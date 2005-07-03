@@ -69,6 +69,7 @@ import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
 class StatusBarField
 {
@@ -86,33 +87,33 @@ class StatusBarField
 	{
 		this.parent = parent;
 
-		label = new JTextField();
-		separator = new JSeparator();
+		this.label = new JTextField();
+		this.separator = new JSeparator();
 
 		this.visible = true;
 		this.index = index;
 		this.start = start;
 		this.size = size;
 
-		this.field_id = "field" + String.valueOf(index);
+		this.field_id = StatusBarModel.FIELD_PREFIX + String.valueOf(index);
 
-		parent.add(label,
+		parent.add(this.label,
 				new XYConstraints(start, 1, size - 3, parent.getHeight() - 2));
-		parent.add(separator,
+		parent.add(this.separator,
 				new XYConstraints(start + size - 2, 1, 1, parent.getHeight() - 2));
 
-		separator.setVisible(true);
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.addMouseListener(new StatusBarModel_separator_mouseAdapter(this));
-		separator.addMouseMotionListener(new StatusBarModel_separator_mouseMotionAdapter(this));
+		this.separator.setVisible(true);
+		this.separator.setOrientation(SwingConstants.VERTICAL);
+		this.separator.addMouseListener(new StatusBarModel_separator_mouseAdapter(this));
+		this.separator.addMouseMotionListener(new StatusBarModel_separator_mouseMotionAdapter(this));
 
-		label.setVisible(true);
-		label.setDisabledTextColor(Color.black);
-		label.setEnabled(false);
-		label.setBackground(parent.getBackground());// new Color(212, 208, 200)
-		label.setEditable(false);
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		label.setRequestFocusEnabled(false);
+		this.label.setVisible(true);
+		this.label.setDisabledTextColor(Color.black);
+		this.label.setEnabled(false);
+		this.label.setBackground(parent.getBackground());// new Color(212, 208, 200)
+		this.label.setEditable(false);
+		this.label.setHorizontalAlignment(SwingConstants.LEFT);
+		this.label.setRequestFocusEnabled(false);
 
 		Border border = BorderFactory.createBevelBorder(
 				BevelBorder.LOWERED,
@@ -127,10 +128,42 @@ class StatusBarField
 
 public class StatusBarModel extends JPanel implements OperationListener
 {
+	public static final String FIELD_PREFIX = "field";
+
+	/**
+	 * @deprecated use FIELD_STATUS
+	 */	
+	public static String field_status = "status";
+	/**
+	 * @deprecated use FIELD_SERVER
+	 */	
+	public static String field_server = "server";
+	/**
+	 * @deprecated use FIELD_SESSION
+	 */	
+	public static String field_session = "session";
+	/**
+	 * @deprecated use FIELD_USER
+	 */	
+	public static String field_user = "user";
+	/**
+	 * @deprecated use FIELD_TIME
+	 */	
+	public static String field_time = "time";
+
+	public static String FIELD_DOMAIN = "domain";
+	public static String FIELD_STATUS = "status";
+	public static String FIELD_SERVER = "server";
+	public static String FIELD_SESSION = "session";
+	public static String FIELD_USER = "user";
+	public static String FIELD_TIME = "time";
+
+	private ProgressBar pbar;
+	private boolean pbarEnabled = false;
 
 	StatusBarField fields[];
 	int field_num;
-	static public final int max_fields = 8;
+	public static final int MAX_FIELDS = 8;
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	XYLayout xYLayout1 = new XYLayout();
 
@@ -138,19 +171,21 @@ public class StatusBarModel extends JPanel implements OperationListener
 	StatusBarField dragging_sbf;
 	StatusBarField right_sbf;
 
-	Dispatcher disp = null;
-
 	public StatusBarModel()
 	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.setEnabled(true);
+		this.addComponentListener(new StatusBarModel_this_componentAdapter(this));
+//		this.setLayout(xYLayout1);
+//		this.setLayout(gridBagLayout1);
+		this.setLayout(new LineLayout());
+
+//		Border border = BorderFactory.createBevelBorder(
+//						BevelBorder.LOWERED,
+//						Color.white,
+//						Color.white,
+//						new Color(142, 142, 142),
+//						new Color(99, 99, 99));
+
 	}
 
 	public StatusBarModel(int field_num)
@@ -159,96 +194,122 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 		int i;
 
-		fields = new StatusBarField[max_fields];
+		this.fields = new StatusBarField[MAX_FIELDS];
 		this.field_num = field_num;
 
-		if(field_num == 0)
+		if(this.field_num == 0)
 			return;
 
 		int width = this.getWidth();
-		int f_width = width / field_num;
-		int f_start = 1;
+		int f_width = width / this.field_num;
+		int f_start = 0;
 
-		for(i = 0; i < field_num; i++)
+		for(i = 0; i < this.field_num; i++)
 		{
-			fields[i] = new StatusBarField(this, i, f_start, f_width);
+			this.fields[i] = new StatusBarField(this, i, f_start, f_width);
 			f_start += f_width;
 		}
 	}
 
+	public void removeDispatcher(Dispatcher disp)
+	{
+		if(disp != null)
+		{
+			disp.unregister(this, StatusMessageEvent.STATUS_MESSAGE);
+			disp.unregister(this, StatusMessageEvent.STATUS_USER);
+			disp.unregister(this, StatusMessageEvent.STATUS_SERVER);
+			disp.unregister(this, StatusMessageEvent.STATUS_SESSION);
+			disp.unregister(this, StatusMessageEvent.STATUS_DOMAIN);
+			disp.unregister(this, StatusMessageEvent.STATUS_PROGRESS_BAR);
+		}
+	}
+
+	/**
+	 * @deprecated use {@link #addDispatcher(Dispatcher) addDispatcher}
+	 */
 	public void setDispatcher(Dispatcher disp)
 	{
-//		if(disp != null)
-//			disp.unregister(this, StatusMessageEvent.type);
-		this.disp = disp;
-		disp.register(this, StatusMessageEvent.type);
+		addDispatcher(disp);
+	}
+	
+	public void addDispatcher(Dispatcher disp)
+	{
+		if(disp != null)
+		{
+			disp.register(this, StatusMessageEvent.STATUS_MESSAGE);
+			disp.register(this, StatusMessageEvent.STATUS_USER);
+			disp.register(this, StatusMessageEvent.STATUS_SERVER);
+			disp.register(this, StatusMessageEvent.STATUS_SESSION);
+			disp.register(this, StatusMessageEvent.STATUS_DOMAIN);
+			disp.register(this, StatusMessageEvent.STATUS_PROGRESS_BAR);
+		}
 	}
 
 	public void setText(int index, String text)
 	{
-		fields[index].label.setText(text);
+		this.fields[index].label.setText(text);
 	}
 
 	public void setText(String field_id, String text)
 	{
-		try 
+		try
 		{
-			fields[getIndex(field_id)].label.setText(text);
-		} 
-		catch (Exception ex) 
+			this.fields[getIndex(field_id)].label.setText(text);
+		}
+		catch (Exception ex)
 		{
 			// field not found
-		} 
+		}
 	}
 
 	public String getText(int index)
 	{
-		return fields[index].label.getText();
+		return this.fields[index].label.getText();
 	}
 
 	public String getText(String field_id)
 	{
-		return fields[getIndex(field_id)].label.getText();
+		return this.fields[getIndex(field_id)].label.getText();
 	}
 
 	public int getIndex(String field_id)
 	{
 		int i;
-		for(i = 0; i < field_num; i++)
-			if(fields[i].field_id.equals(field_id))
+		for(i = 0; i < this.field_num; i++)
+			if(this.fields[i].field_id.equals(field_id))
 				break;
-		if(i >= fields.length)
+		if(i >= this.fields.length)
 			return -1;
 		return i;
 	}
 
 	public String getID(int index)
 	{
-		return fields[index].field_id;
+		return this.fields[index].field_id;
 	}
 
 	public void setID(int index, String field_id)
 	{
-		fields[index].field_id = field_id;
+		this.fields[index].field_id = field_id;
 	}
 
 	public void setIndex(int index, int old_index)
 	{
 		int i;
-		StatusBarField sbf = fields[old_index];
+		StatusBarField sbf = this.fields[old_index];
 
 		if(old_index > index)
 		{
 			for(i = old_index; i > index; i--)
-				fields[i] = fields[i - 1];
+				this.fields[i] = this.fields[i - 1];
 		}
 		else
 		{
 			for(i = old_index; i < index; i++)
-				fields[i] = fields[i + 1];
+				this.fields[i] = this.fields[i + 1];
 		}
 
-		fields[index] = sbf;
+		this.fields[index] = sbf;
 	}
 
 	public void setIndex(int index, String field_id)
@@ -260,44 +321,41 @@ public class StatusBarModel extends JPanel implements OperationListener
 	{
 		int i;
 
-		for(i = field_num; i > index; i--)
-			fields[i] = fields[i - 1];
-		field_num++;
+		for(i = this.field_num; i > index; i--)
+			this.fields[i] = this.fields[i - 1];
+		this.field_num++;
 
-		fields[index] = new StatusBarField(this, index, 0, getHeight() - 2);
-		fields[index].field_id = field_id;
+		this.fields[index] = new StatusBarField(this, index, 0, getHeight() - 2);
+		this.fields[index].field_id = field_id;
 
 		distribute();
 
-		if(field_id.equals("time"))
+		if(field_id.equals(StatusBarModel.field_time))
 		{
-			new MyTimeDisplay(fields[index]).start();
+			new MyTimeDisplay(this.fields[index]).start();
 		}
-
 	}
 
 	public void add(int index)
 	{
-		add(index, "field" + String.valueOf(field_num));
+		add(index, FIELD_PREFIX + String.valueOf(this.field_num));
 	}
 
 	public void add(String field_id)
 	{
-		add(field_num, field_id);
+		add(this.field_num, field_id);
 	}
 
 	public void add()
 	{
-		add(field_num);
+		add(this.field_num);
 	}
 
 	public void remove(int index)
 	{
-		int i;
-
-		for(i = field_num; i > index; i--)
-			fields[i] = fields[i - 1];
-		field_num++;
+		for(int i = this.field_num; i > index; i--)
+			this.fields[i] = this.fields[i - 1];
+		this.field_num--;
 	}
 
 	public void remove(String field_id)
@@ -306,9 +364,9 @@ public class StatusBarModel extends JPanel implements OperationListener
 	}
 
 	public void setWidth(int index, int width)
-	{
-		fields[index].size = width;
-		fields[index].label.setSize(fields[index].size, getHeight() - 2);
+	{		
+		this.fields[index].size = width;
+		this.fields[index].label.setSize(this.fields[index].size, getHeight() - 2);
 	}
 
 	public void setWidth(String field_id, int width)
@@ -318,24 +376,15 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void setStart(int index, int start)
 	{
-		fields[index].start = start;
-		fields[index].label.setLocation(fields[index].start, 1);
-		fields[index].separator.setLocation(
-				fields[index].start + fields[index].size - 2, 1);
+		this.fields[index].start = start;
+		this.fields[index].label.setLocation(this.fields[index].start, 1);
+		this.fields[index].separator.setLocation(
+				this.fields[index].start + this.fields[index].size - 2, 1);
 	}
 
 	public void setStart(String field_id, int start)
 	{
 		setStart(getIndex(field_id), start);
-	}
-
-	private void jbInit() throws Exception
-	{
-		this.setEnabled(true);
-		this.addComponentListener(new StatusBarModel_this_componentAdapter(this));
-//		this.setLayout(xYLayout1);
-//		this.setLayout(gridBagLayout1);
-		this.setLayout(new LineLayout());
 	}
 
 	public void setVisible(boolean aFlag)
@@ -348,60 +397,63 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void distribute()
 	{
-		if(field_num == 0)
+		if(this.field_num == 0)
 			return;
 
-		int i;
+		//int i;
 		int width = getWidth();
-		int f_width = width / field_num;
+		int f_width = width / this.field_num;
+//		int f_start = 0;
 		int f_start = 0;
-		for(i = 0; i < field_num; i++)
+		if (this.pbarEnabled)
+			f_start = this.pbar.getWidth() + 3;
+
+		for(int i = 0; i < this.field_num; i++)
 		{
-			if(i == field_num - 1)
+			if(i == this.field_num - 1)
 				f_width = getWidth() - f_start;
 			setWidth(i, f_width);
 			setStart(i, f_start);
-			fields[i].label.setBounds(
-					fields[i].start,
+			this.fields[i].label.setBounds(
+					this.fields[i].start,
 					1,
 					f_width - 3,
 					getHeight() - 2);
-			fields[i].separator.setBounds(
-					fields[i].start + f_width - 2,
+			this.fields[i].separator.setBounds(
+					this.fields[i].start + f_width - 2,
 					1,
 					1,
 					getHeight() - 2);
-//			System.out.println("draw " + fields[i].field_id + " at " +
+//			System.out.println("draw " + this.fields[i].field_id + " at " +
 //					String.valueOf(f_start) + " width " +
 //					String.valueOf(f_width) + " height " +
-//					String.valueOf(fields[i].label.getHeight()));
+//					String.valueOf(this.fields[i].label.getHeight()));
 			f_start += f_width;
 		}
 	}
 
 	public void organize()
 	{
-		if(field_num == 0)
+		if(this.field_num == 0)
 			return;
 
-		int i;
-		int f_start = fields[0].start;
-		for(i = 0; i < field_num; i++)
+		int f_start = this.fields[0].start;
+		for(int i = 0; i < this.field_num; i++)
 		{
-			if(i == field_num - 1)
+			if(i == this.field_num - 1)
 				setWidth(i, getWidth() - f_start);
 			setStart(i, f_start);
-			fields[i].label.setBounds(
-					fields[i].start,
+			this.fields[i].label.setBounds(
+					this.fields[i].start,
 					1,
-					fields[i].size - 3,
+					this.fields[i].size - 3,
 					getHeight() - 2);
-			fields[i].separator.setBounds(
-					fields[i].start + fields[i].size - 2,
+			this.fields[i].separator.setBounds(
+					this.fields[i].start + this.fields[i].size - 2,
 					1,
 					1,
 					getHeight() - 2);
-			f_start += fields[i].size;
+			f_start += this.fields[i].size;
 		}
 	}
 
@@ -420,14 +472,14 @@ public class StatusBarModel extends JPanel implements OperationListener
 	void separator_mousePressed(MouseEvent e, StatusBarField sbf)
 	{
 //		System.out.println("mouse pressed on ..."+ String.valueOf(sbf.index));
-		if(sbf.index == field_num - 1)
+		if(sbf.index == this.field_num - 1)
 			return;
 		dragging = true;
 		dragging_sbf = sbf;
 		right_sbf = null;
-//		if(sbf.index != field_num - 2)
+//		if(sbf.index != this.field_num - 2)
 //		{
-			right_sbf = fields[sbf.index + 1];
+			right_sbf = this.fields[sbf.index + 1];
 //			System.out.println("start dragging " + String.valueOf(sbf.index) +
 //				" and " + String.valueOf(right_sbf.index));
 //		}
@@ -499,10 +551,82 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 	public void operationPerformed(OperationEvent oe)
 	{
-		if(oe.getActionCommand().equals(StatusMessageEvent.type))
+		try
 		{
 			StatusMessageEvent sme = (StatusMessageEvent )oe;
-			setText("status", sme.getText());
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_MESSAGE))
+			{
+				setText(StatusBarModel.field_status, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_SESSION))
+			{
+				setText(StatusBarModel.field_session, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_SERVER))
+			{
+				setText(StatusBarModel.field_server, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_USER))
+			{
+				setText(StatusBarModel.field_user, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_DOMAIN))
+			{
+				setText(StatusBarModel.FIELD_DOMAIN, sme.getText());
+			}
+			else
+			if(sme.getActionCommand().equals(StatusMessageEvent.STATUS_PROGRESS_BAR))
+			{
+				this.setProgressBarEnable(sme.getShowProgressBar());
+			}
+			
+		}
+		catch (Exception ex)
+		{
+//			System.out.println("this is not a StatusMessageEvent so don't bother");
+		}
+		
+	}
+	
+	
+	/**
+	 * @deprecated use setProgressBarEnable
+	 * @param en
+	 */
+	public void enableProgressBar (boolean en){
+		this.setProgressBarEnable(en);
+	}
+
+	public void setProgressBarEnable (boolean enable)
+	{
+		if (enable)
+		{
+			this.pbar = new ProgressBar();
+			this.pbarEnabled = true;
+			this.distribute();
+			this.add(
+						this.pbar,
+						new XYConstraints(
+								3,
+								(this.getHeight() - this.pbar.getHeight()) / 2 + 2,
+								this.pbar.getWidth(),
+								this.pbar.getHeight()));
+
+			this.pbar.start(LangModel.getString("Loading_Please_wait"));
+		}
+		else
+		{
+			if (this.pbar != null){
+				this.pbar.stop();
+				this.pbarEnabled = false;
+				this.distribute();
+				this.remove(this.pbar);
+				this.pbar = null;
+			}
 		}
 	}
 }
@@ -526,6 +650,7 @@ class StatusBarModel_separator_mouseAdapter extends java.awt.event.MouseAdapter
 	{
 		adaptee.parent.separator_mouseExited(e);
 	}
+
 
 	public void mousePressed(MouseEvent e)
 	{

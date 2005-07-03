@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Prediction.StatisticsMath;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 
@@ -70,7 +69,7 @@ public class ReflectoEventPredictor
 		if(bs == null)
 			length = prediction[prediction.length-1].end;
 		else
-			length = bs.dataPts.TNDP;
+			length = bs.getTraceData().length;
 
 		double[] y = new double[length];
 

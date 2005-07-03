@@ -1,42 +1,23 @@
-
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Schedule;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 
-public class Schedule
-{
-	ApplicationContext aContext = new ApplicationContext();
+public class Schedule extends AbstractApplication {
+	private static final String APPLICATION_NAME = "scheduler";
 
-	public Schedule(ScheduleApplicationModelFactory factory)
-	{
-		if(!Environment.canRun(Environment.MODULE_SCHEDULE))
-			return;
-
-		aContext.setApplicationModel(factory.create());
-		Frame frame = new ScheduleMDIMain(aContext);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/scheduling_mini.gif"));
-//		Environment.addWindow(frame);
-		frame.setVisible(true);
-
+	
+	public Schedule() {
+		super(APPLICATION_NAME);
+	}
+	
+	protected void init() {
+		super.init();
+		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));				
+		super.startMainFrame(new ScheduleMainFrame(super.aContext), UIStorage.SCHEDULING_ICON_MINI);
 	}
 
-	public static void main(String[] args)
-	{
-		Environment.initialize();
-		try
-		{
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		new Schedule(new DefaultScheduleApplicationModelFactory());
+	public static void main(String[] args) {
+		new Schedule();
 	}
 }
-

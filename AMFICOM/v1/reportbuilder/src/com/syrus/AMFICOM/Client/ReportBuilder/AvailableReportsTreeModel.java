@@ -1,17 +1,26 @@
 package com.syrus.AMFICOM.Client.ReportBuilder;
 
+import com.syrus.AMFICOM.Client.Schedule.Report.ScheduleReportModel;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
+
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -21,14 +30,17 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 
 import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -48,18 +60,22 @@ import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
 
+import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
+import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
+
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 import com.syrus.AMFICOM.Client.Survey.Report.AlarmReportModel;
+import com.syrus.AMFICOM.Client.Survey.Report.ObserveReportModel;
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
-
-import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
 import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.PredictionReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.ModelingReportModel;
+import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
+import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
+import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
+
+import javax.swing.tree.TreePath;
 
 /**
  * <p>Description: Модель дерева с доступными отчётами</p>
@@ -70,16 +86,42 @@ import com.syrus.AMFICOM.Client.Analysis.Report.ModelingReportModel;
  */
 
 public class AvailableReportsTreeModel extends ObjectResourceTreeModel
+	implements OperationListener
 {
-	public AvailableReportsTreeModel()
-{}
+	private ApplicationContext aContext = null;
+
+	public AvailableReportsTreeModel(ApplicationContext aContext)
+	{
+		this.aContext = aContext;
+		this.aContext.getDispatcher().register(this,TreeDataSelectionEvent.type);
+	}
+
+	public void operationPerformed (OperationEvent oe)
+	{
+		if (oe.getActionCommand().equals(TreeDataSelectionEvent.type))
+		{
+			UniTreePanel reportsTreePanel = (UniTreePanel) oe.getSource();
+			TreePath treePath = reportsTreePanel.getTree().getSelectionPath();
+			if (treePath == null)
+				return;
+
+			ObjectResourceTreeNode lastElem =
+				(ObjectResourceTreeNode) treePath.getLastPathComponent();
+
+			if ((lastElem.getObject() instanceof OptimizationReportModel)
+          && toAskObjects(lastElem))
+			{
+				SelectSolutionFrame ssFrame = new SelectSolutionFrame (this.aContext);
+			}
+		}
+	}
 
 	public ObjectResourceTreeNode getRoot()
 	{
 		return new ObjectResourceTreeNode(
 			"root",
-			LangModelReport.String("label_availableReports"),
-true);
+			LangModelReport.getString("label_availableReports"),
+			true);
 	}
 
 	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
@@ -109,9 +151,9 @@ true);
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject()instanceof String)
@@ -123,7 +165,7 @@ true);
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"reportRoot",
-					LangModelReport.String("label_availableReports"), //Отчёты без привязки к конкретному оборудованию
+					LangModelReport.getString("label_availableReports"), //Отчёты без привязки к конкретному оборудованию
 					true);
 
 				vec.add(ortn);
@@ -131,7 +173,7 @@ true);
 
 				ortn = new ObjectResourceTreeNode(
 					"templateElementRoot",
-					LangModelReport.String("label_availableTemplElems"), //Отчёты с привязкой к конкретному оборудованию,
+					LangModelReport.getString("label_availableTemplElems"), //Отчёты с привязкой к конкретному оборудованию,
 					true); //тесту, карте итд
 
 				vec.add(ortn);
@@ -153,14 +195,14 @@ true);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repSboiSistemy"),
+				 LangModelReport.getString("label_repSboiSistemy"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repStat"),
+				 LangModelReport.getString("label_repStat"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -176,7 +218,7 @@ true);
 
 				ortn = new ObjectResourceTreeNode(
 					"EquipmentChars",
-					LangModelConfig.String("label_equipChars"),
+					LangModelConfig.getString("label_equipChars"),
 					true);
 
 				vec.add(ortn);
@@ -184,7 +226,7 @@ true);
 
 				ortn = new ObjectResourceTreeNode(
 					"label_repPhysicalScheme",
-					LangModelReport.String("label_repPhysicalScheme"),
+					LangModelReport.getString("label_repPhysicalScheme"),
 					true);
 
 				vec.add(ortn);
@@ -192,21 +234,21 @@ true);
 
 						  ortn = new ObjectResourceTreeNode(
 				 "label_repTopologicalScheme",
-				 LangModelReport.String("label_repTopologicalScheme"),
+				 LangModelReport.getString("label_repTopologicalScheme"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repAbonentsPassports"),
+				 LangModelReport.getString("label_repAbonentsPassports"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repMetrologicalPoverka"),
+				 LangModelReport.getString("label_repMetrologicalPoverka"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -214,10 +256,45 @@ true);
 
 			else if (s.equals("templateElementRoot"))
 			{
-				AlarmReportModel alarmModel = new AlarmReportModel();
+				SchemeReportModel schemeModel = new SchemeReportModel();
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-					alarmModel,
-					alarmModel.getObjectsName(),
+					schemeModel,
+					schemeModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				ortn = new ObjectResourceTreeNode(
+					"EquipmentChars",
+					LangModelConfig.getString("label_equipChars"),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				MapReportModel mapModel = new MapReportModel();
+				ortn = new ObjectResourceTreeNode(
+					mapModel,
+					mapModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				OptimizationReportModel optModel = new OptimizationReportModel();
+				ortn = new ObjectResourceTreeNode(
+					optModel,
+					optModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				ScheduleReportModel schedModel = new ScheduleReportModel();
+				ortn = new ObjectResourceTreeNode(
+					schedModel,
+					schedModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
@@ -225,14 +302,14 @@ true);
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repSboiSistemy"),
+				 LangModelReport.getString("label_repSboiSistemy"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repStat"),
+				 LangModelReport.getString("label_repStat"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -246,19 +323,19 @@ true);
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				EvaluationReportModel erModel = new EvaluationReportModel();
+				SurveyReportModel srModel = new SurveyReportModel();
 				ortn = new ObjectResourceTreeNode(
-					erModel,
-					erModel.getObjectsName(),
+					srModel,
+					srModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				SurveyReportModel srModel = new SurveyReportModel();
+				EvaluationReportModel erModel = new EvaluationReportModel();
 				ortn = new ObjectResourceTreeNode(
-					srModel,
-					srModel.getObjectsName(),
+					erModel,
+					erModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
@@ -282,31 +359,32 @@ true);
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
-				/*        ortn = new ObjectResourceTreeNode(
-				 new OptimizationReportModel(),
-				 LangModelReport.String("label_repOptimizationResults"),
-				 true);
-				 vec.add(ortn);
-				 registerSearchableNode("", ortn);*/
-
+				ObserveReportModel observeModel = new ObserveReportModel();
 				ortn = new ObjectResourceTreeNode(
-					"EquipmentChars",
-					LangModelConfig.String("label_equipChars"),
+					observeModel,
+					observeModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
 				registerSearchableNode("", ortn);
 
 				/*        ortn = new ObjectResourceTreeNode(
-				 "",
-				 LangModelReport.String("label_repAbonentsPassports"),
+				 new OptimizationReportModel(),
+				 LangModelReport.getString("label_repOptimizationResults"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
 
 				/*        ortn = new ObjectResourceTreeNode(
 				 "",
-				 LangModelReport.String("label_repMetrologicalPoverka"),
+				 LangModelReport.getString("label_repAbonentsPassports"),
+				 true);
+				 vec.add(ortn);
+				 registerSearchableNode("", ortn);*/
+
+				/*        ortn = new ObjectResourceTreeNode(
+				 "",
+				 LangModelReport.getString("label_repMetrologicalPoverka"),
 				 true);
 				 vec.add(ortn);
 				 registerSearchableNode("", ortn);*/
@@ -318,7 +396,7 @@ true);
 				{
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 						"mufta",
-						LangModelConfig.String("mufta"),
+						LangModelConfig.getString("mufta"),
 						true);
 
 					vec.add(ortn);
@@ -326,7 +404,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"switch",
-						LangModelConfig.String("switch"),
+						LangModelConfig.getString("switch"),
 						true);
 
 					vec.add(ortn);
@@ -334,7 +412,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"cross",
-						LangModelConfig.String("cross"),
+						LangModelConfig.getString("cross"),
 						true);
 
 					vec.add(ortn);
@@ -342,7 +420,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"multiplexor",
-						LangModelConfig.String("multiplexer"),
+						LangModelConfig.getString("multiplexor"),
 						true);
 
 					vec.add(ortn);
@@ -350,7 +428,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"filter",
-						LangModelConfig.String("filter"),
+						LangModelConfig.getString("filter"),
 						true);
 
 					vec.add(ortn);
@@ -358,7 +436,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"transmitter",
-						LangModelConfig.String("transmitter"),
+						LangModelConfig.getString("transmitter"),
 						true);
 
 					vec.add(ortn);
@@ -366,7 +444,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"reciever",
-						LangModelConfig.String("reciever"), //поменять на receiver
+						LangModelConfig.getString("reciever"), //поменять на receiver
 						true);
 
 					vec.add(ortn);
@@ -374,7 +452,7 @@ true);
 
 					ortn = new ObjectResourceTreeNode(
 						"tester",
-						LangModelConfig.String("tester"),
+						LangModelConfig.getString("tester"),
 						true);
 
 					vec.add(ortn);
@@ -410,14 +488,13 @@ true);
 				s.equals("reciever") ||
 				s.equals("tester"))
 			{
-				Hashtable equipTypeHash = Pool.getHash(EquipmentType.typ);
+				Map equipTypeHash = Pool.getMap(EquipmentType.typ);
 				if (equipTypeHash == null)
-					return new Vector();
+					return new ArrayList();
 
-				Enumeration equipTypeEnum = equipTypeHash.elements();
-				while (equipTypeEnum.hasMoreElements())
+				for (Iterator it = equipTypeHash.values().iterator(); it.hasNext();)
 				{
-					EquipmentType eqType = (EquipmentType) equipTypeEnum.nextElement();
+					EquipmentType eqType = (EquipmentType) it.next();
 					if (eqType.eq_class.equals(s))
 					{
 						ObjectsReport rep = new ObjectsReport(new
@@ -444,40 +521,26 @@ true);
 						vec.add(ortn);
 					}
 				}
-
-				/*        ObjectsReport or = new ObjectsReport (orm.getTyp(),"",ObjectResourceReportModel.rt_objectsReport);
-				 try
-				 {
-				 or.setReserve(new Vector());
-				 }
-				 catch (CreateReportException cre){}
-				 ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-				 or,
-					 LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
-				 true,
-				 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-				 ortn.setDragDropEnabled(true);
-				 vec.add(ortn);
-				 registerSearchableNode("", ortn);*/
-
 			}
 
-			else if (s.equals("label_repPhysicalScheme"))
+			else if (   s.equals("label_repPhysicalScheme")
+						&& this.toAskObjects(node))
 			{
-				Hashtable ht = new Hashtable();
-				if (Pool.getHash(Scheme.typ) != null)
+        Set schemeTypeSet = new HashSet();
+        
+				Map schemeMap = Pool.getMap(Scheme.typ);
+				if (schemeMap != null)
 				{
-					for (Enumeration en = Pool.getHash(Scheme.typ).elements();
-						en.hasMoreElements(); )
+					for (Iterator it = schemeMap.values().iterator(); it.hasNext();)
 					{
-						Scheme sch = (Scheme) en.nextElement();
-						ht.put(sch.scheme_type, sch.scheme_type);
+						Scheme sch = (Scheme) it.next();
+						schemeTypeSet.add(sch.scheme_type);
 					}
 
-					for (Enumeration en = ht.elements(); en.hasMoreElements(); )
+					for (Iterator it = schemeTypeSet.iterator(); it.hasNext();)
 					{
-						String type = (String) en.nextElement();
-						String name = LangModelSchematics.String(type);
+						String type = (String) it.next();
+						String name = LangModelSchematics.getString(type);
 						if (type.equals(""))
 							name = "Схема";
 
@@ -492,18 +555,19 @@ true);
 			{
 				if (Pool.getHash(MapContext.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(MapContext.typ));
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(
+						aContext.getDataSourceInterface().getSession().getDomainId());
+            
+          Map mcHash = Pool.getMap(MapContext.typ);
+					filter.filtrate(mcHash);
+          
+					ObjectResourceSorter sorter = MapContext.getDefaultSorter();
+					sorter.setDataSet(mcHash);
+					sorter.default_sort();
 
-					/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-						 dSet = filter.filter(dSet);
-						 ObjectResourceSorter sorter = MapContext.getDefaultSorter();
-						 sorter.setDataSet(dSet);
-						 dSet = sorter.default_sort();*/
-
-					Enumeration enum = dSet.elements();
-					for (; enum.hasMoreElements(); )
+					for (Iterator it = mcHash.values().iterator(); it.hasNext();)
 					{
-						MapContext mc = (MapContext) enum.nextElement();
+						MapContext mc = (MapContext) it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
 							mc.getName(), true);
 						vec.add(n);
@@ -515,12 +579,11 @@ true);
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
-
-				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+////////////////////////////////////
+				List dSet = new ArrayList();
+				for (ListIterator it = mc.getNodes().listIterator(); it.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) it.next();
 					if (os instanceof MapEquipmentNodeElement)
 						dSet.add(os);
 				}
@@ -528,29 +591,27 @@ true);
 				ObjectResourceSorter sorter = MapEquipmentNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for (ListIterator iter = dSet.listIterator(); iter.hasNext(); )
 				{
-					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enum.
-						nextElement();
+					MapEquipmentNodeElement me = (MapEquipmentNodeElement) iter.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
 				}
 			}
-			else if (s.equals(MapKISNodeElement.typ))
+/*			else if (s.equals(MapKISNodeElement.typ))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
 				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+				for (Enumeration enumer = mc.getNodes().elements();
+					enumer.hasMoreElements(); )
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) enumer.nextElement();
 					if (os instanceof MapKISNodeElement)
 						dSet.add(os);
 				}
@@ -560,26 +621,25 @@ true);
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumer = dSet.elements();
+				for (; enumer.hasMoreElements(); )
 				{
-					MapKISNodeElement me = (MapKISNodeElement) enum.nextElement();
+					MapKISNodeElement me = (MapKISNodeElement) enumer.nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
 				}
-			}
+			}*/
 			else if (s.equals(MapPhysicalNodeElement.typ))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+				List dSet = new ArrayList();
+				for (ListIterator lIt = mc.getNodes().listIterator(); lIt.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) lIt.next();
 					if (os instanceof MapPhysicalNodeElement)
 						dSet.add(os);
 				}
@@ -587,13 +647,11 @@ true);
 				ObjectResourceSorter sorter = MapPhysicalNodeElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapPhysicalNodeElement me = (MapPhysicalNodeElement) enum.
-						nextElement();
+					MapPhysicalNodeElement me = (MapPhysicalNodeElement) lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -604,24 +662,23 @@ true);
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode) node.
 					getParent();
 				MapContext mc = null;
-				DataSet dSet = null;
+				List dSet = null;
 				if (parent.getObject()instanceof MapContext)
 				{
 					mc = (MapContext) parent.getObject();
-					dSet = new DataSet(mc.getPhysicalLinks());
+					dSet = mc.getPhysicalLinks();
 				}
 				else
 				{
 					MapEquipmentNodeElement mene = (MapEquipmentNodeElement) parent.
-getObject();
+            getObject();
 					mc = mene.getMapContext();
 
-					dSet = new DataSet();
-					for (Enumeration enum = mc.getPhysicalLinks().elements();
-						enum.hasMoreElements(); )
+					dSet = new ArrayList();
+					for (ListIterator lIt = mc.getPhysicalLinks().listIterator(); lIt.hasNext();)
 					{
-						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enum.
-nextElement();
+						MapPhysicalLinkElement ml = (MapPhysicalLinkElement) lIt.next();
+
 						if (ml.startNode.equals(mene) || ml.endNode.equals(mene))
 							dSet.add(ml);
 					}
@@ -630,17 +687,15 @@ nextElement();
 				ObjectResourceSorter sorter = MapPhysicalLinkElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enum.
-						nextElement();
+					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) lIt.next();
 
 					String curName = ml.getName();
 					ObjectsReport curReport = new ObjectsReport(new MapReportModel(),
-						curName, "", toAskObjects(node));
+						MapReportModel.rep_linkChars,"", toAskObjects(node));
 
 					try
 					{
@@ -671,19 +726,16 @@ nextElement();
 					getParent();
 				MapContext mc = (MapContext) parent.getObject();
 
-				DataSet dSet = new DataSet(mc.getTransmissionPath());
+				List dSet = mc.getTransmissionPath();
 
 				ObjectResourceSorter sorter = MapTransmissionPathElement.
 					getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)
 				{
-					MapTransmissionPathElement me = (MapTransmissionPathElement)
-						enum.
-						nextElement();
+					MapTransmissionPathElement me = (MapTransmissionPathElement)lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -697,23 +749,21 @@ nextElement();
 					getObject();
 				MapContext mc = ml.getMapContext();
 
-				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getMapMarkElements().elements();
-					enum.hasMoreElements(); )
+				List dSet = new ArrayList();
+				for (ListIterator lIt = mc.getMapMarkElements().listIterator(); lIt.hasNext();)        
 				{
-					MapMarkElement mme = (MapMarkElement) enum.nextElement();
+					MapMarkElement mme = (MapMarkElement) lIt.next();
 					if (mme.link_id.equals(ml.getId()))
 						dSet.add(mme);
 				}
 
 				ObjectResourceSorter sorter = MapMarkElement.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
+				sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				for (ListIterator lIt = dSet.listIterator(); lIt.hasNext();)        
 				{
-					MapMarkElement mme = (MapMarkElement) enum.nextElement();
+					MapMarkElement mme = (MapMarkElement) lIt.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(mme,
 						mme.getName(), true);
 					vec.add(n);
@@ -724,18 +774,19 @@ nextElement();
 				((ObjectResourceTreeNode) node.getParent()).getObject().equals(
 				"label_repPhysicalScheme"))
 			{
+				Map dSet = Pool.getMap(Scheme.typ);
 
-				DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
+				ObjectResourceFilter filter = new ObjectResourceDomainFilter(
+					aContext.getDataSourceInterface().getSession().getDomainId());
+          
+				filter.filter(dSet);
+				ObjectResourceSorter sorter = Scheme.getDefaultSorter();
+				sorter.setDataSet(dSet);
+				sorter.default_sort();
 
-				/*          ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
-				 dSet = filter.filter(dSet);
-				 ObjectResourceSorter sorter = Scheme.getDefaultSorter();
-				 sorter.setDataSet(dSet);
-				 dSet = sorter.default_sort();*/
-
-				for (Enumeration enum = dSet.elements(); enum.hasMoreElements(); )
+				for (Iterator it = dSet.values().iterator(); it.hasNext(); )
 				{
-					Scheme scheme = (Scheme) enum.nextElement();
+					Scheme scheme = (Scheme) it.next();
 					if (scheme.scheme_type.equals(s))
 					{
 						ObjectsReport or = new ObjectsReport (
@@ -772,20 +823,19 @@ nextElement();
 					String curName =
 						(String) ((ObjectResourceTreeNode) node).getObject();
 
-					Vector views = (Vector) curModel.getAvailableViewTypesforField(
-						curName);
+					List views = curModel.getAvailableViewTypesforField(curName);
 					if (views == null)
-						return new Vector();
+						return new ArrayList();
 
-					for (int i = 0; i < views.size(); i++)
+					for (ListIterator lIt = views.listIterator();lIt.hasNext();)
 					{
-						String view = (String) views.get(i);
+						String view = (String) lIt.next();
 						ObjectsReport curReport = new ObjectsReport(curModel,
 							curName, view, toAskObjects(node));
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 							curReport,
-							LangModelReport.String(curReport.view_type),
+							LangModelReport.getString(curReport.view_type),
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/new.gif").getScaledInstance(16, 16,
@@ -817,10 +867,9 @@ nextElement();
 			 Scheme scheme = (Scheme) node.getObject();*/
 
 			//Элементы
-			for (Enumeration enum = scheme.elements.elements();
-				enum.hasMoreElements(); )
+			for (Iterator it = scheme.elements.iterator();it.hasNext();)
 			{
-				SchemeElement element = (SchemeElement) enum.nextElement();
+				SchemeElement element = (SchemeElement) it.next();
 				if (element.scheme_id.equals(""))
 				{
 					ObjectsReport rep = new ObjectsReport(new
@@ -888,9 +937,9 @@ nextElement();
 			}
 
 			//Линки
-			for (int i = 0; i < scheme.links.size(); i++)
+			for (Iterator it = scheme.links.iterator(); it.hasNext();)
 			{
-				SchemeLink link = (SchemeLink) scheme.links.get(i);
+				SchemeLink link = (SchemeLink) it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -928,9 +977,9 @@ nextElement();
 			}
 
 			//Кабельные линки
-			for (int i = 0; i < scheme.cablelinks.size(); i++)
+			for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 			{
-				SchemeCableLink link = (SchemeCableLink) scheme.cablelinks.get(i);
+				SchemeCableLink link = (SchemeCableLink) it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -975,10 +1024,9 @@ nextElement();
 			if (!schel.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme) Pool.get(Scheme.typ, schel.scheme_id);
-				for (Enumeration enum = scheme.elements.elements();
-					enum.hasMoreElements(); )
+				for (Iterator it = scheme.elements.iterator();it.hasNext(); )
 				{
-					SchemeElement element = (SchemeElement) enum.nextElement();
+					SchemeElement element = (SchemeElement) it.next();
 
 					if (element.scheme_id.equals(""))
 					{
@@ -1043,22 +1091,22 @@ nextElement();
 		{
 			ObjectResourceTreeNode ortn;
 			ortn = new ObjectResourceTreeNode(MapEquipmentNodeElement.typ,
-				LangModelConfig.String("label_nodes"), true);
+				LangModelConfig.getString("label_nodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapEquipmentNodeElement.typ, ortn);
 
 //				vec.add(new ObjectResourceTreeNode(MapKISNodeElement.typ, "Узлы с КИС", true));
 			ortn = new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String("label_links"), true);
+				LangModelConfig.getString("label_links"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalLinkElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapPhysicalNodeElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_topologicalNodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalNodeElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapTransmissionPathElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"menuJCatPathText"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapTransmissionPathElement.typ, ortn);
@@ -1066,7 +1114,7 @@ nextElement();
 		else if (node.getObject()instanceof MapEquipmentNodeElement)
 		{
 			vec.add(new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_inputLinks"), true));
 		}
 		else if (node.getObject()instanceof MapPhysicalLinkElement)
@@ -1080,14 +1128,14 @@ nextElement();
 		else if (node.getObject()instanceof Scheme)
 		{
 			vec.add(new ObjectResourceTreeNode(SchemeElement.typ,
-				LangModelConfig.String("label_nodes"), true));
+				LangModelConfig.getString("label_nodes"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeLink.typ,
-				LangModelConfig.String("label_links"), true));
+				LangModelConfig.getString("label_links"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ,
-				LangModelConfig.String("label_cablelinks"),
+				LangModelConfig.getString("label_cablelinks"),
 				true));
 			vec.add(new ObjectResourceTreeNode(SchemePath.typ,
-				LangModelConfig.String("menuJCatPathText"), true));
+				LangModelConfig.getString("menuJCatPathText"), true));
 		}
 ///конец топологии
 
@@ -1097,16 +1145,19 @@ nextElement();
 			ObjectResourceReportModel orm =
 				(ObjectResourceReportModel) node.getObject();
 
-			Vector fields = orm.getAllColumnIDs();
-			Vector fieldNames = orm.getColumnNamesbyIDs(orm.getAllColumnIDs());
+			List fields = orm.getAllColumnIDs();
+			List fieldNames = orm.getColumnNamesbyIDs(orm.getAllColumnIDs());
 
-			for (int i = 0; i < fields.size(); i++)
+      ListIterator fIt = fields.listIterator();
+      ListIterator fNIt = fieldNames.listIterator();
+
+			for (;fIt.hasNext();)
 			{
-				String curField = (String) fields.get(i);
-				String curName = (String) fieldNames.get(i);
+				String curField = (String) fIt.next();
+				String curName = (String) fNIt.next();
 
 				//Поля для которых нет стат.отчётов не отображаем
-				Vector views = (Vector) orm.getAvailableViewTypesforField(curField);
+				List views = orm.getAvailableViewTypesforField(curField);
 				if (views.size() == 0)
 					continue;
 
@@ -1125,14 +1176,14 @@ nextElement();
 				rt_objectsReport, toAskObjects(node));
 			try
 			{
-				or.setReserve(new Vector());
+				or.setReserve(new ArrayList());
 			}
 			catch (CreateReportException cre)
 			{}
 
 			ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 				or,
-				LangModelReport.String(ObjectResourceReportModel.rt_objectsReport),
+				LangModelReport.getString(ObjectResourceReportModel.rt_objectsReport),
 				true,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
 				getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
@@ -1152,17 +1203,19 @@ nextElement();
 				ObjectResourceReportModel orrm = (ObjectResourceReportModel)
 					curReport.model;
 
-				Vector fields = orrm.getAllColumnIDs();
-				Vector fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
+				List fields = orrm.getAllColumnIDs();
+				List fieldNames = orrm.getColumnNamesbyIDs(orrm.getAllColumnIDs());
 
 				if (fields == null)
-					return new Vector();
+					return new ArrayList();
 
-				for (int i = 0; i < fields.size(); i++)
+				for (ListIterator fIt = fields.listIterator(),
+                          fNIt = fieldNames.listIterator();
+             fIt.hasNext();)
 				{
 					ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
-						fields.get(i),
-						(String) fieldNames.get(i),
+						fIt.next(),
+						(String) fNIt.next(),
 						true);
 					ortn.setFinal(true);
 
@@ -1176,11 +1229,22 @@ nextElement();
 			APOReportModel rm =
 				(APOReportModel) node.getObject();
 
-			Vector fields = rm.getAvailableReports();
+      if (rm instanceof ObserveReportModel)
+      {
+				AlarmReportModel observeModel = new AlarmReportModel();
+				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
+					observeModel,
+					observeModel.getObjectsName(),
+					true);
 
-			for (int i = 0; i < fields.size(); i++)
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+      }
+
+			List fields = rm.getAvailableReports();
+			for (ListIterator it = fields.listIterator(); it.hasNext();)
 			{
-				String curName = (String) fields.get(i);
+				String curName = (String) it.next();
 				String langName = rm.getLangForField(curName);
 
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(

@@ -1,8 +1,8 @@
-#ifndef _MCM_IDL_
-#define _MCM_IDL_
+#ifndef MCM_IDL
+#define MCM_IDL
 
-#include <measurement.idl>
-#include <configuration.idl>
+#include "measurement.idl"
+#include "configuration.idl"
 
 module com {
 module syrus {
@@ -10,11 +10,38 @@ module AMFICOM {
 module mcm {
 module corba {
 
-	interface MCM {
+	interface MCM : general::corba::Verifiable {
 
-		void transmitTests(in com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable tests) raises (com::syrus::AMFICOM::util::corba::AMFICOMRemoteException);
+		void receiveTests(in measurement::corba::TestSeq tests)
+			raises (general::corba::AMFICOMRemoteException);
 
-		void ping(in long i) raises (com::syrus::AMFICOM::util::corba::AMFICOMRemoteException);
+		void abortTests(in general::corba::IdentifierSeq test_ids)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::MeasurementSeq transmitMeasurements(in general::corba::IdentifierSeq ids)
+				raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::MeasurementSeq transmitMeasurementsButIdsByCondition(
+				in general::corba::IdentifierSeq ids,
+				in general::corba::StorableObjectCondition storableObjectCondition)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::AnalysisSeq transmitAnalyses(in general::corba::IdentifierSeq ids)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::AnalysisSeq transmitAnalysesButIdsByCondition(
+				in general::corba::IdentifierSeq ids,
+				in general::corba::StorableObjectCondition storableObjectCondition)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::EvaluationSeq transmitEvaluations(in general::corba::IdentifierSeq ids)				
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::EvaluationSeq transmitEvaluationsButIdsByCondition(
+				in general::corba::IdentifierSeq ids,
+				in general::corba::StorableObjectCondition storableObjectCondition)
+			raises (general::corba::AMFICOMRemoteException);
+
 	};
 
 };
@@ -23,4 +50,4 @@ module corba {
 };
 };
 
-#endif
+#endif // MCM_IDL

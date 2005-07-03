@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Survey.UI;
+/*package com.syrus.AMFICOM.Client.Survey.UI;
 
 import com.ofx.geometry.SxDoublePoint;
 
@@ -6,9 +6,8 @@ import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.Alarm.EventSource;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+import com.syrus.AMFICOM.Client.Resource.MapView.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapEquipmentNodeElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapKISNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -18,22 +17,23 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import java.util.Iterator;
 
 ///Thread для перезагрузки аттрибутов элементов карты
-public class ReloadAttributes 
+public class ReloadAttributes
 		extends Thread
 		implements Runnable
 {
 	int timeInterval = 5000;
 	MapMainFrame mmf;
 
-	private boolean is_running = true;
+	private volatile boolean is_running = true;
 
 	public ReloadAttributes(MapMainFrame mmf)
 	{
@@ -49,7 +49,7 @@ public class ReloadAttributes
 	{
 		is_running = false;
 	}
-	
+
 	public void run()
 	{
 		while (is_running)
@@ -92,12 +92,12 @@ public class ReloadAttributes
 		}
 
 	}
-*/
+/
 	public void updateAttributes()
 	{
 	try
 	{
-		Vector vec;
+		ArrayList vec;
 		int count;
 		int i;
 		if(lnl() == null)
@@ -117,17 +117,16 @@ public class ReloadAttributes
 		{
 			EventSource esrc = (EventSource )enum1.nextElement();
 			esrc_ht.put(esrc.id, esrc.object_source_id);
-            
+
 		}
 
 		vec = mc.getTransmissionPath();
 
 		if(vec == null)
 			return;
-		count = vec.size();
-		for(i = 0; i < count; i++)
+		for(Iterator it = vec.iterator(); it.hasNext();)
 		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )vec.get(i);
+			MapTransmissionPathElement path = (MapTransmissionPathElement )it.next();
 
 			ElementAttribute ea = (ElementAttribute )path.attributes.get("alarmed");
 			if(ea != null)
@@ -200,23 +199,23 @@ public class ReloadAttributes
 				}
 			}
 		}
-*/			
+/
 	}
 	catch(Exception ex)
 	{
 		System.out.println("attributes not updated: " + ex.getMessage());
 //			ex.printStackTrace();
 	}
-		
-	}
 
+	}
+/*
 	public void updateAttributes1()
 	{
 		Vector vec;
 		int count;
 		int i;
 		MapContext mc = lnl().getMapContext();
-			
+
 		vec = mc.getNodes();
 		count = vec.size();
 		for(i = 0; i < count; i++)
@@ -251,5 +250,6 @@ public class ReloadAttributes
 			path.updateAttributes();
 		}
 	}
-
+/
 }
+*/

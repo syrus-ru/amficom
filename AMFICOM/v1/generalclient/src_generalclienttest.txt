@@ -1,0 +1,5 @@
+test\com\syrus\AMFICOM\client_\general\ui\MLabel.java
+test\com\syrus\AMFICOM\client_\general\ui\TestResourceCellRenderer.java
+test\com\syrus\AMFICOM\client_\general\ui\TestResourceTableTest.java
+test\com\syrus\AMFICOM\client_\resource\TestResource.java
+test\com\syrus\AMFICOM\client_\resource\TestResourceController.java

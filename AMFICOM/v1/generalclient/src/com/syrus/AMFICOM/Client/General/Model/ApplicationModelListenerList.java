@@ -88,7 +88,7 @@ import java.io.Serializable;
 		if (fooEvent == null)
 		    fooEvent = new FooEvent(this);
 		((FooListener)listeners[i+1]).fooXXX(fooEvent);
-	    }	       
+	    }	
 	}
     }	
    </pre>
@@ -97,7 +97,7 @@ import java.io.Serializable;
  * notification method in the FooListener interface).
  * <p>
  * <strong>Warning:</strong>
- * Serialized objects of this class will not be compatible with 
+ * Serialized objects of this class will not be compatible with
  * future Swing releases.  The current serialization support is appropriate
  * for short term storage or RMI between applications running the same
  * version of Swing.  A future release of Swing will provide support for

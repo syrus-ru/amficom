@@ -1,29 +1,31 @@
+/*
+ * $Id: MapdbInterfaceLoad1.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
 import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceLoad1 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceLoad1
 {
 	protected MapdbInterfaceLoad1()
 	{
 	}
 
-	static public int loadMaps(
+	public static int loadMaps(
 			String domain_id,
 			Vector map_ids,
 			MapContextSeq_TransferableHolder mapseq,
@@ -238,7 +240,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public MapElement_Transferable loadMapElement(
+	public static MapElement_Transferable loadMapElement(
 			String id,
 			Vector images)
 	{
@@ -376,7 +378,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return eq_t;
 	}
 
-	static public int loadMapElements(
+	public static int loadMapElements(
 			Vector map_ids,
 			MapElementSeq_TransferableHolder equipmentseq,
 			Vector images)
@@ -436,7 +438,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 /*
-	static public int loadMapElements(
+	public static int loadMapElements(
 			Vector map_ids,
 			MapElementSeq_TransferableHolder equipmentseq,
 			Vector images)
@@ -587,7 +589,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public MapMarkElement_Transferable loadMapMark(
+	public static MapMarkElement_Transferable loadMapMark(
 			String id,
 			Vector images)
 	{
@@ -701,7 +703,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return eq_t;
 	}
 
-	static public int loadMapMarks(
+	public static int loadMapMarks(
 			Vector map_ids,
 			MapMarkElementSeq_TransferableHolder markseq,
 			Vector images)
@@ -760,7 +762,7 @@ public class MapdbInterfaceLoad1 extends Object
 	}
 
 /*
-	static public int loadMapMarks(
+	public static int loadMapMarks(
 			Vector map_ids,
 			MapMarkElementSeq_TransferableHolder markseq,
 			Vector images)
@@ -887,7 +889,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public MapElement_Transferable loadMapKIS(
+	public static MapElement_Transferable loadMapKIS(
 			String id,
 			Vector images)
 	{
@@ -963,7 +965,7 @@ public class MapdbInterfaceLoad1 extends Object
 		return kis_t;
 	}
 
-	static public int loadMapKISs(
+	public static int loadMapKISs(
 			Vector map_ids,
 			MapElementSeq_TransferableHolder kisseq,
 			Vector images)
@@ -1021,7 +1023,7 @@ public class MapdbInterfaceLoad1 extends Object
 	}
 
 /*
-	static public int loadMapKISs(
+	public static int loadMapKISs(
 			Vector map_ids,
 			MapKISElementSeq_TransferableHolder kisseq,
 			Vector images)
@@ -1267,6 +1269,4 @@ public class MapdbInterfaceLoad1 extends Object
 		String map_id,
 		String link_id,
 		String distance);
-
 }
-

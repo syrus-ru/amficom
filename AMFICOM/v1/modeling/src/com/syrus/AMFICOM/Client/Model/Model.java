@@ -1,18 +1,9 @@
 package com.syrus.AMFICOM.Client.Model;
 
-import java.awt.Frame;
-import java.awt.Toolkit;
-
+import java.awt.*;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.DefaultModelApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ModelApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class Model
 {
@@ -32,13 +23,6 @@ public class Model
 
 	public static void main(String[] args)
 	{
-		Environment.initialize();
-		LangModelModel.initialize();
-		LangModelAnalyse.initialize();
-		LangModelSchematics.initialize();
-		LangModelConfig.initialize();
-		com.syrus.AMFICOM.Client.General.Lang.LangModelReport.initialize();
-
 		try
 		{
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());

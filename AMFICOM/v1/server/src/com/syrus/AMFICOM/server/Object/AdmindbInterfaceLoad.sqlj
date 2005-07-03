@@ -1,24 +1,30 @@
+/*
+ * $Id: AdmindbInterfaceLoad.sqlj,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import java.sql.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class AdmindbInterfaceLoad
 {
 	protected AdmindbInterfaceLoad()
 	{
 	}
 
-	static public int loadServers(
+	public static int loadServers(
 			ServerSeq_TransferableHolder serverseq,
 			String []server_ids)
 	{
@@ -35,7 +41,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public Server_Transferable loadServer(String id)
+	public static Server_Transferable loadServer(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -111,7 +117,7 @@ public class AdmindbInterfaceLoad
 		}
 	}
 
-	static public int loadServers(
+	public static int loadServers(
 			ServerSeq_TransferableHolder serverseq)
 	{
 		String It_id = "";
@@ -208,7 +214,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadClients(
+	public static int loadClients(
 			ClientSeq_TransferableHolder clientseq,
 			String []client_ids)
 	{
@@ -224,7 +230,7 @@ public class AdmindbInterfaceLoad
 		vec.copyInto(clientseq.value);
 		return Constants.ERROR_NO_ERROR;
 	}
-	static public Client_Transferable loadClient(String id)
+	public static Client_Transferable loadClient(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -303,7 +309,7 @@ public class AdmindbInterfaceLoad
 	}
 
 
-	static public int loadClients(
+	public static int loadClients(
 			ClientSeq_TransferableHolder clientseq)
 	{
 		String It_id = "";
@@ -398,7 +404,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadAgents(
+	public static int loadAgents(
 			AgentSeq_TransferableHolder agentseq,
 			String []agent_ids)
 	{
@@ -415,7 +421,7 @@ public class AdmindbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public Agent_Transferable loadAgent(String id)
+	public static Agent_Transferable loadAgent(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -493,7 +499,7 @@ public class AdmindbInterfaceLoad
 		}
 	}
 
-	static public int loadAgents(
+	public static int loadAgents(
 			AgentSeq_TransferableHolder agentseq)
 	{
 		String It_id = "";
@@ -620,7 +626,4 @@ public class AdmindbInterfaceLoad
 		String hostname,
 		Timestamp created,
 		Timestamp modified);
-
-
 }
-

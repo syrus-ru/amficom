@@ -31,3 +31,4 @@ private: //variables;
 };
 
 #endif // !defined(AFX_DISPATCHER_H__1E9D94AC_6908_4CCC_9D0C_C1B13FED9511__INCLUDED_)
+

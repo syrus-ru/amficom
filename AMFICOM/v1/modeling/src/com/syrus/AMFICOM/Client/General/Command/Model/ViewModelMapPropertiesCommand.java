@@ -1,22 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import java.awt.Dimension;
+import javax.swing.*;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-
-import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
+import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapPropertiesCommand;
 import com.syrus.AMFICOM.Client.Model.ModelMDIMain;
 
 public class ViewModelMapPropertiesCommand  extends ViewMapPropertiesCommand
 {
 	JDesktopPane desktop;
 	ModelMDIMain parent;
-	public ViewModelMapPropertiesCommand()
-	{
-	}
 
 	public ViewModelMapPropertiesCommand(ModelMDIMain parent, JDesktopPane desktop, ApplicationContext aContext)
 	{

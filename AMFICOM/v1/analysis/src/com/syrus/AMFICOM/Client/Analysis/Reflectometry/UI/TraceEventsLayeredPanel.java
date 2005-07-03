@@ -1,25 +1,14 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.util.*;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.ImageIcon;
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
+public class TraceEventsLayeredPanel extends ScalableLayeredPanel
+implements PropertyChangeListener
 {
-	Dispatcher dispatcher;
-
 	public TraceEventsLayeredPanel(Dispatcher dispatcher)
 	{
 		super();
@@ -27,8 +16,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -37,12 +25,11 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -50,9 +37,9 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 		return new TraceEventsToolBar(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
@@ -61,9 +48,8 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof ReflectogramEventsPanel)
 				{
-					if(rue.MIN_TRACE_LEVEL_CHANGED)
+					if(rue.minTraceLevelChanged())
 					{
-						((ReflectogramEventsPanel)panel).updateMinTraceLevel((Double)rue.getSource());
 						jLayeredPane.repaint();
 					}
 				}
@@ -80,7 +66,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 			{
 				((TraceEventsPanel)panel).draw_events = b;
 				jLayeredPane.repaint();
-			};
+			}
 		}
 	}
 
@@ -93,7 +79,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 			{
 				((ReflectogramEventsPanel)panel).draw_modeled = b;
 				jLayeredPane.repaint();
-			};
+			}
 		}
 	}
 
@@ -107,7 +93,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 				((TraceEventsPanel)panel).updEvents(id);
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 
@@ -121,85 +107,5 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 			if (panel instanceof ReflectogramEventsPanel)
 				((ReflectogramEventsPanel)panel).draw_modeled = ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
 		}
-	}
-}
-
-class TraceEventsToolBar extends ScalableToolBar
-{
-	protected static final String events = "eventsButton";
-	protected static final String modeled = "modeledButton";
-
-	JToggleButton eventsTButton = new JToggleButton();
-	JToggleButton modeledTButton = new JToggleButton();
-
-	public TraceEventsToolBar (TraceEventsLayeredPanel panel)
-	{
-		super(panel);
-	}
-
-	protected static String[] buttons = new String[]
-	{
-		ex, dx, ey, dy, fit, separator, events, modeled
-	};
-
-	protected String[] getButtons()
-	{
-		return buttons;
-	}
-
-	protected Hashtable createGraphButtons()
-	{
-		Hashtable buttons = new Hashtable();
-
-		buttons.put(
-				events,
-				createToolButton(
-				eventsTButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("showevents"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/events.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						eventsTButton_actionPerformed(e);
-					}
-				},
-				true));
-		buttons.put(
-				modeled,
-				createToolButton(
-				modeledTButton,
-				btn_size,
-				null,
-				LangModelAnalyse.String("showmodel"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/modeled.gif")),
-				new ActionListener()
-				{
-					public void actionPerformed(ActionEvent e)
-					{
-						modeledTButton_actionPerformed(e);
-					}
-				},
-				true));
-
-		eventsTButton.doClick();
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
-	}
-
-	void eventsTButton_actionPerformed(ActionEvent e)
-	{
-		TraceEventsLayeredPanel panel = (TraceEventsLayeredPanel)super.panel;
-		boolean b = eventsTButton.isSelected();
-		panel.drawEvents (b);
-	}
-
-	void modeledTButton_actionPerformed(ActionEvent e)
-	{
-		TraceEventsLayeredPanel panel = (TraceEventsLayeredPanel)super.panel;
-		boolean b = modeledTButton.isSelected();
-		panel.drawModeled (b);
 	}
 }

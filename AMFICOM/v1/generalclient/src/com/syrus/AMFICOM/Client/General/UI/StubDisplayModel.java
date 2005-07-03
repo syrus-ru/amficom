@@ -1,57 +1,29 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс, описывающий свойства, одинаковые для всех объектов, * //
-// *           загружаемых в клиентское ПО с РИСД. Каждый объект          * //
-// *           содержит экземпляр данного класса и может использовать     * //
-// *           из него необходимые члены для хранения информации,         * //
-// *           связанной с обменом клиентского ПО с РИСД                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\ObjectResource.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: StubDisplayModel.java,v 1.6 2005/05/18 14:01:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.awt.Color;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:18 $
+ * @module generalclient_v1
+ */
 public class StubDisplayModel implements ObjectResourceDisplayModel
 {
-	Vector cols = new Vector();
-	Vector colnames = new Vector();
+	LinkedList cols = new LinkedList();
+	LinkedList colnames = new LinkedList();
 	int[] colsizes = new int[0];
 	
 	public StubDisplayModel()
@@ -60,14 +32,14 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 	
 	public StubDisplayModel(Vector cols, Vector colnames)
 	{
-		this.cols = cols;
-		this.colnames = colnames;
+		this.cols.addAll(cols);
+		this.colnames.addAll(colnames);
 	}
 	
 	public StubDisplayModel(Vector cols, Vector colnames, int[] colsizes)
 	{
-		this.cols = cols;
-		this.colnames = colnames;
+		this.cols.addAll(cols);
+		this.colnames.addAll(colnames);
 		this.colsizes = colsizes;
 	}
 
@@ -88,7 +60,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 		this.colsizes = colsizes;
 	}
 
-	public Vector getColumns()
+	public List getColumns()
 	{
 		return cols;
 	}
@@ -104,7 +76,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 					return (String)colnames.get(i);
 			}
 		}
-        catch (Exception ex) 
+        catch (Exception ex)
         {
         }
 		return "";
@@ -121,7 +93,7 @@ public class StubDisplayModel implements ObjectResourceDisplayModel
 					return colsizes[i];
 			}
 		}
-        catch (Exception ex) 
+        catch (Exception ex)
         {
         }
 		return 100;

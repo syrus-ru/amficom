@@ -1,36 +1,35 @@
+/*-
+ * $Id: TimeSpinner.java,v 1.6 2005/05/05 11:04:47 bob Exp $
+ *
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
-import javax.swing.*;
+import java.util.Calendar;
+import java.util.Date;
 
-public class TimeSpinner extends JSpinner
-{
-	protected TimeSpinnerEditor editor;
-	protected static String pattern = "HH:mm";
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
-	public TimeSpinner()
-	{
-		super(new SpinnerDateModel());
-	}
-	
-	static public String getPattern()
-	{
-		return pattern;
-	}
+/**
+ * @version $Revision: 1.6 $, $Date: 2005/05/05 11:04:47 $
+ * @author $Author: bob $
+ * @module generalclient_v1
+ */
+public class TimeSpinner extends JSpinner {
 
-	public JComponent getEditor()
-	{
-		if (editor == null)
-			editor = new TimeSpinnerEditor(this, pattern);
-		return editor;
+	private static final String	PATTERN	= "HH:mm";
+
+	public TimeSpinner() {
+		super(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR));
+		this.setEditor(new JSpinner.DateEditor(this, PATTERN));
 	}
 
-	static class TimeSpinnerEditor extends JSpinner.DateEditor
-	{
-		TimeSpinnerEditor(JSpinner spinner, String pattern)
-		{
-			super(spinner, pattern);
-		}
+	public static String getPattern() {
+		return PATTERN;
 	}
+
 }
-
-

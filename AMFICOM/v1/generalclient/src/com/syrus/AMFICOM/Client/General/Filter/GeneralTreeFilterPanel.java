@@ -2,14 +2,14 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTree;
@@ -19,6 +19,8 @@ import com.syrus.AMFICOM.Client.General.Filter.TreeModelClone;
 import com.syrus.AMFICOM.Client.General.Filter.FilterTree;
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
 import com.syrus.AMFICOM.Client.General.Filter.FilterTreeNode;
+
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
 public class GeneralTreeFilterPanel extends FilterPanel
 {
@@ -88,24 +90,27 @@ public class GeneralTreeFilterPanel extends FilterPanel
 		}
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name)
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("list");
 		TreeModelClone tm = (TreeModelClone)tree.getModel();
 		TreeModelClone new_tm = tm.myclone();
 		vec.add(new_tm);
 		FilterExpression fexp = new FilterExpression();
 		fexp.setVec(vec);
-		fexp.setName(LangModel.String("labelFiltration")+" \'"+col_name+"\' "+LangModel.String("labelPoSpisku"));
+
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' " + LangModel.getString("labelPoSpisku");
+		fexp.setName(expName);
+		fexp.setColumnName(col_name);
 		fexp.setId(col_id);
 		return fexp;
 	}
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		TreeModelClone tm = (TreeModelClone)vec.elementAt(1);
+		List vec = expr.getVec();
+		TreeModelClone tm = (TreeModelClone)vec.get(1);
 		TreeModelClone new_tm = tm.myclone();
 		tree.setModel(new_tm);
 	}

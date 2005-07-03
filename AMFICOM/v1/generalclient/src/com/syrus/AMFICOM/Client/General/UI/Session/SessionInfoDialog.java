@@ -1,53 +1,16 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Диалоговое окно параметров сессии работы пользователя      * //
-// *         с системой                                                   * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 1.0                                                          * //
-// * От: 1 jul 2002                                                       * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Main\SessionInfoDialog.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: SessionInfoDialog.java,v 1.8 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI.Session;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 
 import javax.swing.JButton;
@@ -60,6 +23,17 @@ import javax.swing.SwingConstants;
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class SessionInfoDialog extends JDialog
 {
 	SessionInterface si;
@@ -103,7 +77,7 @@ public class SessionInfoDialog extends JDialog
 
 	public SessionInfoDialog()
 	{
-		this(Environment.getActiveWindow(), LangModel.String("SessionInfoTitle"), false);
+		this(Environment.getActiveWindow(), LangModel.getString("SessionInfoTitle"), false);
 	}
 
 	public SessionInfoDialog(SessionInterface si)
@@ -117,7 +91,7 @@ public class SessionInfoDialog extends JDialog
 
 		this.si = si;
 
-		labelServer.setText(si.getConnectionInterface().getServerIP());
+		labelServer.setText(ConnectionInterface.getInstance().getServerName());
 		labelUser.setText(si.getUser());
 		labelCategory.setText("");
 		long lot = si.getLogonTime();
@@ -126,9 +100,8 @@ public class SessionInfoDialog extends JDialog
 		long st = cm - lot;
 		long st2 = st / 3600000;//hours
 		String s1 = String.valueOf(st2) + sdf2.format(new Date(st));
-//		labelSessionTotal.setText(sdf2.format(new Date(System.currentTimeMillis() - si.getLogonTime())));
 		labelSessionTotal.setText(s1);
-		labelConnectPeriod.setText(Pool.getName(Domain.typ, si.getDomainId()));
+		labelConnectPeriod.setText(((ObjectResource)Pool.get(Domain.class.getName(), si.getDomainId())).getName());
 		labelConnectLast.setText("");
 	}
 
@@ -138,16 +111,16 @@ public class SessionInfoDialog extends JDialog
 		jPanel1.setLayout(xYLayout1);
 		xYLayout1.setHeight(224);
 		xYLayout1.setWidth(400);
-		buttonOk.setText(LangModel.String("buttonClose"));
+		buttonOk.setText(LangModel.getString("buttonClose"));
 		buttonOk.addActionListener(new SessionInfoDialog_buttonOk_actionAdapter(this));
-		jLabel1.setText(LangModel.String("labelServer"));
-		jLabel3.setText(LangModel.String("labelUser"));
-		jLabel5.setText(LangModel.String("labelCategory"));
-		jLabel7.setText(LangModel.String("labelSessionStart"));
-		jLabel9.setText(LangModel.String("labelSessionTotal"));
-		jLabel11.setText(LangModel.String("labelActiveDomain"));
-		jLabel13.setText(LangModel.String("labelServerConnectLast"));
-		jLabel2.setText(LangModel.String("labelServerConnectLast2"));
+		jLabel1.setText(LangModel.getString("labelServer"));
+		jLabel3.setText(LangModel.getString("labelUser"));
+		jLabel5.setText(LangModel.getString("labelCategory"));
+		jLabel7.setText(LangModel.getString("labelSessionStart"));
+		jLabel9.setText(LangModel.getString("labelSessionTotal"));
+		jLabel11.setText(LangModel.getString("labelActiveDomain"));
+		jLabel13.setText(LangModel.getString("labelServerConnectLast"));
+		jLabel2.setText(LangModel.getString("labelServerConnectLast2"));
 
 		jSplitPane1.setOrientation(SwingConstants.VERTICAL);
 		jSplitPane2.setOrientation(SwingConstants.HORIZONTAL);
@@ -198,5 +171,3 @@ class SessionInfoDialog_buttonOk_actionAdapter implements java.awt.event.ActionL
 		adaptee.buttonOk_actionPerformed(e);
 	}
 }
-
-

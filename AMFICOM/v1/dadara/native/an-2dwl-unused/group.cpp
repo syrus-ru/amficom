@@ -624,3 +624,4 @@ void group_events(InEvent *ie, int len, ArrList &outEvents)
 	fprintf(fout, "\n");
 	fflush(fout);
 }
+

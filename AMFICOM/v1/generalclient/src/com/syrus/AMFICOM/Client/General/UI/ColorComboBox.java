@@ -6,7 +6,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 
 import java.util.Vector;
 
@@ -115,20 +114,20 @@ public class ColorComboBox extends AComboBox
                     (int)(jComboBox.getHeight() * 3 / 4),
 					(int)(jComboBox.getHeight() * 2 / 4)));
 
-            lbl.setBounds(new Rectangle( 
-					(int)(jComboBox.getHeight() * 5 / 4), 
-					0, 
-					100, 
+            lbl.setBounds(new Rectangle(
+					(int)(jComboBox.getHeight() * 5 / 4),
+					0,
+					100,
 					jComboBox.getHeight() ));
 
             this.setLayout(null);
 
             if (myColor.color == null)
             {
-				jButton.setBounds(new Rectangle( 
-						(int)(jComboBox.getHeight() / 5), 
+				jButton.setBounds(new Rectangle(
 						(int)(jComboBox.getHeight() / 5),
-                        (int)(jComboBox.getHeight()), 
+						(int)(jComboBox.getHeight() / 5),
+                        (int)(jComboBox.getHeight()),
 						(int)(jComboBox.getHeight() * 4 / 5)));
 
                 this.add(jButton);
@@ -253,7 +252,7 @@ public class ColorComboBox extends AComboBox
 				prevComboBox = this.getSelectedIndex();
             }
 /*
-            returnMyColor.setMyColor( 
+            returnMyColor.setMyColor(
 					((MyColor)this.getSelectedItem()).color,
 					((MyColor)this.getSelectedItem()).text );
 */

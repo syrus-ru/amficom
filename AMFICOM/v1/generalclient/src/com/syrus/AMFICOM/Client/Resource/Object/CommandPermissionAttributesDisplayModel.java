@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * <p>Title: </p>
@@ -20,15 +21,19 @@ public class CommandPermissionAttributesDisplayModel extends StubDisplayModel
   public CommandPermissionAttributesDisplayModel()
   {
   }
-  public Vector getColumns()
-  {
-    Vector vec = new Vector();
-//    vec.add("id");
-    vec.add("name");
-    vec.add("owner_id");
-    vec.add("modified");
-    return vec;
-  }
+
+    List cols = new LinkedList();
+	{
+//    	vec.add("id");
+		cols.add("name");
+//    	vec.add("owner_id");
+		cols.add("modified");
+	}
+	
+	public List getColumns()
+	{
+		return cols;
+	}
 
   public String getColumnName(String col_id)
   {
@@ -44,7 +49,7 @@ public class CommandPermissionAttributesDisplayModel extends StubDisplayModel
     return s;
   }
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+  public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
   {
     ObjectResourceModel mod = or.getModel();
     return new JLabelRenderer(mod.getColumnValue(col_id));

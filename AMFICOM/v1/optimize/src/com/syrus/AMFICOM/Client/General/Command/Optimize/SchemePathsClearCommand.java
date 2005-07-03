@@ -53,16 +53,16 @@ public class SchemePathsClearCommand extends VoidCommand
   return;
     }
     // при очистке возвращаем атрибуты волокон из ранее прописанных "tested" в состояние "active"
-    for( Enumeration cls = mdiMain.scheme.getAllCableLinks(); cls.hasMoreElements();) // по всем кабелям
-    { SchemeCableLink scl = (SchemeCableLink) cls.nextElement();
+    for( Iterator cls = mdiMain.scheme.getAllCableLinks().iterator(); cls.hasNext();) // по всем кабелям
+    { SchemeCableLink scl = (SchemeCableLink) cls.next();
       ElementAttribute att = (ElementAttribute)scl.attributes.get("optimizerRibAttribute");
       if(att != null)
       { if( att.value.equals("tested") )
         { att.value = "active";}
       }
     }
-    for( Enumeration cls = mdiMain.scheme.getAllLinks(); cls.hasMoreElements();) // по всем линкам
-    { SchemeLink sl = (SchemeLink) cls.nextElement();
+    for( Iterator cls = mdiMain.scheme.getAllLinks().iterator(); cls.hasNext();) // по всем линкам
+    { SchemeLink sl = (SchemeLink) cls.next();
       ElementAttribute att = (ElementAttribute)sl.attributes.get("optimizerRibAttribute");
       if(att != null)
       { if( att.value.equals("tested") )
@@ -72,7 +72,7 @@ public class SchemePathsClearCommand extends VoidCommand
     mdiMain.ribsModeFrame.repaint();//перерисовать обновлённые значения
 
     mdiMain.optimizerContext.solution = new Solution();//создать пустое решение
-    dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//прописать пустое решение поверх
+    this.dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//прописать пустое решение поверх
     mdiMain.aContext.getDispatcher().notify(new StatusMessageEvent("схема очищена"));
     System.out.println("SchemePathsClearCommand.execute() - done");
   }

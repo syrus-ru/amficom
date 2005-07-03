@@ -1,139 +1,254 @@
+/*
+ * $Id: MeasurementSetup.java,v 1.82 2005/06/25 17:07:41 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
-import com.syrus.util.Log;
-import com.syrus.AMFICOM.general.Identifier;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 
-public class MeasurementSetup extends StorableObject {
-	protected static final int UPDATE_ATTACH_ME = 1;
-	protected static final int UPDATE_DETACH_ME = 2;
+/**
+ * @version $Revision: 1.82 $, $Date: 2005/06/25 17:07:41 $
+ * @author $Author: bass $
+ * @module measurement_v1
+ */
 
-	private Set parameter_set;
-	private Set criteria_set;
-	private Set threshold_set;
-	private Set etalon;
+public final class MeasurementSetup extends StorableObject {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3256442525404443446L;
+
+	private ParameterSet parameterSet;
+	private ParameterSet criteriaSet;
+	private ParameterSet thresholdSet;
+	private ParameterSet etalon;
 	private String description;
-	private long measurement_duration;
-	private ArrayList monitored_element_ids;
+	private long measurementDuration;
 
-	private StorableObject_Database measurementSetupDatabase;
+	private Set<Identifier> monitoredElementIds;
+	private Set<Identifier> measurementTypeIds;
 
-	public MeasurementSetup(Identifier id) throws RetrieveObjectException {
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	MeasurementSetup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
+		this.monitoredElementIds = new HashSet<Identifier>();
+		this.measurementTypeIds = new HashSet<Identifier>();
+
+		final MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE);
 		try {
-			this.measurementSetupDatabase.retrieve(this);
-		}
-		catch (Exception e) {
+			database.retrieve(this);
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		super(new Identifier(mst.id),
-					new Date(mst.created),
-					new Date(mst.modified),
-					new Identifier(mst.creator_id),
-					new Identifier(mst.modifier_id));
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public MeasurementSetup(final IdlMeasurementSetup mst) throws CreateObjectException {
 		try {
-			this.parameter_set = new Set(new Identifier(mst.parameter_set_id));
-			this.criteria_set = (mst.criteria_set_id.identifier_code == 0)?(new Set(new Identifier(mst.criteria_set_id))):null;
-			this.threshold_set = (mst.threshold_set_id.identifier_code == 0)?(new Set(new Identifier(mst.threshold_set_id))):null;
-			this.etalon = (mst.etalon_id.identifier_code == 0)?(new Set(new Identifier(mst.etalon_id))):null;
+			this.fromTransferable(mst);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-		this.description = new String(mst.description);
-		this.measurement_duration = mst.measurement_duration;
-		this.monitored_element_ids = new ArrayList(mst.monitored_element_ids.length);
-		for (int i = 0; i < mst.monitored_element_ids.length; i++)
-			this.monitored_element_ids.add(new Identifier(mst.monitored_element_ids[i]));
+	}
 
-		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	MeasurementSetup(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
+			final String description,
+			final long measurementDuration,
+			final Set<Identifier> monitoredElementIds,
+			final Set<Identifier> measurementTypeIds) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
+		this.parameterSet = parameterSet;
+		this.criteriaSet = criteriaSet;
+		this.thresholdSet = thresholdSet;
+		this.etalon = etalon;
+		this.description = description;
+		this.measurementDuration = measurementDuration;
+
+		this.monitoredElementIds = new HashSet<Identifier>();
+		this.setMonitoredElementIds0(monitoredElementIds);
+
+		this.measurementTypeIds = new HashSet<Identifier>();
+		this.setMeasurementTypeIds0(measurementTypeIds);
+	}
+	
+	/**
+	 * create new instance for client
+	 * @param creatorId
+	 * @param parameterSet
+	 * @param criteriaSet
+	 * @param thresholdSet
+	 * @param etalon
+	 * @param description
+	 * @param measurementDuration
+	 * @param monitoredElementIds
+	 * @throws CreateObjectException
+	 */
+	public static MeasurementSetup createInstance(final Identifier creatorId,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
+			final String description,
+			final long measurementDuration,
+			final Set<Identifier> monitoredElementIds,
+			final Set<Identifier> measurementTypeIds) throws CreateObjectException {
+
 		try {
-			this.measurementSetupDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
+				creatorId,
+				0L,
+				parameterSet,
+				criteriaSet,
+				thresholdSet,
+				etalon,
+				description,
+				measurementDuration,
+				monitoredElementIds,
+				measurementTypeIds);
+
+			assert measurementSetup.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			measurementSetup.markAsChanged();
+
+			return measurementSetup;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
-	public boolean isAttachedToMonitoredElement(Identifier monitored_element_id) {
-    return this.monitored_element_ids.contains(monitored_element_id);
-  }
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+		final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
+		super.fromTransferable(mst.header);
 
-	public void attachToMonitoredElement(Identifier monitored_element_id,
-																			 Identifier modifier_id) throws UpdateObjectException {
-		if (this.isAttachedToMonitoredElement(monitored_element_id))
-      return;
-		super.modifier_id = (Identifier)modifier_id.clone();
-		try {
-			this.measurementSetupDatabase.update(this, UPDATE_ATTACH_ME, monitored_element_id);
-		}
-		catch (Exception e) {
-			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitored_element_id + "' -- " + e.getMessage(), e);
-		}
-		this.monitored_element_ids.add(monitored_element_id);
-		this.monitored_element_ids.trimToSize();
+		this.parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mst.parameterSetId), true);
+
+		Identifier setId = new Identifier(mst.criteriaSetId);
+		this.criteriaSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
+
+		setId = new Identifier(mst.thresholdSetId);
+		this.thresholdSet = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
+
+		setId = new Identifier(mst.etalonId);
+		this.etalon = (!setId.equals(Identifier.VOID_IDENTIFIER)) ? (ParameterSet) StorableObjectPool.getStorableObject(setId,
+				true) : null;
+
+		this.description = mst.description;
+		this.measurementDuration = mst.measurementDuration;
+
+		this.monitoredElementIds = Identifier.fromTransferables(mst.monitoredElementIds);
+		this.measurementTypeIds = Identifier.fromTransferables(mst.measurementTypeIds);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public void detachFromMonitoredElement(Identifier monitored_element_id,
-																				 Identifier modifier_id) throws UpdateObjectException {
-    if (!this.isAttachedToMonitoredElement(monitored_element_id))
-      return;
-		super.modifier_id = (Identifier)modifier_id.clone();
-		try {
-	    this.measurementSetupDatabase.update(this, UPDATE_DETACH_ME, monitored_element_id);
-		}
-		catch (Exception e) {
-			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitored_element_id + "' -- " + e.getMessage(), e);
-		}
-		this.monitored_element_ids.remove(monitored_element_id);
-		this.monitored_element_ids.trimToSize();
-  }
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public IdlMeasurementSetup getTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-	public Object getTransferable() {
-		Identifier_Transferable[] me_ids = new Identifier_Transferable[this.monitored_element_ids.size()];
-		for (int i = 0; i < me_ids.length; i++)
-			me_ids[i] = (Identifier_Transferable)((Identifier)this.monitored_element_ids.get(i)).getTransferable();
+		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
+		final IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
 
-		return new MeasurementSetup_Transferable((Identifier_Transferable)super.getId().getTransferable(),
-																						 super.created.getTime(),
-																						 super.modified.getTime(),
-																						 (Identifier_Transferable)super.creator_id.getTransferable(),
-																						 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																						 (Identifier_Transferable)this.parameter_set.getId().getTransferable(),
-																						 (this.criteria_set == null)?(Identifier_Transferable)this.criteria_set.getId().getTransferable():new Identifier_Transferable(0),
-																						 (this.threshold_set == null)?(Identifier_Transferable)this.threshold_set.getId().getTransferable():new Identifier_Transferable(0),
-																						 (this.etalon == null)?(Identifier_Transferable)this.etalon.getId().getTransferable():new Identifier_Transferable(0),
-																						 this.description,
-																						 this.measurement_duration,
-																						 me_ids);
+		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
+		return new IdlMeasurementSetup(super.getHeaderTransferable(orb),
+				this.parameterSet.getId().getTransferable(),
+				(this.criteriaSet != null) ? this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
+				(this.thresholdSet != null) ? this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,
+				(this.etalon != null) ? this.etalon.getId().getTransferable() : voidIdlIdentifier,
+				this.description,
+				this.measurementDuration,
+				meIds,
+				mtIds);
 	}
 
-	public Set getParameterSet() {
-		return this.parameter_set;
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid()
+				&& this.parameterSet != null
+				&& this.description != null
+				&& this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty()
+				&& this.measurementTypeIds != null && !this.measurementTypeIds.isEmpty();
 	}
 
-	public Set getCriteriaSet() {
-		return this.criteria_set;
+	public short getEntityCode() {
+		return ObjectEntities.MEASUREMENTSETUP_CODE;
 	}
 
-	public Set getThresholdSet() {
-		return this.threshold_set;
+	public ParameterSet getParameterSet() {
+		return this.parameterSet;
 	}
 
-	public Set getEtalon() {
+	public ParameterSet getCriteriaSet() {
+		return this.criteriaSet;
+	}
+
+	public ParameterSet getThresholdSet() {
+		return this.thresholdSet;
+	}
+
+	public ParameterSet getEtalon() {
 		return this.etalon;
 	}
 
@@ -142,36 +257,202 @@ public class MeasurementSetup extends StorableObject {
 	}
 
 	public long getMeasurementDuration() {
-		return this.measurement_duration;
+		return this.measurementDuration;
 	}
 
-	public ArrayList getMonitoredElementIds() {
-		return this.monitored_element_ids;
+	public Set<Identifier> getMonitoredElementIds() {
+		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Set parameter_set,
-																						Set criteria_set,
-																						Set threshold_set,
-																						Set etalon,
-																						String description,
-																						long measurement_duration) {
+	public Set<Identifier> getMeasurementTypeIds() {
+		return Collections.unmodifiableSet(this.measurementTypeIds);
+	}
+
+	public String[] getParameterTypeCodenames() {
+		Parameter[] parameters = this.parameterSet.getParameters();
+		String[] parameterTypeCodenames = new String[parameters.length];
+		for (int i = 0; i < parameters.length; i++)
+			parameterTypeCodenames[i] = parameters[i].getType().getCodename();
+		return parameterTypeCodenames;
+	}
+
+	public byte[][] getParameterValues() {
+		Parameter[] parameters = this.parameterSet.getParameters();
+		byte[][] parameterValues = new byte[parameters.length][];
+		for (int i = 0; i < parameters.length; i++)
+			parameterValues[i] = parameters[i].getValue();
+		return parameterValues;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final ParameterSet parameterSet,
+			final ParameterSet criteriaSet,
+			final ParameterSet thresholdSet,
+			final ParameterSet etalon,
+			final String description,
+			final long measurementDuration) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id);
-		this.parameter_set = parameter_set;
-		this.criteria_set = criteria_set;
-		this.threshold_set = threshold_set;
+			modified,
+			creatorId,
+			modifierId,
+			version);
+		this.parameterSet = parameterSet;
+		this.criteriaSet = criteriaSet;
+		this.thresholdSet = thresholdSet;
 		this.etalon = etalon;
 		this.description = description;
-		this.measurement_duration = measurement_duration;
+		this.measurementDuration = measurementDuration;
 	}
 
-	protected synchronized void setMonitoredElementIds(ArrayList monitored_element_ids) {
-		this.monitored_element_ids = monitored_element_ids;
+	public boolean isAttachedToMonitoredElement(final Identifier monitoredElementId) {
+		return this.monitoredElementIds.contains(monitoredElementId);
+	}
+
+	public void attachToMonitoredElement(final Identifier monitoredElementId) {
+		if (monitoredElementId != null && !this.isAttachedToMonitoredElement(monitoredElementId)) {
+			this.monitoredElementIds.add(monitoredElementId);
+			super.markAsChanged();
+		}
+	}
+
+	public void detachFromMonitoredElement(final Identifier monitoredElementId) {
+		if (monitoredElementId != null && this.isAttachedToMonitoredElement(monitoredElementId)) {
+			this.monitoredElementIds.remove(monitoredElementId);
+			super.markAsChanged();
+		}
+	}
+
+	/**
+	 * Clent setter for monitored element ids
+	 * @param monitoredElementIds
+	 */
+	public void setMonitoredElementIds(final Set<Identifier> monitoredElementIds) {
+		this.setMonitoredElementIds0(monitoredElementIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setMonitoredElementIds0(final Set<Identifier> monitoredElementIds) {
+		this.monitoredElementIds.clear();
+		if (monitoredElementIds != null)
+			this.monitoredElementIds.addAll(monitoredElementIds);
+	}
+
+	/**
+	 * Client setter for measurement type ids
+	 * @param measurementTypeIds
+	 */
+	public void setMeasurementTypeIds(final Set<Identifier> measurementTypeIds) {
+		this.setMeasurementTypeIds0(measurementTypeIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
+		this.measurementTypeIds.clear();
+		if (measurementTypeIds != null)
+			this.measurementTypeIds.addAll(measurementTypeIds);
+	}
+
+	/**
+	 * client setter for criteriaSet
+	 *
+	 * @param criteriaSet
+	 *          The criteriaSet to set.
+	 */
+	public void setCriteriaSet(final ParameterSet criteriaSet) {
+		this.criteriaSet = criteriaSet;
+		super.markAsChanged();
+	}
+
+	/**
+	 * client setter for description
+	 *
+	 * @param description
+	 *            The description to set.
+	 */
+	public void setDescription(final String description) {
+		this.description = description;
+		super.markAsChanged();
+	}
+
+	/**
+	 * client setter for etalon
+	 *
+	 * @param etalon
+	 *            The etalon to set.
+	 */
+	public void setEtalon(final ParameterSet etalon) {
+		this.etalon = etalon;
+		super.markAsChanged();
+	}
+
+	/**
+	 * client setter for measurementDuration
+	 *
+	 * @param measurementDuration
+	 *            The measurementDuration to set.
+	 */
+	public void setMeasurementDuration(final long measurementDuration) {
+		this.measurementDuration = measurementDuration;
+		super.markAsChanged();
+	}
+
+	/**
+	 * client setter for
+	 *
+	 * @param parameterSet
+	 *            The parameterSet to set.
+	 */
+	public void setParameterSet(final ParameterSet parameterSet) {
+		this.parameterSet = parameterSet;
+		super.markAsChanged();
+	}
+
+	/**
+	 * client setter for thresholdSet
+	 *
+	 * @param thresholdSet
+	 *            The thresholdSet to set.
+	 */
+	public void setThresholdSet(final ParameterSet thresholdSet) {
+		this.thresholdSet = thresholdSet;
+		super.markAsChanged();
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public Set<Identifiable> getDependencies() {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		if (this.parameterSet != null)
+			dependencies.add(this.parameterSet);
+
+		if (this.criteriaSet != null)
+			dependencies.add(this.criteriaSet);
+
+		if (this.thresholdSet != null)
+			dependencies.add(this.thresholdSet);
+
+		if (this.etalon != null)
+			dependencies.add(this.etalon);
+
+		dependencies.addAll(this.monitoredElementIds);
+		return dependencies;
 	}
 }

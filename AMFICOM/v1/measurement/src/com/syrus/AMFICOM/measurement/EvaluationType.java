@@ -1,141 +1,419 @@
+/*
+ * $Id: EvaluationType.java,v 1.77 2005/06/29 12:15:20 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.Iterator;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
+import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 
-public class EvaluationType extends ActionType {
-	private ArrayList in_parameter_types;
-	private ArrayList threshold_parameter_types;
-	private ArrayList etalon_parameter_types;
-	private ArrayList out_parameter_types;
+/**
+ * @version $Revision: 1.77 $, $Date: 2005/06/29 12:15:20 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
-	private StorableObject_Database evaluationTypeDatabase;
+public final class EvaluationType extends ActionType {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long serialVersionUID = 3978420317305583161L;
 
-	public EvaluationType(Identifier id) throws RetrieveObjectException {
+	public static final String CODENAME_DADARA = "dadara";
+
+	private Set<Identifier> inParameterTypeIds;
+	private Set<Identifier> thresholdParameterTypeIds;
+	private Set<Identifier> etalonParameterTypeIds;
+	private Set<Identifier> outParameterTypeIds;
+
+	private Set<Identifier> measurementTypeIds;
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	EvaluationType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+		this.inParameterTypeIds = new HashSet<Identifier>();
+		this.thresholdParameterTypeIds = new HashSet<Identifier>();
+		this.etalonParameterTypeIds = new HashSet<Identifier>();
+		this.outParameterTypeIds = new HashSet<Identifier>();
+
+		this.measurementTypeIds = new HashSet<Identifier>();
+
+		final EvaluationTypeDatabase database = (EvaluationTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_TYPE_CODE);
 		try {
-			this.evaluationTypeDatabase.retrieve(this);
-		}
-		catch (Exception e) {
+			database.retrieve(this);
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public EvaluationType(EvaluationType_Transferable ett) throws CreateObjectException {
-		super(new Identifier(ett.id),
-					new Date(ett.created),
-					new Date(ett.modified),
-					new Identifier(ett.creator_id),
-					new Identifier(ett.modifier_id),
-					new String(ett.codename),
-					new String(ett.description));
-
-		this.in_parameter_types = new ArrayList(ett.in_parameter_types.length);
-		for (int i = 0; i < ett.in_parameter_types.length; i++)
-			this.in_parameter_types.add(new Identifier(ett.in_parameter_types[i]));
-
-		this.threshold_parameter_types = new ArrayList(ett.threshold_parameter_types.length);
-		for (int i = 0; i < ett.threshold_parameter_types.length; i++)
-			this.threshold_parameter_types.add(new Identifier(ett.threshold_parameter_types[i]));
-
-		this.etalon_parameter_types = new ArrayList(ett.etalon_parameter_types.length);
-		for (int i = 0; i < ett.etalon_parameter_types.length; i++)
-			this.etalon_parameter_types.add(new Identifier(ett.etalon_parameter_types[i]));
-
-		this.out_parameter_types = new ArrayList(ett.out_parameter_types.length);
-		for (int i = 0; i < ett.out_parameter_types.length; i++)
-			this.out_parameter_types.add(new Identifier(ett.out_parameter_types[i]));
-
-		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public EvaluationType(final IdlEvaluationType ett) throws CreateObjectException {
 		try {
-			this.evaluationTypeDatabase.insert(this);
+			this.fromTransferable(ett);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+	}	
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	EvaluationType(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String codename,
+			final String description,
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> thresholdParameterTypeIds,
+			final Set<Identifier> etalonParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds,
+			final Set<Identifier> measurementTypeIds) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				codename,
+				description);
+
+		this.inParameterTypeIds = new HashSet<Identifier>();
+		this.setInParameterTypeIds0(inParameterTypeIds);
+
+		this.thresholdParameterTypeIds = new HashSet<Identifier>();
+		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
+
+		this.etalonParameterTypeIds = new HashSet<Identifier>();
+		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
+
+		this.outParameterTypeIds = new HashSet<Identifier>();
+		this.setOutParameterTypeIds0(outParameterTypeIds);
+
+
+		this.measurementTypeIds = new HashSet<Identifier>();
+		this.setMeasurementTypeIds0(measurementTypeIds);
+	}
+
+	/**
+	 * create new instance for client
+	 *
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 * @param inParameterTypeIds
+	 * @param thresholdParameterTypeIds
+	 * @param etalonParameterTypeIds
+	 * @param outParameterTypeIds
+	 * @param measurementTypeIds
+	 * @throws CreateObjectException
+	 */
+	public static EvaluationType createInstance(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final Set<Identifier> inParameterTypeIds,
+			final Set<Identifier> thresholdParameterTypeIds,
+			final Set<Identifier> etalonParameterTypeIds,
+			final Set<Identifier> outParameterTypeIds,
+			final Set<Identifier> measurementTypeIds) throws CreateObjectException {
+		try {
+			final EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_TYPE_CODE),
+					creatorId,
+					0L,
+					codename,
+					description,
+					inParameterTypeIds,
+					thresholdParameterTypeIds,
+					etalonParameterTypeIds,
+					outParameterTypeIds,
+					measurementTypeIds);
+
+			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			evaluationType.markAsChanged();
+
+			return evaluationType;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
-	public Object getTransferable() {
-		Identifier_Transferable[] in_par_types = new Identifier_Transferable[this.in_parameter_types.size()];
-		int i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+		final IdlEvaluationType ett = (IdlEvaluationType) transferable;
+		super.fromTransferable(ett.header, ett.codename, ett.description);
 
-		Identifier_Transferable[] threshold_par_types = new Identifier_Transferable[this.threshold_parameter_types.size()];
-		i = 0;
-		for (Iterator iterator = this.threshold_parameter_types.iterator(); iterator.hasNext();)
-			threshold_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		this.inParameterTypeIds = Identifier.fromTransferables(ett.inParameterTypeIds);
+		this.thresholdParameterTypeIds = Identifier.fromTransferables(ett.thresholdParameterTypeIds);
+		this.etalonParameterTypeIds = Identifier.fromTransferables(ett.etalonParameterTypeIds);
+		this.outParameterTypeIds = Identifier.fromTransferables(ett.outParameterTypeIds);		
 
-		Identifier_Transferable[] etalon_par_types = new Identifier_Transferable[this.etalon_parameter_types.size()];
-		i = 0;
-		for (Iterator iterator = this.etalon_parameter_types.iterator(); iterator.hasNext();)
-			etalon_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		Identifier_Transferable[] out_par_types = new Identifier_Transferable[this.out_parameter_types.size()];
-		i = 0;
-		for (Iterator iterator = this.in_parameter_types.iterator(); iterator.hasNext();)
-			in_par_types[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		return new EvaluationType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					 super.created.getTime(),
-																					 super.modified.getTime(),
-																					 (Identifier_Transferable)super.creator_id.getTransferable(),
-																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																					 new String(super.codename),
-																					 new String(super.description),
-																					 in_par_types,
-																					 threshold_par_types,
-																					 etalon_par_types,
-																					 out_par_types);
+		this.measurementTypeIds = Identifier.fromTransferables(ett.measurementTypeIds);
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public ArrayList getInParameterTypes() {
-		return this.in_parameter_types;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public IdlEvaluationType getTransferable(final ORB orb) {
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
+		final IdlIdentifier[] thresholdParTypeIds = Identifier.createTransferables(this.thresholdParameterTypeIds);
+		final IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
+		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
+
+		return new IdlEvaluationType(super.getHeaderTransferable(orb),
+				super.codename,
+				super.description != null ? super.description : "",
+				inParTypeIds,
+				thresholdParTypeIds,
+				etalonParTypeIds,
+				outParTypeIds,
+				measTypIds);
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectType#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
+				&& this.thresholdParameterTypeIds != null && this.thresholdParameterTypeIds != Collections.EMPTY_SET
+				&& this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET
+				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET
+				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
 	}
 
-	public ArrayList getThresholdParameterTypes() {
-		return this.threshold_parameter_types;
+	public Set<Identifier> getInParameterTypeIds() {
+		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
 
-	public ArrayList getEtalonParameterTypes() {
-		return this.etalon_parameter_types;
+	public Set<Identifier> getThresholdParameterTypeIds() {
+		return Collections.unmodifiableSet(this.thresholdParameterTypeIds);
 	}
 
-	public ArrayList getOutParameterTypes() {
-		return this.out_parameter_types;
+	public Set<Identifier> getEtalonParameterTypeIds() {
+		return Collections.unmodifiableSet(this.etalonParameterTypeIds);
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						String codename,
-																						String description) {
+	public Set<Identifier> getOutParameterTypeIds() {
+		return Collections.unmodifiableSet(this.outParameterTypeIds);
+	}
+
+	public Set<Identifier> getMeasurementTypeIds() {
+		return Collections.unmodifiableSet(this.measurementTypeIds);
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final String codename,
+			final String description) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id,
-												codename,
-												description);
+			modified,
+			creatorId,
+			modifierId,
+			version,
+			codename,
+			description);
 	}
 
-	protected synchronized void setParameterTypes(ArrayList in_parameter_types,
-																								ArrayList threshold_parameter_types,
-																								ArrayList etalon_parameter_types,
-																	 ArrayList out_parameter_types) {
-		this.in_parameter_types = in_parameter_types;
-		this.threshold_parameter_types = threshold_parameter_types;
-		this.etalon_parameter_types = etalon_parameter_types;
-		this.out_parameter_types = out_parameter_types;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
+		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_IN));
+		this.setThresholdParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_THRESHOLD));
+		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_ETALON));
+		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(EvaluationTypeWrapper.MODE_OUT));
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
+		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(4);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_IN, this.inParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_THRESHOLD, this.thresholdParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_ETALON, this.etalonParameterTypeIds);
+		parameterTypeIdsModeMap.put(EvaluationTypeWrapper.MODE_OUT, this.outParameterTypeIds);
+		return parameterTypeIdsModeMap;
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected void setInParameterTypeIds0(final Set<Identifier> inParameterTypeIds) {
+		this.inParameterTypeIds.clear();
+		if (inParameterTypeIds != null)
+			this.inParameterTypeIds.addAll(inParameterTypeIds);
+	}
+	
+	/**
+	 * client setter for inParameterTypeIds
+	 *
+	 * @param inParameterTypeIds
+	 *            The inParameterTypeIds to set.
+	 */
+	public void setInParameterTypeIds(final Set<Identifier> inParameterTypeIds) {
+		this.setInParameterTypeIds0(inParameterTypeIds);
+		super.markAsChanged();		
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected void setThresholdParameterTypeIds0(final Set<Identifier> thresholdParameterTypeIds) {
+		this.thresholdParameterTypeIds.clear();
+		if (thresholdParameterTypeIds != null)
+			this.thresholdParameterTypeIds.addAll(thresholdParameterTypeIds);
+	}
+
+	/**
+	 * client setter for thresholdParameterTypeIds
+	 *
+	 * @param thresholdParameterTypeIds
+	 *            The thresholdParameterTypeIds to set.
+	 */
+	public void setThresholdParameterTypeIds(final Set<Identifier> thresholdParameterTypeIds) {
+		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected void setEtalonParameterTypeIds0(final Set<Identifier> etalonParameterTypeIds) {
+		this.etalonParameterTypeIds.clear();
+		if (etalonParameterTypeIds != null)
+			this.etalonParameterTypeIds.addAll(etalonParameterTypeIds);
+	}
+
+	/**
+	 * client setter for etalonParameterTypeIds
+	 *
+	 * @param etalonParameterTypeIds
+	 *            The etalonParameterTypeIds to set.
+	 */
+	public void setEtalonParameterTypeIds(final Set<Identifier> etalonParameterTypeIds) {
+		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected void setOutParameterTypeIds0(final Set<Identifier> outParameterTypeIds) {
+		this.outParameterTypeIds.clear();
+		if (outParameterTypeIds != null)
+			this.outParameterTypeIds.addAll(outParameterTypeIds);
+	}
+
+	/**
+	 * client setter for outParameterTypeIds
+	 *
+	 * @param outParameterTypeIds
+	 *            The outParameterTypeIds to set.
+	 */
+	public void setOutParameterTypeIds(final Set<Identifier> outParameterTypeIds) {
+		this.setOutParameterTypeIds0(outParameterTypeIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
+		this.measurementTypeIds.clear();
+		if (measurementTypeIds != null)
+			this.measurementTypeIds.addAll(measurementTypeIds);
+	}
+
+	/**
+	 * client setter for measurementTypeIds
+	 * @param measurementTypeIds
+	 */
+	public void setMeasurementTypeIds(final Set<Identifier> measurementTypeIds) {
+		this.setMeasurementTypeIds0(measurementTypeIds);
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		if (this.inParameterTypeIds != null)
+			dependencies.addAll(this.inParameterTypeIds);
+
+		if (this.thresholdParameterTypeIds != null)
+			dependencies.addAll(this.thresholdParameterTypeIds);
+
+		if (this.etalonParameterTypeIds != null)
+			dependencies.addAll(this.etalonParameterTypeIds);
+
+		if (this.outParameterTypeIds != null)
+			dependencies.addAll(this.outParameterTypeIds);
+
+
+		if (this.measurementTypeIds != null)
+			dependencies.addAll(this.measurementTypeIds);
+
+		return dependencies;
 	}
 }

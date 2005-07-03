@@ -1,11 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-public abstract class AnalyseApplicationModelFactory implements ApplicationModelFactory
-{
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 
-	public AnalyseApplicationModelFactory()
-	{
-	}
+public abstract class AnalyseApplicationModelFactory
+{
 
 	public ApplicationModel create()
 	{

@@ -9,8 +9,6 @@ import com.syrus.AMFICOM.Client.Optimize.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.Schematics.Elements.*;
-import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;//окно свойств элемента
 
 
 // команда "открыть физическую схему сети" (загрузить с сервера)
@@ -39,14 +37,14 @@ public class SchemeOpenCommand extends VoidCommand
 		// проверка прав доступа
 		Checker checker = new Checker( aContext.getDataSourceInterface() );
 		if( !checker.checkCommand(checker.openSchemeToBeOptimized) )
-    { System.err.println("SchemeOpenCommand.execute : Checker.checkCommand = false; aborting...");
-  return;
-    }
+	    { System.err.println("SchemeOpenCommand.execute : Checker.checkCommand = false; aborting...");
+	  return;
+	    }
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		if (dataSource == null)
-    {  System.err.println("SchemeOpenCommand.execute() : DataSourceInterface = null;  aborting...");
-  return;
-    }
+	    {  System.err.println("SchemeOpenCommand.execute() : DataSourceInterface = null;  aborting...");
+	  return;
+	    }
     // меню выбора схемы
 		MapChooserDialog mcd = new MapChooserDialog(aContext.getDataSourceInterface());
 		DataSet dataSet = new DataSet(Pool.getHash(Scheme.typ));
@@ -58,7 +56,7 @@ public class SchemeOpenCommand extends VoidCommand
 		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
 		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
 
-    mcd.setTitle("Физическая схема");
+		mcd.setTitle("Физическая схема");
 		mcd.setModal(true);
 		mcd.setVisible(true);
 

@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<SCRIPT LANGUAGE="JavaScript">
+	function resizeMe(e) {
+		if (navigator.appName.indexOf("Microsoft") >= 0) {
+			if(navigator.appVersion.charAt(0) == '4') {
+				var frm = window.parent.document.all
+				var hgt, wdt;
+				for (i=0; i < frm.length; i++)  { 
+					if (frm(i).name == "categories_frame") {
+						wdt = frm(i).width;
+						hgt = frm(i).height;
+					}
+				}
+				document.applets[0].resizeApplet(wdt, hgt)
+			} else {
+				alert("Unsupported browser version");
+				alert(navigator.appVersion);
+			}
+		} else if (navigator.appName.indexOf("Netscape") >= 0) {
+			if((navigator.appVersion.charAt(0) == '4' && navigator.appVersion.charAt(2) == '0' && navigator.appVersion.charAt(3) >= '6') ||
+			   (navigator.appVersion.charAt(0) == '4' && navigator.appVersion.charAt(2) >= '5') ||
+			   (navigator.appVersion.charAt(0) > '4')) {
+				var hgt, wdt;
+				hgt = e.height;
+				wdt = e.width;
+				document.applets[0].resizeApplet(wdt, hgt);
+			} else {
+				alert("Unsupported browser version");
+				alert(navigator.appVersion);
+			}
+		} else {
+				alert("Unsupported browser");
+				alert(navigator.appName);
+		}
+	}
+
+	window.onresize = resizeMe
+	window.onload = resizeMe
+
+</SCRIPT>
+
+</HEAD>
+
+<BODY>
+
+	<APPLET CODE="IncrementalTOC.class" ARCHIVE="browser.jar" WIDTH=2048 HEIGHT=2048><param name=contents value="contents.cnt">
+	</APPLET>
+
+</BODY>
+
+</HTML>

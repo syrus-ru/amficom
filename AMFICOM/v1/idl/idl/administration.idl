@@ -1,0 +1,103 @@
+/*-
+ * $Id: administration.idl,v 1.11 2005/06/26 13:31:12 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef ADMINISTRATION_IDL
+#define ADMINISTRATION_IDL
+
+#include "general.idl"
+
+module com {
+module syrus {
+module AMFICOM {
+module administration {
+module corba {
+
+//////////////////////////////////// User /////////////////////////////////
+
+
+	typedef struct IdlSystemUser {
+		general::corba::StorableObject header;
+	
+		general::corba::WString32 login;
+		enum SystemUserSort {
+			USER_SORT_SYSADMIN,
+			USER_SORT_REGULAR,
+			USER_SORT_SERVERPROCESS,
+			USER_SORT_MCM
+		} sort;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} SystemUser;
+
+	typedef sequence<SystemUser> SystemUserSeq;
+
+/////////////////////////////////// Domain ////////////////////////////////
+	typedef struct IdlDomain {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		
+		general::corba::IdentifierSeq characteristicIds;
+	} Domain;
+
+	typedef sequence<Domain> DomainSeq;
+
+/////////////////////////////////// Server ////////////////////////////////
+	typedef struct IdlServer {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::WString64 hostname;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} Server;
+
+	typedef sequence<Server> ServerSeq;
+
+//////////////////////////////// ServerProcess ////////////////////////////
+	typedef struct IdlServerProcess {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::Identifier serverId;
+		general::corba::Identifier userId;
+		general::corba::WString256 description;
+	} ServerProcess;
+
+	typedef sequence<ServerProcess> ServerProcessSeq;
+
+//////////////////////////////////// MCM //////////////////////////////////
+	typedef struct IdlMCM {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::WString64 hostname;
+		general::corba::Identifier userId;
+		general::corba::Identifier serverId;
+		general::corba::IdentifierSeq characteristicIds;
+	} MCM;
+	
+	typedef sequence<MCM> MCMSeq;
+};
+};
+};
+};
+};
+
+#endif // ADMINISTRATION_IDL

@@ -35,24 +35,17 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableEditor;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableRenderer;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
 import java.awt.Dimension;
-
-import java.lang.reflect.Field;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.awt.SystemColor;
 import java.util.Vector;
 
-import java.awt.SystemColor;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
+
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class ObjectResourcePropertyTablePane extends JScrollPane
 {
@@ -81,9 +74,9 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModel.String("labelTabbedList"));
+		setName(LangModel.getString("labelTabbedList"));
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 //		jTable.setSelectionMode(
 //				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
@@ -141,7 +134,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel = new ObjectResourcePropertyTableModel(cols, or);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void initialize(String [] cols, ObjectResource or)
@@ -149,7 +142,7 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel = new ObjectResourcePropertyTableModel(cols, or);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void setTableModel(ObjectResourcePropertyTableModel tableModel)
@@ -186,9 +179,9 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 		tableModel.setContents((ObjectResource)o);
 //		int i = tableModel.getObjectIndex((ObjectResource )o);
 /*
-		DataSet dataSet = tableModel.getContents();
-		int i = dataSet.indexOf(o);
-		if(i < dataSet.size())
+		DataSet list = tableModel.getContents();
+		int i = list.indexOf(o);
+		if(i < list.size())
 			jTable.getSelectionModel().setSelectionInterval(i, i);
 */
 	}
@@ -202,6 +195,5 @@ public class ObjectResourcePropertyTablePane extends JScrollPane
 	{
 		return jTable;
 	}
-	
-}
 
+}

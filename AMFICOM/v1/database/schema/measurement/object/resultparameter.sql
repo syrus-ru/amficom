@@ -1,7 +1,9 @@
+-- $Id: resultparameter.sql,v 1.6 2005/06/15 17:03:09 bass Exp $
+
 CREATE TABLE ResultParameter (
- id VARCHAR2(32),
- type_id VARCHAR2(32) NOT NULL,
- result_id VARCHAR2(32) NOT NULL,
+ id NUMBER(19),
+ type_id NOT NULL,
+ result_id NOT NULL,
  value BLOB NOT NULL,
 --
  CONSTRAINT rtpar_pk PRIMARY KEY (id),

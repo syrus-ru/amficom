@@ -5,7 +5,9 @@ import java.awt.*;
 import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import java.awt.event.*;
-
+/**
+ * @deprecated
+ */
 public class MessageDialog extends JDialog
 {
 	private Message message;
@@ -15,13 +17,13 @@ public class MessageDialog extends JDialog
 	private JTextPane jTextPane1 = new JTextPane();
 	private JScrollPane jScrollPane1 = new JScrollPane();
 	private JViewport jViewport1 = new JViewport();
-	private JFrame parent;
+//	private JFrame parent;
 
 	public MessageDialog(JFrame parent, String title, boolean modal, Message message)
 	{
 		super (parent, title, modal);
 		this.message = message;
-		this.parent = parent;
+//		this.parent = parent;
 
 		try
 		{

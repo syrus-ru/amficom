@@ -3,15 +3,23 @@
 #include <assert.h>
 #include "prf.h"
 
+#ifdef __unix__
+#define __int64 long long
+#define CLK_TCK CLOCKS_PER_SEC
+#define USE_clock 1
+#else
 #define USE_clock 1
 #define USE_rdtsc 1
+#endif
 
 static int clock_cur;
 static __int64 clock_cur_64;
 static int cur_id = -1;
+static int isModified = 0;
 
 const int debug_to_console = 0;
 const int dump_regularly = 0;
+const int print_only_if_modified = 1;
 
 #if USE_clock
 const int clock_loop_print = CLK_TCK * 5;
@@ -19,6 +27,10 @@ static time_t clock_at_next_print = clock_loop_print;
 #else
 const __int64 clock_loop_print = (__int64) 2e9;
 static __int64 clock_at_next_print = clock_loop_print;
+#endif
+
+#if USE_rdtsc
+const double rdtsc_divisor = 3e6; // XXX: for easiest debugging on *my* CPU
 #endif
 
 #if USE_rdtsc
@@ -92,6 +104,7 @@ void prf_b(char *id)
 		}
 #endif
 		pdata[cur_id].total_count++;
+		isModified = 1;
 	}
 	// если не надо начинать другой блок, заканчиваем
 	if (id == 0)
@@ -132,6 +145,11 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 	if (f == 0)
 		f = stdout;
 
+	if (!isModified)
+		return;
+
+	isModified = 0;
+
 	int i;
 
 #if USE_clock
@@ -150,24 +168,24 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 #if USE_clock && !USE_rdtsc
 	char *head = "count   ticks   %time   name";
 	char *line = "-----   -----   -----   ----";
-	char *form = "%5d   %5d   %4.1f%%   %s\n";
+	char *form = "%5d   %5d   %4.1f%%   %s%s\n";
 #elif USE_clock && USE_rdtsc
-	char *head = "count   ticks   %tick   %rdtsc  name";
-	char *line = "-----   -----   -----   ------  ----";
-	char *form = "%5d   %5d   %4.1f%%   %5.2f%%   %s\n";
+	char *head = "count   ticks   %tick    rdtsc    %rdtsc   name";
+	char *line = "-----   -----   -----   -------   ------   ----";
+	char *form = "%5d   %5d   %4.1f%%   %7.2f   %5.2f%%   %s%s\n";
 #elif !USE_clock && USE_rdtsc
-	char *head = "count   %rdtsc   name";
-	char *line = "-----   ------   ----";
-	char *form = "%5d   %5d   %5.2f%%   %s\n";
+	char *head = "count    rdtsc    %rdtsc   name";
+	char *line = "-----   -------   ------   ----";
+	char *form = "%5d   %7.2f   %5.2f%%   %s%s\n";
 #endif
 
 	fprintf (f, "profiler statistics:\n");
-	fprintf (f, "  total records:   %d\n", records);
+	fprintf (f, "  total records: %d\n", records);
 #if USE_clock
-	fprintf (f, "  total ticks:     %d\n", total);
+	fprintf (f, "  total ticks:   %d\n", total);
 #endif
 #if USE_rdtsc
-	fprintf (f, "  total rdtsc/1e6: %.3f\n", (double )total64 / 1e6);
+	fprintf (f, "  total rdtsc/%g: %.3f\n", rdtsc_divisor, (double )total64 / rdtsc_divisor);
 #endif
 
 	//if (1)
@@ -185,8 +203,10 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 				total ? pdata[i].total_time * 99.0 / total : 0,
 #endif
 #if USE_rdtsc
+				pdata[i].total_time_64 / rdtsc_divisor,
 				total64 ? pdata[i].total_time_64 * 99.0 / total64 : 0,
 #endif
+				cur_id == i ? "--> " : "", // если какой-то блок еще не завершился, помечаем его
 				pdata[i].id);
 		}
 
@@ -194,4 +214,9 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 	}
 
 	fflush(f);
+}
+
+void prf_print()
+{
+	prf_print(0);
 }

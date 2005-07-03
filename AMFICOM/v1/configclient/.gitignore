@@ -1,0 +1,17 @@
+classes
+docs
+lib
+*.deploy
+*.jpr
+*.jpx
+*.jar
+*.tar
+*.gz
+*.swp
+.mach
+.corba
+.client
+Makefile.inc
+bak
+doc
+ConfigureV2.jpx

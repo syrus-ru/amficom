@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Prediction.Report;
 
-import java.util.Vector;
+import java.util.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
@@ -20,9 +20,9 @@ public class PredictionReportModel extends ESAPEReportModel
 	public PredictionReportModel()
 	{
 	}
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new ArrayList(7);
 
 		result.add(ESAPEReportModel.testParams);
 		result.add(ESAPEReportModel.commonInfo);
@@ -37,7 +37,7 @@ public class PredictionReportModel extends ESAPEReportModel
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repPredictionResults");
+		return LangModelReport.getString("label_repPredictionResults");
 	}
 
 	public String getLangForField(String field)
@@ -47,9 +47,9 @@ public class PredictionReportModel extends ESAPEReportModel
 		{
 			if (field.equals(ESAPEReportModel.pred_stat_data)
 				|| field.equals(ESAPEReportModel.pred_time_distrib))
-				strToReturn = LangModelPrediction.String(field);
+				strToReturn = LangModelPrediction.getString(field);
 			else
-				strToReturn = LangModelAnalyse.String(field);
+				strToReturn = LangModelAnalyse.getString(field);
 		}
 		catch(Exception exc)
 		{

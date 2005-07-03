@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.ItemEvent;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JComboBox;
 import javax.swing.JList;
 
 public class TrueFalseComboBox extends AComboBox

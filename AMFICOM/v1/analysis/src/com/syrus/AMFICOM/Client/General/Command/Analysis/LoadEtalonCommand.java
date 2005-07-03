@@ -2,66 +2,62 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 
-public class LoadEtalonCommand extends VoidCommand
+public class LoadEtalonCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
-
-	public LoadEtalonCommand(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext )value);
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
+	public LoadEtalonCommand()
+	{ // empty
 	}
 
 	public Object clone()
 	{
-		return new LoadEtalonCommand(aContext);
+		return new LoadEtalonCommand();
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-
-		if (bs.test_setup_id.equals(""))
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noTestSetupError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("noTestSetupError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}
 
-		if (ts.etalon_id.equals(""))
+//		Measurement m = null;
+//		try
+//		{
+//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//						 new Identifier(bs.measurementId), true);
+//		}
+//		catch(ApplicationException ex)
+//		{
+//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//			ex.printStackTrace();
+//			return;
+//		}
+
+		MeasurementSetup ms = Heap.getContextMeasurementSetup();
+		if (ms != null)
+		if (ms.getEtalon() == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noEtalonError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("noEtalonError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}
 
-		aContext.getDispatcher().notify(new RefChangeEvent("etalon", RefChangeEvent.OPEN_ETALON_EVENT));
+		// Heap.etalonMTMCUpdated();
 	}
 }

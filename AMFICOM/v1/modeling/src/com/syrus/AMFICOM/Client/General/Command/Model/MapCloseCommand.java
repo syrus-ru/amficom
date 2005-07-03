@@ -1,8 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Model;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class MapCloseCommand extends VoidCommand

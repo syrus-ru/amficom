@@ -15,3 +15,4 @@ TestSetup.java
 TestType.java
 ThresholdSet.java
 *.generated.java
+.nbattrs

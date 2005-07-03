@@ -1,23 +1,37 @@
+/*
+ * $Id: RISDConnection.java,v 1.6 2004/07/21 08:19:57 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM;
+
 
 import java.util.Hashtable;
 import javax.naming.Context;
-import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import oracle.aurora.jndi.sess_iiop.ServiceCtx;
 import com.syrus.util.Log;
 
-public class RISDConnection {
-  public static final String DEFAULT_serviceURL = "sess_iiop://research:2481:research";
-	public static final String DEFAULT_user = "amficom";
-	public static final String DEFAULT_password = "amficom";
-  private String serviceURL;
-  private String username;
-  private String password;
+/**
+ * @version $Revision: 1.6 $, $Date: 2004/07/21 08:19:57 $
+ * @author $Author: arseniy $
+ * @module agent_v1
+ */
 
-  public RISDConnection() {
-    this.setDefaults();
-  }
+public class RISDConnection {
+	public static final String DEFAULT_SERVICE_URL = "sess_iiop://research:2481:research";
+	public static final String DEFAULT_USER = "amficom";
+	public static final String DEFAULT_PASSWORD = "amficom";
+	private String serviceURL;
+	private String username;
+	private String password;
+
+	public RISDConnection() {
+		this.setDefaults();
+	}
   
   public RISDConnection(String serviceURL, String username, String password) {
     this.serviceURL = serviceURL;
@@ -26,9 +40,9 @@ public class RISDConnection {
   }
 
   public void setDefaults() {
-    this.serviceURL = DEFAULT_serviceURL;
-    this.username = DEFAULT_user;
-    this.password = DEFAULT_password;
+    this.serviceURL = DEFAULT_SERVICE_URL;
+    this.username = DEFAULT_USER;
+    this.password = DEFAULT_PASSWORD;
   }
 
   public Object getServerObject(String objectName) {
@@ -47,4 +61,16 @@ public class RISDConnection {
     }
     return serverObject;
   }
+
+	public String getServiceURL() {
+		return this.serviceURL;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
 }

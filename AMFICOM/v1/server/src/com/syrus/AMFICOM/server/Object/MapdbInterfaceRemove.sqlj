@@ -1,29 +1,29 @@
+/*
+ * $Id: MapdbInterfaceRemove.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceRemove extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceRemove
 {
 	protected MapdbInterfaceRemove()
 	{
 	}
 
-	static public int removeElementAttributes(
+	public static int removeElementAttributes(
 			String elementAttributeTable,
 			String elementAttributeField,
 			String element_id)
@@ -59,7 +59,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeMaps(String[] mapseq)
+	public static int removeMaps(String[] mapseq)
 	{
 		Vector vector2 = new Vector();
 		String equipment_ids[] = new String[0];
@@ -139,7 +139,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeJMaps(String[] mapseq)
+	public static int removeJMaps(String[] mapseq)
 	{
 		Vector vector2 = new Vector();
 		String kis_ids[] = new String[0];
@@ -175,7 +175,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeElements(String[] equipmentseq)
+	public static int removeElements(String[] equipmentseq)
 	{
 		int i;
 		for(i = equipmentseq.length - 1; i >= 0; i--)
@@ -203,7 +203,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeKISs(String[] kisseq)
+	public static int removeKISs(String[] kisseq)
 	{
 		int i;
 		for(i = kisseq.length - 1; i >= 0; i--)
@@ -231,7 +231,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeMarks(String[] markseq)
+	public static int removeMarks(String[] markseq)
 	{
 		int i;
 		for(i = markseq.length - 1; i >= 0; i--)
@@ -259,7 +259,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeNodes(String[] nodeseq)
+	public static int removeNodes(String[] nodeseq)
 	{
 		int i;
 		for(i = nodeseq.length - 1; i >= 0; i--)
@@ -287,7 +287,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeNodeLinks(String[] nodelinkseq)
+	public static int removeNodeLinks(String[] nodelinkseq)
 	{
 		int i;
 		for(i = nodelinkseq.length - 1; i >= 0; i--)
@@ -315,7 +315,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeLinks(String[] linkseq)
+	public static int removeLinks(String[] linkseq)
 	{
 		int i;
 		for(i = linkseq.length - 1; i >= 0; i--)
@@ -343,7 +343,7 @@ public class MapdbInterfaceRemove extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removePaths(String[] pathseq)
+	public static int removePaths(String[] pathseq)
 	{
 		int i;
 		for(i = pathseq.length - 1; i >= 0; i--)
@@ -372,7 +372,4 @@ public class MapdbInterfaceRemove extends Object
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
-
 }
-

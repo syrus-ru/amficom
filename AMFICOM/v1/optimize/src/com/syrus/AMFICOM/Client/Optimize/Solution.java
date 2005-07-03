@@ -45,7 +45,7 @@ public class Solution
     id =  mdiMain.aContext.getDataSourceInterface().GetUId(this.typ);
     scheme_id = mdiMain.scheme.id;
 		if(index == 0){	price = dllAdapter.GetBestPrice(); }
-    else { price = -1; }
+		else { price = -1; }
 
 		double topology[] = DllAdapter.getNetMonitoringTopology(index);// топология мониторинга в числовом формате, 0-лучшее решение
 		String r_id = "", r_type = "";
@@ -53,27 +53,27 @@ public class Solution
 		paths = new Vector(); // вектор всех путей (потом передаём для добавления в схему)
 		 // идентификатор узла начала (откуда линк исходит), то есть идентификатор узла, в котором стоит КИС
 		schemePath.start_device_id = ( (Node)dllAdapter.m2g.g.nodes.get((int)topology[1]) ).str_id ;
-    Rib r;
+		Rib r;
 		for(int i=1; i<topology.length; i+=2)
-		{ if(topology[i+1] != -1)// добавляем в линк точки маршрута
-			{ r = (Rib)dllAdapter.m2g.g.ribs.get((int)topology[i+1]) ;
-        r_id = r.str_id ; // идентификатор линка (ребра)
-        r_type =   r.type ; // тип линка (кабель или одно волокно)
+		{	if(topology[i+1] != -1)// добавляем в линк точки маршрута
+			{ 	r = (Rib)dllAdapter.m2g.g.ribs.get((int)topology[i+1]) ;
+				r_id = r.str_id ; // идентификатор линка (ребра)
+				r_type =   r.type ; // тип линка (кабель или одно волокно)
 				if(r_type.equals("fiber"))// если это волокно(не кабельный линк)
-        { SchemeLink sl = (SchemeLink)Pool.get(SchemeLink.typ, r_id);
-          addLink(schemePath, sl.id);
-        }
-        else if(r_type.equals("cable"))// если это кабельный линк
-        { SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, r_id);//!!!
-          // ВНИМАНИЕ ! берём из кабеля вседа 0е волокно для тестового сигнала (вообще-то это должен задавать пользователь)
-          addCableLink(schemePath, scl.id,( (SchemeCableThread)scl.cable_threads.get(0)).id);
-        }
+				{ 	SchemeLink sl = (SchemeLink)Pool.get(SchemeLink.typ, r_id);
+					addLink(schemePath, sl.id);
+				}
+				else if(r_type.equals("cable"))// если это кабельный линк
+		        { SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, r_id);//!!!
+		          // ВНИМАНИЕ ! берём из кабеля вседа 0е волокно для тестового сигнала (вообще-то это должен задавать пользователь)
+		          addCableLink(schemePath, scl.id,( (SchemeCableThread)scl.cable_threads.iterator().next()).id);
+		        }
 			}
 			else//если данный путь закончен, то добавляем его в массив путей
-			{  // идентификатор узла конца (куда линнк входит)
+			{    // идентификатор узла конца (куда линнк входит)
 				 schemePath.end_device_id = ( (Node)dllAdapter.m2g.g.nodes.get((int)topology[i]) ).str_id ;
-         // оценочные потери на данном пути
-         double loss = topology[i+2];// ... , номер узла конца маршрута (i), -1 (i+1), потери (i+2), -2 (i+3), ...
+		         // оценочные потери на данном пути
+		         double loss = topology[i+2];// ... , номер узла конца маршрута (i), -1 (i+1), потери (i+2), -2 (i+3), ...
 				 i += 2;
 				 ElementAttribute attr = new ElementAttribute();
 				 {	attr = new ElementAttribute();

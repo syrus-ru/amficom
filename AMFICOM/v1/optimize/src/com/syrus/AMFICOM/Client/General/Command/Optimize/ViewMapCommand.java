@@ -50,22 +50,22 @@ public class ViewMapCommand extends VoidCommand
   //-------------------------------------------------------------------------------------------------------------
   public void execute()
   { System.out.println("ViewMapCommand().execute(): starting ..." );
-    if(parent.mapContext == null)
+    if(this.parent.mapContext == null)
     {  System.out.println("ViewMapCommand().execute(): mdiMain.MapContext = null. aborting ..." );
-   return;
+  return;
     }
-    { ApplicationContext aC = new ApplicationContext();
-      aC.setApplicationModel(factory.create());
-      aC.setConnectionInterface(aContext.getConnectionInterface());
-      aC.setSessionInterface(aContext.getSessionInterface());
-      aC.setDataSourceInterface( aC.getApplicationModel().getDataSource(aContext.getSessionInterface()) );
-      aC.setDispatcher(dispatcher);
+    { ApplicationContext aс = new ApplicationContext();
+      aс.setApplicationModel(factory.create());
+      aс.setConnectionInterface(aContext.getConnectionInterface());
+      aс.setSessionInterface(aContext.getSessionInterface());
+      aс.setDataSourceInterface( aс.getApplicationModel().getDataSource(aContext.getSessionInterface()) );
+      aс.setDispatcher(dispatcher);
       System.out.println("Dispatcher " + dispatcher);
 
       NewMapViewCommand com2 = new NewMapViewCommand(dispatcher, desktop, aContext, factory);
       com2.execute();
       if(com2.frame == null) // такое может быть в случае если одна карта уже открыта (два окна карты из-под одной сессии открывать запрещено, так как отжирается слишком много памяти)
-  {return;}
+  return;
 
       while(!com2.frame.isVisible()) // ждём, пока карта не нарисуется
       { try

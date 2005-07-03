@@ -1,0 +1,2 @@
+*
+						 * Depending on {@link #type}, may reference either {@link SchemePort} or {@link SchemeCablePort}.

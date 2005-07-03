@@ -1,72 +1,47 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: класс, описывающий свойства, одинаковые для всех объектов, * //
-// *           загружаемых в клиентское ПО с РИСД. Каждый объект          * //
-// *           содержит экземпляр данного класса и может использовать     * //
-// *           из него необходимые члены для хранения информации,         * //
-// *           связанной с обменом клиентского ПО с РИСД                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Resource\ObjectResource.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: StubPropertyDisplayModel.java,v 1.6 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 import java.awt.Color;
+import java.util.*;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 {
-	ObjectResource or;
+	StorableObject or;
 	
 	public StubPropertyDisplayModel()
 	{
 	}
 	
-	public StubPropertyDisplayModel(ObjectResource or)
+	public StubPropertyDisplayModel(StorableObject or)
 	{
 		this.or = or;
 	}
 	
-	public Vector getColumns()
+	static LinkedList empty = new LinkedList();
+	
+	public List getColumns()
 	{
 		if(or == null)
-			return new Vector();
+			return empty;
 		ObjectResourceModel mod = or.getModel();
+		if(mod == null)
+			return empty;
 		return mod.getPropertyColumns();
 	}
 	
@@ -75,6 +50,8 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		if(or == null)
 			return "";
 		ObjectResourceModel mod = or.getModel();
+		if(mod == null)
+			return "";
 		return mod.getPropertyName(col_id);
 	}
 	
@@ -88,23 +65,29 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		if(or == null)
 			return false;
 		ObjectResourceModel mod = or.getModel();
+		if(mod == null)
+			return false;
 		return mod.isPropertyEditable(col_id);
 	}
 
-	public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+	public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
     {
 		if(this.or == null)
 			return null;
 		ObjectResourceModel mod = this.or.getModel();
-		return (PropertyRenderer)mod.getPropertyRenderer(col_id);
+		if(mod == null)
+			return null;
+		return (PropertyRenderer )mod.getPropertyRenderer(col_id);
 	}
 
-	public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
+	public PropertyEditor getColumnEditor(StorableObject or, String col_id)
     {
 		if(this.or == null)
 			return null;
 		ObjectResourceModel mod = this.or.getModel();
-		return (PropertyEditor)mod.getPropertyEditor(col_id);
+		if(mod == null)
+			return null;
+		return (PropertyEditor )mod.getPropertyEditor(col_id);
 	}
 
 	public boolean isColumnColored(String col_id)
@@ -112,7 +95,7 @@ public class StubPropertyDisplayModel implements ObjectResourceDisplayModel
 		return false;
 	}
 	
-	public Color getColumnColor(ObjectResource or, String col_id)
+	public Color getColumnColor(StorableObject or, String col_id)
 	{
 		return Color.white;
 	}

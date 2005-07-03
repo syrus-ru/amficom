@@ -1,9 +1,9 @@
 /*
- * $Id: JAlertingMessageDialog.java,v 1.1.1.1 2004/05/27 11:24:21 bass Exp $
+ * $Id: JAlertingMessageDialog.java,v 1.4 2004/09/27 13:28:51 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
- * îÁÕŞÎÏ-ÔÅÈÎÉŞÅÓËÉÊ ÃÅÎÔÒ.
- * ğÒÏÅËÔ: áíæéëïí.
+ * Copyright © 2004 Syrus Systems.
+ * Íàó÷íî-òåõíè÷åñêèé öåíòğ.
+ * Ïğîåêò: ÀÌÔÈÊÎÌ.
  */
 
 package com.syrus.AMFICOM.Client.Object.ui;
@@ -18,8 +18,9 @@ import javax.swing.border.BevelBorder;
 import javax.swing.table.*;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 13:28:51 $
  * @author $Author: bass $
+ * @module generalclient_v1
  */
 public final class JAlertingMessageDialog extends JDialog {
 	private static final long serialVersionUID = 8756613248708170516L;
@@ -42,6 +43,10 @@ public final class JAlertingMessageDialog extends JDialog {
 				 * Calculate and set table row height according to the maximum
 				 * JOptionPane icon height. Native GTK Look & Feel has no such resources
 				 * available.
+				 *
+				 * See also:
+				 * javax.swing.UIManager#installLookAndFeel(String, String)
+				 * http://java.sun.com/developer/JDCTechTips/2004/tt0309.html#1
 				 */
 				Icon errorIcon = UIManager.getIcon("OptionPane.errorIcon");
 				Icon informationIcon = UIManager.getIcon("OptionPane.informationIcon");
@@ -145,7 +150,7 @@ public final class JAlertingMessageDialog extends JDialog {
 
 	private void jButton1ActionPerformed(java.awt.event.ActionEvent e) {//GEN-FIRST:event_jButton1ActionPerformed
 		synchronized (this) {
-			Environment.the_dispatcher.notify(jAlertingMessageTableModel1.getDelegate());
+			Environment.getDispatcher().notify(jAlertingMessageTableModel1.getDelegate());
 			jAlertingMessageTableModel1.setDelegate(new OpenModuleEvent());
 			dispose();
 		}

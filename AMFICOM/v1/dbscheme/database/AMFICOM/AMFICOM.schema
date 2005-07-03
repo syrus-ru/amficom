@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<SCHEMA class="oracle.jdeveloper.cm.ds.db.Schema">
+   <ID class="oracle.jdeveloper.offlinedb.OfflineDBObjectID" uid="0c5b206e-00ff-1000-87df-c73a017b6a50" type="SCHEMA"/>
+   <name>AMFICOM</name>
+   <properties class="java.util.HashMap">
+      <Item>
+         <Key>ID</Key>
+         <Value>0c735ac3-00ff-1000-8170-c73a017befc8::AMFICOM::DatabasePackage</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_CONNECTION</Key>
+         <Value>JAMAICA</Value>
+      </Item>
+      <Item>
+         <Key>OfflineDBConstants.IMPORT_SOURCE_SCHEMA</Key>
+         <Value>AMFICOM</Value>
+      </Item>
+   </properties>
+</SCHEMA>

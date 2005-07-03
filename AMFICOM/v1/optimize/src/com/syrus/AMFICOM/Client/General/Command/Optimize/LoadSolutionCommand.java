@@ -69,11 +69,11 @@ public class LoadSolutionCommand extends VoidCommand
     {	System.out.println("LoadSolutionCommand.execute() : MapChooserDialog.retCode = MapChooserDialog.RET_OK; continuing...");
       SolutionCompact slc =  (SolutionCompact)mcd.retObject;
       slc.setLocalFromTransferable();//приветсти из вида path_transferable к path
-      mdiMain.optimizerContext.solution = new Solution(slc);
-      dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//очистить схему и прописать только то, что загрузили
-      mdiMain.aContext.getDispatcher().notify(new StatusMessageEvent("СМ загружена"));
+      this.mdiMain.optimizerContext.solution = new Solution(slc);
+      this.dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//очистить схему и прописать только то, что загрузили
+      this.mdiMain.aContext.getDispatcher().notify(new StatusMessageEvent("СМ загружена"));
       // при обновлении схемы открываем всё остальное ( кроме карты )
-      new ViewShowallCommand(dispatcher, mdiMain.desktopPane, aContext, mdiMain).execute();
+      new ViewShowallCommand(this.dispatcher, mdiMain.desktopPane, aContext, this.mdiMain).execute();
     }
 
     System.out.println("LoadSolutionCommand.execute() - done");

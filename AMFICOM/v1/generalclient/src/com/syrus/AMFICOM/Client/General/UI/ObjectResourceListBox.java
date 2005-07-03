@@ -1,55 +1,60 @@
+/*
+ * $Id: ObjectResourceListBox.java,v 1.9 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceListBox extends JList
 		implements PropertyRenderer, PropertyEditor
 {
 	static public final String _DEFAULT_COL_ID = "name";
 	static public final String _ID_COL_ID = "id";
 
-	public Vector vec = new Vector();
+	public List vec = new ArrayList();
 	String obj_id = "";
 	String type = "";
 	String col_id = "name";
-	Hashtable objs = new Hashtable();
+	Map objs = new HashMap();
 
 	boolean doRestrict = false;
 	String domain_id = "";
 
-    class MyListBoxRenderer extends DefaultListCellRenderer
-    {
+		class MyListBoxRenderer extends DefaultListCellRenderer
+		{
 		ObjectResourceListBox parent;
 
-        public MyListBoxRenderer(ObjectResourceListBox parent)
-        {
+				public MyListBoxRenderer(ObjectResourceListBox parent)
+				{
 			this.parent = parent;
-        }
+				}
 
-	    public Component getListCellRendererComponent(
+			public Component getListCellRendererComponent(
 				JList list,
 				Object value,
 				int index,
 				boolean isSelected,
 				boolean cellHasFocus)
-        {
-			if(value instanceof ObjectResource)
+				{
+			if(value instanceof StorableObject)
 			{
-				ObjectResource or = (ObjectResource)value;
+				StorableObject or = (StorableObject)value;
 				String text = "";
 				if(parent.col_id.equals(ObjectResourceListBox._DEFAULT_COL_ID))
 					text = or.getName();
@@ -58,19 +63,19 @@ public class ObjectResourceListBox extends JList
 					text = or.getId();
 				else
 				{
-					ObjectResourceModel mod = or.getModel();
-					text = mod.getColumnValue(parent.col_id);
+//					ObjectResourceModel mod = or.getModel();
+//					text = mod.getColumnValue(parent.col_id);
 //					text = or.getColumnValue(parent.col_id);
 				}
 				return super.getListCellRendererComponent(
-                        list, text, index, isSelected, cellHasFocus);
+												list, text, index, isSelected, cellHasFocus);
 			}
 			else
 				return super.getListCellRendererComponent(
-                        list, value, index, isSelected, cellHasFocus);
-        }
+												list, value, index, isSelected, cellHasFocus);
+				}
 
-    }
+		}
 
 	public ObjectResourceListBox()
 	{
@@ -80,81 +85,85 @@ public class ObjectResourceListBox extends JList
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(Hashtable objs, String col_id)
+	public ObjectResourceListBox(Map objs, String col_id)
 	{
 		super();
 		this.objs = objs;
 		this.col_id = col_id;
 
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		{
+			Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
-
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(Hashtable objs, String col_id, Object obj)
+	public ObjectResourceListBox(Map objs, String col_id, Object obj)
 	{
 		this(objs, col_id);
 		setSelected(obj);
 	}
-	
+
 	public ObjectResourceListBox(String type, String col_id)
 	{
 		this.type = type;
 		this.col_id = col_id;
 
-		objs = Pool.getHash(type);
+		objs = Pool.getMap(type);
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		{
+			Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
-
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 
-        ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setCellRenderer(renderer);
+				ObjectResourceListBox.MyListBoxRenderer renderer = new ObjectResourceListBox.MyListBoxRenderer(this);
+				renderer.setSize(this.getWidth(), this.getHeight());
+				renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+				this.setCellRenderer(renderer);
 //        this.setMaximumRowCount(5);
 	}
-	
+
 	public ObjectResourceListBox(String type, String col_id, Object obj)
 	{
 		this(type, col_id);
 		setSelected(obj);
 	}
-	
-	public ObjectResourceListBox(Hashtable objs, Object obj)
+
+	public ObjectResourceListBox(Map objs, Object obj)
 	{
 		this(objs, _DEFAULT_COL_ID, obj);
 	}
-	
-	public ObjectResourceListBox(Hashtable objs)
+
+	public ObjectResourceListBox(Map objs)
 	{
 		this(objs, _DEFAULT_COL_ID);
 	}
@@ -163,38 +172,42 @@ public class ObjectResourceListBox extends JList
 	{
 		this(type, _DEFAULT_COL_ID, obj);
 	}
-	
+
 	public ObjectResourceListBox(String type)
 	{
 		this(type, _DEFAULT_COL_ID);
 	}
 
-	public void setContents(Enumeration enum)
+	public void setContents(Collection collection)
 	{
-		vec = new Vector();
-		if(enum != null)
-			for(; enum.hasMoreElements();)
+		vec = new ArrayList();
+		if(collection != null)
+		{
+			Iterator it = collection.iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
-
+		}
 //        setModel(new DefaultComboBoxModel(vec));
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
 	}
 
-	public void setContents(Hashtable objs)
+	public void setContents(Map objs)
 	{
-		vec = new Vector();
+		vec = new ArrayList();
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		{
+			Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
-
+		}
 //        setModel(new DefaultListModel(vec));
 		if(doRestrict)
 			restrictContents();
@@ -204,17 +217,17 @@ public class ObjectResourceListBox extends JList
 
 	public void setContents(String type)
 	{
-		Hashtable objs = Pool.getHash(type);
+		Map objs = Pool.getMap(type);
 		setContents(objs);
 	}
 
 	public void removeAll()
 	{
-		vec.removeAllElements();
+		vec.clear();
 		setListData(vec);
 	}
-	
-	public void remove(ObjectResource or)
+
+	public void remove(StorableObject or)
 	{
 		vec.remove(or);
 		setListData(vec);
@@ -223,7 +236,7 @@ public class ObjectResourceListBox extends JList
 	public void remove(Object[] objs)
 	{
 		for(int i = 0; i < objs.length; i++)
-			vec.remove((ObjectResource )objs[i]);
+			vec.remove((StorableObject )objs[i]);
 		setListData(vec);
 	}
 
@@ -231,39 +244,42 @@ public class ObjectResourceListBox extends JList
 	{
 		for(int i = 0; i < vec.size(); i++)
 		{
-			ObjectResource or = (ObjectResource )vec.get(i);
+			StorableObject or = (StorableObject )vec.get(i);
 			if(or.getId().equals(obj_id))
 				vec.remove(or);
 		}
 		setListData(vec);
 	}
 
-	public void add(ObjectResource or)
+	public void add(StorableObject or)
 	{
 		vec.add(or);
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
 	}
-	
-	public void add(Hashtable h)
+
+	public void add(Map h)
 	{
-		add(h.elements());
+		add(h);
 	}
 
-	public void add(Vector v)
+	public void add(List v)
 	{
-		add(v.elements());
+		add(v);
 	}
 
-	public void add(Enumeration e)
+	public void add(Collection e)
 	{
 		if(e != null)
-			for(; e.hasMoreElements();)
+		{
+			Iterator it = e.iterator();
+			for(; it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )e.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
+		}
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
@@ -271,26 +287,26 @@ public class ObjectResourceListBox extends JList
 
 	public Object getSelected()
 	{
-		ObjectResource or = (ObjectResource )super.getSelectedValue();
+		StorableObject or = (StorableObject )super.getSelectedValue();
 		if(or == null)
 			return null;
 		obj_id = or.getId();
 		return obj_id;
 	}
-	
-	public ObjectResource getSelectedObjectResource()
+
+	public StorableObject getSelectedObjectResource()
 	{
-		ObjectResource or = (ObjectResource )super.getSelectedValue();
+		StorableObject or = (StorableObject )super.getSelectedValue();
 		return or;
 	}
-	
+
 	public void setSelected(Object obj)
 	{
 		if(obj == null)
 		{
 			return;
 		}
-		if(obj instanceof ObjectResource)
+		if(obj instanceof StorableObject)
 		{
 			this.setSelectedValue(obj, true);
 			return;
@@ -299,27 +315,22 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String)obj;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+			Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				StorableObject or = (StorableObject )it.next();
 				if(or.getId().equals(obj_id))
 				{
 					this.setSelectedValue(or, true);
 					break;
 				}
 			}
-/*
-			obj_id = (String)obj;
-			Object or = Pool.get(type, obj_id);
-			if(or != null)
-				this.setSelectedValue(or, true);
-*/
 		}
 	}
 
 	public void deselect(Object obj)
 	{
-		ObjectResource or = null;
+		StorableObject or = null;
 		if(obj == null)
 		{
 			return;
@@ -327,9 +338,11 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String )obj;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+
+			Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or1 = (ObjectResource )enum.nextElement();
+				StorableObject or1 = (StorableObject )it.next();
 				if(or1.getId().equals(obj_id))
 				{
 					or = or1;
@@ -337,16 +350,17 @@ public class ObjectResourceListBox extends JList
 				}
 			}
 		}
-		if(obj instanceof ObjectResource)
+		if(obj instanceof StorableObject)
 		{
-			or = (ObjectResource )obj;
+			or = (StorableObject )obj;
 		}
 		if(or != null)
 		{
 			int index = 0;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+			Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or2 = (ObjectResource )enum.nextElement();
+				StorableObject or2 = (StorableObject )it.next();
 				if(or2.equals(or))
 				{
 					this.getSelectionModel().removeSelectionInterval(index, index);
@@ -367,15 +381,17 @@ public class ObjectResourceListBox extends JList
 
 	public void restrictContents()
 	{
-		Vector vec_to_remove = new Vector();
-		for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+		List vec_to_remove = new ArrayList();
+
+		Iterator it = vec.listIterator();
+		for(;it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )enum.nextElement();
+			StorableObject or = (StorableObject )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
 		for(int i = 0; i < vec_to_remove.size(); i++)
-			vec.remove((ObjectResource )vec_to_remove.get(i));
+			vec.remove((StorableObject )vec_to_remove.get(i));
 	}
 
 	public void setDomainId(String domain_id)
@@ -388,4 +404,8 @@ public class ObjectResourceListBox extends JList
 		return domain_id;
 	}
 
+	public void setListData(List data)
+	{
+		super.setListData(data.toArray());
+	}
 }

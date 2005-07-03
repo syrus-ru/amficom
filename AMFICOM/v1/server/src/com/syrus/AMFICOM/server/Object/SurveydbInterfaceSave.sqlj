@@ -1,31 +1,35 @@
+/*
+ * $Id: SurveydbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import sqlj.runtime.profile.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import com.syrus.util.database.ByteArrayDatabase;
 import java.sql.*;
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
+import oracle.jdbc.driver.OracleResultSet;
+import oracle.sql.BLOB;
+import sqlj.runtime.ConnectionContext;
+import sqlj.runtime.ref.DefaultContext;
 
-import java.util.*;
-
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SurveydbInterfaceSave
 {
 	protected SurveydbInterfaceSave()
 	{
 	}
 
-	static public void saveResultParameters(
+	public static void saveResultParameters(
 			String paramTableName,
 			String result_id,
 			ClientParameter_Transferable[] parameters)
@@ -151,7 +155,7 @@ public class SurveydbInterfaceSave
 			"concavities",
 			val)
 */
-	static public int saveActionArgument(
+	public static int saveActionArgument(
 			String actionTableName,
 			String actionTypeFieldName,
 			String argumentTableName,
@@ -322,7 +326,7 @@ public class SurveydbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public void saveActionArgument(
+	public static void saveActionArgument(
 			String tableName,
 			String actionFieldName,
 			String element_id,
@@ -411,7 +415,7 @@ public class SurveydbInterfaceSave
 
 	}
 
-	static public void saveActionParameter(
+	public static void saveActionParameter(
 			String tableName,
 			String actionFieldName,
 			String element_id,
@@ -497,7 +501,7 @@ public class SurveydbInterfaceSave
 			"ana1",
 			args)
 */
-	static public void saveArguments(
+	public static void saveArguments(
 			String actionTableName,
 			String actionTypeFieldName,
 			String argumentTableName,
@@ -526,7 +530,7 @@ public class SurveydbInterfaceSave
 		}
 	}
 
-	static public void saveArguments(
+	public static void saveArguments(
 			String tableName,
 			String actionFieldName,
 			String element_id,
@@ -547,7 +551,7 @@ public class SurveydbInterfaceSave
 */
 	}
 
-	static public void saveParameters(
+	public static void saveParameters(
 			String tableName,
 			String actionFieldName,
 			String element_id,
@@ -568,6 +572,4 @@ public class SurveydbInterfaceSave
 	}
 
 	#sql public static iterator IdIterator ( String id );
-
 }
-

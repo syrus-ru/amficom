@@ -42,7 +42,7 @@ public interface Command extends Cloneable
 	public static int RESULT_YES = 1;
 	public static int RESULT_NO = 2;
 	public static int RESULT_CANCEL = 3;
-
+	
 	public void execute();			// первое выполнение команды
 
 	public void undo();				// обратное выполнение - восстановление
@@ -50,10 +50,10 @@ public interface Command extends Cloneable
 
 	public void redo();				// повторное выполнение команды
 
-	public void commit_execute();	// подтверждение окончательного выполнения
+	public void commitExecute();	// подтверждение окончательного выполнения
 									// команды и освобождение ресурсов
 
-	public void commit_undo();		// подтверждение окончательного обратного
+	public void commitUndo();		// подтверждение окончательного обратного
 									// выполнения команды и освобождение
 									// ресурсов
 
@@ -66,5 +66,10 @@ public interface Command extends Cloneable
 									// установить значение параметра field
 
 	public int getResult();
-}
 
+	public Command getNext();
+	public void setNext(Command next);
+
+	public Command getPrevious();
+	public void setPrevious(Command previous);
+}

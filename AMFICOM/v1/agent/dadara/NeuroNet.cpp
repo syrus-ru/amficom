@@ -423,3 +423,4 @@ void NeuroNet::setInerciaCoeff(double coeff)
 	}
 
 }
+

@@ -1,27 +1,31 @@
+/*
+ * $Id: SchemedbInterfaceProtoSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-import java.util.Hashtable;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class SchemedbInterfaceProtoSave
 {
 	protected SchemedbInterfaceProtoSave()
 	{
 	}
 
-	static public int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
+	public static int saveDevicePorts(String device_id, SchemePort_Transferable[] ports)
 	{
 		PortIdIterator idIt = null;
 
@@ -184,7 +188,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
+	public static int saveDeviceCablePorts(String device_id, SchemeCablePort_Transferable[] ports)
 	{
 		CablePortIdIterator idIt = null;
 
@@ -346,7 +350,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveLinks(SchemeLink_Transferable[] links)
+	public static int saveLinks(SchemeLink_Transferable[] links)
 	{
 		int i;
 		int len;
@@ -434,7 +438,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveSchemeDevices(SchemeDevice_Transferable[] devices)
+	public static int saveSchemeDevices(SchemeDevice_Transferable[] devices)
 	{
 		int i;
 		int j;
@@ -504,7 +508,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveProtoElement(
+	public static int saveProtoElement(
 			String domain_id,
 			SchemeProtoElement_Transferable proto,
 			Hashtable other_protos)
@@ -692,7 +696,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveProtoElements(
+	public static int saveProtoElements(
 			String domain_id,
 			SchemeProtoElement_Transferable[] protos)
 	{
@@ -710,7 +714,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemePort(String id)
+	public static int removeSchemePort(String id)
 	{
 		PortIdIterator pidIt = null;
 		try
@@ -738,7 +742,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeCablePort(String id)
+	public static int removeSchemeCablePort(String id)
 	{
 		CablePortIdIterator pidIt = null;
 		try
@@ -766,7 +770,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeDevice(String id)
+	public static int removeSchemeDevice(String id)
 	{
 		PortIdIterator pidIt = null;
 		CablePortIdIterator cpidIt = null;
@@ -817,7 +821,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeDevices(String[] ids)
+	public static int removeSchemeDevices(String[] ids)
 	{
 		int i;
 		int j;
@@ -833,7 +837,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeLink(String id)
+	public static int removeSchemeLink(String id)
 	{
 		PortIdIterator pidIt = null;
 		try
@@ -857,7 +861,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeSchemeLinks(String[] ids)
+	public static int removeSchemeLinks(String[] ids)
 	{
 		int i;
 		int j;
@@ -873,7 +877,7 @@ public class SchemedbInterfaceProtoSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeProtoElements(String[] proto_ids)
+	public static int removeProtoElements(String[] proto_ids)
 	{
 		String scheme_cell_id = "";
 		String ugo_cell_id = "";
@@ -1009,6 +1013,4 @@ public class SchemedbInterfaceProtoSave
 	#sql public static iterator PortIdIterator ( String scheme_port_id );
 	#sql public static iterator CablePortIdIterator ( String scheme_cable_port_id );
 	#sql public static iterator MapProtoIdIterator ( String map_proto_element_id );
-
 }
-

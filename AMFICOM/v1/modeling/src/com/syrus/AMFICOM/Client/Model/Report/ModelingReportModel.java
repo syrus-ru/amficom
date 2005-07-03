@@ -1,10 +1,9 @@
 package com.syrus.AMFICOM.Client.Model.Report;
 
-import java.util.Vector;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.*;
+import java.util.*;
+
+import com.syrus.AMFICOM.Client.Analysis.Report.ESAPEReportModel;
+import com.syrus.AMFICOM.Client.General.Lang.*;
 
 /**
  * <p>Title: </p>
@@ -20,9 +19,9 @@ public class ModelingReportModel extends ESAPEReportModel
 	public ModelingReportModel()
 	{
 	}
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new ArrayList(3);
 
 		result.add(ESAPEReportModel.testParams);
 		result.add(ESAPEReportModel.model_params);
@@ -32,7 +31,7 @@ public class ModelingReportModel extends ESAPEReportModel
 	}
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repModelingResults");
+		return LangModelReport.getString("label_repModelingResults");
 	}
 
 	public String getLangForField(String field)
@@ -41,9 +40,9 @@ public class ModelingReportModel extends ESAPEReportModel
 		try
 		{
 			if (field.equals(ESAPEReportModel.model_params))
-				strToReturn = LangModelModel.String(field);
+				strToReturn = LangModelModel.getString(field);
 			else
-				strToReturn = LangModelAnalyse.String(field);
+				strToReturn = LangModelAnalyse.getString(field);
 		}
 		catch(Exception exc)
 		{

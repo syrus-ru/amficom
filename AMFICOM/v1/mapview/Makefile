@@ -1,85 +1,58 @@
-MODULE_NAME = map_v1
+MODULE_NAME = mapview_v1
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
-
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
-
-HOST=mongol
-SERVICE_NAME=mongol
-
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
-
-JPUB = $(ORACLE_HOME)/bin/jpub
-JPUB_FLAGS = \
-	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
-	-user=amficom/amficom \
-	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
-	-omit_schema_names \
-	-package=com.syrus.AMFICOM.map.ora \
-	-dir=$(SRCDIR) \
-	-usertypes=oracle \
-	-methods=all
-
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
+
+
+APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xbean.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map
+		-C $(CLASSDIR) com
 
-.mach:	.corba $(CLASSDIR)
+.mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
-	touch $@
-
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/li\'lmapletty.idl
-	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
-		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java 
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY:	clean
-clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
+clean:	cleanmach
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/*.class
-	rm -f .mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/map/corba
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
-	rm -f .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
 .PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDLDIR)/li\'lmapletty.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/map/*.java
+		$(SOURCES)
 		
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
 
-#### Compile and install jar to libdir
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	

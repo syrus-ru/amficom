@@ -1,54 +1,26 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Configure\Application\ElementCatalogDialog.java        * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourceCatalogFrame.java,v 1.6 2004/09/27 09:32:54 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import java.awt.*;
+import java.util.List;
+import javax.swing.*;
 
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-
-public class ObjectResourceCatalogFrame 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 09:32:54 $
+ * @module generalclient_v1
+ */
+public class ObjectResourceCatalogFrame
 		extends JInternalFrame
 		implements OperationListener
 {
@@ -85,7 +57,7 @@ public class ObjectResourceCatalogFrame
 			aContext.getDispatcher().register(this, TreeDataSelectionEvent.type);
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		panel.setContents(dataSet);
 	}
@@ -104,7 +76,7 @@ public class ObjectResourceCatalogFrame
 	{
 		panel.setActionModel(orcam);
 	}
-	
+
 	private void jbInit() throws Exception
 	{
 
@@ -146,7 +118,7 @@ public class ObjectResourceCatalogFrame
 				title = "";
 			}
 
-			setTitle(LangModel.String("node" + title));
+			setTitle(LangModel.getString("node" + title));
 		}
 	}
 
@@ -162,6 +134,5 @@ public class ObjectResourceCatalogFrame
 			ex.printStackTrace();
 		}
 		super.doDefaultCloseAction();
-    }
+	 }
 }
-

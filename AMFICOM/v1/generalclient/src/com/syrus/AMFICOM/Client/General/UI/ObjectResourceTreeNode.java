@@ -1,20 +1,27 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.BorderLayout;
 
-import javax.swing.*;
-import javax.swing.tree.*;
+import javax.swing.JPanel;
+import javax.swing.ImageIcon;
+
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 {
-	boolean isFinal = false;
-	boolean enable = true;
-	Object obj;
-	String name;
 	public boolean expanded = false;
-	Object parameter = null;
-	ObjectResourceElementLabel label = null;
-	
+
+	boolean isFinal = false;
+
+	private boolean enable = true;
+	private Object obj;
+	private String name;
+	private Object parameter = null;
+
+	private JPanel renderer = new JPanel();
+	private ObjectResourceElementLabel label = null;
+
 	boolean dragDropEnabled = false;
 
 	public ObjectResourceTreeNode(Object obj, String name, boolean enable)
@@ -23,6 +30,10 @@ public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 		this.enable = enable;
 		this.obj = obj;
 		this.name = name;
+
+		label = new ObjectResourceElementLabel(null, obj, name, enable);
+		renderer.setLayout(new BorderLayout());
+		renderer.add(label,BorderLayout.CENTER);
 	}
 
 	public ObjectResourceTreeNode(Object obj, String name, boolean enable, boolean isFinal)
@@ -33,8 +44,14 @@ public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 
 	public ObjectResourceTreeNode(Object obj, String name, boolean enable, ImageIcon ii)
 	{
-		this(obj, name, enable);
+		super (name, true);
+		this.enable = enable;
+		this.obj = obj;
+		this.name = name;
+
 		label = new ObjectResourceElementLabel(ii, obj, name, enable);
+		renderer.setLayout(new BorderLayout());
+		renderer.add(label,BorderLayout.CENTER);
 	}
 
 	public ObjectResourceTreeNode(Object obj, String name, boolean enable, ImageIcon ii, boolean isFinal)
@@ -83,7 +100,32 @@ public class ObjectResourceTreeNode extends DefaultMutableTreeNode
 		return parameter;
 	}
 
-	public Component getComponent()
+	public JPanel getComponent()
+	{
+		return renderer;
+	}
+
+	public void setComponent(JPanel comp)
+	{
+	  renderer = comp;
+	}
+
+	public void setForeground(Color fc)
+	{
+		label.setForeground(fc);
+	}
+
+	public void setBackground(Color bc)
+	{
+		renderer.setBackground(bc);
+	}
+
+	public void setIcon(ImageIcon icon)
+	{
+		label.setIcon(icon);
+	}
+
+	ObjectResourceElementLabel getElementLabel()
 	{
 		return label;
 	}

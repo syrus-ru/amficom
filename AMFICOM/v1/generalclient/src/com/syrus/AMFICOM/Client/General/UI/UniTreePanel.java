@@ -1,5 +1,27 @@
 /*
-для оптимизации работы дерева вводится следующая схема разворачивания ветви
+ * $Id: UniTreePanel.java,v 1.16 2005/05/18 14:01:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.AMFICOM.Client.General.UI;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import java.awt.*;
+import java.awt.dnd.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.StorableObject;
+
+/**
+ * для оптимизации работы дерева вводится следующая схема разворачивания ветви
 дерева:
 
 при добавлении новых узлов (нод) тем узлам, которые являются основными для
@@ -9,36 +31,24 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 
 Например, при добавлении в дерево группы этот метод будет вызываться так:
 
-        ortn = new ObjectResourceTreeNode(
-                                OperatorGroup.typ,
-                                "Группы",
-                                true);
-        vec.add(ortn);
-        registerSearchableNode(OperatorGroup.typ, ortn);
+			ortn = new ObjectResourceTreeNode(
+											OperatorGroup.class.getName(),
+											"Группы",
+											true);
+			vec.add(ortn);
+			registerSearchableNode(OperatorGroup.class.getName(), ortn);
 
 
 Если группа добавляется в дочернюю ветвь (например, список групп в
 пользователях или командах), эта функция вызываться не должна.
 
-Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
+Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.class.getName()
 зарегистрированная ветвь станет выделенной.
-*/
-package com.syrus.AMFICOM.Client.General.UI;
-
-import java.awt.datatransfer.*;
-import java.awt.dnd.*;
-
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.tree.*;
-import javax.swing.event.*;
-
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/18 14:01:18 $
+ * @module generalclient_v1
+ */
 public class UniTreePanel extends JPanel
 		implements OperationListener, DragGestureListener
 {
@@ -61,7 +71,7 @@ public class UniTreePanel extends JPanel
 	{
 		this.aContext = aContext;
 		this.dispatcher = disp;
-		dsi = aContext.getDataSourceInterface();
+		dsi = aContext.getDataSource();
 		this.otm = otm;
 		try
 		{
@@ -80,37 +90,20 @@ public class UniTreePanel extends JPanel
 		dispatcher.register(this, "treelistdeselectionevent");
 		dispatcher.register(this, "treelistrefreshevent");
 		dispatcher.register(this, ContextChangeEvent.type);
-		Environment.the_dispatcher.register(this, ContextChangeEvent.type);
+		Environment.getDispatcher().register(this, ContextChangeEvent.type);
 		this.setLayout(borderLayout1);
-/*
-		root = otm.getRoot();
-		otm.nodeBeforeExpanded(root);
-		Vector vec = otm.getChildNodes(root);
-		for (int i = 0; i < vec.size(); i++)
-		{
-			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec.elementAt(i);
-			root.add(tn);
-			otm.nodeBeforeExpanded(tn);
-			Vector vect = otm.getChildNodes(tn);
-			for (int k = 0; k < vect.size(); k++)
-			{
-				ObjectResourceTreeNode rtn = (ObjectResourceTreeNode ) vect.elementAt(k);
-				tn.add(rtn);
-			}
-		}
-		tm = new DefaultTreeModel(root);
-*/
-		tree = new JTree(new Vector());
+
+		tree = new JTree(new Hashtable());
 		tree.setRootVisible(true);
-		tree.addTreeWillExpandListener(new javax.swing.event.TreeWillExpandListener() {
+		tree.addTreeWillExpandListener(new TreeWillExpandListener() {
 			public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
 				tree_treeWillExpand(e);
 			}
+
 			public void treeWillCollapse(TreeExpansionEvent e) {
+
 			}
 		});
-//		tree.setBorder(BorderFactory.createEtchedBorder());
-//		tree.setEditable(true);
 		tree.setCellRenderer(renderer);
 		this.add(tree, BorderLayout.CENTER);
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -143,21 +136,23 @@ public class UniTreePanel extends JPanel
 		}
 		this.otm = otm;
 		root = otm.getRoot();
-		root.removeAllChildren();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		otm.nodeBeforeExpanded(root);
-		Vector vec1 = otm.getChildNodes(root);
+		List vec1 = otm.getChildNodes(root);
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		for (int i = 0; i < vec1.size(); i++)
+		root.removeAllChildren();
+
+		ListIterator lIt = vec1.listIterator();
+		for (; lIt.hasNext();)
 		{
-			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec1.elementAt(i);
+			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 			root.add(tn);
 			if(!tn.isFinal())
 				tn.add(new ObjectResourceTreeNode("", "", true));
 		}
 		tm = new DefaultTreeModel(root);
 		tree.setModel(tm);
-		tree.updateUI();
+		tree.revalidate();
 	}
 
 	public JTree getTree()
@@ -185,16 +180,17 @@ public class UniTreePanel extends JPanel
 					this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 					orte.removeAllChildren();
 					otm.nodeBeforeExpanded(orte);
-					Vector vec = otm.getChildNodes(orte);
+					List vec = otm.getChildNodes(orte);
 					this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					if (vec.size() == 0)
 					{
 						orte.isFinal = true;
 					}
-					Enumeration en = vec.elements();
-					for (; en.hasMoreElements();)
+
+					ListIterator lIt = vec.listIterator();
+					for (; lIt.hasNext();)
 					{
-						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 						orte.add(tn);
 						if (tn.getObject().equals(o))
 						{
@@ -232,13 +228,13 @@ public class UniTreePanel extends JPanel
 
 	public void operationPerformed (OperationEvent ev)
 	{
-		if (ev.getActionCommand().equals(TreeListSelectionEvent.typ))
+		if (ev.getActionCommand().equals(TreeListSelectionEvent.class.getName()))
 		{
 			TreeListSelectionEvent select_event = (TreeListSelectionEvent)ev;
 			if(select_event.SELECT)
 			{
 				if (send_event)
-				   return;
+					return;
 				Object o = ev.getSource();
 
 				if ( (select_event.search == true) && (select_event.searchAll == true) )
@@ -256,7 +252,7 @@ public class UniTreePanel extends JPanel
 					if (tp != null)
 					{
 						ObjectResourceTreeNode orte = (ObjectResourceTreeNode )tp.getLastPathComponent();
-						if (orte.getObject() instanceof ObjectResource)
+						if (orte.getObject() instanceof StorableObject)
 						{
 							orte = (ObjectResourceTreeNode )orte.getParent();
 						}
@@ -265,15 +261,18 @@ public class UniTreePanel extends JPanel
 				}
 				else if ( (select_event.search == true) && (select_event.searchAll == false) )
 				{
-					Vector vec = otm.getSearchableNodes(o);
-					int i = 0;
-					while (i < vec.size())
+					List vec = otm.getSearchableNodes(o);
+
+					ListIterator lIt = vec.listIterator();
+					for (; lIt.hasNext();)
 					{
-						if (setNodeSelection((ObjectResourceTreeNode )vec.elementAt(i), o))
-						   break;
-						i++;
+						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+
+						if (setNodeSelection(tn, o))
+							break;
 					}
-					if (i == vec.size() || vec.size() == 0)
+
+					if (!lIt.hasNext() || !lIt.hasPrevious())
 					{
 						dispatcher.notify(new TreeListSelectionEvent(o, TreeListSelectionEvent.SELECT_EVENT));
 					}
@@ -287,7 +286,7 @@ public class UniTreePanel extends JPanel
 				if (tp != null)
 				{
 					ObjectResourceTreeNode orte = (ObjectResourceTreeNode )tp.getLastPathComponent();
-					if (orte != null && orte.getObject() instanceof ObjectResource)
+					if (orte != null && orte.getObject() instanceof StorableObject)
 					{
 						orte = (ObjectResourceTreeNode )orte.getParent();
 					}
@@ -296,7 +295,7 @@ public class UniTreePanel extends JPanel
 						this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						orte.removeAllChildren();
 						otm.nodeBeforeExpanded(orte);
-						Vector vec = otm.getChildNodes(orte);
+						List vec = otm.getChildNodes(orte);
 						this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						if (vec.size() == 0)
 						{
@@ -307,10 +306,10 @@ public class UniTreePanel extends JPanel
 							orte.isFinal = false;
 						}
 
-						Enumeration enum = vec.elements();
-						for(; enum.hasMoreElements();)
+						ListIterator lIt = vec.listIterator();
+						for (; lIt.hasNext();)
 						{
-							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) enum.nextElement();
+							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 							orte.add(tn);
 							if (tn.getObject().equals(o))
 							{
@@ -349,14 +348,15 @@ public class UniTreePanel extends JPanel
 		if (node == null)
 			return;
 
-		Vector res = new Vector();
+		List res = new ArrayList();
 		Class cl = null;
-		DataSet data = new DataSet();
+		ObjectResourceController controller = null;
+		//DataSet data = new DataSet();
 		ObjectResourceCatalogActionModel orcam = null;
 		int n = 0;
 		Object selectedObject = node.getObject();
 
-		if (!(node.getObject() instanceof ObjectResource))
+		if (!(node.getObject() instanceof StorableObject))
 		{
 			if (node.isFinal() == false && node.getChildCount() != 0)
 			{
@@ -370,22 +370,25 @@ public class UniTreePanel extends JPanel
 						this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						node.removeAllChildren();
 						otm.nodeBeforeExpanded(node);
-						Vector vec = otm.getChildNodes(node);
+						List vec = otm.getChildNodes(node);
 						this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						if (vec.size() == 0)
 						{
 							node.isFinal = true;
 						}
-						Enumeration en = vec.elements();
-						for (; en.hasMoreElements();)
+
+						ListIterator lIt = vec.listIterator();
+						for (; lIt.hasNext();)
 						{
-							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+
 							node.add(tn);
 							if(!tn.isFinal())
 								tn.add(new ObjectResourceTreeNode("", "", true));
-							if (((ObjectResourceTreeNode)tn).getObject() instanceof ObjectResource)
+							Object obj = tn.getObject();
+							if (obj instanceof StorableObject)
 							{
-								res.add( ((ObjectResourceTreeNode)tn).getObject() );
+								res.add( obj );
 							}
 //				tn.add(stubNode);
 						}
@@ -396,9 +399,10 @@ public class UniTreePanel extends JPanel
 						for (; en.hasMoreElements();)
 						{
 							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
-							if (((ObjectResourceTreeNode)tn).getObject() instanceof ObjectResource)
+							Object obj = tn.getObject();
+							if (obj instanceof StorableObject)
 							{
-								res.add( ((ObjectResourceTreeNode)tn).getObject() );
+								res.add( obj );
 							}
 //				tn.add(stubNode);
 						}
@@ -409,40 +413,40 @@ public class UniTreePanel extends JPanel
 //					if (res.isEmpty())
 //						return;
 
-			data = new DataSet (res);
+			//data = new DataSet (res);
 			cl = otm.getNodeChildClass(node);
 			orcam = otm.getNodeActionModel(node);
 			n = -1;
 		}
-		else if ((node.getObject() instanceof ObjectResource))
+		else if ((node.getObject() instanceof StorableObject))
 		{
 			if (node.isRoot())
 				return;
 
 			ObjectResourceTreeNode parent = (ObjectResourceTreeNode)node.getParent();
 
-			Enumeration enum = parent.children();
-			for(; enum.hasMoreElements();)
+			Enumeration enumeration = parent.children();
+			for(; enumeration.hasMoreElements();)
 			{
-				Object oo = enum.nextElement();
-				if (((ObjectResourceTreeNode)oo).getObject() instanceof ObjectResource)
+				Object oo = enumeration.nextElement();
+				if (((ObjectResourceTreeNode)oo).getObject() instanceof StorableObject)
 				{
-				   res.add( ((ObjectResourceTreeNode)oo).getObject() );
+					res.add( ((ObjectResourceTreeNode)oo).getObject() );
 				}
 			}
 //					if (res.isEmpty())
 //						return;
 
-			data = new DataSet (res);
+			//data = new DataSet (res);
 			cl = otm.getNodeChildClass(parent);
 			orcam = otm.getNodeActionModel(parent);
+
 //					cl = node.getClass();
 			selectedObject = node.getObject();
-			n =	data.indexOf(selectedObject);
+			n =	res.indexOf(selectedObject);
 		}
 
-		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, data, cl, n, selectedObject);
-		event.param = orcam;
+		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, controller);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);
 		send_event = true;
@@ -463,16 +467,17 @@ public class UniTreePanel extends JPanel
 				this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				orte.removeAllChildren();
 				otm.nodeBeforeExpanded(orte);
-				Vector vec = otm.getChildNodes(orte);
+				List vec = otm.getChildNodes(orte);
 				this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				if (vec.size() == 0)
 				{
 					orte.isFinal = true;
 				}
-				Enumeration en = vec.elements();
-				for (; en.hasMoreElements();)
+
+				ListIterator lIt = vec.listIterator();
+				for (; lIt.hasNext();)
 				{
-					ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+					ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 					orte.add(tn);
 					if(!tn.isFinal())
 						tn.add(new ObjectResourceTreeNode("", "", true));
@@ -493,22 +498,23 @@ public class UniTreePanel extends JPanel
 
 		ObjectResourceTreeNode fc = (ObjectResourceTreeNode )tn.getFirstChild();
 
-		Object obj = ((ObjectResourceTreeNode )fc).getObject();
-		if (obj instanceof String && ((String)obj).equals(""))
+		Object obj = fc.getObject();
+		if (obj instanceof String && ((String)obj).length()==0)
 		{
 			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			tn.removeAllChildren();
 			otm.nodeBeforeExpanded(tn);
-			Vector vec = otm.getChildNodes(tn);
+			List vec = otm.getChildNodes(tn);
 			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			if (vec.size() == 0)
 			{
 				tn.isFinal = true;
 			}
-			Enumeration en = vec.elements();
-			for (; en.hasMoreElements();)
+
+			ListIterator lIt = vec.listIterator();
+			for (; lIt.hasNext();)
 			{
-				ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) en.nextElement();
+				ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) lIt.next();
 				tn.add(tnn);
 				if(!tnn.isFinal())
 					tnn.add(new ObjectResourceTreeNode("", "", true));
@@ -518,9 +524,9 @@ public class UniTreePanel extends JPanel
 					oooo = recure_tree_exp(tnn, o);
 					if (oooo != null)
 					{
-						for(; en.hasMoreElements();)
+						for(; lIt.hasNext();)
 						{
-							ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) en.nextElement());
+							ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) lIt.next());
 							tn.add(temp);
 							if(!temp.isFinal())
 								temp.add(new ObjectResourceTreeNode("", "", true));
@@ -531,9 +537,9 @@ public class UniTreePanel extends JPanel
 				else
 				{
 					oooo = tnn;
-					for(; en.hasMoreElements();)
+					for(; lIt.hasNext();)
 					{
-						ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) en.nextElement());
+						ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) lIt.next());
 						tn.add(temp);
 						if(!temp.isFinal())
 							temp.add(new ObjectResourceTreeNode("", "", true));
@@ -563,7 +569,7 @@ public class UniTreePanel extends JPanel
 				}
 			}
 		}
-	   return oooo;
+		return oooo;
 	}
 
 	public void dragGestureRecognized( DragGestureEvent event)
@@ -575,7 +581,7 @@ public class UniTreePanel extends JPanel
 		ObjectResourceTreeNode ortn = (ObjectResourceTreeNode )tp.getLastPathComponent();
 		if(ortn.isDragDropEnabled())
 		{
-			ObjectResourceElementLabel orel = (ObjectResourceElementLabel )ortn.getComponent();
+			ObjectResourceElementLabel orel = ortn.getElementLabel();
 			if(orel != null)
 				orel.dragGestureRecognized(event);
 //			else
@@ -621,6 +627,6 @@ public class UniTreePanel extends JPanel
 				break;
 			}
 		}
-	   return oooo;
+		return oooo;
 	}*/
 }

@@ -1,0 +1,2 @@
+*
+						 * Takes non-null value at pack time.

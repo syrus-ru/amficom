@@ -2,22 +2,22 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import java.awt.BorderLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
-public class FilterDialog extends JDialog 
+public class FilterDialog extends JDialog
 {
+	public static final int RETURN_CODE_OK = 1;
+	public static final int RETURN_CODE_CANCEL = 2;
+	
 	public int retcode = 0;
-	private ObjectResourceFilterPane filterPanel = new ObjectResourceFilterPane();
+	
+	ObjectResourceFilterPane filterPanel = new ObjectResourceFilterPane();
+	
 	private JPanel buttonPanel = new JPanel();
 	
 	private JButton okButton = new JButton();
@@ -39,68 +39,60 @@ public class FilterDialog extends JDialog
 			e.printStackTrace();
 		}
 		pack();
-		this.filter = filter;
-		filterPanel.setFilter(filter);
-		filterPanel.setContext(null);
+		this.setFilter(filter);
 	}
 
 	public FilterDialog(ObjectResourceFilter filter, ApplicationContext aContext)
 	{
 		this(filter);
-		filterPanel.setContext(aContext);
+		this.filterPanel.setContext(aContext);
 	}
 
 	private void jbInit() throws Exception
 	{
 //		this.setResizable(false);
 		setTitle("Фильтрация");// сигналов тревоги
-		this.getContentPane().setLayout(verticalFlowLayout1);
-		okButton.setText("Применить");
-		okButton.addActionListener(new ActionListener()
+
+		this.okButton.setText("Применить");
+		this.okButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					okButton_actionPerformed(e);
+					FilterDialog.this.retcode = RETURN_CODE_OK;
+					FilterDialog.this.dispose();
 				}
 			});
-		cancelButton.setText("Отменить");
-		cancelButton.addActionListener(new ActionListener()
+		this.cancelButton.setText("Отменить");
+		this.cancelButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{					
+					FilterDialog.this.retcode = RETURN_CODE_CANCEL;
+					FilterDialog.this.dispose();
+				}
+			});
+		this.clearButton.setText("Очистить");
+		this.clearButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					cancelButton_actionPerformed(e);
+					FilterDialog.this.filter.clearCriteria();
+					FilterDialog.this.filterPanel.setFilter(FilterDialog.this.filter);
 				}
 			});
-		clearButton.setText("Очистить");
-		clearButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					clearButton_actionPerformed(e);
-				}
-			});
-		this.getContentPane().add(filterPanel, null);
-		buttonPanel.add(okButton, null);
-		buttonPanel.add(cancelButton, null);
-		buttonPanel.add(clearButton, null);
-		this.getContentPane().add(buttonPanel, null);
+		this.buttonPanel.add(this.okButton, null);
+		this.buttonPanel.add(this.cancelButton, null);
+		this.buttonPanel.add(this.clearButton, null);
+
+		this.getContentPane().setLayout(this.verticalFlowLayout1);
+		this.getContentPane().add(this.filterPanel, null);
+		this.getContentPane().add(this.buttonPanel, null);
 	}
 
-	private void clearButton_actionPerformed(ActionEvent e)
-	{
-		filter.clearCriteria();
-		filterPanel.setFilter(filter);
-	}
+	public void setFilter(ObjectResourceFilter filter){
+		this.filter = filter;
+		this.filterPanel.setFilter(filter);
+		this.filterPanel.setContext(null);
 
-	private void cancelButton_actionPerformed(ActionEvent e)
-	{
-		retcode = 2;
-		dispose();
-	}
-
-	private void okButton_actionPerformed(ActionEvent e)
-	{
-		retcode = 1;
-		dispose();
 	}
 }

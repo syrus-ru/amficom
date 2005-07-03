@@ -1,72 +1,32 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\Panels\GeneralListPane.java                    * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourceTablePane.java,v 1.11 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableEditor;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableRenderer;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
-import java.awt.Dimension;
 import java.awt.SystemColor;
-
-import java.lang.reflect.Field;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import java.awt.event.*;
+import java.util.List;
+import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
+import javax.swing.table.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceTablePane extends JScrollPane
 {
-	ObjectResourceTableModel tableModel;
+	public ObjectResourceTableModel tableModel;
 	ObjectResourceTableRenderer renderer;
 	ObjectResourceTableEditor editor;
 	ObjectResourceSorter sorter = null;
@@ -93,7 +53,7 @@ public class ObjectResourceTablePane extends JScrollPane
 
 	private void jbInit() throws Exception
 	{
-		setName(LangModel.String("labelTabbedList"));
+		setName(LangModel.getString("labelTabbedList"));
 
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -127,8 +87,8 @@ public class ObjectResourceTablePane extends JScrollPane
 			editor = new ObjectResourceTableEditor(tableModel);
 
 		jTable.setModel(tableModel);
-		jTable.setDefaultRenderer(ObjectResource.class, renderer);
-		jTable.setDefaultEditor(ObjectResource.class, editor);
+		jTable.setDefaultRenderer(StorableObject.class, renderer);
+		jTable.setDefaultEditor(StorableObject.class, editor);
 
 //		jTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		TableColumnModel ctm = jTable.getColumnModel();
@@ -147,22 +107,22 @@ public class ObjectResourceTablePane extends JScrollPane
 	{
 		this.renderer = renderer;
 		renderer.setModel(tableModel);
-		jTable.setDefaultRenderer(ObjectResource.class, renderer);
+		jTable.setDefaultRenderer(StorableObject.class, renderer);
 	}
 
 	public void setEditor(ObjectResourceTableEditor editor)
 	{
 		this.editor = editor;
 		editor.setModel(tableModel);
-		jTable.setDefaultEditor(ObjectResource.class, editor);
+		jTable.setDefaultEditor(StorableObject.class, editor);
 	}
 
-	public void initialize(ObjectResourceDisplayModel displayModel, DataSet dataSet)
+	public void initialize(ObjectResourceDisplayModel displayModel, List dataSet)
 	{
 		tableModel = new ObjectResourceTableModel(displayModel, dataSet);
 		tableInit();
 //		tableModel.setDisplayModel(displayModel);
-//		tableModel.setContents(dataSet);
+//		tableModel.setContents(list);
 	}
 
 	public void setSorter(ObjectResourceSorter sorter)
@@ -179,12 +139,12 @@ public class ObjectResourceTablePane extends JScrollPane
 		return sorter;
 	}
 
-	public void setContents(DataSet dataSet)
+	public void setContents(List dataSet)
 	{
 		tableModel.setContents(dataSet);
 	}
 
-	public DataSet getContents()
+	public List getContents()
 	{
 		return tableModel.getContents();
 	}
@@ -193,12 +153,12 @@ public class ObjectResourceTablePane extends JScrollPane
 	{
 		if(sorter == null)
 			return;
-		DataSet ds = getContents();
+		List ds = getContents();
 		sorter.setDataSet(ds);
 		ds = sorter.sort(sort_type, sort_dir);
-		setContents(ds);		
+		setContents(ds);
 	}
-	
+
 /*
 	public String getSelectedField(String field_name)
 	{
@@ -215,11 +175,11 @@ public class ObjectResourceTablePane extends JScrollPane
 	}
 */
 	public Object getObjectAt(int i)
-  {
-    return tableModel.getObjectByIndex(i);
-  }
+	{
+	 return tableModel.getObjectByIndex(i);
+	}
 
-  public Object getSelectedObject()
+	public Object getSelectedObject()
 	{
 		int ind = jTable.getSelectedRow();
 		if(ind == -1)
@@ -229,7 +189,7 @@ public class ObjectResourceTablePane extends JScrollPane
 
 	public int setSelected(Object o)
 	{
-		DataSet dataSet = tableModel.getContents();
+		List dataSet = tableModel.getContents();
 		int i = dataSet.indexOf(o);
 		if(i >= 0 && i < dataSet.size())
 		{
@@ -246,7 +206,7 @@ public class ObjectResourceTablePane extends JScrollPane
 
 	public void deselect(Object o)
 	{
-		DataSet dataSet = tableModel.getContents();
+		List dataSet = tableModel.getContents();
 		int i = dataSet.indexOf(o);
 		if(i >= 0 && i < dataSet.size())
 		{
@@ -308,6 +268,4 @@ public class ObjectResourceTablePane extends JScrollPane
 			}
 		}
 	}
-
 }
-

@@ -1,0 +1,10 @@
+classes
+docs
+lib
+jr.bat
+*.deploy
+*.jpr
+*.jpx
+*.tar
+*.gz
+*.swp

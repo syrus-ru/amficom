@@ -1,15 +1,19 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
+import java.util.ListIterator;
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -137,35 +141,34 @@ public class UserPanel  extends GeneralPanel
 */
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.user = (User)or;
     if(user == null)
-      return false;
+      return;
 
-    this.jTextFieldID.setText(user.id);
+    this.jTextFieldID.setText(user.getId());
     this.jTextFieldLogin.setText(user.login);
     this.jTextFieldTyp.setText(user.type);
     this.jTextFieldProfileName.setTextNameByID(user.type, user.object_id);
 
-    Vector g = new Vector();
-    for(int i=0; i<user.group_ids.size(); i++)
+    List g = new ArrayList();
+    for(ListIterator lIt = user.group_ids.listIterator(); lIt.hasNext();)
     {
-      Object o = Pool.get(OperatorGroup.typ, (String)user.group_ids.get(i));
-      if(o!=null)
+      Object o = Pool.get(OperatorGroup.class.getName(), (String)lIt.next());
+      if(o != null)
         g.add(o);
     }
 
-    Vector c = new Vector();
-    for(int i=0; i<user.category_ids.size(); i++)
+    List c = new ArrayList();
+    for(ListIterator lIt = user.category_ids.listIterator(); lIt.hasNext();)
     {
-      Object o = Pool.get(OperatorCategory.typ, (String)user.category_ids.get(i));
-      if(o!=null)
+      Object o = Pool.get(OperatorCategory.class.getName(), (String)lIt.next());
+      if(o != null)
         c.add(o);
     }
 
-    this.groupList.setContents(g.elements());
-    this.categoryList.setContents(c.elements());
-    return true;
+    this.groupList.setContents(g);
+    this.categoryList.setContents(c);
   }
 }

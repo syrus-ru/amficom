@@ -2,14 +2,20 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+
+import java.util.Map;
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.StorableObject;
 
 
 public class DomainDomainPanel extends GeneralPanel
@@ -127,13 +133,13 @@ public class DomainDomainPanel extends GeneralPanel
     splitPane.setResizeWeight(.5);
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
     return domain;
   }
 
 //--------------------------------------------------------
-/*  public boolean setObjectResource(ObjectResource or)
+/*  public boolean setObjectResource(StorableObject or)
   {
 
     this.domain = (Domain)or;
@@ -144,73 +150,61 @@ public class DomainDomainPanel extends GeneralPanel
     this.internalDomainsList.removeAll();
     this.otherDomainsList.removeAll();
 
-    this.fatherDomain.setTyp(Domain.typ);
+    this.fatherDomain.setTyp(Domain.class.getName());
     this.fatherDomain.remove(this.domain);
-    this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
+    this.fatherDomain.setSelectedTyp(Domain.class.getName(), domain.domain_id);
 
     this.internalDomainsList.
-        setContents(this.domain.getChildren(Domain.typ));
+        setContents(this.domain.getChildren(Domain.class.getName()));
 
     this.otherDomainsList.setContents(getOtherDomains());
     return true;
   }*/
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
 
     this.domain = (Domain)or;
     if(domain == null)
-      return false;
+      return;
 
     this.fatherDomain.removeAllItems();
     this.internalDomainsList.removeAll();
     this.otherDomainsList.removeAll();
 
-    this.fatherDomain.setTyp(Domain.typ);
+    this.fatherDomain.setTyp(Domain.class.getName());
     this.fatherDomain.remove(this.domain);
-    this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
-    {
-      DataSet dSet = new DataSet(this.domain.getChildren(Domain.typ));
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      internalDomainsList.setContents(dSet.elements());
-    }
+    this.fatherDomain.setSelectedTyp(Domain.class.getName(), domain.domain_id);
+    ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(this.domain.getChildren(Domain.class.getName()));
+    internalDomainsList.setContents(sorter.default_sort());
 
-
-    {
-      DataSet dSet = new DataSet(getOtherDomains());
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      otherDomainsList.setContents(dSet.elements());
-    }
-    return true;
+    sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(getOtherDomains());
+    otherDomainsList.setContents(sorter.default_sort());
   }
 
 //--------------------------------------------------------
-  private Enumeration getOtherDomains()
+  private Collection getOtherDomains()
   {
-    Vector exeptOtherIds = this.internalDomainsList.getVectorIDfromList();
-    exeptOtherIds.add(this.domain.id);
+    List exeptOtherIds = this.internalDomainsList.getVectorIDfromList();
+    exeptOtherIds.add(this.domain.getId());
     exeptOtherIds.add(this.fatherDomain.getSelectedId());
 
-
-    Hashtable other = new Hashtable();
-    Hashtable tmp_h = Pool.getHash(Domain.typ);
+    Map other = new HashMap();
+    Map tmp_h = Pool.getMap(Domain.class.getName());
 
     if(tmp_h == null)
-      tmp_h = new Hashtable();
+      tmp_h = new HashMap();
 
-    for(Enumeration e = tmp_h.elements();
-        e.hasMoreElements(); )
+    for(Iterator it = tmp_h.values().iterator(); it.hasNext();)
     {
-      ObjectResource o = (ObjectResource)e.nextElement();
+      StorableObject o = (StorableObject)it.next();
       if(!exeptOtherIds.contains(o.getId()))
         other.put(o.getId(), o);
     }
-    return other.elements();
+    return other.values();
   }
 
 //--------------------------------------------------------
@@ -251,9 +245,9 @@ public class DomainDomainPanel extends GeneralPanel
   {
     if(fatherID == null)
       fatherID = "";
-    Domain fatherDomain = (Domain)Pool.get(Domain.typ, fatherID);
+    Domain fatherDomain = (Domain)Pool.get(Domain.class.getName(), fatherID);
 
-    Vector internalIds = this.internalDomainsList.getVectorIDfromList();
+    List internalIds = this.internalDomainsList.getVectorIDfromList();
 
     if(internalIds.contains(fatherID))
     {

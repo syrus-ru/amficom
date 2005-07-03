@@ -1,17 +1,17 @@
-package com.syrus.AMFICOM.Client.General.Scheme;
+/*package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.awt.event.KeyEvent;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.*;
 
 public class SchemePanelNoEdition extends SchemePanel
 {
-	Hashtable animators = new Hashtable();
+	Map animators = new HashMap();
 
 	public SchemePanelNoEdition(ApplicationContext aContext)
 	{
@@ -20,8 +20,7 @@ public class SchemePanelNoEdition extends SchemePanel
 		try
 		{
 			jbInit();
-		}
-		catch(Exception e)
+		} catch(Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -30,7 +29,7 @@ public class SchemePanelNoEdition extends SchemePanel
 	public void init_module()
 	{
 		super.init_module();
-		dispatcher.register(this, MapNavigateEvent.type);
+//		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -39,28 +38,42 @@ public class SchemePanelNoEdition extends SchemePanel
 		{
 			SchemeElementsEvent see = (SchemeElementsEvent)ae;
 			if (see.CREATE_ALARMED_LINK)
-				startPathAnimator((String)see.obj);
+			{
+				SchemeElement se = (SchemeElement)see.obj;
+				SchemePath path = se.getAlarmedPath();
+				startPathAnimator(path, se.getAlarmedPathElement());
+			}
+
 			if (!see.OPEN_PRIMARY_SCHEME)
 				return;
 			if (see.OBJECT_TYPE_UPDATE)
 				return;
 
 		}
-		if (ae.getActionCommand().equals(MapNavigateEvent.type))
+		if (ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
-			if (mne.DATA_ALARMMARKER_CREATED)
+			if (mne.isDataMarkerCreated())
 			{
 				//				System.out.println("DATA_ALARMMARKER_CREATED: " + mne.linkID);
-				startPathAnimator(mne.linkID);
+				try {
+					SchemePath path = (SchemePath)SchemeStorableObjectPool.getStorableObject(mne.getSchemePathId(), true);
+					startPathAnimator(path, SchemeUtils.getPathElement(path, mne.getSchemePathElementId()));
+				} catch (ApplicationException ex) {
+				}
 			}
-			if (mne.DATA_ALARMMARKER_DELETED)
+			if (mne.isDataMarkerDeleted())
 			{
 //				System.out.println("DATA_ALARMMARKER_DELETED: " + mne.linkID);
-				stopPathAnimator(mne.linkID);
+				stopPathAnimator(mne.getSchemePathElementId());
 			}
 		}
 		super.operationPerformed(ae);
+	}
+
+	public String getReportTitle()
+	{
+		return LangModelSchematics.getString("scheme");
 	}
 
 	public void keyPressed(KeyEvent e)
@@ -81,49 +94,42 @@ public class SchemePanelNoEdition extends SchemePanel
 		graph.setGraphEditable(false);
 	}
 
-	public void startPathAnimator(String link_id)
+	public void startPathAnimator(SchemePath path, PathElement pe)
 	{
-		if (link_id == null || link_id.equals(""))
+		if (pe == null)
 			return;
 
-		System.out.println("link_id =  " + link_id);
 		AlarmedPathAnimator ap;
-
-		if (animators.containsKey(link_id))
-		{
-			ap = (AlarmedPathAnimator)animators.get(link_id);
-			System.out.println("get ap " + ap.hashCode());
-		}
+		if (animators.containsKey(pe.getId()))
+			ap = (AlarmedPathAnimator)animators.get(pe.getId());
 		else
 		{
-			ap = new AlarmedPathAnimator(aContext, this, link_id);
-			animators.put(link_id, ap);
+			ap = new AlarmedPathAnimator(aContext, this, path, pe);
+			animators.put(pe.getId(), ap);
 			ap.mark();
-			System.out.println("create ap " + ap.hashCode());
 		}
-		System.out.println("start ap " + ap.hashCode());
 	}
 
-	public void stopPathAnimator(String link_id)
+	public void stopPathAnimator(Identifier pe_id)
 	{
-		if (link_id != null)
+		if (pe_id != null)
 		{
-			if (animators.containsKey(link_id))
+			if (animators.containsKey(pe_id))
 			{
-				AlarmedPathAnimator ap = (AlarmedPathAnimator)animators.get(link_id);
+				AlarmedPathAnimator ap = (AlarmedPathAnimator)animators.get(pe_id);
 				ap.unmark();
-				animators.remove(link_id);
-				System.out.println("stop ap " + ap.hashCode());
+				animators.remove(pe_id);
 			}
-		}
-		else
+		} else
 		{
-			for (Enumeration en = animators.elements(); en.hasMoreElements();)
+			for (Iterator it = animators.values().iterator(); it.hasNext();)
 			{
-				AlarmedPathAnimator ap = (AlarmedPathAnimator)en.nextElement();
+				AlarmedPathAnimator ap = (AlarmedPathAnimator)it.next();
 				ap.unmark();
 			}
-			animators = new Hashtable();
+			animators = new HashMap();
 		}
 	}
 }
+
+*/

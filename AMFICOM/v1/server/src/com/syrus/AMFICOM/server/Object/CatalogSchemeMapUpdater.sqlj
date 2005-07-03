@@ -1,25 +1,25 @@
+/*
+ * $Id: CatalogSchemeMapUpdater.sqlj,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.ISM.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
 
-import com.syrus.AMFICOM.server.*;
-
-public class CatalogSchemeMapUpdater extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class CatalogSchemeMapUpdater
 {
-
 	public CatalogSchemeMapUpdater()
 	{
 	}
@@ -28,7 +28,7 @@ public class CatalogSchemeMapUpdater extends Object
 // ELEMENT
 ///////////////////////////////////////////////////////////////////
 
-	static public String getElementScheme(String element_id)
+	public static String getElementScheme(String element_id)
 	{
 		String s1;
 		String s2;
@@ -63,7 +63,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getElementMap(String element_id)
+	public static String getElementMap(String element_id)
 	{
 		String s1;
 
@@ -83,7 +83,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void equipmentUpdated(Equipment_Transferable eq)
+	public static void equipmentUpdated(Equipment_Transferable eq)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -169,7 +169,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemeElementUpdated(SchemeElement_Transferable se)
+	public static void schemeElementUpdated(SchemeElement_Transferable se)
 	{
 		IdIterator idIt = null;
 
@@ -233,7 +233,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void mapElementUpdated(MapElement_Transferable me)
+	public static void mapElementUpdated(MapElement_Transferable me)
 	{
 		String s1;
 
@@ -290,7 +290,7 @@ public class CatalogSchemeMapUpdater extends Object
 // PATH
 ///////////////////////////////////////////////////////////////////
 
-	static public String getPathScheme(String path_id)
+	public static String getPathScheme(String path_id)
 	{
 		String s1;
 		String s2;
@@ -311,7 +311,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getPathMap(String path_id)
+	public static String getPathMap(String path_id)
 	{
 		String s1;
 
@@ -331,7 +331,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void pathUpdated(TransmissionPath_Transferable tp)
+	public static void pathUpdated(TransmissionPath_Transferable tp)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -422,7 +422,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 /*
-	static public void updatePathLinks(SchemePath_Transferable sp)
+	public static void updatePathLinks(SchemePath_Transferable sp)
 	{
 		PathLinkIterator lidIt = null;
 
@@ -483,7 +483,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 */
-	static public void schemePathUpdated(SchemePath_Transferable sp)
+	public static void schemePathUpdated(SchemePath_Transferable sp)
 	{
 		IdIterator idIt = null;
 
@@ -554,7 +554,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void mapPathUpdated(MapPathElement_Transferable mp)
+	public static void mapPathUpdated(MapPathElement_Transferable mp)
 	{
 		String s1;
 
@@ -614,7 +614,7 @@ public class CatalogSchemeMapUpdater extends Object
 // LINK
 ///////////////////////////////////////////////////////////////////
 
-	static public String getDeviceElement(String device_id)
+	public static String getDeviceElement(String device_id)
 	{
 		String s1;
 
@@ -634,7 +634,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getSchemePort(String port_id)
+	public static String getSchemePort(String port_id)
 	{
 		String s1;
 
@@ -654,7 +654,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getPort(String port_id)
+	public static String getPort(String port_id)
 	{
 		String s1;
 
@@ -687,7 +687,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getPortEquipment(String port_id)
+	public static String getPortEquipment(String port_id)
 	{
 		String s1;
 
@@ -720,7 +720,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getLinkScheme(String link_id)
+	public static String getLinkScheme(String link_id)
 	{
 		String s1;
 		String s2;
@@ -754,7 +754,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void linkUpdated(Link_Transferable l)
+	public static void linkUpdated(Link_Transferable l)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -818,7 +818,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemeLinkUpdated(SchemeLink_Transferable sl)
+	public static void schemeLinkUpdated(SchemeLink_Transferable sl)
 	{
 		IdIterator idIt = null;
 
@@ -869,7 +869,7 @@ public class CatalogSchemeMapUpdater extends Object
 // CABLELINK
 ///////////////////////////////////////////////////////////////////
 
-	static public String getCableLinkScheme(String link_id)
+	public static String getCableLinkScheme(String link_id)
 	{
 		String s1;
 		String s2;
@@ -905,7 +905,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getCableLinkMap(String link_id)
+	public static String getCableLinkMap(String link_id)
 	{
 		String s1;
 
@@ -925,7 +925,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getSchemeCablePort(String port_id)
+	public static String getSchemeCablePort(String port_id)
 	{
 		String s1;
 
@@ -945,7 +945,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getCablePort(String port_id)
+	public static String getCablePort(String port_id)
 	{
 		String s1;
 
@@ -965,7 +965,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getMapElement(String element_id)
+	public static String getMapElement(String element_id)
 	{
 		String s1;
 
@@ -985,7 +985,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getSchemePortElement(String port_id)
+	public static String getSchemePortElement(String port_id)
 	{
 		String s1;
 		String s2;
@@ -1029,7 +1029,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void cableLinkUpdated(CableLink_Transferable l)
+	public static void cableLinkUpdated(CableLink_Transferable l)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -1134,7 +1134,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemeCableLinkUpdated(SchemeCableLink_Transferable scl)
+	public static void schemeCableLinkUpdated(SchemeCableLink_Transferable scl)
 	{
 		IdIterator idIt = null;
 
@@ -1219,7 +1219,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void mapLinkUpdated(MapPhysicalLinkElement_Transferable ml)
+	public static void mapLinkUpdated(MapPhysicalLinkElement_Transferable ml)
 	{
 		String s1;
 
@@ -1269,7 +1269,7 @@ public class CatalogSchemeMapUpdater extends Object
 // CABLELINKTHREAD
 ///////////////////////////////////////////////////////////////////
 
-	static public String getThreadSchemeCable(String thread_id)
+	public static String getThreadSchemeCable(String thread_id)
 	{
 		String s1;
 
@@ -1290,7 +1290,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public String getThreadCableLink(String thread_id)
+	public static String getThreadCableLink(String thread_id)
 	{
 		String s1;
 
@@ -1310,7 +1310,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void cableThreadUpdated(CableLinkThread_Transferable t)
+	public static void cableThreadUpdated(CableLinkThread_Transferable t)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -1372,7 +1372,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemeCableLinkThreadUpdated(SchemeCableThread_Transferable st)
+	public static void schemeCableLinkThreadUpdated(SchemeCableThread_Transferable st)
 	{
 		IdIterator idIt = null;
 
@@ -1425,7 +1425,7 @@ public class CatalogSchemeMapUpdater extends Object
 // PORT
 ///////////////////////////////////////////////////////////////////
 
-	static public String getPortElement(String port_id)
+	public static String getPortElement(String port_id)
 	{
 		String s1;
 		String s2;
@@ -1446,7 +1446,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void portUpdated(Port_Transferable p)
+	public static void portUpdated(Port_Transferable p)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -1496,7 +1496,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemePortUpdated(SchemePort_Transferable sp)
+	public static void schemePortUpdated(SchemePort_Transferable sp)
 	{
 		IdIterator idIt = null;
 
@@ -1547,7 +1547,7 @@ public class CatalogSchemeMapUpdater extends Object
 // CABLEPORT
 ///////////////////////////////////////////////////////////////////
 
-	static public String getCablePortElement(String port_id)
+	public static String getCablePortElement(String port_id)
 	{
 		String s1;
 		String s2;
@@ -1568,7 +1568,7 @@ public class CatalogSchemeMapUpdater extends Object
 		return null;
 	}
 
-	static public void cablePortUpdated(CablePort_Transferable p)
+	public static void cablePortUpdated(CablePort_Transferable p)
 	{
 		IdIterator idIt = null;
 		IdIterator idIt2 = null;
@@ -1618,7 +1618,7 @@ public class CatalogSchemeMapUpdater extends Object
 		}
 	}
 
-	static public void schemeCablePortUpdated(SchemeCablePort_Transferable sp)
+	public static void schemeCablePortUpdated(SchemeCablePort_Transferable sp)
 	{
 		IdIterator idIt = null;
 
@@ -1672,7 +1672,4 @@ public class CatalogSchemeMapUpdater extends Object
 		int is_cable,
 		String link_id,
 		String thread_id);
-
-
 }
-

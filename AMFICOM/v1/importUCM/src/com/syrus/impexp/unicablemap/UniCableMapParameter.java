@@ -255,5 +255,6 @@ public class UniCableMapParameter {
 	public String value;
 	
 	public UniCableMapParameter() {
+		// empty
 	}
 }

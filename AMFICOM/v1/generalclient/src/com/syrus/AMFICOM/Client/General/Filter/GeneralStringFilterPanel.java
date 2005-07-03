@@ -1,21 +1,23 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
 
-import java.util.Vector;
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
+
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class GeneralStringFilterPanel extends FilterPanel
 {
 	JTextField textField = new JTextField();
 	JLabel jLabel1 = new JLabel();
-	XYLayout xYLayout1 = new XYLayout();
 
 	public GeneralStringFilterPanel()
 	{
@@ -33,28 +35,35 @@ public class GeneralStringFilterPanel extends FilterPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(xYLayout1);
-		jLabel1.setText(LangModel.String("labelStringForSearch"));
-		this.add(jLabel1, new XYConstraints(10, 20, 200, 20));
-		this.add(textField, new XYConstraints(10, 50, 200, 20));
-//		this.setLayout(null);
+		this.setLayout(new GridBagLayout());
+		jLabel1.setText(LangModel.getString("labelStringForSearch"));
+		this.add(jLabel1,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 5, 0), 0, 0));
+		this.add(textField,  new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name)
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("string");
 		vec.add(textField.getText());
 		FilterExpression fexp = new FilterExpression();
 		fexp.setVec(vec);
-		fexp.setName(LangModel.String("labelFiltration")+" \'"+col_name+"\' "+LangModel.String("labelPoPodstroke")+" "+textField.getText());
+
+		String expName = LangModel.getString("labelFiltration") + " \'" + col_name + "\' "+LangModel.getString("labelPoPodstroke");
+		if (conditionsRequested)
+			expName += (" " + textField.getText());
+
+		fexp.setName(expName);
+		fexp.setColumnName(col_name);
 		fexp.setId(col_id);
 		return fexp;
 	}
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		textField.setText((String) vec.elementAt(1));
+		List vec = expr.getVec();
+		textField.setText((String) vec.get(1));
 	}
 }

@@ -10,7 +10,6 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Command.Config.*;
 import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -18,7 +17,6 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.io.*;
@@ -29,14 +27,7 @@ import com.syrus.AMFICOM.Client.Schematics.Elements.*;//окно свойств элемента
 import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.Optimize.UI.*;
 
-import java.awt.geom.*;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.print.PrinterJob;
-import java.awt.event.*;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.print.*;
+import com.syrus.AMFICOM.Client.Resource.Optimize.*;
 
 public class OptimizeMDIMain extends JFrame implements OperationListener
 {
@@ -77,8 +68,11 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
   private int opened_scheme_num = 0; // количество открытых схем
   public boolean map_is_opened = false; // индикатор открытия карты
   public OptimizeMainToolBar mainToolBar; // панелька с кнопками, дублирующими главное меню
+  
+  public String latestSavedSolutionId = ""; //id последнего сохранённого решения
   // </Vit>
 
+  private CreateOptimizeReportCommand corCommand = null;
     //-------------------------------------------------------------------------------------------------------------
     public OptimizeMDIMain(ApplicationContext aContext)
     { super();
@@ -98,12 +92,12 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     private void jbInit() throws Exception
     { this.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/design.gif"));
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-      setContentPane(mainPanel);
+      setContentPane(this.mainPanel);
       //Разворачиваем окно на весь экран
       Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
       setSize(dim.width, dim.height - 24);// 24 - размер таскбара винды
       setLocation(0,0);
-      this.setTitle(LangModelOptimize.String("AppTitle"));
+      this.setTitle(LangModelOptimize.getString("AppTitle"));
       this.addComponentListener(new OptimizeMDIMain_this_componentAdapter(this));
       this.addWindowListener(new java.awt.event.WindowAdapter()
       { public void windowClosing(WindowEvent e)
@@ -219,7 +213,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       aModel.setCommand("menuLoadSm", new LoadSolutionCommand(internal_dispatcher, aContext, this)); // то ли надо передавать в ф-ю ?
       //очисить схему от всех путей, которые в ней могут находиться
       aModel.setCommand("menuClearScheme", new SchemePathsClearCommand(internal_dispatcher, aContext, this));
-
+      
       aModel.setCommand("menuViewMap", new ViewMapCommand(internal_dispatcher, desktopPane, aContext, new MapOptimizeApplicationModelFactory(), this));
       aModel.setCommand("menuViewScheme", new ViewSchemeCommand(internal_dispatcher, desktopPane, aContext, new MapOptimizeApplicationModelFactory(), this));
       //открытие свойств карты и схемы
@@ -228,6 +222,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       aModel.setCommand("menuViewGraph", new ViewGraphCommand(internal_dispatcher, desktopPane, aContext, optimizerContext, this));
       aModel.setCommand("menuViewSolution", new ViewSolutionCommand(internal_dispatcher, desktopPane, aContext, this));
       aModel.setCommand("menuViewKIS", new ViewKISCommand(internal_dispatcher, desktopPane, aContext, this));
+      
       aModel.setCommand("menuViewParams", new ViewParamCommand(internal_dispatcher, desktopPane, aContext, optimizerContext, this));
       aModel.setCommand("menuViewMode", new ViewModeCommand(internal_dispatcher, desktopPane, aContext, this));
       // показать все основные окна (на всякий случай посылает event "showallevent")
@@ -240,6 +235,12 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       aModel.setCommand("menuOptimizeCriteriaPriceClose", new ClosePricelistCommand(internal_dispatcher, desktopPane, aContext, this));
       // изменение режима оптимизации ( встречное\односторонее )
       aModel.setCommand("menuOptimizeModeUnidirect", new SetOptimizeModeCommand(  0, internal_dispatcher, desktopPane, aContext, this ));
+      aModel.setCommand("menuOptimizeModeBidirect", new SetOptimizeModeCommand(  1, internal_dispatcher, desktopPane, aContext, this ));
+      
+      corCommand = new CreateOptimizeReportCommand(aContext);
+      corCommand.setMainWindow(this);
+      aModel.setCommand("menuReportCreate", corCommand);
+      
       aModel.setCommand("menuOptimizeModeBidirect", new SetOptimizeModeCommand(  1, internal_dispatcher, desktopPane, aContext, this ));
 
       aModel.add("menuHelpAbout", new HelpAboutCommand(this));//, new OptimizeMDIMain_AboutBoxPanel1()));
@@ -286,6 +287,8 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       //  aModel.enable("menuSchemeOpen");
       //  aModel.enable("menuSchemeSave");
       //  aModel.enable("menuSchemeClose");
+      aModel.enable("menuReport");
+
       aModel.fireModelChanged("");
 
       if(ConnectionInterface.getActiveConnection() != null)
@@ -346,64 +349,46 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     public void operationPerformed(OperationEvent ae)
     {	ApplicationModel aModel = aContext.getApplicationModel();
     //---------------------
-     if(ae.getActionCommand().equals("mapopened"))// событие: открыта новая карта
-     { DataSourceInterface dataSource = aContext.getDataSourceInterface();
-// все нижезакоментированные действия автоматически выполняются при открытии схемы
-// так как при открытии карты автомматически открывается и схема
-//       //как только открывается новая карта , сразу производятся все действия для подготовки процесса оптимизации
-//       optimizerContext = new OpticalOptimizerContext(this);
-//       // при открытии карты надо переприсвоить optimizerContext в модели всех команд, которые к ней относятся;
-//       aModel.getCommand("menuOptimizeStart").setParameter("optimizerContext", optimizerContext);
-//       aModel.getCommand("menuOptimizeStop").setParameter("optimizerContext", optimizerContext);
-//       aModel.getCommand("menuViewGraph").setParameter("optimizerContext", optimizerContext);
-//       aModel.getCommand("menuViewSolution").setParameter("optimizerContext", optimizerContext);
-//       aModel.getCommand("menuViewParams").setParameter("optimizerContext", optimizerContext);
-//       aModel.getCommand("menuViewShowall").setParameter("optimizerContext", optimizerContext);
-//       //System.out.println("Open map " + mapContext.id);
-//
-//       //задаём цены на устройства при открытии новой карты: получаем таблицу идентификаторов для задания цены
-//       // ht2 хранит идентификаторы устройств в другом виде, нежели ht1. Именно такой формат нужен для окна задания цены
-//       Hashtable ht2 = (Hashtable)Pool.getHash(EquipmentType.typ);
-//       // окно задания цены на RTU и коммутаторы (при открытии окна карты передвинем)
-//       kisSelectFrame = new KISselectionFrame( optimizerContext, ht2, this);
-//       this.desktopPane.add(kisSelectFrame, null);
-//       kisSelectFrame.setVisible(true);
+ 	if(ae.getActionCommand().equals("mapopened"))// событие: открыта новая карта
+ 	{	 DataSourceInterface dataSource = aContext.getDataSourceInterface();
+     	 //  некоторые действия автоматически выполняются при открытии схемы
+         // так как при открытии карты автоматически открывается и схема
 
-       aModel.enable("menuScheme");
-       aModel.enable("menuMapOpen");
-       aModel.enable("menuSchemeOpen");
-       aModel.enable("menuSchemeSave");
-       aModel.enable("menuSchemeSaveAs");
-       aModel.enable("menuLoadSm");
-       aModel.enable("menuClearScheme");
-       aModel.enable("menuSchemeClose");
-       aModel.enable("menuView");
-       aModel.enable("menuViewMap");
-       aModel.enable("menuViewScheme");
-       aModel.enable("menuViewMapElProperties");
-       aModel.enable("menuViewSchElProperties");
-       aModel.enable("menuViewKIS");
-       aModel.enable("menuViewGraph");
-       aModel.enable("menuViewSolution");
-       aModel.enable("menuViewParams");
-       aModel.enable("menuViewMode");
-       aModel.enable("menuViewShowall");
-       aModel.enable("menuOptimize");
-       aModel.enable("menuOptimizeCriteria");
-       aModel.enable("menuOptimizeMode");
-       aModel.enable("menuOptimizeModeUnidirect");
-       aModel.enable("menuOptimizeModeBidirect");
-       aModel.enable("menuOptimizeCriteriaPrice");
-       aModel.enable("menuOptimizeCriteriaPriceLoad");
-       aModel.enable("menuOptimizeCriteriaPriceSave");
-       aModel.enable("menuOptimizeCriteriaPriceSaveas");
-       aModel.enable("menuOptimizeCriteriaPriceClose");
-       aModel.enable("menuOptimizeStart");
-       aModel.disable("menuOptimizeStop");
-       aModel.fireModelChanged("");
-
-       opened_scheme_num++; // счётчик открытых схем
-       map_is_opened = true;
+	       aModel.enable("menuScheme");
+	       aModel.enable("menuMapOpen");
+	       aModel.enable("menuSchemeOpen");
+	       aModel.enable("menuSchemeSave");
+	       aModel.enable("menuSchemeSaveAs");
+	       aModel.enable("menuLoadSm");
+	       aModel.enable("menuClearScheme");
+	       aModel.enable("menuSchemeClose");
+	       aModel.enable("menuView");
+	       aModel.enable("menuViewMap");
+	       aModel.enable("menuViewScheme");
+	       aModel.enable("menuViewMapElProperties");
+	       aModel.enable("menuViewSchElProperties");
+	       aModel.enable("menuViewKIS");
+	       aModel.enable("menuViewGraph");
+	       aModel.enable("menuViewSolution");
+	       aModel.enable("menuViewParams");
+	       aModel.enable("menuViewMode");
+	       aModel.enable("menuViewShowall");
+	       aModel.enable("menuOptimize");
+	       aModel.enable("menuOptimizeCriteria");
+	       aModel.enable("menuOptimizeMode");
+	       aModel.enable("menuOptimizeModeUnidirect");
+	       aModel.enable("menuOptimizeModeBidirect");
+	       aModel.enable("menuOptimizeCriteriaPrice");
+	       aModel.enable("menuOptimizeCriteriaPriceLoad");
+	       aModel.enable("menuOptimizeCriteriaPriceSave");
+	       aModel.enable("menuOptimizeCriteriaPriceSaveas");
+	       aModel.enable("menuOptimizeCriteriaPriceClose");
+	       aModel.enable("menuOptimizeStart");
+	       aModel.disable("menuOptimizeStop");
+	       aModel.fireModelChanged("");
+	
+	       opened_scheme_num++; // счётчик открытых схем
+	       map_is_opened = true;
     }
     //--------------------------------------
     else if(ae.getActionCommand().equals("scheme_is_opened"))// событие: открыта новая схема
@@ -434,15 +419,14 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
        if(scheme.paths.size() != 0)
        { System.out.println("event scheme_is_opened: Loaded scheme already contains scheme path(s).");
          javax.swing.JOptionPane.showMessageDialog( Environment.getActiveWindow(), "Схема уже содержит пути тестирования.", "Внимание!", javax.swing.JOptionPane.WARNING_MESSAGE );
-         SchemePath sp;
          System.out.println("Loading initial paths and links ...");
-         for(Enumeration paths = scheme.paths.elements(); paths.hasMoreElements();)
-         { sp = (SchemePath)paths.nextElement();
-           // запоминаем начальные пути тестирования
+         for(Iterator iter = scheme.paths.iterator(); iter.hasNext(); )
+         {  SchemePath sp = (SchemePath)iter.next();
+         	// запоминаем начальные пути тестирования
            optimizerContext.original_paths.add(sp);
            // прописываем originally_lconnected_nodes (пробегаем по пути, ищем линки и отмечаем соединяемые ими узлы)
-           for( Enumeration pes = sp.links.elements(); pes.hasMoreElements(); )
-           { PathElement pe = (PathElement)pes.nextElement();
+           for( Iterator pes = sp.links.iterator(); pes.hasNext(); )
+           { PathElement pe = (PathElement)pes.next();
              if(!pe.is_cable)//если это не кабель, а линк
              { SchemeLink sl = (SchemeLink)Pool.get( SchemeLink.typ, pe.link_id);
                String se1_id = ((SchemeElement)scheme.getSchemeElementByPort(sl.source_port_id)).id;
@@ -492,6 +476,8 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
        aModel.enable("menuOptimizeModeBidirect");
        aModel.enable("menuOptimizeStart");
        aModel.disable("menuOptimizeStop");
+       aModel.enable("menuReport");
+       aModel.enable("menuReportCreate");
        aModel.fireModelChanged("");
 
        opened_scheme_num++; // счётчик открытых схем
@@ -562,8 +548,8 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     { Vector new_sps = optimizerContext.solution.paths; // все пути нового решения
       SchemePath sp; // один путь из решения
       // удаляем все пути из пула
-      for(Enumeration ps = scheme.paths.elements(); ps.hasMoreElements();)
-      { sp = (SchemePath)ps.nextElement();
+      for(Iterator ps = scheme.paths.iterator(); ps.hasNext();)
+      { sp = (SchemePath)ps.next();
         Pool.remove(SchemePath.typ, sp.getId());
       }
       // удаляем все пути из схемы
@@ -594,8 +580,8 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       SchemePath sp; // один путь из решения
       // удаляем все пути (если они есть) из пула
       if(scheme.paths != null)
-      { for(Enumeration ps = scheme.paths.elements(); ps.hasMoreElements();)
-        { sp = (SchemePath)ps.nextElement();
+      { for(Iterator ps = scheme.paths.iterator(); ps.hasNext();)
+        { sp = (SchemePath)ps.next();
           Pool.remove(SchemePath.typ, sp.getId());
         }
       }
@@ -620,8 +606,8 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     else if(ae.getActionCommand().equals("scheme_updated_event"))
     { if(mapContext != null && mapFrame != null)
       {	 MapContext mc = mapContext;
-         for(int i=0; i<scheme.paths.size(); i++)
-         { SchemePath se = (SchemePath)scheme.paths.get(i);
+         for(Iterator i=scheme.paths.iterator(); i.hasNext();)
+         { SchemePath se = (SchemePath)i.next();
            se.mtppe = null;
            Hashtable ht = Pool.getHash(MapTransmissionPathProtoElement.typ);
            if(ht != null)
@@ -852,27 +838,26 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
 	{	// проверка прав доступа
 		Checker checker = new Checker( aContext.getDataSourceInterface() );
 		if( !checker.checkCommand(checker.enterOptimizationModul) )
-    {
+		{
   return;
-    }
-
+		}
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.enable("menuSessionClose");
-    aModel.disable("menuSessionNew");
+		aModel.disable("menuSessionNew");
 		aModel.enable("menuSessionOptions");
 		aModel.enable("menuSessionChangePassword");
 		aModel.enable("menuSessionDomain");
-    aModel.fireModelChanged("");
+    aModel.enable("menuReport");    
+		aModel.fireModelChanged("");
 
-    mainToolBar.open_scheme.setEnabled(true);
-    mainToolBar.open_map.setEnabled(true);
-    mainToolBar.new_session.setEnabled(false);
-
-    String domain_id = aContext.getSessionInterface().getDomainId();
-    if(domain_id!=null&&!domain_id.equals(""))
-    { setDomainSelected();
-    }
-
+	    mainToolBar.open_scheme.setEnabled(true);
+	    mainToolBar.open_map.setEnabled(true);
+	    mainToolBar.new_session.setEnabled(false);
+	
+	    String domain_id = aContext.getSessionInterface().getDomainId();
+	    if(domain_id!=null&&!domain_id.equals(""))
+	    { setDomainSelected();
+	    }
   }
 //----------------------------------------------------------------------------------------------------------
   public void setSessionClosed()
@@ -894,6 +879,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
     aModel.disable("menuSchemeSaveAs");
     aModel.disable("menuLoadSm");
     aModel.disable("menuClearScheme");
+    aModel.disable("menuReport");    
     aModel.fireModelChanged("");
 
     mainToolBar.open_scheme.setEnabled(false);
@@ -980,6 +966,10 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
 			return;
 		}
 		super.processWindowEvent(e);
+	}
+	//--------------------------------------------------------------------------------------------------------------	
+	String getLatestSavedSolutionId()
+	{    return   latestSavedSolutionId;
 	}
 }
 //==================================================================================================================

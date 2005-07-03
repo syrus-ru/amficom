@@ -69,4 +69,3 @@ public class ContextChangeEvent extends OperationEvent
 	}
 
 }
-

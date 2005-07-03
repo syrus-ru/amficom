@@ -1,3 +1,6 @@
+.classpath
+.project
+.settings
 .corba
 .mach
 *.jar
@@ -12,3 +15,6 @@ classes
 logs
 orb.db
 SerializedLRUMaps
+gc
+pid
+cache

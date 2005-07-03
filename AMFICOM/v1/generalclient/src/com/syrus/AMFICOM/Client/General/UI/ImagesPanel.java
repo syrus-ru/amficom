@@ -1,29 +1,41 @@
 package com.syrus.AMFICOM.Client.General.UI;
-import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import javax.swing.JButton;
-import javax.swing.BorderFactory;
 import java.awt.Color;
-import javax.swing.border.BevelBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
-import javax.swing.ImageIcon;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.Iterator;
 
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.border.BevelBorder;
 
-public class ImagesPanel extends JPanel 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import com.syrus.AMFICOM.resource.FileImageResource;
+
+public class ImagesPanel extends JPanel
 		implements OperationListener
 {
 	private FlowLayout flowLayout1 = new FlowLayout();
@@ -35,7 +47,7 @@ public class ImagesPanel extends JPanel
 	public JButton cancelButton = new JButton();
 
 	Dispatcher disp = new Dispatcher();
-	public ImageResource ir = null;
+	public AbstractImageResource ir = null;
 	DataSourceInterface dsi = null;
 	private JScrollPane jScrollPane1 = new JScrollPane();
 
@@ -53,7 +65,7 @@ public class ImagesPanel extends JPanel
 		initImages();
 	}
 
-	public ImagesPanel(DataSourceInterface dsi, ImageResource ir)
+	public ImagesPanel(DataSourceInterface dsi, AbstractImageResource ir)
 	{
 		this(dsi);
 		setImageResource(ir);
@@ -61,28 +73,28 @@ public class ImagesPanel extends JPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(borderLayout1);
+		this.setLayout(this.borderLayout1);
 
-		flowLayout1.setAlignment(FlowLayout.LEFT);
-		imagesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
-		imagesPanel.setBackground(Color.white);
-		imagesPanel.setLayout(flowLayout1);
-		imagesPanel.setAutoscrolls(false);
-		imagesPanel.setMaximumSize(new Dimension(0, 1300));
-		imagesPanel.setMinimumSize(new Dimension(0, 100));
-		imagesPanel.setPreferredSize(new Dimension(0, 100));
-		
-		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		this.flowLayout1.setAlignment(FlowLayout.LEFT);
+		this.imagesPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+		this.imagesPanel.setBackground(Color.white);
+		this.imagesPanel.setLayout(this.flowLayout1);
+		this.imagesPanel.setAutoscrolls(false);
+		this.imagesPanel.setMaximumSize(new Dimension(0, 1300));
+		this.imagesPanel.setMinimumSize(new Dimension(0, 100));
+		this.imagesPanel.setPreferredSize(new Dimension(0, 100));
+
+		this.jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 //		jScrollPane1.getViewport().setLayout();
-		jScrollPane1.getViewport().add(imagesPanel);
-		jScrollPane1.setWheelScrollingEnabled(true);
-		this.add(jScrollPane1, BorderLayout.CENTER);
+		this.jScrollPane1.getViewport().add(this.imagesPanel);
+		this.jScrollPane1.setWheelScrollingEnabled(true);
+		this.add(this.jScrollPane1, BorderLayout.CENTER);
 
-		chooseButton.setText("Выбрать");
-		chooseButton.disable();
-		addButton.setText("Добавить");
-		cancelButton.setText("Отменить");
+		this.chooseButton.setText("Выбрать");
+		this.chooseButton.setEnabled(false);
+		this.addButton.setText("Добавить");
+		this.cancelButton.setText("Отменить");
 		buttonsPanel.add(chooseButton, null);
 		buttonsPanel.add(addButton, null);
 		buttonsPanel.add(cancelButton, null);
@@ -101,12 +113,29 @@ public class ImagesPanel extends JPanel
 	{
 		disp.register(this, "select");
 		disp.register(this, "selectir");
-		for(Enumeration enum = ImageCatalogue.getAll(); enum.hasMoreElements();)
+		
+		StorableObjectCondition condition =
+			new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+		
+		Collection irs = null;
+
+		try
 		{
-			ImageResource ir = (ImageResource )enum.nextElement();
-			ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-			ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
-			imagesPanel.add(ipl);
+			irs = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		}
+		catch (ApplicationException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+
+		for(Iterator it = irs.iterator(); it.hasNext();)
+		{
+			AbstractImageResource ir = (AbstractImageResource )it.next();
+			ImageIcon icon = new ImageIcon(ir.getImage());
+			Image im = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, new ImageIcon(im), ir);
+			this.imagesPanel.add(ipl);
 		}
 	}
 
@@ -115,46 +144,85 @@ public class ImagesPanel extends JPanel
 		if(oe.getActionCommand().equals("select"))
 		{
 			ImagesPanelLabel ipl = (ImagesPanelLabel )oe.getSource();
-			ir = (ImageResource )ipl.ir;
-			chooseButton.enable();
+			ir = ipl.ir;
+			this.chooseButton.setEnabled(true);
 		}
 		else
 		if(oe.getActionCommand().equals("selectir"))
 		{
-			ir = (ImageResource )oe.getSource();
-			chooseButton.enable();
+			ir = (AbstractImageResource )oe.getSource();
+			chooseButton.setEnabled(true);
 		}
 	}
 
-	public ImageResource getImageResource()
+	public AbstractImageResource getImageResource()
 	{
 		return ir;
 	}
 
-	public void setImageResource(ImageResource ir)
+	public void setImageResource(AbstractImageResource ir)
 	{
 		disp.notify(new OperationEvent(ir, 0, "selectir"));
 	}
 
-	private void addButton_actionPerformed(ActionEvent e)
+	void addButton_actionPerformed(ActionEvent ae)
 	{
 		JFileChooser chooser = new JFileChooser();
-        chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
-        int returnVal = chooser.showOpenDialog(null);
-        if(returnVal == JFileChooser.APPROVE_OPTION)
-        {
-			ImageResource ir = new ImageResource(
-					dsi.GetUId(ImageResource.typ), 
-					chooser.getSelectedFile().getName(), 
-					chooser.getSelectedFile().getAbsolutePath());
-			ImageCatalogue.add(ir.getId(), ir);
-			ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-			ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
+		  chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", "Picture"));
+		  int returnVal = chooser.showOpenDialog(null);
+		  if(returnVal == JFileChooser.APPROVE_OPTION)
+		  {
+			try
+			{
+				/*
+				 * Fuck, whoever did this, we're tired of your
+				 * irresponsibility!!! As was previosly mentioned
+				 * (multiple times!), this constructor should
+				 * never be used client-side. Use
+				 * #createInstance(...) instead.
+				 *
+				 * --
+				 * Yours sincerely,
+				 *         Bass.
+				 */
+				ir = new FileImageResource(
+					IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE));
+			}
+			catch (ObjectNotFoundException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+			catch (RetrieveObjectException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+			catch (IdentifierGenerationException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+			((FileImageResource )ir).setFileName(chooser.getSelectedFile().getName());
+			try
+			{
+				StorableObjectPool.putStorableObject(ir);
+			}
+			catch (IllegalObjectEntityException e)
+			{
+				e.printStackTrace();
+				return;
+			}
+//					chooser.getSelectedFile().getAbsolutePath());
+			ImageIcon icon = new ImageIcon(ir.getImage());
+			Image im = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			ImagesPanelLabel ipl = new ImagesPanelLabel(disp, new ImageIcon(im), ir);
+
 			imagesPanel.add(ipl);
 			if(disp != null)
 				disp.notify(new OperationEvent(ir, 0, "selectir"));
 			imagesPanel.revalidate();
-        }	
+		  }
 	}
 
 }

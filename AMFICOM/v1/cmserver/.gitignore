@@ -10,4 +10,10 @@
 *.log
 classes
 logs
+cache
 orb.db
+gc
+SerializedLRUMaps
+.settings
+.classpath
+.project

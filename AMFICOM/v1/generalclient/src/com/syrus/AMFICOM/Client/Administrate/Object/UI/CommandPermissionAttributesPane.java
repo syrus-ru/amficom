@@ -1,24 +1,35 @@
+/*
+ * $Id: CommandPermissionAttributesPane.java,v 1.9 2005/05/18 14:01:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
 
-public class CommandPermissionAttributesPane extends PropertiesPanel
-{
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 14:01:20 $
+ * @module generalclient_v1
+ */
+public final class CommandPermissionAttributesPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static CommandPermissionAttributesPane instance = null;
 
   CommandPermissionAttributes cpa;
   CommandPermissionAttributesPanel cpap =
-      new CommandPermissionAttributesPanel();
+		new CommandPermissionAttributesPanel();
 
   NewUpDater updater;
 
@@ -26,134 +37,139 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
   BorderLayout borderLayout1 = new BorderLayout();
   User user;
 
-  public CommandPermissionAttributesPane() {
-    try
-    {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public CommandPermissionAttributesPane() {
+		jbInit();
+	}
 
-  public CommandPermissionAttributesPane(CommandPermissionAttributes cpa)
-  {
-    super();
-    setObjectResource(cpa);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public CommandPermissionAttributesPane(CommandPermissionAttributes cpa) {
+		super();
+		setObjectResource(cpa);
+	}
 
-  void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-
-    this.setBorder(BorderFactory.createRaisedBevelBorder());
-    this.add(cpap, BorderLayout.CENTER);
-  }
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.add(cpap, BorderLayout.CENTER);
+	}
 
   public boolean save()
   {
-    return modify();
+	 return modify();
   }
 
   public boolean cancel()
   {
-    this.setData(this.cpa);
-    return true;
+	 this.setData(this.cpa);
+	 return true;
   }
 
   public boolean modify()
   {
-    if(!Checker.checkCommand(user, Checker.modifyExec))
-    {
-      this.setData(cpa);
-      return false;
-    }
-    if(cpa.id.equals(""))
-      return false;
+	 if(!Checker.checkCommand(user, Checker.modifyExec))
+	 {
+		this.setData(cpa);
+		return false;
+	 }
+	 if(cpa.getId().equals(""))
+		return false;
 
 
 
-    this.cpap.modify();
-    Date d = new Date();
-    cpa.modified_by = user.id;
-    cpa.modified = d.getTime();
+	 this.cpap.modify();
+	 Date d = new Date();
+	 cpa.modified_by = user.getId();
+	 cpa.modified = d.getTime();
 
 
-    if(!NewUpDater.checkName(cpa))
-      return false;
+	 if(!NewUpDater.checkName(cpa))
+		return false;
 
-    updater.updateObjectResources(this.cpa, false);
-    Pool.put(CommandPermissionAttributes.typ, cpa.id, cpa);
-    this.aContext.getDataSourceInterface().SaveExec(cpa.id);
+	 updater.updateObjectResources(this.cpa, false);
+	 Pool.put(CommandPermissionAttributes.class.getName(), cpa.getId(), cpa);
+	 this.aContext.getDataSource().SaveExec(cpa.getId());
 
-    this.setData(cpa);
+	 this.setData(cpa);
 
-    return true;
+	 return true;
   }
   public boolean create() // new command (Exec) CAN NOT BE CREATED !!!
   {
-    String error = "Ошибка: Команда не может быть создана.";
-    JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
-    return false;
+	 String error = "Ошибка: Команда не может быть создана.";
+	 JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
+	 return false;
   }
   public boolean open()
   {
-    return true;
+	 return true;
   }
   public boolean delete() // COMMAND CAN NOT BE DELETED !!!!
   {
 
-    String error = "Ошибка: Команда не может быть удалена.";
-    JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
-    return false;
+	 String error = "Ошибка: Команда не может быть удалена.";
+	 JOptionPane.showMessageDialog(null, error, "Ошибка", JOptionPane.OK_OPTION);
+	 return false;
   }
   public void setContext(ApplicationContext aContext)
   {
-    this.aContext = aContext;
-    this.user = (User)Pool.get(User.typ,
-                               this.aContext.getSessionInterface().getUserId());
+	 this.aContext = aContext;
+	 this.user = (User)Pool.get(User.class.getName(),
+										 this.aContext.getSessionInterface().getUserId());
 
-    this.updater = new NewUpDater(aContext);
+	 this.updater = new NewUpDater(aContext);
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
-    ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
-                                   Pool.get("ObjectFrame", "AdministrateObjectFrame");
-    if(f!=null)
-    {
-      f.setTitle("Команды");
-    }
+	 ObjectResourceCatalogFrame f = (ObjectResourceCatalogFrame)
+											  Pool.get("ObjectFrame", "AdministrateObjectFrame");
+	 if(f != null)
+	 {
+		f.setTitle("Команды");
+	 }
 
-    if(!Checker.checkCommand(user, Checker.readExecInfo))
-    {
-      this.showTheWindow(false);
-      setData(or);
-      return false;
-    }
+	 if(!Checker.checkCommand(user, Checker.readExecInfo))
+	 {
+		this.showTheWindow(false);
+		setData(or);
+		return;
+	 }
 
-    this.showTheWindow(true);
-    setData(or);
-    return true;
+	 this.showTheWindow(true);
+	 setData(or);
   }
 
-  private void setData(ObjectResource or)
+  private void setData(StorableObject or)
   {
-    cpa = (CommandPermissionAttributes)or;
-    cpa.updateLocalFromTransferable();
-    this.cpap.setObjectResource(or);
+	 cpa = (CommandPermissionAttributes)or;
+	 cpa.updateLocalFromTransferable();
+	 this.cpap.setObjectResource(or);
   }
 
-  public ObjectResource getObjectResource()
+  public StorableObject getObjectResource()
   {
-    return cpa;
+	 return cpa;
   }
 
 
   void showTheWindow(boolean key)
   {
-    this.cpap.setVisible(key);
-    repaint();
+	 this.cpap.setVisible(key);
+	 repaint();
   }
+
+	public static CommandPermissionAttributesPane getInstance() {
+		if (instance == null)
+			synchronized (CommandPermissionAttributesPane.class) {
+				if (instance == null)
+					instance = new CommandPermissionAttributesPane();
+			}
+		return instance;
+	}
 }

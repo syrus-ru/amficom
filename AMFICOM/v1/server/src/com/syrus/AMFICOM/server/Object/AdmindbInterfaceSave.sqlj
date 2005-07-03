@@ -1,24 +1,29 @@
+/*
+ * $Id: AdmindbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:57 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class AdmindbInterfaceSave
 {
 	protected AdmindbInterfaceSave()
 	{
 	}
 
-	static public int saveServers(Server_Transferable[] serverseq)
+	public static int saveServers(Server_Transferable[] serverseq)
 	{
 		int i;
 		int len;
@@ -86,7 +91,7 @@ public class AdmindbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveClients(Client_Transferable[] clientseq)
+	public static int saveClients(Client_Transferable[] clientseq)
 	{
 		int i;
 		int len;
@@ -154,7 +159,7 @@ public class AdmindbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveAgents(Agent_Transferable[] agentseq)
+	public static int saveAgents(Agent_Transferable[] agentseq)
 	{
 		int i;
 		int len;
@@ -222,4 +227,3 @@ public class AdmindbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 }
-

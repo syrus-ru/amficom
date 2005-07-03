@@ -1,393 +1,261 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
-// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                                     * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*-
+ * $Id: map.idl,v 1.22 2005/06/28 08:08:24 max Exp $
+ *
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
-#ifndef _map_idl_
-#define _map_idl_
+#ifndef MAP_IDL
+#define MAP_IDL
 
-#include <general.idl>
-#include <scheme.idl>
+#include "configuration.idl"
+#include "resource.idl"
 
-module com
-{
-module syrus
-{
-module AMFICOM
-{
-module CORBA
-{
+module com {
+	module syrus {
+		module AMFICOM {
+			module map {
+				module corba {
+					typedef struct IdlSiteNodeType {
+						general::corba::StorableObject header;
 
-module Map
-{
-	struct MapProtoElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring description;
-		wstring owner_id;
+						wstring codename;
+						wstring name;
+						wstring description;
 
-		wstring symbol_id;
-		long long modified;
+						general::corba::Identifier imageId;
+						boolean topological;
+						general::corba::IdentifierSeq characteristicIds;
+					} SiteNodeType;
 
-		wstring pe_class;
-		boolean pe_is_kis;
-		boolean is_visual;
-		boolean is_topological;
-		wstring domain_id;
+					typedef sequence<SiteNodeType> SiteNodeTypeSeq;
 
-		Scheme::ElementAttributeSeq_Transferable attributes;
-		General::wstringSeq pe_ids;
+					/**
+					 * Physical line type such as tunnel, subway, etc.
+					 */
+					typedef struct IdlPhysicalLinkType {
+						general::corba::StorableObject header;
+
+						wstring codename;
+						wstring name;
+						wstring description;
+
+						long dimensionX;
+						long dimensionY;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} PhysicalLinkType;
+
+					typedef sequence<PhysicalLinkType> PhysicalLinkTypeSeq;
+
+					/**
+					 * Node.
+					 */
+					typedef struct IdlSiteNode {
+						general::corba::StorableObject header;
+
+						wstring name;
+						wstring description;
+
+						double  longitude;		// anchor
+						double latitude;		// anchor
+
+						general::corba::Identifier imageId;
+						general::corba::Identifier siteNodeTypeId;
+
+						wstring city;
+						wstring street;
+						wstring building;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} SiteNode;
+
+					typedef sequence<SiteNode> SiteNodeSeq;
+
+					typedef struct IdlTopologicalNode {
+						general::corba::StorableObject header;
+
+						wstring name;
+						wstring description;
+
+						double  longitude;		// anchor
+						double latitude;		// anchor
+
+						general::corba::Identifier physicalLinkId;
+
+						boolean active;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} TopologicalNode;
+
+					typedef sequence<TopologicalNode> TopologicalNodeSeq;
+
+//					XXX
+//					XXX
+//					XXX
+					typedef union IdlAbstractNode switch (enum AbstractNodeSort{
+							NODE_SORT_SITE,
+							NODE_SORT_TOPOLOGICAL}) {
+						case NODE_SORT_SITE:
+							SiteNode siteNode;
+						case NODE_SORT_TOPOLOGICAL:
+							TopologicalNode topologicalNode;
+					} AbstractNode;
+
+					typedef sequence<AbstractNode> AbstractNodeSeq;
+
+					/**
+					 * Map item, line fragment.
+					 */
+					typedef struct IdlNodeLink {
+						general::corba::StorableObject header;
+
+						wstring name;
+
+						general::corba::Identifier physicalLinkId;
+
+						general::corba::Identifier startNodeId;
+						general::corba::Identifier endNodeId;
+
+						double length;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} NodeLink;
+
+					typedef sequence<NodeLink> NodeLinkSeq;
+
+					/**
+					 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
+					 */
+					typedef struct IdlMark {
+						general::corba::StorableObject header;
+
+						wstring name;
+						wstring description;
+						double  longitude;		// anchor
+						double latitude;		// anchor
+
+						general::corba::Identifier physicalLinkId;
+
+						double distance;
+
+						wstring city;
+						wstring street;
+						wstring building;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} Mark;
+
+					typedef sequence<Mark> MarkSeq;
+
+					/**
+					 * Line item.
+					 */
+					typedef struct IdlPhysicalLink {
+						general::corba::StorableObject header;
+
+						wstring name;
+						wstring description;
+
+						general::corba::Identifier physicalLinkTypeId;
+
+						general::corba::Identifier startNodeId;
+						general::corba::Identifier endNodeId;
+
+						wstring city;
+						wstring street;
+						wstring building;
+
+						long dimensionX;
+						long dimensionY;
+
+						boolean leftToRight;
+						boolean topToBottom;
+
+						general::corba::IdentifierSeq nodeLinkIds;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} PhysicalLink;
+
+					typedef sequence<PhysicalLink> PhysicalLinkSeq;
+
+					typedef struct IdlCollector {
+						general::corba::StorableObject header;
+
+						wstring name;
+						wstring description;
+
+						general::corba::IdentifierSeq physicalLinkIds;
+
+						general::corba::IdentifierSeq characteristicIds;
+					} Collector;
+
+					typedef sequence<Collector> CollectorSeq;
+
+					typedef struct IdlMap {
+						general::corba::StorableObject header;
+
+						general::corba::Identifier domainId;
+
+						wstring name;
+						wstring description;
+
+						general::corba::IdentifierSeq siteNodeIds;
+						general::corba::IdentifierSeq topologicalNodeIds;
+						general::corba::IdentifierSeq nodeLinkIds;
+						general::corba::IdentifierSeq physicalLinkIds;
+						general::corba::IdentifierSeq markIds;
+						general::corba::IdentifierSeq collectorIds;
+					} Map;
+
+					typedef sequence<Map> MapSeq;
+
+					typedef struct IdlMapView {
+						general::corba::StorableObject header;
+
+						general::corba::Identifier domainId;
+						wstring name;
+						wstring description;
+
+						double longitude;
+						double latitude;
+						double scale;
+						double defaultScale;
+
+						general::corba::Identifier mapId;
+						general::corba::IdentifierSeq schemeIds;
+					} MapView;
+
+					typedef sequence<MapView> MapViewSeq;
+					
+					typedef struct IdlTopologicalImageQuery {
+						long mapImageWidth;
+						long mapImageHeight;
+
+						double topoCenterX;
+						double topoCenterY;
+						double topoScale;
+
+						::CORBA::BooleanSeq layerVisibilities;
+						::CORBA::BooleanSeq labelVisibilities;
+					} TopologicalImageQuery;
+
+					typedef struct IdlRenderedImage {
+						::CORBA::OctetSeq image;
+					} RenderedImage;
+
+					typedef struct IdlMapFeature {
+						double centerX;
+						double centerY;
+
+						wstring name;
+					} MapFeature;
+
+					typedef sequence<MapFeature> MapFeatureSeq;
+				};
+			};
+		};
 	};
-	typedef sequence <MapProtoElement_Transferable> MapProtoElementSeq_Transferable;
-
-	struct MapLinkProtoElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring owner_id;
-		wstring domain_id;
-
-		long long modified;
-		General::wstringSeq cable_type_ids;
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapLinkProtoElement_Transferable> MapLinkProtoElementSeq_Transferable;
-
-	struct MapPathProtoElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring owner_id;
-		wstring domain_id;
-
-		long long modified;
-		General::wstringSeq path_type_ids;
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapPathProtoElement_Transferable> MapPathProtoElementSeq_Transferable;
-
-	struct MapElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring longitude;		// anchor
-		wstring latitude;		// anchor
-		wstring map_id;
-
-		wstring symbol_id;
-
-		wstring element_id;
-		wstring element_type_id;
-
-		long long modified;
-		boolean has_kis;
-		wstring kis_element_type_id;
-		wstring ism_map_id;
-		wstring map_kis_id;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapElement_Transferable> MapElementSeq_Transferable;
-
-	struct MapPhysicalNodeElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring longitude;
-		wstring latitude;
-		wstring description;
-		wstring owner_id;
-
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring symbol_id;
-
-		wstring physicalLinkID;
-		boolean active;
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapPhysicalNodeElement_Transferable> MapPhysicalNodeElementSeq_Transferable;
-
-	struct MapNodeLinkElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring owner_id;
-
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		wstring physicalLinkID;
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapNodeLinkElement_Transferable> MapNodeLinkElementSeq_Transferable;
-
-	struct MapPhysicalLinkElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		Scheme::ElementAttributeSeq_Transferable attributes;
-
-		wstring link_id;
-		wstring link_type_id;
-
-		General::wstringSeq nodeLink_ids;
-	};
-	typedef sequence <MapPhysicalLinkElement_Transferable> MapPhysicalLinkElementSeq_Transferable;
-
-	struct MapMarkElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring longitude;
-		wstring latitude;
-		wstring description;
-		wstring owner_id;
-
-		wstring map_id;
-
-		wstring symbol_id;
-
-		wstring link_id;
-		double distance;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapMarkElement_Transferable> MapMarkElementSeq_Transferable;
-
-	struct MapPathElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring startNode_id;//начало
-		wstring endNode_id;//конец
-		Scheme::ElementAttributeSeq_Transferable attributes;
-
-		wstring path_id;
-
-		General::wstringSeq physicalLink_ids;
-	};
-	typedef sequence <MapPathElement_Transferable> MapPathElementSeq_Transferable;
-
-	struct MapContext_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring user_id;
-		wstring description;
-		wstring domain_id;
-
-		long long created;
-		wstring created_by;
-		long long modified;
-		wstring modified_by;
-
-		wstring scheme_id;
-
-		General::wstringSeq equipment_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq kis_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq node_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq nodeLink_ids;//Вектор элементов типа NodeLinks
-		General::wstringSeq physicalLink_ids;
-		General::wstringSeq path_ids;
-		General::wstringSeq mark_ids;
-
-		boolean showPhysicalNodeElement;//Флаг видимости PhysicalNodeElement
-
-		wstring longitude;
-		wstring latitude;
-		double zoomFactor;
-		double defaultZoomFactor;
-
-		long mouseTolerancy;
-	};
-	typedef sequence <MapContext_Transferable> MapContextSeq_Transferable;
-
-	struct ISMMapContext_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring codename;
-		wstring user_id;
-		wstring description;
-		wstring domain_id;
-
-		long long created;
-		wstring created_by;
-		long long modified;
-		wstring modified_by;
-
-		wstring map_id;
-
-		General::wstringSeq kis_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq node_ids;//Вектор элементов наследников класса Node
-		General::wstringSeq nodeLink_ids;//Вектор элементов типа NodeLinks
-		General::wstringSeq physicalLink_ids;
-		General::wstringSeq path_ids;
-		General::wstringSeq mark_ids;
-	};
-	typedef sequence <ISMMapContext_Transferable> ISMMapContextSeq_Transferable;
-
-
-
-
-
-
-
-
-
-/*
-	struct MapEquipmentElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring longitude;		// anchor
-		wstring latitude;		// anchor
-		wstring map_id;
-
-		wstring symbol_id;
-
-		wstring element_id;
-		wstring element_type_id;
-
-		wstring codename;
-		wstring scheme_equipment_element_id;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-//		General::wstringSeq connect_point_ids;
-//		wstringSeq access_point_ids;
-	};
-	typedef sequence <MapEquipmentElement_Transferable> MapEquipmentElementSeq_Transferable;
-*/
-	struct MapKISElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring type_id;
-		wstring description;
-		wstring owner_id;
-
-		wstring longitude;
-		wstring latitude;
-		wstring map_id;
-		wstring ism_map_id;
-
-		wstring symbol_id;
-
-		wstring KIS_id;
-		wstring KIS_type_id;
-
-		wstring codename;
-		wstring scheme_kis_element_id;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-//		General::wstringSeq connect_point_ids;
-//		wstringSeq test_point_ids;
-
-	};
-	typedef sequence <MapKISElement_Transferable> MapKISElementSeq_Transferable;
-
-/*
-	struct MapConnectionPointElement_Transferable
-	{
-		wstring id;
-		wstring name;
-		wstring description;
-		wstring physicalLinkID;
-		wstring in_out;// "in" "out"
-		wstring map_id;
-
-		wstring element_id;
-
-		wstring interface_id;
-
-		wstring port_id;
-		wstring port_local_id;
-		wstring port_type_id;
-
-//		wstring local_address;
-
-		wstring test_port_id;
-		wstring test_port_type_id;
-		wstring test_port_local_id;
-
-		wstring access_port_id;
-		wstring access_port_type_id;
-		wstring access_port_local_id;
-//		wstring path_id;
-		boolean is_test_port;
-		boolean is_access_port;
-
-		Scheme::ElementAttributeSeq_Transferable attributes;
-	};
-	typedef sequence <MapConnectionPointElement_Transferable> MapConnectionPointElementSeq_Transferable;
-*/
-
 };
-
-};
-};
-};
-};
-
-#endif
+#endif // MAP_IDL

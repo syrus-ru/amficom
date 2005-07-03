@@ -1,13 +1,27 @@
+/*
+ * $Id: DomainModel.java,v 1.5 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.text.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.DomainPaneConfig;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.StorableObject;
+
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class DomainModel extends ObjectResourceModel
 {
   public Domain dom;
@@ -17,10 +31,11 @@ public class DomainModel extends ObjectResourceModel
     this.dom = dom;
   }
 
-  public PropertiesPanel getPropertyPane()
-  {
-    return new DomainPaneConfig(dom);
-  }
+	public ObjectResourcePropertiesPane getPropertyPane() {
+		DomainPaneConfig domainPaneConfig = DomainPaneConfig.getInstance();
+		domainPaneConfig.setObjectResource(dom);
+		return domainPaneConfig;
+	}
 
   public String getColumnValue(String col_id)
   {
@@ -29,7 +44,7 @@ public class DomainModel extends ObjectResourceModel
     try
     {
 //      if(col_id.equals("id"))
-//        s = dom.id;
+//        s = dom.getId();
       if(col_id.equals("name"))
         s = dom.name;
       if(col_id.equals("owner_id"))
@@ -50,27 +65,27 @@ public class DomainModel extends ObjectResourceModel
     return s;
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
-    if(key.equals(Domain.typ))
+    if(key.equals(Domain.class.getName()))
     {
-      return dom.domains.elements();
+      return dom.domains.values();
     }
-    return new Vector().elements();
+    return new Vector();
   }
 
   public Enumeration getChildTypes()
   {
     Vector ret = new Vector();
-    ret.add(Domain.typ);
+    ret.add(Domain.class.getName());
     return ret.elements();
   }
 
   public Class getChildClass(String type)
   {
-    if(type.equals(Domain.typ))
+    if(type.equals(Domain.class.getName()))
       return Domain.class;
-    return ObjectResource.class;
+    return StorableObject.class;
   }
 
 

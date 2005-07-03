@@ -1,31 +1,15 @@
-package com.syrus.AMFICOM.Client.General.Command.Scheme;
+/*package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.*;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.MapProtoGroup;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
-import com.syrus.io.DirectoryToFile;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
 public class SchemeFromFileCommand extends VoidCommand
 {
@@ -34,8 +18,6 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	FileOutputStream fos;
 	PrintWriter pw;
-
-	Hashtable idl = new Hashtable();
 
 	public SchemeFromFileCommand()
 	{
@@ -54,7 +36,8 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	public void execute()
 	{
-		DirectoryToFile.readAll();
+//		DirectoryToFile.readAll();
+
 		dispatcher.notify(new TreeListSelectionEvent("",  TreeListSelectionEvent.REFRESH_EVENT));
 
 		int res = JOptionPane.showConfirmDialog(
@@ -75,16 +58,11 @@ public class SchemeFromFileCommand extends VoidCommand
 		dataSource.SaveCableLinkTypes(createCableLinkTypesList());
 		dataSource.SavePortTypes(createPortTypesList());
 		dataSource.SaveCablePortTypes(createCablePortTypesList());
-		dataSource.SaveMapProtoElements(createMapProtoIdsList());
-		dataSource.SaveMapProtoGroups(createMapProtoGroupsIdsList());
+		dataSource.SaveMapProtoGroups(createSchemeProtoGroupsIdsList());
 
-		if (Pool.getHash(Scheme.typ) != null)
-			for (Enumeration enum = Pool.getHash(Scheme.typ).keys(); enum.hasMoreElements();)
-			{
-				String id = (String)enum.nextElement();
-				Scheme sch = (Scheme)Pool.get(Scheme.typ, id);
-				dataSource.SaveScheme(id);
-			}
+		if (Pool.getMap(Scheme.typ) != null)
+			for (Iterator it = Pool.getMap(Scheme.typ).keySet().iterator(); it.hasNext();)
+				dataSource.SaveScheme((String)it.next());
 
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -95,46 +73,40 @@ public class SchemeFromFileCommand extends VoidCommand
 
 	String[] createEqtIdsList()
 	{
-		ArrayList eqt_ids = new ArrayList();
-		int size = 0;
-
-		if (Pool.getHash(EquipmentType.typ) != null)
-			for (Enumeration enum = Pool.getHash(EquipmentType.typ).keys(); enum.hasMoreElements();)
-			{
-				eqt_ids.add(enum.nextElement());
-				size++;
-			}
-		return (String[])eqt_ids.toArray(new String[size]);
+		Map m = Pool.getMap(EquipmentType.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 	}
 
-	public Hashtable getTopLevelElements()
+	public Map getTopLevelElements()
 	{
-		Hashtable ht = new Hashtable();
+		Map ht = new HashMap();
 		ArrayList ids = new ArrayList();
 
-		if (Pool.getHash(ProtoElement.typ) != null)
-			for (Enumeration enum = Pool.getHash(ProtoElement.typ).elements(); enum.hasMoreElements();)
+		if (Pool.getMap(ProtoElement.typ) != null)
+			for (Iterator it = Pool.getMap(ProtoElement.typ).values().iterator(); it.hasNext();)
 			{
-				ProtoElement element = (ProtoElement)enum.nextElement();
-				for (int j = 0; j < element.protoelement_ids.size(); j++)
-					ids.add((String )element.protoelement_ids.get(j));
+				ProtoElement element = (ProtoElement)it.next();
+				for (Iterator iit = element.protoelementIds.iterator(); iit.hasNext();)
+					ids.add((String)iit.next());
 				ht.put(element.getId(), element);
 			}
 
-		for (Enumeration enum = ht.elements(); enum.hasMoreElements();)
+		for (Iterator it = ht.values().iterator(); it.hasNext();)
 		{
-			ProtoElement element = (ProtoElement)enum.nextElement();
+			ProtoElement element = (ProtoElement)it.next();
 			if(ids.contains(element.getId()))
 				ht.remove(element.getId());
 		}
 		return ht;
 	}
 
-	ArrayList get_proto_ids (ArrayList ids, ProtoElement proto)
+	ArrayList get_proto_ids (ArrayList ids, SchemeProtoElement proto)
 	{
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 		{
-			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement p = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			get_proto_ids(ids, p);
 		}
 		ids.add(proto.getId());
@@ -144,91 +116,56 @@ public class SchemeFromFileCommand extends VoidCommand
 	String[] createSchemeProtoIdsList()
 	{
 		ArrayList proto_ids = new ArrayList();
-		Hashtable top_protos = getTopLevelElements();
+		Map top_protos = getTopLevelElements();
 
-		for (Enumeration enum = top_protos.elements(); enum.hasMoreElements();)
-			get_proto_ids(proto_ids, (ProtoElement)enum.nextElement());
+		for (Iterator it = top_protos.values().iterator(); it.hasNext();)
+			get_proto_ids(proto_ids, (ProtoElement)it.next());
 
 		return (String[])proto_ids.toArray(new String[proto_ids.size()]);
 	}
 
-	String[] createMapProtoIdsList()
+	String[] createSchemeProtoGroupsIdsList()
 	{
-		ArrayList mps = new ArrayList();
+		Map m = Pool.getMap(SchemeProtoGroup.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 
-		if (Pool.getHash(MapProtoElement.typ) != null)
-			for (Enumeration enum = Pool.getHash(MapProtoElement.typ).keys(); enum.hasMoreElements();)
-				mps.add(enum.nextElement());
-
-		return (String[])mps.toArray(new String[mps.size()]);
-	}
-
-	String[] createMapProtoGroupsIdsList()
-	{
-		ArrayList mps = new ArrayList();
-
-		if (Pool.getHash(MapProtoGroup.typ) != null)
-			for (Enumeration enum = Pool.getHash(MapProtoGroup.typ).keys(); enum.hasMoreElements();)
-				mps.add(enum.nextElement());
-
-		return (String[])mps.toArray(new String[mps.size()]);
 	}
 
 	String[] createLinkTypesList()
 	{
-		ArrayList lts = new ArrayList();
-		int size = 0;
-
-		if (Pool.getHash(LinkType.typ) != null)
-			for (Enumeration enum = Pool.getHash(LinkType.typ).keys(); enum.hasMoreElements();)
-			{
-				lts.add(enum.nextElement());
-				size++;
-			}
-		return (String[])lts.toArray(new String[size]);
+		Map m = Pool.getMap(LinkType.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 	}
 
 	String[] createCableLinkTypesList()
 	{
-		ArrayList lts = new ArrayList();
-		int size = 0;
+		Map m = Pool.getMap(CableLinkType.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 
-		if (Pool.getHash(CableLinkType.typ) != null)
-			for (Enumeration enum = Pool.getHash(CableLinkType.typ).keys(); enum.hasMoreElements();)
-			{
-				lts.add(enum.nextElement());
-				size++;
-			}
-		return (String[])lts.toArray(new String[size]);
 	}
 
 	String[] createPortTypesList()
 	{
-		ArrayList pts = new ArrayList();
-		int size = 0;
-
-		if (Pool.getHash(PortType.typ) != null)
-			for (Enumeration enum = Pool.getHash(PortType.typ).keys(); enum.hasMoreElements();)
-			{
-				pts.add(enum.nextElement());
-				size++;
-			}
-		return (String[])pts.toArray(new String[size]);
+		Map m = Pool.getMap(PortType.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 	}
 
 	String[] createCablePortTypesList()
 	{
-		ArrayList pts = new ArrayList();
-		int size = 0;
-
-		if (Pool.getHash(CablePortType.typ) != null)
-			for (Enumeration enum = Pool.getHash(CablePortType.typ).keys(); enum.hasMoreElements();)
-			{
-				pts.add(enum.nextElement());
-				size++;
-			}
-		return (String[])pts.toArray(new String[size]);
+		Map m = Pool.getMap(CablePortType.typ);
+		if (m != null)
+			return (String[])m.keySet().toArray(new String[m.size()]);
+		return new String[0];
 	}
 }
 
 
+*/

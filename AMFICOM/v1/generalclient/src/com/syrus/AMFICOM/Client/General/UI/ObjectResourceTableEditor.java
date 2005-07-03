@@ -1,10 +1,5 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +11,9 @@ import javax.swing.JTextField;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.TableCellEditor;
+
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class ObjectResourceTableEditor
 		extends DefaultCellEditor
@@ -71,7 +69,7 @@ public class ObjectResourceTableEditor
 
 //		System.out.println("editor for " + text);
 
-		try 
+		try
 		{
 			JComboBox jcb = (JComboBox )editor;
 			jcb.addActionListener(new ActionListener()
@@ -81,10 +79,10 @@ public class ObjectResourceTableEditor
 						fireEditingStopped();
 					}
 				});
-		} catch (Exception ex) 
+		} catch (Exception ex)
 		{
 //			ex.printStackTrace();
-		} finally 
+		} finally
 		{
 		}
 		

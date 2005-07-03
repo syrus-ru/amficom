@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
-import java.awt.*;
-import java.util.*;
+//import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -10,15 +11,18 @@ import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 
 public class OptimizeSolveDisplayModel extends StubDisplayModel
 {
+	private List columnList;
 	//---------------------------------------------------------------------------------------------------------------
 	public OptimizeSolveDisplayModel()
 	{ super();
 	}
 	//---------------------------------------------------------------------------------------------------------------
-	public Vector getColumns()
-	{ Vector vec = new Vector();
-		vec.add("full_path");
-		return vec;
+	public List getColumns()
+	{  if (this.columnList==null)
+	   {	this.columnList = new ArrayList();
+			this.columnList.add("full_path");
+		}
+		return this.columnList;
 	}
 	//---------------------------------------------------------------------------------------------------------------
 	public String getColumnName(String col_id)

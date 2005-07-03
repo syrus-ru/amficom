@@ -38,7 +38,6 @@ TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT
 */
 package com.syrus.AMFICOM.Client.General.Event;
 
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 
 public class TreeListSelectionEvent extends OperationEvent
 {

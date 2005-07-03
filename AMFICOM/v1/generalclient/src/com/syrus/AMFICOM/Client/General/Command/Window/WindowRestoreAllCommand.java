@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class WindowRestoreAllCommand extends VoidCommand 
+public class WindowRestoreAllCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;

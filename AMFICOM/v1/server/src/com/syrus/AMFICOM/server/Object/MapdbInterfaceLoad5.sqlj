@@ -1,29 +1,32 @@
+/*
+ * $Id: MapdbInterfaceLoad5.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
+import java.sql.SQLException;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceLoad5 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceLoad5
 {
 	protected MapdbInterfaceLoad5()
 	{
 	}
 
-	static public int loadJMapNodes(
+	public static int loadJMapNodes(
 			Vector map_ids,
 			MapPhysicalNodeElementSeq_TransferableHolder nodeseq,
 			Vector images)
@@ -167,7 +170,7 @@ public class MapdbInterfaceLoad5 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadJMapNodeLinks(
+	public static int loadJMapNodeLinks(
 			Vector map_ids,
 			MapNodeLinkElementSeq_TransferableHolder nodelinkseq,
 			Vector images)
@@ -307,7 +310,7 @@ public class MapdbInterfaceLoad5 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadJMapLinks(
+	public static int loadJMapLinks(
 			Vector map_ids,
 			MapPhysicalLinkElementSeq_TransferableHolder linkseq,
 			Vector images)
@@ -499,7 +502,7 @@ public class MapdbInterfaceLoad5 extends Object
 		String id,
 		String attribute_id );
 
-	#sql static public iterator MapNodeIterator (
+	#sql public static iterator MapNodeIterator (
 		String symbol_id,
 		String latitude,
 		String owner_id,
@@ -512,7 +515,7 @@ public class MapdbInterfaceLoad5 extends Object
 		String physical_link_id,
 		String longitude);
 
-	#sql static public iterator MapNodeLinkIterator (
+	#sql public static iterator MapNodeLinkIterator (
 		String physical_link_id,
 		String id,
 		String end_node_id,
@@ -522,7 +525,7 @@ public class MapdbInterfaceLoad5 extends Object
 		String map_id,
 		String ism_map_id);
 
-	#sql static public iterator MapPhysicalLinkIterator (
+	#sql public static iterator MapPhysicalLinkIterator (
 		String description,
 		String id,
 		String end_node_id,
@@ -535,7 +538,7 @@ public class MapdbInterfaceLoad5 extends Object
 		String link_id,
 		String link_type_id);
 
-	#sql static public iterator MapPathIterator (
+	#sql public static iterator MapPathIterator (
 		String description,
 		String id,
 		String end_node_id,
@@ -546,6 +549,4 @@ public class MapdbInterfaceLoad5 extends Object
 		String map_id,
 		String ism_map_id,
 		String path_id);
-
 }
-

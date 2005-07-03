@@ -1,4 +1,15 @@
-#include <general.idl>
+/*
+ * $Id: KIS.idl,v 1.2 2004/09/29 14:48:51 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef KIS_IDL
+#define KIS_IDL
+
+#include "general.idl"
 
 module com {
 module syrus {
@@ -89,3 +100,5 @@ module KIS {
 };
 };
 };
+
+#endif

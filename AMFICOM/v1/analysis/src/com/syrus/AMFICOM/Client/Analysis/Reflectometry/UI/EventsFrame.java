@@ -4,188 +4,185 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.util.Vector;
+import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.Icon;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.DetailedEventResource;
+import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
 
-public class EventsFrame extends ATableFrame
-												 implements OperationListener
+public class EventsFrame extends JInternalFrame
+implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+    CurrentEventChangeListener, PropertyChangeListener
 {
-	private ReflectogramEvent []data_;
-	private ReflectogramEvent []data;
-	private ReflectogramEvent []etalon;
+	ApplicationContext aContext;
+	private WrapperedTableModel tModel;
+	WrapperedTable jTable;
 
-	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
-	private ATable jTable;
-	private int selected = 0;
-	private boolean skip = false;
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
+	private boolean primaryShown = false;
+	private boolean etalonShown = false;
+	private boolean primaryOpened = false;
+	private boolean etalonOpened = false;
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
+    protected static class TableView {
+        public static final int COMP = 10;
+        public static final int PRIM = 11;
+        public static final int ETAL = 12;
+        private int viewMode;
+        public TableView(int viewMode) {
+            this.viewMode = viewMode;
+        }
+        public void setViewMode(int viewMode) {
+            this.viewMode = viewMode;
+        }
+        public int nRows(CompositeEventList eList) {
+            switch(viewMode) {
+            case COMP: return eList.getNCompositeEvents();
+            case PRIM: return eList.getNEvents();
+            case ETAL: return eList.getNEtalonEvents();
+            default: throw new InternalError();
+            }
+        }
+        public int nPri1(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return eList.getC2P(row);
+            case PRIM: return row;
+            case ETAL: return eList.getC2P(eList.getE2C(row));
+            default: throw new InternalError();
+            }
+        }
+        public int nEt1(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return eList.getC2E(row);
+            case PRIM: return eList.getC2E(eList.getP2C(row));
+            case ETAL: return row;
+            default: throw new InternalError();
+            }
+        }
+        public int nComp(CompositeEventList eList, int row) {
+            switch(viewMode) {
+            case COMP: return row;
+            case PRIM: return eList.getP2C(row);
+            case ETAL: return eList.getE2C(row);
+            default: throw new InternalError();
+            }
+        }
+        public void toNextRow(CompositeEventList.Walker walker) {
+            switch(viewMode) {
+            case COMP:
+                walker.toNextCompositeEvent();
+                break;
+            case PRIM:
+                walker.toNextEvent();
+                break;
+            case ETAL:
+                walker.toNextEtalonEvent();
+                break;
+            default:
+                throw new InternalError();
+            }
+        }
+        public int currentRow2() {
+            switch(viewMode) {
+            case COMP: return Heap.getCurrentCompositeEvent();
+            case PRIM: return Heap.getCurrentEvent2();
+            case ETAL: return Heap.getCurrentEtalonEvent2();
+            default: throw new InternalError();
+            }
+        }
+        public void moveTo(int row) {
+            switch(viewMode) {
+            case COMP: Heap.setCurrentCompositeEvent(row); return;
+            case PRIM: Heap.setCurrentEvent(row); return;
+            case ETAL: Heap.setCurrentEtalonEvent(row); return;
+            default: throw new InternalError();
+            }
+        }
+    }
 
-	public EventsFrame()
-	{
-		this(new Dispatcher());
-	}
+    protected TableView view; // State
 
-	public EventsFrame(Dispatcher dispatcher)
+	public EventsFrame(ApplicationContext aContext)
 	{
 		super();
 
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		this.initModule(aContext);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	private void initModule(ApplicationContext aContext1)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
-	}
+		this.aContext = aContext1;
+		this.aContext.getDispatcher().addPropertyChangeListener(RefUpdateEvent.typ, this);
+		
+        view = new TableView(TableView.PRIM);
+        updateEventsModel();
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					this.data = (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
-					etalon = null;
-					data_ = null;
-					setNoComparedWithEtalonColor();
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
-					{
-						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
-						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						setTableModel(bs, a.events);
-						updTableModel(0);
-					}
-					setVisible(true);
-				}
-			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if(id.equals("etalon"))
-				{
-					etalon = null;
-					data_ = null;
-					setNoComparedWithEtalonColor();
-				}
-				if (id.equals("all"))
-				{
-					etalon = null;
-					data_ = null;
-					tModel.clearTable();
-					setNoComparedWithEtalonColor();
-					setVisible(false);
-				}
-			}
-			if(rce.OPEN_ETALON)
-			{
-				String et_id = (String)rce.getSource();
-				if(et_id != null)
-					etalon = (ReflectogramEvent [])Pool.get("eventparams", et_id);
-				else
-					etalon = null;
-
-				if(etalon != null && data!= null)
-					data_ = ReflectogramMath.alignClone(data, etalon);
-				else
-					data_ = null;
-
-				setComparedWithEtalonEventsColor();
-			}
-			if(rce.CLOSE_ETALON)
-			{
-				data_ = null;
-				etalon = null;
-				setNoComparedWithEtalonColor();
-			}
-		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if (rue.ANALYSIS_PERFORMED)
-			{
-				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
-				{
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
-					{
-						RefAnalysis a = (RefAnalysis)Pool.get("refanalysis", id);
-						BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						setTableModel(bs, a.events);
-						if (selected >= a.events.length)
-							selected = a.events.length-1;
-						updTableModel (selected);
-					}
-					setVisible(true);
-				}
-			}
-
-			if (rue.EVENT_SELECTED)
-			{
-				updTableModel (Integer.parseInt((String)rue.getSource()));
-			}
-
-			if (rue.CONCAVITY_SELECTED)
-			{
-				if (jTable.getSelectedRow() != -1)
-					jTable.removeRowSelectionInterval(jTable.getSelectedRow(), jTable.getSelectedRow());
-			}
-		}
+		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentEventChangeListener(this);
+        Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("eventTableTitle");
+		return LangModelAnalyse.getString("eventTableTitle");
 	}
 
 	public TableModel getTableModel()
@@ -193,288 +190,384 @@ public class EventsFrame extends ATableFrame
 		return tModel;
 	}
 
-
-	public void setComparedWithEtalonEventsColor()
-	{
-
-		if(etalon == null || data_ == null)
-		{
-			setNoComparedWithEtalonColor();
-			return;
-		}
-
-		int []newEvents = ReflectogramComparer.getNewEventsList(data_, etalon);
-		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(data_, etalon, .5);
-		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(data_, etalon, .5);
-
-		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
-		rend.setNewEventsList(newEvents);
-		rend.setAmplitudeChangedEventsList(amplChengedEvents);
-		rend.setLossChangedEventsList(lossChengedEvents);
-		jTable.updateUI();
-	}
-
-	public void setNoComparedWithEtalonColor()
-	{
-		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
-		rend.setNewEventsList(null);
-		rend.setAmplitudeChangedEventsList(null);
-		rend.setLossChangedEventsList(null);
-		jTable.updateUI();
-	}
-
 	private void jbInit() throws Exception
 	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("eventNum"),
-												LangModelAnalyse.String("eventType"),
-												LangModelAnalyse.String("eventStartLocationKM"),
-												LangModelAnalyse.String("eventLengthKM"),
-												LangModelAnalyse.String("eventReflectanceDB"),
-												LangModelAnalyse.String("eventLossDB"),
-												LangModelAnalyse.String("eventLeadAttenuationDBKM")},
-					new Object[] {"", "", "", "", "", "", "", ""},
-					0);
+		tModel = new WrapperedTableModel(
+				DetailedEventWrapper.getInstance(),
+				new String[] { DetailedEventWrapper.KEY_N, DetailedEventWrapper.KEY_IMAGE,
+						DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_DISTANCE,
+						DetailedEventWrapper.KEY_LENGTH,
+						DetailedEventWrapper.KEY_REFLECTANCE,
+						DetailedEventWrapper.KEY_LOSS, DetailedEventWrapper.KEY_ATTENUATION });
 
-		jTable = new ATable(tModel);
+		jTable = new WrapperedTable(tModel);
+		jTable.setAllowSorting(false);
 
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(25);
-		jTable.getColumnModel().getColumn(0).setMaxWidth(40);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(85);
-		jTable.getColumnModel().getColumn(2).setPreferredWidth(75);
-		jTable.getColumnModel().getColumn(3).setPreferredWidth(80);
-		jTable.getColumnModel().getColumn(4).setPreferredWidth(75);
-		jTable.getColumnModel().getColumn(5).setPreferredWidth(70);
-		jTable.getColumnModel().getColumn(6).setPreferredWidth(85);
-
+		FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());
+    CommonUIUtilities.arrangeTableColumns(this.jTable);
+		TableColumnModel cModel = jTable.getColumnModel();
+		cModel.getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
+		cModel.getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
+		Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
+		cModel.getColumn(1).setMaxWidth(bttnSize.width);
+		jTable.getColumnModel().getColumn(2).setPreferredWidth(120);
+		
 		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
+		this.setMaximizable(true);
 		this.setIconifiable(true);
-		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("eventTableTitle"));
+		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
-		ListSelectionModel rowSM = jTable.getSelectionModel();
-		jTable.getColumnModel().setSelectionModel(rowSM);
-		rowSM.addListSelectionListener(new ListSelectionListener()
-		{
-			public void valueChanged(ListSelectionEvent e) {
-			//Ignore extra messages.
-			if (e.getValueIsAdjusting()) return;
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		ListSelectionModel rowSM = jTable.getSelectionModel();		
+		rowSM.addListSelectionListener(new ListSelectionListener() {
 
-			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-			if (lsm.isSelectionEmpty())
-			{
-						//no rows are selected
-			}
-			else
-			{
-				selected = lsm.getMinSelectionIndex();
-				if (!skip)
-				{
-					dispatcher.notify(new RefUpdateEvent(String.valueOf(selected), RefUpdateEvent.EVENT_SELECTED_EVENT));
+			public void valueChanged(ListSelectionEvent e) {
+				// Ignore extra messages.
+				if (e.getValueIsAdjusting())
+					return;
+
+				ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+				if (!lsm.isSelectionEmpty()) {
+					int selected = lsm.getMinSelectionIndex();
+					if (view.currentRow2() != selected)
+						view.moveTo(selected);
 				}
-				skip = false;
 			}
-		}
 		});
 
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+		final JPopupMenu popupMenu = this.createPopupMenu();
 
-		jTable.setDefaultRenderer(Object.class, new EventTableRenderer(jTable));
+        // FIXME: event edition is currently for internal use only. Should be either improved or disabled in final version. 
+		this.jTable.addMouseListener(new MouseAdapter() {
+
+			public void mouseClicked(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					popupMenu.show((Component) e.getSource(), e.getX(), e.getY());
+				}
+			}
+		});
+
+		jTable.setDefaultRenderer(Object.class, new EventTableRenderer());
 
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
-		updColorModel();
 	}
-
-	private void updColorModel()
-	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
-		repaint();
-	}
-
-	void updTableModel(int activeEvent)
-	{
-		if (activeEvent != -1)
-//			if (selected != activeEvent)
-			{
-				selected = activeEvent;
-				skip = true;
-				jTable.setRowSelectionInterval(selected, selected);
-				jTable.scrollRectToVisible(jTable.getCellRect(jTable.getSelectedRow(), jTable.getSelectedColumn(), true));
+	
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent ev = (RefUpdateEvent)evt;
+			if (ev.traceChanged()) {
+				TraceResource tr = (TraceResource)evt.getNewValue();
+				if (tr.getId().equals(Heap.PRIMARY_TRACE_KEY)) {
+					primaryShown = tr.isShown();
+					updateEventsModel();
+				} else if (tr.getId().equals(Heap.ETALON_TRACE_KEY)) {
+					etalonShown = tr.isShown();
+					updateEventsModel();
+				}
 			}
+		}
 	}
+	
+	private JPopupMenu createPopupMenu() {
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem joinPreviousMenuItem = new JMenuItem("Join previous");
+        JMenuItem splitTo2MenuItem = new JMenuItem("Split to 2");
+        JMenuItem splitTo3MenuItem = new JMenuItem("Split to 3");
+        JMenuItem changeToConnectorMenuItem = new JMenuItem("Change to CONNECTOR");
+        JMenuItem changeToGainMenuItem = new JMenuItem("Change to GAIN");
+        JMenuItem changeToLinearMenuItem = new JMenuItem("Change to LINEAR");
+        JMenuItem changeToLossMenuItem = new JMenuItem("Change to LOSS");
+        JMenuItem changeToNonidMenuItem = new JMenuItem("Change to NOT IDENTIFIED");
+        JMenuItem moveBeginToMarkerA = new JMenuItem("Move begin to Marker A");
+        JMenuItem moveEndToMarkerA = new JMenuItem("Move end to Marker A");
 
-	void setTableModel(BellcoreStructure bs, TraceEvent[] events)
-	{
-
-		double res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-		double sigma = MathRef.calcSigma(bs.fxdParams.AW/10, bs.fxdParams.PWU[0]);
-		Vector row;
-		tModel.clearTable();
-
-		for (int i = 0; i < events.length; i++)
-		{
-			row = new Vector(6);
-
-			switch (events[i].getType())
-			{
-				case TraceEvent.INITIATE:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add("0.0"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				case TraceEvent.LINEAR:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add(Double.toString( MathRef.round_4 (events[i].data[1] - events[i].data[0]))); // потери
-						 row.add(Double.toString( MathRef.round_4 (events[i].data[2] / res))); //затух
-						 tModel.insertRow(row);
-						 break;
-				case TraceEvent.NON_IDENTIFIED:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add("-----"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				case TraceEvent.CONNECTOR:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0] - events[i].data[2]))))); // отраж
-						 row.add(Double.toString( MathRef.round_4 ( events[i].data[1] - events[i].data[0]))); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				case TraceEvent.WELD:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add("-----"); // отраж
-						 row.add(Double.toString( MathRef.round_4 ( events[i].data[2]))); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				case TraceEvent.TERMINATE:
-						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
-						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
-						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
-						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0]-events[i].data[1]))))); // отраж
-						 row.add("-----"); // потери
-						 row.add("-----"); //затух
-						 tModel.insertRow(row);
-						 break;
-				default: ;
+		joinPreviousMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+                Heap.joinCurrentEventWithPrevious();
 			}
+		});
 
+        splitTo2MenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.splitCurrentEventToN(2);
+            }
+        });
+
+        splitTo3MenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.splitCurrentEventToN(3);
+            }
+        });
+
+        changeToConnectorMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.CONNECTOR);
+            }
+        });
+
+        changeToGainMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.GAIN);
+            }
+        });
+
+        changeToLinearMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.LINEAR);
+            }
+        });
+
+        changeToLossMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.LOSS);
+            }
+        });
+
+        changeToNonidMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Heap.changeCurrentEventType(SimpleReflectogramEvent.NOTIDENTIFIED);
+            }
+        });
+
+        moveBeginToMarkerA.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (Heap.hasMarkerPosition())
+                    Heap.changeCurrentEventBegin(Heap.getMarkerPosition());
+            }
+        });
+
+        moveEndToMarkerA.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (Heap.hasMarkerPosition())
+                    Heap.changeCurrentEventEnd(Heap.getMarkerPosition());
+            }
+        });
+
+        popupMenu.add(joinPreviousMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(splitTo2MenuItem);
+        popupMenu.add(splitTo3MenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(changeToLinearMenuItem);
+        popupMenu.add(changeToLossMenuItem);
+        popupMenu.add(changeToGainMenuItem);
+        popupMenu.add(changeToConnectorMenuItem);
+        popupMenu.add(changeToNonidMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(moveBeginToMarkerA);
+        popupMenu.add(moveEndToMarkerA);
+		return popupMenu;
+	}
+
+	private void updateTableModel()
+	{
+        // подгоняем текущее выделение к тому месту в таблице,
+        // которое должно соответствовать текущей паре событий
+        // XXX: если текущего выделения не должно быть, надо бы его убрать.
+		int nEvent = view.currentRow2();
+		if (nEvent != -1 && nEvent < this.jTable.getRowCount())
+		{
+			this.jTable.setRowSelectionInterval(nEvent, nEvent);
+			this.jTable.scrollRectToVisible(this.jTable.getCellRect(
+                    this.jTable.getSelectedRow(),
+                    this.jTable.getSelectedColumn(),
+                    true));
 		}
 	}
+
+    private void updateColors() {
+//        this.jTable.revalidate();
+        this.jTable.repaint();
+    }
+
+	private void setTableModel()
+	{
+        if (Heap.getMTAEPrimary() == null)
+            return; // XXX
+        DetailedEvent[] pevents = Heap.getMTAEPrimary().getDetailedEvents();
+        DetailedEvent[] eevents = Heap.getMTMEtalon() != null ?
+                Heap.getMTMEtalon().getMTAE().getDetailedEvents() : null;
+        BellcoreStructure bs = Heap.getBSPrimaryTrace();
+        double resMt = bs.getResolution();
+        double resKm = resMt / 1000.0;
+		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+
+		int nRows = view.nRows(Heap.getEventList());
+		
+    CompositeEventList eList = Heap.getEventList();
+    CompositeEventList.Walker w = eList.new Walker();
+    
+    clearTable();
+		for (int row = 0; row < nRows; row++, view.toNextRow(w))
+		{
+            // nPri или nEt может быть -1, но не оба одновременно
+            int nPri = view.nPri1(eList, row);
+            int nEt = view.nEt1(eList, row);
+
+            // выбираем, параметры какого события будем выводить - primary или etalon
+            // предпочтение отдается primary
+            DetailedEvent ev = nPri >= 0 ? pevents[nPri] : eevents[nEt];
+            DetailedEventResource res = new DetailedEventResource();
+            res.initGeneral(ev, nPri + 1, resKm, sigma);
+            tModel.addObject(res);
+		}
+		jTable.updateUI();
+	}
+	
+	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
+	{
+        int viewMode;
+
+		public Component getTableCellRendererComponent(	JTable table1,
+														Object value,
+														boolean isSelected1,
+														boolean hasFocus,
+														int row,
+														int column) {
+			Component c = super.getTableCellRendererComponent(table1, value,
+                    isSelected1, hasFocus, row, column);
+
+			int nPrimary = view.nPri1(Heap.getEventList(), row);
+			int nEtalon = view.nEt1(Heap.getEventList(), row);
+
+            //SimpleReflectogramEventComparer comp = Heap.getEventComparer();
+            String colorCode = null;
+
+            if (Heap.getMTMEtalon() == null) {
+                // no etalon - use default colors
+            } else if (nPrimary < 0) {
+                colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_LOST;
+            } else if (nEtalon < 0) {
+                colorCode = isSelected1
+                ? AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED
+                : AnalysisResourceKeys.COLOR_EVENTS_NEW;
+            } else {
+                //System.err.println("row " + row + " column " + column);
+                // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
+                DetailedEvent pri =
+                    Heap.getMTAEPrimary().getDetailedEvents()[nPrimary];
+                DetailedEvent et =
+                    Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon];
+                if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
+                        SimpleReflectogramEventComparer.CHANGETYPE_LOSS,
+                        0.5))
+                    colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_LOSS_CHANGED;
+                else if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
+                        SimpleReflectogramEventComparer.CHANGETYPE_AMPL,
+                        0.5))
+                    colorCode = isSelected1
+                    ? AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED
+                    : AnalysisResourceKeys.COLOR_EVENTS_AMPLITUDE_CHANGED;
+                // no change - use default colors
+            }
+
+			if (colorCode != null)
+				c.setForeground(UIManager.getColor(colorCode));
+            else
+                c.setForeground(Color.BLACK); // XXX: default color
+
+			return c;
+		}
+	}
+
+    private void updateCompDebug() {
+        // FIXME: debug: development-time console code for comparison
+        if (Heap.getBSPrimaryTrace() != null
+        		&& Heap.getMinuitAnalysisParams() != null
+        		&& Heap.getMTMEtalon() != null) {
+        	List alarms = CoreAnalysisManager.compareAndMakeAlarms(
+        			Heap.getRefAnalysisPrimary().getAR(),
+        			new Etalon(Heap.getMTMEtalon(),
+        					Heap.getMinTraceLevel(),
+        					Heap.getAnchorer()));
+        	if (alarms.size() == 0)
+        		System.out.println("No alarms");
+        	else
+        		System.out.println(alarms.size() + " alarms:");
+        	for (Iterator it = alarms.iterator(); it.hasNext(); ) {
+        		ReflectogramAlarm al = (ReflectogramAlarm)it.next();
+        		System.out.println("- " + al);
+        	}
+        }
+    }
+
+	public void etalonMTMCUpdated()
+	{
+		etalonOpened = true;
+		updateEventsModel();
+        updateTableModel();
+        updateColors();
+        updateCompDebug();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		etalonOpened = false;
+		updateEventsModel();
+        updateTableModel();
+        updateColors();
+	}
+
+	public void currentEventChanged()
+	{
+		updateTableModel();
+	}
+
+    public void primaryRefAnalysisCUpdated() {
+        updateColors();
+        if (Heap.getRefAnalysisPrimary() != null)
+        {
+        	primaryOpened = true;
+        	updateEventsModel();
+            updateTableModel();
+            updateCompDebug();
+        }
+        setVisible(true);
+    }
+    
+    private void clearTable() {
+    	for (Iterator it = tModel.getValues().iterator(); it.hasNext();) {
+				it.next();
+    		it.remove();
+			}
+    }
+
+    public void primaryRefAnalysisRemoved() {
+    	primaryOpened = false;
+    	clearTable();
+    	
+        this.jTable.revalidate();
+        this.jTable.repaint();
+        setVisible(false);
+    }
+    
+    private void updateEventsModel() {
+    	boolean showPrimary = primaryOpened && primaryShown;
+    	boolean showEtalon = etalonOpened && etalonShown;
+    	
+    	if (showPrimary && showEtalon) {
+    		view.setViewMode(TableView.COMP);
+    	} else if (showPrimary) {
+            view.setViewMode(TableView.PRIM);
+    	} else if (showEtalon) {
+            view.setViewMode(TableView.ETAL);
+    	} else 
+    		return;
+    	setTableModel();
+    }
 }
-
-class EventTableRenderer extends DefaultTableCellRenderer
-{
-	int []newEventsList;
-	int []amplitudeChangedEventsList;
-	int []lossChangedEventsList;
-
-	JTable table;
-
-	public void setNewEventsList(int []newEventsList)
-	{
-		this.newEventsList = newEventsList;
-	}
-
-	public void setAmplitudeChangedEventsList(int []amplitudeChangedEventsList)
-	{
-		this.amplitudeChangedEventsList = amplitudeChangedEventsList;
-	}
-
-	public void setLossChangedEventsList(int []lossChangedEventsList)
-	{
-		this.lossChangedEventsList = lossChangedEventsList;
-	}
-
-	public EventTableRenderer(JTable table)
-	{
-		this.table = table;
-	}
-
-
-
-
-	public Component getTableCellRendererComponent(JTable table, Object value,
-												boolean isSelected, boolean hasFocus, int row, int column)
-	{
-		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-		if(table.getSelectedRow() == row && containsRow(row, newEventsList))
-		{
-			c.setForeground(Color.MAGENTA);
-		}
-		else if(table.getSelectedRow() == row && (containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList)))
-		{
-			c.setForeground(Color.ORANGE);
-		}
-		else if(table.getSelectedRow() == row)
-		{
-			c.setForeground(Color.WHITE);
-		}
-		else if(containsRow(row, newEventsList))
-		{
-			c.setForeground(Color.red);
-		}
-		else if(containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList))
-		{
-			c.setForeground(Color.CYAN);
-		}
-		else
-		{
-			c.setForeground(Color.black);
-		}
-		return c;
-	}
-
-	private boolean containsRow(int row, int []array)
-	{
-		if(array == null)
-			return false;
-
-		for(int i=0; i<array.length; i++)
-		{
-			if(array[i] == row)
-				return true;
-		}
-		return false;
-	}
-}
-

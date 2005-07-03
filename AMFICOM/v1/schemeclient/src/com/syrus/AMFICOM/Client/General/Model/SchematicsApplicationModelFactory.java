@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+
 public class SchematicsApplicationModelFactory
-		implements ApplicationModelFactory
 {
 	public SchematicsApplicationModelFactory()
 	{

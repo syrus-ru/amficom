@@ -5,7 +5,7 @@
 #include <string.h> // strcmp; strlen
 #include "ModelF.h"
 #include "mat-solve.h"
-#include "../fit/BreakL-enh.h"
+#include "../BreakL/BreakL-mf.h"
 
 #include "prf.h"
 
@@ -14,6 +14,9 @@
 const double PI = 3.14159265358979323846;
 
 const int MF_MAX_ID = 100;
+
+// включение/отключение компрессии данных
+const int ENABLE_COMPRESSION = 1;
 
 // отображение ID -> entry
 // должно быть проинициализировано функцией MF_init()
@@ -24,7 +27,11 @@ static int ID_to_entry[MF_MAX_ID];
 // Вызывающая сторона может оставить значения по умолчанию
 // Вызываемая сторона может игнорировать эти параметры.
 // npars - должен игнорироваться в случае фиксированного числа параметров
-typedef double (*MF_Tfptr) (double *pars, int npars, double x, double *cache = 0, int valid = 0);
+typedef double (*MF_Tfptr) (double *pars, int npars, double x, double *cache, int valid);
+
+// расчет значений функции в диапазоне - необязательный метод
+// здесь кэш не нужен
+typedef void (*MF_Tfarrptr) (double *pars, int npars, double x0, double step, int N, double *buffer);
 
 // тип "функция реализация аттрибутов"
 typedef double (*MF_Tattrp) (double *pars, int npars);
@@ -39,6 +46,15 @@ struct MF_Attr
 	MF_Tattrp fun;
 };
 
+// тип "описание методов сохранения/восстановления в/из потока byteIn/byteOut"
+struct MF_IOProc
+{
+	int supported; // флаг поддержки процедуры сохранения
+	void (*quantizeFP)(ModelF &mf); // функция округления параметров
+	void (*writeFP)(ModelF &mf, byteOut &bout); // функция записи
+	int (*readFP)(ModelF &mf, byteIn &bin); // функция чтения. Возвращает 1 при ошибке или нехватке данных
+};
+
 // Описание конкретных модельных функций
 
 const int MF_MAX_ATTRS = 10; // макс. число аттрибутов у модельной функции
@@ -49,8 +65,10 @@ struct MF_MD
 	int npars;					// полное число параметров (аргументов)
 	char *psig;					// сигнатура; если psig!=0, то strlen(psig)==pars
 	MF_Tfptr fptr;				// shape function
+	MF_Tfarrptr farrptr;		// shape quick array computation function
 	MF_Tcmdp cmd;				// command function list
 	MF_Attr attr[MF_MAX_ATTRS];	// attributes function list
+	MF_IOProc ioProc;			// i/o procedures
 };
 
 extern struct MF_MD funcs[]; // будет ниже
@@ -120,14 +138,14 @@ ModelF::ModelF(int ID, int np_)
 	init(ID, np_);
 }
 
-void ModelF::init(int ID, int np_)
+void ModelF::init(int ID_, int np_, double *pars_)
 {
 	if (parsPtr != parsStorage)
-		delete parsPtr;
+		delete[] parsPtr;
 
 	nPars = 0;
 	parsPtr = parsStorage;
-	entry = i_ID2entry(ID);
+	entry = i_ID2entry(ID_);
 
 	if (entry < 0)
 		return; // неверный ID
@@ -142,11 +160,22 @@ void ModelF::init(int ID, int np_)
 			nPars = 0;
 	}
 
-	if (nPars > MF_MAX_FIXED_PARS)
+	if (pars_)
+	{
+		parsPtr = pars_;
+	}
+	else if (nPars > MF_MAX_FIXED_PARS)
 	{
 		parsPtr = new double[nPars];
 		assert(parsPtr);
 	}
+}
+
+void ModelF::setP(double *pars)
+{
+	if (parsPtr != parsStorage)
+		delete[] parsPtr;
+	parsPtr = pars;
 }
 
 void ModelF::zeroPars()
@@ -171,7 +200,7 @@ int ModelF::isCorrect()
 ModelF::~ModelF()
 {
 	if (parsPtr != parsStorage)
-		delete parsPtr;
+		delete[] parsPtr;
 }
 
 int ModelF::getID()
@@ -203,7 +232,27 @@ int ModelF::getFlags(int ipar)
 double ModelF::calcFunP(double *pars, double x)
 {
 	assert(entry >= 0);
-	return funcs[entry].fptr(pars, nPars, x);
+	return funcs[entry].fptr(pars, nPars, x, 0, 0);
+}
+
+void ModelF::calcFunArrayP(double *pars, double x0, double step, int N, double *output)
+{
+	assert(entry >= 0);
+	MF_Tfarrptr farrptr = funcs[entry].farrptr;
+	if (farrptr)
+	{
+		farrptr(pars, nPars, x0, step, N, output);
+	}
+	else
+	{
+		MF_Tfptr fptr = funcs[entry].fptr;
+		int i;
+		for (i = 0; i < N; i++)
+		{
+			// XXX: сюда надо добавить поддержку кэша fptr, это пара строк, но нет времени отлаживать
+			output[i] = fptr(pars, nPars, x0 + i * step, 0, 0);
+		}
+	}
 }
 
 double ModelF::getAttrP(double *pars, const char *name, double default_value)
@@ -410,6 +459,36 @@ double ModelF::RMS2LinP(double *pars, double *y, int i0, int x0, int length, int
 
 	return ret;
 }
+// округлить данные (как будто они были записаны и восстановлены)
+void ModelF::quantize()
+{
+	assert(entry >= 0);
+	if (funcs[entry].ioProc.supported)
+		funcs[entry].ioProc.quantizeFP(*this);
+}
+// проверить, доступно ли сохранение в поток
+int ModelF::isByteStreamingPossible(int shapeID)
+{
+	int entry = i_ID2entry(shapeID);
+	assert(entry >= 0);
+	return funcs[entry].ioProc.supported;
+}
+
+// запись параметров в поток байт
+void ModelF::saveToByteOut(byteOut &bos)
+{
+	assert(entry >= 0);
+	assert(funcs[entry].ioProc.supported);
+	funcs[entry].ioProc.writeFP(*this, bos);
+}
+
+// восстановление параметров из потока байт
+int ModelF::loadFromByteIn(byteIn &bis)
+{
+	assert(entry >= 0);
+	assert(funcs[entry].ioProc.supported);
+	return funcs[entry].ioProc.readFP(*this, bis);
+}
 
 // экспортируются для отладки - счетчики числа обращений к f() из RMS2()
 int total_RMS2_counter_nl = 0;
@@ -433,6 +512,35 @@ static double f_LIN0(double *pars, int, double x, double *, int)
 {
 	return pars[0] + x * pars[1];
 }
+
+static double fc_LIN0(double *pars, ModelF &, int command, void *extra)
+{
+	if (command == MF_CMD_ACXL_CHANGE)
+		pars[0] += ((ACXL_data *)extra)->dA;
+
+	if (command == MF_CMD_LIN_SET_BY_X1Y1X2Y2)
+	{
+		double *args = (double *)extra;
+		double x1 = args[0];
+		double y1 = args[1];
+		double x2 = args[2];
+		double y2 = args[3];
+		if (x1 == x2)
+		{
+			pars[0] = (y1 + y2) / 2.0;
+			pars[1] = 0.0;
+		}
+		else
+		{
+			pars[1] = (y2 - y1) / (x2 - x1);
+			pars[0] = y1 - x1 * pars[1];
+		}
+	}
+
+	return 0;
+}
+
+#ifdef MF_USE_SPL_AND_CON
 
 static double f_SPL1(double *pars, int, double x, double *, int)
 {
@@ -752,14 +860,6 @@ static int impose_x_ordering(double &pL, double &pR, int update)
 	return rc;
 }
 
-struct ACXL_data
-{
-	double dA;
-	double dC;
-	double dX;
-	double dL;
-};
-
 static void ACXL_fc_CON1(double *pars, ACXL_data *ACXL)
 {
 	pars[0] += ACXL->dA;
@@ -903,33 +1003,6 @@ static double fc_CON1e(double *pars, ModelF &, int command, void *extra)
 	}
 }
 
-static double fc_LIN0(double *pars, ModelF &, int command, void *extra)
-{
-	if (command == MF_CMD_ACXL_CHANGE)
-		pars[0] += ((ACXL_data *)extra)->dA;
-
-	if (command == MF_CMD_LIN_SET_BY_X1Y1X2Y2)
-	{
-		double *args = (double *)extra;
-		double x1 = args[0];
-		double y1 = args[1];
-		double x2 = args[2];
-		double y2 = args[3];
-		if (x1 == x2)
-		{
-			pars[0] = (y1 + y2) / 2.0;
-			pars[1] = 0.0;
-		}
-		else
-		{
-			pars[1] = (y2 - y1) / (x2 - x1);
-			pars[0] = y1 - x1 * pars[1];
-		}
-	}
-
-	return 0;
-}
-
 static double fc_SPL1(double *pars, ModelF &, int command, void *extra)
 {
 	if (command == MF_CMD_ACXL_CHANGE)
@@ -962,167 +1035,16 @@ static double a_fheight_CON1cde(double *p, int)
 {	return p[1]; // XXX: not a front height but aLet that sometimes may be much bigger
 }
 
-static int bsearchmh(double *pars, int npairs, double key)
+static const char *an_fPos =		"fPos";
+static const char *an_width =		"width";
+static const char *an_weldStep =	"weldStep";
+static const char *an_fHeight =		"fHeight";
+
+#endif // MF_USE_SPL_AND_CON
+
+static double a_canLeftLink_true(double *, int)
 {
-	int L = 0;
-	int R = npairs;
-	while (R > L)
-	{
-		int C = (R + L) / 2;
-		if (pars[C * 2] > key)
-			R = C;
-		else
-			L = C + 1;
-	}
-	return L;
-}
-
-static double f_BREAKL(double *pars, int npars, double x, double *, int)
-{
-	//prf_b("f_BREAKL");
-	int nEv = npars / 2;
-	int k;
-	if (nEv > 8)
-	{
-		k = bsearchmh(pars, nEv, x);
-	}
-	else
-	{
-		for (k = 0; k < nEv; k++)
-		{
-			if (pars[k * 2] > x)
-				break;
-		}
-	}
-	//prf_e();
-	if (k == 0)
-		return pars[k * 2 + 1];
-	if (k == nEv)
-		return pars[(nEv - 1) * 2 + 1];
-
-	double x0 = pars[k * 2 - 2];
-	double y0 = pars[k * 2 - 1];
-	double x1 = pars[k * 2 + 0];
-	double y1 = pars[k * 2 + 1];
-
-	if (x0 == x1)
-		return (y0 + y1) / 2;
-
-	return (x - x0) / (x1 - x0) * (y1 - y0) + y0;
-}
-
-static double fc_BREAKL(double *pars, ModelF &mf, int command, void *extra)
-{
-	//prf_b("fc_BREAKL");
-	if (command == MF_CMD_ACXL_CHANGE)
-	{
-		// эта операция изменяет число узлов,
-		// поэтому может выполняться только с главным набором параметров
-		assert(pars == mf.getP());
-
-		double dA = ((ACXL_data *)extra)->dA;
-		double dL = ((ACXL_data *)extra)->dL;
-		int dC = (int )((ACXL_data *)extra)->dC;
-		int dX = (int )((ACXL_data *)extra)->dX;
-
-		{ // A-преобразование
-			int N = mf.getNPars() / 2;
-			int i;
-			for (i = 0; i < N * 2; i += 2)
-			{
-				pars[i + 1] += dA; // сдвиг вверх
-			}
-		}
-
-		{ // L-преобразование
-			int i;
-			int N = mf.getNPars() / 2;
-			double *pars = mf.getP();
-			double x0 = pars[0];
-			double x1 = pars[N * 2 - 2];
-			double y0 = pars[1];
-			double y1 = pars[N * 2 - 1];
-
-			// ищем абс. макс.
-			double ymax = y0;
-			int imax = 0;
-			for (i = 0; i < N * 2; i += 2)
-			{
-				if (pars[i + 1] > ymax)
-				{
-					ymax = pars[i + 1];
-					imax = i;
-				}
-			}
-
-			// ищем мин. значение слева и справа от макс.
-			double yminL = ymax;
-			double yminR = ymax;
-			for (i = 0; i < imax; i += 2)
-			{
-				if (pars[i + 1] < yminL)
-					yminL = pars[i + 1];
-			}
-			for (i = imax; i < N * 2; i += 2)
-			{
-				if (pars[i + 1] < yminR)
-					yminR = pars[i + 1];
-			}
-
-			// масштабируем слева и справа
-			if (yminL < ymax)
-			{
-				double ratio = (ymax + dL - yminL) / (ymax - yminL);
-				for (i = 0; i < imax; i += 2)
-					pars[i + 1] = yminL + (pars[i + 1] - yminL) * ratio;
-			}
-			if (yminR < ymax)
-			{
-				double ratio = (ymax + dL - yminR) / (ymax - yminR);
-				for (i = imax; i < N * 2; i += 2)
-					pars[i + 1] = yminR + (pars[i + 1] - yminR) * ratio;
-			}
-		}
-
-		{ // CX-преобразование
-			int N = mf.getNPars() / 2;
-			int isUpper = dX > 0;
-			dX = isUpper ? dX : -dX;
-			int i;
-			for (i = 0; i < N * 2; i += 2)
-			{
-				pars[i + 0] += dC - dX; // смещаем влево
-			}
-			int x0 = (int )pars[0];
-			int x1 = (int )pars[N * 2 - 2];
-			BreakL_Enh(mf, x0, x1, dX * 2, isUpper); // раздвигаем вправо
-			// теперь mf изменилась, в т.ч. N и размещение pars
-		}
-	}
-	//prf_e();
-	return 0;
-}
-
-static double a_noiseSuppressionLength_BREAKL(double *pars, int npars)
-{
-	int N = npars / 2;
-	int i;
-	double ret = 0;
-	for (i = 0; i < N - 1; i++)
-	{
-		double L1 = pars[i * 2 + 2] - pars[i * 2 + 0];
-		double L2 = pars[i * 2 + 4] - pars[i * 2 + 2];
-		if (L1 < 1)
-			L1 = 1;
-		if (L2 < 1)
-			L2 = 1;
-		double nef = (L1 + L2) / 2.0; // XXX: (L1 + L2) / 4.0 ??
-		if (nef < 1)
-			nef = 1;
-		if (i == 0 || ret < nef)
-			ret = nef;
-	}
-	return ret;
+	return 1.0;
 }
 
 static double f_GAUSS(double *pars, int, double x, double *, int)
@@ -1136,11 +1058,8 @@ static double f_GAUSS(double *pars, int, double x, double *, int)
 	return A * exp(-0.5 * frac * frac);
 }
 
-static const char *an_fPos =		"fPos";
-static const char *an_width =		"width";
-static const char *an_weldStep =	"weldStep";
-static const char *an_fHeight =		"fHeight";
 static const char *an_noiseSuppressionLength = "noiseSuppressionLength";
+static const char *an_canLeftLink = "canLeftLink";
 
 // главная таблица модельных функций с фикс. числом параметров
 
@@ -1149,21 +1068,23 @@ static const char *an_noiseSuppressionLength = "noiseSuppressionLength";
 
 // ID = MF_ID_INVALID = 0: reserved
 
-static MF_MD funcs[] =
+MF_MD funcs[] =
 {
 	{
 		MF_ID_LIN,
 		2,
 		"LL",
-		f_LIN0,
+		f_LIN0, 0,
 		fc_LIN0
 	},
+
+#ifdef MF_USE_SPL_AND_CON
 
 	{
 		MF_ID_SPL1,
 		5,
 		"LLLXW", // XXX: '.' just reminds to rewrite (center,width)(..) to (x0,x1)(XX)
-		f_SPL1,
+		f_SPL1, 0,
 		fc_SPL1,
 		{
 			{ an_fPos, a_fpos_SPL1 },
@@ -1176,7 +1097,7 @@ static MF_MD funcs[] =
 		MF_ID_CON1c,
 		9,
 		"LLLXXWWW.",
-		f_CON1c,
+		f_CON1c, 0,
 		fc_CON1c,
 		{
 			{ an_fPos, a_fpos_CON1cde },
@@ -1189,7 +1110,7 @@ static MF_MD funcs[] =
 		MF_ID_CON1d,
 		8,
 		"LLLXXWWL",
-		f_CON1d,
+		f_CON1d, 0,
 		fc_CON1d,
 		{
 			{ an_fPos, a_fpos_CON1cde },
@@ -1202,7 +1123,7 @@ static MF_MD funcs[] =
 		MF_ID_CON1e,
 		8,
 		"LLLXXW..",
-		f_CON1e,
+		f_CON1e, 0,
 		fc_CON1e,
 		{
 			{ an_fPos, a_fpos_CON1cde },
@@ -1211,14 +1132,23 @@ static MF_MD funcs[] =
 		}
 	},
 
+#endif
+
 	{
 		MF_ID_BREAKL,
 		0, // переменное число параметров
 		0, // сигнатуры нет
-		f_BREAKL, // функция
+		f_BREAKL, farr_BREAKL, // функция
 		fc_BREAKL, // обработчик команд
 		{
-			{ an_noiseSuppressionLength, a_noiseSuppressionLength_BREAKL }
+			{ an_noiseSuppressionLength, a_noiseSuppressionLength_BREAKL },
+			{ an_canLeftLink, a_canLeftLink_true }
+		},
+		{ // преобразование в/из потока байт
+			ENABLE_COMPRESSION,
+			fioQ_BREAKL,
+			fioW_BREAKL,
+			fioR_BREAKL
 		}
 	},
 
@@ -1226,10 +1156,11 @@ static MF_MD funcs[] =
 		MF_ID_GAUSS,
 		3,
 		"LXW",
-		f_GAUSS
+		f_GAUSS, 0
 	},
 
 	{
 		MF_ID_INVALID
 	}
 };
+

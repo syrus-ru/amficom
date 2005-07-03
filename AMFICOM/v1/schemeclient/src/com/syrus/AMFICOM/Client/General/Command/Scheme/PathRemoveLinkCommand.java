@@ -1,13 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 
-public class PathRemoveLinkCommand extends VoidCommand
+public class PathRemoveLinkCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemeGraph graph;
 
 	public PathRemoveLinkCommand(ApplicationContext aContext, SchemeGraph graph)
@@ -27,10 +26,7 @@ public class PathRemoveLinkCommand extends VoidCommand
 				graph,
 				graph.getSelectionCells(),
 				CreatePathEvent.REMOVE_LINK_EVENT));
-		graph.setGraphChanged(true);
-	}
+		aContext.getDispatcher().notify(new SchemeElementsEvent(this, graph, SchemeElementsEvent.SCHEME_CHANGED_EVENT));
+	}*/
 }
-
-
-
 

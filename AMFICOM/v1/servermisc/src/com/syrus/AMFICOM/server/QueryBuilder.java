@@ -24,127 +24,181 @@
 // * --------------   ---------- ---------------------------------------- * //
 // *                                                                      * //
 //////////////////////////////////////////////////////////////////////////////
+
 package com.syrus.AMFICOM.server;
 
-
-//////////////////////////////////////////////////////////////////////////////
-// Реализация статического класса pmRISDQuery
-// для формировани динамических запросов
-//////////////////////////////////////////////////////////////////////////////
-
+/**
+ * Реализация статического класса pmRISDQuery
+ * для формирования динамических запросов
+ *
+ * @version $Revision: 1.2 $, $Date: 2004/06/07 15:36:09 $
+ * @module servermisc
+ */
 public class QueryBuilder
 {
-	private int cond_counter;			// счетчик добавленных условий where
-	private int ord_counter;			// счетчик полей для order by
-	private int set_counter;			// счетчик добавленных полей для set
-	private int val_counter;			// счетчик добавленных полей для value
-	public String query;				// строка запроса
-	private String order;				// строка блока order by
-	private String fields;				// строка блока insert into tbl()
-	private String values;				// строка блока values()
-	private String ordarray[];			// массим полей упорядочивания order by
-	static final int MAX_ORDER_BY = 5;	// максимальной число полей упорядоч.
+	/**
+	 * максимальное число полей упорядоч.
+	 */
+	static final int MAX_ORDER_BY = 5;
 
-	// в конструкторе установить блок select ... from ...
+	/**
+	 * строка запроса
+	 */
+	public String query;
+
+	/**
+	 * счётчик добавленных условий where
+	 */
+	private int condCounter;
+
+	/**
+	 * счётчик полей для order by
+	 */
+	private int ordCounter;
+
+	/**
+	 * счётчик добавленных полей для set
+	 */
+	private int setCounter;
+
+	/**
+	 * счётчик добавленных полей для value
+	 */
+	private int valCounter;
+
+	/**
+	 * строка блока order by
+	 */
+	private String order;
+
+	/**
+	 * строка блока insert into tbl()
+	 */
+	private String fields;
+
+	/**
+	 * строка блока values()
+	 */
+	private String values;
+
+	/**
+	 * массив полей упорядочивания order by
+	 */
+	private String ordarray[];
+
+	/**
+	 * в конструкторе установить блок select ... from ...
+	 */
 	public QueryBuilder(String s)
 	{
-		query = (s == null)?"":s;
+		query = (s == null) ? "" : s;
 		order = "";
 		fields = "";
 		values = "";
-		cond_counter = 0;
-		ord_counter = 0;
-		set_counter = 0;
-		val_counter = 0;
+		condCounter = 0;
+		ordCounter = 0;
+		setCounter = 0;
+		valCounter = 0;
 		ordarray = new String[MAX_ORDER_BY];
 	}
 
-	// конструктор без параметров устанавливает запрос по умолчанию
-	// - пустая строка
+	/**
+	 * конструктор без параметров устанавливает запрос по умолчанию
+	 * - пустая строка
+	 */
 	public QueryBuilder()
 	{
 		this(null);
 	}
 
-	// установить значение запроса s и сбросить внутренние переменные
+	/**
+	 * установить значение запроса s и сбросить внутренние переменные
+	 */
 	public void setQuery(String s)
 	{
-		query = (s == null)?"":s;
+		query = (s == null)? "" : s;
 		order = "";
 		fields = "";
 		values = "";
-		cond_counter = 0;
-		ord_counter = 0;
-		set_counter = 0;
-		val_counter = 0;
+		condCounter = 0;
+		ordCounter = 0;
+		setCounter = 0;
+		valCounter = 0;
 	}
 
-	// найти, есть ли уже в блоке order by поле с данным именем чтобы
-	// не добавлять его в поиск повторно
-	private boolean SearchSubstr(String ord)
+	/**
+	 * найти, есть ли уже в блоке order by поле с данным именем чтобы
+	 * не добавлять его в поиск повторно
+	 */
+	private boolean searchSubstr(String ord)
 	{
-		int i;
-
-		for(i = 0;i < ord_counter; i++)
+		for (int i = 0; i < ordCounter; i++)
 			if (ord.equals(ordarray[i]))
 				return true;
 		return false;
 	}
 
-	// добавить условие выборки where ... или and ...
-	// передаваемое в параметре s и добавить при этом поле ord
-	// в блок order by
+	/**
+	 * добавить условие выборки where ... или and ...
+	 * передаваемое в параметре s и добавить при этом поле ord
+	 * в блок order by
+	 */
 	public void addCondition(String s, String ord)
 	{
 		// если это первое условие - поставить where cond
-		// если where cond уже есть (в этом случае cond_counter != 0)
+		// если where cond уже есть (в этом случае condCounter != 0)
 		// то добавить and cond
-		query = query + ((cond_counter == 0)?" where ":" and ") + s;
-		cond_counter++;
+		query += ((condCounter == 0) ? " where " : " and ") + s;
+		condCounter++;
 
 		// если ord не пусто и такого поля в order by еще нет, то добавить
-		if (ord != null && ord != "")
-			if (SearchSubstr(ord) == false)
-			{
-				if (ord_counter == MAX_ORDER_BY)
-					return;
-				order = order + ((ord_counter == 0)?" order by ":", ") + ord;
-				ordarray[ord_counter++] = ord;
-			}
+		if ((ord != null) && (ord.length() != 0) && (!searchSubstr(ord)))
+		{
+			if (ordCounter == MAX_ORDER_BY)
+				return;
+			order += ((ordCounter == 0) ? " order by " : ", ") + ord;
+			ordarray[ordCounter++] = ord;
+		}
 	}
 
-	// добавить условие установки поля set ... или ,...
-	// передаваемое в параметре s
+	/**
+	 * добавить условие установки поля set ... или ,...
+	 * передаваемое в параметре s
+	 */
 	public void addSet(String s)
 	{
 		// если это первое поле - поставить set
-		// если set s уже есть (в этом случае set_counter != 0)
+		// если set s уже есть (в этом случае setCounter != 0)
 		// то добавить ,...
-		query = query + ((set_counter == 0)?" set ":", ") + s;
-		set_counter++;
+		query += ((setCounter == 0) ? " set " : ", ") + s;
+		setCounter++;
 	}
 
-	// добавить поле f установки insert into tbl(...) values(...)
-	// передаваемое в параметре s
+	/**
+	 * добавить поле f установки insert into tbl(...) values(...)
+	 * передаваемое в параметре s
+	 */
 	public void addValue(String f, String s)
 	{
 		// если это первое поле - поставить set
-		// если set s уже есть (в этом случае set_counter != 0)
+		// если set s уже есть (в этом случае setCounter != 0)
 		// то добавить ,...
-		fields = fields + ((val_counter == 0)?"(":", ") + f;
-		values = values + ((val_counter == 0)?" values(":", ") + s;
-		val_counter++;
+		fields += ((valCounter == 0) ? "(" : ", ") + f;
+		values += ((valCounter == 0) ? " values(" : ", ") + s;
+		valCounter++;
 	}
-	// завершить формирование запроса, соединив вместе
-	// select ... from ... where ... order by ...
+
+	/**
+	 * завершить формирование запроса, соединив вместе
+	 * select ... from ... where ... order by ...
+	 */
 	public void finishQuery()
 	{
-		if(val_counter > 0)
+		if(valCounter > 0)
 		{
-			fields = fields + ")";
-			values = values + ")";
+			fields += ")";
+			values += ")";
 		}
-		query = query + fields + values + order;
+		query += fields + values + order;
 	}
 }
-

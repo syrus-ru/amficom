@@ -1,27 +1,26 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.*;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class HistogrammLayeredPanel extends ScalableLayeredPanel implements OperationListener
+public class HistogrammLayeredPanel extends ScalableLayeredPanel implements PropertyChangeListener
 {
 	Dispatcher dispatcher;
 	private boolean useMarkers = false;
+	MarkersInfo mInfo;
 
 	public HistogrammLayeredPanel(Dispatcher dispatcher)
 	{
@@ -30,8 +29,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
@@ -42,11 +40,11 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -54,28 +52,34 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 		return new HistogrammToolBar(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			if (useMarkers)
+			if(rue.markerMoved()) {
+				mInfo = (MarkersInfo)rue.getNewValue();
+			}
+
+			if(rue.markerLocated())
 			{
-				for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+				if (useMarkers)
 				{
-					SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-					if (panel instanceof HistogrammPanel)
-					{
-						if(rue.MARKER_MOVED)
-						{
-							MarkersInfo mInfo = (MarkersInfo)rue.getSource();
-							((HistogrammPanel)panel).updateHistogrammData(
-									Math.min(mInfo.a_pos, mInfo.b_pos),
-									Math.max(mInfo.a_pos, mInfo.b_pos));
-							jLayeredPane.repaint();
-						}
-					}
+					updateHistogrammData();
+				}
+			}
+		}
+	}
+	
+	protected void updateHistogrammData() {
+		if (mInfo != null) {
+			for (int i = 0; i < jLayeredPane.getComponentCount(); i++) {
+				SimpleGraphPanel panel = (SimpleGraphPanel) jLayeredPane.getComponent(i);
+				if (panel instanceof HistogrammPanel) {
+					((HistogrammPanel) panel).updateHistogrammData(Math.min(mInfo.a_pos,
+							mInfo.b_pos), Math.max(mInfo.a_pos, mInfo.b_pos));
+					jLayeredPane.repaint();
 				}
 			}
 		}
@@ -89,13 +93,13 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 
 class HistogrammToolBar extends ScalableToolBar
 {
-	protected static final String bindMark = "bind2markers";
+	protected static final String BIND_MARK = "bind2markers";
 
 	JToggleButton markersTButton = new JToggleButton();
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, bindMark
+		EX, DX, EY, DY, FIX, SEPARATOR, BIND_MARK
 	};
 
 	public HistogrammToolBar (HistogrammLayeredPanel panel)
@@ -108,18 +112,19 @@ class HistogrammToolBar extends ScalableToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		buttons.put(
-				bindMark,
+				BIND_MARK,
 				createToolButton(
 				markersTButton,
-				btn_size,
 				null,
-				LangModelAnalyse.String("bindToMarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
+				null,
+				LangModelAnalyse.getString("bindToMarker"),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -138,5 +143,7 @@ class HistogrammToolBar extends ScalableToolBar
 		HistogrammLayeredPanel panel = (HistogrammLayeredPanel)super.panel;
 		boolean b = markersTButton.isSelected();
 		panel.useMarkers(b);
+		if (b)
+			panel.updateHistogrammData();
 	}
 }

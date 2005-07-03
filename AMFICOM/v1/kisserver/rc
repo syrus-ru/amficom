@@ -1,0 +1,9 @@
+#!/bin/bash
+PROJECT=/home/arseniy/java/server
+CLASSES=$PROJECT/classes
+LIB=/home/arseniy/java/lib
+CLASSPATH=$ORACLASSPATH:$ORACLE_HOME/lib/vbjapp.jar:$ORACLE_HOME/lib/vbjorb.jar:$ORACLE_HOME/lib/aurora_client.jar
+MYCLASSPATH=$CLASSES:$LIB/ServerInterface_General.jar:$LIB/AMFICOMServerObject.jar:$LIB/io.jar
+SQLJCLASSPATH=$ORACLE_HOME/sqlj/lib/translator.zip:$ORACLE_HOME/sqlj/lib/runtime12.zip:$ORACLE_HOME/jdbc/lib/classes12.zip
+
+java -classpath $CLASSPATH:$MYCLASSPATH:$SQLJCLASSPATH com.syrus.AMFICOM.server.load.Hlam

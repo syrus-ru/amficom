@@ -1,0 +1,8 @@
+*.jar
+*.swp
+*.tar
+*.gz
+classes
+.mach
+.classpath
+.project

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertyTableModel;
 
 import java.awt.Component;
@@ -66,7 +65,7 @@ public class ObjectResourcePropertyTableEditor
 			}
 		}
 
-		try 
+		try
 		{
 			JComboBox jcb = (JComboBox )editor;
 			jcb.addActionListener(new ActionListener()
@@ -76,10 +75,10 @@ public class ObjectResourcePropertyTableEditor
 						fireEditingStopped();
 					}
 				});
-		} catch (Exception ex) 
+		} catch (Exception ex)
 		{
 //			ex.printStackTrace();
-		} finally 
+		} finally
 		{
 		}
 		

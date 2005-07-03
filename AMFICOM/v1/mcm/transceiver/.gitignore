@@ -1,4 +1,4 @@
-com_syrus_AMFICOM_mcm_Transceiver.h
+com_syrus_AMFICOM_mcm_TCPKISConnection.h
 *.so
 *.o
 *.swp

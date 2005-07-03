@@ -1,40 +1,43 @@
+/*
+ * $Id: AMFICOMdbInterface.sqlj,v 1.6 2004/07/26 11:18:42 krupenn Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.io.*;
-import org.omg.CORBA.*;
-import java.util.*;
-
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Survey.*;
 import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-
-import com.syrus.AMFICOM.filter.*;
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.CORBA.Survey.*;
+import com.syrus.AMFICOM.filter.LogicSchemeBase;
 import com.syrus.AMFICOM.server.*;
-import com.syrus.AMFICOM.server.measurement.*;
 import com.syrus.AMFICOM.server.event.*;
+import com.syrus.AMFICOM.server.measurement.*;
+import com.syrus.util.database.DatabaseConnection;
+import java.io.*;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import org.omg.CORBA.StringHolder;
+import sqlj.runtime.ref.DefaultContext;
 
-//import com.syrus.AMFICOM.Server.Process.ServerProcessHelper;
-
+/**
+ * @version $Revision: 1.6 $, $Date: 2004/07/26 11:18:42 $
+ * @author $Author: krupenn $
+ * @module server_v1
+ */
 public class AMFICOMdbInterface
 {
 	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -1662,7 +1665,7 @@ public class AMFICOMdbInterface
 				}
 			}
 
-			LogicScheme_yo ls = new LogicScheme_yo(new AlarmFilter());
+			LogicSchemeBase ls = new LogicSchemeBase(new AlarmFilter());
 
 			try
 			{
@@ -2289,6 +2292,9 @@ public class AMFICOMdbInterface
 		vec1.copyInto(desc1);
 
 		Vector vec = filterTimeDiapazon(start_time, end_time, desc1);
+		System.out.println("tests in diapazon - " + vec.size());
+		vec = filterDomain(vec, accessIdentity.domain_id);
+		System.out.println("tests in domain - " + vec.size());
 
 		desc.value = new ResourceDescriptor_Transferable[vec.size()];
 		vec.copyInto(desc.value);
@@ -2349,6 +2355,40 @@ public class AMFICOMdbInterface
 			throw new AMFICOMRemoteException(Constants.ERROR_LOADING, "Невозможно загрузить тест: " + ex.getMessage());
 		}
 */
+	}
+
+	public Vector filterDomain(Vector invec, String domain_id)
+	{
+		Vector vec = new Vector();
+		String dom;
+		String kis_id;
+		ResourceDescriptor_Transferable rd;
+		Test test;
+
+		for(int i = 0; i < invec.size(); i++)
+		{
+			try
+			{
+				rd = (ResourceDescriptor_Transferable )invec.get(i);
+				test = new Test(rd.resource_id);
+				kis_id = test.getKISId();
+				
+				#sql {
+					select domain_id into :dom from equipments
+					where id = :kis_id
+				};
+				if(domain_id.equals(dom))
+				{
+					vec.add(rd);
+					System.out.println("Test " + test.getId());
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		return vec;
 	}
 
 	public Vector filterTimeDiapazon(

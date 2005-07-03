@@ -1,0 +1,319 @@
+/*-
+ * $Id: configuration.idl,v 1.96 2005/06/28 10:41:54 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef CONFIGURATION_IDL
+#define CONFIGURATION_IDL
+
+#include "general.idl"
+
+module com {
+module syrus {
+module AMFICOM {
+module configuration {
+module corba {
+
+// Generic interface to Equipment, MonitoredElement, etc
+//	abstract interface MonitoredDomainMember_Transferable {
+//		attribute general::corba::IdentifierSeq monitored_element_ids;
+//
+//		void getKIS() raises (general::corba::AMFICOMRemoteException);
+//	};
+
+
+/////////////////////// EquipmentType /////////////////////
+	typedef struct IdlEquipmentType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+		general::corba::WString128 manufacturer;
+		general::corba::WString32 manufacturerCode;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} EquipmentType;
+
+	typedef sequence<EquipmentType> EquipmentTypeSeq;
+
+/////////////////////// TransmissionPathType /////////////////////
+	typedef struct IdlTransmissionPathType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} TransmissionPathType;
+
+	typedef sequence<TransmissionPathType> TransmissionPathTypeSeq;
+
+/////////////////////// PortType /////////////////////
+	typedef struct IdlPortType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+		enum PortTypeSort {
+			PORTTYPESORT_OPTICAL,
+			PORTTYPESORT_ELECTRICAL,
+			PORTTYPESORT_THERMAL
+		} sort;
+		general::corba::IdentifierSeq characteristicIds;
+	} PortType;
+
+	typedef sequence<PortType> PortTypeSeq;
+
+	typedef struct IdlMeasurementPortType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} MeasurementPortType;
+
+	typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
+
+/////////////////////// LinkType /////////////////////
+	abstract valuetype IdlAbstractLinkType {
+		enum LinkTypeSort {
+			LINKTYPESORT_OPTICAL_FIBER,
+			LINKTYPESORT_ETHERNET,
+			LINKTYPESORT_GSM
+		};
+	};
+
+	typedef IdlAbstractLinkType AbstractLinkType;
+
+	typedef struct IdlLinkType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+		AbstractLinkType::LinkTypeSort sort;
+		general::corba::WString128 manufacturer;
+		general::corba::WString32 manufacturerCode;
+		general::corba::Identifier imageId;
+		general::corba::IdentifierSeq characteristicIds;
+	} LinkType;
+
+	typedef sequence<LinkType> LinkTypeSeq;
+
+	typedef struct IdlCableLinkType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+		AbstractLinkType::LinkTypeSort sort;
+		general::corba::WString128 manufacturer;
+		general::corba::WString32 manufacturerCode;
+		general::corba::Identifier imageId;
+		general::corba::IdentifierSeq characteristicIds;
+	} CableLinkType;
+
+	typedef sequence<CableLinkType> CableLinkTypeSeq;
+
+	typedef struct IdlCableThreadType {
+		general::corba::StorableObject header;
+
+		general::corba::WString32 codename;
+		general::corba::WString256 description;
+		general::corba::WString128 name;
+
+		long color;
+
+		general::corba::Identifier linkTypeId;
+		general::corba::Identifier cableLinkTypeId;
+	} CableThreadType;
+
+	typedef sequence<CableThreadType> CableThreadTypeSeq;
+
+///////////////////////// Equipment ///////////////////////
+	typedef struct IdlEquipment {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::Identifier _typeId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+
+		general::corba::WString128 supplier;
+		general::corba::WString32 supplierCode;
+
+		float longitude;
+		float latitude;
+
+		general::corba::WString64 hwSerial;
+		general::corba::WString64 hwVersion;
+		general::corba::WString64 swSerial;
+		general::corba::WString64 swVersion;
+		general::corba::WString64 inventoryNumber;
+
+		general::corba::Identifier imageId;
+
+		general::corba::IdentifierSeq characteristicIds;
+	} Equipment;
+
+	typedef sequence<Equipment> EquipmentSeq;
+
+///////////////////// Transmission Path ///////////////////
+	typedef struct IdlTransmissionPath {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+
+		general::corba::Identifier _typeId;
+		general::corba::Identifier startPortId;
+		general::corba::Identifier finishPortId;
+
+		general::corba::IdentifierSeq characteristicIds;
+
+	} TransmissionPath;
+
+	typedef sequence<TransmissionPath> TransmissionPathSeq;
+
+/////////////////////////////// Port ////////////////////////////////
+
+	typedef struct IdlPort {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier _typeId;
+		general::corba::WString256 description;
+		general::corba::Identifier equipmentId;
+
+		enum PortSort {
+			PORT_SORT_PORT,
+			PORT_SORT_CABLE_PORT
+		} sort;
+		general::corba::IdentifierSeq characteristicIds;
+	} Port;
+
+	typedef sequence<Port> PortSeq;
+
+//////////////////////////////// KIS ////////////////////////////////
+	typedef struct IdlKIS {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::WString64 hostname;
+		short tcpPort;
+		general::corba::Identifier equipmentId;
+		general::corba::Identifier mcmId;
+		general::corba::IdentifierSeq characteristicIds;
+	} KIS;
+
+	typedef sequence<KIS> KISSeq;
+
+////////////////////////// MeasurementPort ///////////////////////////
+	typedef struct IdlMeasurementPort {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier _typeId;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::Identifier kisId;
+		general::corba::Identifier portId;
+		general::corba::IdentifierSeq characteristicIds;
+	} MeasurementPort;
+
+	typedef sequence<MeasurementPort> MeasurementPortSeq;
+
+///////////////////// Monitored Element ///////////////////
+
+	typedef struct IdlMonitoredElement {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::Identifier measurementPortId;
+		enum MonitoredElementSort {
+			MONITOREDELEMENT_SORT_LINK,
+			MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+			MONITOREDELEMENT_SORT_EQUIPMENT,
+			MONITOREDELEMENT_SORT_PORT,
+			MONITOREDELEMENT_SORT_CABLEPORT
+		} sort;
+		general::corba::WString64 localAddress;
+
+		general::corba::IdentifierSeq monitoredDomainMemberIds;
+	} MonitoredElement;
+
+	typedef sequence<MonitoredElement> MonitoredElementSeq;
+
+///////////////////// Link /////////////////////
+	typedef struct IdlLink {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::Identifier _typeId;
+
+		wstring inventoryNo;
+		general::corba::WString128 supplier;
+		general::corba::WString32 supplierCode;
+
+		long color;
+		general::corba::WString32 mark;
+		general::corba::IdentifierSeq characteristicIds;
+	} Link;
+
+	typedef sequence<Link> LinkSeq;
+
+	typedef struct IdlCableLink {
+		general::corba::StorableObject header;
+
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::Identifier _typeId;
+
+		wstring inventoryNo;
+		general::corba::WString128 supplier;
+		general::corba::WString32 supplierCode;
+
+		long color;
+		general::corba::WString32 mark;
+		general::corba::IdentifierSeq characteristicIds;
+	} CableLink;
+
+	typedef sequence<CableLink> CableLinkSeq;
+///////////////////// CableThread /////////////////////
+	typedef struct IdlCableThread {
+		general::corba::StorableObject header;
+		general::corba::Identifier domainId;
+
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::Identifier _typeId;
+	} CableThread;
+
+	typedef sequence<CableThread> CableThreadSeq;
+};
+};
+};
+};
+};
+
+#endif // CONFIGURATION_IDL

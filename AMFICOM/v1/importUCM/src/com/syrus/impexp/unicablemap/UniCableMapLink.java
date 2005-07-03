@@ -79,5 +79,6 @@ public class UniCableMapLink {
 	public int lord;
 	
 	public UniCableMapLink() {
+		// empty
 	}
 }

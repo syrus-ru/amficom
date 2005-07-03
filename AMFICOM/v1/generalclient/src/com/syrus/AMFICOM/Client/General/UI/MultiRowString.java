@@ -1,9 +1,8 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.util.*;
-import com.syrus.io.*;
+import com.syrus.io.SimpleStringTokenizer;
 
-public class MultiRowString 
+public class MultiRowString
 {
 	int rows;
 	String[] strings;
@@ -15,8 +14,7 @@ public class MultiRowString
 
 	public void parseString(String s)
 	{
-		Vector vec = new Vector();
-		MyStringTokenizer tokenizer = new MyStringTokenizer(s, "\n");
+		SimpleStringTokenizer tokenizer = new SimpleStringTokenizer(s, "\n");
 		rows = tokenizer.countTokens();
 		strings = new String[rows];
 		for(int i = 0; i < rows; i++)

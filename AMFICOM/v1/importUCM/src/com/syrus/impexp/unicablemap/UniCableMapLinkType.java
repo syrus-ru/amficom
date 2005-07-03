@@ -70,5 +70,6 @@ public class UniCableMapLinkType extends UniCableMapType {
 	public static final String UCM_ADJUCENT_ADJUCENT = "смежный/смежный";
 
 	public UniCableMapLinkType() {
+		// empty
 	}
 }

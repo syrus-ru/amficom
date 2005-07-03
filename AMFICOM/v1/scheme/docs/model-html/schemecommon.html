@@ -1,0 +1,76 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+
+	function checkNavigator() {
+		var frameSet = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\n'
+		+'<HTML>\n'
+		+'	<META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">\n'
+		+'	<TITLE>Rose Web Publisher</TITLE>\n'
+		+'<HEAD>\n'
+		+'<frameset cols="25%,75%">\n'
+		+'<frame marginwidth="0" marginheight="0" scrolling="NO" src="contents.html" name="categories_frame">\n'
+		+'<frame src="webviewer/intro.html" name="contents_frame">\n'
+		+'<noframes>\n'
+		+'<P>This page is in frames, which your browser does not support.</P>\n'
+		+'</noframes>\n'
+		+'</frameset>\n'
+		+'</HEAD>\n'
+		+'</HTML>\n';
+
+		var unsupported = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">\n'
+		+'<HTML>\n'
+		+'<HEAD>\n'
+		+'	<META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">\n'
+		+'	<TITLE>Rose Web Publisher - Unsupported browser</TITLE>\n'
+		+'</HEAD>\n'
+		+'<BODY BGCOLOR="#FFFFFF">\n'
+		+'<P><FONT SIZE="5"><B>Unsupported Browser</B></FONT></P>\n'
+		+'<P><FONT SIZE="5"><B><BR></B>\n'
+		+'<FONT SIZE="4">The following browsers are supported:</FONT></P>\n'
+		+'<P><FONT SIZE="4">1. Microsoft\'s Internet Explorer 4.0 or better. </FONT><A HREF="http://www.microsoft.com/windows/ie">\n'
+		+'<FONT SIZE="4">http://www.microsoft.com/ie</FONT></A></P>\n'
+		+'<P><FONT SIZE="4">2. Netscape\'s Communicator 4.06 or better. </FONT><A HREF="http://www.netscape.com/download">\n'
+		+'<FONT SIZE="4">http://www.netscape.com/download.</FONT></A><FONT SIZE="4">  If you wish to publish the images in PNG '
+		+'format you will need to add PNG support to Netscape Communicator.  </FONT><A HREF="http://codelab.siegelgale.com/solutions/pnglive2.html">\n'
+		+'<FONT SIZE="4">PNG Live</FONT></A><FONT SIZE="4"> is a plug-in that provides PNG support for Netscape Communicator. Netscape '
+		+'Communicator 4.5 or better has built-in support for PNG and therefore does not require any special plug-in to view '
+		+'web pages created by Rose Web Publisher.</FONT><A HREF="http://www.netscape.com/download"><FONT SIZE="4"></FONT></A></P>\n'
+		+'<P><FONT SIZE="4"><BR>\n'
+		+'</FONT>\n'
+		+'</BODY>\n'
+		+'</HTML>\n';
+
+		var bOK = 0;
+
+		if (navigator.appName.indexOf("Microsoft") >= 0) {
+			if(navigator.appVersion.charAt(0) == '4')
+				bOK = 1;
+		} else if (navigator.appName.indexOf("Netscape") >= 0) {
+			if((navigator.appVersion.charAt(0) == '4' && navigator.appVersion.charAt(2) == '0' && navigator.appVersion.charAt(3) >= '6') ||
+			   (navigator.appVersion.charAt(0) == '4' && navigator.appVersion.charAt(2) >= '5') ||
+			   (navigator.appVersion.charAt(0) > '4'))
+				bOK = 1;
+		}
+		if (bOK == 1)
+		{
+			document.open("text/html", "replace");
+			document.write(frameSet);
+			document.close()
+		}
+		else
+		{
+			document.open("text/html", "replace");
+			document.write(unsupported);
+			document.close()
+		}
+	}
+// -->
+</SCRIPT>
+
+</HEAD>
+<BODY onload='checkNavigator();'>
+</BODY>
+</HTML>

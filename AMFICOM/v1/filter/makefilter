@@ -37,7 +37,7 @@ JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	impl jar
+$(TARGET):	clean impl jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
@@ -50,5 +50,5 @@ impl:
 		@$(TARGET_CLASS_LIST)
 
 clean:
-	rd /s /q $(CLASSES)\com
-	del /f /q $(TARGET)
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

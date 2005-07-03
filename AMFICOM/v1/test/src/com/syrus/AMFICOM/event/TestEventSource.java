@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventSource.java,v 1.1.1.1 2005/02/16 21:28:10 cvsadmin Exp $
+ * $Id: TestEventSource.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,24 +15,25 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2005/02/16 21:28:10 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
-public class TestEventSource extends CommonEventTest {
+public class TestEventSource extends DatabaseCommonTest {
 
 	public TestEventSource(String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		return suiteWrapper(TestEventSource.class);
+		addTestSuite(TestEventSource.class);
+		return createTestSetup();
 	}
 
 	public void testCreateInstance() throws ApplicationException {
@@ -56,13 +56,12 @@ public class TestEventSource extends CommonEventTest {
 		for (Iterator it = eventSources.iterator(); it.hasNext();) {
 			eventSource = (EventSource) it.next();
 			System.out.println("id: "+ eventSource.getId());
-			EventStorableObjectPool.putStorableObject(eventSource);
 		}
-		EventStorableObjectPool.flush(false);
+		StorableObjectPool.flush(ObjectEntities.EVENTSOURCE_CODE, false);
 	}
 
 	private EventSource createAndTestEventSource(Identifier sourceEntityId) throws ApplicationException {
-		EventSource eventSource = EventSource.createInstance(SessionContext.getAccessIdentity().getUserId(), sourceEntityId);
+		EventSource eventSource = EventSource.createInstance(creatorUser.getId(), sourceEntityId);
 
 		EventSource_Transferable est = (EventSource_Transferable) eventSource.getTransferable();
 

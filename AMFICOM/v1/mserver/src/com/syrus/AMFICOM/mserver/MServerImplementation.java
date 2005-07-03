@@ -1,4 +1,79 @@
-package com.syrus.AMFICOM.mserver
+/*-
+ * $Id: MServerImplementation.java,v 1.65 2005/06/29 14:25:31 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-public class MServerImplementation {
+package com.syrus.AMFICOM.mserver;
+
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
+import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.65 $, $Date: 2005/06/29 14:25:31 $
+ * @author $Author: arseniy $
+ * @module mserver_v1
+ */
+public class MServerImplementation extends MServerMeasurementTransmit {
+
+	private static final long serialVersionUID = 395371850379497709L;
+
+	MServerImplementation() {
+		super(MServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
+	}
+
+	protected void validateAccess(final IdlSessionKey sessionKeyT,
+			final IdlIdentifierHolder userId,
+			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {
+		try {
+			MServerSessionEnvironment.getInstance().getMServerServantManager().getLoginServerReference().validateAccess(sessionKeyT,
+					userId,
+					domainId);
+		}
+		catch (final CommunicationException ce) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
+		catch (AMFICOMRemoteException are) {
+			//-Pass AMFICOMRemoteException upward -- do not catch it by 'throw Throwable' below
+			throw are;
+		}
+		catch (final Throwable throwable) {
+			Log.errorException(throwable);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION,
+					CompletionStatus.COMPLETED_PARTIALLY,
+					throwable.getMessage());
+		}
+	}
+
+	public void deleteTests(IdlIdentifier[] ids, IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+		this.validateAccess(sessionKeyT, userId, domainId);
+
+		final Set<Identifier> testIds = Identifier.fromTransferables(ids);
+		StorableObjectPool.delete(testIds);
+		try {
+			StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_DELETE, CompletionStatus.COMPLETED_NO, "Cannot delete '"
+					+ ObjectEntities.codeToString(ObjectEntities.TEST_CODE) + "'");
+		}
+	}
+
 }

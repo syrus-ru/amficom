@@ -1,23 +1,41 @@
+/*
+ * $Id: CommandPermissionAttributesPanel.java,v 1.8 2005/05/13 19:03:16 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.text.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import oracle.jdeveloper.layout.*;
-import javax.swing.border.*;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPanel
+import javax.swing.BorderFactory;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.TitledBorder;
+
+import oracle.jdeveloper.layout.VerticalFlowLayout;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/05/13 19:03:16 $
+ * @module generalclient_v1
+ */
+public class CommandPermissionAttributesPanel extends GeneralPanel//ObjectResourcePropertiesPane
 {
   public CommandPermissionAttributes cpa;
   SimpleDateFormat sdf = new SimpleDateFormat();
@@ -30,7 +48,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
   JLabel jLabelModifiedBy = new JLabel();
   ObjectResourceTextField jTextID = new ObjectResourceTextField();
   ObjectResourceTextField jTextName = new ObjectResourceTextField();
-  OrComboBox ComboOwner = new OrComboBox();//(OperatorProfile.typ);
+  OrComboBox ComboOwner = new OrComboBox();//(OperatorProfile.class.getName());
   ObjectResourceTextField jTextCreated = new ObjectResourceTextField();
   ObjectResourceTextField jTextCreatedBy = new ObjectResourceTextField();
   ObjectResourceTextField jTextModified = new ObjectResourceTextField();
@@ -43,7 +61,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
   JPanel jPanel5 = new JPanel();
   VerticalFlowLayout verticalFlowLayout2 = new VerticalFlowLayout();
   JLabel jLabelCategories = new JLabel();
-  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.typ);
+  private TwoListsPanel categoriesPanel = new TwoListsPanel("Подключенные категории", "Неподключенные категории", OperatorCategory.class.getName());
   private TitledBorder titledBorder1;
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
@@ -128,7 +146,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
     jScrollPane1.getViewport().add(jTextAreaForbidden, null);
 
     this.add(jLabelName, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(jLabelOwner, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+//    this.add(jLabelOwner, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jLabelCreated, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jLabelCreatedBy, new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jLabelModified, new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
@@ -140,7 +158,7 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
 	    this.add(jLabelID, new GridBagConstraints(0, 8, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
     this.add(jTextName, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-    this.add(ComboOwner, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+//    this.add(ComboOwner, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jTextCreated, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jTextCreatedBy, new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
     this.add(jTextModified, new GridBagConstraints(1, 4, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
@@ -181,20 +199,20 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
     this.aContext = aContext;
   }
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
     this.cpa = (CommandPermissionAttributes)or;
     if(cpa == null)
-      return false;
+      return;
 
-    this.jTextCreatedBy.setTextNameByID(User.typ,cpa.created_by);
-    this.jTextID.setText(cpa.id);
-    this.jTextModifiedBy.setTextNameByID(User.typ,cpa.modified_by);
+    this.jTextCreatedBy.setTextNameByID(User.class.getName(),cpa.created_by);
+    this.jTextID.setText(cpa.getId());
+    this.jTextModifiedBy.setTextNameByID(User.class.getName(),cpa.modified_by);
     this.jTextName.setText(cpa.name);
     this.jTextAreaForbidden.setText(cpa.whyRejected);
 
-    this.ComboOwner.setTyp(User.typ);
-    this.ComboOwner.setSelectedTyp(User.typ, cpa.owner_id);
+    this.ComboOwner.setTyp(User.class.getName());
+    this.ComboOwner.setSelectedTyp(User.class.getName(), cpa.owner_id);
 
 
     this.jTextCreated.setText(sdf.format(new Date(cpa.created)));
@@ -202,14 +220,9 @@ public class CommandPermissionAttributesPanel extends GeneralPanel//PropertiesPa
 
     categoriesPanel.setObjectResource(cpa);
 
-    return true;
   }
   public ObjectResource getObjectResource()
   {
     return cpa;
   }
-
-
-
-
 }

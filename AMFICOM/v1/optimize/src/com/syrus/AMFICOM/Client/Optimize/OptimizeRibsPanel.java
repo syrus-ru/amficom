@@ -1,17 +1,25 @@
 package com.syrus.AMFICOM.Client.Optimize;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.util.Iterator;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Optimize.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
+import com.syrus.AMFICOM.Client.Optimize.UI.OptimizeRibsDisplayModel;
+import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 
 // Данный класс изображает панель на которой находится jComboBox1 со списком
 // видов элементов(рёбер) и таблица элементов с полями "Идентификатор", "Название" и "активность"
@@ -95,24 +103,24 @@ public class OptimizeRibsPanel extends JPanel implements OperationListener
 	//--------------------------------------------------------------------------------------------------------------
 	// обновить таблицу узлов данными со схемы
 	public void updateTable()
-	{	JTable table = tablePane.getTable();
+	{	JTable table = this.tablePane.getTable();
 		//Оновить таблицу
-		mouseSelect = false;
+		this.mouseSelect = false;
 		//Здесь очищаем выбранные элементы у табли
 		table.clearSelection();
-		mouseSelect = true;
+		this.mouseSelect = true;
 		DataSet dataSet = new DataSet();// еcли ничего не получится, то останется пустая таблица
-		if(mdiMain != null)
-		{	if(mdiMain.scheme != null)
+		if(this.mdiMain != null)
+		{	if(this.mdiMain.scheme != null)
 			{ Vector sum = new Vector(100,100);
-        for(Enumeration cls = mdiMain.scheme.getAllCableLinks(); cls.hasMoreElements();)
-        { sum.add(cls.nextElement());}
-        for(Enumeration ls = mdiMain.scheme.getAllLinks(); ls.hasMoreElements();)
-        { sum.add(ls.nextElement());}
+        for(Iterator cls = mdiMain.scheme.getAllCableLinks().iterator(); cls.hasNext();)
+        { sum.add(cls.next());}
+        for(Iterator ls = this.mdiMain.scheme.getAllLinks().iterator(); ls.hasNext();)
+        { sum.add(ls.next());}
         dataSet = new DataSet(sum.elements());
 			}
 		}
-		tablePane.setContents(dataSet);
+		this.tablePane.setContents(dataSet);
     table.setRowHeight( getFont().getSize() + 8 );
 	}
 	//--------------------------------------------------------------------------------------------------------------
@@ -123,11 +131,12 @@ public class OptimizeRibsPanel extends JPanel implements OperationListener
 		mouseSelect = false;
 		//Здесь очищаем выбранные элементы у таблицы
 		myTable.clearSelection();
-		DataSet dataSet = tablePane.getContents();
-		for(int i = 0; i < dataSet.size(); i++)
-		{	SchemeElement se = (SchemeElement )dataSet.get(i);
+		java.util.List list = tablePane.getContents();
+		int i_cou=0;
+		for(Iterator i = list.iterator(); i.hasNext();i_cou++)
+		{	SchemeElement se = (SchemeElement )i.next();
 			//if(se.isSelected())
-			{	myTable.getSelectionModel().addSelectionInterval(i, i);
+			{	myTable.getSelectionModel().addSelectionInterval( i_cou, i_cou);
 			}
 		}
 		mouseSelect = true;

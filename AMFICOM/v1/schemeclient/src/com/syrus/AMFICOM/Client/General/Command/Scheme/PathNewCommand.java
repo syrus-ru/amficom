@@ -1,39 +1,58 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-public class PathNewCommand extends VoidCommand
+
+public class PathNewCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
-	SchemePanel panel;
+	/*ApplicationContext aContext;
+	SchemeTabbedPane pane;
 
-	public PathNewCommand(ApplicationContext aContext, SchemePanel panel)
+	public PathNewCommand(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
 		this.aContext = aContext;
-		this.panel = panel;
+		this.pane = pane;
 	}
 
 	public Object clone()
 	{
-		return new PathNewCommand(aContext, panel);
+		return new PathNewCommand(aContext, pane);
 	}
 
 	public void execute()
 	{
-		panel.getGraph().currentPath = new SchemePath(aContext.getDataSourceInterface().GetUId(SchemePath.typ));
+		SchemeGraph graph = pane.getGraph();
+		if (pane.getCurrentPanel().getSchemeResource().getSchemePath() == null)
+			return;
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
-		ElementAttribute ea = new ElementAttribute(aContext.getDataSourceInterface().GetUId(ElementAttribute.typ), "", "false", "alarmed");
-		panel.getGraph().currentPath.attributes.put(ea.type_id, ea);
+		SchemePath path;
+		try {
+			path = SchemePath.createInstance(userId, "");
+		} 
+		catch (CreateObjectException e) {
+			Log.errorException(e);
+			return;
+		}
+		
+		path.setScheme(pane.getCurrentPanel().getSchemeResource().getScheme());
+//		graph.setCurrentPath(path);
 
-		panel.getGraph().removeSelectionCells();
-		aContext.getDispatcher().notify(new CreatePathEvent(panel, null, CreatePathEvent.CREATE_PATH_EVENT));
-	}
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+																				getAccessIdentifier().user_id);
+		CharacteristicType type = MiscUtil.getCharacteristicType(
+				user_id, "alarmed", CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				DataType.DATA_TYPE_STRING);
+
+		try {
+			Characteristic ea = Characteristic.createInstance(user_id, type, "Сигнал тревоги", "",
+					CharacteristicSort.CHARACTERISTIC_SORT_SCHEMEPATH, "false",
+					path.getId(), true, true);
+			path.addCharacteristic(ea);
+		} catch (CreateObjectException ex) {
+			ex.printStackTrace();
+		}
+		aContext.getDispatcher().notify(new CreatePathEvent(pane, null,
+				CreatePathEvent.CREATE_PATH_EVENT));
+}*/
 }
-
-
-

@@ -1,25 +1,35 @@
+/*
+ * $Id: MaintenancedbInterface.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.server.*;
-import java.sql.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.*;
-import sqlj.runtime.*;
+import sqlj.runtime.SQLNullException;
 
 /**
- * @module AMFICOMServerObject
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
  */
 public class MaintenancedbInterface
 {
-
 	protected MaintenancedbInterface()
 	{
 	}
 
-	static public Vector getEventSourceTypes()
+	public static Vector getEventSourceTypes()
 	{
 		EventSourceType_Transferable est;
 		Vector vec = new Vector();
@@ -146,7 +156,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	static public Vector getAlertingMessages()
+	public static Vector getAlertingMessages()
 	{
 		AlertingMessage_Transferable am;
 		Vector vec = new Vector();
@@ -215,7 +225,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	static public Vector getAlertingMessageUsers()
+	public static Vector getAlertingMessageUsers()
 	{
 		AlertingMessageUser_Transferable amu;
 		Vector vec = new Vector();
@@ -284,7 +294,7 @@ public class MaintenancedbInterface
 		return vec;
 	}
 
-	static public void saveAlertingMessages(AlertingMessage_Transferable am)
+	public static void saveAlertingMessages(AlertingMessage_Transferable am)
 	{
 		try
 		{
@@ -329,7 +339,7 @@ public class MaintenancedbInterface
 		}
 	}
 
-	static public void saveAlertingMessageUsers(AlertingMessageUser_Transferable amu)
+	public static void saveAlertingMessageUsers(AlertingMessageUser_Transferable amu)
 	{
 		try
 		{
@@ -374,7 +384,7 @@ public class MaintenancedbInterface
 		}
 	}
 
-	static public void removeAlertingMessageUser(String amu_id)
+	public static void removeAlertingMessageUser(String amu_id)
 	{
 		try
 		{
@@ -420,7 +430,7 @@ public class MaintenancedbInterface
 
 
 
-	static public int getAlarms(
+	public static int getAlarms(
 			AlarmSeq_TransferableHolder alarmseq)
 	{
 /*
@@ -562,7 +572,7 @@ public class MaintenancedbInterface
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public String doEvent(String source_id, String event_type, String descriptor)
+	public static String doEvent(String source_id, String event_type, String descriptor)
 	{
 	try
 	{
@@ -589,14 +599,14 @@ public class MaintenancedbInterface
 	}
 	}
 
-	static public String getLastEvent(String source_id)
+	public static String getLastEvent(String source_id)
 	{
 		String ev_id = "";
 
 		return ev_id;
 	}
 
-	static public int GetAlarmIdsForMonitoredElement(
+	public static int GetAlarmIdsForMonitoredElement(
 			String me_id,
 			ResourceDescriptorSeq_TransferableHolder alarmids)
 		throws AMFICOMRemoteException
@@ -720,5 +730,4 @@ public class MaintenancedbInterface
 		String id,
 		Timestamp generated,
 		Timestamp reacted );
-
 }

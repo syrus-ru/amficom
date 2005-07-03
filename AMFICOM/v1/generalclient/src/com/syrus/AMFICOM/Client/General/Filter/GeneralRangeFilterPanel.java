@@ -1,21 +1,22 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
+
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 public class GeneralRangeFilterPanel extends FilterPanel
 {
-	XYLayout xYLayout1 = new XYLayout();
-
 	JLabel jLabel1 = new JLabel();
 	JLabel jLabel2 = new JLabel();
 	JTextField loField = new JTextField();
@@ -37,26 +38,36 @@ public class GeneralRangeFilterPanel extends FilterPanel
 
 	private void jbInit() throws Exception
 	{
-		this.setLayout(xYLayout1);
-		jLabel1.setText(LangModel.String("labelFrom"));
-		jLabel2.setText(LangModel.String("labelTo"));
+		this.setLayout(new GridBagLayout());
 
-		this.add(jLabel1, new XYConstraints(10, 20, 100, 20));
-		this.add(loField, new XYConstraints(115, 20, 100, 20));
+		jLabel1.setText(LangModel.getString("labelFrom"));
+		jLabel2.setText(LangModel.getString("labelTo"));
 
-		this.add(jLabel2, new XYConstraints(10, 50, 100, 20));
-		this.add(hiField, new XYConstraints(115, 50, 100, 20));
-//		this.setLayout(null);
+		this.add(jLabel1,  new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+		this.add(loField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
+
+		this.add(jLabel2, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 10, 0, 0), 0, 0));
+		this.add(hiField, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 	}
 
-	public FilterExpression getExpression(String col_id, String col_name)
+	public FilterExpressionInterface getExpression(String col_id, String col_name, boolean conditionsRequested)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		vec.add("range");
 		vec.add(loField.getText());
 		vec.add(hiField.getText());
 		FilterExpression fexp = new FilterExpression();
-		fexp.setName(LangModel.String("labelFiltration")+" \'"+col_name+"\' "+LangModel.String("labelPoDiapOt")+" "+loField.getText()+" "+LangModel.String("labelPoDiapDo")+" "+hiField.getText());
+
+		String expName = LangModel.getString("labelFiltration")+" \'"+col_name+"\' ";
+		if (conditionsRequested)
+			expName += (LangModel.getString("labelPoDiapOt")+" "+loField.getText()+" "+LangModel.getString("labelPoDiapDo")+" "+hiField.getText());
+
+		fexp.setName(expName);
+		fexp.setColumnName(col_name);
 		fexp.setVec(vec);
 		fexp.setId(col_id);
 		return fexp;
@@ -64,8 +75,8 @@ public class GeneralRangeFilterPanel extends FilterPanel
 
 	public void setExpression(FilterExpression expr)
 	{
-		Vector vec = expr.getVec();
-		loField.setText((String) vec.elementAt(1));
-		hiField.setText((String) vec.elementAt(2));
+		List vec = expr.getVec();
+		loField.setText((String) vec.get(1));
+		hiField.setText((String) vec.get(2));
 	}
 }

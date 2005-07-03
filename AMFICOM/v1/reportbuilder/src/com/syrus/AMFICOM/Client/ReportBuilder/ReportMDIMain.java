@@ -29,11 +29,13 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionChangePasswordCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand;
+import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.ProgressBar;
@@ -50,15 +52,16 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import com.syrus.AMFICOM.Client.ReportBuilder.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplateImplementationPanel;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
+import com.syrus.AMFICOM.Client.General.Report.SelectReportsPanel;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 
 import com.syrus.io.IniFile;
 
+import com.syrus.AMFICOM.Client.Optimize.Report.OptimizeReportsTreeModel;
 /**
  * <p>Description: Главное окно редактора шаблонов отчёта</p>
  * <p>Copyright: Copyright (c) 2003</p>
@@ -69,9 +72,6 @@ import com.syrus.io.IniFile;
 
 public class ReportMDIMain extends JFrame implements OperationListener
 {
-	static public String ev_closingWindow = "ev_closingWindow";
-	static public String ev_closingAdditionalPanel = "ev_closingAdditionalPanel";
-
 	private Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
 
@@ -81,15 +81,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	static SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-	BorderLayout borderLayout = new BorderLayout();
+	public boolean isTemplateSchemeMode = true;
 
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	ReportMenuBar menuBar = new ReportMenuBar();
 	public ReportToolBar toolBar = new ReportToolBar(this);
 	public InnerReportToolBar innerToolBar = new InnerReportToolBar(this);
 
@@ -101,10 +94,20 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 	public JInternalFrame additionalPanel = null;
 
+	BorderLayout borderLayout = new BorderLayout();
+
+	JPanel mainPanel = new JPanel();
+	JScrollPane scrollPane = new JScrollPane();
+	JViewport viewport = new JViewport();
+	JDesktopPane desktopPane = new JDesktopPane();
+	JPanel statusBarPanel = new JPanel();
+	StatusBarModel statusBar = new StatusBarModel(0);
+	ReportMenuBar menuBar = new ReportMenuBar();
 
 	public ReportMDIMain(ApplicationContext aContext)
 	{
 		super();
+
 		try
 		{
 			jbInit();
@@ -132,7 +135,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		}
 
 		desktopPane.setBackground(SystemColor.control.darker().darker());
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
@@ -142,7 +145,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 		setLocation(0, 0);
 
-		this.setTitle(LangModelReport.String("label_rtbWindowTitle"));
+		this.setTitle(LangModelReport.getString("label_rtbWindowTitle"));
 		this.addComponentListener(new TemplateMDIMain_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -152,24 +155,22 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			}
 		});
 
-		mainPanel.setLayout(new BorderLayout());//new FlowLayout());
+		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBackground(Color.darkGray);
 		desktopPane.setLayout(null);
 		desktopPane.setBackground(Color.darkGray);
 
 
-		statusBar.add();
+//		statusBar.add();
 		statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		statusBarPanel.setLayout(new BorderLayout());
 		statusBarPanel.add(statusBar, BorderLayout.CENTER);
 
-//		statusBarPanel.add(new ProgressBar("Попа - новый год"),BorderLayout.WEST);
-
-		statusBar.add("status");
-		statusBar.add("server");
-		statusBar.add("session");
-		statusBar.add("user");
-		statusBar.add("time");
+		statusBar.add(StatusBarModel.field_status);
+		statusBar.add(StatusBarModel.field_server);
+		statusBar.add(StatusBarModel.field_session);
+		statusBar.add(StatusBarModel.field_user);
+		statusBar.add(StatusBarModel.field_time);
 
 		viewport.setView(desktopPane);
 		scrollPane.setViewport(viewport);
@@ -201,10 +202,10 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -235,6 +236,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
 		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
@@ -323,7 +325,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					setSessionOpened();
 				}
 			}
-			if(cce.SESSION_CLOSED)
+			else if(cce.SESSION_CLOSED)
 			{
 				// Closing of the existing windows
 				//---------------------------------------------------------------
@@ -335,39 +337,43 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					setSessionClosed();
 				}
 			}
-			if(cce.CONNECTION_OPENED)
+			else if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModelReport.String("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText(StatusBarModel.field_status, LangModel.getString("statusReady"));
+					statusBar.setText(StatusBarModel.field_server, aContext.getConnectionInterface().getServiceURL());
 				}
 			}
-			if(cce.CONNECTION_CLOSED)
+			else if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModelReport.String("statusDisconnected"));
-					statusBar.setText("server", LangModelReport.String("statusNoConnection"));
+					statusBar.setText(StatusBarModel.field_status, LangModel.getString("statusDisconnected"));
+					statusBar.setText(StatusBarModel.field_server, LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 
 				}
 			}
-			if(cce.CONNECTION_FAILED)
+			else if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModelReport.String("statusError"));
-					statusBar.setText("server", LangModelReport.String("statusConnectionError"));
+					statusBar.setText("status", LangModelReport.getString("statusError"));
+					statusBar.setText("server", LangModelReport.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
+			}
+			else if(cce.DOMAIN_SELECTED)
+			{
+				setSessionOpened();
 			}
 		}
 
@@ -382,7 +388,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				}
 				additionalPanel = (JInternalFrame)ae.getSource();
 				desktopPane.add(additionalPanel);
-				additionalPanel.setSize(selectReportsPanel.getWidth(),450);
+				additionalPanel.setSize(selectReportsPanel.getWidth(),460);
 
 				selectReportsPanel.setSize(
 								selectReportsPanel.getWidth(),
@@ -391,13 +397,15 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				additionalPanel.setLocation(
 						selectReportsPanel.getX(),
 						selectReportsPanel.getY() + selectReportsPanel.getHeight());
+
+				additionalPanel.setVisible(true);
 			}
 			catch (java.lang.IllegalArgumentException eee)
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
 						"Can't create filer panel!",
-						LangModelReport.String("label_error"),
+						LangModelReport.getString("label_error"),
 						JOptionPane.ERROR_MESSAGE);
 
 				selectReportsPanel.setSize(
@@ -409,24 +417,13 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		}
 
 		if (ae.getActionCommand().equals(
-			ReportMDIMain.ev_closingAdditionalPanel))
+			SelectReportsPanel.ev_closingAdditionalPanel))
 		{
 			if (selectReportsPanel != null)
 				selectReportsPanel.setSize(
 							  selectReportsPanel.getWidth(),
 							  desktopPane.getHeight());
 			desktopPane.remove(additionalPanel);
-		}
-
-		if (ae.getActionCommand().equals(
-			ReportBuilder.ev_startProgressBar))
-		{
-			statusBar.pbar.start("Идёт загрузка. Пожалуйста, подождите.");
-		}
-		if (ae.getActionCommand().equals(
-			ReportBuilder.ev_stopProgressBar))
-		{
-			statusBar.pbar.stop();
 		}
 	}
 
@@ -465,16 +462,18 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 	public void setSessionOpened()
 	{
-//		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
-		statusBar.pbar.start("Идёт загрузка. Пожалуйста, подождите.");
+		aContext.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR,true));
+//		statusBar.enableProgressBar(true);
 
 		ReportBuilder.invokeAsynchronously(new Runnable() {
 			public void run() {
 				ApplicationModel aModel = aContext.getApplicationModel();
 
-				aModel.disable("menuSessionOpen");
+				aModel.disable("menuSessionNew");
+				aModel.enable("menuSessionClose");
 				aModel.enable("menuSessionOptions");
 				aModel.enable("menuSessionChangePassword");
+				aModel.enable("menuSessionDomain");
 
 				DataSourceInterface dsi = aContext.getDataSourceInterface();
 				new ConfigDataSourceImage(dsi).LoadNet();
@@ -485,20 +484,21 @@ public class ReportMDIMain extends JFrame implements OperationListener
 				new MapDataSourceImage(dsi).LoadProtoElements();
 				new MapDataSourceImage(dsi).LoadMaps();
 
-				new SurveyDataSourceImage(dsi).LoadParameterTypes();
+				new SurveyDataSourceImage(dsi).GetAlarms();
+
+/*				new SurveyDataSourceImage(dsi).LoadParameterTypes();
 				new SurveyDataSourceImage(dsi).LoadTestTypes();
 				new SurveyDataSourceImage(dsi).LoadAnalysisTypes();
 				new SurveyDataSourceImage(dsi).LoadEvaluationTypes();
 				new SurveyDataSourceImage(dsi).LoadModelingTypes();
-
+*/
 				toolBar.setTemplateToolBarState(true);
 				setTemplate(null);
 
-				aModel.setEnabled("menuAlarmAlert",true);
-				aModel.setEnabled("menuReportBuilder",true);
 				aModel.fireModelChanged("");
 //				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
-				statusBar.pbar.stop();
+        aContext.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR,false));
+//				statusBar.enableProgressBar(false);
 			}
 		},
 		"Идёт загрузка. Пожалуйста, подождите.");
@@ -526,7 +526,8 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					desktopPane,
 					aContext,
 					this,
-					this.layoutWOCPanel.reportTemplate);
+					this.layoutWOCPanel.reportTemplate,
+					new AvailableReportsTreeModel(aContext));
 
 			layoutScrollPane = new JInternalFrame();
 			layoutScrollPane.getContentPane().add(innerToolBar,BorderLayout.NORTH);
@@ -534,9 +535,9 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			JScrollPane scrPane = new JScrollPane(layoutWOCPanel);
 			layoutScrollPane.getContentPane().add(scrPane, BorderLayout.CENTER);
 			desktopPane.add(layoutScrollPane);
-			layoutScrollPane.setTitle(LangModelReport.String("label_templateScheme"));
+			layoutScrollPane.setTitle(LangModelReport.getString("label_templateScheme"));
 			layoutScrollPane.setFrameIcon(
-					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
 
 			if ((layoutWOCPanel.reportTemplate.size.width + selectReportsPaneMinSize)
@@ -586,10 +587,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			aContext.getDispatcher().register(this,SelectReportsPanel.ev_additionalPaneCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.SetRestrictionsWindow.ev_lsWindowCreated);
 			aContext.getDispatcher().register(this,com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane.state_filterClosed);
-			aContext.getDispatcher().register(this,ReportMDIMain.ev_closingWindow);
-			aContext.getDispatcher().register(this,ReportMDIMain.ev_closingAdditionalPanel);
-			aContext.getDispatcher().register(this,ReportBuilder.ev_startProgressBar);
-			aContext.getDispatcher().register(this,ReportBuilder.ev_stopProgressBar);
+			aContext.getDispatcher().register(this,SelectReportsPanel.ev_closingAdditionalPanel);
 		}
 		catch (Exception exc)
 		{
@@ -600,14 +598,11 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.enable("menuSessionOpen");
+		aModel.enable("menuSessionNew");
 		aModel.disable("menuSessionClose");
 		aModel.disable("menuSessionOptions");
 		aModel.disable("menuSessionChangePassword");
-
-		aModel.setEnabled("menuAlarmAlert",false);
-		aModel.setEnabled("menuReportBuilder",false);
-//    setModel(aModel);
+		aModel.disable("menuSessionDomain");
 
 		aModel.fireModelChanged("");
 		toolBar.setTemplateToolBarState(false);

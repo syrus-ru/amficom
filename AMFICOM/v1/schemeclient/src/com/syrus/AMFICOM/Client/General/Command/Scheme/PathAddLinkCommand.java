@@ -1,33 +1,33 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client_.scheme.graph.*;
 
-public class PathAddLinkCommand extends VoidCommand
+public class PathAddLinkCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
-	SchemeGraph graph;
+/*	ApplicationContext aContext;
+	SchemeTabbedPane pane;
 
-	public PathAddLinkCommand(ApplicationContext aContext, SchemeGraph graph)
+	public PathAddLinkCommand(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
 		this.aContext = aContext;
-		this.graph = graph;
+		this.pane = pane;
 	}
 
 	public Object clone()
 	{
-		return new PathAddLinkCommand(aContext, graph);
+		return new PathAddLinkCommand(aContext, pane);
 	}
 
 	public void execute()
 	{
+		SchemeGraph graph = pane.getGraph();
 		aContext.getDispatcher().notify(new CreatePathEvent(
 				graph,
 				graph.getSelectionCells(),
 				CreatePathEvent.ADD_LINK_EVENT));
-	}
+	}*/
 }
 
 

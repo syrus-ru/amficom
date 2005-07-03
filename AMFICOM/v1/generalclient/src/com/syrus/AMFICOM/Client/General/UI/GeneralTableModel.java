@@ -72,14 +72,10 @@
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.*;
 import java.sql.*;
-import java.awt.event.*;
 import java.util.*;
 
 /** Use the following import statements with SWING version 1.1**/
-import javax.swing.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 
 public class GeneralTableModel extends AbstractTableModel
@@ -115,7 +111,7 @@ public class GeneralTableModel extends AbstractTableModel
 		int j;
 		m_columnNames = new String[p_columns.length];
 		for (i = 0; i < p_columns.length; i++) // Copy column names
-			m_columnNames[i] = new String(p_columns[i]);
+			m_columnNames[i] = p_columns[i];
 
 		m_data = new Vector();  // Instantiate Data vector
 
@@ -277,4 +273,3 @@ public class GeneralTableModel extends AbstractTableModel
 		super.fireTableDataChanged();
 	}
 }
-

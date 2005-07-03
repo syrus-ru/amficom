@@ -1,5 +1,6 @@
-corba
-mcm
+.corba
+.mach
+.head
 *.jar
 *.jpr*
 *.jpx*
@@ -8,5 +9,12 @@ mcm
 *.gz
 *.swp
 *.log
+.settings
+.classpath
+.project
 classes
 logs
+cache
+test
+.idl
+common.properties

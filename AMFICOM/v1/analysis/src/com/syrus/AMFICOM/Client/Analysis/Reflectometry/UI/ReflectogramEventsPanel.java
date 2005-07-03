@@ -1,112 +1,72 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Stroke;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 
 public class ReflectogramEventsPanel extends TraceEventsPanel
 {
-	public Dispatcher dispatcher;
+	protected Dispatcher dispatcher;
 
 	public boolean draw_modeled = false;
 	public boolean draw_alarms = false;
 	public boolean draw_min_trace_level = false;
 	public boolean draw_noise_level = false;
 
-	protected ReflectogramEvent[] ep;
+	//protected ModelTraceAndEvents mtae; // использовалось только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
-	protected Double min_trace_level;
-	protected double noise_level = 28;
+	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
 
-	protected double[] modeled_y;
-
-	protected Color modeledColor;
-	protected Color minLevelColor;
-
-	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double delta_x)
+	public ReflectogramEventsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
 	{
-		super (panel, y, delta_x);
+		super (panel, y, deltaX);
 		init_module(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	void init_module(Dispatcher dispatcher1)
 	{
-		this.dispatcher = dispatcher;
+		this.dispatcher = dispatcher1;
 	}
 
-	public void updateEvents (ReflectogramEvent[] ep)
+	public void updateAlarms (ReflectogramAlarm[] alarms1)
 	{
-		this.ep = ep;
-
-		if (ep != null)
-		{
-			int n = ep[ep.length-1].end+2;
-			modeled_y = new double[n];
-			for (int i = 0; i < ep.length; i++)
-			{
-				for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-					modeled_y[j] = ep[i].refAmpl(j)[0];
-			}
-		}
-	}
-
-	public void updateAlarms (ReflectogramAlarm[] alarms)
-	{
-		this.alarms = alarms;
-		if (alarms != null)
+		this.alarms = alarms1;
+		if (alarms1 != null)
 		{
 			draw_alarms = true;
-		}
-		else
+		} else
 			draw_alarms = false;
-	}
-
-	public void updateMinTraceLevel(Double value)
-	{
-		min_trace_level = value;
-		Pool.put("min_trace_level", "primarytrace", min_trace_level);
 	}
 
 	public void updateNoiseLevel()
 	{
-		RefAnalysis ana = (RefAnalysis)Pool.get("refanalysis", "primarytrace");
+		RefAnalysis ana = Heap.getRefAnalysisPrimary();
 		if (ana != null)
 		{
 			TraceEvent ev = ana.overallStats;
 			if (ev != null)
-				noise_level = ev.data[2];
+				noise_level = ev.overallStatsNoiseLevel98Pct();
 		}
 
-		min_trace_level = (Double)Pool.get("min_trace_level", "primarytrace");
-		if (min_trace_level == null)
-		{
-			min_trace_level = new Double(noise_level - 3);
-			Pool.put("min_trace_level", "primarytrace", min_trace_level);
-		}
+		// FIXME: способ выбора minTraceLevel (оба не год€тс€ -- saa)
+		//updateMinTraceLevel(noise_level - 3); // по +3 дЅ от ур. шума?
+		ClientAnalysisManager.setDefaultMinTraceLevel(); // между мин. фит. кр. и абс. мин. р/г? 
 	}
 
 	protected void updColorModel()
 	{
 		super.updColorModel();
-
-		modeledColor = ColorManager.getColor("modeledColor");
-		minLevelColor = ColorManager.getColor("minTraceLevelColor");
 	}
 
 	protected void this_mousePressed(MouseEvent e)
@@ -119,10 +79,10 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if (coord2index(currpos.x) > y.length)
 				return;
 
-			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scale_y - 1)) < mouse_coupling)
+			if(Math.abs(currpos.y - getMinTraceLevelCoord()) < MOUSE_COUPLING)
 			{
 				moving_level = true;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+				setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 				return;
 			}
 		}
@@ -134,9 +94,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (moving_level)
 		{
 			moving_level = false;
-			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
-			updateMinTraceLevel(min_trace_level);
 			return;
 		}
 		super.this_mouseReleased(e);
@@ -148,11 +107,10 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			upd_currpos(e);
 
-			double pos = min_trace_level.doubleValue();
-			pos += (currpos.y - tmppos.y)/scale_y;
-			min_trace_level = new Double(pos);
+			double pos = coord2value(currpos.y);
+			Heap.setMinTraceLevel(pos);
 			parent.repaint();
-			dispatcher.notify(new RefUpdateEvent(min_trace_level, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
+			dispatcher.firePropertyChange(new RefUpdateEvent(this, RefUpdateEvent.MIN_TRACE_LEVEL_CHANGED_EVENT));
 			return;
 		}
 		super.this_mouseDragged(e);
@@ -165,8 +123,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		if (draw_events)
 		{
 			paint_reflectogram_events(g);
-		}
-		else
+		} else
 		{
 			paint_trace(g);
 		}
@@ -182,8 +139,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		{
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		}
-		else if (draw_noise_level && draw_events)
+		} else if (draw_noise_level && draw_events)
 			paint_noise_level(g);
 
 		paint_scale_digits(g);
@@ -193,20 +149,19 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	{
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
-		g.setColor(scaleColor.darker());
-		int h = (int)((noise_level - top) * scale_y - 1);
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE).darker());
+		int h = (int)((noise_level - top) * scaleY - 1);
 		g.drawLine(0, h, jw, h);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-		g.drawString("”ровень шумов", jw - 87, h - 1);
+		g.drawString(LangModelAnalyse.getString("Noise level"), jw - 87, h - 1);
 	}
 
 	protected void paint_min_trace_level(Graphics g)
 	{
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
-		g.setColor(minLevelColor);
-		g.drawLine(0, (int)((min_trace_level.doubleValue() - top) * scale_y - 1),
-							 jw, (int)((min_trace_level.doubleValue() - top) * scale_y - 1));
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));
+		g.drawLine(0, getMinTraceLevelCoord(), jw, getMinTraceLevelCoord());
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
@@ -218,77 +173,80 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		g.setColor(Color.red);
 		for (int j = 0; j < alarms.length; j++)
 		{
-			if ((alarms[j].alarmPointCoord < end) && (alarms[j].alarmEndPointCoord > start))
-				for (int i = Math.max(0, alarms[j].alarmPointCoord - start); i < Math.min (end, alarms[j].alarmEndPointCoord) - start; i++)
+			if ((alarms[j].pointCoord <= end) && (alarms[j].pointCoord >= start))
+				for (int i = Math.max(0, alarms[j].pointCoord - start); i < Math.min (end, alarms[j].endPointCoord) - start; i++)
 				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-					(int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
+					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
+					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
 				}
 		}
 	}
 
-	protected void paint_modeled_trace(Graphics g)
+    /**
+     * Draw model curve using current graphics plotting settings.
+     * @param g graphics to plot (not null)
+     * @param mtr trace and range to plot
+     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+     *   false to draw [sre.begin .. sre.end].
+     */
+    protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
+            boolean avoidLastPoint)
+    {
+        int n1 = mtr.getBegin();
+        int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+        if ((n1 <= end) && (n2 >= start))
+        {
+            int iFrom = Math.max(start, n1);
+            int iTo = Math.min(end, n2);
+            if (iTo - iFrom >= 0)
+            {
+                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+                draw_y_curve(g, vArr, 0, iFrom - start, iTo - iFrom);
+            }
+        }
+    }
+
+    /**
+     * Draw model curve using current graphics plotting settings.
+     * @param g graphics to plot, or null if no plotting is required
+     * @param r GraphRange to be updated, or null if update not requied
+     * @param mtr trace and range to plot
+     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+     *   false to draw [sre.begin .. sre.end].
+     */
+    protected void drawModelCurve(Graphics g, GraphRange r, ModelTraceRange mtr,
+            boolean avoidLastPoint)
+    {
+        if (g != null)
+            drawModelCurve(g, mtr, avoidLastPoint);
+        if (r != null) {
+            int n1 = mtr.getBegin();
+            int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+            int iFrom = n1;
+            int iTo = n2;
+            if (iTo - iFrom >= 0)
+            {
+                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+                update_range_by_y_curve(r, vArr, 0, iFrom - start, iTo - iFrom);
+            }
+        }
+    }
+
+    protected void paint_modeled_trace(Graphics g)
 	{
-		if (modeled_y == null)
+    	ModelTraceAndEvents mtae = Heap.getMTAEPrimary();
+		if (mtae == null)
 			return;
-
-		g.setColor(modeledColor);
-		for(int j=0; j<ep.length; j++)
-		{
-			if ((ep[j].begin < end) && (ep[j].end > start))
-			{
-				for (int i = Math.max(0, ep[j].begin - start); i < Math.min (end, ep[j].end) - start; i++)
-				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - modeled_y[i+start] - top) * scale_y),
-										 (int)((i+1)*scale_x+1), (int)((max_y - modeled_y[i+start+1] - top) * scale_y));
-				}
-			}
-		}
+		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
+		drawModelCurve(g, mtae.getModelTrace(), false);
 	}
 
-	protected void paint_reflectogram_events(Graphics g)
-	{
-		if (ep == null)
-		{
-			paint_events(g);
-			return;
-		}
-		for(int j=0; j<ep.length; j++)
-		{
-			if ((ep[j].begin < end) && (ep[j].end > start))
-			{
-				int type = ep[j].getType();
-				switch (type)
-				{
-					case ReflectogramEvent.LINEAR: g.setColor(linezoneColor); break;
-					case ReflectogramEvent.CONNECTOR:
-					{
-						if (j == 0)
-							g.setColor(deadzoneColor);
-						else if (j == ep.length - 1)
-							g.setColor(endColor);
-						else
-							g.setColor(connectColor);
-						break;
-					}
-					case ReflectogramEvent.WELD: g.setColor(weldColor); break;
-					default: g.setColor(noiseColor);
-				}
+    protected void paint_reflectogram_events(Graphics g)
+    {
+        paint_events(g);
+    }
 
-				for (int i = Math.max(0, ep[j].begin - start); i <= Math.min (end, ep[j].end) - start; i++)
-				{
-//					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-//										 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-										 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
-				}
-			}
-		}
-
-		g.setColor(noiseColor);
-		if (ep[ep.length-1].end < end)
-			for (int i =  Math.max(0, ep[ep.length-1].end - start); i< Math.min (end, y.length - start - 1); i++)
-				g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-									 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
-	}
+    private int getMinTraceLevelCoord() {
+    	return value2coord(Heap.getMinTraceLevel());
+    }
 }

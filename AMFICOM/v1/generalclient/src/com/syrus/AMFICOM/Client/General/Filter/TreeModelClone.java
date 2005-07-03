@@ -2,9 +2,11 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Enumeration;
 
 import javax.swing.tree.DefaultTreeModel;
 import com.syrus.AMFICOM.Client.General.Filter.FilterTreeNode;
@@ -19,42 +21,42 @@ public class TreeModelClone extends DefaultTreeModel
 
 	public TreeModelClone myclone ()
 	{
-		FilterTreeNode new_root = new FilterTreeNode(LangModel.String("labelRoot"), "root");
+		FilterTreeNode new_root = new FilterTreeNode(LangModel.getString("labelRoot"), "root");
 		new_root.state = ((FilterTreeNode)root).state;
 		for(Enumeration en = root.children(); en.hasMoreElements();)
 		{
 			FilterTreeNode kisnode_old = (FilterTreeNode)en.nextElement();
-			FilterTreeNode kisnode_new = new FilterTreeNode(kisnode_old.getName(),kisnode_old.id);
+			FilterTreeNode kisnode_new = new FilterTreeNode(kisnode_old.getName(),kisnode_old.getId());
 			kisnode_new.state = kisnode_old.state;
 			new_root.add(kisnode_new);
 			for(Enumeration enu = kisnode_old.children(); enu.hasMoreElements();)
 			{
 				FilterTreeNode portnode_old = (FilterTreeNode)enu.nextElement();
-				FilterTreeNode portnode_new = new FilterTreeNode(portnode_old.getName(),portnode_old.id);
+				FilterTreeNode portnode_new = new FilterTreeNode(portnode_old.getName(),portnode_old.getId());
 				portnode_new.state = portnode_old.state;
 				kisnode_new.add(portnode_new);
 				for(Enumeration e = portnode_old.children(); e.hasMoreElements();)
 				{
 					FilterTreeNode vol_tt_old = (FilterTreeNode)e.nextElement();
-					FilterTreeNode vol_tt_new = new FilterTreeNode(vol_tt_old.getName(),vol_tt_old.id);
+					FilterTreeNode vol_tt_new = new FilterTreeNode(vol_tt_old.getName(),vol_tt_old.getId());
 					vol_tt_new.state = vol_tt_old.state;
 					portnode_new.add(vol_tt_new);
-					if ( vol_tt_new.getName().equals(LangModel.String("ORMones")) )
+					if ( vol_tt_new.getName().equals(LangModel.getString("ORMones")) )
 					{
-						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
+						for(Enumeration enumeration = vol_tt_old.children(); enumeration.hasMoreElements();)
 						{
-							FilterTreeNode pathnode_old = (FilterTreeNode)enum.nextElement();
-							FilterTreeNode pathnode_new = new FilterTreeNode(pathnode_old.getName(),pathnode_old.id);
+							FilterTreeNode pathnode_old = (FilterTreeNode)enumeration.nextElement();
+							FilterTreeNode pathnode_new = new FilterTreeNode(pathnode_old.getName(),pathnode_old.getId());
 							pathnode_new.state = pathnode_old.state;
 							vol_tt_new.add(pathnode_new);
 						}
 					}
-					if ( vol_tt_new.getName().equals(LangModel.String("ORTestTypes")) )
+					if ( vol_tt_new.getName().equals(LangModel.getString("ORTestTypes")) )
 					{
-						for(Enumeration enum = vol_tt_old.children(); enum.hasMoreElements();)
+						for(Enumeration enumeration = vol_tt_old.children(); enumeration.hasMoreElements();)
 						{
-							FilterTreeNode ttnode_old = (FilterTreeNode)enum.nextElement();
-							FilterTreeNode ttnode_new = new FilterTreeNode(ttnode_old.getName(),ttnode_old.id);
+							FilterTreeNode ttnode_old = (FilterTreeNode)enumeration.nextElement();
+							FilterTreeNode ttnode_new = new FilterTreeNode(ttnode_old.getName(),ttnode_old.getId());
 							ttnode_new.state = ttnode_old.state;
 							vol_tt_new.add(ttnode_new);
 						}
@@ -66,55 +68,55 @@ public class TreeModelClone extends DefaultTreeModel
 		TreeModelClone mtm = new TreeModelClone(new_root);
 		return mtm;
 	}
-  
-	public Hashtable getHash ()
+
+	public Map getHash ()
 	{
-		Hashtable result = new Hashtable();
-    
+		Map result = new HashMap();
+
 		FilterTreeNode node = (FilterTreeNode )this.getRoot();
 
 		getTreeHash(node, result);
 
 		return result;
 	}
-  
-	private void getTreeHash(FilterTreeNode node, Hashtable volume)
+
+	private void getTreeHash(FilterTreeNode node, Map volume)
 	{
 		FilterTreeNode parent = (FilterTreeNode )node.getParent();
-      
-		ArrayList childList = new ArrayList();
-		for(Enumeration enum1 = node.children(); enum1.hasMoreElements();)      
-			childList.add(((FilterTreeNode )enum1.nextElement()).id);
+
+		List childList = new ArrayList();
+		for(Enumeration enum1 = node.children(); enum1.hasMoreElements();)
+			childList.add(((FilterTreeNode )enum1.nextElement()).getId());
 
 		FilterTreeNodeHolder trans = new FilterTreeNodeHolder(
-				node.id,
+				node.getId(),
 				node.state,
 				node.name,
 //				"root",
-				(parent == null) ? "" : parent.id,
+				(parent == null) ? "" : parent.getId(),
 				(String[] )childList.toArray(new String[0]));
-        
-		volume.put(node.id, trans);
 
-		for(Enumeration enum = node.children(); enum.hasMoreElements();)
+		volume.put(node.getId(), trans);
+
+		for(Enumeration enumeration = node.children(); enumeration.hasMoreElements();)
 		{
-			FilterTreeNode curElem = (FilterTreeNode )enum.nextElement();
-			
+			FilterTreeNode curElem = (FilterTreeNode )enumeration.nextElement();
+
 			getTreeHash(curElem, volume);
-/*      
+/*
 			ArrayList childList = new ArrayList();
-			for(Enumeration enum1 = curElem.children(); enum1.hasMoreElements();)      
-				childList.add(((FilterTreeNode )enum1.nextElement()).id);
-      
+			for(Enumeration enum1 = curElem.children(); enum1.hasMoreElements();)
+				childList.add(((FilterTreeNode )enum1.nextElement()).getId());
+
 			FilterTreeNodeHolder trans = new FilterTreeNodeHolder(
-					curElem.id,
+					curElem.getId(),
 					curElem.state,
 					curElem.name,
-					node.id,
-//					(parent == null) ? "root" : parent.id,
+					node.getId(),
+//					(parent == null) ? "root" : parent.getId(),
 					(String[] )childList.toArray());
-        
-			volume.put(curElem.id, trans);
+
+			volume.put(curElem.getId(), trans);
 */
 		}
 	}

@@ -1,20 +1,32 @@
+/*
+ * $Id: EvaluationManager.java,v 1.5 2004/07/21 08:18:10 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.agent.ParametersDatabase;
-import com.syrus.AMFICOM.analysis.dadara.DadaraEvaluationManager;
-import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Etalon_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
-import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
-import com.syrus.AMFICOM.server.measurement.Result;
+import java.util.LinkedList;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.util.LinkedList;
+import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Evaluation_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
+import com.syrus.AMFICOM.server.measurement.Result;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/07/21 08:18:10 $
+ * @author $Author: arseniy $
+ * @module agent_v1
+ */
 public abstract class EvaluationManager {
 	protected Hashtable evaluationresultparameters;
 	protected AlarmLevel alarmLevel;
+
+	EvaluationManager() {}
 
   public static EvaluationManager getEvaluationManager(String evaluation_type_id) {
     if (evaluation_type_id.equals("dadara"))
@@ -47,10 +59,10 @@ public abstract class EvaluationManager {
     Enumeration names = this.evaluationresultparameters.keys();
     Enumeration values = this.evaluationresultparameters.elements();
     LinkedList ll = new LinkedList();
-    String par_name;
+    String parName;
     while (names.hasMoreElements()) {
-      par_name = (String)names.nextElement();
-      ll.add(new Parameter_Transferable(par_name, ParametersDatabase.getEvaluationParameterTypeId(par_name, evaluation.evaluation_type_id), (byte[])values.nextElement()));
+      parName = (String)names.nextElement();
+      ll.add(new Parameter_Transferable(parName, ParametersDatabase.getEvaluationParameterTypeId(parName, evaluation.evaluation_type_id), (byte[])values.nextElement()));
     }
     Parameter_Transferable[] erparameters = (Parameter_Transferable[])ll.toArray(new Parameter_Transferable[ll.size()]);
 
@@ -63,5 +75,5 @@ public abstract class EvaluationManager {
 																	 this.alarmLevel);
   }
 
-  public abstract void evaluate(Hashtable thresholds, Hashtable etalonparameters, Hashtable analysisresultparameters, Hashtable resultparameters) throws Exception;
+	public abstract void evaluate(Hashtable thresholds, Hashtable etalonparameters, Hashtable analysisresultparameters, Hashtable resultparameters) throws Exception;
 }

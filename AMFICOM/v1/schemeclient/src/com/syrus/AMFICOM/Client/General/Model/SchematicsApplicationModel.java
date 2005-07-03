@@ -1,16 +1,21 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptyConfigDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDConfigDataSource;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
+import sun.java2d.loops.ScaledBlit;
+
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 public class SchematicsApplicationModel extends ApplicationModel
 {
 	public SchematicsApplicationModel()
 	{
-		super();
-
 		add("menuSession");
 		add("menuSessionNew");
 		add("menuSessionClose");
@@ -47,27 +52,45 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuPathAddEnd");
 		add("menuPathAddLink");
 		add("menuPathRemoveLink");
-		add("menuPathUpdateLink");
+		add("menuPathAutoCreate");
 		add("menuPathDelete");
 		add("menuPathCancel");
+
+		add("menuReportCreate");
+		add("menuReport");
 
 		add("menuWindow");
 		add("menuWindowArrange");
 		add("menuWindowTree");
 		add("menuWindowScheme");
+		add("menuWindowCatalog");
 		add("menuWindowUgo");
 		add("menuWindowProps");
 		add("menuWindowList");
+		
+		this.initUIConstats();
 	}
-
-	public DataSourceInterface getDataSource(SessionInterface si)
-	{
-		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
-			return new RISDConfigDataSource(si);
-		else
-		if(connection.equals("Empty"))
-			return new EmptyConfigDataSource(si);
-		return null;
+	
+	private void initUIConstats() {
+		UIManager.put(SchemeResourceKeys.ICON_SCHEMATICS, Toolkit
+				.getDefaultToolkit().getImage("images/main/schematics_mini.gif"));
+		UIManager.put(SchemeResourceKeys.ICON_COMPONENTS, Toolkit
+				.getDefaultToolkit().getImage("images/main/components_mini.gif"));
+		
+		UIManager.put(SchemeResourceKeys.ICON_CATALOG, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/folder.gif").getScaledInstance(
+						16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(SchemeResourceKeys.ICON_SCHEME, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/scheme.gif").getScaledInstance(
+						16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(SchemeResourceKeys.ICON_NEW, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/new.gif").getScaledInstance(16,
+						16, Image.SCALE_SMOOTH)));
+		UIManager.put(SchemeResourceKeys.ICON_SAVE, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16,
+						16, Image.SCALE_SMOOTH)));
+		UIManager.put(SchemeResourceKeys.ICON_SYNCHRONIZE, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/synchronize.gif").getScaledInstance(16,
+						16, Image.SCALE_SMOOTH)));
 	}
 }

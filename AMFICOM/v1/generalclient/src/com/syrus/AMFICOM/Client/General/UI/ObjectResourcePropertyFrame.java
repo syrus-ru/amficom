@@ -1,39 +1,19 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Configure\Application\ElementCatalogDialog.java        * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourcePropertyFrame.java,v 1.7 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
+
+import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -41,15 +21,13 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class ObjectResourcePropertyFrame extends JInternalFrame
 		implements OperationListener
 {
@@ -91,7 +69,7 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 			return;
 //		disp.register(this, MapNavigateEvent.type);
 		disp.register(this, TreeDataSelectionEvent.type);
-		disp.register(this, TreeListSelectionEvent.typ);
+		disp.register(this, TreeListSelectionEvent.class.getName());
 	}
 
 	public void setContents(ObjectResource obj)
@@ -130,17 +108,17 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 		{
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
 
-			DataSet data = tdse.getDataSet();
+			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 
 			if (n != -1)
 			{
-				ObjectResource res = data.get(n);
+				ObjectResource res = (ObjectResource )data.get(n);
 				panel.setSelected(res);
 			}
 		}
 		else
-		if(oe.getActionCommand().equals(TreeListSelectionEvent.typ))
+		if(oe.getActionCommand().equals(TreeListSelectionEvent.class.getName()))
 		{
 			Object o = oe.getSource();
 			if(o instanceof ObjectResource)
@@ -156,4 +134,3 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 	}
 
 }
-

@@ -1,22 +1,20 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
 import javax.swing.*;
+
 import oracle.jdeveloper.layout.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 import com.syrus.AMFICOM.Client.General.Filter.LogicSchemePanel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import oracle.jdeveloper.layout.XYConstraints;
+import com.syrus.AMFICOM.filter.LogicSchemeElementBase;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Button;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,7 +40,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	private JButton buttonClose = new JButton();
 
 	public LogicSchemeWindow(
-			Dialog parent, 
+			Dialog parent,
 			ObjectResourceFilter filter,
 			ObjectResourceFilterPane filterPane)
 	{
@@ -62,7 +60,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	}
 
 	public LogicSchemeWindow(
-			Frame parent, 
+			Frame parent,
 			ObjectResourceFilter filter,
 			ObjectResourceFilterPane filterPane)
 	{
@@ -90,9 +88,9 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	public LogicSchemeWindow(ObjectResourceFilterPane filterPane)
 	{
-		this(null, filterPane);	
+		this(null, filterPane);
 	}
-	
+
 	public void setFilter (ObjectResourceFilter orf)
 	{
 		this.filter = orf;
@@ -103,10 +101,10 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	{
 //    setClosable(true);
 //    this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		this.setTitle(LangModel.String("label_lswTitle"));
+		this.setTitle(LangModel.getString("label_lswTitle"));
 		JPanel contentPane = (JPanel) this.getContentPane();
-		buttonClose.setText(LangModel.String("label_close"));
-		deleteButton.setText(LangModel.String("label_delete"));
+		buttonClose.setText(LangModel.getString("label_close"));
+		deleteButton.setText(LangModel.getString("label_delete"));
 		deleteButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -116,9 +114,9 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		});
 		contentPane.setLayout(gridBagLayout1);
 		this.setSize(new Dimension(610, 300));
-	
+
 		andToggleButton.setMargin(new Insets(2, 2, 2, 2));
-		andToggleButton.setText(LangModel.String("label_and"));
+		andToggleButton.setText(LangModel.getString("label_and"));
 		andToggleButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -126,7 +124,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 				andToggleButton_actionPerformed(e);
 			}
 		});
-		orToggleButton.setText(LangModel.String("label_or"));
+		orToggleButton.setText(LangModel.getString("label_or"));
 		orToggleButton.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -135,11 +133,11 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 			}
 		});
 		orToggleButton.setMargin(new Insets(2, 2, 2, 2));
-		jScrollPane1.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jScrollPane1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		jScrollPane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+		jScrollPane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		jScrollPane1.setAutoscrolls(true);
 		useStandartSchemeCheckBox.setSelected(true);
-		useStandartSchemeCheckBox.setText(LangModel.String("label_createStandartScheme"));
+		useStandartSchemeCheckBox.setText(LangModel.getString("label_createStandartScheme"));
 		contentPane.setBorder(BorderFactory.createEtchedBorder());
 		contentPane.add(useStandartSchemeCheckBox, new GridBagConstraints(0, 0, 4, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 10, 0, 10), 0, 0));
 		contentPane.add(jScrollPane1, new GridBagConstraints(0, 1, 5, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 10, 0, 10), 0, 0));
@@ -149,7 +147,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		contentPane.add(Box.createVerticalGlue(), new GridBagConstraints(3, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 		contentPane.add(buttonClose, new GridBagConstraints(4, 2, 1, 1, 0.0, 0.0, GridBagConstraints.EAST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		jScrollPane1.getViewport().add(logicSchemePanel);
-	
+
 		useStandartSchemeCheckBox.addActionListener(new java.awt.event.ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -166,8 +164,8 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 				{
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModel.String("label_schemeNotCompleted"),
-							LangModel.String("label_error"),
+							LangModel.getString("label_schemeNotCompleted"),
+							LangModel.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 					filter.logicScheme.organizeStandartScheme();
 					refreshLSTextValue();
@@ -193,7 +191,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 		if (frameSize.width > screenSize.width)
 			frameSize.width = screenSize.width;
 		setLocation(
-				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.width - frameSize.width) / 2,
 				(screenSize.height - frameSize.height) / 2);
 	}
 
@@ -205,8 +203,11 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	void andToggleButton_actionPerformed(ActionEvent e)
 	{
-	    if (andToggleButton.isSelected())
-			lsWindowButtonPressed = LangModel.String("label_and");
+		if (andToggleButton.isSelected())
+		{
+			lsWindowButtonPressed = LogicSchemeElementBase.otAnd;
+			orToggleButton.setSelected(false);
+		}
 		else
 			lsWindowButtonPressed = "";
 	}
@@ -214,7 +215,10 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 	void orToggleButton_actionPerformed(ActionEvent e)
 	{
 		if (orToggleButton.isSelected())
-			lsWindowButtonPressed = LangModel.String("label_or");
+		{
+			lsWindowButtonPressed = LogicSchemeElementBase.otOr;
+			andToggleButton.setSelected(false);
+		}
 		else
 			lsWindowButtonPressed = "";
 	}
@@ -231,9 +235,9 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 			filter.logicScheme.getTextValue());
 	}
 
-	protected void processWindowEvent(WindowEvent e) 
+	protected void processWindowEvent(WindowEvent e)
 	{
-		if (e.getID() == WindowEvent.WINDOW_CLOSING) 
+		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
 			hide();
 			return;
@@ -243,6 +247,7 @@ public class LogicSchemeWindow extends JDialog//JInternalFrame
 
 	private void buttonClose_actionPerformed(ActionEvent e)
 	{
+		filterPane.tryToSaveChanges();
 		hide();
 	}
 }

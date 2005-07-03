@@ -1,28 +1,40 @@
+/*
+ * $Id: ReportReceiver.java,v 1.5 2004/08/22 18:39:04 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-import com.syrus.AMFICOM.CORBA.KIS.Test_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
-import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
 import com.syrus.AMFICOM.CORBA.General.AlarmLevel;
+import com.syrus.AMFICOM.CORBA.KIS.Result_Transferable;
+import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.measurement.Result;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/08/22 18:39:04 $
+ * @author $Author: arseniy $
+ * @module agent_v1
+ */
 public class ReportReceiver extends Agent {
-  private final String reportFileName;
-  private boolean reportFileConnected;
-  private int reportFileHandle;
-  
-  public ReportReceiver(String kis_id) {
-    this.reportFileHandle = 0;
-    this.reportFileConnected = false;
-    this.reportFileName = "reportChannel" + kis_id;
-  }
+	private final String reportFileName;
+	private boolean reportFileConnected;
+	private int reportFileHandle;
+
+	public ReportReceiver(String kisId) {
+		this.reportFileHandle = 0;
+		this.reportFileConnected = false;
+		this.reportFileName = "report" + kisId;
+	}
 
   public void run() {
-    String[] par_names;
-    byte[][] par_values;
-    String measurement_id, measurement_type_id, test_id;
-		long start_time;
+    String[] parNames;
+    byte[][] parValues;
+    String measurementId, measurementTypeId, testId;
+		long startTime;
 		TestContainer testContainer;
     Parameter_Transferable[] parameters;
     Result_Transferable result;
@@ -43,25 +55,25 @@ public class ReportReceiver extends Agent {
         if (Transceiver.read1(this.reportFileHandle, this.reportFileName)) {
 					Log.debugMessage("Report is read", Log.DEBUGLEVEL03);
           try {
-						par_names = Transceiver.getParameterNames();
-						par_values = Transceiver.getParameterValues();
-	          measurement_id = Transceiver.getMeasurementId();
-						test_id = measurement_id.substring(0, measurement_id.indexOf("*"));
-						start_time = Long.parseLong(measurement_id.substring(measurement_id.indexOf("*") + 1));
+						parNames = Transceiver.getParameterNames();
+						parValues = Transceiver.getParameterValues();
+	          measurementId = Transceiver.getMeasurementId();
+						testId = measurementId.substring(0, measurementId.indexOf(MEASUREMENT_ID_DELIMITER));
+						startTime = Long.parseLong(measurementId.substring(measurementId.indexOf(MEASUREMENT_ID_DELIMITER) + 1));
 						synchronized (testContainers) {
-							testContainer = (TestContainer)testContainers.get(test_id);
+							testContainer = (TestContainer)testContainers.get(testId);
 						}
 						if (testContainer == null)
-							throw new Exception("ReportReceiver | ERROR: Cannot find Test Container for test id: '" + test_id + "'");
-						measurement_type_id = testContainer.getMeasurementTypeId();
-            parameters = new Parameter_Transferable[par_names.length];
-            for (int i = 0; i < par_names.length; i++)
-							parameters[i] = new Parameter_Transferable(par_names[i], ParametersDatabase.getTestParameterTypeId(par_names[i], measurement_type_id), par_values[i]);
+							throw new Exception("ReportReceiver | ERROR: Cannot find Test Container for test id: '" + testId + "'");
+						measurementTypeId = testContainer.getMeasurementTypeId();
+            parameters = new Parameter_Transferable[parNames.length];
+            for (int i = 0; i < parNames.length; i++)
+							parameters[i] = new Parameter_Transferable(parNames[i], ParametersDatabase.getTestParameterTypeId(parNames[i], measurementTypeId), parValues[i]);
             result = new Result_Transferable(null,
-                                             test_id,
-																						 test_id,
+                                             testId,
+																						 testId,
                                              Result.RESULT_TYPE_TEST,
-                                             start_time,
+                                             startTime,
                                              parameters,
 																						 AlarmLevel.ALARM_LEVEL_NONE);
 //------------------------------ Stub
@@ -96,8 +108,11 @@ public class ReportReceiver extends Agent {
         }
       }//else if !reportFileConnected
 
-      try{ sleep(kistimewait); }
-      catch(InterruptedException ex) { }
-    }
-  }
+			try {
+				sleep(kistimewait);
+			} catch (InterruptedException ie) {
+				;
+			}
+		}
+	}
 }

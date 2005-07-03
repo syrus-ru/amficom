@@ -1,0 +1,2 @@
+*
+					 * PathElement has no associated <code>name</code> (or <code>thisName</code>) field: its {@link #name()} method actually returns {@link #abstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#name()}.

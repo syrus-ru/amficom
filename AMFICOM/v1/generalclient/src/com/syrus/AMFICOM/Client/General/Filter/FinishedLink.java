@@ -2,11 +2,10 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.Graphics;
 import java.awt.Color;
-import com.syrus.AMFICOM.Client.General.Filter.LogicSchemeElement;
 
 import com.syrus.AMFICOM.filter.*;
 
-public class FinishedLink extends FinishedLink_yo
+public class FinishedLink extends FinishedLinkBase
 {
 	public FinishedLink(ElementsActiveZone az1, ElementsActiveZone az2)
 	{

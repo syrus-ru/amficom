@@ -1,27 +1,32 @@
+/*
+ * $Id: ISMDirectorydbInterfaceLoad2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import java.sql.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
-public class  ISMDirectorydbInterfaceLoad2
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class ISMDirectorydbInterfaceLoad2
 {
 	protected ISMDirectorydbInterfaceLoad2()
 	{
 	}
 
-	static public int loadAccessPortTypes(
+	public static int loadAccessPortTypes(
 			String[] apt_ids,
 			AccessPortTypeSeq_TransferableHolder aporttypeseq)
 	{
@@ -123,7 +128,7 @@ public class  ISMDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadKISTypes(
+	public static int loadKISTypes(
 			String[] ids,
 			EquipmentTypeSeq_TransferableHolder equipmenttypes)
 	{
@@ -245,7 +250,7 @@ public class  ISMDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadPathTypes(
+	public static int loadPathTypes(
 			String[] path_ids,
 			TransmissionPathTypeSeq_TransferableHolder pathtypeseq)
 	{
@@ -360,6 +365,4 @@ public class  ISMDirectorydbInterfaceLoad2
 		String name,
 		String description,
 		Timestamp modified);
-
 }
-

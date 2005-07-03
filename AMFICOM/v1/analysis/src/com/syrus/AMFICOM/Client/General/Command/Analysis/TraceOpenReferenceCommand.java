@@ -1,92 +1,74 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.io.*;
+import java.util.Properties;
+
 import javax.swing.JFileChooser;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.io.*;
 
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
-import com.syrus.io.TraceReader;
-
-public class TraceOpenReferenceCommand extends VoidCommand
+public class TraceOpenReferenceCommand extends AbstractCommand
 {
-	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
-	public TraceOpenReferenceCommand(Dispatcher dispatcher, ApplicationContext aContext)
+	public TraceOpenReferenceCommand(ApplicationContext aContext)
 	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher )value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
 	}
 
 	public Object clone()
 	{
-		return new TraceOpenReferenceCommand(dispatcher, aContext);
+		return new TraceOpenReferenceCommand(aContext);
 	}
 
 	public void execute()
 	{
+		Properties properties = new Properties();
+		String lastDir = "";
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReferenceTrace))
-			{
-				return;
-			}
-		}
-		catch (NullPointerException ex)
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		} catch (IOException ex)
 		{
-			System.out.println("Application context and/or user are not defined");
-			return;
 		}
 
-
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
-
-		JFileChooser chooser = new JFileChooser(ini.getValue("lastdir"));
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore"));
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			TraceReader tr = new TraceReader();
+			BellcoreStructure bs;
 			bs = tr.getData(chooser.getSelectedFile());
 			if (bs == null)
 			{
 				 System.out.println("Error reading file: " + id);
 				 return;
 			}
-			if (Pool.getHash("bellcorestructure") != null )
+			if (!Heap.hasEmptyAllBSMap())
 			{
-				if (Pool.get("bellcorestructure", "referencetrace") != null)
-					 new FileRemoveCommand (dispatcher, "referencetrace", aContext).execute();
+				if (Heap.getBSReferenceTrace() != null)
+					 new FileRemoveCommand (Heap.REFERENCE_TRACE_KEY, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
-			Pool.put("bellcorestructure", "referencetrace", bs);
-			dispatcher.notify(new RefChangeEvent("referencetrace",
-											RefChangeEvent.OPEN_EVENT));
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+			Heap.setBSReferenceTrace(bs);
+			//Heap.referenceTraceOpened(activeRefId, bs);
+			try
+			{
+				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.store(new FileOutputStream(propertiesFileName), null);
+			} catch (IOException ex)
+			{
+			}
 		}
 	}
 }

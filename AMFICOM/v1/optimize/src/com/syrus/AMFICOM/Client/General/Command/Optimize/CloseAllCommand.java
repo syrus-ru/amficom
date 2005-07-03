@@ -1,11 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Optimize;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import java.awt.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Optimize.*;
@@ -127,15 +124,16 @@ public class CloseAllCommand extends VoidCommand
       aModel.disable("menuViewSchElProperties");
       aModel.disable("menuViewSolution");
       aModel.disable("menuViewKIS");
-      aModel.disable("menuViewMode");
+       aModel.disable("menuViewMode");
       aModel.disable("menuViewParams");
+      aModel.disable("menuViewGraph");
       aModel.disable("menuViewShowall");
       aModel.enable("menuOptimize"); // меню "оптимизация"
       aModel.disable("menuOptimizeStart");
       aModel.disable("menuOptimizeCriteria");
-      //aModel.disable("menuOptimizeMode");
+      aModel.disable("menuOptimizeMode");
       aModel.disable("menuOptimizeStop");
-
+      aModel.disable("menuReportCreate");
 
       aModel.fireModelChanged("");
   }

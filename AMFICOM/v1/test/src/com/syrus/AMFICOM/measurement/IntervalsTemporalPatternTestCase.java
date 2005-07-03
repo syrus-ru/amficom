@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternTestCase.java,v 1.1.1.1 2005/04/22 14:33:42 cvsadmin Exp $
+ * $Id: IntervalsTemporalPatternTestCase.java,v 1.4 2005/04/28 16:04:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.SortedSet;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2005/04/22 14:33:42 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.4 $, $Date: 2005/04/28 16:04:05 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -77,12 +78,12 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
 		
 		{
-		PeriodicalTemporalPattern periodicTemporalPattern = new PeriodicalTemporalPattern(new Identifier("PeriodicTemporalPattern_1"),
+		PeriodicalTemporalPattern periodicTemporalPattern = new PeriodicalTemporalPattern(new Identifier("PeriodicalTemporalPattern_1"),
 			userId, 0L, intervalLength);
 		
 		MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
 		
-		intervalsTemporalPattern.addIntervalItem(0, periodicTemporalPattern.getId());
+		intervalsTemporalPattern.addIntervalItems(Collections.singletonMap( new Long(0), periodicTemporalPattern.getId()));
 		}
 		
 		this.printTimes(intervalsTemporalPattern, startTime, endTime);
@@ -95,7 +96,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -112,7 +113,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -129,7 +130,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -146,7 +147,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -163,7 +164,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -180,7 +181,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -197,7 +198,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -209,13 +210,13 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 		{
 
-			long timeToDelete = endTime - startTime - 2*intervalLength; 
+			long timeToDelete = endTime - startTime - 3*intervalLength; 
 
 			Date deletedDate = new Date(startTime + timeToDelete);
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -226,30 +227,40 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		
 		
 		
+//		{
+//
+//			long timeToInsert = endTime - startTime - 2*intervalLength; 
+//
+//			Date insertDate = new Date(startTime + timeToInsert);
+//
+//			System.out.println("expect added time " + insertDate);
+//
+//			intervalsTemporalPattern.addIntervalItem(timeToInsert, null);
+//
+//			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
+//
+//			this.printTimes(intervalsTemporalPattern, startTime, endTime);
+//
+//			assertTrue(times.contains(insertDate));
+//		}
+		
 		{
-
-			long timeToInsert = endTime - startTime - 2*intervalLength; 
-
-			Date insertDate = new Date(startTime + timeToInsert);
-
-			System.out.println("expect added time " + insertDate);
-
-			intervalsTemporalPattern.addIntervalItem(timeToInsert, null);
-
-			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
-
+			System.out.println("add periodical ");
+			PeriodicalTemporalPattern periodicTemporalPattern2 = new PeriodicalTemporalPattern(new Identifier("PeriodicalTemporalPattern_2"),
+				userId, 0L, intervalLength/2);
+			
+			MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern2);
+			
+			intervalsTemporalPattern.addIntervalItems(Collections.singletonMap( new Long(intervalLength), periodicTemporalPattern2.getId()));
+			
 			this.printTimes(intervalsTemporalPattern, startTime, endTime);
-
-			assertTrue(times.contains(insertDate));
 		}
 		
 		{
-//			PeriodicTemporalPattern periodicTemporalPattern = new PeriodicTemporalPattern(new Identifier("PeriodicTemporalPattern_2"),
-//				userId, 0L, intervalLength, (endTime - startTime)/intervalLength);
-//			
-//			MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
-//			
-//			intervalsTemporalPattern.addIntervalItem(0, periodicTemporalPattern.getId());
+			long moveTime = -2 * intervalLength;
+			System.out.println("move " + moveTime);
+			intervalsTemporalPattern.moveAllItems(moveTime);
+			this.printTimes(intervalsTemporalPattern, startTime + (moveTime > 0 ? 0 : moveTime), endTime + (moveTime < 0 ? 0 : moveTime));
 		}
 	}
 
@@ -272,7 +283,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		
 		MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
 		
-		intervalsTemporalPattern.addIntervalItem(0, periodicTemporalPattern.getId());
+		intervalsTemporalPattern.addIntervalItems(Collections.singletonMap( new Long(0), periodicTemporalPattern.getId()));
 		}
 		
 		this.printTimes(intervalsTemporalPattern, startTime, endTime);
@@ -285,7 +296,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -302,7 +313,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -331,7 +342,8 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 		
 		MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
 		
-		intervalsTemporalPattern.addIntervalItem(0, periodicTemporalPattern.getId());
+		intervalsTemporalPattern.addIntervalItems(Collections.singletonMap( new Long(0), periodicTemporalPattern.getId()));
+
 		}
 		
 		this.printTimes(intervalsTemporalPattern, startTime, endTime);
@@ -344,7 +356,7 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
@@ -361,14 +373,15 @@ public class IntervalsTemporalPatternTestCase extends TestCase {
 
 			System.out.println("expect delete " + deletedDate);
 
-			intervalsTemporalPattern.removeIntervalItem(timeToDelete);
+			intervalsTemporalPattern.removeIntervalItems(Collections.singleton(new Long(timeToDelete)));
 
 			SortedSet times = intervalsTemporalPattern.getTimes(startTime, endTime);
 
 			this.printTimes(intervalsTemporalPattern, startTime, endTime);
 
 			assertFalse(times.contains(deletedDate));
-		}
+		}		
+	
 	}
 	
 	private void printTimes(IntervalsTemporalPattern intervalsTemporalPattern, long startTime, long endTime) {

@@ -1,30 +1,33 @@
+/*
+ * $Id: ObjectdbInterfaceLoad.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.util.database.ByteArrayDatabase;
+import java.sql.*;
+import java.util.Vector;
+import oracle.sql.BLOB;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
-import oracle.sql.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ObjectdbInterfaceLoad
 {
 	protected ObjectdbInterfaceLoad()
 	{
 	}
 
-	static public ObjectPermissionAttributes_Transferable loadPermissionAttributes
+	public static ObjectPermissionAttributes_Transferable loadPermissionAttributes
 		(String id)
 	{
 		String It_id = "";
@@ -114,7 +117,9 @@ public class ObjectdbInterfaceLoad
 					while (ciIt.next())
 					{
 						try { vector2.addElement(ciIt.category_id()); }
-						catch(SQLNullException e) { }
+						catch (SQLNullException sqlne) {
+							;
+						}
 					}
 					ciIt.close();
 				}
@@ -190,7 +195,7 @@ public class ObjectdbInterfaceLoad
 		return opa;
 	}
 
-	static public String[] loadDomainLinks(String id)
+	public static String[] loadDomainLinks(String id)
 	{
 		String It_id = "";
 		InnerIdIterator idIt = null;
@@ -232,7 +237,7 @@ public class ObjectdbInterfaceLoad
 
 	}
 
-	static public int loadDomains(DomainSeq_TransferableHolder domainseq)
+	public static int loadDomains(DomainSeq_TransferableHolder domainseq)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -368,7 +373,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadCategories(
+	public static int loadCategories(
 			OperatorCategorySeq_TransferableHolder categoryseq,
 			String []category_ids)
 	{
@@ -385,7 +390,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public OperatorCategory_Transferable loadCategory(String id)
+	public static OperatorCategory_Transferable loadCategory(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -472,7 +477,7 @@ public class ObjectdbInterfaceLoad
 		}
 	}
 
-	static public int loadCategories(
+	public static int loadCategories(
 			OperatorCategorySeq_TransferableHolder categoryseq)
 	{
 		String It_id = "";
@@ -585,7 +590,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadGroups(
+	public static int loadGroups(
 			OperatorGroupSeq_TransferableHolder groupseq,
 			String []group_ids)
 	{
@@ -602,7 +607,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public OperatorGroup_Transferable loadGroup(String id)
+	public static OperatorGroup_Transferable loadGroup(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -739,7 +744,7 @@ public class ObjectdbInterfaceLoad
 		}
 	}
 
-	static public int loadGroups(
+	public static int loadGroups(
 			OperatorGroupSeq_TransferableHolder groupseq)
 	{
 		String It_id = "";
@@ -908,21 +913,21 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 /*
-	static public int loadRoles(
+	public static int loadRoles(
 			OperatorRoleSeq_TransferableHolder roleseq,
 			Vector images)
 	{
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadPrivileges(
+	public static int loadPrivileges(
 			OperatorPrivilegeSeq_TransferableHolder privilegeseq,
 			Vector images)
 	{
 		return Constants.ERROR_NO_ERROR;
 	}
 */
-	static public int loadProfiles(
+	public static int loadProfiles(
 			OperatorProfileSeq_TransferableHolder profileseq,
 			String []profile_ids)
 	{
@@ -939,7 +944,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public OperatorProfile_Transferable loadProfile(String id)
+	public static OperatorProfile_Transferable loadProfile(String id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -1241,7 +1246,7 @@ public class ObjectdbInterfaceLoad
 		}
 	}
 
-	static public int loadProfiles(
+	public static int loadProfiles(
 			OperatorProfileSeq_TransferableHolder profileseq)
 	{
 		String It_id = "";
@@ -1593,7 +1598,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadExecs(
+	public static int loadExecs(
 			CommandPermissionAttributesSeq_TransferableHolder execseq)
 	{
 		String It_id = "";
@@ -1777,7 +1782,7 @@ public class ObjectdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadUserDescriptors(
+	public static int loadUserDescriptors(
 			UserSeq_TransferableHolder userseq)
 	{
 		String It_id = "";
@@ -2076,6 +2081,4 @@ public class ObjectdbInterfaceLoad
 		String language,
 		String organization,
 		String e_mail);
-
 }
-

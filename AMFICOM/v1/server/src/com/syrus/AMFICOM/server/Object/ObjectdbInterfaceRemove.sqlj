@@ -1,24 +1,28 @@
+/*
+ * $Id: ObjectdbInterfaceRemove.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ObjectdbInterfaceRemove
 {
 	protected ObjectdbInterfaceRemove()
 	{
 	}
 
-	static public int removeObjectPermissions(String id)
+	public static int removeObjectPermissions(String id)
 	{
 		try
 		{
@@ -39,7 +43,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeDomains(String[] domainseq)
+	public static int removeDomains(String[] domainseq)
 	{
 		int i;
 		String opi;
@@ -79,7 +83,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeCategories(String[] categoryseq)
+	public static int removeCategories(String[] categoryseq)
 	{
 		int i;
 		for(i = categoryseq.length - 1; i >= 0; i--)
@@ -107,7 +111,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeGroups(String[] groupseq)
+	public static int removeGroups(String[] groupseq)
 	{
 		int i;
 		for(i = groupseq.length - 1; i >= 0; i--)
@@ -134,7 +138,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeRoles(String[] roleseq)
+	public static int removeRoles(String[] roleseq)
 	{
 /*
 		int i;
@@ -157,7 +161,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removePrivileges(String[] privilegeseq)
+	public static int removePrivileges(String[] privilegeseq)
 	{
 /*
 		int i;
@@ -180,7 +184,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeProfiles(String[] profileseq)
+	public static int removeProfiles(String[] profileseq)
 	{
 		int i;
 		for(i = profileseq.length - 1; i >= 0; i--)
@@ -202,7 +206,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeExecs(String[] execseq)
+	public static int removeExecs(String[] execseq)
 	{
 		int i;
 		for(i = execseq.length - 1; i >= 0; i--)
@@ -229,7 +233,7 @@ public class ObjectdbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeUsers(String[] userseq)
+	public static int removeUsers(String[] userseq)
 	{
 		int i;
 		for(i = userseq.length - 1; i >= 0; i--)
@@ -255,6 +259,4 @@ public class ObjectdbInterfaceRemove
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-

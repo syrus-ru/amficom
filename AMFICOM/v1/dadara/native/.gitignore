@@ -1,0 +1,10 @@
+dadara.dsp
+dadara.dsw
+dadara.opt
+*.cmd
+Release
+Debug
+dadara.dll
+dadara.exp
+dadara.lib
+dadara.ncb

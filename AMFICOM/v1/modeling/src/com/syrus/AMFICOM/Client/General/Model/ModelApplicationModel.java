@@ -2,8 +2,7 @@ package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
+//import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 
 public class ModelApplicationModel extends ApplicationModel
 {
@@ -23,9 +22,9 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuExit");
 
 		add("menuView");
-		add("menuViewMapOpen");
-		add("menuViewMapEdit");
-		add("menuViewMapClose");
+		add("menuViewMapViewOpen");
+		add("menuViewMapViewEdit");
+		add("menuViewMapViewClose");
 		add("menuViewSchemeOpen");
 		add("menuViewSchemeEdit");
 		add("menuViewSchemeClose");
@@ -44,7 +43,6 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuFileClose");
 		add("menuFileAddCompare");
 		add("menuFileRemoveCompare");
-		add("menuExit");
 
 		add("menuTrace");
 		add("menuTraceAddCompare");
@@ -65,7 +63,7 @@ public class ModelApplicationModel extends ApplicationModel
 		add("menuHelpLicense");
 		add("menuHelpAbout");
 	}
-
+/*
 	public DataSourceInterface getDataSource(SessionInterface si)
 	{
 		String connection = Environment.getConnectionType();
@@ -75,6 +73,6 @@ public class ModelApplicationModel extends ApplicationModel
 		if(connection.equals("Empty"))
 			return new EmptySurveyDataSource(si);
 		return null;
-	}
+	}*/
 
 }

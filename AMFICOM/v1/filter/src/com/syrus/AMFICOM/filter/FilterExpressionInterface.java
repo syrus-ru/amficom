@@ -1,28 +1,46 @@
+/*
+ * $Id: FilterExpressionInterface.java,v 1.4 2004/08/24 12:52:08 peskovsky Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.filter;
 
-import java.util.Vector;
 import java.io.*;
+import java.util.List;
 
-public interface FilterExpressionInterface 
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/08/24 12:52:08 $
+ * @module filter_v1
+ */
+public interface FilterExpressionInterface
 {
-	public static String NUMERIC_EXPRESSION = "numeric";
-	public static String STRING_EXPRESSION = "string";
-	public static String RANGE_EXPRESSION = "range";
-	public static String TIME_EXPRESSION = "time";
-	public static String LIST_EXPRESSION = "list";
+	String NUMERIC_EXPRESSION = "numeric";
+	String STRING_EXPRESSION = "string";
+	String RANGE_EXPRESSION = "range";
+	String TIME_EXPRESSION = "time";
+	String LIST_EXPRESSION = "list";
 
-	public String getName();
-	public String getId();
-	public Vector getVec();
-	public int getListID();
+	String getName();
+	String getColumnName();
+	String getId();
+	List getVec();
+	int getListID();
+	boolean isTemplate();
 
-	public void setName(String n);
-	public void setId(String i);
-	public void setVec(Vector v);
-	public void setListID(int l);
+	void setName(String n);
+	void setColumnName(String n);
+	void setId(String i);
+	void setVec(List v);
+	void setListID(int l);
+	void setTemplate (boolean newValue);
 
-	public void writeObject(java.io.ObjectOutputStream out)
+	void writeObject(ObjectOutputStream out)
 		throws IOException;
-	public void readObject(java.io.ObjectInputStream in)
+	void readObject(ObjectInputStream in)
 		throws IOException, ClassNotFoundException;
+
+	Object clone();
 }

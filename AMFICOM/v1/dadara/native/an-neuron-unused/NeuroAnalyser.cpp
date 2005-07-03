@@ -167,3 +167,4 @@ void catchEndingChar(void *key)
 	char c = getch();
 	key = &c;
 }
+

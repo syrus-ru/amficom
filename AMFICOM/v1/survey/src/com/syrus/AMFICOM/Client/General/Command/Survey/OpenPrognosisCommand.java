@@ -1,18 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*; 
-import javax.swing.*; 
-
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.*;
-//import com.syrus.AMFICOM.Client.Resource.Analysis.*;
-//import com.syrus.AMFICOM.Client.Survey.Analysis.*;
 
-public class OpenPrognosisCommand extends VoidCommand 
+public class OpenPrognosisCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -20,6 +12,7 @@ public class OpenPrognosisCommand extends VoidCommand
 
 	public OpenPrognosisCommand()
 	{
+		 // nothing
 	}
 
 	public OpenPrognosisCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
@@ -62,10 +55,8 @@ public class OpenPrognosisCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Prognosis window");
+		  System.out.println("Starting Prognosis window");
 
-		LangModelPrediction.initialize();
-		LangModelAnalyse.initialize();
 		new com.syrus.AMFICOM.Client.Prediction.Prediction(new DefaultPredictionApplicationModelFactory());
 /*
 		try
@@ -97,3 +88,4 @@ public class OpenPrognosisCommand extends VoidCommand
 */
 	}
 }
+

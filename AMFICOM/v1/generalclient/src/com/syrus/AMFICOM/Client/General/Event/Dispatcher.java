@@ -32,11 +32,15 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 
-import java.util.*;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Dispatcher implements OperationListener
 {
-	private LinkedList events; // список событий
+	private List events; // список событий
 	private Cmd tmp;
 
 	// на каждое событие может подписываться произвольное число наблюдателей
@@ -50,7 +54,7 @@ public class Dispatcher implements OperationListener
 			listeners = new LinkedList();
 		}
 
-		private synchronized LinkedList cloneListeners()
+		private synchronized List cloneListeners()
 		{
 			return (LinkedList)listeners.clone();
 		}
@@ -64,6 +68,8 @@ public class Dispatcher implements OperationListener
 	// регистрация связывает подписчика с определенным событием
 	public synchronized void register (OperationListener listener, String command)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "register(" + listener.getClass().getName() + ", " + command + ")");
+		
 		for (Iterator it = events.iterator(); it.hasNext();)
 		{
 			tmp = (Cmd)it.next();
@@ -84,6 +90,8 @@ public class Dispatcher implements OperationListener
 	// унрегистрация убирает связь подписчика с определенным событием
 	public synchronized void unregister (OperationListener listener, String command)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "unregister(" + listener.getClass().getName() + ", " + command + ")");
+		
 		for (Iterator it = events.iterator(); it.hasNext();)
 		{
 			tmp = (Cmd)it.next();
@@ -107,10 +115,10 @@ public class Dispatcher implements OperationListener
 	public void notify (OperationEvent event)
 	{
 		String command = event.getActionCommand();
-		LinkedList clone = null;
+		List clone = null;
 		synchronized(this)
 		{
-			clone = (LinkedList)events.clone();
+			clone = (List)((LinkedList)events).clone();
 		}
 
 		// ищем событие если список не пуст
@@ -121,8 +129,11 @@ public class Dispatcher implements OperationListener
 			{
 				for (it = tmp.cloneListeners().iterator(); it.hasNext();)
 				{
+					OperationListener ol = (OperationListener )it.next();
+					Environment.log(Environment.LOG_LEVEL_FINER, "event " + event.command + " sent to " + ol.getClass().getName(), getClass().getName(), "notify()");
+					
 					// у каждого наблюдателя вызываем метод actionPerformed(event)
-					((OperationListener)(it.next())).operationPerformed(event);
+					ol.operationPerformed(event);
 				}
 				return;
 			}

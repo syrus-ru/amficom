@@ -1,25 +1,31 @@
+/*
+ * $Id: NetDirectorydbInterfaceLoad2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import java.sql.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetDirectorydbInterfaceLoad2
 {
 	protected NetDirectorydbInterfaceLoad2()
 	{
 	}
 
-	static public int loadCharacteristicTypes(
+	public static int loadCharacteristicTypes(
 			String[] ids,
 			CharacteristicTypeSeq_TransferableHolder characteristictypeseq)
 	{
@@ -118,7 +124,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadPortTypes(
+	public static int loadPortTypes(
 			String[] ids,
 			PortTypeSeq_TransferableHolder porttypeseq)
 	{
@@ -243,7 +249,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadCablePortTypes(
+	public static int loadCablePortTypes(
 			String[] ids,
 			CablePortTypeSeq_TransferableHolder porttypeseq)
 	{
@@ -348,7 +354,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadEquipmentTypes(
+	public static int loadEquipmentTypes(
 			String[] ids,
 			EquipmentTypeSeq_TransferableHolder equipmenttypes)
 	{
@@ -467,7 +473,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadLinkTypes(
+	public static int loadLinkTypes(
 			String[] ids,
 			LinkTypeSeq_TransferableHolder linktypes)
 	{
@@ -607,7 +613,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public Vector loadCableTypeThreads(String cable_id)
+	public static Vector loadCableTypeThreads(String cable_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -686,7 +692,7 @@ public class NetDirectorydbInterfaceLoad2
 		return vector;
 	}
 
-	static public int loadCableTypes(
+	public static int loadCableTypes(
 			String[] ids,
 			CableLinkTypeSeq_TransferableHolder linktypes)
 	{
@@ -815,7 +821,7 @@ public class NetDirectorydbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadTestPortTypes(
+	public static int loadTestPortTypes(
 			String[] ids,
 			TestPortTypeSeq_TransferableHolder tporttypeseq)
 	{
@@ -991,7 +997,4 @@ public class NetDirectorydbInterfaceLoad2
 		int is_editable,
 		int is_visible,
 		Timestamp modified);
-
-
 }
-

@@ -1,22 +1,26 @@
 MODULE_NAME = administration_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
+IDLDIR = ../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+HOST = mongol
+SERVICE_NAME = mongol
 
-HOST=mongol
-SERVICE_NAME=mongol
-
-JAVACFLAGS = -source 1.3
-SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = -target 1.2
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
+
+
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java)
+
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -24,19 +28,8 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationStorableObjectPool.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/User.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/UserDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/Domain.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/DomainDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/Server.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/ServerDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/MCM.java \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/MCMDatabase.java \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -56,7 +49,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/administration/*.class)
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -67,8 +60,8 @@ cleancorba:
 
 #### Install ####
 .PHONY:	install
-install: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
 .PHONY:	arch
@@ -76,5 +69,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/administration.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/administration/*.java
+		$(SOURCES)
 

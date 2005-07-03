@@ -1,6 +1,12 @@
 package com.syrus.AMFICOM.Client.Administrate.Object;
 import java.awt.*;
-import java.util.*;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.ListIterator;
+import java.util.Map;
 
 import javax.swing.*;
 
@@ -9,11 +15,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
-
-
-
-
-
 
 public class AdministrateTreeModel extends ObjectResourceTreeModel
 {
@@ -66,8 +67,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     {
       return null;
     }
-
-
   }
 
 //--------------------------------------------------------
@@ -81,7 +80,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
   public void nodeAfterSelected(ObjectResourceTreeNode node)
   {
   }
-
 
 //--------------------------------------------------------
   public void nodeBeforeExpanded(ObjectResourceTreeNode node)
@@ -150,9 +148,9 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
       if(s.equals(Domain.typ))
         return new ObjectResourceCatalogActionModel(
             ObjectResourceCatalogActionModel.PANEL,
-            ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
+            ObjectResourceCatalogActionModel.ADD_BUTTON,
             ObjectResourceCatalogActionModel.SAVE_BUTTON,
-            ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+            ObjectResourceCatalogActionModel.REMOVE_BUTTON,
             ObjectResourceCatalogActionModel.PROPS_BUTTON,
             ObjectResourceCatalogActionModel.CANCEL_BUTTON);
       else
@@ -310,12 +308,10 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     return null;
   }
 
-
-
 //--------------------------------------------------------
-  public Vector getChildNodes(ObjectResourceTreeNode node)
+  public List getChildNodes(ObjectResourceTreeNode node)
   {
-    Vector vec = new Vector();
+    List vec = new ArrayList();
     ObjectResourceTreeNode ortn;
 
     if(node.getObject() instanceof String)
@@ -342,7 +338,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(), User.typ, vec);
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(), User.typ, vec);
         }
       }
       else if(s.equals(OperatorProfile.typ)) // case of the Profile is selected
@@ -354,7 +350,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorProfile.typ, vec);
         }
       }
@@ -367,7 +363,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorCategory.typ, vec);
         }
       }
@@ -380,7 +376,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorGroup.typ, vec);
         }
       }
@@ -427,7 +423,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         ortn = (ObjectResourceTreeNode )node.getParent();
         if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       CommandPermissionAttributes.typ, vec);
         }
       }
@@ -518,12 +514,13 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         ortn = (ObjectResourceTreeNode )node.getParent();
         if(ortn!=null && ortn.getObject().equals(permission_to_obj))
         {
-          if (Pool.getHash(Domain.typ) != null)
+          Map dSet = Pool.getMap(Domain.typ);
+          if (dSet != null)
           {
             ImageIcon ii = getIcon(Domain.typ);
-            for(Enumeration enum = Pool.getHash(Domain.typ).elements(); enum.hasMoreElements();)
+            for(Iterator it = dSet.values().iterator(); it.hasNext();)
             {
-              Domain dom = (Domain)enum.nextElement();
+              Domain dom = (Domain)it.next();
               if(dom.domain_id == null ||
                  dom.domain_id.equals(""))
                 vec.add(new ObjectResourceTreeNode(dom, dom.getName(), true, ii));
@@ -532,7 +529,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Domain.typ, vec);
         }
       }
@@ -545,7 +542,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Agent.typ, vec);
         }
       }
@@ -558,7 +555,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Client.typ, vec);
         }
       }
@@ -571,7 +568,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Server.typ, vec);
         }
       }
@@ -579,12 +576,11 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     else if(node.getObject() instanceof ObjectResource)
     {
 
-      ObjectResource or = (ObjectResource )node.getObject();
+      AdminObjectResource or = (AdminObjectResource )node.getObject();
       {
-        Enumeration enum = or.getChildTypes();
-        for(; enum.hasMoreElements(); )
+        for(Iterator it = or.getChildTypes().iterator(); it.hasNext();)
         {
-          String s = (String)enum.nextElement();
+          String s = (String)it.next();
 
           if(s.equals(OperatorProfile.typ))
           {
@@ -646,17 +642,17 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     return vec;
   }
 
-  private void setVectorFromPool(Vector vec, String typ)
+  private void setVectorFromPool(List vec, String typ)
   {
     ImageIcon ii = getIcon(typ);
 
     ObjectResourceTreeNode ortn;
-    if (Pool.getHash(typ) != null)
+    Map map = Pool.getMap(typ);
+    if (map != null)
     {
-      Enumeration enum = getSortedElements(Pool.getHash(typ));
-      for(; enum.hasMoreElements();)
+      for(ListIterator it = getSortedElements(map).listIterator(); it.hasNext();)
       {
-        ObjectResource or = (ObjectResource)enum.nextElement();
+        ObjectResource or = (ObjectResource)it.next();
         if(typ.equals(User.typ) || typ.equals(Agent.typ) || typ.equals(Client.typ) || typ.equals(Server.typ))
           ortn = new ObjectResourceTreeNode(or, or.getName(), true, ii, true);
         else
@@ -666,21 +662,18 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     }
   }
 
-
-
-
-  private void setCommandVectorFromPool(Vector vec, String filterGroup)
+  private void setCommandVectorFromPool(List vec, String filterGroup)
   {
     ObjectResourceTreeNode ortn;
 
     ImageIcon ii = getIcon(CommandPermissionAttributes.typ);
 
-    if (Pool.getHash(CommandPermissionAttributes.typ) != null)
+    Map map = Pool.getMap(CommandPermissionAttributes.typ);
+    if (map != null)
     {
-      Enumeration enum = getSortedElements(Pool.getHash(CommandPermissionAttributes.typ));
-      for(; enum.hasMoreElements();)
+      for(ListIterator it = getSortedElements(map).listIterator(); it.hasNext();)
       {
-        CommandPermissionAttributes cpa = (CommandPermissionAttributes)enum.nextElement();
+        CommandPermissionAttributes cpa = (CommandPermissionAttributes)it.next();
         if(cpa.filterGroup.equals(filterGroup))
         {
           ortn = new ObjectResourceTreeNode(cpa, cpa.getName(), true, ii, true);
@@ -692,17 +685,15 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
 
 
-  private void setVectorFromObjectResource(ObjectResource or, String typ, Vector vec)
+  private void setVectorFromObjectResource(AdminObjectResource or, String typ, List vec)
   {
     or.updateLocalFromTransferable();
     ImageIcon ii = getIcon(typ);
 
-    Enumeration e = getSortedElements(or.getChildren(typ));
-    if(e == null)
-      return;
-    for(; e.hasMoreElements(); )
+    List sortedEls = getSortedElements(or.getChildren(typ));
+    for (ListIterator it = sortedEls.listIterator(); it.hasNext();)
     {
-      ObjectResource oRes = (ObjectResource)e.nextElement();
+      ObjectResource oRes = (ObjectResource)it.next();
       ObjectResourceTreeNode ortn;
       if(typ.equals(Domain.typ))
         ortn = new ObjectResourceTreeNode(oRes, oRes.getName(), true, ii);
@@ -712,31 +703,21 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     }
   }
 
-
-
-  private Enumeration getSortedElements(Enumeration e)
+  private List getSortedElements(Map h)
   {
-    DataSet dSet = new DataSet(e);
     ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
-    sorter.setDataSet(dSet);
-    dSet = sorter.default_sort();
-    return dSet.elements();
+    sorter.setDataSet(h);
+  
+    return sorter.default_sort();
   }
 
-
-
-  private Enumeration getSortedElements(Hashtable h)
+  private List getSortedElements(Collection coll)
   {
-    return getSortedElements(h.elements());
+    ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(coll);
+  
+    return sorter.default_sort();
   }
-
-
-
-  private Enumeration getSortedElements(Vector v)
-  {
-    return getSortedElements(v.elements());
-  }
-
 
   private ImageIcon getIcon(String typ){
     if(typ.equals(User.typ)){

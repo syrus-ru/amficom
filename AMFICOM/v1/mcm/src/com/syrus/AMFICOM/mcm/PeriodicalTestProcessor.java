@@ -1,119 +1,151 @@
+/*
+ * $Id: PeriodicalTestProcessor.java,v 1.40 2005/06/22 13:59:17 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.PTTemporalTemplate;
-import com.syrus.AMFICOM.util.RetrieveObjectException;
 import com.syrus.util.Log;
 
-public class PeriodicalTestProcessor extends TestProcessor {
-	private static final long FRAME = 24*60*60*1000;//ms
-	private static final int STATUS_NEW_MEASUREMENT = 0;
-	private static final int STATUS_MEASUREMENT_IS_WAITING = 1;
-	private static final int STATUS_NEW_FRAME = 2;
-	private static final int STATUS_LAST_MEASUREMENT_GONE = 3;
+/**
+ * @version $Revision: 1.40 $, $Date: 2005/06/22 13:59:17 $
+ * @author $Author: arseniy $
+ * @module mcm_v1
+ */
 
-	private PTTemporalTemplate pt_template;
-	private int status;
+public class PeriodicalTestProcessor extends TestProcessor {
+	private static final long FRAME = 24*60*60*1000;//ms	
+	
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
+
+	private long endTime;
+	private CronTemporalPattern temporalPattern;
+
+	private List<Date> timeStampsList;
+	private Date currentTimeStamp;
 
 	public PeriodicalTestProcessor(Test test) {
 		super(test);
+
+		this.endTime = test.getEndTime().getTime();
 		try {
-			this.pt_template = new PTTemporalTemplate(test.getPTTemplateId());
+			this.temporalPattern = (CronTemporalPattern) StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			super.abort();
+		catch (ApplicationException ae) {
+			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
+			this.abort();
 		}
-		this.status = STATUS_NEW_FRAME;
+
+		this.timeStampsList = new LinkedList<Date>();
+		this.currentTimeStamp = null;
+	}
+
+	private Date getCurrentTimeStamp() {
+		Date timeStamp = null;
+		if (!super.lastMeasurementAcquisition) {
+			if (!this.timeStampsList.isEmpty()) {
+				timeStamp = this.timeStampsList.remove(0);
+			}
+			else {
+				long start = System.currentTimeMillis();
+				if (start <= this.endTime) {
+					Set times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+//--------
+					Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + (new Date(start))
+							+ " to " + (new Date(Math.min(start + FRAME, this.endTime))), Log.DEBUGLEVEL09);
+					for (Iterator it = times.iterator(); it.hasNext();)
+						Log.debugMessage("time: " + it.next(), Log.DEBUGLEVEL09);
+//--------
+					this.timeStampsList.addAll(times);
+					if (!this.timeStampsList.isEmpty())
+						timeStamp = this.timeStampsList.remove(0);
+				}
+				else
+					super.lastMeasurementAcquisition = true;
+			}
+		}
+		return timeStamp;
 	}
 
 	public void run() {
-		long start_time_l = super.test.getStartTime().getTime();
-		long end_time_l = super.test.getEndTime().getTime();
-		ArrayList tt_frame = null;
-		long cur_time;
-		Date cur_start_time = null;
-		Measurement measurement = null;
 		while (super.running) {
+			if (! super.lastMeasurementAcquisition) {
+				if (this.currentTimeStamp == null) {
+					this.currentTimeStamp = this.getCurrentTimeStamp();
+					Log.debugMessage("Next measurement at: " + this.currentTimeStamp, Log.DEBUGLEVEL07);
+				}
+				else {
+					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
+
+						try {
+							super.newMeasurementCreation(this.currentTimeStamp);
+							this.currentTimeStamp = null;
+							super.clearFalls();
+						}
+						catch (CreateObjectException coe) {
+							Log.errorException(coe);
+							if (coe.getCause() instanceof IllegalObjectEntityException)
+								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+							else
+								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
+							super.sleepCauseOfFall();
+						}
+
+					}	//if (this.currentTimeStamp.getTime() <= System.currentTimeMillis())
+				}	//if (this.currentTimeStamp == null)
+			}	//if (! super.lastMeasurementAcquisition)
+
+			super.processMeasurementResult();
+			super.checkIfCompletedOrAborted();
+
 			try {
-				sleep(super.tick_time);
+				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
-
-			switch (this.status) {
-				case STATUS_NEW_FRAME:
-					cur_time = System.currentTimeMillis();
-					if (cur_time <= end_time_l) {
-						tt_frame = this.pt_template.getTimeStamps(start_time_l, cur_time, Math.min(end_time_l, cur_time + FRAME));
-						this.status = STATUS_NEW_MEASUREMENT;
-					}
-					else
-						this.status = STATUS_LAST_MEASUREMENT_GONE;
-					break;
-				case STATUS_NEW_MEASUREMENT:
-					if (tt_frame != null && ! tt_frame.isEmpty()) {
-						cur_start_time = (Date)tt_frame.remove(0);
-						measurement = null;
-						try {
-							measurement = super.test.createMeasurement(MeasurementControlModule.createIdentifier("measurement"),
-																												 cur_start_time);
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
-						if (measurement != null)
-							this.status = STATUS_MEASUREMENT_IS_WAITING;
-					}
-					else
-						this.status = STATUS_NEW_FRAME;
-					break;
-				case STATUS_MEASUREMENT_IS_WAITING:
-					if (measurement != null && cur_start_time.getTime() <= System.currentTimeMillis()) {
-						super.transceiver.addMeasurement(measurement, this);
-						super.n_measurements ++;
-						this.status = STATUS_NEW_MEASUREMENT;
-					}
-					break;
-				case STATUS_LAST_MEASUREMENT_GONE:
-					break;
-			}//switch
-
-			if (this.status != STATUS_LAST_MEASUREMENT_GONE || super.n_measurements < super.n_reports)
-				super.checkMeasurementResults();
-			else
-				break;
-		}//while
-
-		super.cleanup();
-	}//run
-
-/*
-	private int calculateTotalMeasurementsNumber() {
-		int n_cycles = (int)((this.end_time - this.start_times[0])/this.period);
-		int n1 = n_cycles * this.start_times.length;
-		long offset = n_cycles * this.period;
-		int n2 = 0;
-		while (n2 < this.start_times.length
-					 && this.start_times[n2] + offset <= this.end_time)
-			n2 ++;
-
-		return (n1 + n2);
+		}
 	}
 
-	private long calculateNextTime() {
-		long tc = System.currentTimeMillis();
-		int n_cycles = (int)((tc - this.start_times[0])/this.period);
-		long offset = n_cycles * this.period;
-		int n = 0;
-		while (n < this.start_times.length
-					 && this.start_times[n] + offset < tc)
-			n ++;
+	protected void cleanup() {
+		super.cleanup();
+		if (this.timeStampsList != null)
+			this.timeStampsList.clear();
+	}
 
-		return (this.start_times[n] + offset);
-	}*/
+	protected void processFall() {
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_CREATE_IDENTIFIER:
+				this.continueWithNextMeasurement();
+				break;
+			case FALL_CODE_CREATE_MEASUREMENT:
+				this.continueWithNextMeasurement();
+				break;
+			default:
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+		}
+	}
+
+	private void continueWithNextMeasurement() {
+		this.currentTimeStamp = null;
+	}
 }

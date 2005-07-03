@@ -1,186 +1,255 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: исполняемый список команд                                  * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Command\CommandBundle.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: CommandList.java,v 1.10 2005/05/18 14:01:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-import java.util.Vector;
-
-public class CommandList extends Object
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/05/18 14:01:20 $
+ * @module generalclient_v1
+ */
+public class CommandList extends VoidCommand
 {
-	protected Vector commands;	// список команд
+	/** список команд */
+	private Command top = null;
+	private Command bottom = null;
+	
+	private int count = 0;
+	
+	/**
+	 * последней выполненной команды в списке + 1
+	 * (или индекс первой готовой к выполнению команды)
+	 */
+	private Command current = null;
 
-	private int maxlength = 10;	// максимальное количество команд в списке
-
-	private int curindex = 0;	// индекс последней выполненной команды в списке
-								// + 1 (или индекс первой готовой к выполнению
-								// команды)
+	/** максимальное количество команд в списке */
+	private int maxlength = 50;
 
 	public CommandList()
 	{
 	}
 
-	// создание
-	public CommandList(Vector commands)
+	public CommandList(int maxlength)
 	{
-		this.commands = (Vector )commands.clone();
+		this.maxlength = maxlength;
 	}
 
-	public void proceed(int c)	// выполнить следующие c команд в списке
+	/**
+	 * выполнить следующие c команд в списке
+	 */
+	public void proceed(int c)
 	{
-		int count = getCount();
-		if(c + curindex < count)	// если надо выполнить команд больше, чем
-									// есть в списке, то выполнить все
-			count = c + curindex;	// в противном случае выполнять только C
-		for(; curindex < count; curindex++)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.execute();
+			Command com = current.getPrevious();
+			if( com != null)
+			{
+				current = com;
+				current.execute();
+			}
+			else
+			{
+				return;
+			}
 		}
 	}
 
-	public void proceed_undo(int c)	// выполнить обратоно C команд
+	/**
+	 * выполнить обратоно C команд
+	 */
+	public void proceedUndo(int c)
 	{
-		int index = 0;
-		if(c < curindex + 1)			// если выполнить undo для количества
-										// команд большего, чем есть, то
-										// выполнить undo для всех, в противном
-			index = curindex + 1 - c;	// случае только для c команд
-		for(; curindex >= index; curindex--)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.undo();
+			if(current == null)
+				return;
+			current.undo();
+			current = current.getNext();
 		}
 	}
 
-	public void proceed_redo(int c)	// повторно выполнить c команд
+	public void proceedRedo(int c)	// повторно выполнить c команд
 	{
-		int count = getCount();
-		if(c + curindex < count)	// если надо выполнить команд больше, чем
-									// есть в списке, то выполнить все
-			count = c + curindex;	// в противном случае выполнять только C
-		for(; curindex < count; curindex++)
+		for(int i = 0; i < c; i++)
 		{
-			Command command = (Command )commands.get(curindex);
-			command.redo();
+			Command com = getPrevious();
+			if( com != null)
+			{
+				current = com;
+				current.redo();
+			}
+			else
+			{
+				return;
+			}
 		}
 	}
-
-	public void add(Command command)// добавить команду в конец списка
+	
+	/**
+	 * добавить команду в конец списка
+	 */
+	public void add(Command command)
 	{
-		commands.add(command);
-	}
-
-	public void flush()				// удалить весь список
-	{
-		commands.clear();
-		curindex = 0;
-	}
-
-	public void removeTop(int c)	// удалить c команд в конце списка
-	{
-		int i;
-		int index = 0;
-		if(c < getCount())
-			index = getCount() - c;
-		for(i = getCount() - 1; i >= index; i--)
-		{
-			Command command = (Command )commands.get(i);
-			if(i > curindex - 1)		// если у команды был выполнен undo,
-										// то есть она находится за curindex
-										// в списке, то подтвердить undo
-				command.commit_undo();	//
-			commands.remove(i);
-		}
-		if(curindex > getCount() - 1)	// поправить индекс текущей команды
-			curindex = getCount() - 1;	// если он выехал за границы
-	}
-
-	public void removeBottom(int c)	// удалить c команд в начале списка
-	{
-		int i;
-		int count = getCount();
-		if(c < count)
-			count = c;
-		for(i = 0; i < count; i++)
-		{
-			Command command = (Command )commands.get(0);
-			if(i < curindex)			// если команда уже была выполнена,
-										// то есть она находится перед curindex
-										// в списке, то подтвердить выполнение
-				command.commit_execute();	//
-			commands.remove(0);
-		}
-		curindex -= count;
-		if(curindex < 0)			// поправить индекс текущей команды
-			curindex = 0;			// если он выехал за границы
-	}
-
-	public void step()				// выполнить одну следующую команду
-	{
-		if(curindex == getCount())	// если в конце списка то выполнять нечего
+		if(command == null)
 			return;
-		Command command = (Command )commands.get(curindex++);
-									// выполнить команду и переместить указатель
-									// списка выполненных команд
-		command.execute();
+
+		// not executed commands are lost
+		command.setNext(current);
+		if(current != null)	
+			current.setPrevious(command);
+		command.setPrevious(null);
+		top = command;
+		if(bottom == null)
+			bottom = top;
+
+		count++;
+
+		if(getCount() > maxlength)
+			removeBottom(1);
 	}
 
-	public void redo()				// выполнить одну следующую команду
+	/**
+	 * удалить весь список
+	 */
+	public void flush()
 	{
-		if(curindex == getCount())	// если в конце списка то выполнять нечего
+		top = null;
+		bottom = null;
+		current = null;
+		count = 0;
+	}
+
+	/**
+	 * удалить c команд в конце списка
+	 */
+	public void removeTop(int c)
+	{
+		for(int i = 0; i < c; i++)
+		{
+			if(top != null)
+			{
+				top.commitUndo();
+				if(current == top)
+					current = top.getNext();
+				top = top.getNext();
+				count--;
+			}
+			else
+				break;
+		}
+		if(top != null)
+			top.setPrevious(null);
+	}
+
+	/**
+	 * удалить c команд в начале списка
+	 */
+	public void removeBottom(int c)
+	{
+		for (int i = 0; i < c; i++)
+		{
+			if(bottom != null)
+			{
+				bottom.commitExecute();
+				if(current == bottom)
+					current = null;
+				bottom = bottom.getPrevious();
+				count--;
+			}
+			else
+				break;
+		}
+
+		if(bottom != null)
+			bottom.setNext(null);
+	}
+	
+	public void executeAll()
+	{
+		while(current != top)
+		{
+			// выполнить команду и переместить указатель
+			// списка выполненных команд
+			current = getPrevious();
+			if(current != null)
+				current.execute();
+		}
+	}
+
+	/**
+	 * выполнить одну следующую команду
+	 */
+	public void execute()
+	{
+		if(current == top)
 			return;
-		Command command = (Command )commands.get(curindex++);
-									// выполнить команду и переместить указатель
-									// списка выполненных команд
-		command.redo();
+
+		// выполнить команду и переместить указатель
+		// списка выполненных команд
+		current = getPrevious();
+		if(current != null)
+			current.execute();
 	}
 
-	public void undo()				// обратно выполнить одну команду
+	/**
+	 * выполнить одну следующую команду
+	 */
+	public void redo()
 	{
-		if(curindex == 0)			// если в начале списка то выполнять нечего
+		if(current == top)
 			return;
-		Command command = (Command )commands.get(curindex--);
-									// выполнить undo команды и переместить
-									// указатель списка выполненных команд
-		command.undo();
+
+		// выполнить команду и переместить указатель
+		// списка выполненных команд
+		current = getPrevious();
+		current.redo();
 	}
 
-	public int getCount()			// получить количество команд в списке
+	/**
+	 * обратно выполнить одну команду
+	 */
+	public void undo()
 	{
-		return commands.size();
+		if(current == null)
+			return;// если в начале списка то выполнять нечего
+
+		// выполнить undo команды и переместить
+		// указатель списка выполненных команд
+		current.undo();
+		current = current.getNext();
+	}
+	
+	public Command getPrevious()
+	{
+		if(current == null)
+			return getBottom();
+		else
+			return current.getPrevious();
+	}
+	
+	/**
+	 *
+	 */
+	 public Command getBottom()
+	 {
+		return bottom;
+	 }
+
+	 public Command getTop()
+	 {
+		return top;
+	 }
+
+	/**
+	 * получить количество команд в списке
+	 */
+	public int getCount()
+	{
+		return count;
 	}
 }
-
- 

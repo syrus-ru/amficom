@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
 import java.text.*;
 import java.util.*;
 
@@ -10,8 +9,10 @@ import oracle.jdeveloper.layout.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.general.StorableObject;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -154,24 +155,23 @@ public class DomainGeneralPanel extends GeneralPanel
   }
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(StorableObject or)
   {
     this.domain = (Domain)or;
     if(this.domain == null)
-      return false;
+      return;
 
     SimpleDateFormat sdf = new SimpleDateFormat();
     this.domainCreated.setText(sdf.format( new Date(domain.created)));
-    this.domainCreatedBy.setTextNameByID(User.typ, domain.created_by);
-    this.domainId.setText(domain.id);
+    this.domainCreatedBy.setTextNameByID(User.class.getName(), domain.created_by);
+    this.domainId.setText(domain.getId());
     this.domainModified.setText(sdf.format(new Date(domain.modified)));
-    this.domainModifiedBy.setTextNameByID(User.typ, domain.modified_by);
+    this.domainModifiedBy.setTextNameByID(User.class.getName(), domain.modified_by);
     this.domainName.setText(domain.name);
     this.domainNotes.setText(domain.description);
 
-//    this.domainOwner.setTyp(User.typ);
-//    this.domainOwner.setSelectedTyp(User.typ, domain.owner_id);
-    return true;
+//    this.domainOwner.setTyp(User.class.getName());
+//    this.domainOwner.setSelectedTyp(User.class.getName(), domain.owner_id);
   }
 
   public boolean modify()

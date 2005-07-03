@@ -6,11 +6,11 @@ import java.awt.Toolkit;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 
+import java.util.Iterator;
 import javax.swing.*;
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -114,7 +114,7 @@ public class ReportToolBar
 		buttonOpenSession.setText("");
 		buttonOpenSession.setMaximumSize(buttonSize);
 		buttonOpenSession.setPreferredSize(buttonSize);
-		buttonOpenSession.setToolTipText(LangModelSurvey.ToolTip("menuSessionNew"));
+		buttonOpenSession.setToolTipText(LangModelSurvey.getString("NewSession"));
 		buttonOpenSession.setName("menuSessionNew");
 		buttonOpenSession.addActionListener(actionAdapter);
 		importTemplateButton.addActionListener(new ReportToolBar_importTemplateButton_actionAdapter(this));
@@ -147,7 +147,7 @@ public class ReportToolBar
 																						getImage("images/new.gif").
 																						getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		newTemplateButton.setToolTipText(LangModelReport.String("label_newTemplate"));
+		newTemplateButton.setToolTipText(LangModelReport.getString("label_newTemplate"));
 		newTemplateButton.setMaximumSize(buttonSize);
 		newTemplateButton.setPreferredSize(buttonSize);
 
@@ -155,7 +155,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/load_template.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		openTemplateButton.setToolTipText(LangModelReport.String(
+		openTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_openTemplate"));
 		openTemplateButton.setMaximumSize(buttonSize);
 		openTemplateButton.setPreferredSize(buttonSize);
@@ -164,7 +164,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/save_template.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		saveTemplateButton.setToolTipText(LangModelReport.String(
+		saveTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_saveTemplate"));
 		saveTemplateButton.setMaximumSize(buttonSize);
 		saveTemplateButton.setPreferredSize(buttonSize);
@@ -173,7 +173,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/openfile.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		importTemplateButton.setToolTipText(LangModelReport.String(
+		importTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_importTemplate"));
 		importTemplateButton.setMaximumSize(buttonSize);
 		importTemplateButton.setPreferredSize(buttonSize);
@@ -182,7 +182,7 @@ public class ReportToolBar
 																						 getImage(
 				"images/save.gif").getScaledInstance(16, 16,
 				Image.SCALE_SMOOTH)));
-		exportTemplateButton.setToolTipText(LangModelReport.String(
+		exportTemplateButton.setToolTipText(LangModelReport.getString(
 				"label_exportTemplate"));
 		exportTemplateButton.setMaximumSize(buttonSize);
 		exportTemplateButton.setPreferredSize(buttonSize);
@@ -231,10 +231,8 @@ public class ReportToolBar
 		AbstractButton jb = (AbstractButton) e.getSource();
 		String s = jb.getName();
 
-		Command command = aModel.getCommand(s);
-		command = (Command) command.clone();
-		command.execute();
-	}
+    aModel.getCommand(s).execute();
+  }
 
 	public void setTemplateToolBarState(boolean newState)
 	{
@@ -252,8 +250,8 @@ public class ReportToolBar
 		{
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelReport.String("label_crossesExist"),
-				LangModelReport.String("label_error"),
+				LangModelReport.getString("label_crossesExist"),
+				LangModelReport.getString("label_error"),
 				JOptionPane.ERROR_MESSAGE);
 
 			return;
@@ -264,6 +262,7 @@ public class ReportToolBar
 				SelectTemplate.SAVE,
 				mainWindow.layoutWOCPanel.reportTemplate);
 
+    selectTemplateDialog.setSize(400,300);
 		selectTemplateDialog.setLocation(
 				mainWindow.getX() + mainWindow.getWidth() / 2 -
 				selectTemplateDialog.getWidth() / 2,
@@ -280,8 +279,8 @@ public class ReportToolBar
 		{
 			int resultValue = JOptionPane.showConfirmDialog(
 					mainWindow,
-					LangModelReport.String("label_saveChanges"),
-					LangModelReport.String("label_confirm"),
+					LangModelReport.getString("label_saveChanges"),
+					LangModelReport.getString("label_confirm"),
 					JOptionPane.YES_NO_CANCEL_OPTION);
 
 			if (resultValue == JOptionPane.CANCEL_OPTION)
@@ -296,6 +295,7 @@ public class ReportToolBar
 				SelectTemplate.OPEN,
 				null);
 
+    selectTemplateDialog.setSize(400,300);
 		selectTemplateDialog.setLocation(
 				mainWindow.getX() + mainWindow.getWidth() / 2 -
 				selectTemplateDialog.getWidth() / 2,
@@ -304,10 +304,10 @@ public class ReportToolBar
 
 		selectTemplateDialog.setVisible(true);
 
-		if (selectTemplateDialog.selectedTemplate == null)
+		if (SelectTemplate.selectedTemplate == null)
 			return;
 
-		mainWindow.setTemplate(selectTemplateDialog.selectedTemplate);
+		mainWindow.setTemplate(SelectTemplate.selectedTemplate);
 	}
 
 	private void newTemplateButton_actionPerformed(ActionEvent e)
@@ -318,8 +318,8 @@ public class ReportToolBar
 		{
 			int resultValue = JOptionPane.showConfirmDialog(
 					mainWindow,
-					LangModelReport.String("label_saveChanges"),
-					LangModelReport.String("label_confirm"),
+					LangModelReport.getString("label_saveChanges"),
+					LangModelReport.getString("label_confirm"),
 					JOptionPane.YES_NO_CANCEL_OPTION);
 
 			if (resultValue == JOptionPane.CANCEL_OPTION)
@@ -344,7 +344,7 @@ public class ReportToolBar
 	{
 		if (JOptionPane.showConfirmDialog(
 			Environment.getActiveWindow(),
-			LangModelReport.String("label_confImportTemplates"),
+			LangModelReport.getString("label_confImportTemplates"),
 			"",
 			JOptionPane.YES_NO_OPTION,
 			JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
@@ -402,17 +402,16 @@ public class ReportToolBar
 		new ReportDataSourceImage(
 				mainWindow.aContext.getDataSourceInterface()).LoadReportTemplates();
 
-		Hashtable rtHash = Pool.getHash(ReportTemplate.typ);
+		Map rtHash = Pool.getMap(ReportTemplate.typ);
 		if (rtHash == null)
 			return;
 
 		int templNumber = 0;
 		ReportTemplate curRT = null;
 		System.out.println("Exporting report templates.");
-		Enumeration rtEnum = rtHash.elements();
-		while (rtEnum.hasMoreElements())
+		for (Iterator it = rtHash.values().iterator();it.hasNext();)
 		{
-			curRT = (ReportTemplate) rtEnum.nextElement();
+			curRT = (ReportTemplate) it.next();
 			String curRTFileName = dirToSave + "//" + curRT.id + ".tpl";
 
 			try
@@ -494,4 +493,4 @@ class RTFileFilter implements FileFilter
 
 		return false;
 	}
-};
+}

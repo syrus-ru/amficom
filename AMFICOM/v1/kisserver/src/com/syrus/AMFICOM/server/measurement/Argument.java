@@ -86,8 +86,7 @@ public class Argument {
     Log.debugMessage("Argument.save | Trying: " + update, Log.DEBUGLEVEL05);
     st.executeUpdate(update);
 		st.close();
-    ByteArrayDatabase bdb  = new ByteArrayDatabase(this.value);
-    bdb.saveAsBlob(conn, table_name, "value", "id = '" + this.id + "'");
+    ByteArrayDatabase.saveAsBlob(this.value, conn, table_name, "value", "id = '" + this.id + "'");
   }
 
   public String getId() {
@@ -130,8 +129,7 @@ public class Argument {
 
 		Connection conn = DatabaseConnection.getConnection();
     String table_name = this.holder_sort + "arguments";
-    ByteArrayDatabase badb = new ByteArrayDatabase(this.value);
-		badb.saveAsBlob(conn, table_name, "value", "id = '" + this.id + "'");
+		ByteArrayDatabase.saveAsBlob(this.value, conn, table_name, "value", "id = '" + this.id + "'");
 	}
 
   public static Argument[] retrieveArguments(String holder_id, String holder_sort) throws SQLException {

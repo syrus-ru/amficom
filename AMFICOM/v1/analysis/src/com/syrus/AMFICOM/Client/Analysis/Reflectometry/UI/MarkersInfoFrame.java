@@ -1,39 +1,40 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.util.Vector;
+import java.beans.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.table.JTableHeader;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
 
 public class MarkersInfoFrame extends JInternalFrame
-																		implements OperationListener
+implements PropertyChangeListener, BsHashChangeListener
 {
-	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
-	private ATable jTable;
-	private MarkersInfo mInfo;
+	//Don't change sequence
+	private static String[] DEFAULT_KEYS = new String[] {
+			MarkerResourceWrapper.KEY_A_POSITION, // 0
+			MarkerResourceWrapper.KEY_A_LOSS, // 1 (changes to KEY_A_REFLECTANCE)
+			MarkerResourceWrapper.KEY_A_ATTENUATION, // 2
+			MarkerResourceWrapper.KEY_A_CUMULATIVE_LOSS, // 3
+			MarkerResourceWrapper.KEY_B_POSITION, // 4
+			MarkerResourceWrapper.KEY_BA_DISTANCE, // 5 (changes to KEY_AB_DISTANCE)
+			MarkerResourceWrapper.KEY_AB_LOSS, // 6
+			MarkerResourceWrapper.KEY_AB_ATTENUATION, // 7
+			MarkerResourceWrapper.KEY_AB_LSA_ATTENUATION, // 8
+			MarkerResourceWrapper.KEY_AB_ORL // 9
+	};
+	MarkerResource res;
+	
+	private WrapperedPropertyTableModel tModel;
+	private WrapperedPropertyTable jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -41,8 +42,6 @@ public class MarkersInfoFrame extends JInternalFrame
 	JViewport viewport = new JViewport();
 	double sigma;
 	BellcoreStructure bs;
-
-
 
 	public MarkersInfoFrame()
 	{
@@ -56,8 +55,7 @@ public class MarkersInfoFrame extends JInternalFrame
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -67,45 +65,20 @@ public class MarkersInfoFrame extends JInternalFrame
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
+		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
+		Heap.addBsHashListener(this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-					sigma = MathRef.calcSigma(bs.fxdParams.AW/10, bs.fxdParams.PWU[0]);
-					setTableModel();
-					setVisible(true);
-				}
-			}
-			if (rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					tModel.clearTable();
-					setVisible(false);
-				}
-			}
-
-		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			if (rue.MARKER_MOVED)
+			if (rue.markerMoved())
 			{
-				updTableModel ((MarkersInfo)rue.getSource());
+				updTableModel ((MarkersInfo)rue.getNewValue());
 			}
 		}
 	}
@@ -113,155 +86,99 @@ public class MarkersInfoFrame extends JInternalFrame
 	private void jbInit() throws Exception
 	{
 		//setFocusCycleRoot(false);
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		String markerInfoKey = LangModelAnalyse.String("markerInfoKey");
-		String markerInfoValue = LangModelAnalyse.String("markerInfoValue");
-		tModel = new GeneralTableModel(
-					new String[] {markerInfoKey, markerInfoValue},
-					new String[] {"1", "2"},
-					0);
-		jTable = new ATable(tModel);
+		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		res = new MarkerResource();
+		tModel = new WrapperedPropertyTableModel(MarkerResourceWrapper.getInstance(),
+				res, DEFAULT_KEYS);
 
+		jTable = new WrapperedPropertyTable(tModel);
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
 
-//		this.getContentPane().add(mainPanel);
 		this.getContentPane().add(mainPanel);
 
-		this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("markerInfoTitle"));
+		this.setTitle(LangModelAnalyse.getString("markerInfoTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTable.setMaximumSize(new Dimension(200, 213));
-		jTable.setMinimumSize(new Dimension(200, 213));
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 		scrollPane.getViewport().add(jTable);
-
-		updColorModel();
-	}
-
-	private void updColorModel()
-	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	void updTableModel(MarkersInfo mInfo)
 	{
-		// положение курсора А
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_pos_m))+ " " + LangModelAnalyse.String("mt"), 0, 1);
-		if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
-		{// потери в А
-			tModel.setValueAt(LangModelAnalyse.String("markerALoss"), 1, 0);
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_loss))+ " " + LangModelAnalyse.String("dB"), 1, 1);
-		}
+		String mt = " " + LangModelAnalyse.getString("mt");
+		String dB = " " + LangModelAnalyse.getString("dB");
+		String dbkm = " " + LangModelAnalyse.getString("dB/km");
+		
+		// setting keys
 		if (mInfo.a_type == MarkersInfo.REFLECTIVE)
-		{// отражение в А
-			tModel.setValueAt(LangModelAnalyse.String("markerAReflection"), 1, 0);
-			if (mInfo.a_reflectance > 0)
-				tModel.setValueAt(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, mInfo.a_reflectance)))+ " " + LangModelAnalyse.String("dB"), 1, 1);
-			else
-				tModel.setValueAt("-----", 1, 1);
-		}
-		if (mInfo.a_type == MarkersInfo.NOANALYSIS)
-		{
-			tModel.setValueAt("-----", 1, 1);
-			tModel.setValueAt("-----", 2, 1);
-			tModel.setValueAt("-----", 3, 1);
-		}
-		else
-		{ // затухание в А
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_attfactor))+ " " + LangModelAnalyse.String("dB")+ "/" + LangModelAnalyse.String("km"), 2, 1);
-		// накапливаемые потери в А
-			 tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_cumulative_loss))+ " " + LangModelAnalyse.String("dB"), 3, 1);
-		}
-		// положение курсора В
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.b_pos_m))+ " " + LangModelAnalyse.String("mt"), 4, 1);
-		// расстояние А-В
+			DEFAULT_KEYS[1] = MarkerResourceWrapper.KEY_A_REFLECTION;
+		else if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
+			DEFAULT_KEYS[1] = MarkerResourceWrapper.KEY_A_LOSS;
+
 		if (mInfo.a_pos < mInfo.b_pos)
-			tModel.setValueAt(LangModelAnalyse.String("markerBAdist"), 5, 0);
+			DEFAULT_KEYS[5] = MarkerResourceWrapper.KEY_BA_DISTANCE;
 		else
-			tModel.setValueAt(LangModelAnalyse.String("markerABdist"), 5, 0);
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_b_distance_m))+ " " + LangModelAnalyse.String("mt"), 5, 1);
-			// 2pt. loss
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_loss))+ " " + LangModelAnalyse.String("dB"), 6, 1);
-			// 2pt. Att
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_attenuation))+ " " + LangModelAnalyse.String("dB") + "/" + LangModelAnalyse.String("km"), 7, 1);
-			// LSA Att
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.lsa_attenuation))+ " " + LangModelAnalyse.String("dB") + "/" + LangModelAnalyse.String("km"), 8, 1);
-			// 2pt. ORL
-			if (mInfo.a_b_orl > 0)
-				tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_orl))+ " " + LangModelAnalyse.String("dB"), 9, 1);
-			else
-				tModel.setValueAt("-----", 9, 1);
+			DEFAULT_KEYS[5] = MarkerResourceWrapper.KEY_AB_DISTANCE;
+		
+		// setting values
+		res.setAPosition(Math.round(mInfo.a_pos_m) + mt);
+		if (mInfo.a_type == MarkersInfo.NOANALYSIS) {
+			res.setALoss(MarkerResource.DASH);
+			res.setAReflectance(MarkerResource.DASH);
+			res.setAAttenuation(MarkerResource.DASH);
+			res.setACumulativeLoss(MarkerResource.DASH);
+		} else
+		{
+			if (mInfo.a_type == MarkersInfo.NONREFLECTIVE) {// потери в А
+				res.setALoss(MathRef.round_4(mInfo.a_loss) + dB);
+			} else if (mInfo.a_type == MarkersInfo.REFLECTIVE) {// отражение в А
+				if (mInfo.a_reflectance > 0)
+					res.setAReflectance(MathRef.round_4(MathRef.calcReflectance(sigma, mInfo.a_reflectance)) + dB);
+				else
+					res.setAReflectance(MarkerResource.DASH);
+			}
+			res.setAAttenuation(MathRef.round_4(mInfo.a_attfactor) + dbkm);
+			res.setACumulativeLoss(MathRef.round_4(mInfo.a_cumulative_loss) + dB);
+		}
+		res.setBPosition(Math.round(mInfo.b_pos_m) + mt);
+		res.setAbDistance(Math.round(mInfo.a_b_distance_m) + mt);
+		res.setAbLoss(MathRef.round_4(mInfo.a_b_loss) + dB);
+		res.setAbAttenuation(MathRef.round_4(mInfo.a_b_attenuation) + dbkm);
+		res.setLsaAttenuation(MathRef.round_4(mInfo.lsa_attenuation) + dbkm);
+		if (mInfo.a_b_orl > 0)
+			res.setAbOrl(MathRef.round_4(mInfo.a_b_orl) + dB);
+		else
+			res.setAbOrl(MarkerResource.DASH);
 		jTable.updateUI();
 	}
 
-	void setTableModel()
+	public void bsHashAdded(String key, BellcoreStructure bs)
 	{
-		tModel.clearTable();
+		if (key.equals(Heap.PRIMARY_TRACE_KEY))
+		{
+			bs = Heap.getBSPrimaryTrace();
+			sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+			setVisible(true);
+		}
+	}
 
-		Vector apos = new Vector(2);
-		apos.add(LangModelAnalyse.String("markerAPos"));
-		apos.add("");
-		tModel.insertRow(apos);
+	public void bsHashRemoved(String key)
+	{
+	}
 
-		Vector lost = new Vector(2);
-		lost.add(LangModelAnalyse.String("markerALoss"));
-		lost.add("");
-		tModel.insertRow(lost);
-
-		Vector att = new Vector(2);
-		att.add(LangModelAnalyse.String("markerAAttenuation"));
-		att.add("");
-		tModel.insertRow(att);
-
-		Vector cumloss = new Vector(2);
-		cumloss.add(LangModelAnalyse.String("markerACumloss"));
-		cumloss.add("");
-		tModel.insertRow(cumloss);
-
-		Vector bpos = new Vector(2);
-		bpos.add(LangModelAnalyse.String("markerBPos"));
-		bpos.add("");
-		tModel.insertRow(bpos);
-
-		Vector abdist = new Vector(2);
-		abdist.add(LangModelAnalyse.String("markerBAdist"));
-		abdist.add("");
-		tModel.insertRow(abdist);
-
-		Vector loss_2pt = new Vector(2);
-		loss_2pt.add(LangModelAnalyse.String("markerABloss"));
-		loss_2pt.add("");
-		tModel.insertRow(loss_2pt);
-
-		Vector att_2pt = new Vector(2);
-		att_2pt.add(LangModelAnalyse.String("markerABatt"));
-		att_2pt.add("");
-		tModel.insertRow(att_2pt);
-
-		Vector att_lsa = new Vector(2);
-		att_lsa.add(LangModelAnalyse.String("markerABlsaatt"));
-		att_lsa.add("");
-		tModel.insertRow(att_lsa);
-
-		Vector orl_2pt = new Vector(2);
-		orl_2pt.add(LangModelAnalyse.String("markerABorl"));
-		orl_2pt.add("");
-		tModel.insertRow(orl_2pt);
+	public void bsHashRemovedAll()
+	{
+		setVisible(false);
 	}
 }

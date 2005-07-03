@@ -10,7 +10,7 @@ import javax.swing.text.Document;
 public class TextFieldEditor extends JTextField
 		implements PropertyRenderer, PropertyEditor
 {
-    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1); 
+    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
 	public TextFieldEditor()
 	{
@@ -36,7 +36,7 @@ public class TextFieldEditor extends JTextField
 		setBackground(SystemColor.window);
 	}
 
-    public TextFieldEditor(int columns) 
+    public TextFieldEditor(int columns)
 	{
         super(columns);
 		setOpaque(true);
@@ -48,7 +48,7 @@ public class TextFieldEditor extends JTextField
 		setBackground(SystemColor.window);
     }
 
-    public TextFieldEditor(String text, int columns) 
+    public TextFieldEditor(String text, int columns)
 	{
         super(text, columns);
 		setOpaque(true);
@@ -60,7 +60,7 @@ public class TextFieldEditor extends JTextField
 		setBackground(SystemColor.window);
     }
 
-    public TextFieldEditor(Document doc, String text, int columns) 
+    public TextFieldEditor(Document doc, String text, int columns)
 	{
         super(doc, text, columns);
 		setOpaque(true);

@@ -4,43 +4,34 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-INCIDLDIR=../idl_v1/idl
+IDLDIR=../idl_v1/idl
 
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/servermisc.jar
+JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
+$(call checkenve,IDLJ)
+
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
-IDL2JAVA=$(JAVA_HOME)/bin/idlj
-IDL2JAVAFLAGS = \
-	-fall \
-	-i $(IDLDIR) \
-	-i $(INCIDLDIR) \
-	-td $(SRCDIR) \
-	-v
-
-#JAVAC = $(JAVA_HOME)/bin/javac
-#JAVACFLAGS = \
-	-O \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-encoding $(ENCODING) \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java)
 
 
-all: $(LIBNAME) $(LIBNAME_INTERFACE)
+all:	$(LIBNAME) $(LIBNAME_INTERFACE)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
+.PHONY: interface
+interface: $(LIBNAME_INTERFACE)
+
+.PHONY: interface
+interface: $(LIBNAME_INTERFACE)
 
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
@@ -49,14 +40,16 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/cmserver/corba/_CMServerStub.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/cmserver/corba/CMServerHelper.class \
 		-C $(CLASSDIR) com/syrus/AMFICOM/cmserver/corba/CMServerHolder.class
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
+	$(IDLJ) $(IDLJFLAGS) \
 		$(IDLDIR)/cmserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
@@ -69,18 +62,23 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba
-	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/cmserver/*.class
-	rm -f .mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/cmserver/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/cmserver/corba
-	rm -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/cmserver/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/cmserver/corba
+	$(RM) .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
 .PHONY:	arch
@@ -88,4 +86,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/cmserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
+		$(SOURCES)
+

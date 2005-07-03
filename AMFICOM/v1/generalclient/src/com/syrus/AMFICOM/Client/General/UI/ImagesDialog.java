@@ -1,17 +1,25 @@
+/*
+ * $Id: ImagesDialog.java,v 1.6 2005/05/18 14:01:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
-import java.awt.Frame;
-import java.awt.Dimension;
+
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
+import java.awt.*;
+import java.awt.event.*;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
-
-public class ImagesDialog extends JDialog 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/18 14:01:18 $
+ * @module generalclient_v1
+ */
+public class ImagesDialog extends JDialog
 {
 	private ImagesPanel jPanel1;
 	private BorderLayout borderLayout1 = new BorderLayout();
@@ -41,7 +49,7 @@ public class ImagesDialog extends JDialog
 
 	private void jbInit() throws Exception
 	{
-		jPanel1 = new ImagesPanel(aContext.getDataSourceInterface());
+		jPanel1 = new ImagesPanel(aContext.getDataSource());
 		this.setSize(new Dimension(400, 300));
 		this.setResizable(false);
 		this.getContentPane().setLayout(borderLayout1);
@@ -63,12 +71,12 @@ public class ImagesDialog extends JDialog
 			});
 	}
 
-	public ImageResource getImageResource()
+	public AbstractImageResource getImageResource()
 	{
 		return jPanel1.getImageResource();
 	}
 
-	public void setImageResource(ImageResource ir)
+	public void setImageResource(AbstractImageResource ir)
 	{
 		jPanel1.setImageResource(ir);
 	}

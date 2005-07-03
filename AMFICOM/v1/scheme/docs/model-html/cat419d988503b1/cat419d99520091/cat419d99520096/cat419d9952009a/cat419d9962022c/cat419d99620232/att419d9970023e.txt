@@ -1,0 +1,3 @@
+*
+						 * Getter returns optical length of this scheme link or scheme cable link.
+						 * @see #opticalLength

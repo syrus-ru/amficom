@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.ReportBuilder;
 
-
+import java.util.Iterator;
+import java.util.Map;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -10,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ReportDataSourceImage;
@@ -93,9 +94,9 @@ public class SelectTemplate extends JDialog
 		super(frame,"",true);
 
 		if (mode == SelectTemplate.OPEN)
-			this.setTitle(LangModelReport.String("label_openTemplate"));
+			this.setTitle(LangModelReport.getString("label_openTemplate"));
 		if (mode == SelectTemplate.SAVE)
-			this.setTitle(LangModelReport.String("label_saveTemplate"));
+			this.setTitle(LangModelReport.getString("label_saveTemplate"));
 
 		this.owner = frame;
 		this.mode = mode;
@@ -128,9 +129,9 @@ public class SelectTemplate extends JDialog
 
 		openSaveButton.setMargin(new Insets(2, 2, 2, 2));
 		if (mode == OPEN)
-			openSaveButton.setText(LangModelReport.String("label_open"));
+			openSaveButton.setText(LangModelReport.getString("label_open"));
 		if (mode == SAVE)
-			openSaveButton.setText(LangModelReport.String("label_save"));
+			openSaveButton.setText(LangModelReport.getString("label_save"));
 
 		openSaveButton.setEnabled(false);
 
@@ -141,7 +142,7 @@ public class SelectTemplate extends JDialog
 				openSaveButton_actionPerformed(e);
 			}
 		});
-		cancelButton.setText(LangModelReport.String("label_cancel"));
+		cancelButton.setText(LangModelReport.getString("label_cancel"));
 		cancelButton.setMargin(new Insets(2, 2, 2, 2));
 
 		cancelButton.addActionListener(new ActionListener()
@@ -152,7 +153,7 @@ public class SelectTemplate extends JDialog
 			}
 		});
 		removeButton.setMargin(new Insets(2, 2, 2, 2));
-		removeButton.setText(LangModelReport.String("label_delete"));
+		removeButton.setText(LangModelReport.getString("label_delete"));
 		removeButton.setEnabled(false);
 
 		removeButton.addActionListener(new ActionListener()
@@ -220,14 +221,13 @@ public class SelectTemplate extends JDialog
 		new ReportDataSourceImage(
 				owner.aContext.getDataSourceInterface()).LoadReportTemplates();
 
-		Hashtable rtHash = Pool.getHash(ReportTemplate.typ);
+		Map rtHash = Pool.getMap(ReportTemplate.typ);
 		if (rtHash == null)
 			return;
 
-		Enumeration rtEnum = rtHash.elements();
-		while (rtEnum.hasMoreElements())
+    for (Iterator it = rtHash.values().iterator(); it.hasNext();)
 		{
-			ReportTemplate curRT = (ReportTemplate) rtEnum.nextElement();
+			ReportTemplate curRT = (ReportTemplate) it.next();
 			String curType = comboData[templateTypesComboBox.getSelectedIndex()];
 			if (curRT.templateType.equals(curType) || curType.equals(ReportTemplate.rtt_AllTemplates))
 				this.templatesList.add(curRT);
@@ -236,17 +236,27 @@ public class SelectTemplate extends JDialog
 
 	private void setComboBoxData()
 	{
-		comboData = new String[7];
+		comboData = new String[11];
 		comboData[0] = ReportTemplate.rtt_AllTemplates;
-		comboData[1] = ReportTemplate.rtt_Evaluation;
-		comboData[2] = ReportTemplate.rtt_Analysis;
-		comboData[3] = ReportTemplate.rtt_Prediction;
-		comboData[4] = ReportTemplate.rtt_Modeling;
-		comboData[5] = ReportTemplate.rtt_Survey;
-		comboData[6] = ReportTemplate.rtt_Optimization;
+
+		comboData[1] = ReportTemplate.rtt_Scheme;
+		comboData[2] = ReportTemplate.rtt_Map;
+		comboData[3] = ReportTemplate.rtt_Optimization;
+    
+		comboData[4] = ReportTemplate.rtt_Scheduler;        
+    
+		comboData[5] = ReportTemplate.rtt_Analysis;
+		comboData[6] = ReportTemplate.rtt_Survey;    
+		comboData[7] = ReportTemplate.rtt_Evaluation;
+
+		comboData[8] = ReportTemplate.rtt_Prediction;
+		comboData[9] = ReportTemplate.rtt_Modeling;
+
+		comboData[10] = ReportTemplate.rtt_Observe;
+
 
 		for (int i = 0; i < comboData.length; i++)
-			templateTypesComboBox.addItem(LangModelReport.String(comboData[i]));
+			templateTypesComboBox.addItem(LangModelReport.getString(comboData[i]));
 	}
 
 	private void openSaveButton_actionPerformed(ActionEvent e)
@@ -259,8 +269,8 @@ public class SelectTemplate extends JDialog
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("error_noTemplate"),
-						LangModelReport.String("label_error"),
+						LangModelReport.getString("error_noTemplate"),
+						LangModelReport.getString("label_error"),
 						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -268,10 +278,10 @@ public class SelectTemplate extends JDialog
 			//Это всё для правильного отображения на схеме
 			ReportBuilder.loadRequiredObjects(owner.aContext,selectedTemplate);
 
-			for (int j = 0; j < selectedTemplate.objectRenderers.size(); j++)
+      for (ListIterator lIt = selectedTemplate.objectRenderers.listIterator(); lIt.hasNext();)
 			{
 				ObjectsReport report =
-					((RenderingObject)selectedTemplate.objectRenderers.get(j)).getReportToRender();
+					((RenderingObject)lIt.next()).getReportToRender();
 				try
 				{
 					report.setReserve(report.getReserve());
@@ -294,8 +304,8 @@ public class SelectTemplate extends JDialog
 			{
 				int replace = JOptionPane.showConfirmDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("label_templateExists"),
-						LangModelReport.String("label_confirm"),
+						LangModelReport.getString("label_templateExists"),
+						LangModelReport.getString("label_confirm"),
 						JOptionPane.YES_NO_OPTION);
 				if (replace == JOptionPane.NO_OPTION)
 					return;
@@ -312,9 +322,10 @@ public class SelectTemplate extends JDialog
 			//меняем ID
 			DataSourceInterface dsi = this.owner.aContext.getDataSourceInterface();
 			templateToSave.id = dsi.GetUId(ReportTemplate.typ);
-			for (int i = 0; i < templateToSave.objectRenderers.size(); i++)
+      
+      for (ListIterator lIt = templateToSave.objectRenderers.listIterator(); lIt.hasNext();)      
 			{
-				RenderingObject curRO = (RenderingObject) templateToSave.objectRenderers.get(i);
+				RenderingObject curRO = (RenderingObject) lIt.next();
 				curRO.id = this.owner.aContext.getDataSourceInterface().GetUId("reporttemplatefield");
 			}
 
@@ -339,16 +350,16 @@ public class SelectTemplate extends JDialog
 	private void removeButton_actionPerformed(ActionEvent e)
 	{
 		int[] selIndices = this.templatesList.getSelectedIndices();
-		Vector selTemplates = new Vector();
+		List selTemplates = new ArrayList();
 
 		for (int i = 0; i < selIndices.length; i++)
 			selTemplates.add((ReportTemplate)this.templatesList.
 				getModel().getElementAt(selIndices[i]));
 
 
-		for (int i = 0; i < selTemplates.size(); i++)
+		for (ListIterator lIt = selTemplates.listIterator(); lIt.hasNext();)
 		{
-			ReportTemplate rt = (ReportTemplate) selTemplates.get(i);
+			ReportTemplate rt = (ReportTemplate) lIt.next();
 			if (rt != null)
 			{
 				this.owner.aContext.getDataSourceInterface().RemoveReportTemplates(
@@ -398,14 +409,14 @@ public class SelectTemplate extends JDialog
 	{
 		int curLength = selectedTemplateNameField.getText().length();
 
-		if ((e.getKeyCode() == e.VK_BACK_SPACE) ||
-				(e.getKeyCode() == e.VK_DELETE))
+		if ((e.getKeyCode() == KeyEvent.VK_BACK_SPACE) ||
+				(e.getKeyCode() == KeyEvent.VK_DELETE))
 			curLength--;
 		else
 			if (!(e.isActionKey() ||
-					 (e.getKeyCode() == e.VK_ALT) ||
-					 (e.getKeyCode() == e.VK_CONTROL) ||
-					 (e.getKeyCode() == e.VK_SHIFT)))
+					 (e.getKeyCode() == KeyEvent.VK_ALT) ||
+					 (e.getKeyCode() == KeyEvent.VK_CONTROL) ||
+					 (e.getKeyCode() == KeyEvent.VK_SHIFT)))
 				curLength++;
 
 		if (curLength > 0)

@@ -14,7 +14,7 @@ public class DefaultModelApplicationModelFactory
 		aModel.setUsable("menuSessionSave", false);
 		aModel.setUsable("menuSessionUndo", false);
 		aModel.setVisible("menuSessionOptions", false);
-		aModel.setVisible("menuView", false);
+		//aModel.setVisible("menuView", false);
 
 		aModel.setUsable("menuHelpContents", false);
 		aModel.setUsable("menuHelpFind", false);

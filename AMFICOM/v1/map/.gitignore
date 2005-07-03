@@ -1,0 +1,16 @@
+classes
+docs
+lib
+*.deploy
+*.jar
+*.jpr
+*.jpx*
+*.swp
+*.tar
+*.gz
+.corba
+.ora
+.mach
+.classpath
+.project
+.settings

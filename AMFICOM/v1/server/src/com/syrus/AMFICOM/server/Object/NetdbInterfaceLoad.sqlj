@@ -1,25 +1,31 @@
+/*
+ * $Id: NetdbInterfaceLoad.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import java.sql.*;
+import java.util.Vector;
+import sqlj.runtime.SQLNullException;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetdbInterfaceLoad
 {
 	protected NetdbInterfaceLoad()
 	{
 	}
 
-	static public Vector loadCharacteristics(
+	public static Vector loadCharacteristics(
 			String charTable,
 			String charField,
 			String element_id)
@@ -126,7 +132,7 @@ public class NetdbInterfaceLoad
 		return vector2;
 	}
 
-	static public Vector loadElementPorts(String element_id)
+	public static Vector loadElementPorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -161,7 +167,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	static public Vector loadElementCablePorts(String element_id)
+	public static Vector loadElementCablePorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -196,7 +202,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	static public Vector loadElementTestPorts(String element_id)
+	public static Vector loadElementTestPorts(String element_id)
 	{
 		IdIterator idIt = null;
 		Vector vector = new Vector();
@@ -231,7 +237,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	static public Vector loadCableThreads(String cable_id)
+	public static Vector loadCableThreads(String cable_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -309,7 +315,7 @@ public class NetdbInterfaceLoad
 		return vector;
 	}
 
-	static public Object loadPort(String port_id)
+	public static Object loadPort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -413,7 +419,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	static public Object loadCablePort(String port_id)
+	public static Object loadCablePort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -516,7 +522,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	static public Object loadTestPort(String port_id)
+	public static Object loadTestPort(String port_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -585,7 +591,7 @@ public class NetdbInterfaceLoad
 		}
 	}
 
-	static public Object loadLink(String link_id)
+	public static Object loadLink(String link_id)
 	{
 		int k;
 
@@ -756,7 +762,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	static public Object loadCableLink(String link_id)
+	public static Object loadCableLink(String link_id)
 	{
 		int k;
 
@@ -932,7 +938,7 @@ public class NetdbInterfaceLoad
 		
 	}
 
-	static public Object loadEquipment(String equipment_id)
+	public static Object loadEquipment(String equipment_id)
 	{
 		String It_id = "";
 		String It_name = "";
@@ -1119,7 +1125,7 @@ public class NetdbInterfaceLoad
 		}
 	}
 
-	static public int loadPorts(
+	public static int loadPorts(
 			PortSeq_TransferableHolder portseq)
 	{
 		String It_id = "";
@@ -1234,7 +1240,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadEquipments(
+	public static int loadEquipments(
 			String domain_id,
 			EquipmentSeq_TransferableHolder equipments,
 			Vector port_vec,
@@ -1458,7 +1464,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadLinks(
+	public static int loadLinks(
 			String domain_id,
 			LinkSeq_TransferableHolder links)
 	{
@@ -1638,7 +1644,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadCableLinks(
+	public static int loadCableLinks(
 			String domain_id,
 			CableLinkSeq_TransferableHolder links)
 	{
@@ -1821,7 +1827,7 @@ public class NetdbInterfaceLoad
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadTestPorts(
+	public static int loadTestPorts(
 			TestPortSeq_TransferableHolder tportseq)
 	{
 		String It_id = "";
@@ -2017,6 +2023,4 @@ public class NetdbInterfaceLoad
 		String color,
 		String mark,
 		String link_type_id);
-
 }
-

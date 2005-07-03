@@ -72,3 +72,4 @@ void Vector::killElements()
 	size = 0;
 	return;
 }
+

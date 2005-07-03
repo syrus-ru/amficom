@@ -1,32 +1,49 @@
+/*
+ * $Id: Transceiver.java,v 1.4 2004/07/21 08:18:10 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.agent;
 
-public class Transceiver  {
-  private static String measurement_id;
-  private static String[] par_names;
-  private static byte[][] par_values;
+/**
+ * @version $Revision: 1.4 $, $Date: 2004/07/21 08:18:10 $
+ * @author $Author: arseniy $
+ * @module agent_v1
+ */
 
-  static {
-    System.loadLibrary("agenttransceiver");
-  }
+public class Transceiver {
+	private static String measurementId;
+	private static String[] parNames;
+	private static byte[][] parValues;
+
+	private Transceiver() {
+	}
+
+	static {
+		System.loadLibrary("agenttransceiver");
+	}
 
   public static native int call(String fileName);
   public static native boolean read1(int fileHandle, String fileName);
   public static native boolean push1(int fileHandle, String fileName,
-                                      String measurement_id,
-                                      String measurement_type_id,
-                                      String local_address,
-                                      String[] par_names,
-                                      byte[][] par_values);
+                                      String measurementId,
+                                      String measurementTypeId,
+                                      String localAddress,
+                                      String[] parNames,
+                                      byte[][] parValues);
 
   public static String getMeasurementId() {
-    return measurement_id;
+    return measurementId;
   }
 
   public static String[] getParameterNames() {
-    return par_names;
+    return parNames;
   }
 
-  public static byte[][] getParameterValues() {
-    return par_values;
-  }
+	public static byte[][] getParameterValues() {
+		return parValues;
+	}
 }

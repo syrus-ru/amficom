@@ -6,7 +6,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class WindowCloseAllCommand extends VoidCommand 
+public class WindowCloseAllCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;

@@ -54,8 +54,8 @@ public class GraphFrame extends JInternalFrame implements OperationListener
 	//--------------------------------------------------------------------------------------------------------------
 	private void jbInit() throws Exception
 	{	tModel = new GeneralTableModel(
-					new String[] {LangModelOptimize.String("overallKey"),
-												LangModelOptimize.String("overallValue")},
+					new String[] {LangModelOptimize.getString("overallKey"),
+												LangModelOptimize.getString("overallValue")},
 					new String[] {"1", "2"},
 					0);
 		jTable = new JTable(tModel);
@@ -67,7 +67,7 @@ public class GraphFrame extends JInternalFrame implements OperationListener
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelOptimize.String("overallTitle"));
+		this.setTitle(LangModelOptimize.getString("overallTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -88,27 +88,27 @@ public class GraphFrame extends JInternalFrame implements OperationListener
 	{	tModel.clearTable();
 
 		Vector length = new Vector(2);
-		length.add(LangModelOptimize.String("totalLength"));
+		length.add(LangModelOptimize.getString("totalLength"));
 		length.add("");
 		tModel.insertRow(length);
 
 		Vector loss = new Vector(2);
-		loss.add(LangModelOptimize.String("totalLoss"));
+		loss.add(LangModelOptimize.getString("totalLoss"));
 		loss.add("");
 		tModel.insertRow(loss);
 
 		Vector attenuation = new Vector(2);
-		attenuation.add(LangModelOptimize.String("totalAttenuation"));
+		attenuation.add(LangModelOptimize.getString("totalAttenuation"));
 		attenuation.add("");
 		tModel.insertRow(attenuation);
 
 		Vector orl = new Vector(2);
-		orl.add(LangModelOptimize.String("totalReturnLoss"));
+		orl.add(LangModelOptimize.getString("totalReturnLoss"));
 		orl.add("");
 		tModel.insertRow(orl);
 
 		Vector evNum = new Vector(2);
-		evNum.add(LangModelOptimize.String("totalEvents"));
+		evNum.add(LangModelOptimize.getString("totalEvents"));
 		evNum.add("");
 		tModel.insertRow(evNum);
 	}

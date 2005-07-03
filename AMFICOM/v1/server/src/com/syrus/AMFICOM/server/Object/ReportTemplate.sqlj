@@ -1,13 +1,23 @@
+/*
+ * $Id: ReportTemplate.sqlj,v 1.5 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Report.*;
+import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
 import java.sql.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.Report.*;
-
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ReportTemplate
 {
 	private String id;
@@ -18,6 +28,8 @@ public class ReportTemplate
 
 	private RenderingObject[] ros;
 	private FirmedTextPane[] boxes;
+	private ImagePane[] images;
+	private FilterTemplate[] filters;  
 
 	public ReportTemplate(ReportTemplate_Transferable rt)
 			throws Exception
@@ -62,6 +74,36 @@ public class ReportTemplate
 		this.boxes = new FirmedTextPane[len2];
 		for(int i = 0; i < len2; i++)
 			boxes[i] = new FirmedTextPane(rt.firmedTextPanes[i], this.id);
+      
+		int len3 = rt.imagePanes.length;
+		this.images = new ImagePane[len3];
+		for(int i = 0; i < len3; i++)
+			images[i] = new ImagePane(rt.imagePanes[i], this.id);
+      
+		int len4 = rt.filters.length;
+		this.filters = new FilterTemplate[len4];
+		for(int i = 0; i < len4; i++)
+    {
+			filters[i] = new FilterTemplate(rt.filters[i]);
+      try 
+      {
+        #sql{ insert into REPORTTEMPLATEFILTERS (
+            REPORT_TEMPLATE_ID, 
+            FILTER_ID)
+          values(
+            :(this.id), 
+            :(filters[i].getId()))
+        };
+        #sql { commit };
+      } 
+      catch (Exception ex) 
+      {
+        System.out.println("error saving new report template: " + ex.getMessage());
+        ex.printStackTrace();
+        throw ex;
+      } 
+      
+    }
 	}
 
 	public ReportTemplate(String id)
@@ -103,6 +145,10 @@ public class ReportTemplate
 
 			ros = RenderingObject.retrieveRenderingObjects(this.id);
 			boxes = FirmedTextPane.retrieveBoxes(this.id);
+			images = ImagePane.retrieveImages(this.id);
+			
+			filters = getFilters();
+
 		}
 		catch(Exception e)
 		{
@@ -111,6 +157,35 @@ public class ReportTemplate
 			e.printStackTrace();
 			throw e;
 		}
+	}
+
+	public FilterTemplate[] getFilters()
+	{
+		try
+		{
+			//Выбрали фильтры этого шаблона
+			ReportFilterIterator rfIt = null;
+				
+			#sql rfIt = { select
+					REPORT_TEMPLATE_ID,
+					FILTER_ID
+				from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :id
+			};
+	
+			Vector rep_filters = new Vector();
+			while(rfIt.next())
+			{
+				FilterTemplate ft = new FilterTemplate(rfIt.filter_id());
+				rep_filters.add(ft);
+			}
+			return (FilterTemplate[] )rep_filters.toArray(new FilterTemplate[0]);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Cannot load filter s for reporttemplate " + this.id);
+		}
+		return new FilterTemplate[0];
 	}
 
 	public ReportTemplate_Transferable getTransferable()
@@ -124,6 +199,14 @@ public class ReportTemplate
 		for (int i = 0; i < boxes.length; i++)
 			boxes_t[i] = this.boxes[i].getTransferable();
 
+		ImagePane_Transferable[] images_t = new ImagePane_Transferable[this.images.length];
+		for (int i = 0; i < images.length; i++)
+			images_t[i] = this.images[i].getTransferable();
+
+		Filter_Transferable[] filters_t = new Filter_Transferable[this.filters.length];
+		for (int i = 0; i < filters.length; i++)
+			filters_t[i] = this.filters[i].getTransferable();
+
 		return new ReportTemplate_Transferable(
 			this.id,
 			this.name,
@@ -131,7 +214,9 @@ public class ReportTemplate
 			this.description,
 			this.template_type,
 			ros_t,
-			boxes_t);
+			boxes_t,
+			images_t,
+			filters_t);
 	}
 
 	public long getModified()
@@ -159,6 +244,12 @@ public class ReportTemplate
 			#sql { delete from AMFICOM.REPORTTEMPLATEBOXES
 				where REPORT_TEMPLATE_ID = :(this.id)
 			};
+			#sql { delete from AMFICOM.REPORTIMAGEPANES
+				where REPORT_TEMPLATE_ID = :(this.id)
+			};
+      
+			removeFilters();
+	  
 			#sql { delete from AMFICOM.REPORTTEMPLATES
 				where ID = :(this.id)
 			};
@@ -170,6 +261,35 @@ public class ReportTemplate
 			ex.printStackTrace();
 			throw ex;
 		} 
+	}
+	
+	public void removeFilters()
+	{
+		try
+		{
+			//Выбрали фильтры этого шаблона
+			ReportFilterIterator rfIt = null;
+			#sql rfIt = { select
+					REPORT_TEMPLATE_ID,
+					FILTER_ID
+				from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :id
+			};
+			//Уничтожили их
+			while(rfIt.next())
+			{
+				#sql { delete from AMFICOM.FILTERS
+					where ID = :(rfIt.filter_id())
+				};
+			}
+			//И уничтожили ссылки на них в связывающей таблице
+			#sql { delete from AMFICOM.REPORTTEMPLATEFILTERS
+				where REPORT_TEMPLATE_ID = :(this.id)
+			};
+		}
+		catch(Exception e)
+		{
+		}
 	}
 
 	public void update(ReportTemplate_Transferable rt) throws Exception
@@ -204,22 +324,12 @@ public class ReportTemplate
 		this.setReportTemplateFields(rt.renderingObjects);
 
 		this.setReportTemplateBoxes(rt.firmedTextPanes);
+    
+		this.setReportTemplateImages(rt.imagePanes);    
+    
+		this.setReportTemplateFilters(rt.filters);    
 	}
-/*
-	public String[] getFieldReportIds()
-	{
-		Vector vec = new Vector();
-		for(int i = 0; i < ros.length; i++)
-		{
-			String id = ros[i].getFieldReportId();
-			if(!vec.contains(id))
-				vec.add(id);
-		}
-		String[] ids = new String[vec.size()];
-		vec.copyInto(ids);
-		return ids;
-	}
-*/
+
 	public void setReportTemplateFields(RenderingObject_Transferable[] renderingObjects) throws Exception
 	{
 		int len = renderingObjects.length;
@@ -252,6 +362,31 @@ public class ReportTemplate
 			boxes[i] = new FirmedTextPane(firmedTextPanes[i], this.id);
 	}
 
+	public void setReportTemplateImages(ImagePane_Transferable[] imagePanes) throws Exception
+	{
+		int len = imagePanes.length;
+		this.images = new ImagePane[len];
+
+		#sql{ delete from AMFICOM.REPORTIMAGEPANES
+			where REPORT_TEMPLATE_ID =:(this.id)
+		};
+		#sql { commit };
+
+		for(int i = 0; i < len; i++)
+			images[i] = new ImagePane(imagePanes[i], this.id);
+	}
+
+	public void setReportTemplateFilters(Filter_Transferable[] new_filters) throws Exception
+	{
+		int len = new_filters.length;
+		this.filters = new FilterTemplate[len];
+
+		removeFilters();
+
+		for(int i = 0; i < len; i++)
+			filters[i] = new FilterTemplate(new_filters[i]);
+	}
+
 	#sql public static iterator ReportTemplateIterator(
 		String id,
 		String name,
@@ -259,6 +394,7 @@ public class ReportTemplate
 		String description,
 		String template_type);
 
-
+	#sql public static iterator ReportFilterIterator(
+		String report_template_id,
+		String filter_id);
 }
-

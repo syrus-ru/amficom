@@ -1,42 +1,31 @@
-package com.syrus.AMFICOM.Client.Schematics.Report;
+/*package com.syrus.AMFICOM.Client.Schematics.Report;
 
-import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanelNoEdition;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
+import java.util.*;
 
 import javax.swing.JComponent;
 
-import java.util.Vector;
-
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
 public class SchemeReportModel extends APOReportModel
 {
 	public String getName() {return "schemereportmodel";}
 
-	public static String scheme = "label_scheme";
+	public static String scheme = "schemeMainTitle";
+	public static String ugo = "elementsUGOTitle";
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repPhysicalScheme");
+		return LangModelReport.getString("label_repPhysicalScheme");
 	}
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		String return_value = this.getObjectsName() + ":" + LangModelReport.String(rp.field);
+		String return_value = this.getObjectsName() + ":" + LangModelSchematics.getString(rp.field);
 		if (rp.reserveName != null)
 			return_value += rp.reserveName;
 
@@ -45,7 +34,7 @@ public class SchemeReportModel extends APOReportModel
 
 	public String getLangForField(String field)
 	{
-		return LangModelReport.String(field);
+		return LangModelSchematics.getString(field);
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)
@@ -60,11 +49,12 @@ public class SchemeReportModel extends APOReportModel
 	{
 	}
 
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new ArrayList(2);
 
 		result.add(SchemeReportModel.scheme);
+		result.add(SchemeReportModel.ugo);
 
 		return result;
 	}
@@ -85,9 +75,9 @@ public class SchemeReportModel extends APOReportModel
 		}
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
-		return false;
+		return -1;
 	}
 
 	public JComponent createReport(
@@ -99,29 +89,41 @@ public class SchemeReportModel extends APOReportModel
 
 			throws CreateReportException
 	{
-		JComponent returnValue = null;
+		SchemeRenderPanel schemePanel = null;
 
-		if (rp.field.equals(SchemeReportModel.scheme))
+		if (  rp.field.equals(SchemeReportModel.scheme)
+			 || rp.field.equals(SchemeReportModel.ugo))
 		{
-			SchemePanelNoEdition schemePanel = new SchemePanelNoEdition(aContext);
-			Scheme sc = (Scheme) Pool.get(Scheme.typ,(String) rp.getReserve());
-			if (sc == null)
-				throw new CreateReportException(
-					rp.getName(),
-					CreateReportException.cantImplement);
+			Scheme sc = null;
 
+			if (rp.getReserve() instanceof UgoPanel)
+			{
+				sc = ((UgoPanel) rp.getReserve()).getGraph().getScheme();
+			} else
+			{
+				sc = (Scheme) Pool.get(Scheme.typ, (String) rp.getReserve());
+				if (sc == null)
+					throw new CreateReportException(
+						rp.getName(),
+						CreateReportException.cantImplement);
+			}
+
+			schemePanel = new SchemeRenderPanel(aContext);
 			schemePanel.openScheme(sc);
 
-			SchemeGraph schemeGraph = schemePanel.getGraph();
 			RenderingObject reportsRO = rt.findROforReport(rp);
-
-			returnValue = new SchemeRenderPanel(reportsRO, schemeGraph);
+			schemePanel.initializeSize(reportsRO);
 		}
 
-		return returnValue;
+		return schemePanel;
 	}
 
-	public void setData(ReportTemplate rt,Object data)
+	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
-	};
+		if (rt.templateType.equals(ReportTemplate.rtt_Scheme))
+		{
+			super.setData(rt,aReport);
+		}
+	}
 }
+*/

@@ -1,134 +1,136 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: команда, включающая в себя несколько команд                * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Command\CommandBundle.java                            * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * $Id: CommandBundle.java,v 1.9 2005/05/18 14:01:20 bass Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.ListIterator;
 
-public class CommandBundle implements Command
+/**
+ *  Название: команда, включающая в себя несколько команд
+ *
+ *
+ *
+ * @version $Revision: 1.9 $, $Date: 2005/05/18 14:01:20 $
+ * @module
+ * @author $Author: bass $
+ * @see
+ */
+public class CommandBundle extends VoidCommand implements Command
 {
-	protected Vector commands;			// список команд
+	/** список команд */
+	protected List commands = new ArrayList();
 
 	public CommandBundle()
 	{
 	}
 
-	public Object clone()				// получить копию команды
+	/**
+	 * получить копию команды
+	 */
+	public Object clone()
 	{
 		Command c;
 		CommandBundle cb = new CommandBundle();
-		cb.commands = new Vector();
-		for(Enumeration e = commands.elements(); e.hasMoreElements();)
+		cb.commands = new ArrayList();
+		for(ListIterator e = commands.listIterator(); e.hasNext();)
 		{
-			c = (Command )e.nextElement();
+			c = (Command )e.next();
 			cb.commands.add(c.clone());
 		}
 		return cb;
 	}
 
-	public void add(Command command)	// добавить в список команду
+	/**
+	 * добавить в список команду
+	 */
+	public void add(Command command)
 	{
 		commands.add(command);
 	}
 
-	public void remove(Command command)	// удалить команду из списка
+	/**
+	 * удалить команду из списка
+	 */
+	public void remove(Command command)
 	{
 		commands.remove(command);
 	}
 
-	public void remove(int index)		// удалить команду из списка
+	/**
+	 * удалить команду из списка
+	 */
+	public void remove(int index)
 	{
 		commands.remove(index);
 	}
 
-	public void execute()				// выполнить - все команды в списке
+	/**
+	 * выполнить - все команды в списке
+	 */
+	public void execute()
 	{
-		int i;
-		int count = getCount();
-		for(i = 0; i < count; i++)
+		for(ListIterator it = commands.listIterator();it.hasNext();)
 		{
-			Command command = (Command )commands.get(i);
+			Command command = (Command )it.next();
 			command.execute();
 		}
 	}
 
-	public int getResult()
+	/**
+	 * обратно выполнить - все команды в списке в обратном порядке
+	 */
+	public void undo()
 	{
-		return RESULT_OK;
-	}
-
-	public void undo()					// обратно выполнить - все команды 
-										// в списке в обратном порядке
-	{
-		int i;
-		int count = getCount();
-		for(i = count - 1; i >= 0; i--)
+		for(ListIterator it = commands.listIterator(commands.size());it.hasPrevious();)
 		{
-			Command command = (Command )commands.get(i);
+			Command command = (Command )it.previous();
 			command.undo();
 		}
 	}
 
-	public void redo()		// выполнить - команды в списке повторно - ничем не
-							// отличается от первого выполнения списка команд
+	/**
+	 * выполнить - команды в списке повторно
+	 */
+	public void redo()
 	{
-		execute();
-	}
-
-	public void commit_execute()		// подтверждение выполнения - 
-										// подтвердить для всех команд
-	{
-		int i;
-		int count = getCount();
-		for(i = 0; i < count; i++)
+		for(ListIterator it = commands.listIterator();it.hasNext();)
 		{
-			Command command = (Command )commands.get(i);
-			command.commit_execute();
+			Command command = (Command )it.next();
+			command.redo();
 		}
 	}
 
-	public void commit_undo()			// подтверждение обратного выполнения -
-										// подтвердить для всех команд
+	/**
+	 * подтверждение выполнения - подтвердить для всех команд
+	 */
+	public void commitExecute()
 	{
-		int i;
-		int count = getCount();
-		for(i = count - 1; i >= 0; i--)
+		for(ListIterator it = commands.listIterator();it.hasNext();)
 		{
-			Command command = (Command )commands.get(i);
-			command.commit_undo();
+			Command command = (Command )it.next();
+			command.commitExecute();
+		}
+	}
+
+	/**
+	 * подтверждение обратного выполнения - подтвердить для всех команд
+	 */
+	public void commitUndo()
+	{
+		for(ListIterator it = commands.listIterator(commands.size());it.hasPrevious();)
+		{
+			Command command = (Command )it.previous();
+			command.commitUndo();
 		}
 	}
 
@@ -137,13 +139,22 @@ public class CommandBundle implements Command
 		return null;
 	}
 
-	public int getCount()		// получить количество команд в данной команде
+	/**
+	 * получить количество команд в данной команде
+	 */
+	public int getCount()
 	{
 		return commands.size();
 	}
 
 	public void setParameter(String field, Object value)
 	{
+		int i;
+		int count = getCount();
+		for(i = 0; i < count; i++)
+		{
+			Command command = (Command )commands.get(i);
+			command.setParameter(field, value);
+		}
 	}
 }
-

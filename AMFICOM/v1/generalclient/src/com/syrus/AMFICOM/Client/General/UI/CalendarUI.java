@@ -42,7 +42,7 @@ public class CalendarUI extends JPanel
 		}
 
 		mCanvas.init(this, cal);
-		monthLabel.setText(" " + sdf.format(getCalendar().getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(getCalendar().getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public static JDialog createDialogInstance(Calendar cal, boolean hideOnChoose)
@@ -57,7 +57,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -75,7 +75,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -93,8 +93,9 @@ public class CalendarUI extends JPanel
 			}
 		};
 		dialog.setModal(modal);
-		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+//		dialog.setSize(new Dimension(190, 190));
+		dialog.pack();
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -113,7 +114,7 @@ public class CalendarUI extends JPanel
 		};
 		dialog.setContentPane(instance);
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
 	}
@@ -131,7 +132,7 @@ public class CalendarUI extends JPanel
 		};
 		dialog.setModal(modal);
 		dialog.setSize(new Dimension(190, 190));
-		dialog.setTitle(LangModel.String("CalendarTitle"));
+		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return dialog;
@@ -149,7 +150,7 @@ public class CalendarUI extends JPanel
 			}
 		};
 		frame.setSize(new Dimension(190, 190));
-		frame.setTitle(LangModel.String("CalendarTitle"));
+		frame.setTitle(LangModel.getString("CalendarTitle"));
 		frame.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
 		return frame;
@@ -160,7 +161,7 @@ public class CalendarUI extends JPanel
 		CalendarUI instance = new CalendarUI(cal);
 		internalFrame = new JInternalFrame();
 		internalFrame.setSize(new Dimension(190, 190));
-		internalFrame.setTitle(LangModel.String("CalendarTitle"));
+		internalFrame.setTitle(LangModel.getString("CalendarTitle"));
 		internalFrame.setContentPane(instance);
 		return internalFrame;
 	}
@@ -213,9 +214,9 @@ public class CalendarUI extends JPanel
 		todayPanel = new JPanel(new FlowLayout());
 		todayPanel.add(
 			new JLabel(
-				LangModel.String("Today") + ": " +
-				new SimpleDateFormat("dd.MM.yyyy").format(mCanvas.todayCal.getTime()) +
-				LangModel.String("YearPostfix")),
+				LangModel.getString("Today") + ": " +
+				new SimpleDateFormat("dd.MM.yyyy").format(MonthCanvas.todayCal.getTime()) +
+				LangModel.getString("YearPostfix")),
 			BorderLayout.SOUTH);
 
 		add(monthPanel, BorderLayout.NORTH);
@@ -251,7 +252,7 @@ public class CalendarUI extends JPanel
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + 1);
 
 		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public void decrease()
@@ -266,7 +267,7 @@ public class CalendarUI extends JPanel
 			cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) - 1);
 
 		mCanvas.reinit();
-		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.String("YearPostfix"));
+		monthLabel.setText(" " + sdf.format(cal.getTime()) + LangModel.getString("YearPostfix"));
 	}
 
 	public void setMonthVisible(boolean b)
@@ -316,8 +317,8 @@ class MonthCanvas extends Container
 
 	void reinit()
 	{
-		if (this.todayCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH) &&
-				this.todayCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
+		if (todayCal.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
+			&& todayCal.get(Calendar.YEAR) == cal.get(Calendar.YEAR))
 			today = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 		else
 			today = 0;
@@ -331,7 +332,7 @@ class MonthCanvas extends Container
 		JPanel q = new JPanel(new GridLayout(0, weekNames.length));
 		for (int i=0; i<weekNames.length; i++)
 		{
-			JLabel l = new JLabel(weekNames[i], JLabel.CENTER);
+			JLabel l = new JLabel(weekNames[i], SwingConstants.CENTER);
 			q.setBackground(Color.gray);
 			q.add(l);
 		}
@@ -352,7 +353,7 @@ class MonthCanvas extends Container
 		cal.set(Calendar.DAY_OF_MONTH, temp_day);
 		// Fill the first few cells with blanks.
 		for (int i = fday; i < dayOfWeek; i++) {
-			calPanel.add(new JLabel(" ", JLabel.CENTER));
+			calPanel.add(new JLabel(" ", SwingConstants.CENTER));
 		}
 
 		// Add the days.
@@ -462,7 +463,7 @@ class MonthCanvas extends Container
 				g.setColor(Color.black);
 			g.drawString("" + day, x, y + fm.getAscent());
 
-			if (day == parent.today)
+			if (day == MonthCanvas.today)
 			{
 				g.setColor(Color.red);
 				g.drawImage(

@@ -1,30 +1,31 @@
+/*
+ * $Id: ObjectdbInterfaceSave.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import oracle.sql.*;
-
-import java.util.Vector;
-
-import com.syrus.io.*;
-import com.syrus.util.*;
-import com.syrus.util.database.*;
-
-import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ObjectdbInterfaceSave
 {
 	protected ObjectdbInterfaceSave()
 	{
 	}
 
-	static public int saveObjectPermission(ObjectPermissionAttributes_Transferable opa)
+	public static int saveObjectPermission(ObjectPermissionAttributes_Transferable opa)
 	{
 		try
 		{
@@ -140,7 +141,7 @@ public class ObjectdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveDomainLinks(String domain_id, String[] ids)
+	public static int saveDomainLinks(String domain_id, String[] ids)
 	{
 		try
 		{
@@ -169,7 +170,7 @@ public class ObjectdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveDomains(Domain_Transferable[] domainseq)
+	public static int saveDomains(Domain_Transferable[] domainseq)
 	{
 		int i;
 		int len;
@@ -286,7 +287,7 @@ public class ObjectdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveExecs(CommandPermissionAttributes_Transferable[] execseq)
+	public static int saveExecs(CommandPermissionAttributes_Transferable[] execseq)
 	{
 		int i;
 		int len;
@@ -409,7 +410,7 @@ public class ObjectdbInterfaceSave
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveUsers(User_Transferable[] userseq)
+	public static int saveUsers(User_Transferable[] userseq)
 	{
 		int i;
 		int len;
@@ -462,6 +463,4 @@ public class ObjectdbInterfaceSave
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-

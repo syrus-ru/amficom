@@ -1,20 +1,12 @@
 package com.syrus.AMFICOM.Client.Prediction;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JToolBar;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Lang.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class PredictionToolBar extends JToolBar implements ApplicationModelListener
 {
@@ -58,7 +50,7 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 		buttonOpenSession.setText("");
 		buttonOpenSession.setMaximumSize(buttonSize);
 		buttonOpenSession.setPreferredSize(buttonSize);
-		buttonOpenSession.setToolTipText(LangModelPrediction.ToolTip("menuSessionOpen"));
+		buttonOpenSession.setToolTipText(LangModelPrediction.getString("menuSessionOpen"));
 		buttonOpenSession.setName("menuSessionOpen");
 		buttonOpenSession.addActionListener(actionAdapter);
 
@@ -67,7 +59,7 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 //    buttonCloseSession.setText("");
 //    buttonCloseSession.setMaximumSize(buttonSize);
 //    buttonCloseSession.setPreferredSize(buttonSize);
-//    buttonCloseSession.setToolTipText(LangModelPrediction.ToolTip("menuSessionClose"));
+//    buttonCloseSession.setToolTipText(LangModelPrediction.getString("menuSessionClose"));
 //    buttonCloseSession.setName("menuSessionClose");
 //    buttonCloseSession.addActionListener(actionAdapter);
 
@@ -77,20 +69,20 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 		loadStatistics.setText("");
 		loadStatistics.setMaximumSize(buttonSize);
 		loadStatistics.setPreferredSize(buttonSize);
-		loadStatistics.setToolTipText(LangModelPrediction.ToolTip("menuViewDataLoad"));
+		loadStatistics.setToolTipText(LangModelPrediction.getString("menuViewDataLoad"));
 		loadStatistics.setName("menuViewDataLoad");
 		loadStatistics.addActionListener(actionAdapter);
 
 		traceAddCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_add.gif")));
 		traceAddCompare.setMaximumSize(buttonSize);
 		traceAddCompare.setPreferredSize(buttonSize);
-		traceAddCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceAddCompare"));
+		traceAddCompare.setToolTipText(LangModelAnalyse.getString("menuTraceAddCompare"));
 		traceAddCompare.setName("menuTraceAddCompare");
 		traceAddCompare.addActionListener(actionAdapter);
 		traceRemoveCompare.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/download_remove.gif")));
 		traceRemoveCompare.setMaximumSize(buttonSize);
 		traceRemoveCompare.setPreferredSize(buttonSize);
-		traceRemoveCompare.setToolTipText(LangModelAnalyse.ToolTip("menuTraceRemoveCompare"));
+		traceRemoveCompare.setToolTipText(LangModelAnalyse.getString("menuTraceRemoveCompare"));
 		traceRemoveCompare.setName("menuTraceRemoveCompare");
 		traceRemoveCompare.addActionListener(actionAdapter);
 
@@ -99,7 +91,7 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 		countPrediction.setText("");
 		countPrediction.setMaximumSize(buttonSize);
 		countPrediction.setPreferredSize(buttonSize);
-		countPrediction.setToolTipText(LangModelPrediction.ToolTip("menuViewCountPrediction"));
+		countPrediction.setToolTipText(LangModelPrediction.getString("menuViewCountPrediction"));
 		countPrediction.setName("menuViewCountPrediction");
 		countPrediction.addActionListener(actionAdapter);
 
@@ -108,7 +100,7 @@ public class PredictionToolBar extends JToolBar implements ApplicationModelListe
 		savePrediction.setText("");
 		savePrediction.setMaximumSize(buttonSize);
 		savePrediction.setPreferredSize(buttonSize);
-		savePrediction.setToolTipText(LangModelPrediction.ToolTip("menuViewSavePrediction"));
+		savePrediction.setToolTipText(LangModelPrediction.getString("menuViewSavePrediction"));
 		savePrediction.setName("menuViewSavePrediction");
 		savePrediction.addActionListener(actionAdapter);
 

@@ -1,22 +1,25 @@
+/*
+ * $Id: ObjectResourceCatalogButtonsPanel.java,v 1.6 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
-import oracle.jdeveloper.layout.*;
-
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.*;
-
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
-import javax.swing.event.*;
+import oracle.jdeveloper.layout.XYConstraints;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceCatalogButtonsPanel extends JPanel
 {
 	public ApplicationContext aContext;
@@ -29,9 +32,9 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 	public JButton buttonProperties = new JButton();
 	public JButton buttonSave = new JButton();
 
-	PropertiesPanel pp;
+	ObjectResourcePropertiesPane pp;
 
-	public ObjectResourceCatalogButtonsPanel(PropertiesPanel pp)
+	public ObjectResourceCatalogButtonsPanel(ObjectResourcePropertiesPane pp)
 	{
 		super();
 		try
@@ -45,7 +48,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		setPropertiesPanel(pp);
 	}
 
-	public void setPropertiesPanel(PropertiesPanel pp)
+	public void setPropertiesPanel(ObjectResourcePropertiesPane pp)
 	{
 		this.pp = pp;
 	}
@@ -176,14 +179,14 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		if(!propPane.delete())
 			return;
 
-		dataSet.remove(or);
+		list.remove(or);
 		listPane.tableModel.fireTableDataChanged();
 
-		dispatcher.notify(new OperationEvent(or.getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(or.getClass().getName(), 0, "treelistrefreshevent"));
 		buttonCancel.setEnabled(true);
 		buttonSave.setEnabled(true);
 		jTabbedPane.setSelectedComponent(listPane);
-		if (dataSet.size() == 0)
+		if (list.size() == 0)
 		{
 			jTabbedPane.setDisabledIconAt(1, new TextIcon(((JComponent)propPane).getName(), jTabbedPane, false));
 			jTabbedPane.setEnabledAt(1, false);
@@ -192,7 +195,7 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		}
 		else
 		{
-			ObjectResource obj = (ObjectResource )dataSet.elements().nextElement();
+			ObjectResource obj = (ObjectResource )list.elements().nextElement();
 			listPane.setSelected(obj);
 			send_event = true;
 			dispatcher.notify(new OperationEvent(obj, 0, "treelistselectionevent"));
@@ -212,10 +215,10 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 			return;
 
 		ObjectResource res = propPane.getObjectResource();
-		dataSet.add(res);
+		list.add(res);
 
 		listPane.tableModel.fireTableDataChanged();
-		dispatcher.notify(new OperationEvent(res.getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(res.getClass().getName(), 0, "treelistrefreshevent"));
 
 		send_event = true;
 		dispatcher.notify(new OperationEvent(res, 0, "treelistselectionevent"));
@@ -234,11 +237,10 @@ public class ObjectResourceCatalogButtonsPanel extends JPanel
 		if(!propPane.save())
 			return;
 		
-		dispatcher.notify(new OperationEvent(propPane.getObjectResource().getTyp(), 0, "treelistrefreshevent"));
+		dispatcher.notify(new OperationEvent(propPane.getObjectResource().getClass().getName(), 0, "treelistrefreshevent"));
 
 		buttonSave.setEnabled(false);
 		buttonCancel.setEnabled(false);
 */
 	}
 }
-

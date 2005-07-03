@@ -1,98 +1,46 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.event.ActionEvent;
+import com.syrus.AMFICOM.client.model.*;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDisplayModel;
-
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapChooserDialog;
-
-public class SchemeOpenCommand extends VoidCommand
+public class SchemeOpenCommand extends AbstractCommand
 {
 	ApplicationContext aContext;
-	SchemeGraph graph;
 
-	public SchemeOpenCommand(ApplicationContext aContext, SchemeGraph graph)
+	public SchemeOpenCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.graph = graph;
 	}
 
 	public Object clone()
 	{
-		return new SchemeOpenCommand(aContext, graph);
+		return new SchemeOpenCommand(aContext);
 	}
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
+		/*
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(LangModelSchematics.getString("scheme"), SchemeController.getInstance());
 
-		SchemeChooserDialog mcd = new SchemeChooserDialog(aContext.getDataSourceInterface());//mapFrame, "Выберите карту", true);
-
-		DataSet dataSet = new DataSet(Pool.getHash(Scheme.typ));
-		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
-		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
-		sorter.setDataSet(dataSet);
-		mcd.setContents(odm, sorter.default_sort());
-
-		// отфильтровываем по домену
-		ObjectResourceTableModel ortm = (ObjectResourceTableModel )mcd.listPane.getTable().getModel();
-		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
-		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
+		try {
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			LinkedIdsCondition condition = new LinkedIdsCondition(domain_id, ObjectEntities.SCHEME_CODE);
+			Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			mcd.setContents(schemes);
+		} catch (ApplicationException ex) {
+			ex.printStackTrace();
+		}
 
 		mcd.setModal(true);
 		mcd.setVisible(true);
 
-		if(mcd.retCode == mcd.RET_CANCEL)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_CANCEL)
 			return;
 
-		if(mcd.retCode == mcd.RET_OK)
+		if(mcd.getReturnCode() == ObjectResourceChooserDialog.RET_OK)
 		{
-			Scheme scheme = (Scheme)mcd.retObject;
-			GraphActions.clearGraph(graph);
-
-			scheme.serializable_cell = null;
-			scheme.serializable_ugo = null;
-			scheme.unpack();
-			//graph.setSchemeFromArchivedState(scheme.serializable_cell);
-		//	graph.copyFromArchivedState(scheme.serializable_cell, new java.awt.Point(0, 0));
-//			graph.updatePathsAtScheme(new Vector());
-
+			Scheme scheme = (Scheme)mcd.getReturnObject();
 			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme,
 					SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
-		}
-	}
-
-	class SchemeChooserDialog extends MapChooserDialog
-	{
-		public SchemeChooserDialog(DataSourceInterface dsi)
-		{
-			super(dsi);
-		}
-
-		public void jbInit() throws Exception
-		{
-			super.jbInit();
-			this.setTitle("Cхема");
-		}
-
-		public void buttonDelete_actionPerformed(ActionEvent e)
-		{
-			Scheme scheme = (Scheme)listPane.getSelectedObject();
-			aContext.getDataSourceInterface().RemoveScheme(scheme.getId());
-		}
+		}*/
 	}
 }

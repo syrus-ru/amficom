@@ -1,4 +1,10 @@
+classes
+test
+.mach
+.head
+clean.cmd
 *.obj
+*.exp
 *.o
 *.so
 *.dll
@@ -18,5 +24,7 @@
 *.log
 .cdtbuild
 .cdtproject
+.classpath
 .project
 logs
+.settings

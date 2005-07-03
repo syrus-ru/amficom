@@ -1,158 +1,96 @@
 #
-# $Id: Makefile,v 1.1.1.1 2004/06/22 11:27:59 cvsadmin Exp $
+# $Id: Makefile,v 1.45 2005/06/22 11:54:51 arseniy Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME = general_v1
-MODULE_VERSION = $(shell date +%Y%m%d)
 
-USER = AMFICOM
-PASSWORD = amficom
-HOST = RESEARCH
-SERVICE_NAME = SHAITAN
-
-LIBNAME = general.jar
-SRC_SUFFIXES = \
-	.java \
-	.generated.java
-
-CLASS_SUFFIXES = \
-	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
-SRCDIR = src
-CLASSDIR = classes
-ifeq ($(shell hostname -s),bass)
-LIBDIR = lib
-else
-LIBDIR = ../lib
-endif
-ENCODING = windows-1251
-JAVACFLAGS = -source 1.4 -sourcepath $(SRCDIR) -deprecation -g -O
-SUNJAVACFLAGS = -target 1.4.2
-JIKESFLAGS = \
-	-target 1.4.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	+E \
-	+P \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pno-switchcheck \
-	+Pnaming-convention \
-	-nowarn \
-	+T=8
-IDL2JAVAFLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-no_tie \
-	-narrow_compliance \
-	-portable \
-	-root_dir $(SRCDIR) \
-	-strict \
-	-no_toString
-SQLJFLAGS = \
-	-cache=true \
-	-checkfilename=true \
-	-checksource=true \
-	-codegen=iso \
-	-compile=true \
-	-compiler-encoding-flag=true \
-	-explain=true \
-	-linemap=true \
-	-parse=both \
-	-password "$(PASSWORD)" \
-	-profile=true \
-	-ser2class=true \
-	-status=true \
-	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
-	-user "$(USER)" \
-	-warn=all
 
-include Makefile.inc
+JAVAC=javac
+
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
+$(call checkenve,IDLJ)
 
-.PHONY: export
-export: $(LIBNAME)
+APPCLASSPATH := $(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
 
-.PHONY: all
-all: .all
 
-.all: .idl .sqlj
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+
+
+$(LIBNAME): .mach
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com
+
+.mach:	.corba $(CLASSDIR)
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(DEPRECATEDCLASSPATH):$(CLASSDIR) \
-		-d $(CLASSDIR) \
-		-encoding $(ENCODING) \
-	 	$(shell find $(SRCDIR) -name '*.java')
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
 	touch $@
 
 .PHONY: idl
 idl: .idl
 
-.idl: $(SRCDIR) $(CLASSDIR)
-	$(IDL2JAVA) \
-		$(IDL2JAVAFLAGS) \
-		$(IDLDIR)/general.idl
+# Just idl-to-java compilation
+.idl: $(SRCDIR)
+#	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general-vt.idl
 	touch $@
 
-.PHONY: idlclean
-idlclean:
-	$(RM) -r \
-		$(SRCDIR)/com/syrus/AMFICOM/general/corba \
-		$(CLASSDIR)/com/syrus/AMFICOM/general/corba \
-		.idl
 
-.PHONY: sqlj
-sqlj: .sqlj
+.PHONY: corba
+corba: .corba
 
-.sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
-	$(RM) \
-		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
+# Compilation of stubs & skeletons
+.corba:	$(CLASSDIR) .idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
+	$(JAVAC) \
+		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
 	touch $@
 
-.PHONY: sqljclean
-sqljclean:
-	$(RM) \
-		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.sqlj
-
-$(SRCDIR) $(CLASSDIR):
+$(SRCDIR):
+$(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY: clean
-clean: sqljclean idlclean
-	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.all
-	$(RM) \
-		$(LIBNAME)
 
-.PHONY: dist
-dist: distclean
-	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
-	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
-	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
+.PHONY:	clean
+clean:	cleanmach cleancorba
+	$(RM) $(LIBNAME)
 
-.PHONY: distclean
-distclean: clean
-	$(RM) -r \
-		$(SRCDIR) \
-		$(CLASSDIR) \
-		SQLChecker.cache \
-		sqlj.properties \
-		*.jar
+.PHONY:	cleanmach
+cleanmach:
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
 
-$(LIBNAME): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
+.PHONY:	cleancorba
+cleancorba:
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/security/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/general/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/security/corba
+	$(RM) .corba
 
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
+
+#### Archive ####
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(IDLDIR)/general.idl \
+		$(SOURCES)

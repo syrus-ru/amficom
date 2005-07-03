@@ -1,1 +1,1 @@
-nmake /f makemap %1
+nmake /f makemapclient %1

@@ -1,151 +1,246 @@
+/*
+ * $Id: Evaluation.java,v 1.70 2005/06/29 14:17:40 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
-import com.syrus.AMFICOM.general.Identifier;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
-public class Evaluation extends Action {
-	private Set threshold_set;
-	private Set etalon;
+/**
+ * @version $Revision: 1.70 $, $Date: 2005/06/29 14:17:40 $
+ * @author $Author: arseniy $
+ * @module measurement_v1
+ */
 
-	private StorableObject_Database evaluationDatabase;
+public final class Evaluation extends Action {
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3617570505297703480L;
 
-	public Evaluation(Identifier id) throws RetrieveObjectException {
+	private ParameterSet thresholdSet;
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public Evaluation(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+		final EvaluationDatabase database = (EvaluationDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_CODE);
 		try {
-			this.evaluationDatabase.retrieve(this);
-		}
-		catch (Exception e) {
+			database.retrieve(this);
+		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+		
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
-		super(new Identifier(et.id),
-					new Date(et.created),
-					new Date(et.modified),
-					new Identifier(et.creator_id),
-					new Identifier(et.modifier_id),
-					new Identifier(et.type_id),
-					new Identifier(et.monitored_element_id));
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public Evaluation(final IdlEvaluation et) throws CreateObjectException {
 		try {
-			this.threshold_set = new Set(new Identifier(et.threshold_set_id));
-			this.etalon = new Set(new Identifier(et.etalon_id));
-		}
-		catch (RetrieveObjectException roe) {
-			throw new CreateObjectException(roe.getMessage(), roe);
-		}
-
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
-		try {
-			this.evaluationDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+			this.fromTransferable(et);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
-	private Evaluation(Identifier id,
-										 Identifier creator_id,
-										 Identifier type_id,
-										 Set threshold_set,
-										 Set etalon,
-										 Identifier monitored_element_id) throws CreateObjectException {
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	Evaluation(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final ParameterSet thresholdSet) {
 		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creator_id,
-					creator_id,
-					type_id,
-					monitored_element_id);
-		this.threshold_set = threshold_set;
-		this.etalon = etalon;
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				type,
+				monitoredElementId,
+				measurement);
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
-		try {
-			this.evaluationDatabase.insert(this);
-		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+		this.thresholdSet = thresholdSet;
 	}
 
-	public Object getTransferable() {
-		return new Evaluation_Transferable((Identifier_Transferable)super.getId().getTransferable(),
-																			 super.created.getTime(),
-																			 super.modified.getTime(),
-																			 (Identifier_Transferable)super.creator_id.getTransferable(),
-																			 (Identifier_Transferable)super.modifier_id.getTransferable(),
-																			 (Identifier_Transferable)super.type_id.getTransferable(),
-																			 (Identifier_Transferable)super.monitored_element_id.getTransferable(),
-																			 (Identifier_Transferable)this.threshold_set.getId().getTransferable(),
-																			 (Identifier_Transferable)this.etalon.getId().getTransferable());
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+		final IdlEvaluation et = (IdlEvaluation) transferable;
+		super.fromTransferable(et.header, null, new Identifier(et.monitoredElementId), null);
+
+		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
+		final Identifier parentActionId = new Identifier(et.measurementId);
+		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
+				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
+
+		this.thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(et.thresholdSetId), true);
+
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	public Set getThresholdSet() {
-		return this.threshold_set;
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public IdlEvaluation getTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return new IdlEvaluation(super.getHeaderTransferable(orb),
+				super.type.getId().getTransferable(),
+				super.monitoredElementId.getTransferable(),
+				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
+						: Identifier.VOID_IDENTIFIER.getTransferable(),
+				this.thresholdSet.getId().getTransferable());
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.syrus.AMFICOM.measurement.Action#isValid()
+	 */
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	protected boolean isValid() {
+		return super.isValid() && this.thresholdSet != null;
+	}
+	
+
+	public short getEntityCode() {
+		return ObjectEntities.EVALUATION_CODE;
 	}
 
-	public Set getEtalon() {
-		return this.etalon;
+	public Measurement getMeasurement() {
+		return (Measurement) super.parentAction;
+	}
+	
+	public void setMeasurement(final Measurement measurement) {
+		super.parentAction = measurement;
+		super.markAsChanged();
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier type_id,
-																						Identifier monitored_element_id,
-																						Set threshold_set,
-																						Set etalon) {
+	public ParameterSet getThresholdSet() {
+		return this.thresholdSet;
+	}
+	
+	public void setThresholdSet(final ParameterSet thresholdSet) {
+		this.thresholdSet = thresholdSet;
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	protected synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final long version,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final ParameterSet thresholdSet) {
 		super.setAttributes(created,
-												modified,
-												creator_id,
-												modifier_id,
-												type_id,
-												monitored_element_id);
-		this.threshold_set = threshold_set;
-		this.etalon = etalon;
+			modified,
+			creatorId,
+			modifierId,
+			version,
+			type,
+			monitoredElementId,
+			measurement);
+		this.thresholdSet = thresholdSet;
 	}
 
-	public Result createResult(Identifier id,
-														 Identifier creator_id,
-														 Measurement measurement,
-														 AlarmLevel alarm_level,
-														 Identifier[] parameter_ids,
-														 Identifier[] parameter_type_ids,
-														 byte[][] parameter_values) throws CreateObjectException {
-		return Result.create(id,
-												 creator_id,
-												 measurement,
-												 this,
-												 ResultSort.RESULT_SORT_EVALUATION,
-												 alarm_level,
-												 parameter_ids,
-												 parameter_type_ids,
-												 parameter_values);
+	/**
+	 * Create a new instance for client
+	 * @param creatorId
+	 * @param type
+	 * @param monitoredElementId
+	 * @param measurement
+	 * @param thresholdSet
+	 * @return a newly generated instance
+	 * @throws CreateObjectException
+	 */
+	public static Evaluation createInstance(final Identifier creatorId,
+			final EvaluationType type,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final ParameterSet thresholdSet) throws CreateObjectException {
+		try {
+			final Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_CODE),
+				creatorId,
+				0L,
+				type,
+				monitoredElementId,
+				measurement,
+				thresholdSet);
+
+			assert evaluation.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			evaluation.markAsChanged();
+
+			return evaluation;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
 	}
 
-	public static Evaluation create(Identifier id,
-																	Identifier creator_id,
-																	Identifier type_id,
-																	Set threshold_set,
-																	Set etalon,
-																	Identifier monitored_element_id) throws CreateObjectException {
-		return new Evaluation(id,
-													creator_id,
-													type_id,
-													threshold_set,
-													etalon,
-													monitored_element_id);
+	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
+			throws CreateObjectException {
+		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_EVALUATION, resultParameters);
+	}
+
+	/**
+	 * <p>
+	 * <b>Clients must never explicitly call this method. </b>
+	 * </p>
+	 */
+	@Override
+	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		
+		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.type);
+		//	Measurement if exists
+		if (super.parentAction != null)
+			dependencies.add(super.parentAction);
+		dependencies.add(this.thresholdSet);
+		return dependencies;
 	}
 }

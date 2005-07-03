@@ -387,10 +387,14 @@ public class LoadMessageFrame extends JFrame implements LogWriter{
 				for(int i = 0; i < 100; i++)
 				{
 					log(" String " + i);
-					try{ this.sleep(100); }
-					catch(Exception e) {}
-//					for(long j = 0; j < 5000000; j++);
-  //						for(long k = 0; k < 5000000; k++);
+					try
+					{
+						sleep(100);
+					}
+					catch(InterruptedException ie)
+					{
+						ie.printStackTrace();
+					}
 				}
 			}
 		};

@@ -1,67 +1,68 @@
 #
-# $Id: Makefile.inc,v 1.1.1.1 2004/07/03 17:54:32 cvsadmin Exp $
+# $Id: Makefile.inc,v 1.25 2005/06/22 10:58:07 arseniy Exp $
 #
 # vim:set ft=make:
 #
 
 exesuffix =
 
+# User may override MODULE_VERSION
+MODULE_VERSION ?= $(shell date +%Y%m%d)
+
+SRC_SUFFIXES = \
+	.java \
+	.generated.java
+
+CLASS_SUFFIXES = \
+	.class \
+	$$%.class
+
+# User may override either of IDLDIR, SRCDIR, CLASSDIR
+IDLDIR ?= idl
+SRCDIR ?= src
+CLASSDIR ?= classes
+
+ifeq ($(shell hostname -s),bass)
+LIBDIR ?= lib
+EXTLIBDIR ?= lib/ext
+else
+LIBDIR ?= ../lib
+EXTLIBDIR ?= ../../extlib
+endif
+
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing `$(MAKE)'))
 checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing `$(MAKE)'))
 pathsearch = $(firstword $(wildcard $(addsuffix /$(1), $(subst :, , $(PATH)))))
-orabase = $(dir $(ORACLE_HOME))
-orahomes9 = $(wildcard $(orabase)9.*)
-orahome9 = $(firstword $(orahomes9))
 
-idl2java = $(firstword $(wildcard $(addsuffix /bin/idl2java$(exesuffix), $(1))))
-IDL2JAVA = $(call idl2java,$(ORACLE_HOME))
-ifeq ($(IDL2JAVA),)
-IDL2JAVA = $(call idl2java,$(orahome9))
-endif
-ifeq ($(IDL2JAVA),)
-IDL2JAVA = $(call pathsearch,idl2java$(exesuffix))
-endif
+# User may override database connection settings
+USER = AMFICOM
+PASSWORD ?= amficom
+HOST ?= amficom
+SERVICE_NAME ?= jamaica
 
 sqlj = $(firstword $(wildcard $(addsuffix /bin/sqlj$(exesuffix), $(1))))
 SQLJ = $(call sqlj,$(ORACLE_HOME))
 ifeq ($(SQLJ),)
-SQLJ = $(call sqlj,$(orahome9))
-endif
-ifeq ($(SQLJ),)
 SQLJ = $(call pathsearch,sqlj$(exesuffix))
 endif
-
-aurora_client_orbdep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.jar)
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbdep.zip)
-endif
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbdep.jar)
-endif
-ifeq ($(aurora_client_orbdep),)
-aurora_client_orbdep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbdep.zip)
-endif
-aurora_client_orbindep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.jar)
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(ORACLE_HOME)/javavm/lib/aurora_client_orbindep.zip)
-endif
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbindep.jar)
-endif
-ifeq ($(aurora_client_orbindep),)
-aurora_client_orbindep = $(wildcard $(orahome9)/javavm/lib/aurora_client_orbindep.zip)
-endif
-AURORACLASSPATH = $(aurora_client_orbdep):$(aurora_client_orbindep)
-
-vbjapp = $(wildcard $(ORACLE_HOME)/lib/vbjapp.jar)
-ifeq ($(vbjapp),)
-vbjapp = $(wildcard $(ORACLE_HOME)/lib/vbjapp.zip)
-endif
-vbjorb = $(wildcard $(ORACLE_HOME)/lib/vbjorb.jar)
-ifeq ($(vbjorb),)
-vbjorb = $(wildcard $(ORACLE_HOME)/lib/vbjorb.zip)
-endif
-VBJCLASSPATH = $(vbjapp):$(vbjorb)
+SQLJFLAGS = \
+	-cache=true \
+	-checkfilename=true \
+	-checksource=true \
+	-codegen=oracle \
+	-compile=true \
+	-compiler-encoding-flag=false \
+	-explain=true \
+	-linemap=true \
+	-parse=both \
+	-password "$(PASSWORD)" \
+	-profile=true \
+	-status=true \
+	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
+	-user "$(USER)" \
+	-warn=all \
+	-d $(CLASSDIR) \
+	-encoding $(ENCODING)
 
 JDBCCLASSPATH = $(wildcard $(ORACLE_HOME)/jdbc/lib/ojdbc14.jar)
 ifeq ($(JDBCCLASSPATH),)
@@ -74,15 +75,15 @@ ifeq ($(JDBCCLASSPATH),)
 JDBCCLASSPATH = $(wildcard $(ORACLE_HOME)/jdbc/lib/classes12.zip)
 endif
 
-runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
-ifeq ($(runtime12),)
-runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
-endif
-ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.jar)
-endif
 ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.zip)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
 endif
 translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.jar)
 ifeq ($(translator),)
@@ -90,20 +91,65 @@ translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.zip)
 endif
 SQLJCLASSPATH = $(runtime12):$(translator)
 
+# User may override AMFICOMCLASSPATH and/or EXTCLASSPATH
 AMFICOMCLASSPATH ?= $(shell find $(LIBDIR) -name '*\.[jz][ai][pr]' -printf '%p:')
+EXTCLASSPATH ?= $(shell find $(EXTLIBDIR) -name '*\.[jz][ai][pr]' -printf '%p:')
 
+jdevrt = $(wildcard $(ORACLE_HOME)/lib/jdev-rt.jar)
+ifeq ($(jdevrt),)
 jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.jar)
+endif
+ifeq ($(jdevrt),)
+jdevrt = $(wildcard $(ORACLE_HOME)/lib/jdev-rt.zip)
+endif
+ifeq ($(jdevrt),)
+jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.zip)
+endif
 DEPRECATEDCLASSPATH = $(jdevrt)
 
+ENCODING ?= KOI8-R
+JAVAC_WARNOFF_FLAG = -nowarn
+# User may specify either -source 1.3 or -source 1.4 as an initial value
+# of JAVACFLAGS
+JAVACFLAGS += \
+	-Xlint:unchecked \
+	-source 1.5 \
+	-target 1.5 \
+	-O \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-deprecation \
+	-encoding $(ENCODING) \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
+# User may specify -target 1.1/1.2/1.3/1.4
+SUNJAVACFLAGS +=
+# User may specify -target 1.1/1.2/1.3/1.4/1.4.2 
+JIKESFLAGS += \
+	+E \
+	+P \
+	+Pall \
+	+Pno-switchcheck \
+	+T=2
+ifeq ($(JAVAC),)
 JAVAC = $(call pathsearch,jikes$(exesuffix))
 ifeq ($(JAVAC),)
 JAVAC = $(JAVA_HOME)/bin/javac
-JAVAC_FLAGS := $(JAVAC_FLAGS) $(SUNJAVAC_FLAGS)
+JAVACFLAGS := $(JAVACFLAGS) $(SUNJAVACFLAGS)
 else
-JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
+JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
+endif
 endif
 
-JAR = $(call pathsearch,jar-3.3.1$(exesuffix))
+CP = $(call pathsearch,cp$(exesuffix))
+ifeq ($(CP),)
+CP = cp
+endif
+ifeq ($(CP),)
+CP = copy
+endif
+
+JAR = $(call pathsearch,jar-3.4.1$(exesuffix))
 ifeq ($(JAR),)
 JAR = $(call pathsearch,jar$(exesuffix))
 endif
@@ -112,3 +158,14 @@ JAR = $(JAVA_HOME)/bin/jar
 endif
 
 JAVA = $(JAVA_HOME)/bin/java
+
+IDLJ = $(JAVA_HOME)/bin/idlj
+IDLJFLAGS += \
+	-fallTIE \
+	-i $(IDLDIR) \
+	-td $(SRCDIR)
+
+PMD_JAR = $(shell find $(PMD_HOME) -name pmd-*.jar)
+PMD_JARS = $(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
+
+PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rulesets/clone.xml,rulesets/codesize.xml,rulesets/coupling.xml,rulesets/design.xml,rulesets/favorites.xml,rulesets/junit.xml,rulesets/naming.xml,rulesets/newrules.xml,rulesets/scratchpad.xml,rulesets/strictexception.xml,rulesets/strings.xml

@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
-import java.util.Vector;
-import java.util.Hashtable;
 import java.awt.*;
-import javax.swing.*;
 
 public abstract class ObjectResourceTreeModel
 {
 	public abstract ObjectResourceTreeNode getRoot();
-	public abstract Vector getChildNodes(ObjectResourceTreeNode node);
+	public abstract List getChildNodes(ObjectResourceTreeNode node);
 	public abstract Class getNodeChildClass(ObjectResourceTreeNode node);
 
 //	public abstract ImageIcon getNodeIcon(ObjectResourceTreeNode node);
@@ -30,22 +30,24 @@ public abstract class ObjectResourceTreeModel
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
 	}
 
-	Hashtable ht = new Hashtable();
+	Map ht = new HashMap();
 	public void registerSearchableNode(Object criteria, ObjectResourceTreeNode tn)
 	{
-		Vector vec = (Vector )ht.get(criteria);
+		List vec = (List) ht.get(criteria);
 		if(vec == null)
-			vec = new Vector();
+			vec = new ArrayList();
+
 		vec.add(tn);
+
 		ht.put(criteria, vec);
 	}
 
-	public Vector getSearchableNodes(Object criteria)
+	public List getSearchableNodes(Object criteria)
 	{
-		Vector vec = (Vector )ht.get(criteria);
+		List vec = (List) ht.get(criteria);
 		if(vec == null)
-			vec = new Vector();
+			vec = new ArrayList();
+
 		return vec;
 	}
 }
-

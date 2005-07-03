@@ -1,49 +1,113 @@
-SRC=./src
-CLASSES=./classes
-IDL=../idl_v1
-LIB=../lib
+MODULE_NAME = measurement_v1
 
-LIBNAME=measurement.jar
-ARCHFILE=measurement.tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-APPCLASSPATH=$(LIB)/util.jar:$(LIB)/general.jar
+IDLDIR = ../idl_v1/idl
 
-IDL2JAVA=idl2java
-IDL2JAVA_FLAGS=-no_examples -no_tie -root_dir $(SRC) -I$(IDL)
-#JAVAC=javac
-JAVAC=jikes
-JAVAC_CUSTOM_OPTIONS=-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar -extdirs $(JAVA_HOME)/jre/lib/ext +E +Pno-modifier-order +Predundant-modifiers +Pswitchcheck +Pno-naming-convention -nowarn +T=2
-JAVAC_OPTIONS=-d $(CLASSES)
+HOST = aldan
+SERVICE_NAME = hodja
 
-mach:	corba
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
-		$(SRC)/com/syrus/AMFICOM/measurement/TemporalPattern.java
+JAVAC=javac
 
-corba:
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDL)/event.idl
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDL)/measurement.idl
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(APPCLASSPATH) -sourcepath $(SRC) \
-		$(SRC)/com/syrus/AMFICOM/event/corba/*.java \
-		$(SRC)/com/syrus/AMFICOM/measurement/corba/*.java
-	touch corba
+JPUB = $(ORACLE_HOME)/bin/jpub
+JPUB_FLAGS = \
+	-compile=false \
+	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
+	-user=amficom/amficom \
+	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
+	-omit_schema_names \
+	-package=com.syrus.AMFICOM.measurement.ora \
+	-dir=$(SRCDIR) \
+	-usertypes=oracle \
+	-methods=all
 
-clean:	cleanmach cleancorba
-	rm -f $(LIBNAME)
 
+include ../tools/Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,IDLJ)
+
+
+APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)
+
+
+$(LIBNAME): .mach
+	$(CP) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource/
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
+		-C $(CLASSDIR) com/syrus/AMFICOM/resource
+
+.mach:	.corba .ora $(CLASSDIR)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
+	touch $@
+
+.ora:	$(CLASSDIR)
+	$(JPUB) $(JPUB_FLAGS) \
+		-sql=CRONSTRINGARRAY:CronStringArray
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
+	touch $@
+	
+
+.corba:	$(CLASSDIR)
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
+	touch $@
+
+$(CLASSDIR):
+	mkdir -p $@
+
+.PHONY:	clean
+clean:	cleanmach cleanora cleancorba
+	$(RM) $(LIBNAME)
+
+.PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/measurement/*.class
-	rm -f mach
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
 
+.PHONY:	cleanora
+cleanora:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
+	$(RM) .ora
+
+.PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRC)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(SRC)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/event/corba
-	rm -f corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
+	$(RM) .corba
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
+
+
 
 #### Archive ####
+.PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDL)/measurement.idl \
-		$(SRC)/com/syrus/AMFICOM/measurement/*.java
+		$(IDLDIR)/measurement.idl \
+		$(SOURCES)
+		
+.PHONY: pmd
+pmd:
+	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
+

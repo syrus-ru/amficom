@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
+import java.beans.PropertyVetoException;
+
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 
@@ -43,7 +45,7 @@ public abstract class WindowArranger
 			{
 				f.setMaximum(b);
 			}
-			catch (java.beans.PropertyVetoException pve)
+			catch (PropertyVetoException pve)
 			{
 				pve.printStackTrace();
 			}

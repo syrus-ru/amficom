@@ -1,0 +1,7 @@
+com\syrus\AMFICOM\Client\Optimize
+com\syrus\AMFICOM\Client\Optimize\Report
+com\syrus\AMFICOM\Client\Optimize\UI
+com\syrus\AMFICOM\Client\General\Command\Optimize
+com\syrus\AMFICOM\Client\General\Model
+com\syrus\AMFICOM\Client\General\Lang
+

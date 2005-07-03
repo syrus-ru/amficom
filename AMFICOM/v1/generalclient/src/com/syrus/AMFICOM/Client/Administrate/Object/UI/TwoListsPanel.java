@@ -1,13 +1,26 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceNameSorter;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class TwoListsPanel extends GeneralPanel
 {
@@ -19,7 +32,7 @@ public class TwoListsPanel extends GeneralPanel
   OrListBox list1 = new OrListBox();
   OrListBox list2 = new OrListBox();
 
-  ObjectResource or;
+  AdminObjectResource or;
 
   JScrollPane scrollPane1 = new JScrollPane();
   JScrollPane scrollPane2 = new JScrollPane();
@@ -166,47 +179,37 @@ public class TwoListsPanel extends GeneralPanel
 
 
 
-  public boolean setObjectResource(ObjectResource or)
+  public void setObjectResource(ObjectResource or)
   {
-    this.or = or;
+    this.or = (AdminObjectResource)or;
 
-    {
-      list1.removeAll();
-      DataSet dSet = new DataSet(or.getChildren(childTyp));
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      list1.setContents(dSet.elements());
-    }
+    list1.removeAll();
+    ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(this.or.getChildren(childTyp));
+    list1.setContents(sorter.default_sort());
 
+    Map h = new HashMap();
 
-
-    Hashtable h = new Hashtable();
-
-    Hashtable tmp_h = Pool.getHash(childTyp);
+    Map tmp_h = Pool.getMap(childTyp);
     if(tmp_h == null)
-      tmp_h = new Hashtable();
-    for(Enumeration e = tmp_h.elements(); e.hasMoreElements();)
+      tmp_h = new HashMap();
+
+    for(Iterator it = tmp_h.values().iterator(); it.hasNext();)
     {
-      ObjectResource o = (ObjectResource)e.nextElement();
+      ObjectResource o = (ObjectResource)it.next();
       h.put(o.getId(), o);
     }
 
-    for(Enumeration e = or.getChildren(childTyp);
-        e.hasMoreElements();)
+    for(Iterator it = this.or.getChildren(childTyp).iterator(); it.hasNext();)
     {
-      h.remove(((ObjectResource)e.nextElement()).getId());
+      h.remove(((ObjectResource)it.next()).getId());
     }
+
     list2.removeAll();
 
-    {
-      DataSet dSet = new DataSet(h);
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      list2.setContents(dSet.elements());
-    }
-    return true;
+    sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(h);
+    list2.setContents(sorter.default_sort());
   }
 
 
@@ -240,15 +243,15 @@ public class TwoListsPanel extends GeneralPanel
 
 
 
-  public boolean modify(Vector modifiedVector)
+  public boolean modify(List modifiedVector)
   {
-    modifiedVector.removeAllElements();
-    Vector v  = this.list1.getVectorIDfromList();
+    modifiedVector.clear();
+    List v  = this.list1.getVectorIDfromList();
+    ListIterator lIt = v.listIterator();
 
-    for(int i=0; i<v.size(); i++)
-    {
-      modifiedVector.add(v.get(i));
-    }
+    for(;lIt.hasNext();)
+      modifiedVector.add(lIt.next());
+
     return true;
   }
 

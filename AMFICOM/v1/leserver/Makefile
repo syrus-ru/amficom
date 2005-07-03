@@ -1,22 +1,28 @@
-MODULE_NAME = loginserver_v1
+MODULE_NAME = leserver_v1
 
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
+LOCALIDLDIR = ./idl
 
 HOST = mongol
 SERVICE_NAME = mongol
 
+JAVAC=javac
+
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDLJ)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/eventserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/util.jar
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/loginserver/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -24,27 +30,35 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
+.PHONY: interface
+interface: $(LIBNAME_INTERFACE)
+
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/loginserver/corba/LoginServer.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/loginserver/corba/LoginServerOperations.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/loginserver/corba/_LoginServerStub.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/loginserver/corba/LoginServerHelper.class \
-		-C $(CLASSDIR) com/syrus/AMFICOM/loginserver/corba/LoginServerHolder.class
-	$(CP) $(LIBNAME_INTERFACE) $(LIBDIR)
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/LoginServer.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/LoginServerOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/_LoginServerStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/LoginServerHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/LoginServerHolder.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServer.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerOperations.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/_EventServerStub.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHelper.class \
+		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHolder.class
+	$(CP) $@ $(LIBDIR)
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) idl/loginserver.idl
+	$(IDLJ) $(IDLJFLAGS) $(LOCALIDLDIR)/leserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/loginserver/corba/*.java
+		$(SRCDIR)/com/syrus/AMFICOM/leserver/corba/*.java
 	touch $@
 
 $(CLASSDIR):
@@ -61,8 +75,8 @@ cleanmach:
 
 .PHONY:	cleancorba
 cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/loginserver/corba
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/loginserver/corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/leserver/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/leserver/corba
 	$(RM) .corba
 
 #### Install ####
@@ -75,6 +89,6 @@ install: $(LIBNAME) $(LIBNAME_INTERFACE)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		idl/loginserver.idl \
-		$(addprefix $(SRCDIR)/,$(SOURCES))
+		$(LOCALIDLDIR)/leserver.idl \
+		$(SOURCES)
 

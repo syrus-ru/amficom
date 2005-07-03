@@ -10,7 +10,7 @@ import java.util.Vector;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
-public class WindowArrangeCommand extends VoidCommand 
+public class WindowArrangeCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private JDesktopPane desktop;
@@ -127,7 +127,7 @@ public class WindowArrangeCommand extends VoidCommand
 					rowCount++;
 				}
 			}
-			else 
+			else
 			{
 				frameWidth = (int)deskWidth / (col + 1);
 				if (temp.isResizable())

@@ -1,27 +1,22 @@
 package com.syrus.AMFICOM.Client.General.Command.Prediction;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.ActionParameterType;
-import com.syrus.AMFICOM.Client.Resource.Result.Modeling;
-import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
-import com.syrus.AMFICOM.Client.Resource.Result.Result;
-import com.syrus.AMFICOM.Client.Resource.Test.ModelingType;
-
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.BellcoreWriter;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.corba.*;
+import com.syrus.io.*;
 import com.syrus.util.ByteArray;
 
 public class SavePredictionCommand extends VoidCommand
@@ -73,7 +68,7 @@ public class SavePredictionCommand extends VoidCommand
 			return;
 		}
 
-		if(Pool.get("theModels", "savedModels")==null)
+		if(Pool.get("theModels", "savedModels") == null)
 		{
 			Pool.put("theModels", "savedModels", new Vector());
 		}
@@ -89,106 +84,90 @@ public class SavePredictionCommand extends VoidCommand
 			savedModels.add(bs.title);
 		}
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 //		String s = (String)JOptionPane.showInputDialog(null, "Название модели:", "", JOptionPane.OK_CANCEL_OPTION, null, new Object[] {bs.title}, bs.title);
 //    String s = JOptionPane.showInputDialog(null, "Название модели:", bs.title, JOptionPane.OK_CANCEL_OPTION);
-
 //    if (s == null || s.equals(""))
 //			return;
 
+//		Identifier modelingId = IdentifierPool.generateId(ObjectEntities.MODELING_ENTITY_CODE);
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		List meIds = new ArrayList(1);
+		meIds.add(bs.monitoredElementId);
 
-		Modeling m = new Modeling(dataSource.GetUId(Modeling.typ));
+		try {
+			SetParameter[] parameters = new SetParameter[3];
 
-		m.name = bs.title;
+			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_TIME);
+			Long predictionTime = ((Long)Pool.get("predictionTime", bs.title));
+			parameters[0] = SetParameter.createInstance(
+					ptype,
+					ByteArray.toByteArray(predictionTime.longValue()));
 
-		m.type_id = "optprognosis";
-		m.domain_id = dataSource.getSession().getDomainId();
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.PREDICTION_DATA_FROM);
+			parameters[1] = SetParameter.createInstance(
+					ptype,
+					ByteArray.toByteArray(refStat.getLowerTime()));
 
-		long predictionTime = ((Long)Pool.get("predictionTime", bs.title)).longValue();
+			ptype = AnalysisUtil.getParameterType(userId,	ParameterTypeCodenames.PREDICTION_DATA_TO);
+			parameters[2] = SetParameter.createInstance(
+					ptype,
+					ByteArray.toByteArray(refStat.getUpperTime()));
 
+			Set argumentSet = Set.createInstance(
+					userId,
+					SetSort.SET_SORT_ANALYSIS_CRITERIA,
+					"",
+					parameters,
+					meIds);
 
-//		String path_id = (String)Pool.get("activecontext", "activepathid");
+			String name = bs.title;
+			Modeling m = Modeling.createInstance(
+					userId,
+					new Identifier(bs.schemePathId),
+					new Identifier(bs.monitoredElementId),
+					name,
+					argumentSet,
+					ModelingSort.MODELINGSORT_PREDICTION);
 
-		m.scheme_path_id = refStat.getPathID();
-		m.user_id = aContext.getSessionInterface().getUserId();
-		m.modified = new Date().getTime();
-		m.setTransferableFromLocal();
+			parameters = new SetParameter[1];
+			ptype = AnalysisUtil.getParameterType(userId,
+					ParameterTypeCodenames.REFLECTOGRAMMA);
+			parameters[0] = SetParameter.createInstance(
+					ptype,
+					new BellcoreWriter().write(bs));
 
-		ModelingType mt = (ModelingType)Pool.get(ModelingType.typ, m.type_id);
-		ActionParameterType apt;
+			m.createResult(
+					userId,
+					parameters);
 
-		apt = (ActionParameterType )mt.sorted_arguments.get("time_start");
-		try
+			MeasurementStorableObjectPool.putStorableObject(m);
+			MeasurementStorableObjectPool.flush(true);
+
+//		m.setTypeId("optprognosis");
+
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Модель сохранена под именем " + bs.title,
+					"Сообщение",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		catch (ApplicationException ex)
 		{
-			Parameter resparam3 = new Parameter(
-					dataSource.GetUId(Parameter.typ),
-					apt.getId(),
-					new ByteArray(refStat.getLowerTime()).getBytes(),
-					"time_start",
-					"long");
-			resparam3.setTransferableFromLocal();
-			m.addArgument(resparam3);
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Ошибка сохранения прогнозируемой рефлектограммы на сервере",
+					"Ошибка",
+					JOptionPane.ERROR_MESSAGE);
 		}
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Ошибка сохранения параметров прогнозирования",
+					"Ошибка",
+					JOptionPane.ERROR_MESSAGE);
 		}
-
-		apt = (ActionParameterType )mt.sorted_arguments.get("time_end");
-		try
-		{
-			Parameter resparam4 = new Parameter(
-					dataSource.GetUId(Parameter.typ),
-					apt.getId(),
-					new ByteArray(refStat.getUpperTime()).getBytes(),
-					"time_end",
-					"long");
-			resparam4.setTransferableFromLocal();
-			m.addArgument(resparam4);
-		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-		}
-
-		m.setTransferableFromLocal();
-		Pool.put(Modeling.typ, m.getId(), m);
-
-		Result r = new Result(m.getId(), "modeling", "", aContext.getSessionInterface().getUserId(), dataSource.GetUId("result"));
-		apt = (ActionParameterType )mt.sorted_parameters.get("reflectogramm");
-		Parameter resparam1 = new Parameter(
-				dataSource.GetUId(Parameter.typ),
-				apt.getId(),
-				new BellcoreWriter().write(bs),
-				"reflectogramm",
-				"reflectogramm");
-		resparam1.setTransferableFromLocal();
-		r.addParameter(resparam1);
-
-		apt = (ActionParameterType )mt.sorted_parameters.get("time");
-
-
-		try
-		{
-			Parameter resparam2 = new Parameter(
-					dataSource.GetUId(Parameter.typ),
-					apt.getId(),
-					new ByteArray(predictionTime).getBytes(),
-					"time",
-					"long");
-			resparam2.setTransferableFromLocal();
-			r.addParameter(resparam2);
-		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-		}
-
-		Pool.put("result", r.id, r);
-
-		dataSource.SaveModeling(m.getId(), r.getId());
-
-		JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Модель сохранена под именем <"+bs.title+">", "Модель сохранена", JOptionPane.INFORMATION_MESSAGE);
-		return;
 	}
 }

@@ -1,15 +1,13 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
 import java.awt.Component;
 
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
+
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
 
 public class ObjectResourceTableRenderer extends DefaultTableCellRenderer
 {
@@ -78,7 +76,7 @@ public class ObjectResourceTableRenderer extends DefaultTableCellRenderer
 				component.setBackground(table.getBackground());
 			}
 		}
-		else //		if (isSelected) 
+		else //		if (isSelected)
 		{
 //				System.out.println("	(selected)");
 		   component.setForeground(table.getSelectionForeground());
@@ -87,18 +85,18 @@ public class ObjectResourceTableRenderer extends DefaultTableCellRenderer
 //		System.out.println("render " + text + " with fgcolor " + component.getForeground() + " with bkcolor " + component.getBackground());
 		
 
-		if (hasFocus) 
+		if (hasFocus)
 		{
 			setBorder( UIManager.getBorder("Table.focusCellHighlightBorder") );
 /*
-			if (table.isCellEditable(row, column)) 
+			if (table.isCellEditable(row, column))
 			{
 				component.setForeground( UIManager.getColor("Table.focusCellForeground") );
 				component.setBackground( UIManager.getColor("Table.focusCellBackground") );
 			}
 */
-		} 
-		else 
+		}
+		else
 		{
 			setBorder(noFocusBorder);
 		}

@@ -1,20 +1,27 @@
+/*
+ * $Id: SessionChangePasswordCommand.java,v 1.4 2004/08/06 06:42:46 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.Command.Session;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.UI.Session.ChangePasswordDialog;
+import java.awt.*;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/08/06 06:42:46 $
+ * @module generalclient_v1
+ */
 public class SessionChangePasswordCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private SessionInterface si;
 	ApplicationContext aContext;
 
 	public SessionChangePasswordCommand()
@@ -46,22 +53,28 @@ public class SessionChangePasswordCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
+	/**
+	 * @return a clone of this command.
+	 * @deprecated do not use this method -- the class doesn't realize
+	 *             {@link Cloneable}, and {@link Cloneable#clone()} is
+	 *             implemented improperly.
+	 */
 	public Object clone()
 	{
-		return new SessionChangePasswordCommand(dispatcher, aContext);
+		return new SessionChangePasswordCommand(this.dispatcher, this.aContext);
 	}
 
 	public void execute()
 	{
-		ChangePasswordDialog cDialog = new ChangePasswordDialog(aContext);
+		ChangePasswordDialog cDialog = new ChangePasswordDialog(this.aContext);
 
 //		cDialog.si = aContext.getSessionInterface();
 
-		if(dispatcher != null)
-			dispatcher.notify(new ContextChangeEvent(
-					aContext.getSessionInterface(),
+		if(this.dispatcher != null)
+			this.dispatcher.notify(new ContextChangeEvent(
+					this.aContext.getSessionInterface(),
 					ContextChangeEvent.PASSWORD_CHANGING_EVENT));
-		dispatcher.notify(new StatusMessageEvent("Изменение пароля"));
+		this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Изменение пароля"));
 		cDialog.setModal(true);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -69,23 +82,21 @@ public class SessionChangePasswordCommand extends VoidCommand
 		cDialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		cDialog.show();
 
-		if(cDialog.retCode == cDialog.RET_CANCEL)
+		int returnCode = cDialog.getReturnCode();
+		if (returnCode == ChangePasswordDialog.RET_CANCEL)
 		{
 //			statusBar.setText("status", LangModelMain.String("statusCancelled"));
-			dispatcher.notify(new StatusMessageEvent("Операция прервана"));
+			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Операция прервана"));
 			return;
 		}
 
-		if(cDialog.retCode == cDialog.RET_OK)
+		if (returnCode == ChangePasswordDialog.RET_OK)
 		{
-			dispatcher.notify(new StatusMessageEvent("Новый пароль установлен"));
-			if(dispatcher != null)
-				dispatcher.notify(new ContextChangeEvent(
-						aContext.getSessionInterface(),
+			this.dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Новый пароль установлен"));
+			if(this.dispatcher != null)
+				this.dispatcher.notify(new ContextChangeEvent(
+						this.aContext.getSessionInterface(),
 						ContextChangeEvent.PASSWORD_CHANGED_EVENT));
 		}
 	}
-
 }
-
- 

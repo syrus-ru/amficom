@@ -1,9 +1,21 @@
+/*
+ * $Id: ReportObjectManager.java,v 1.3 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import java.util.Hashtable;
-import java.sql.SQLException;
 import com.syrus.AMFICOM.CORBA.Report.*;
+import java.util.Hashtable;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ReportObjectManager
 {
 	private Hashtable reportTemplates;
@@ -66,5 +78,4 @@ public class ReportObjectManager
 		return reportTemplates;
 */
 	}
-
 }

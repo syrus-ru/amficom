@@ -1,52 +1,88 @@
+/*
+ * $Id: OnetimeTestProcessor.java,v 1.26 2005/06/16 10:54:57 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Date;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
-import com.syrus.AMFICOM.util.Identifier;
+/**
+ * @version $Revision: 1.26 $, $Date: 2005/06/16 10:54:57 $
+ * @author $Author: bass $
+ * @module mcm_v1
+ */
 
 public class OnetimeTestProcessor extends TestProcessor {
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
+
+	private Date startTime;
 
 	public OnetimeTestProcessor(Test test) {
 		super(test);
+		super.lastMeasurementAcquisition = (super.test.getNumberOfMeasurements() > 0);
+
+		this.startTime = test.getStartTime();
+		Log.debugMessage("ParameterSet lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
 	}
 
 	public void run() {
-		Measurement measurement = null;
-		try {
-			/*Ordinary measurement with ordinary setup*/
-			Identifier id = MeasurementControlModule.createIdentifier("measurement");
-			Log.debugMessage("OnetimeTestProcessor | Measurement id: '" + id.toString() + "'", Log.DEBUGLEVEL06);
-			measurement = super.test.createMeasurement(id,
-																								 super.test.getStartTime());
-/*
-				MeasurementControlModule.measurementServer.ping(1);*/
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
-		if (measurement != null) {
-			super.transceiver.addMeasurement(measurement, this);
-			super.n_measurements ++;
+		while (super.running) {
+			if (!super.lastMeasurementAcquisition) {
+				if (this.startTime.getTime() <= System.currentTimeMillis()) {
 
-			while (super.running) {
-				try {
-					sleep(super.tick_time);
+					try {
+						super.newMeasurementCreation(this.startTime);
+						super.lastMeasurementAcquisition = true;
+						super.clearFalls();
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+						if (coe.getCause() instanceof IllegalObjectEntityException)
+							super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+						else
+							super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
+						super.sleepCauseOfFall();
+					}
+
 				}
-				catch (InterruptedException ie) {
-					Log.errorException(ie);
-				}
+			}
 
-				if (super.n_reports < 1)
-					super.checkMeasurementResults();
-				else
-					break;
-			}//while
+			super.processMeasurementResult();
+			super.checkIfCompletedOrAborted();
 
-		}//if (measurement != null)
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}
 
-		super.cleanup();
-		
-	}//run
+		}	//while
+	}
+
+	protected void processFall() {
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_CREATE_IDENTIFIER:
+				this.abort();
+				break;
+			case FALL_CODE_CREATE_MEASUREMENT:
+				this.abort();
+				break;
+			default:
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+		}
+	}
 }

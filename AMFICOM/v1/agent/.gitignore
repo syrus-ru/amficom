@@ -8,5 +8,8 @@ agent
 *.swp
 *.log
 *.sor
-classes
 logs
+classes
+docs
+lib
+Makefile.inc

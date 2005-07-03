@@ -3,12 +3,6 @@ package com.syrus.AMFICOM.server.event;
 import java.util.Vector;
 import java.util.Hashtable;
 
-class LogicParam {
-	int nr;
-	Vector pos = new Vector();
-	String val;
-}
-
 public class RuleParser {
 	String logic;
 	Hashtable logicParams = new Hashtable();
@@ -19,13 +13,13 @@ public class RuleParser {
 
 	public RuleParser(String logic)	{
 		this.logic = logic;
-    this.parseRule();
+		this.parseRule();
 	}
 
 	private void parseRule() {
 		int start = 0;
-    int end;
-    String temp;
+		int end;
+//		String temp;
 
 		this.action = this.nextWord(logic, 0);
 		start += action.length();
@@ -60,7 +54,7 @@ public class RuleParser {
 //		int endIndex = str.indexOf(d[0], startIndex);
 		int endIndex = str.length();
 
-		for (int i = 0; i< d.length; i++)
+		for (int i = 0; i < d.length; i++)
 			if ((str.indexOf(d[i], startIndex) > 0) && str.indexOf(d[i], startIndex) < endIndex)
 				endIndex = str.indexOf(d[i], startIndex);
 		return str.substring(startIndex, endIndex);
@@ -90,7 +84,6 @@ public class RuleParser {
 	private String[] parseParameters (String str)	{
 		Vector params = new Vector();
 		int d = '\"';
-		int d2 = ' ';
 		int st = 0;
 		int end = -1;
 		int tmp;
@@ -139,5 +132,11 @@ public class RuleParser {
 
 	public String getDescriptor() {
 		return this.descriptor;
+	}
+
+	private class LogicParam {
+		int nr;
+		Vector pos = new Vector();
+		String val;
 	}
 }

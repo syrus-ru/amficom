@@ -1,26 +1,16 @@
-
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.load;
-
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-
-import sqlj.*;
-
-import java.io.*;
-
-import java.util.*;
-
-//Package for Oracle Extensions to JDBC
-import oracle.sql.*;
-import oracle.jdbc.driver.*;
 
 import com.syrus.AMFICOM.server.*;
 import com.syrus.io.*;
+import java.io.File;
+import java.sql.*;
+import java.util.*;
+import sqlj.runtime.ref.DefaultContext;
 
 public class LoadProtoElementsNew
 {
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
 	LogWriter frame;
 	ConnectionManager connectionManager;
 
@@ -43,7 +33,7 @@ public class LoadProtoElementsNew
 		li = new LoadImages(frame, connectionManager);
 		lsa = new LoadSystemAdministrator(frame, connectionManager);
 		try{
-			connectionManager.m_ctx.getConnection().setAutoCommit(false);
+			connectionManager.getConnCtx().getConnection().setAutoCommit(false);
 		} catch (Exception exx) {}
 		try
 		{
@@ -156,7 +146,7 @@ public class LoadProtoElementsNew
 						{
 							String thread_id = (String )e.nextElement();
 
-							MyStringTokenizer parser = new MyStringTokenizer((String )ht2.get(thread_id));
+							SimpleStringTokenizer parser = new SimpleStringTokenizer((String )ht2.get(thread_id));
 							String thread_type_id = parser.nextToken();
 							String thread_name = parser.finalToken();
 
@@ -1316,7 +1306,7 @@ public class LoadProtoElementsNew
 						:thread_type_id)
 			};
 
-			String at_s = ResourcedbInterface.getUId("ctlnk");
+			String at_s = ResourcedbInterface.getUid(CONN, "ctlnk");
 			#sql {
 				insert into AMFICOM.SCHEMECABLELINKTHREADS(
 						ID,

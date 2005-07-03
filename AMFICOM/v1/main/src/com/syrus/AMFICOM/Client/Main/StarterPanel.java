@@ -88,6 +88,13 @@ public class StarterPanel
 					new Color(142, 142, 142),
 					new Color(99, 99, 99));
 
+	protected static int ROW_OFFSET = 30;
+	protected static int ROW_INTERVAL = 100;
+	protected static int COL_COUNT = 5;
+	protected static int COL_OFFSET = 30;
+	protected static int COL_INTERVAL = 100;
+
+
 	public StarterPanel()
 	{
 		super();
@@ -109,224 +116,210 @@ public class StarterPanel
 
 	private void jbInit() throws Exception
 	{
-		int img_siz = 48;
-		int btn_siz = 52;
-		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
+		int imgSize = 48;
+		int btnSize = 52;
+		Dimension buttonSize = new Dimension(btnSize, btnSize);
+		
 		this.setLayout(xYLayout1);
 
 		this.setPreferredSize(new Dimension(510, 300));
 		this.setMinimumSize(new Dimension(510, 300));
 		labelAdmin.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelAdmin.setText("");
 		labelAdmin.setMaximumSize(buttonSize);
 		labelAdmin.setPreferredSize(buttonSize);
-		labelAdmin.setToolTipText(LangModelMain.ToolTip("menuToolsAdmin"));
+		labelAdmin.setToolTipText(LangModelMain.getString("menuToolsAdmin"));
 		labelAdmin.setName("menuToolsAdmin");
 		labelAdmin.addMouseListener(this);
 		labelAdmin.setBorder(normalBorder);
 
 		labelConfig.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/configure.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelConfig.setText("");
 		labelConfig.setMaximumSize(buttonSize);
 		labelConfig.setPreferredSize(buttonSize);
-		labelConfig.setToolTipText(LangModelMain.ToolTip("menuToolsConfig"));
+		labelConfig.setToolTipText(LangModelMain.getString("menuToolsConfig"));
 		labelConfig.setName("menuToolsConfig");
 		labelConfig.addMouseListener(this);
 		labelConfig.setBorder(normalBorder);
 
 		labelComponents.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/components.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelComponents.setText("");
 		labelComponents.setMaximumSize(buttonSize);
 		labelComponents.setPreferredSize(buttonSize);
-		labelComponents.setToolTipText(LangModelMain.ToolTip("menuToolsComponents"));
+		labelComponents.setToolTipText(LangModelMain.getString("menuToolsComponents"));
 		labelComponents.setName("menuToolsComponents");
 		labelComponents.addMouseListener(this);
 		labelComponents.setBorder(normalBorder);
 
 		labelScheme.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/schematics.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelScheme.setText("");
 		labelScheme.setMaximumSize(buttonSize);
 		labelScheme.setPreferredSize(buttonSize);
-		labelScheme.setToolTipText(LangModelMain.ToolTip("menuToolsScheme"));
+		labelScheme.setToolTipText(LangModelMain.getString("menuToolsScheme"));
 		labelScheme.setName("menuToolsScheme");
 		labelScheme.addMouseListener(this);
 		labelScheme.setBorder(normalBorder);
 
 		labelMap.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/map.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMap.setText("");
 		labelMap.setMaximumSize(buttonSize);
 		labelMap.setPreferredSize(buttonSize);
-		labelMap.setToolTipText(LangModelMain.ToolTip("menuToolsMap"));
+		labelMap.setToolTipText(LangModelMain.getString("menuToolsMap"));
 		labelMap.setName("menuToolsMap");
 		labelMap.addMouseListener(this);
 		labelMap.setBorder(normalBorder);
 
 		labelTrace.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/design.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelTrace.setText("");
 		labelTrace.setMaximumSize(buttonSize);
 		labelTrace.setPreferredSize(buttonSize);
-		labelTrace.setToolTipText(LangModelMain.ToolTip("menuToolsTrace"));
+		labelTrace.setToolTipText(LangModelMain.getString("menuToolsTrace"));
 		labelTrace.setName("menuToolsTrace");
 		labelTrace.addMouseListener(this);
 		labelTrace.setBorder(normalBorder);
 
 		labelSchedule.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/scheduling.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelSchedule.setText("");
 		labelSchedule.setMaximumSize(buttonSize);
 		labelSchedule.setPreferredSize(buttonSize);
-		labelSchedule.setToolTipText(LangModelMain.ToolTip("menuToolsSchedule"));
+		labelSchedule.setToolTipText(LangModelMain.getString("menuToolsSchedule"));
 		labelSchedule.setName("menuToolsSchedule");
 		labelSchedule.addMouseListener(this);
 		labelSchedule.setBorder(normalBorder);
 
 		labelSurvey.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/observe.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelSurvey.setText("");
 		labelSurvey.setMaximumSize(buttonSize);
 		labelSurvey.setPreferredSize(buttonSize);
-		labelSurvey.setToolTipText(LangModelMain.ToolTip("menuToolsSurvey"));
+		labelSurvey.setToolTipText(LangModelMain.getString("menuToolsSurvey"));
 		labelSurvey.setName("menuToolsSurvey");
 		labelSurvey.addMouseListener(this);
 		labelSurvey.setBorder(normalBorder);
 
 		labelModel.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/model.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelModel.setText("");
 		labelModel.setMaximumSize(buttonSize);
 		labelModel.setPreferredSize(buttonSize);
-		labelModel.setToolTipText(LangModelMain.ToolTip("menuToolsModel"));
+		labelModel.setToolTipText(LangModelMain.getString("menuToolsModel"));
 		labelModel.setName("menuToolsModel");
 		labelModel.addMouseListener(this);
 		labelModel.setBorder(normalBorder);
 
 		labelMonitor.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/analyse.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMonitor.setText("");
 		labelMonitor.setMaximumSize(buttonSize);
 		labelMonitor.setPreferredSize(buttonSize);
-		labelMonitor.setToolTipText(LangModelMain.ToolTip("menuToolsMonitor"));
+		labelMonitor.setToolTipText(LangModelMain.getString("menuToolsMonitor"));
 		labelMonitor.setName("menuToolsMonitor");
 		labelMonitor.addMouseListener(this);
 		labelMonitor.setBorder(normalBorder);
 
 		labelAnalyse.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/survey.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelAnalyse.setText("");
 		labelAnalyse.setMaximumSize(buttonSize);
 		labelAnalyse.setPreferredSize(buttonSize);
-		labelAnalyse.setToolTipText(LangModelMain.ToolTip("menuToolsAnalyse"));
+		labelAnalyse.setToolTipText(LangModelMain.getString("menuToolsAnalyse"));
 		labelAnalyse.setName("menuToolsAnalyse");
 		labelAnalyse.addMouseListener(this);
 		labelAnalyse.setBorder(normalBorder);
 
 		labelNorms.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/evaluate.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelNorms.setText("");
 		labelNorms.setMaximumSize(buttonSize);
 		labelNorms.setPreferredSize(buttonSize);
-		labelNorms.setToolTipText(LangModelMain.ToolTip("menuToolsNorms"));
+		labelNorms.setToolTipText(LangModelMain.getString("menuToolsNorms"));
 		labelNorms.setName("menuToolsNorms");
 		labelNorms.addMouseListener(this);
 		labelNorms.setBorder(normalBorder);
 
 		labelMaintain.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/maintenance.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelMaintain.setText("");
 		labelMaintain.setMaximumSize(buttonSize);
 		labelMaintain.setPreferredSize(buttonSize);
-		labelMaintain.setToolTipText(LangModelMain.ToolTip("menuToolsMaintain"));
+		labelMaintain.setToolTipText(LangModelMain.getString("menuToolsMaintain"));
 		labelMaintain.setName("menuToolsMaintain");
 		labelMaintain.addMouseListener(this);
 		labelMaintain.setBorder(normalBorder);
 
 		labelPrognosis.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/prognosis.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelPrognosis.setText("");
 		labelPrognosis.setMaximumSize(buttonSize);
 		labelPrognosis.setPreferredSize(buttonSize);
-		labelPrognosis.setToolTipText(LangModelMain.ToolTip("menuToolsPrognosis"));
+		labelPrognosis.setToolTipText(LangModelMain.getString("menuToolsPrognosis"));
 		labelPrognosis.setName("menuToolsPrognosis");
 		labelPrognosis.addMouseListener(this);
 		labelPrognosis.setBorder(normalBorder);
 
 		labelReportBuilder.setIcon(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/report.gif").getScaledInstance(
-					img_siz,
-					img_siz,
+					imgSize,
+					imgSize,
 					Image.SCALE_DEFAULT)));
 		labelReportBuilder.setText("");
 		labelReportBuilder.setMaximumSize(buttonSize);
 		labelReportBuilder.setPreferredSize(buttonSize);
-		labelReportBuilder.setToolTipText(LangModelMain.ToolTip("menuToolsReportBuilder"));
+		labelReportBuilder.setToolTipText(LangModelMain.getString("menuToolsReportBuilder"));
 		labelReportBuilder.setName("menuToolsReportBuilder");
 		labelReportBuilder.addMouseListener(this);
 		labelReportBuilder.setBorder(normalBorder);
 
-		add(labelAdmin, new XYConstraints(30, 30, -1, -1));
-		add(labelConfig, new XYConstraints(130, 30, -1, -1));
-		add(labelComponents, new XYConstraints(230, 30, -1, -1));
-		add(labelScheme, new XYConstraints(330, 30, -1, -1));
-		add(labelMap, new XYConstraints(430, 30, -1, -1));
-		add(labelTrace, new XYConstraints(30, 130, -1, -1));
-		add(labelModel, new XYConstraints(130, 130, -1, -1));
-		add(labelSchedule, new XYConstraints(230, 130, -1, -1));
-		add(labelMonitor, new XYConstraints(330, 130, -1, -1));
-		add(labelNorms, new XYConstraints(430, 130, -1, -1));
-		add(labelAnalyse, new XYConstraints(30, 230, -1, -1));
-		add(labelSurvey, new XYConstraints(130, 230, -1, -1));
-		add(labelMaintain, new XYConstraints(230, 230, -1, -1));
-		add(labelPrognosis, new XYConstraints(330, 230, -1, -1));
-		add(labelReportBuilder, new XYConstraints(430, 230, -1, -1));
+		addComponents();
 	}
 
 	public void mouseEntered(MouseEvent e)
@@ -353,7 +346,6 @@ public class StarterPanel
 		if(!e.getComponent().isEnabled())
 			return;
 		setCursor(Cursor.getDefaultCursor());
-//		System.out.println("mouse Press");
 		((JComponent)e.getComponent()).setBorder(
 				BorderFactory.createBevelBorder(
 						BevelBorder.LOWERED,
@@ -368,7 +360,6 @@ public class StarterPanel
 		if(!e.getComponent().isEnabled())
 			return;
 		setCursor(Cursor.getDefaultCursor());
-//		System.out.println("mouse ERelease");
 		((JComponent)e.getComponent()).setBorder(
 				BorderFactory.createBevelBorder(
 						BevelBorder.RAISED,
@@ -387,7 +378,7 @@ public class StarterPanel
 		JLabel jl = (JLabel )e.getSource();
 		String s = jl.getName();
 		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
+//		command = (Command )command.clone();
 		command.execute();
 	}
 
@@ -406,13 +397,20 @@ public class StarterPanel
 		int count = e.length;
 		int i;
 
-//		System.out.println("changed model in panel");
-
 		labelAdmin.setVisible(aModel.isVisible("menuToolsAdmin"));
 		labelAdmin.setEnabled(aModel.isEnabled("menuToolsAdmin"));
 
 		labelConfig.setVisible(aModel.isVisible("menuToolsConfig"));
 		labelConfig.setEnabled(aModel.isEnabled("menuToolsConfig"));
+
+		labelComponents.setVisible(aModel.isVisible("menuToolsComponents"));
+		labelComponents.setEnabled(aModel.isEnabled("menuToolsComponents"));
+
+		labelScheme.setVisible(aModel.isVisible("menuToolsScheme"));
+		labelScheme.setEnabled(aModel.isEnabled("menuToolsScheme"));
+
+		labelMap.setVisible(aModel.isVisible("menuToolsMap"));
+		labelMap.setEnabled(aModel.isEnabled("menuToolsMap"));
 
 		labelTrace.setVisible(aModel.isVisible("menuToolsTrace"));
 		labelTrace.setEnabled(aModel.isEnabled("menuToolsTrace"));
@@ -434,6 +432,116 @@ public class StarterPanel
 
 		labelNorms.setVisible(aModel.isVisible("menuToolsNorms"));
 		labelNorms.setEnabled(aModel.isEnabled("menuToolsNorms"));
+
+		labelMaintain.setVisible(aModel.isVisible("menuToolsMaintain"));
+		labelMaintain.setEnabled(aModel.isEnabled("menuToolsMaintain"));
+
+		labelPrognosis.setVisible(aModel.isVisible("menuToolsPrognosis"));
+		labelPrognosis.setEnabled(aModel.isEnabled("menuToolsPrognosis"));
+
+		labelReportBuilder.setVisible(aModel.isVisible("menuToolsReportBuilder"));
+		labelReportBuilder.setEnabled(aModel.isEnabled("menuToolsReportBuilder"));
+
+		addComponents();
+	}
+	
+	protected void addComponents()
+	{
+		if(aModel == null)	
+			return;
+		this.removeAll();
+		
+		int counter = -1;
+		if(aModel.isVisible("menuToolsAdmin"))
+			add(labelAdmin, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsConfig"))
+			add(labelConfig, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsComponents"))
+			add(labelComponents, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsScheme"))
+			add(labelScheme, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMap"))
+			add(labelMap, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsTrace"))
+			add(labelTrace, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsModel"))
+			add(labelModel, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsSchedule"))
+			add(labelSchedule, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMonitor"))
+			add(labelMonitor, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsNorms"))
+			add(labelNorms, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsAnalyse"))
+			add(labelAnalyse, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsSurvey"))
+			add(labelSurvey, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMaintain"))
+			add(labelMaintain, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsPrognosis"))
+			add(labelPrognosis, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsReportBuilder"))
+			add(labelReportBuilder, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
 	}
 }
 

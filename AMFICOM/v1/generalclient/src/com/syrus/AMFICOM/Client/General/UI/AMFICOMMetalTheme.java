@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.Font;
-import java.awt.Color;
-import javax.swing.plaf.*;
 import javax.swing.*;
 
 import javax.swing.plaf.FontUIResource;
@@ -265,5 +263,7 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 			return getBlack();
 	}
 
-
+//	protected ColorUIResource getSecondary3() { return secondary3; }
+//  private static final ColorUIResource secondary3 = new ColorUIResource(
+//      234, 234, 234);
 }

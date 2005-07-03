@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Optimize;
 
 import java.awt.*;
+import java.util.Iterator;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -11,6 +12,7 @@ import com.syrus.AMFICOM.Client.Optimize.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+import javax.swing.table.TableModel;
 
 // панель, на которой находится jComboBox со списком
 // видов элементов и таблица элементов с полями "Название" и "Наличие КИС"
@@ -107,7 +109,7 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     if(mdiMain != null)
     {	if(mdiMain.scheme != null)
       {  //dataSet = new DataSet(mdiMain.scheme.getTopLevelElements());
-         dataSet = new DataSet(mdiMain.scheme.getAllTopElements()); //getAllTopElements() возвращает все схемные-элементы на всех уровнях
+         dataSet = new DataSet(mdiMain.scheme.getAllTopElements().iterator() ); //getAllTopElements() возвращает все схемные-элементы на всех уровнях
       }
     }
     tablePane.setContents(dataSet);
@@ -121,11 +123,12 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     mouseSelect = false;
     //Здесь очищаем выбранные элементы у таблицы
     myTable.clearSelection();
-    DataSet dataSet = tablePane.getContents();
-    for(int i = 0; i < dataSet.size(); i++)
-    {	SchemeElement se = (SchemeElement )dataSet.get(i);
+   java.util.List list = tablePane.getContents();
+   int i_cou=0;
+    for( Iterator  i = list.iterator() ; i.hasNext() ; i_cou++)
+    {	SchemeElement se = (SchemeElement )i.next();
       //if(se.isSelected())
-      {	myTable.getSelectionModel().addSelectionInterval(i, i);
+      {	myTable.getSelectionModel().addSelectionInterval(i_cou, i_cou);
       }
     }
     mouseSelect = true;
@@ -157,4 +160,8 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     }
   }
   //--------------------------------------------------------------------------------------------------------------
+  public TableModel getTableModel()
+  {
+    return tablePane.getTable().getModel();
+  }
 }

@@ -1,26 +1,22 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.*;
-import java.awt.Component;
-import java.awt.Rectangle;
 import java.awt.SystemColor;
 
-import java.io.Serializable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
 
 public class JLabelRenderer extends JLabel
 		implements PropertyRenderer
 {
-    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1); 
-    
-    private Color unselectedForeground; 
-    private Color unselectedBackground; 
+    protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
-    public JLabelRenderer() 
+    private Color unselectedForeground;
+    private Color unselectedBackground;
+
+    public JLabelRenderer()
 	{
 		super();
 		setOpaque(true);
@@ -42,11 +38,9 @@ public class JLabelRenderer extends JLabel
 		setText((String )obj);
 	}
 	
-    protected void setValue(Object value) 
+    protected void setValue(Object value)
 	{
 		setText((value == null) ? "" : value.toString());
     }
 	
 }
-
-

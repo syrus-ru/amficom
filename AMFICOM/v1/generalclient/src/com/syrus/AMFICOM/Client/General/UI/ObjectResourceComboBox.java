@@ -1,63 +1,64 @@
+/*
+ * $Id: ObjectResourceComboBox.java,v 1.9 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import javax.swing.*;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JList;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceComboBox extends AComboBox
 		implements PropertyRenderer, PropertyEditor, ActionListener
 {
 	static public final String _DEFAULT_COL_ID = "name";
 	static public final String _ID_COL_ID = "id";
 
-	public Vector vec = new Vector();
-	String obj_id = "";
-	String type = "";
-	String col_id = "name";
-	int shownull = 0;
-	Hashtable objs = new Hashtable();
-	StubResource stubResource = new StubResource();
+	public List vec = new ArrayList();
 
-	boolean doRestrict = false;
-	String domain_id = "";
+	private String obj_id = "";
+	private String type = "";
+	private String col_id = "name";
+	private int shownull = 0;
+	private Map objs = new HashMap();
+	private StubResource stubResource = new StubResource();
 
-    class ComboBoxRenderer extends DefaultListCellRenderer
-    {
+	private boolean doRestrict = false;
+	private String domain_id = "";
+
+	class ComboBoxRenderer extends DefaultListCellRenderer
+	{
 		ObjectResourceComboBox parent;
 
-        public ComboBoxRenderer(ObjectResourceComboBox parent)
-        {
+		public ComboBoxRenderer(ObjectResourceComboBox parent)
+		{
 			this.parent = parent;
-        }
+		}
 
-	    public Component getListCellRendererComponent(
-				JList list,
-				Object value,
-				int index,
-				boolean isSelected,
-				boolean cellHasFocus)
-        {
-			if(value instanceof ObjectResource)
+		public Component getListCellRendererComponent(
+			JList list,
+			Object value,
+			int index,
+			boolean isSelected,
+			boolean cellHasFocus)
+		{
+			if(value instanceof StorableObject)
 			{
-				ObjectResource or = (ObjectResource)value;
+				StorableObject or = (StorableObject)value;
 				String text = "";
 				if(parent.col_id.equals(ObjectResourceComboBox._DEFAULT_COL_ID))
 					text = or.getName();
@@ -66,111 +67,116 @@ public class ObjectResourceComboBox extends AComboBox
 					text = or.getId();
 				else
 				{
-					ObjectResourceModel mod = or.getModel();
-					text = mod.getColumnValue(parent.col_id);
+//					ObjectResourceModel mod = or.getModel();
+//					text = mod.getColumnValue(parent.col_id);
 //					text = or.getColumnValue(parent.col_id);
 				}
 				JComponent c = (JComponent )super.getListCellRendererComponent(
-                        list, text, index, isSelected, cellHasFocus);
+												list, text, index, isSelected, cellHasFocus);
 				c.setToolTipText(text);
 				return c;
 			}
 			else
 				return super.getListCellRendererComponent(
-                        list, value, index, isSelected, cellHasFocus);
-        }
+												list, value, index, isSelected, cellHasFocus);
+		}
 
-    }
+	}
 
 	public ObjectResourceComboBox()
 	{
 		super();
 
-        setModel(new DefaultComboBoxModel(vec));
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 		this.addActionListener(this);
 
-        ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setRenderer(renderer);
-        this.setMaximumRowCount(5);
+		ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
+		renderer.setSize(this.getWidth(), this.getHeight());
+		renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+		this.setRenderer(renderer);
+		this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceComboBox(Hashtable objs, String col_id, boolean shownull)
+	public ObjectResourceComboBox(Map objs, String col_id, boolean shownull)
 	{
 		super();
 		this.objs = objs;
 		this.col_id = col_id;
 
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		{
+			for(Iterator it = objs.values().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject)it.next();
+				vec.add(or);
 			}
+		}
+
 		if(shownull)
 			vec.add(stubResource);
 
-        setModel(new DefaultComboBoxModel(vec));
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 		this.addActionListener(this);
 
-        ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setRenderer(renderer);
-        this.setMaximumRowCount(5);
+		ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
+		renderer.setSize(this.getWidth(), this.getHeight());
+		renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+		this.setRenderer(renderer);
+		this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceComboBox(Hashtable objs, String col_id, boolean shownull, Object obj)
+	public ObjectResourceComboBox(Map objs, String col_id, boolean shownull, Object obj)
 	{
 		this(objs, col_id, shownull);
 		setSelected(obj);
 	}
-	
+
 	public ObjectResourceComboBox(String type, String col_id, boolean shownull)
 	{
 		this.type = type;
 		this.col_id = col_id;
 
-		objs = Pool.getHash(type);
+		objs = Pool.getMap(type);
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		{
+			for(Iterator it = objs.values().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject)it.next();
+				vec.add(or);
 			}
+		}
 
 		if(shownull)
 			vec.add(stubResource);
 
-        setModel(new DefaultComboBoxModel(vec));
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 
 		this.setBounds(new Rectangle(0, 0, 20, 20));
 		this.addActionListener(this);
 
-        ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
-        renderer.setSize(this.getWidth(), this.getHeight());
-        renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
-        this.setRenderer(renderer);
-        this.setMaximumRowCount(5);
+		ObjectResourceComboBox.ComboBoxRenderer renderer = new ObjectResourceComboBox.ComboBoxRenderer(this);
+		renderer.setSize(this.getWidth(), this.getHeight());
+		renderer.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()));
+		this.setRenderer(renderer);
+		this.setMaximumRowCount(5);
 	}
-	
+
 	public ObjectResourceComboBox(String type, String col_id, boolean shownull, Object obj)
 	{
 		this(type, col_id, shownull);
 		setSelected(obj);
 	}
-	
-	public ObjectResourceComboBox(Hashtable objs, Object obj)
+
+	public ObjectResourceComboBox(Map objs, Object obj)
 	{
 		this(objs, _DEFAULT_COL_ID, false, obj);
 	}
-	
-	public ObjectResourceComboBox(Hashtable objs)
+
+	public ObjectResourceComboBox(Map objs)
 	{
 		this(objs, _DEFAULT_COL_ID, false);
 	}
@@ -179,7 +185,7 @@ public class ObjectResourceComboBox extends AComboBox
 	{
 		this(type, _DEFAULT_COL_ID, false, obj);
 	}
-	
+
 	public ObjectResourceComboBox(String type)
 	{
 		this(type, _DEFAULT_COL_ID, false);
@@ -190,132 +196,167 @@ public class ObjectResourceComboBox extends AComboBox
 		this(type, _DEFAULT_COL_ID, shownull);
 	}
 
-	public void setContents(Enumeration enum, boolean shownull)
+	public void setContents(Collection coll, boolean shownull)
 	{
-		vec = new Vector();
-		if(enum != null)
-			for(; enum.hasMoreElements();)
+		vec = new ArrayList();
+
+		if(coll != null)
+		{
+			for(Iterator it = coll.iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject)it.next();
+				vec.add(or);
 			}
+		}
+
 		if(shownull)
 			vec.add(stubResource);
 
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
-	public void setContents(Hashtable objs, boolean shownull)
+	public void setContents(Iterator it, boolean shownull)
 	{
-		vec = new Vector();
-		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+		vec = new ArrayList();
+		if(it != null)
+			for(; it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject )it.next();
+				vec.add(or);
 			}
+
 		if(shownull)
 			vec.add(stubResource);
 
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
 
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
+	}
+
+	public void setContents(Map objs, boolean shownull)
+	{
+		vec = new ArrayList();
+
+		if(objs != null)
+		{
+			for(Iterator it = objs.values().iterator(); it.hasNext();)
+			{
+				StorableObject or = (StorableObject)it.next();
+				vec.add(or);
+			}
+		}
+
+		if(shownull)
+			vec.add(stubResource);
+
+		if(doRestrict)
+			restrictContents();
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public void setContents(String type, boolean shownull)
 	{
-		Hashtable objs = Pool.getHash(type);
+		Map objs = Pool.getMap(type);
 		setContents(objs, shownull);
 
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
-	public void add(ObjectResource or)
+	public void add(StorableObject or)
 	{
 		vec.add(or);
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
-	}
-	
-	public void add(Hashtable h)
-	{
-		add(h.elements());
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
-	public void add(Vector v)
+	public void add(Map h)
 	{
-		add(v.elements());
+		add(h.values());
 	}
 
-	public void add(Enumeration e)
+	public void add(ArrayList v)
 	{
-		if(e != null)
-			for(; e.hasMoreElements();)
+		add(v);
+	}
+
+	public void add(Collection coll)
+	{
+		if(coll != null)
+		{
+			for(Iterator it = coll.iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )e.nextElement();
-				vec.addElement(or);
+				StorableObject or = (StorableObject)it.next();
+				vec.add(or);
 			}
+		}
+
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public void removeAll()
 	{
-		vec.removeAllElements();
-        setModel(new DefaultComboBoxModel(vec));
+		vec.clear();
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
-	
-	public void remove(ObjectResource or)
+
+	public void remove(StorableObject or)
 	{
 		vec.remove(or);
-        setModel(new DefaultComboBoxModel(vec));
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public void remove(Object[] objs)
 	{
 		for(int i = 0; i < objs.length; i++)
-			vec.remove((ObjectResource )objs[i]);
-        setModel(new DefaultComboBoxModel(vec));
+			vec.remove((StorableObject )objs[i]);
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public void remove(String obj_id)
 	{
-		for(int i = 0; i < vec.size(); i++)
+		for(ListIterator it = vec.listIterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )vec.get(i);
+			StorableObject or = (StorableObject)it.next();
 			if(or.getId().equals(obj_id))
 				vec.remove(or);
 		}
-        setModel(new DefaultComboBoxModel(vec));
+
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public Object getSelected()
 	{
 		return getSelectedId();
 	}
-	
+
 	public String getSelectedId()
 	{
-		ObjectResource or = (ObjectResource )this.getSelectedItem();
+		StorableObject or = (StorableObject )this.getSelectedItem();
 		if(or == null)
 			return null;
 		obj_id = or.getId();
 		return obj_id;
 	}
-	
-	public ObjectResource getSelectedObjectResource()
+
+	public StorableObject getSelectedObjectResource()
 	{
-		ObjectResource or = (ObjectResource )this.getSelectedItem();
+		StorableObject or = (StorableObject )this.getSelectedItem();
 		return or;
 	}
-	
+
 	public void setSelected(Object obj)
 	{
 		if(obj == null)
@@ -323,7 +364,7 @@ public class ObjectResourceComboBox extends AComboBox
 			this.setSelectedItem(stubResource);
 			return;
 		}
-		if(obj instanceof ObjectResource)
+		if(obj instanceof StorableObject)
 		{
 			this.setSelectedItem(obj);
 			return;
@@ -335,9 +376,9 @@ public class ObjectResourceComboBox extends AComboBox
 
 			boolean found = false;
 
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+			for(ListIterator it = vec.listIterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				StorableObject or = (StorableObject)it.next();
 				if(or.getId().equals(obj_id))
 				{
 					this.setSelectedItem(or);
@@ -345,15 +386,9 @@ public class ObjectResourceComboBox extends AComboBox
 					break;
 				}
 			}
+
 			if(!found)
 				this.setSelectedItem(stubResource);
-/*
-			Object or = Pool.get(type, obj_id);
-			if(or != null)
-				this.setSelectedItem(or);
-			else
-				this.setSelectedItem(stubResource);
-*/
 		}
 	}
 
@@ -361,7 +396,7 @@ public class ObjectResourceComboBox extends AComboBox
 	{
 //		if(e.getModifiers() == ActionEvent.ACTION_PERFORMED)
 		{
-			ObjectResource or = (ObjectResource )this.getSelectedItem();
+			StorableObject or = (StorableObject )this.getSelectedItem();
 			String text = "";
 			if(or == null)
 				text = "";
@@ -373,8 +408,8 @@ public class ObjectResourceComboBox extends AComboBox
 				text = or.getId();
 			else
 			{
-				ObjectResourceModel mod = or.getModel();
-				text = mod.getColumnValue(col_id);
+//				ObjectResourceModel mod = or.getModel();
+//				text = mod.getColumnValue(col_id);
 			}
 			this.setToolTipText(text);
 		}
@@ -385,21 +420,26 @@ public class ObjectResourceComboBox extends AComboBox
 		doRestrict = bool;
 		if(doRestrict)
 			restrictContents();
-        setModel(new DefaultComboBoxModel(vec));
+		setModel(new DefaultComboBoxModel(vec.toArray(new StorableObject[vec.size()])));
 	}
 
 	public void restrictContents()
 	{
-		Vector vec_to_remove = new Vector();
-		for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+		List vec_to_remove = new ArrayList();
+
+		for(ListIterator it = vec.listIterator(); it.hasNext();)
 		{
-			ObjectResource or = (ObjectResource )enum.nextElement();
+			StorableObject or = (StorableObject)it.next();
 			if(!or.getDomainId().equals(domain_id))
 				if(!or.equals(stubResource))
 					vec_to_remove.add(or);
 		}
-		for(int i = 0; i < vec_to_remove.size(); i++)
-			vec.remove((ObjectResource )vec_to_remove.get(i));
+
+		for(ListIterator it = vec_to_remove.listIterator(); it.hasNext();)
+		{
+			StorableObject or = (StorableObject)it.next();
+			vec.remove(or);
+		}
 	}
 
 	public void setDomainId(String domain_id)
@@ -411,5 +451,4 @@ public class ObjectResourceComboBox extends AComboBox
 	{
 		return domain_id;
 	}
-
 }

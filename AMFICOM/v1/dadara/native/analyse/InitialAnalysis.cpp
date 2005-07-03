@@ -1,1427 +1,1303 @@
-// InitialAnalysis.cpp: implementation of the InitialAnalysis class.
-//
-//////////////////////////////////////////////////////////////////////
-
+//----------------------------------------
 #include "InitialAnalysis.h"
-#include "../Common/MathRef.h"
+#include "../common/MathRef.h"
 #include "Histogramm.h"
 
-#include "../Common/assert.h"
+#include <math.h>
+#include <assert.h>
+#include <stdlib.h>
+#include "../an2/findLength.h"
+#include "../an2/findNoise.h"
+#include "../wavelet/wavelet.h"
 
-#ifdef USE_NEURAL_NETWORK
-#include "NeuroAnalyser.h"
-#endif
+#include "../common/prf.h"
 
-#include "../An2/findLength.h"
+static	SineWavelet wavelet; // используемый вейвлет
 
-#ifdef DEBUG_INITIAL_ANALYSIS
-	#ifndef _WIN32
-		#include <time.h>
-		#include <sys/time.h>
-	#endif
-	#include <stdio.h>
-#endif
-
-//////////////////////////////////////////////////////////////////////
+#define xsign(f) ((f)>=0?1:-1)
+inline double fmin(double a, double b) { return a < b ? a : b; }
+inline double fmax(double a, double b) { return a > b ? a : b; }
+inline int imin(int a, int b) { return a < b ? a : b; }
+inline int imax(int a, int b) { return a > b ? a : b; }
+//------------------------------------------------------------------------------------------------------------
 // Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 InitialAnalysis::InitialAnalysis(
-	double *data,				//точки рефлектограммы
+	double* data,				//точки рефлектограммы
 	int data_length,			//число точек
 	double delta_x,				//расстояние между точками (м)
 	double minimalThreshold,	//минимальный уровень события
 	double minimalWeld,			//минимальный уровень неотражательного события
 	double minimalConnector,	//минимальный уровень отражательного события
-	double minimalEndingSplash,	//минимальный уровень последнего отражения
-	double maximalNoise,		//максимальный уровень шума
-	int waveletType,			//номер используемого вейвлета
-	double formFactor,			//формфактор отражательного события
-	int reflectiveSize,			//характерная длина отражательного события
-	int nonReflectiveSize)		//характерная длина неотражательного события
+	double minimalEnd,			//минимальный уровень отражения в конце волокна
+	double noiseFactor,			// множитель для уровня шума (около 2.0)
+	int nonReflectiveSize,		//характерная длина неотражательного события
+	double rACrit,				// порог "большого" коннектора
+	int rSSmall,				// макс. длина для маленького коннектора
+	int rSBig,					// макс. длина для большого коннектора
+	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
+	double *externalNoise)		//вычисленный заранее шум ( ==0 -> ищем сами)
 {
-
-	/*fprintf(stderr,
-		"data_length %d\n"
-		"delta_x %g\n"
-		"minimalThreshold %g\n"
-		"minimalWeld %g\n"
-		"minimalConnector %g\n"
-		"minimalEndingSplash %g\n"
-		"maximalNoise %g\n"
-		"waveletType %d\n"
-		"formFactor %g\n"
-		"reflectiveSize %d\n"
-		"nonReflectiveSize %d\n",
-		data_length,
-		delta_x,
-		minimalThreshold,
-		minimalWeld,
-		minimalConnector,
-		minimalEndingSplash,
-		maximalNoise,
-		waveletType,
-		formFactor,
-		reflectiveSize,
-		nonReflectiveSize);*/
-
-
 #ifdef DEBUG_INITIAL_ANALYSIS
-	#ifdef _WIN32
-		this->str = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
-		if (this->str == 0)
-			this->str = stderr;
-		fprintf (this->str, "*** InitialAnalysis::InitialAnalysis: data=%p, data_length=%d\n",
-			data,data_length);
-	#else
-		timeval tv;
-		gettimeofday(&tv, NULL);
-		tm* t = localtime(&tv.tv_sec);
-		const int size = 64; //was: 9 + 15 + 1 + 14 + 1 + 3 + 1...
-		char* filename = new char[size];
-		sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-dadara-ia.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
-		filename[size - 1] = 0;
-		this->str = fopen(filename, "a");
-		delete[] filename;
-	#endif
+	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
+	assert(logf);
+	fprintf(logf, "=== IA invoked\n"
+		"len %d deltaX %g minTh %g minWeld %g minConn %g minEnd %g noiseFactor %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEnd, noiseFactor);
+	fprintf(logf, "nRefSize %d rACrit %g rSBig %d rSSmall %d lTZ %d extNoise %s\n",
+		nonReflectiveSize, rACrit, rSBig, rSSmall, lengthTillZero, externalNoise ? "present" : "absent");
+	fflush(logf);
 #endif
-
+#ifdef debug_lines
+    cou = 0;
+    for(int i=0; i<sz; i++){col[i] = -1;}
+#endif
 	this->delta_x				= delta_x;
 	this->minimalThreshold		= minimalThreshold;
 	this->minimalWeld			= minimalWeld;
 	this->minimalConnector		= minimalConnector;
-	this->minimalEndingSplash	= minimalEndingSplash;
-	this->maximalNoise			= maximalNoise;
-	this->waveletType			= waveletType;
-	this->formFactor			= formFactor;
+    this->minimalEnd			= minimalEnd;
+    this->noiseFactor			= noiseFactor;
 	this->data_length			= data_length;
 	this->data					= data;
-	this->evSizeC				= reflectiveSize;
-	this->evSizeW				= nonReflectiveSize;
+    this->rACrit 				= rACrit;
+    this->rSSmall				= rSSmall;
+    this->rSBig					= rSBig;
+    int scaleB					= nonReflectiveSize;
 
-	performAnalysis();
+    events = new ArrList();
+	if (lengthTillZero <= 0){
+		lastPoint = getLastPoint();
+    }
+	else{
+		lastPoint = lengthTillZero - 1;
+    }
+
+	noise	= new double[lastPoint + 1];
+#ifdef debug_VCL
+	debug_f_wlet = new double[lastPoint + 1];
+	f_tmp   = new double[lastPoint + 1];
+	type	= new double[data_length];
+#endif
+	// если массив с уровнем шума не задан извне, либо пользователь IA не указал его размер, считаем шум сами
+	if (externalNoise == 0 || lengthTillZero <= 0)
+	{	prf_b("IA: noise");
+		// вычисляем уровень шума
+		{ const int sz = lastPoint + 1;
+		  //fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
+		  fillNoiseArray(data, data_length, sz, 1.0, noiseFactor, noise);
+		}
+	}
+	else
+	{	int i;
+		for (i = 0; i < lastPoint; i++)
+		{	noise[i] = externalNoise[i] * noiseFactor;
+        }
+	}
+	// noise convolution to wavelet
+    WaveletDataConvolution(noise, lastPoint+1, scaleB);
+
+	prf_b("IA: analyse");
+	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
+	performAnalysis(f_wletTEMP, scaleB);
+	delete[] f_wletTEMP;
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "IA: f_wletTEMP deleted\n");
+#endif
+	prf_b("IA: done");
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "IA: resulting nEvents = %d\n", (int)(getEvents().getLength()));
+#endif
 }
-
-
-
-
+//------------------------------------------------------------------------------------------------------------
 InitialAnalysis::~InitialAnalysis()
 {
-	//delete[] wn_w;
-	//delete[] wn_c;
-	delete[] transC;
-	delete[] transW;
+#ifdef debug_VCL
+	delete[] debug_f_wlet;
+	delete[] type;
+#endif
 	delete[] noise;
-	delete[] data_woc;
 
-	epVector.clear();
+    events->disposeAll();
 
-	delete[] eps;
-
+    delete events;
 #ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str, "### InitialAnalysis::~InitialAnalysis\n");
-	if (this->str != stderr && this->str != stdout)
-		fclose(this->str);
+	fclose(logf);
 #endif
 }
-
-
-void InitialAnalysis::performAnalysis()
-{
-	correctDataArray();
-
-	lastNonZeroPoint = getLastPoint();
-	transC	 = new double[lastNonZeroPoint];
-	transW	 = new double[lastNonZeroPoint];
-	noise	 = new double[lastNonZeroPoint];
-	data_woc = new double[data_length];
-
-	//calcEventSize(0.5);
-
-	wn_c = getWLetNorma(evSizeC, waveletType);
-	wn_w = getWLetNorma(evSizeW, waveletType);
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "Reflecting event size = %d\n", evSizeC);
-		fprintf(this->str, "Nonreflecting event size = %d\n", evSizeW);
-#endif
-
-	// вычисляем уровень шума
-	getNoise(noise, evSizeC);
-
-	// выполняем вейвлет-преобразование
-	performTransformation(data, 0, lastNonZeroPoint, transC, evSizeC, wn_c);
-	performTransformation(data, 0, lastNonZeroPoint, transW, evSizeW, wn_w);
-
-	// вычитаем из коэффициентов преобразования(КП) постоянную составляющую (среднее затухание)
-	meanAttenuation = shiftToZeroAttenuation(transC);
-	shiftToZeroAttenuation(transW);
-
-	// устанавливаем в 0 КП, которые меньше уровня шума или минимального уровня события
-	setNonZeroTransformation(transC, minimalThreshold, 0, lastNonZeroPoint);
-	setNonZeroTransformation(transW, minimalThreshold, 0, lastNonZeroPoint);
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "First transformation performed\nSearching for connectors...");
-#endif
-
-	// определяем координаты и типы событий по КП
-	findConnectors(
-		transC,
-		transW,
-		0,
-		//min(lastNonZeroPoint + evSizeC, data_length - 10), 
-		lastNonZeroPoint - 1,
-		epVector);
-//	correctConnectorCoords();
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\nFound %d connectors\nSubstracting connectors from trace...", epVector.size());
-#endif
-	excludeConnectors(epVector, data, data_woc);
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\n");
-#endif
-
-	performTransformation(data_woc, 0, lastNonZeroPoint, transW, evSizeW, wn_w);
-	shiftToZeroAttenuation(transW);
-	setNonZeroTransformation(transW, minimalThreshold, 0, lastNonZeroPoint);
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "Second transformation performed\nSearching for welds...");
-#endif
-	findWelds(transW, epVector);
-	siewLinearParts();
-	correctWeldCoords();
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\nTotal %d events found\n", epVector.size());
-#endif
-
-	
-#ifdef DEBUG_INITIAL_ANALYSIS
-	EPLIST::iterator it;
-#endif
-
-	// исключаем неидентифицированные события
-	//excludeNonRecognizedEvents();
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "Excluding short events (linear = %d, weld = %d, connector = %d)...", 
-			max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
-#endif
-	// исключаем события с длиной, меньшей половины характерного размера
-	excludeShortEvents(max(evSizeW/2, 10), max(evSizeW/2, 3), max(evSizeC/2, 4));
-	siewLinearParts();
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\n");
-#endif
-
-	
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "Setting EventsParams...");
-#endif
-	setEventParams();
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\n%d events set\nCorrecting end...", epVector.size());
-#endif
-	// корректируем конец волокна согласно минимального отражения
-	correctEnd();
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "done\nTotal number of events = %d\n", epVector.size());
-#endif
-
-//	fclose (f);
-#ifdef DEBUG_INITIAL_ANALYSIS
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		if(it->end <= it->begin)
-			fprintf(this->str, "error in event bounds: x1 = %d, x2 = %d\n", it->begin, it->end);
+//------------------------------------------------------------------------------------------------------------
+// поиск прекрывающихся событий
+// XXX: пересечение - по thr или по weld порогу?
+// note: null-ссылки пропускаем (они остаются при перемещении объектов из одного списка в другой)
+// проверяем перекрыте с учетом разномасштабности
+int InitialAnalysis::splashesOverlap(Splash &spl1, Splash &spl2) {
+	// если всплески одного знака - учитываем разность масштабов
+	int delta = spl1.sign == spl2.sign 
+		? abs(spl1.scale - spl2.scale) // integer abs
+		: 0;
+	return
+		spl1.begin_thr + 1 < spl2.end_thr + delta && spl2.begin_thr + 1 < spl1.end_thr + delta;
+}
+//--------------------------------------------
+int InitialAnalysis::findMinOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
+	int j;
+	for (j = 0; j < arrList.getLength(); j++) {
+		if (arrList[j] && splashesOverlap(spl, *(Splash*)arrList[j]))
+			return j;
 	}
-	fclose(this->str);
+	return -1;
+}
+//--------------------------------------------
+int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList) {
+	int j;
+	int ret = -1;
+	for (j = 0; j < arrList.getLength(); j++) {
+		if (arrList[j] && splashesOverlap(spl, *(Splash*)arrList[j]))
+			ret = j;
+	}
+	return ret;
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
+{	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
+	{	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
+		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
+		double wn = getWLetNorma(scaleB);
+		performTransformationOnly(data, 0, lastPoint + 1, TEMP, scaleB, wn);
+		calcAverageFactor(TEMP, scaleB, wn);
+		centerWletImageOnly(TEMP, scaleB, 0, lastPoint + 1, wn);// вычитаем из коэффициентов преобразования(КП) постоянную составляющую
+	}
+#ifdef debug_VCL
+	{	int i;
+		for (i = 0; i <= lastPoint; i++)
+			debug_f_wlet[i] = TEMP[i];
+	}
 #endif
-}
 
-int InitialAnalysis::getEventSize()
-{
-	return evSizeC;
-}
+	// корректируем пороги на основе среднего наклона и начального масштаба вейвлета
+    shiftThresholds(scaleB);// сдвинуть пороги
 
-EventParams **InitialAnalysis::getEventParams()
-{
-	return eps;
-}
-
-int InitialAnalysis::getEventsCount()
-{
-	return epVector.size();
-}
-
-double InitialAnalysis::getMeanAttenuation()
-{
-	return meanAttenuation;
-}
-
-void InitialAnalysis::correctDataArray()
-{
-	// Excluding bad points at the begin of the reflectogramm;
-	double tmp;
-	if(data[1]<data[0])
-	{
-		tmp = data[0];
-		data[0] = data[1];
-		data[1] = tmp;
-	}
-	if(data[2]<data[1] && data[2]<data[3])
-	{
-		data[2] = (data[1]+data[3])/2.;
-	}
-
-	double minimum = data[300];
-	int i;
-
-	for(i=300; i<data_length; i++)
-	{
-		if(data[i]<minimum)
-		{
-			minimum = data[i];
+#ifdef DEBUG_INITIAL_ANALYSIS
+	{	// FIXME: debug dump
+		FILE *f = fopen ("noise2.tmp", "w");
+		if (f) {
+			int i;
+			for	(i = 0; i <= lastPoint; i++)
+				fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
+			fclose(f);
 		}
 	}
-
-	for(i=0; i<data_length; i++)
-	{
-		data[i] = data[i] - minimum;
-	}
-
-	for(i=0; i<302; i++)
-	{
-		if(data[i]<0.)
-		{
-			data[i] = 0.;
-		}
-	}
-}
-
-int InitialAnalysis::getLastPoint()
-{
-	/*int lastPoint = data_length-1;
-	for(int i=300; i<data_length; i++)
-	{
-		if(data[i]<1.)
-		{
-			lastPoint = i;
-			break;
-		}
-	}*/
-	int lastPoint = findReflectogramLength(data, data_length) - 1;
-
-	if (lastPoint < 0)
-		lastPoint = 0;
-
-	if(lastPoint + 10 < data_length)
-		lastPoint += 10;
-
-	return lastPoint;
-}
-
-
-/*void InitialAnalysis::calcEventSize(double level)
-{
-	int eventSize = 0;
-	int maximumIndex = 4;
-	int i;
-
-	for (i = 0; i < min(300, data_length); i++)
-		if(data[i] > data[maximumIndex])
-			maximumIndex = i;
-
-	eventSize = maximumIndex;
-
-	for(i = maximumIndex; i < data_length; i++)
-	{
-		if(data[i] < data[maximumIndex] - level)
-		{
-			eventSize = i;
-			break;
-		}
-	}
-
-	eventSize = (int)(eventSize*0.6);
-
-	if(eventSize<4)
-		eventSize = 4;
-
-	evSizeC = eventSize;
-	evSizeW = 3*eventSize/5;
-}*/
-
-
-void InitialAnalysis::performTransformation(double* y, int start, int end, double *trans, int freq, double norma)
-{
-	double tmp;
-
-	for(int i = start; i < end; i++)
-	{
-		tmp = 0.;
-		for(int j = max(i - freq, 0); j < min(i + freq + 1, end); j++)
-			tmp = tmp + y[j] * wLet(j - i, freq, norma, waveletType);
-		trans[i] = tmp;
-	}
-}
-
-
-
-void InitialAnalysis::getNoise(double *noise, int freq)
-{
-	int i;
-
-// First, we set that noise is euqal to the first derivative.
-
-	for(i = 0; i < lastNonZeroPoint - 1; i++)
-	{
-		noise[i] = fabs(data[i] - data[i+1]);
-		if (noise[i] > maximalNoise) 
-			noise[i] = maximalNoise;
-	}
-	noise[lastNonZeroPoint - 1] = 0.;
-    
-	double EXP;
-
-// Cut of the prompt-peaks with exponent.
-	for(i=0; i < lastNonZeroPoint; i++)
-	{
-		EXP = (exp((double)i / lastNonZeroPoint) - 1.) * maximalNoise / (exp(1.) - 1.);
-		if (noise[i] > EXP) 
-			noise[i] = EXP;
-	}
-
-	convolutionOfNoise(freq);
-}
-
-
-double InitialAnalysis::shiftToZeroAttenuation(double *trans)
-{
-	Histogramm* histo = new Histogramm(-0.5, 0, 100);
-	//возможное затухание находится в пределах [0; -0.5] дБ
-
-	histo->init(trans, lastNonZeroPoint, 0, lastNonZeroPoint-1);
-	double meanAtt = histo->getMaximumValue();
-	delete histo;
-
-	for(int i=0; i < lastNonZeroPoint; i++)
-		trans[i] = trans[i] - meanAtt;
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str, "mean attenuation = %f\n", meanAtt);
 #endif
-	return meanAtt;
-}
-
-
-void InitialAnalysis::setNonZeroTransformation(double* trans, double threshold, int start, int end)
-{
-	int i;
-	for(i = start; i < end; i++)
-	{
-		if(fabs(trans[i]) < max(threshold, noise[i] / 2.))
-			trans[i] = 0.;
-	}
-
-	//Excluding of the exidental zero points;
-	for(i = start; i < end - 1; i++) // FIXME: && i < trans.length - 2 -- would like to change acc to Stas's J IA
-	{
-		if(fabs(trans[i]) < threshold)
-		{
-			if(fabs(trans[i-1]) > threshold && 
-		       fabs(trans[i+1]) > threshold)
-					trans[i] = (trans[i-1] + trans[i+1]) / 2.;
+	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
+	ArrList accSpl; // текущий список найденных сварок (пустой)
+	int scaleIndex;
+	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 2) {
+		int scale = scaleB * scaleIndex / 4;
+		if (scale < getMinScale())
+			continue;
+		// проводим поиск всплесков на данном масштабе
+		ArrList newSpl;
+		performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scale, getWLetNorma(scale));
+#ifdef DEBUG_INITIAL_ANALYSIS
+	{	// FIXME: debug dump
+		FILE *f;
+		f = fopen ("noiserq.dat", "r");
+		if (f != 0) {
+			fclose (f);
+			char sbuf[32];
+			sprintf(sbuf,"noise-%d.tmp", scale);
+			FILE *f = fopen (sbuf, "w");
+			if (f) {
+				int i;
+				for	(i = 0; i <= lastPoint; i++)
+					fprintf(f,"%d %g %g %g\n", i, data[i], TEMP[i], noise[i]);
+				fclose(f);
+			}
 		}
 	}
-}
-
-void InitialAnalysis::findConnectors(double *trans, double *correct, int start, int end, EPLIST &vector)
-{
-	int halfWidth = evSizeC / 2;
-	if(halfWidth < 1) 
-		halfWidth = 1;
-
-	int type;
-
-    int x1; // начало события
-    int x2; // конец события
-
-	int counter = 0;
-
-	for(int i = start; i < end; i += (x2 - x1))
-	{
-		int k1; // середина первого участка
-		int k2; // середина второго участка
-		int k3; // середина третьего участка
-		int c1; // точка максимума первого участка
-		int c2; // точка максимума второго участка
-		int c3; // точка максимума третьего участка
-		int j; // конец первого участка
-		int k; // конец второго участка
-		int s; // конец третьего участка
-
-		j = i + 1;
-		c1 = j;
-		while(j < end && sign(trans[i]) == sign(trans[j]))
-		{
-			if(fabs(trans[c1]) < fabs(trans[j]))
-				c1 = j;
-			j++;
-		}
-		k = j + 1;
-		c2 = k;
-        while(k < end && sign(trans[j]) == sign(trans[k]))
-		{
-			if(fabs(trans[c2]) < fabs(trans[k]))
-				c2 = k;
-			k++;
-		}
-		s = k + 1;
-		c3 = s;
-        while(s < end && sign(trans[k]) == sign(trans[s]))
-		{
-			if(fabs(trans[c3]) < fabs(trans[s]))
-				c3 = s;
-			s++;
-		}
-		k1 = (j + i) / 2;
-		k2 = (k + j) / 2;
-		k3 = (s + k) / 2;
-
-		x1 = i;
-        if(fabs(trans[c1]) < minimalThreshold) // linear part
-        {
-			type = EventParams::LINEAR;
-			x2 = j;
-        }
-        else if(trans[c1] > minimalConnector && 
-				trans[c2] < -minimalConnector)  // connector
-		{
-			type = EventParams::CONNECTOR;
-			x2 = k;
-			for (int ii = c2; ii < s; ii++)
-				if (fabs(correct[ii]) < minimalWeld)
-				{
-					x2 = ii;
-					break;
+#endif
+		findAllWletSplashes(TEMP, scale, newSpl);
+		//fprintf(stderr, "scale %d: %d splashes\n", scale, newSpl.getLength()); fflush(stderr);
+		// анализируем, что делать  с каждым найденным всплеском
+		int i;
+		for (i = 0; i < newSpl.getLength(); i++) {
+			Splash *cnSplash = (Splash*)newSpl[i];
+			// ищем, с какими всплесками accSpl пересекается текущий cnSplash
+			int minAccIndex = findMinOverlappingSplashIndex(*cnSplash, accSpl);
+			int maxAccIndex = findMaxOverlappingSplashIndex(*cnSplash, accSpl);
+			enum {
+				ACTION_IGNORE  = 1,
+				ACTION_INSERT  = 2,
+				ACTION_REPLACE = 3
+			} action = ACTION_IGNORE;
+			int replaceIndex = -1;
+			if (minAccIndex < 0) { // новый всплеск
+				action = ACTION_INSERT;
+			} else if (minAccIndex < maxAccIndex) { // пересекает несколько всплесков acc
+				action = ACTION_IGNORE;
+			} else { // пересекли ровно один всплеск acc
+				Splash *caSplash = (Splash*)accSpl[minAccIndex];
+				int minBackIndex = findMinOverlappingSplashIndex(*caSplash, newSpl);
+				int maxBackIndex = findMaxOverlappingSplashIndex(*caSplash, newSpl);
+				if (maxBackIndex > minBackIndex) { // соответствующий всплеск пересекает еще какие-то, кроме нашего
+					action = ACTION_IGNORE;
+				} else { // связь взаимно-однозначна
+					assert(minBackIndex >= 0); // Vit: -1 если в обратную сторону ни с кем не пересеклись  
+					if (fabs(cnSplash->f_extr) / sqrt(cnSplash->scale)
+						> fabs(caSplash->f_extr) / sqrt(caSplash->scale)) {
+						action = ACTION_REPLACE;
+						replaceIndex = minAccIndex;
+					}
+					else {
+						action = ACTION_IGNORE;
+					}
 				}
-			//int infl = findInflectionPoint(correct, c2, s);
-			int infl = findFirstAbsMinimumPoint(correct, c2, s);
-			int constant = findConstantPoint(correct, c2, s);
-			x2 = min(constant, min(infl, x2));
-		}
-		else if(trans[c1] > minimalConnector && 
-				fabs(trans[c2]) < minimalThreshold && 
-				trans[c3] < -minimalConnector && 
-				k - j < (int)(halfWidth * 1.5)) //connector
-		{
-			type = EventParams::CONNECTOR;
-			x2 = s;
-			for (int ii = c3; ii < s; ii++)
-				if (fabs(correct[ii]) < minimalWeld)
-				{
-					x2 = ii;
-					break;
-				}
+			}
+			/*if (cnSplash->begin_thr < 2840 && cnSplash->end_thr > 2840) {
+				fprintf(stderr, "HIT2840: begin %d end %d f_extr %g ai %d-%d action %d\n",
+					cnSplash->begin_thr,
+					cnSplash->end_thr,
+					cnSplash->f_extr,
+					minAccIndex,
+					maxAccIndex,
+					(int)action);
 
-			//int infl = findInflectionPoint(correct, c3, s);
-			int infl = findFirstAbsMinimumPoint(correct, c3, s);
-			int constant = findConstantPoint(correct, c3, s);
-			x2 = min(constant, min(infl, x2));
-		}
-		else if(trans[c1] > minimalWeld * .8 || 
-				trans[c1] < -minimalWeld * .8) //weld
-		{
-			type = EventParams::SPLICE;
-			x2 = j;
-		}
-		else //linear
-		{
-			type = EventParams::LINEAR;
-			x2 = j;
-		}
+			}*/
+			// NB: ACTION_REPLACE и ACTION_INSERT производится только для
+			// всплесков, не пересекающихся ни с какими всплесками accSpl
+			// и для всплесков, пересекающихся взаимно-однозначно с одним
+			// accSpl-всплесков.
+			// Это гарантирует, что удаление всплеска из newSpl (при
+			// его перемещении в accSpl) не повлияет на обработку других
+			// всплесков этого же newSpl.
 
-		if (x1 < lastNonZeroPoint && type == EventParams::CONNECTOR)
-		{
-			EventParams ep;
-			ep.n = vector.size();
-			ep.type = type;
-			ep.begin = x1;
-			if (i != 0)
-			{
-				ep.begin = c1 + (int)(0.6 * evSizeW);
-				for (int ii = x1; ii < c1; ii++)
-					if (fabs(correct[ii]) > minimalConnector)
-					{
-						ep.begin = ii + (int)(0.6 * evSizeW);
+			if (action == ACTION_REPLACE) {
+				// удаляем splash и ставим на его место найденный
+				delete (Splash*)accSpl[replaceIndex];
+				accSpl.set(replaceIndex, cnSplash);
+				// 'убираем' splash из newSpl списка, чтобы не удалять его дважды
+				newSpl.set(i, 0);
+			}
+            else if (action == ACTION_INSERT) {
+				// надо найти точку вставки
+				int j;
+				for (j = 0; j < accSpl.getLength(); j++) {
+					if (((Splash*)accSpl[j])->begin_thr > cnSplash->begin_thr)
 						break;
-					}
-			}
-			ep.end = x2 - (int)(0.5 * evSizeW);
-			vector.copy_push_back(ep);
-
-			counter++;
-		}
-#ifdef DEBUG_INITIAL_ANALYSIS
-	if (x2 <= x1)
-		fprintf(this->str, "(!!!!!!!!!Error setting ep.begin = %d; ep.end =  %d\n", x1, x2);
-#endif
-	}
-}
-
-/*void InitialAnalysis::correctConnectorCoords()
-{
-	EPLIST::iterator it;
-	for (it = epVector.begin(); it != epVector.end(); it++)
-	{
-		EventParams* ep = &*it;
-		it++;
-		if (it != epVector.end())
-		{
-			EventParams* ep_next = &(*it);
-			if (ep_next->begin - ep->end < 1.5 * evSizeW)
-			{
-				ep_next->begin -= (int)min(0.5 * evSizeW, 2 * (ep_next->begin - ep->end) / 5);
-				ep->end = ep_next->begin;
-			}
-		}
-		it--;
-	}
-}*/
-
-void InitialAnalysis::correctWeldCoords()
-{
-	double d[2];
-
-	EPLIST::iterator it = epVector.begin();
-	for (; it != epVector.end(); it++)
-	{
-		EventParams* ep = &(*it);
-		if (ep->type == EventParams::SPLICE)
-		{
-			// передний фронт
-			if (it != epVector.begin())
-			{
-				it--;
-				EventParams* ep_last = &(*it);
-				if (ep_last->type == EventParams::LINEAR &&
-					ep_last->end - ep_last->begin > 3)
-				{
-					linearize2point(data, ep_last->begin, ep_last->end, d);
-					for(int i = ep->begin; i < (ep->begin + ep->end) / 2; i++)
-					{
-						if(fabs(data[i] - (d[1] + d[0] * i)) > //max(minimalWeld, fabs(2 * noise[i])))
-							fabs(2 * noise[i]))
-						{
-							ep->begin = i;
-							if (ep->end - ep->begin < evSizeW)
-								ep->begin = ep->end - evSizeW;
-							ep_last->end = ep->begin;
-							if (ep_last->end <= ep_last->begin)
-								ep_last->begin = ep_last->end - 1;
-							break;
-						}
-					}
 				}
-				it++;
+				// j - точка вставки
+				accSpl.slowInsert(j, cnSplash);
+				// 'убираем' splash из newSpl списка, чтобы не удалять его дважды
+				newSpl.set(i, 0);
 			}
-
-			// задний фронт 
-			it++;
-			if (it != epVector.end()
-				&& it->type == EventParams::LINEAR 
-				&& it->end - it->begin > 3)
-			{
-				EventParams* ep_next = &(*it);
-				if (ep_next->type == EventParams::LINEAR &&
-					ep_next->end - ep_next->begin > 3)
-				{
-					linearize2point(data, ep_next->begin, ep_next->end, d);
-					for(int i = ep->end; i > ep->begin; i--)
-					{
-						if (fabs(data[i] - (d[1] + d[0] * i)) > //max(minimalWeld, fabs(2 * noise[i])))
-							fabs(2 * noise[i]))
-						{
-							ep->end = i;
-							if (ep->end - ep->begin < evSizeW)
-								ep->end = ep->begin + evSizeW;
-							ep_next->begin = ep->end;
-							if (ep_next->end <= ep_next->begin)
-								ep_next->begin = ep_next->end - 1;
-							break;
-						}
-					}
-				}
-			}
-			it--;
 		}
-	}
-}
-
-
-void InitialAnalysis::findWelds(double *trans, EPLIST &vector)
-{
-	int halfWidth = evSizeW / 2;
-	if(halfWidth < 1) 
-		halfWidth = 1;
-
-	int type;
-
-    int x1; // начало события
-    int x2; // конец события
-
-	int k1; // середина первого участка
-	int k2; // середина второго участка
-	int k3; // середина третьего участка
-	int c1; // точка максимума первого участка
-	int c2; // точка максимума второго участка
-	int c3; // точка максимума третьего участка
-	int j; // конец первого участка
-	int k; // конец второго участка
-	int s; // конец третьего участка
-
-	EPLIST::iterator it;
-	EPLIST clone;
-	for (it = vector.begin(); it != vector.end(); it++)
-	{
-		clone.copy_push_back(*it);
-	}
-
-	vector.clear();
-
-	for (it = clone.begin(); it != clone.end(); it++)
-	{
-		// XXX
-		vector.copy_push_back(*it);
-		vector.last()->n = vector.size() - 1;
-		EventParams *ep1 = &*vector.last();
-		it++;
-		if (it != clone.end())
+		newSpl.disposeAll();
+#ifdef DEBUG_INITIAL_ANALYSIS_STDERR
 		{
 			int i;
-			EventParams* ep_next = &(*it);
-			int start = ep1->end;
-			int end = ep_next->begin;
-
-			double meanNoise = 0;
-			for (i = start; i < end; i++)
-				meanNoise += fabs(noise[i]);
-			meanNoise /= (double)(end - start);
-
-			setNonZeroTransformation(trans, meanNoise * 0.8, start, end);
-
-			for(i = start; i < end; i += (x2 - x1))
-			{
-				j = i + 1;
-				c1 = j;
-				while(sign(trans[i]) == sign(trans[j]) && j < end)
-				{
-					if(fabs(trans[c1]) < fabs(trans[j]))
-						c1 = j;
-					j++;
-				}
-				k = j + 1;
-				c2 = k;
-				while(sign(trans[j]) == sign(trans[k]) && k < end)
-				{
-					if(fabs(trans[c2]) < fabs(trans[k])) 
-						c2 = k;
-					k++;
-				}
-				s = k + 1;
-				c3 = s;
-				while(sign(trans[k]) == sign(trans[s]) && s < end)
-				{
-					if(fabs(trans[c3]) < fabs(trans[s]))
-						c3 = s;
-					s++;
-				}
-				k1 = (j + i) / 2;
-				k2 = (k + j) / 2;
-				k3 = (s + k) / 2;
-
-				x1 = i;
-				if(fabs(trans[c1]) < minimalThreshold) // linear part
-				{
-					type = EventParams::LINEAR;
-					x2 = j;
-				}
-				else if(trans[c1] > minimalWeld * .8 || 
-						trans[c1] < -minimalWeld * .8) //weld
-						//&& j - i < 3 * evSizeC)
-				{
-					type = EventParams::SPLICE;
-					x2 = j;
-				}
-				else if(trans[c1] > noise[k1] * 3 && 
-						trans[c2] < -noise[k2] * 3 && 
-						trans[c1] > minimalConnector && 
-						trans[c2] < -minimalConnector) //reflection (connector, anyway)
-				{
-					type = EventParams::CONNECTOR;
-					x2 = k;
-				}
-				else if(trans[c1] > minimalConnector && 
-						trans[c2] < minimalConnector && 
-						fabs((trans[c1] + trans[c2]) / (trans[c1] - trans[c2])) < .5) //reflection		
-				{
-					type = EventParams::CONNECTOR;
-					x2=k;
-				}
-				else if(trans[c1] > minimalConnector && 
-						trans[c3] < minimalConnector && 
-						fabs((trans[c1] + trans[c3]) / (trans[c1] - trans[c3])) < .5 &&
-						k - j < (int)(halfWidth * 1.5))  //reflection
-				{
-					type = EventParams::CONNECTOR;
-					x2 = s;
-				}
-				else //linear
-				{
-					type = EventParams::LINEAR;
-					x2 = j;
-				}
-
-				if (x1 < lastNonZeroPoint)
-				{
-					EventParams ep1;
-					ep1.n = vector.size();
-					ep1.type = type;
-					ep1.begin = x1;
-					ep1.end = x2;
-					vector.copy_push_back(ep1);
-				}
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-	if (x2 <= x1)
-		fprintf(this->str, "(!!!!!!!!!Error setting ep.begin = %d; ep.end =  %d\n", x1, x2);
+			fprintf(stderr, "accSpl dump at scale %d: Total %d splices\n", scale, accSpl.getLength());
+			for (i = 0; i < accSpl.getLength(); i++) {
+				fprintf(stderr, "spl[%d]: %d - %d  s %+d @ %d -- ampl %g\n",
+					i,
+					((Splash*)accSpl[i])->begin_thr,
+					((Splash*)accSpl[i])->end_thr,
+					((Splash*)accSpl[i])->sign,
+					((Splash*)accSpl[i])->scale,
+					((Splash*)accSpl[i])->f_extr);
+			}
+			fflush(stderr);
+		}
 #endif
-			}//for
-		}//if
-		it--;
-	}//for
-	clone.clear();
+	}
+	//performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scaleB, getWLetNorma(scaleB));
+	//findAllWletSplashes(TEMP, scaleB, accSpl);
+
+	if(accSpl.getLength() == 0){
+return;}
+
+	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
+	processEventsBeginsEnds(TEMP); // уточнить границы событий (может использовать accSpl через ссылки из EventParams)
+	// используем ArrList и его объекты
+	accSpl.disposeAll(); // очищаем массив ArrList
+
+	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
+    processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
+    excludeShortLinesBetweenConnectors(data, scaleB);
+    addLinearPartsBetweenEvents();
+	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
+	verifyResults(); // проверяем ошибки
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "performAnalysis: done\n");
+	fflush(logf);
+#endif
 }
-
-
-void InitialAnalysis::excludeConnectors(EPLIST &vector, double *data, double *data_woc)
+// -------------------------------------------------------------------------------------------------
+//
+// ======= ФУНКЦИИ ПЕРВОГО ЭТАПА АНАЛИЗА - ПОДГОТОВКИ =======
+//
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
+{	double f_wlet_avrg = calcWletMeanValue(fw, lastPoint, -0.5, 0, 500);
+	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
+}
+//------------------------------------------------------------------------------------------------------------
+// вычислить среднее значение вейвлет-образа
+double InitialAnalysis::calcWletMeanValue(double *fw, int lastPoint, double from, double to, int columns)
+{   // возможное затухание находится в пределах [0; -0.5] дБ
+	Histogramm* histo = new Histogramm(from, to, columns);
+	histo->init(fw, 0, lastPoint + 1);
+	double mean_att = histo->getMaximumValue();
+	delete histo;
+	return mean_att;
+}
+//------------------------------------------------------------------------------------------------------------
+// изменить пороги в соответствии с соотношением норм и масштаба используемого вейвлета
+void InitialAnalysis::shiftThresholds(int scale)
+{   double f_wlet_avrg = average_factor * getWLetNorma2(scale) / getWLetNorma(scale); // средний наклон
+	double thres_factor = 0.2;// степень влияния общего наклона на сдвиг порогов
+    minimalThreshold += fabs(f_wlet_avrg)*thres_factor;
+    if(minimalThreshold > 0.9*minimalWeld)
+    {  minimalThreshold = 0.9*minimalWeld;
+    }
+	//minimalWeld += fabs(f_wlet_avrg)*thres_factor;
+}
+// -------------------------------------------------------------------------------------------------
+//
+// ======= ФУНКЦИИ ВТОРОГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ ВСПЛЕСКОВ =======
+//
+// -------------------------------------------------------------------------------------------------
+// ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
+void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes)
+{   //minimalThreshold,	//минимальный уровень события
+	//minimalWeld,		//минимальный уровень неотражательного события
+	//minimalConnector,	//минимальный уровень отражательного события
+	double minimal_threshold_noise_factor = 0.4;  // XXX - надо бы это снаружи задавать
+    for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
+    {
+/*
+		if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) )
+     continue;
+		Splash& spl = (Splash&)(*(new Splash(wlet_width)));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
+        spl.begin_thr = i; // saa: i-1?
+        spl.f_extr = f_wlet[i];
+		int sign, sign_cur;
+		sign = xsign(f_wlet[i]);
+        for(  ; i<lastPoint-1; i++)
+        {   sign_cur = xsign(f_wlet[i]);
+        	// минимальные на рост
+        	if( fabs(f_wlet[i])>= calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) && spl.begin_thr == -1){
+				spl.begin_thr = i-1;
+            }
+            if( fabs(f_wlet[i])>= calcThresh(minimalWeld, noise[i]) && spl.begin_weld == -1)
+            {	spl.begin_weld = i-1;
+            }
+            //if( spl.begin_weld_n != -1 && spl.end_weld_n == -1 && (fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]*noise_factor) || sign_cur!=sign || i==lastPoint-1) )
+            if( fabs(f_wlet[i])>calcThresh(minimalWeld, noise[i]) && sign_cur==sign)
+            {	spl.end_weld = i+1;
+            }
+            if( fabs(f_wlet[i])>= calcThresh(minimalConnector, noise[i]) && spl.begin_conn == -1)
+            {	spl.begin_conn= i-1;
+            }
+            //if( spl.begin_conn_n != -1 && spl.end_conn_n == -1 && (fabs(f_wlet[i])<= calcThresh(minimalConnector,noise[i]) || sign_cur!=sign || i==lastPoint-1))
+            if( fabs(f_wlet[i]) > calcThresh(minimalConnector,noise[i]) && sign_cur==sign)
+            {	spl.end_conn = i+1;
+            }
+			// минимальные на спад
+            if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) || sign_cur!=sign )
+        	{	spl.end_thr = i;
+     	break;
+     		}
+            if(fabs(spl.f_extr)<fabs(f_wlet[i])){ spl.f_extr = f_wlet[i];}
+        }
+		spl.end_thr = i; // на случай выхода из цикла не по break а по условию в for   
+		spl.sign = sign;
+/*/
+		if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor))
+	continue;
+		int bt = i - 1;
+		int bw = -1;
+		int ew = -1;
+		int bc = -1;
+		int ec = -1;
+		double f_extr = f_wlet[i];
+		int sign = xsign(f_wlet[i]);
+		for (; i <= lastPoint-1; i++) { // цикл (2)
+			if (f_wlet[i] * sign < 0)	// смена знака
+		break;
+			if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor)) // стал меньше minTh
+		break;
+			if (fabs(f_wlet[i]) >= calcThresh(minimalWeld, noise[i])) {
+				ew = i + 1;
+				if (bw == -1)
+					bw = i - 1;
+			}
+			if (fabs(f_wlet[i]) >= calcThresh(minimalConnector, noise[i])) {
+				ec = i + 1;
+				if (bc == -1)
+					bc = i - 1;
+			}
+			if (fabs(f_wlet[i]) > fabs(f_extr))
+				f_extr = f_wlet[i];
+		}
+		int et = i; // на этой точке всплеск уже закончился и, возможно, начался следующий
+		assert(et > bt + 1); // трудно поверить, чтобы цикл (2) не выполнился ни разу. Для этого нужен очень странный FPU // FIXME: debug only
+		if (et > bt + 1) // но на всякий случай проверяем, чтобы избежать зацикливания (в этом случае i-- делать не надо)
+			i--; // ставим точку перед возможным началом следующего всплеска, т.к. в цикле (1) есть пост-операция i++
+		if (bw == -1)
+	continue; // Weld-порог так и не пересекли - такой всплеск не создаем (XXX: в будущем анализе, возможно, они понадобяться для интерпретации более крупных соседних всплесков)
+		Splash& spl = (Splash&)(*(new Splash(wlet_width)));
+        spl.f_extr = f_extr;
+		spl.sign = sign;
+        spl.begin_thr = bt;
+		spl.end_thr = et;
+		spl.begin_weld = bw;
+		spl.end_weld = ew;
+		spl.begin_conn = bc;
+		spl.end_conn = ec;
+//*/
+		fillSplashRParameters(spl, f_wlet, wlet_width);
+        if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
+	        && spl.begin_weld != -1 // !!!  добавляем только существенные всплески ( если эту проверку убрать, то распознавание коннекторов надо изменить, так как если между двумя коннекторными всплесками вдруг окажется случайный незначимый всплеск вверх, то конннектор распознан НЕ БУДЕТ ! )
+           )
+        {  splashes.add(&spl);
+#ifdef debug_lines
+           double begin = spl.begin_thr, end = spl.end_thr, s = spl.sign;
+           xs[cou] = begin*delta_x; xe[cou] = begin*delta_x; ys[cou] = -minimalConnector*2*0.9; ye[cou] = minimalConnector*2*1.1; cou++;
+           xs[cou] = end*delta_x; xe[cou] = end*delta_x; ys[cou] = -minimalConnector*2*1.1; 	ye[cou] = minimalConnector*2*0.9; col[cou]= 0xFFFFFF; cou++;
+           double c = spl.begin_conn ==-1 ? 0xFF0000 : 0x0000FF;
+           if(s>0){	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*0.9;  col[cou]=c; cou++;}
+           else   {	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = -minimalConnector*2*0.9; ye[cou] = -minimalConnector*2*1.1; col[cou]=c; cou++;}
+#endif
+        }
+        else
+        {  delete &spl; // если этого не делать, то будут утечки памяти, так как удалятся только те spl, которые  были добавлены в splashes 
+        }
+	}
+    if(splashes.getLength() == 0)
+return;
+	// напоследок добавляем фиктивный всплеск вниз так как из за резкого спада до нуля в конце всплеск может не успеть уйти вниз достаточно и конец не будет распознан
+	Splash* splend = (Splash*)splashes[splashes.getLength()-1];
+    if(splend->sign > 0)
+    {   Splash* spl = new Splash(wlet_width);
+    	spl->begin_thr 		= lastPoint+1; spl->begin_weld 	= lastPoint+1; spl->begin_conn 	= lastPoint+1;
+        spl->end_thr 		= lastPoint+2; spl->end_weld 	= lastPoint+2; spl->end_conn 	= lastPoint+2;
+		spl->sign			= -1;
+		// fillSplashRParameters() не вызываем, т.к. это невозможно, да и ни к чему
+        splashes.add(spl);
+    }
+#ifdef debug_lines
+    // отображаем пороги
+    xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
+    xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
+    xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
+    xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
+    xs[cou] = 0; ys[cou] = -minimalConnector; xe[cou] = lastPoint*delta_x; ye[cou] = -minimalConnector; col[cou] = 0x00FFFF; cou++;
+#endif
+}
+// -------------------------------------------------------------------------------------------------
+//
+// ======= ФУНКЦИИ ТРЕТЬЕГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+//
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
+{//* мёртвую зону ищём  чуть иначе
+    if( splashes.getLength() <=2 ) // FIXME: вредный код
+return;
+    int i0 = processDeadZone(splashes, dzMaxDist);// ищем мёртвую зону
+	// ищем остальные коннекторы  и сварки
+    for(int i = i0; i<splashes.getLength()-1; i++) // XXX: < or <= ?
+    {
+	  EventParams *ep = 0;
+	  int len = findConnector(i, splashes, ep);
+      if(len != 0)// если коннектор был найден
+      { i+= len - 1;
+	    events->add(ep);
+    continue;
+      }
+	  len = processIfIsNonId(i, splashes);
+	  if (len != 0) // если нашли неид. область
+      { i+= len - 1;
+    continue;
+      }
+      Splash* sp1 = (Splash*)splashes[i];
+      Splash* sp2 = (Splash*)splashes[i+1];
+      int dist = abs(sp2->begin_weld - sp1->end_weld);
+      // две сварки "+" и "-" очень близко
+      if( dist<rSSmall			// если всплески очень близко
+          && (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
+          && ( sp1->begin_weld != -1 && sp2->begin_weld != -1)// и при этом как минимум сварочные
+        )
+      {   EventParams *ep = new EventParams;
+          setUnrecognizedParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+          events->add(ep);
+          i++;// потому что состоит из двух всплесков
+	continue;
+      }
+      // сварка
+      if( sp1->begin_weld!= -1 && fabs(sp1->end_weld-sp1->begin_weld)>1) //сварка
+      {	EventParams *ep = new EventParams;
+        setSpliceParamsBySplash(*ep, *sp1 );
+        //correctSpliceCoords(f_wletTEMP, ep->spliceSplash->scale, ep);
+        events->add(ep);
+	continue;
+      }
+    }
+}
+//-----
+void InitialAnalysis::processEventsBeginsEnds(double *f_wletTEMP)
 {
 	int i;
-	int j;
-	for (i = 0; i < data_length; i++)
-		data_woc[i] = data[i];
-
-	double delta = 0;
-	double *_d = NULL;
-
-	EPLIST::iterator it;
-	for (it = vector.begin(); it != vector.end(); it++) 
+	int pass;
+	for (pass = 0; pass < 2; pass++)
+	for (i = 0; i < events->getLength(); i++)
 	{
+		EventParams *ep = (EventParams*) ((*events)[i]);
 
-		EventParams* ep_last = &(*it);
-		it++;
-		if (it != vector.end())
-		{
-			EventParams* ep1 = &(*it);
+		// определяем пределы допустимых перемещений границ события
+		int minBegin = i > 0
+			? ((EventParams*) ((*events)[i - 1]))->end - 1 // разрешено наползание на 1 точку
+			: 0;
+		int maxEnd = i < events->getLength() - 1
+			? ((EventParams*) ((*events)[i + 1]))->begin + 1
+			: lastPoint;
+		if (minBegin < 0)
+			minBegin = 0;
+		if (maxEnd > lastPoint)
+			maxEnd = lastPoint;
 
-			double d[2];
-			if (ep_last->end != ep1->begin)
-				linearize2point(data, ep_last->end, ep1->begin, d);
-			else
-			{
-				if (ep1 != &(*vector.begin()))
-				{
-					EPLIST::iterator it_2 = it;
-					it_2--;
-					it_2--;
-					EventParams* ep_beforelast = &(*it_2);
-					linearize2point(data, ep_beforelast->end, ep1->begin, d);
-				}
-				else
-					linearize2point(data, ep_last->begin, ep1->begin, d);
-			}
-
-			if (ep_last != &(*vector.begin()))
-			{
-				delta += ((data[ep_last->begin] + _d[0] * (ep_last->end - ep_last->begin)) - data[ep_last->end]);
-				for (j = ep_last->end; j < ep1->begin; j++)
-					data_woc[j] += delta;
-			}
-			else
-			{
-				for (j = ep_last->begin; j < ep_last->end; j++)
-					data_woc[j] = data[ep_last->end] + d[0] * (j - ep_last->end);
-			}
-			_d = d;
-
-			for (j = ep1->begin; j < ep1->end; j++)
-				data_woc[j] = data[ep1->begin] + d[0] * (j - ep1->begin) + delta;
+		int type = ep->type;
+		if (pass) {
+			if (type == EventParams::GAIN || type == EventParams::LOSS)
+				correctSpliceCoords(f_wletTEMP, ep->spliceSplash->scale, ep, minBegin, maxEnd);
 		}
-		it--;
+		else
+		{
+			if (type == EventParams::CONNECTOR || type == EventParams::ENDOFTRACE)
+				correctConnectorFront(ep);
+		}
 	}
 }
-
-void InitialAnalysis::siewLinearParts()
+//-------------------------------------------------------------------------------------------------
+int InitialAnalysis::processDeadZone(ArrList& splashes, int maxDist)
 {
-	EPLIST::iterator it = epVector.begin();
-	while (it != epVector.end()) {
-		EventParams* ep = &(*it);
-		if (ep->type == EventParams::LINEAR) {
-			it++;
-			if (it != epVector.end()) {
-				EventParams* ep_next = &(*it);
-				if (ep_next->type == EventParams::LINEAR) {
-					ep->end = ep_next->end;
-					it--;
-					epVector.removeNext(it);
-					continue;
-				}
-				if (ep->end > ep_next->begin) {
-					ep->end = ep_next->begin;
-					if (ep->begin > ep->end)
-						ep->begin = ep->end;
-				}
-			}
-			it--;
-		}
-		it++;
-	}
-}
-
-void InitialAnalysis::excludeShortEvents(int linearLength, int weldLength, int connectorLength) 
-{
-	EPLIST::iterator it = epVector.begin();
-
-	if (it != epVector.end())
-		it++;
-	while (it != epVector.end())
-	{
-		bool key = false;
-		EventParams* ep = &(*it);
-
-		if (ep->type == EventParams::LINEAR)
-		{ 
-			if (ep->end - ep->begin <= linearLength)
-				key = true; 
-		}
-		else if (ep->type == EventParams::SPLICE)
-		{ 
-			if (ep->end - ep->begin <= weldLength)
-				key = true; 
-		}
-		else if (ep->type == EventParams::CONNECTOR)
-		{
-			if (ep->end - ep->begin <= connectorLength)	
-				key = true; 
-		}
-
-		if (key)
-		{
-			// find prev and next ep's
-			EPLIST::iterator it_2;
-			it_2 = it; it_2--;
-			EventParams* ep_prev = &*it_2;
-			it_2 = it; it_2++;
-			if (!it_2.isNull())
-			{
-				EventParams* ep_next = &*it_2;
-				if (ep_next->type == EventParams::LINEAR)
-					ep_next->begin = ep_prev->end;
-				else if (ep_prev->type == EventParams::LINEAR)
-					ep_prev->end = ep_next->begin;
-				else if(ep_next->type == EventParams::SPLICE)
-					ep_next->begin = ep_prev->end;
-				else
-					ep_prev->end = ep_next->begin;
-			}
-			it--;
-			epVector.removeNext(it);
-		}
-		it++;
-	}
-}
-
-void InitialAnalysis::correctEnd()
-{
-	EPLIST::iterator it;
-
-	int l = (epVector.back()).begin + evSizeC * 2;
-#ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str, "end point before correction = %d (%.3fkm)\n", l, delta_x * l / 1000.);
-	fprintf(this->str, "number of events before correction = %d\n", epVector.size());
-#endif
-
-	it = epVector.end();
-	it --;
-	while (it != epVector.begin()) {
-		EventParams* ep = &(*it);
-#ifdef DEBUG_INITIAL_ANALYSIS
-		fprintf(this->str, "event #%d, has type %d\n", ep->n, ep->type);
-#endif
-		if (ep->type == EventParams::CONNECTOR
-				&& ep->aLet_connector > minimalEndingSplash
-				&& ep->a1_connector >= 0
-				&& ep->a2_connector >= 0
-				&& ep->begin <= lastNonZeroPoint
-				&& ep->end - ep->begin > evSizeC) {
-#ifdef DEBUG_INITIAL_ANALYSIS
-			fprintf(this->str, "last event = #%d, with start = %d, end = %d \n", ep->n, ep->begin, ep->end);
-			fprintf(this->str, "\taLet = %f, a1 = %f, a2 = %f, minEnd = %f \n", ep->aLet_connector, ep->a1_connector, ep->a2_connector, minimalEndingSplash);
-#endif
-			l = min (lastNonZeroPoint - 1, min (ep->end, ep->begin + evSizeC * 2));
-			if (l >= lastNonZeroPoint)
-				l = lastNonZeroPoint-1;
-			ep->end = l;
+	int i;
+	const double DY1 = 3.0; // кандидаты на м.з. - в пределах -3 дБ от абс. макс
+	const double DY2 = 2.0; // м.з. длится до лок. максимума, если нет спада более 2 дБ
+	// ищем абс. макс.
+	double vAbsMax = data[0];
+	for (i = 0; i <= lastPoint; i++)
+		if (vAbsMax < data[i])
+			vAbsMax = data[i];
+	// ищем начало м.з.
+	for (i = 0; i <= lastPoint; i++)
+		if (data[i] > vAbsMax - DY1)
 			break;
+	// i - начало м.з. (!: м б > lastPoint)
+	// ищем первый макс. в м.з.
+	for (; i <= lastPoint - 1; i++)
+		if (data[i + 1] < data[i])
+			break;
+	if (i > lastPoint)
+		return 0; // м.з. не найдена - XXX: как обрабатывать?
+	// ищем абс. макс. до спада на DY2
+	int dzMaxBeg = i;
+	int dzMaxEnd = i;
+	for (; i <= lastPoint; i++) {
+		if (data[i] < data[dzMaxBeg] - DY2)
+			break;
+		if (data[i] > data[dzMaxBeg]) {
+			dzMaxBeg = dzMaxEnd = i;
+		} else if (data[i] == data[dzMaxBeg]) {
+			if (dzMaxEnd == i - 1)
+				dzMaxEnd++;
 		}
-		else {
-			it --;
-			epVector.removeNext(it); // XXX
+	}
+	int sureMax = dzMaxEnd;
+	// ищем все спады правее sureMax, отстоящие друг от друга не более чем на maxDist
+	int pos = sureMax;
+	for (i = 0; i < splashes.getLength(); i++) {
+		Splash *sp = (Splash*)splashes[i];
+		if (sp->begin_thr < sureMax) {			// пропускаем все всплески, начало которых левее sureMax
+			if (sp->sign < 0 && sp->end_thr > pos)	// ... но при этом для спадов отслеживаем их конец
+				pos = sp->end_thr;
 			continue;
 		}
+		if (sp->sign > 0 || sp->begin_thr > pos + maxDist) // останавливаемся на подъеме или лин. участке больше maxDist правее sureMax
+			break;
+		pos = sp->end_thr;
 	}
-
-#ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str, "end point after correction = %d (%.3fkm)\n", l, delta_x * l / 1000.);
-	fprintf(this->str, "number of events after correction = %d\n", epVector.size());
-#endif
+    { EventParams *ep = new EventParams;
+      ep->type = EventParams::DEADZONE;
+      ep->begin = 0; ep->end = pos;
+      if(ep->end > lastPoint){ ep->end = lastPoint;}
+      events->add(ep);
+    }
+	return i;
 }
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::setSpliceParamsBySplash(EventParams& ep, Splash& sp)
+{   if(sp.sign>0) { ep.type = EventParams::GAIN; }
+    else 		  { ep.type = EventParams::LOSS; }
 
-void InitialAnalysis::setEventParams()
+    ep.begin = sp.begin_thr; // sp.begin_weld; - thr - в расчёте на то, что потом уточним
+    ep.end = sp.end_thr; // sp.end_weld+1;
+    if(ep.end>lastPoint){ep.end = lastPoint;}
+    if(ep.begin<0){ep.begin=0;}
+
+    //// remove this
+	//double max = -1;
+	//for(int i=sp.begin_weld; i<sp.end_weld; i++)
+    //{ double res = (fabs(f_wlet[i])-minimalWeld)/noise[i];
+    //  if(max<res){ max = res;}
+    //}
+    //ep.R = max;
+	ep.R = sp.r_weld;
+
+	ep.spliceSplash = &sp;
+}
+//------------------------------------------------------------------------------------------------------------
+// Проводим разномасштабный авейвлет-анализ для уточнения положения сварок
+// ф-я ПОРТИТ f_wlet - вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
+// Уточнение может сужать сварки и расширять в заданных на входе пределах
+void InitialAnalysis::correctSpliceCoords(double* f_wlet /*TEMP space*/, int scale0, EventParams* splice, int minBegin, int maxEnd)
 {
-	int counter = 0;
-	unsigned int i;
+	EventParams& ev = *splice;
+	// если это не сварка, то выход
+    if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
+return;
+	//prf_b("correctSpliceCoords: enter");
+	const double level_factor = 0.15; // уровень от максимума сигнала , при ктором считаем, что сигнал есть
+	const double noise_factor = 0.5;  // 0 , если мы не учитываем шум в пределах событий
+    const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
+	const double factor = 1.2; // множитель геометрической прогрессии
+	const int nscale = 20; // количество разных масштабов
+	int width = scale0; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
+	int w_l = ev.begin, w_r = ev.end; // w_l - wavelet_left: границы вейвлет-образа на текущем масштабе
 
-	eps = new EventParams *[epVector.size()];
+	const int sign = ev.spliceSplash->sign;
 
-	double *d = new double[2];
-#ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str,"InitialAnalysis::setEventParams(): epVector.size() = %d; eps = %p; d = %p\n",(int)epVector.size(),eps, d);
+	// для первого масштаба не ограничиваемся "световым конусом", т.к. начальные w_l, w_r не соответствуют нашему здешнему критерию
+    //int left_cross = (int)(w_l+width*angle_factor), right_cross = (int)(w_r-width*angle_factor); // точки пересечения световым конусом оси ОХ (по сути эквивалентно запоминанию масштаба, при котором это произошло, потому что точка X, где вейвлет пересёк порог, запоминается отдельно)
+    int left_cross  = (int) ceil(w_r+width*angle_factor);
+	int	right_cross = (int)floor(w_l-width*angle_factor);
+    int left_cr2    = (int)floor(w_l-width*angle_factor);
+	int	right_cr2   = (int) ceil(w_r+width*angle_factor);
+
+	int i;
+#ifdef debug_lines
+    int coln=-1,color[]={0xFFFFFF,0x0000FF,0x00FF00,0xFF7733};
+    int csz = sizeof(color)/sizeof(int);
 #endif
+    bool w_lr_ch = false; // цветом !!! при дебаге !!! выделяются участки только на тех масштабах, на которых границы изменились
 
-	for (EPLIST::iterator it = epVector.begin(); it != epVector.end(); it++)
-	{
-		getLinearFittingCoefficients(data, it->begin, it->end, it->begin, d);
-		it->a_linear = d[0];
-		it->b_linear = d[1];
-		eps[counter++] = &(*it);
-	}
+	assert(w_r <= lastPoint);
 
-	delete[] d;
-
-	for(i = 0; i < epVector.size(); i++) //Setting of the weld params;
-	{
-		eps[i]->center_weld = (double)(eps[i]->begin+eps[i]->end)/2.;
-		eps[i]->width_weld = evSizeC*.9;
-
-		double A1;
-		double A2; 
-		double A3;
-		double k;
-
-		if(i>0 && i<epVector.size()-1 && eps[i-1]->type == EventParams::LINEAR && eps[i+1]->type == EventParams::LINEAR)
+    // анализируем при разныех масштабах
+	for(int step=0; step<=nscale; step++, width = (int)(width/factor))
+    {   //width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
+    	if(width<=1)
+    break;
+	    double wn = getWLetNorma(width);
+		//assert(w_r <= lastPoint);
+		//performTransformationAndCenter(data, w_l, w_r+1, f_wlet, width, wn);
+		int minL = imax((int) ceil(left_cr2  + width * angle_factor), minBegin);
+		int maxR = imin((int)floor(right_cr2 - width * angle_factor), maxEnd);
+		//printf("minBegin %d maxEnd %d   w_l %d w_r %d   minL %d maxR %d\n",
+		//	minBegin, maxEnd, w_l, w_r, minL, maxR); fflush(stdout);
+		performTransformationAndCenter(data, minL, maxR + 1, f_wlet, width, wn);
+		// сначала ищём положение экстремума при данном масштабе
+        int i_max = w_l;
+        double f_max = f_wlet[i_max];
+        for(i=w_l; i<w_r; i++) // saa: <=w_r ?
+        {	if( f_wlet[i] * sign > f_max * sign ) // поскольку образ в пределах одного события знакопостояный, то можем работать с модулями
+        	{	i_max = i; f_max = f_wlet[i_max];
+            }
+        }
+        // считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
+		double f_lmax = f_wlet[w_l], df_left = 0, df_right = 0;// df - степень отклонения на немонотонных образах (после пересечения порога ф-я мжет колебаться, вот сепень этого колебания нас и интересует )
+        for(i=w_l; i<i_max; i++) // добавки слева от пересечения порога до максимума
+        { if( fabs(f_wlet[i])>fabs(f_lmax) ) { f_lmax = f_wlet[i];}// новый максимум  отклонения
+          if( df_left<fabs(f_lmax-f_wlet[i]) ) { df_left=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
+        }
+		f_lmax = f_wlet[w_r];
+        for(i=w_r; i>i_max; i--) // добавки справа от пересечения порога до максимума
+        { if(fabs(f_wlet[i])>fabs(f_lmax)) { f_lmax = f_wlet[i];}// новый максимум отклонения
+          if(df_right<fabs(f_lmax-f_wlet[i])){ df_right=fabs(f_lmax-f_wlet[i]);} // новый максимальный уровень падения
+        }
+		const int BUGGY_SHIFT = 0; // было 1; но так границы события могут расширяться и выйти за пределы массива и сломать систему
+		// ищем пересечение слева, пытаясь сдвинуть границу влево ( то есть пока i+width<=left_cross )
+		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
+		if (level_factor * f_max * sign > df_left * 2)
 		{
-			A1 = eps[i-1]->linearF(eps[i]->begin);
-			A2 = eps[i+1]->linearF(eps[i]->begin);
-			A3 = eps[i+1]->linearF(eps[i]->end);
-			k = (eps[i-1]->b_linear + eps[i+1]->b_linear)/2.;
-		}
-		else if(i>0 && i<epVector.size()-1 && eps[i-1]->type == EventParams::LINEAR && eps[i+1]->type != EventParams::LINEAR)
-		{
-			A1 = eps[i-1]->linearF(eps[i]->begin);
-			A2 = data[eps[i]->end];
-			A3 = data[eps[i]->end];
-			k = eps[i-1]->b_linear;
-		}
-		else if(i>0 && i<epVector.size()-1 && eps[i-1]->type != EventParams::LINEAR && eps[i+1]->type == EventParams::LINEAR)
-		{
-			A1 = data[eps[i]->begin];
-			A2 = eps[i+1]->linearF(eps[i]->begin);
-			A3 = eps[i+1]->linearF(eps[i]->end);
-			k = eps[i+1]->b_linear;
-		}
-		else
-		{
-			A1 = data[eps[i]->begin];
-			A2 = data[eps[i]->end];
-			A3 = data[eps[i]->end];
-			k = 0.;
-		}
-
-		eps[i]->a_weld = (A1+A3)/2.;
-		eps[i]->boost_weld = A2-A1;
-		eps[i]->b_weld = k;
-	}
-
-	for(i = 0; i < epVector.size(); i++) // Setting of the connector params;
-	{
-		double A1=0.;
-		double A2=0.;
-		double ALet=0.;
-		//double width=0.;
-		//double width_40=0.;
-		//double width_70=0.;
-		//double width_90=0.;
-		//int st = 0;
-		//double centre=0.;
-		double sigma1=0.;
-		double sigma2=0.;
-		double sigmaFit = 0.;
-		int j;
-
-		if(i > 0 && eps[i-1]->type == EventParams::LINEAR)
-		{
-			A1 = eps[i-1]->linearF(eps[i]->begin);
-		}
-		else 
-		{
-			A1 = data[eps[i]->begin];
-		}
-
-		if(i < epVector.size() - 1 && eps[i+1]->type == EventParams::LINEAR)
-			A2 = eps[i+1]->linearF(eps[i]->end);
-		else
-			A2 = data[eps[i]->end];
-	
-		ALet = A1;
-		for(j = eps[i]->begin; j <= eps[i]->end; j++)
-		{
-			if (ALet < data[j]) 
-				ALet = data[j];
-		}
-		ALet = ALet - A1;
-		
-		/*
-		st = 0;
-		if(i > 0) // not deadzone
-		{
-			for(j = eps[i]->begin; j <= eps[i]->end; j++)
+			if(f_wlet[w_l] * sign >= level_factor * f_max * sign)
 			{
-				if(data[j] > A1 + ALet *.9)
-					width_90++;
-				if(data[j] > A1 + ALet *.7)
+				//fprintf(stdout, "LLa(%d) %d lim %d\n", width, w_l, minL);
+				// расширяем границы
+				for(i = w_l - 1; i >= minL; i--)
 				{
-					width_70++;
-					if (front < 0)
-						front = j;
-					tail = j;
+					if(f_wlet[i] * sign < level_factor * f_max * sign)
+	        		{
+						w_l=i + 1;
+            			w_lr_ch = true;
+				break;
+					}
 				}
-				if(data[j] > A1 + ALet *.4)
-				{
-					width_40++;
-					if (st == 0)
-						st = j - 1;
-				}
+				//fprintf(stdout, "LLb(%d) %d\n", width, i);
 			}
-			if (width_40 - width_70 < 7)
-				width = width_70;
 			else
-				width = width_90;
-			centre = st + width / 2;
-		}
-		else	// deadzone
-		{
-			for(j = eps[i]->begin; j < eps[i]->end; j++)
 			{
-				if(data[j] > A1 + ALet - 0.5)
+				//fprintf(stdout, "LRa(%d) %d lim %g\n", width, w_l, left_cross-width*angle_factor);
+				// сужаем границы
+				for(i=w_l; i<i_max && i<=left_cross-width*angle_factor; i++)
 				{
-					width++;
-					centre = centre + j;
-					if (front < 0)
-						front = j;
-					tail = j;
+					if(f_wlet[i] * sign >= level_factor * f_max * sign)
+	        		{
+						w_l=i-BUGGY_SHIFT;//w_l=i;
+            			w_lr_ch = true;
+				break;
+					}
 				}
+				//fprintf(stdout, "LRb(%d) %d\n", width, i);
 			}
-			centre = centre/width - 1;
-		}
-		
-		if (front < eps[i]->begin)
-			front = eps[i]->begin;
-		if (tail < 0 || tail > eps[i]->end)
-			tail = eps[i]->end;
-		*/
-
-		// ищем (приблизительно) центр
-		double Cm0 = 0;
-		double Cm1 = 0;
-		double th = i > 0
-			? A1 + ALet * 0.7
-			: A1 + ALet - 0.5;
-		for (j = eps[i]->begin; j < eps[i]->end; j++)
+			if(w_l+width*angle_factor<left_cross){ left_cross = (int)ceil(w_l+width*angle_factor);}
+			if(w_l-width*angle_factor>left_cr2)  { left_cr2  = (int)floor(w_l-width*angle_factor);}
+        }
+   		// ищем пересечение справа
+		// XXX: но только если на этом масштабе сигнал/шум достаточно велик
+		if (level_factor * f_max * sign > df_right * 2)
 		{
-			if (data[j] > th)
+			if(f_wlet[w_r] * sign >= level_factor * f_max * sign)
 			{
-				Cm0++;
-				Cm1 += j;
+				//fprintf(stdout, "RRa(%d) %d lim %d\n", width, w_r, maxR);
+				// расширяем
+				for (i = w_r + 1; i <= maxR; i++)
+				{
+					if(f_wlet[i] * sign < level_factor * f_max * sign)
+					{
+				break;
+					}
+				}
+				w_r = i - 1;
+				w_lr_ch = true;
+				//fprintf(stdout, "RRb(%d) %d\n", width, i);
 			}
-		}
-		double center = Cm0 != 0
-			? Cm1 / Cm0
-			: (eps[i]->begin + eps[i]->end) / 2.0;
-
-		// определяем фронт и спад, окончательное положение "центра" положим посередине
-		double Wc1 = 0;
-		double Wc2 = 0;
-		for (j = eps[i]->begin; j < eps[i]->end; j++)
-		{
-			if (data[j] > th)
+			else
 			{
-				if (j < center)
-					Wc1++;
-				else
-					Wc2++;
+				//fprintf(stdout, "RLa(%d) %d lim %g\n", width, w_r, right_cross+width*angle_factor);
+				// сужаем
+				for(i=w_r; i>i_max && i>=right_cross+width*angle_factor; i--)
+				{
+					if(f_wlet[i] * sign >= level_factor * f_max * sign)
+        			{
+				break;
+					}
+				}
+				w_r=i+BUGGY_SHIFT;//w_r=i;
+				w_lr_ch = true;
+				//fprintf(stdout, "RLb(%d) %d\n", width, i);
 			}
+			if(w_r-width*angle_factor>right_cross){ right_cross = (int)floor(w_r-width*angle_factor);}
+			if(w_r+width*angle_factor<right_cr2)  { right_cr2    = (int)ceil(w_r+width*angle_factor);}
 		}
-		double front = center - Wc1;
-		double tail = center + Wc2;
-		double centre = center; // XXX
+#ifdef debug_lines //рисуем вейвлет образы для данного масштаба
+		{ coln++;
+          for(int i=ev.begin; i<ev.end; i++)
+          { double x1=i, y1=f_wlet[i], x2=i+1, y2=f_wlet[i+1];
+            xs[cou]=x1*delta_x; ys[cou]=y1; xe[cou]=x2*delta_x; ye[cou]=y2;
+            col[cou]=color[coln%csz];
+            if(i<w_l || i>w_r || !w_lr_ch) col[cou] = 0x888888;
+            cou++;
+          }
+        }
+#endif
+		w_lr_ch = false;
+    }  // for(int step=0; step<=nscale;...
+	//prf_b("correctSpliceCoords: scales done");
 
-			
-		sigma1 = (centre - eps[i]->begin)/20.;
-		sigma2 = (eps[i]->end - centre)*(1. - formFactor);
-		sigmaFit = (eps[i]->end - centre)*formFactor;
+	//printf("correctSpliceCoords: scale %d..%d begin %d end %d minBegin %d maxEnd %d -- begin %d end %d\n",
+	//	scale0, width, ev.begin, ev.end, minBegin, maxEnd, w_l, w_r);
 
-		eps[i]->a1_connector = A1;
-		eps[i]->a2_connector = A2;
-		eps[i]->aLet_connector = ALet;
-
-		//eps[i]->width_connector = width;
-		//eps[i]->center_connector = centre;
-		
-		//fprintf(stderr, "width_40 %g width_70 %g width_90 %g width %g\n", width_40, width_70, width_90, width); // FIXIT
-		//fflush(stderr); // FIXIT
-
-		eps[i]->center_connector = (front + tail) / 2.0;
-		eps[i]->width_connector = tail - front;
-
-		eps[i]->sigma1_connector = sigma1;
-		eps[i]->sigma2_connector = sigma2;
-		eps[i]->sigmaFit_connector = sigmaFit;
-		eps[i]->k_connector = formFactor;
+	ev.begin = w_l;
+	ev.end = w_r;
+	
+	//if( w_l < w_r  )
+    //{   double old_left = ev.begin;
+    //    double old_right = ev.end;
+	//	// можем только сужать события
+    //	if(w_l>old_left && w_l<old_right ) { ev.begin = w_l;}
+    //	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
+    //}
+/*
+#ifdef debug_VCL
+    double wn = getWLetNorma(wlet_width);
+  	performTransformationAndCenter(data, 0, lastPoint + 1, f_wlet, wlet_width, wn);
+#endif
+*/
+	//prf_b("correctSpliceCoords: return");
+}
+// -------------------------------------------------------------------------------------------------
+// Посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и
+// создать, изменив значение i и вернув сдвиг; если ничего не нашли, то возвращает 0.
+// Сейчас как коннектор опознаем комбинацию конн.вверх + первый конн.вниз,
+// а также конн.вверх + последний свар.вниз.
+// Поиск ведется в пределах макс. протяженности, зависящей от ампл. конн.вверх,
+// и ограничивается любым (>=weld) всплеском вверх.
+int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
+{
+	int ret = 0;
+    Splash* sp1 = (Splash*)splashes[i]; // начальный всплеск
+	Splash* sp2 = 0; // конечный всплеск; sp2 == 0 тогда и только тогда, когда ret == 0
+	if (sp1->begin_conn == -1 || sp1->sign < 0)
+		return ret;
+	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
+	for (int j = i + 1; j < splashes.getLength(); j++) {
+		Splash *tmp = (Splash*)splashes[j];
+		if (fabs(tmp->begin_thr - sp1->end_thr) > distCrit) // достигли макс. протяжености
+	break;
+		if (tmp->sign > 0) { // подъем
+			if (tmp->begin_thr != -1)
+	break; // подъем свар. и выше - это уже не наш коннектор
+			else
+	continue; // подъем меньше свар. - игнорируем
+		}
+		// спад в пределах макс. протяженности
+		if (tmp->begin_conn != -1) {
+			// коннекторной амплитуды
+			ret = j - i + 1;
+			sp2 = tmp;
+	break; // на нем и останавливаемся
+		} else if (tmp->begin_weld != -1) {
+			// сварочной амплитуды - кандидат на спад
+			ret = j - i + 1;
+			sp2 = tmp;
+	continue; // не останавливаемся, продолжаем поиск
+		}
+		// всплески меньшие чем weld, игнорируем
 	}
+	if (ret == 0)
+		return ret;
+	ep = new EventParams;
+	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+	//correctConnectorFront(ep); // уточняем фронт коннекора
+#ifdef debug_lines
+	double begin = ep->begin, end = ep->end;
+	xs[cou] = begin*delta_x; xe[cou] = end*delta_x; ys[cou] = minimalConnector*2*1.1;  ye[cou] = minimalConnector*2*1.5;  col[cou]=0x00FFFF; cou++;
+#endif
+	return ret;
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2 )
+{   double r1s, r1b, r2, r3s, r3b, rmin;
+    ep.type = EventParams::CONNECTOR;
+    ep.begin = sp1.begin_thr;
+    if(ep.begin<0){ep.begin=0;}
+    ep.end = sp2.end_thr;
+    if(sp2.begin_conn != -1 && sp2.sign > 0)// если это начало нового коннектора
+    { ep.end = sp2.begin_thr;// если два коннектора рядом, то конец первого совпадает с началом следующего
+    }
+    if(ep.end>lastPoint)
+    { ep.end = lastPoint;
+    }
+	//// remove this
+    //double max1 = -1, max2 = -1, max3 = -1;
+    //int i;
+    //for(i=sp1.begin_conn ; i<sp1.end_conn; i++)
+    //{ double res = (f_wlet[i]-minimalConnector)/noise[i]; // WONDER: какой f_wlet - на исходном масштабе?
+    //  if(max1<res) { max1 = res;}
+    //  res = (f_wlet[i]-rACrit)/noise[i];
+    //  if(max2<res) { max2 = res;}
+    //  res = (f_wlet[i]-minimalWeld)/noise[i];
+    //  if(max3<res) {max3 = res;}
+    //}
+    //r1s = max1;
+    //r1b = max2;
+    //r2  = max3;
 
+	r1s = sp1.r_conn;
+	r1b = sp1.r_acrit;
+	r2  = sp1.r_weld;
+
+    double l = sp2.begin_thr - sp1.end_conn;
+    assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
+	int av_scale = (sp1.scale + sp2.scale) / 2; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
+    r3s = r2*(rSSmall - l)/av_scale;
+    r3b = r2*(rSBig - l)/av_scale;
+    // может ли этот "коннектор" быть концом волокна
+    if(sp1.sign>0 && sp1.f_extr>= minimalEnd)
+    { ep.can_be_endoftrace = true;
+    }
+	double t1 = r1s<r3b ? r1s:r3b, t2 = r3s>r1b ? r3s:r1b;
+    double t3 = r2<t2 ? r2:t2;
+	rmin = t1<t3 ? t1:t3;
+    ep.R = rmin;
+
+	ep.spliceSplash = 0;
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::correctConnectorFront(EventParams* ev)
+{	if( ev->type != EventParams::CONNECTOR )// пока не дойдём до коннектора
+return;
+    int i_begin = ev->begin, i_end = ev->end;
+	// ищем максимум
+    int i_max = i_begin;// номер макс точки
+    double f_max = data[i_max];
+    int i;
+    for( i=i_begin; i<i_end; i++ )
+    {	if(data[i]>f_max) {i_max = i; f_max = data[i];}
+    }
+    // ищем точку на фронте коннектора такую, что всё слква от неё - меньше, а справа - выше,
+	// которая при этом не меньше, чем на 0.02*(max-minLeft) выше абс. мин. minLeft слева от нее
+
+	// допускается, что искомая точка не обязательно должна быть привязана к сетке целых X,
+	// в таком случае определяется X с округлением вверх, даже в том случае, если так округленное
+	// X дает значение Y, не удовлетворяющее требованию "все справа от X выше Y".
+	// Так сделано специально для улучшения работы на резких фронтах в зашумленных коннекторах.
+	// Для этого используется переменная f_x (значение функции в дробной координате x)
+
+    int i_x = -1; // x - искомая точка с привязкой к целочисленной сетке
+	double f_x = 0; // (undefined if i-x < 0) значение в искомой точке (точка без привязки к целым X)
+    double f_cmax = data[i_begin]; // текущий максимум (слева до тек. точки)
+    double f_lmin = data[i_begin]; // текущий минимум (слева до тек. точки)
+	for( i=i_begin; i<=i_max; i++ )
+    {
+		if (f_lmin > data[i])
+			f_lmin = data[i];
+		double thr = fmax(f_cmax, f_lmin + 0.05 * (f_max - f_lmin));
+		//fprintf(stderr, "i_x %d f_x %g i %d data[i] %g f_cmax %g f_lmin %g f_max %g thr %g\n",
+		//	i_x, f_x, i, data[i], f_cmax, f_lmin, f_max, thr);
+		if(data[i] >= thr)
+        {	f_cmax = data[i];
+            if(i_x == -1)
+            {	i_x = i;
+				f_x = thr;
+            }
+        }
+        if(	i_x!=-1 && data[i]<f_x )
+        {	i_x = -1;
+        }
+    }
+	//fprintf(stderr, "correctConnectorFront: i_begin %d i_end %d i_max %d i_x %d\n",
+	//	i_begin, i_end, i_max, i_x); fflush(stderr);
+    if( i_x==-1 )
+    {	i_x = i_begin;
+    }
+    double ev_beg_old = ev->begin;
+    ev->begin = i_x - 1;
+}
+// -------------------------------------------------------------------------------------------------
+// к этому моменту уже известно, что перед нами не коннектор
+int InitialAnalysis::processIfIsNonId(int i, ArrList& splashes)
+{
+	double mult = 1.0; // множитель для масштаба при определения дистанции связывания событий
+	double amplMagn = 5.0; // множитель для определения, что всплеск не связан с неид. соб.,т.к. его ампл. много больше ампл. неид.
+    Splash* cur = (Splash*)splashes[i];
+	int countPlus = 0;
+	int countMinus = 0;
+	if (cur->sign > 0)
+		countPlus++;
+	else
+		countMinus++;
+	int lastPos = cur->end_thr + (int)(cur->scale * mult); // конец зоны связывания неид. соб.
+	int eventEnd = cur->end_thr;
+	int eventBegin = cur->begin_thr;
+	double ampl = fabs(cur->f_extr); // текущая хар. ампл. неид. соб.
+	int j;
+	for(j = i + 1; j<splashes.getLength(); j++) {
+		EventParams *ep;
+		int conLen = findConnector(j, splashes, ep);
+		if (conLen > 0) {
+			delete ep;
+			// распознав коннектор, никак его не испольуем, а только лишь прерываем связывание неид. события
+			// XXX: в таком случае, создание коннектора будет запрошено дважды - здесь, и по возврату в findEventsBySplashes
+	break;
+		}
+		cur = (Splash*)splashes[j];
+		int begin2 = cur->begin_thr - (int)(cur->scale * mult);
+		if (begin2 > lastPos)
+	break; // это событие уже далеко от lastPos
+		if (fabs(cur->f_extr) > ampl * amplMagn)
+	break; // это событие больше по амплитуде, чем наше неид. соб.
+		if (cur->sign > 0)
+			countPlus++;
+		else
+			countMinus++;
+		ampl = fmax(ampl,fabs(cur->f_extr));
+		lastPos = cur->end_thr + (int)(cur->scale * mult);
+		eventEnd = cur->end_thr;
+	}
+	if (countPlus + countMinus < 3)
+		return 0; // не связываем события (маленький коннектор будет определен как неид. и без этого кода)
+
+	// создаем неид. событие
+	EventParams &ep = *new EventParams;
+    ep.type = EventParams::UNRECOGNIZED;
+    ep.begin = eventBegin;
+    if(ep.begin<0) {ep.begin=0;}
+    ep.end = eventEnd;
+    if(ep.end>lastPoint) {ep.end=lastPoint;}
+	events->add(&ep);
+	return j - i;
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
+{  ep.type = EventParams::UNRECOGNIZED;
+   ep.begin = sp1.begin_thr;
+   if(ep.begin<0){ep.begin=0;}
+   ep.end = sp2.end_thr;
+   if(ep.end>lastPoint){ep.end = lastPoint;}
+   ep.spliceSplash = 0;
+}
+// -------------------------------------------------------------------------------------------------
+//
+// ====== ФУНКЦИИ ЧЕТВЕРТОГО ЭТАПА АНАЛИЗА - ОБРАБОТКИ СОБЫТИЙ =======
+//
+//------------------------------------------------------------------------------------------------------------
+// удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
+void InitialAnalysis::processEndOfTrace()
+{   for(int i=events->getLength()-1; i>0; i--)
+	{   EventParams* ev = (EventParams*)(*events)[i];
+    	if( !ev->can_be_endoftrace)  // true  может быть только у отражательного события
+        {   events->slowRemove(i);
+        }
+        else
+     	{	ev->type = EventParams::ENDOFTRACE;
+    break;
+        }
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int szc)
+{   if(events->getLength()<2)
+return;
+	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
+	{   // пока не дойдём до коннектора
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+    	if(ev1->type != EventParams::CONNECTOR)
+    continue;
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+		EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+	    EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev3->type != EventParams::CONNECTOR)
+    continue;
+    	if(ev2->end - ev2->begin < szc)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2); 
+        }
+    }//for
+}
+//------------------------------------------------------------------------------------------------------------
+// ВАЖНО: предполагаем что линейных событий ещё нет ВООБЩЕ ! (иначе будет неправильно работать)
+void InitialAnalysis::addLinearPartsBetweenEvents()
+{   ArrList* events_new = new ArrList();
+	for(int i=0; i<events->getLength(); i++)
+    {   EventParams *cur = (EventParams*)(*events)[i];
+        if (i>0)
+        { EventParams *prev = (EventParams*)(*events)[i-1];
+          if(prev->end < cur->begin)
+          { EventParams *ep = new EventParams();
+            ep->type = EventParams::LINEAR;
+            ep->begin = prev->end;
+            ep->end = cur->begin;
+            events_new->add(ep);
+          }
+        }
+        events_new->add(cur);
+    }
+    delete events;
+    events = events_new;
+}
+//------------------------------------------------------------------------------------------------------------
+// из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
+void InitialAnalysis::trimAllEvents()
+{	int prevEnd = 0;
+	for(int i=0; i<events->getLength(); i++)
+    {	EventParams& ev = *(EventParams*)(*events)[i];
+		if(ev.begin < 0)
+        { ev.begin = 0;
+        }
+		if(ev.begin != prevEnd && i != 0)
+        {   if( fabs(ev.begin - prevEnd) > 2)
+        	{   bool const GAP_BETWEEN_EVENTS_NOT_TOO_LARGE = false;
+            	assert(GAP_BETWEEN_EVENTS_NOT_TOO_LARGE);
+            }
+        	ev.begin = prevEnd;
+        }
+		if(ev.end <= ev.begin)
+        { ev.end = ev.begin+1;
+        }
+		if(ev.end > lastPoint)
+        { ev.end = lastPoint;
+        }
+		prevEnd = ev.end;
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::verifyResults()
+{	int prevEnd = 0;
+	for(int i=0; i<events->getLength(); i++)
+    {	EventParams& ev = *(EventParams*)(*events)[i];
+//*//#ifndef debug_VCL
+		assert(ev.begin >= 0);
+		assert(ev.end <= lastPoint);
+		assert(ev.end >= ev.begin);
+		assert(ev.end > ev.begin); // >, not just >=
+		assert(ev.begin == prevEnd || i == 0); // XXX
+//#else
+/*/
+//сюда понатыкать брекпоинтов
+		if(!(ev.begin >= 0))
+        { int o=0;}
+		if(!(ev.end <= lastPoint))
+        { int o=0;}
+		if(!(ev.end >= ev.begin))
+        { int o=0;}
+		if(!(ev.end > ev.begin)) // >, not just >=
+        { int o=0;}
+		if(!(ev.begin == prevEnd || i == 0)) // XXX
+        { int o=0;}
+//*/
+//#endif
+		prevEnd = ev.end;
+
+    }
+}
+// -------------------------------------------------------------------------------------------------
+//
+// ====== ОБЩИЕ И ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ АНАЛИЗА =======
+//
+// -------------------------------------------------------------------------------------------------
+// чтобы не менять кучу кода, когда меняем алгоритм пересчёта порогов вынесли в отдельную юфункцию
+double InitialAnalysis::calcThresh(double thres, double noise)
+{	return thres>noise ? thres : noise;// = max(thres, noise)
+	//return thres+noise;
+}
+// -------------------------------------------------------------------------------------------------
+double InitialAnalysis::get_wlet_fabs(int s, int x)
+{	return fabs( wavelet.f(s,x) );
+}
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double noiseFactor, double *outNoise)
+{	findNoiseArray(y, outNoise, data_length, N); // external function from findNoise.cpp
+	int i;
+	for (i = 0; i < N; i++)
+	{	// кто скажет, что sqrt(Neff) в цикле сильно влияет на быстродействие АМФИКОМа, того назову плохим словом.
+		outNoise[i] *= noiseFactor * 3 / sqrt(Neff);
+	}
+}
+//------------------------------------------------------------------------------------------------------------
+// свёртка входных данных с исользованием уже готового вейвлета
+// noise convergence of  0.5*fabs(wavelet)/||wavelet|| function
+// wlet_width - ширина вейвлета, с которым производится свёртка ( равна scaleB )
+void InitialAnalysis::WaveletDataConvolution(double *data, int dataLength, int wlet_width)
+{	double* data_processed = new double[dataLength];
+	UserWavelet fabs_wlet(wavelet.getMinScale(), get_wlet_fabs);
+	fabs_wlet.transform( wlet_width, data, dataLength, 0, dataLength-1, data_processed, 2*fabs_wlet.normStep(wlet_width));// dataLength-1 - так как нужен инекс, а не количество 
+	int i;
+    for(i=0; i<dataLength; i++){
+    data[i] = data_processed[i];
+    }
+    delete[] data_processed;
+}
+//------------------------------------------------------------------------------------------------------------
+int InitialAnalysis::getLastPoint()
+{   int lastPoint = findReflectogramLength(data, data_length) - 1;
+	if (lastPoint < 0)
+	{	lastPoint = 0;
+    }
+	//if(lastPoint + 10 < data_length) lastPoint += 10; не понятно, зачем это вообще надо 
+    return lastPoint;
+}
+//------------------------------------------------------------------------------------------------------------
+// f- исходная ф-ция,
+// f_wlet - вейвлет-образ
+void InitialAnalysis::performTransformationAndCenter(double* data, int begin, int end, double* f_wlet, int scale, double norma)
+{	// transform
+	performTransformationOnly(data, begin, end, f_wlet, scale, norma);
+	centerWletImageOnly(f_wlet, scale, begin, end, norma);
 #ifdef DEBUG_INITIAL_ANALYSIS
-	fprintf(this->str,"InitialAnalysis::setEventParams(): exit\n");
+#if 0 // FIXME: slow debug code
+	int i;
+	char sbuf[64];
+	sprintf(sbuf, "wt-%d-%d-%d", scale, begin, end);
+	FILE *fp = fopen(sbuf, "w");
+	if (fp) {
+		for (i = begin; i < end; i++) {
+			fprintf(fp, "%d %g\n", i, f_wlet[i]);
+		}
+		fclose(fp);
+	}
+#endif
 #endif
 }
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1)
+{   // shift (calcAverageFactor must be performed by now!)
+	double f_wlet_avrg = average_factor * getWLetNorma2(scale) / norma1;
+	for(int i=begin; i<end; i++)
+    {	f_wlet[i] -= f_wlet_avrg;
+    }
+}
+//------------------------------------------------------------------------------------------------------------
+void InitialAnalysis::performTransformationOnly(double* data, int begin, int end, double* f_wlet, int freq, double norma)
+{	//int len = end - begin;
+	assert(begin >= 0);
+	assert(end <= lastPoint + 1);
+	wavelet.transform(freq, data, lastPoint + 1, begin, end - 1, f_wlet + begin, norma); // incl. end-1; excl. lastPoint+1
+}
+//------------------------------------------------------------------------------------------------------------
+int InitialAnalysis::getMinScale() {
+	return wavelet.getMinScale();
+}
+//------------------------------------------------------------------------------------------------------------
+// считаем, что расстояние медлу точками _динаковое_
+void InitialAnalysis::calc_rms_line(double* arr, int beg, int end, double& a, double& b)
+{	if(beg > end) { int temp = end; end = beg; beg = temp;}
+    if(beg == end || beg < 0 || end > data_length)
+    { a=0; b=0;
+return;
+    }
+    double e1=0, e2=0, e3=0, e4=0;
+    int n = end-beg+1;
 
-void InitialAnalysis::getLinearFittingCoefficients(double *data, int from, int to, int shift, double *res)
+    for(int i = beg; i <= end; i++)
+    {   e1 += (double)i*i;// (double) от переполнения int
+        e2 += i;
+        e3 += i * arr[i];
+        e4 += arr[i];
+    }
+    a = (n*e3 - e2*e4)/(n*e1 - e2*e2);
+    b = (e3 - a*e1)/e2;
+
+    a /= delta_x;
+}
+//------------------------------------------------------------------------------------------------------------
+// должна вызываться после заполнения остальных параметров splash (begin/end)
+void InitialAnalysis::fillSplashRParameters(Splash &spl, double *f_wlet, int wlet_width)
 {
-    double alfa = 0., beta = 0., gamma = 0., dzeta = 0., n = 0., d = 0.;
+	int sign = spl.sign;
+	// для коннекторных порогов
+	spl.r_acrit = spl.r_conn = spl.r_weld = -1;
     int i;
-    for (i = from; i <= to; i++)
-	{
-		d = (double)(i - shift);
-		beta = beta - data[i] * d;
-		alfa = alfa + d * d;
-		gamma = gamma + d;
-		dzeta = dzeta - data[i];
-		n = n + 1.;
-	}
-    double a = (n * beta / gamma - dzeta) / (gamma - n * alfa / gamma); // == cov(dx,y)/D(dx)
-    double b = - (alfa * a + beta) / gamma;
-
-	res[0] = b;
-	res[1] = a;
-
-//	dispersia = 0;
-//	n=0.;
-//
-//	for(i=begin; i<=end; i++)
-//	{
-//		dispersia += ((y[i]-(a_*i+b_))*(y[i]-(a_*i+b_)));
-//		n=n+1.;
-//	}
-//
-//	  dispersia/=n;
-//	  dispersia = sqrt(dispersia);
-//
-//	  error = dispersia/sqrt(n);
-
+    for(i=spl.begin_conn; i<spl.end_conn; i++) // если begin_conn и end_conn не определены, то ничего не делает
+    { double res;
+	  res = (f_wlet[i]*sign-minimalConnector)/noise[i];
+      if(spl.r_conn<res) { spl.r_conn = res;}
+      res = (f_wlet[i]*sign-rACrit)/noise[i];
+      if(spl.r_acrit<res) { spl.r_acrit = res;}
+    }
+	// для сварочных порогов
+    for(i=spl.begin_weld; i<spl.end_weld; i++) // если begin_conn и end_conn не определены, то ничего не делает
+    { double res;
+      res = (f_wlet[i]*sign-minimalWeld)/noise[i];
+      if(spl.r_weld<res) {spl.r_weld = res;}
+    }
 }
-
-void InitialAnalysis::convolutionOfNoise(int n_points)
-{
-	int n;
-	double meanValue;
-
-	int i;
-	for(i = 0; i < lastNonZeroPoint; i++)
-	{
-		n=0;
-		meanValue = 0.;
-		for (int j = i; j < min(i + n_points, lastNonZeroPoint); j++)
-		{
-			meanValue += noise[j];
-			n++;
-		}
-		if (n > 0) 
-			meanValue/=n;
-
-		noise[i] = meanValue;
-	}
-}
-
-
-#ifdef USE_NEURAL_NETWORK
-
-void InitialAnalysis::excludeNonRecognizedEvents()
-{
-	int architecture[10];
-	int nLayers;
-
-	//reading information about architecture.
-	FILE *f = fopen("architecture.net", "r");
-	int i;
-
-	if(f == NULL)
-	{
-		//Beep(300, 300);
-		//Beep(600, 300);
-		//Beep(900, 300);
-		return;
-	}
-
-	fseek(f, 0L, SEEK_SET);
-	fscanf(f, "%i", &nLayers);
-
-	int tmp;
-
-	for(i=0; i<nLayers; i++)
-	{
-		fscanf(f, "%i", &tmp);
-		architecture[i] = tmp;
-	}
-
-	fclose(f);
-
-
-
-	int networkEventWindowSize = 66;
-
-	double *window = new double[networkEventWindowSize];
-
-	NeuroAnalyser *na = new NeuroAnalyser(networkEventWindowSize, architecture, nLayers);
-
-	char *fileName = "weights.wht";
-
-	if(na->readWeightsAndShiftsFromSingleFile(fileName))
-	{
-		for (EPLIST::iterator it = epVector.begin(); it != epVector.end(); it++)
-		{
-			EventParams* ep = &(*it);
-			setNNWindow(ep->begin, ep->end, window, networkEventWindowSize);
-			
-			///////////////////////////////////
-		//	ep->type = na->getEventType2(window); ///// 
-			///////////////////////////////////
-		}
-	}
-		
-	delete []window;
-	delete na;
-
-	//siewLinearParts();
-}
-
-void InitialAnalysis::setNNWindow(int from, int to, double *window, int eventWindowSize)
-{
-
-	int dist = evSizeC*2;
-	int delta = dist-(to-from);
-
-	if(delta > 0)
-	{
-		from = from - (int)(delta/2.);
-		to   = to   + (int)(delta/2.);
-	}
-	else if(to-from>evSizeC*2.8)
-	{
-		to = from + (int)(evSizeC*2.8);
-	}
-
-	
-	double dIndex = (double)(to - from)/eventWindowSize;
-	
-	double counter = from;
-
-
-	int i;
-	for(i=0; i<eventWindowSize; i++)
-	{
-		window[i] = data[(int)(counter+0.5)] - meanAttenuation*(counter-from)/evSizeC;
-		counter += dIndex;
-
-	}
-
-	shiftEventToCentre(window, eventWindowSize);
-	return;
-}
-
-void InitialAnalysis::setNNWindow_(int from, int to, double *window, int eventWindowSize)
-{
-	int dist = (int)(evSizeC*2.5);
-	int delta = dist-(to-from);
-
-	if(delta > 0)
-	{
-		from = from - (int)(delta/2.);
-		to   = to   + (int)(delta/2.);
-	}
-	
-	double dIndex = (double)(to - from)/eventWindowSize;
-	
-	double counter = from;
-
-
-	int i;
-	for(i=0; i<eventWindowSize; i++)
-	{
-		window[i] = data[(int)(counter+0.5)] - meanAttenuation*(counter-from)/evSizeC;
-		counter += dIndex;
-
-	}
-
-	shiftEventToCentre(window, eventWindowSize);
-	return;
-}
-
-
-void InitialAnalysis::shiftEventToCentre(double *wnd, int wndSize)
-{
-	double summ = 0.;
-	int i;
-
-	for(i=0; i<wndSize; i++)
-	{
-		summ = summ + wnd[i];
-	}
-
-	summ = summ/wndSize;
-
-	for(i=0; i<wndSize; i++)
-	{
-		wnd[i] = wnd[i] - summ;
-	}
-
-	double deviation = 0;
-
-	for(i=0; i<wndSize; i++)
-	{
-		deviation = deviation + fabs(wnd[i]);
-	}
-
-	deviation = deviation/wndSize;
-	if(deviation <0.000001) deviation = 1.;
-
-	for(i=0; i<wndSize; i++)
-	{
-		wnd[i] = wnd[i]/deviation;
-	}
-}
-
-#endif // USE_NEURAL_NETWORK
-
+//------------------------------------------------------------------------------------------------------------

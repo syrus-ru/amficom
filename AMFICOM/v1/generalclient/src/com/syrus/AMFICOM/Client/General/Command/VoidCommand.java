@@ -1,113 +1,150 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Заглушка для команды (пустая команда)                      * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Command\VoidCommand.java                              * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * $Id: VoidCommand.java,v 1.13 2005/05/18 14:01:20 bass Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 
 package com.syrus.AMFICOM.Client.General.Command;
 
-public class VoidCommand implements Command
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+
+/**
+ *  Заглушка для команды (пустая команда)
+ *
+ *
+ *
+ * @version $Revision: 1.13 $, $Date: 2005/05/18 14:01:20 $
+ * @module
+ * @author $Author: bass $
+ * @see
+ */
+public class VoidCommand implements Command, Cloneable
 {
-	// поле источника команды
+	protected int result = RESULT_UNSPECIFIED;
+
+	/** поле источника команды */
 	private Object source;
 
-	// у пустой команды по умолчанию нет источника
-	public VoidCommand()
+	Command next = null;
+	Command previous = null;
+	
+	public Command getNext()
 	{
-		source = new String("NULL");
+		return next;
 	}
 
-	// получить
+	public void setNext(Command next)
+	{
+		this.next = next;
+	}
+
+	/** у пустой команды по умолчанию нет источника */
+	public VoidCommand()
+	{
+		source = "NULL";
+	}
+
+	/** получить */
 	public Object clone()
 	{
-		return new VoidCommand(source);
+		return new VoidCommand(source);		
 	}
 
 	public VoidCommand(Object source)
 	{
 		if(source == null)
-			source = new String("NULL");
+			source = "NULL";
 		this.source = source;
 	}
 
-	// пустая команда не выполняет никаких действий
+	/** пустая команда не выполняет никаких действий */
 	public void execute()
 	{
-		System.out.println("Void command executed for " + source.toString() + " - ignored");
+		try
+		{
+			throw new Exception("Void command executed for " + source.toString() + " - ignored");
+		}
+		catch(Exception e)
+		{
+			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+		}
 	}
 	
 	public int getResult()
 	{
-		return RESULT_OK;
+		return result;
+	}
+	
+	protected void setResult(int res)
+	{
+		this.result = res;
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void undo()
 	{
-		System.out.println("Void command undo for " + source.toString() + " - ignored");
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command undo() - ignored");
+		
 	}
 
 	// пустая команда не выполняет никаких действий
 	public void redo()
 	{
-		System.out.println("Void command redo for " + source.toString() + " - ignored");
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command redo() - defaults to \'EXECUTE\'");
+		execute();
 	}
 
 	// пустая команда не выполняет никаких действий
-	public void commit_execute()
+	public void commitExecute()
 	{
-		System.out.println("Void command execution commit for " + source.toString());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command execution commit() - ignored");
 	}
 
 	// пустая команда не выполняет никаких действий
-	public void commit_undo()
+	public void commitUndo()
 	{
-		System.out.println("Void command undo commit for " + source.toString() + " - ignored");
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "Void command undo commit() - ignored");
 	}
 
 	// у пустой команды нет источника
 	public Object getSource()
 	{
-		System.out.println("Source for Void command is " + source.toString() + " - ignored");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER,
+				"method call for Void command, ret val " + source.toString() + " - ignored",
+				getClass().getName(),
+				"getSource()");
+		
 		return null;
 	}
 
 	// пустая команда не имеет параметров
 	public void setParameter(String field, Object value)
 	{
-		System.out.println("Set for Void command paramenter " + field +
+		try
+		{
+			throw new Exception("Set for Void command paramenter " + field +
 				" to value " + value.toString() + " - ignored");
+		}
+		catch(Exception e)
+		{
+			Environment.log(Environment.LOG_LEVEL_FINE, "current execution point with call stack:", null, null, e);
+		}
+	}
+
+	public Command getPrevious()
+	{
+		return previous;
+	}
+
+	public void setPrevious(Command previous)
+	{
+		this.previous = previous;
 	}
 
 }
-
- 

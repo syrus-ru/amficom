@@ -1,65 +1,42 @@
+/*
+ * $Id: ApplicationContext.java,v 1.4 2005/05/05 11:04:47 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.ConnectionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
-public class ApplicationContext 
+/**
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/05/05 11:04:47 $
+ * @module generalclient_v1
+ */
+public final class ApplicationContext
 {
-	ConnectionInterface ci;
-	SessionInterface si;
-	ApplicationModel aModel;
-	DataSourceInterface dataSource;
-	Dispatcher dispatcher;
+	
+	private ApplicationModel applicationModel;
+	
+	private Dispatcher dispatcher;
 
-	public ApplicationContext()
+
+	public void setApplicationModel(ApplicationModel applicationModel)
 	{
+		this.applicationModel = applicationModel;
 	}
 
-	public void setConnectionInterface(ConnectionInterface ci)
-	{
-		this.ci = ci;
-	}
-
-	public void setSessionInterface(SessionInterface si)
-	{
-		this.si = si;
-	}
-
-	public void setApplicationModel(ApplicationModel aModel)
-	{
-		this.aModel = aModel;
-	}
-
-	public void setDataSourceInterface(DataSourceInterface dataSource)
-	{
-		this.dataSource = dataSource;
-	}
 
 	public void setDispatcher(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
 	}
 
-	public ConnectionInterface getConnectionInterface()
-	{
-		return ci;
-	}
-
-	public SessionInterface getSessionInterface()
-	{
-		return si;
-	}
-
 	public ApplicationModel getApplicationModel()
 	{
-		return aModel;
-	}
-
-	public DataSourceInterface getDataSourceInterface()
-	{
-		return dataSource;
+		return applicationModel;
 	}
 
 	public Dispatcher getDispatcher()

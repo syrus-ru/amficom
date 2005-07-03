@@ -11,9 +11,10 @@ import javax.swing.JMenuItem;
 
 import java.awt.*;
 
-import java.util.Vector;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.ArrayList;
 
 import oracle.jdeveloper.layout.XYConstraints;
 import oracle.jdeveloper.layout.XYLayout;
@@ -41,18 +42,20 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
+import com.syrus.AMFICOM.Client.Map.Report.MapRenderPanel;
+import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
 import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.MapRenderPanel;
 
 import com.syrus.AMFICOM.CORBA.Scheme.SchemeOptimizeInfo_Transferable;
 import com.syrus.AMFICOM.Client.Resource.Optimize.SolutionCompact;
 
 import com.syrus.AMFICOM.Client.General.Report.*;
+import com.syrus.AMFICOM.Client.Optimize.Report.SelectSolutionFrame;
 
 /**
  * <p>Description: Панель для размещения схемы элементов шаблона</p>
@@ -179,7 +182,7 @@ public class ReportTemplatePanel extends JPanel
 
 	/**
 	 * Задаёт поля на шаблоне
-*/
+  */
 	public void setImagableRect()
 	{
 		java.awt.print.PageFormat defaultPage =
@@ -209,9 +212,9 @@ public class ReportTemplatePanel extends JPanel
 		this.removeAll();
 		this.reportTemplate = rt;
 
-		for (int i = 0; i < rt.labels.size(); i++)
+		for (ListIterator lIt = rt.labels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane tp = (FirmedTextPane) rt.labels.get(i);
+			FirmedTextPane tp = (FirmedTextPane) lIt.next();
 			this.add(tp, new XYConstraints(tp.getX(), tp.getY(), -1, -1));
 
 			tp.setBorder(BorderFactory.createLineBorder(Color.lightGray, 2));
@@ -219,9 +222,9 @@ public class ReportTemplatePanel extends JPanel
 			this.setLabelListener(tp);
 		}
 
-		for (int i = 0; i < rt.images.size(); i++)
+		for (ListIterator lIt = rt.images.listIterator(); lIt.hasNext();)
 		{
-			ImagePanel ip = (ImagePanel) rt.images.get(i);
+			ImagePanel ip = (ImagePanel) lIt.next();
 			this.add(ip, new XYConstraints(ip.getX(), ip.getY(), -1, -1));
 			this.setImagePanelListener(ip);
 		}
@@ -239,11 +242,10 @@ public class ReportTemplatePanel extends JPanel
 */
 	private RenderingObject identifyObject(int x, int y)
 	{
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator lIt = reportTemplate.objectRenderers.listIterator();
+         lIt.hasNext();)  
 		{
-			RenderingObject ror = (RenderingObject) reportTemplate.
-				objectRenderers.
-				get(i);
+			RenderingObject ror = (RenderingObject) lIt.next();
 			if ((ror.x - 2 < x) && (x < ror.x + ror.width + 2) &&
 				(ror.y - 2 < y) && (y < ror.y + ror.height + 2))
 				return ror;
@@ -257,15 +259,18 @@ public class ReportTemplatePanel extends JPanel
 	public boolean checkTemplatesScheme()
 	{
 		// Проверка пересечений объектов отчёта
-		for (int i = 0; i < reportTemplate.objectRenderers.size() - 1; i++)
+    int curI = 0;
+    int orSize = reportTemplate.objectRenderers.size();
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         curI < orSize - 1; curI++)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = i + 1; j < reportTemplate.objectRenderers.size(); j++)
+      int curJ = curI + 1;
+      for (ListIterator jIt = reportTemplate.objectRenderers.listIterator(curJ);
+           curJ < orSize; curJ++)
 			{
-				RenderingObject roJ = (RenderingObject) reportTemplate.
-					objectRenderers.get(j);
+				RenderingObject roJ = (RenderingObject) jIt.next();
 
 				if (  roJ.hasPoint(roI.x,roI.y,null)
 					||	roJ.hasPoint(roI.x + roI.width,roI.y,null)
@@ -276,15 +281,14 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений объектов отчёта с надписями
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         iIt.hasNext();)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = 0; j < reportTemplate.labels.size(); j++)
+      for (ListIterator jIt = reportTemplate.labels.listIterator(); jIt.hasNext();)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  tpJ.hasPoint(roI.x,roI.y)
 					||	tpJ.hasPoint(roI.x + roI.width,roI.y)
@@ -295,15 +299,14 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений объектов отчёта с надписями
-		for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+		for (ListIterator iIt = reportTemplate.objectRenderers.listIterator();
+         iIt.hasNext();)
 		{
-			RenderingObject roI = (RenderingObject) reportTemplate.
-				objectRenderers.get(i);
+			RenderingObject roI = (RenderingObject) iIt.next();
 
-			for (int j = 0; j < reportTemplate.labels.size(); j++)
+      for (ListIterator jIt = reportTemplate.labels.listIterator(); jIt.hasNext();)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  roI.hasPoint(tpJ.getX(),tpJ.getY(),null)
 					||	roI.hasPoint(tpJ.getX() + tpJ.getWidth(),tpJ.getY(),null)
@@ -314,15 +317,17 @@ public class ReportTemplatePanel extends JPanel
 		}
 
 		// Проверка пересечений надписей
-		for (int i = 0; i < reportTemplate.labels.size() - 1; i++)
+    curI = 0;
+    int labelsSize = reportTemplate.labels.size();
+    
+    for (ListIterator iIt = reportTemplate.labels.listIterator(); curI < labelsSize - 1; curI++)
 		{
-			FirmedTextPane tpI = (FirmedTextPane) reportTemplate.
-				labels.get(i);
+			FirmedTextPane tpI = (FirmedTextPane) iIt.next();
 
-			for (int j = i + 1; j < reportTemplate.labels.size(); j++)
+      int curJ = curI + 1;
+      for (ListIterator jIt = reportTemplate.labels.listIterator(curJ); curJ < labelsSize; curJ++)
 			{
-				FirmedTextPane tpJ = (FirmedTextPane) reportTemplate.
-					labels.get(j);
+				FirmedTextPane tpJ = (FirmedTextPane) jIt.next();
 
 				if (  tpJ.hasPoint(tpI.getX(),tpI.getY())
 					||	tpJ.hasPoint(tpI.getX() + tpI.getWidth(),tpI.getY())
@@ -352,8 +357,8 @@ public class ReportTemplatePanel extends JPanel
 
 		g.setColor(Color.black);
 
-		for (int i = 0; i < this.reportTemplate.objectRenderers.size(); i++)
-			((RenderingObject)this.reportTemplate.objectRenderers.get(i)).paint(g);
+    for (ListIterator lIt = reportTemplate.objectRenderers.listIterator(); lIt.hasNext();)
+			((RenderingObject)lIt.next()).paint(g);
 
 		if (this.selectedObject != null)
 		{
@@ -391,7 +396,7 @@ public class ReportTemplatePanel extends JPanel
 	{
 		reportTemplate.curModified = System.currentTimeMillis();
 		this.repaint();
-};
+  }
 
 	private void textPaneMouseClicked(MouseEvent e)
 	{
@@ -406,7 +411,7 @@ public class ReportTemplatePanel extends JPanel
 			JPopupMenu pm = new JPopupMenu();
 
 			JMenuItem mi1 = new JMenuItem();
-			mi1.setText(LangModelReport.String("popup_font"));
+			mi1.setText(LangModelReport.getString("popup_font"));
 			mi1.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
@@ -416,26 +421,26 @@ public class ReportTemplatePanel extends JPanel
 						textPane.getFont());
 
 					fcDialog.show();
-					if (fcDialog.selectedFont == null)
+					if (FontChooserDialog.selectedFont == null)
 						return;
 
-					textPane.setFont(fcDialog.selectedFont);
+					textPane.setFont(FontChooserDialog.selectedFont);
 					textPaneKeyPressed(new KeyEvent(textPane, 0, 0, 0, 0, ' '));
 					reportTemplate.curModified = System.currentTimeMillis();
 				}
 			});
 
 			JMenuItem mi2 = new JMenuItem();
-			mi2.setText(LangModelReport.String("popup_priv_vert"));
+			mi2.setText(LangModelReport.getString("popup_priv_vert"));
 			mi2.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					Vector selectItems = new Vector();
-					selectItems.add(LangModelReport.String(FirmedTextPane.
+					List selectItems = new ArrayList();
+					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toTop));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toBottom));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toTop));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toBottom));
 
 					FirmedTextPane tp = (FirmedTextPane) selectedObject;
 					String oldValue = tp.verticalFirmTo;
@@ -445,26 +450,26 @@ public class ReportTemplatePanel extends JPanel
 					firmingType = null;
 					firmingType = (String) JOptionPane.showInputDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("vybor_priv1"),
-						LangModelReport.String("vybor_priv2"),
+						LangModelReport.getString("vybor_priv1"),
+						LangModelReport.getString("vybor_priv2"),
 						JOptionPane.QUESTION_MESSAGE,
 						null,
 						selectItems.toArray(),
-						LangModelReport.String(oldValue));
+						LangModelReport.getString(oldValue));
 
 					if (firmingType == null)
 						return;
 
 					// Если мы выбрали привязку по полю
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toFieldsTop)))
 						firmingType = FirmedTextPane.toFieldsTop;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toTop)))
 						firmingType = FirmedTextPane.toTop;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toBottom)))
 						firmingType = FirmedTextPane.toBottom;
 
@@ -485,16 +490,16 @@ public class ReportTemplatePanel extends JPanel
 			});
 
 			JMenuItem mi3 = new JMenuItem();
-			mi3.setText(LangModelReport.String("popup_priv_horiz"));
+			mi3.setText(LangModelReport.getString("popup_priv_horiz"));
 			mi3.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
 				{
-					Vector selectItems = new Vector();
-					selectItems.add(LangModelReport.String(FirmedTextPane.
+					List selectItems = new ArrayList();
+					selectItems.add(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toLeft));
-					selectItems.add(LangModelReport.String(FirmedTextPane.toRight));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toLeft));
+					selectItems.add(LangModelReport.getString(FirmedTextPane.toRight));
 
 					FirmedTextPane tp = (FirmedTextPane) selectedObject;
 					String oldValue = tp.horizontalFirmTo;
@@ -504,26 +509,26 @@ public class ReportTemplatePanel extends JPanel
 					firmingType = null;
 					firmingType = (String) JOptionPane.showInputDialog(
 						Environment.getActiveWindow(),
-						LangModelReport.String("vybor_priv1"),
-						LangModelReport.String("vybor_priv2"),
+						LangModelReport.getString("vybor_priv1"),
+						LangModelReport.getString("vybor_priv2"),
 						JOptionPane.QUESTION_MESSAGE,
 						null,
 						selectItems.toArray(),
-						LangModelReport.String(oldValue));
+						LangModelReport.getString(oldValue));
 
 					if (firmingType == null)
 						return;
 
 					// Если мы выбрали привязку по полю
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toFieldsLeft)))
 						firmingType = FirmedTextPane.toFieldsLeft;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toLeft)))
 						firmingType = FirmedTextPane.toLeft;
 
-					if (firmingType.equals(LangModelReport.String(FirmedTextPane.
+					if (firmingType.equals(LangModelReport.getString(FirmedTextPane.
 						toRight)))
 						firmingType = FirmedTextPane.toRight;
 
@@ -544,7 +549,7 @@ public class ReportTemplatePanel extends JPanel
 			});
 
 			JMenuItem mi4 = new JMenuItem();
-			mi4.setText(LangModelReport.String("popup_cancel_priv"));
+			mi4.setText(LangModelReport.getString("popup_cancel_priv"));
 			mi4.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent el)
@@ -843,10 +848,9 @@ public class ReportTemplatePanel extends JPanel
 		if (!smthChanged)
 			return;
 
-		for (int i = 0; i < this.reportTemplate.labels.size(); i++)
+    for (ListIterator lIt = reportTemplate.labels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane tp = (FirmedTextPane)this.reportTemplate.labels.
-				get(i);
+			FirmedTextPane tp = (FirmedTextPane)lIt.next();
 			if ((tp.vertFirmer != null) &&
 				tp.vertFirmer.equals(selectedRenderingObject) ||
 				(tp.horizFirmer != null) &&
@@ -893,7 +897,7 @@ public class ReportTemplatePanel extends JPanel
 					JPopupMenu pm = new JPopupMenu();
 
 					JMenuItem mi2 = new JMenuItem();
-					mi2.setText(LangModelReport.String("popup_vertRazb"));
+					mi2.setText(LangModelReport.getString("popup_vertRazb"));
 					mi2.addActionListener(new java.awt.event.ActionListener()
 					{
 						public void actionPerformed(ActionEvent el)
@@ -903,7 +907,7 @@ public class ReportTemplatePanel extends JPanel
 								String inputValue = (String) JOptionPane.
 									showInputDialog(
 									Environment.getActiveWindow(),
-									LangModelReport.String("label_vertRazb"),
+									LangModelReport.getString("label_vertRazb"),
 									Integer.toString(
 									selectedRenderingObject.getTableDivisionsNumber()));
 
@@ -919,8 +923,8 @@ public class ReportTemplatePanel extends JPanel
 								{
 									JOptionPane.showMessageDialog(
 										Environment.getActiveWindow(),
-										LangModelReport.String("error_numb_req"),
-										LangModelReport.String("label_error"),
+										LangModelReport.getString("error_numb_req"),
+										LangModelReport.getString("label_error"),
 										JOptionPane.ERROR_MESSAGE);
 								}
 							}
@@ -953,7 +957,7 @@ public class ReportTemplatePanel extends JPanel
 		}
 		else
 		{
-			if (this.itemToAdd.equals(LangModelReport.String("label_lb")))
+			if (this.itemToAdd.equals(LangModelReport.getString("label_lb")))
 			{
 				FirmedTextPane newTextPane = new FirmedTextPane();
 				selectedObject = newTextPane;
@@ -972,7 +976,7 @@ public class ReportTemplatePanel extends JPanel
 
 				reportTemplate.labels.add(newTextPane);
 			}
-			else if (this.itemToAdd.equals(LangModelReport.String("label_im")))
+			else if (this.itemToAdd.equals(LangModelReport.getString("label_im")))
 			{
 				try
 				{
@@ -1037,10 +1041,10 @@ public class ReportTemplatePanel extends JPanel
 			{
 				this.reportTemplate.objectRenderers.remove(selectedObject);
 
-				Vector labels = this.reportTemplate.labels;
-				for (int i = 0; i < labels.size(); i++)
+				List labels = this.reportTemplate.labels;
+        for (ListIterator lIt = labels.listIterator(); lIt.hasNext();)        
 				{
-					FirmedTextPane curLabel = (FirmedTextPane) labels.get(i);
+					FirmedTextPane curLabel = (FirmedTextPane) lIt.next();
 					if ((curLabel.vertFirmer != null)
 						 && (curLabel.vertFirmer.equals(selectedObject))
 						 && (curLabel.horizFirmer != null)
@@ -1074,10 +1078,11 @@ public class ReportTemplatePanel extends JPanel
 */
 	public void setSchemeObjectsNewParameters()
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
 
-		this.reportTemplate.setLabels((Vector) theLabels.clone());
+    List cloneList = (List)((ArrayList) theLabels).clone();
+		this.reportTemplate.setLabels(cloneList);
 
 		boolean[] labelsTransformed = new boolean[this.reportTemplate.labels.
 			size()];
@@ -1094,20 +1099,21 @@ public class ReportTemplatePanel extends JPanel
 		for (int i = 0; i < objectsTransformed.length; i++)
 			objectsTransformed[i] = false;
 
-		Vector xs = new Vector(); //строим карту отображённых элементов
-		Vector ys = new Vector();
+		List xs = new ArrayList(); //строим карту отображённых элементов
+		List ys = new ArrayList();
 		getAxisValuesMatrices(xs, ys);
 
+    int curIndex = 0;
 		boolean toBreak = false;
 		while (!toBreak)
 		{
-			for (int i = 0; i < reportTemplate.objectRenderers.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = reportTemplate.objectRenderers.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (objectsTransformed[i])
+				if (objectsTransformed[curIndex])
 					continue;
 
-				RenderingObject curObjectToPrint = (RenderingObject) reportTemplate.
-					objectRenderers.get(i);
+				RenderingObject curObjectToPrint = (RenderingObject) lIt.next();
 
 				int newY = checkToTopForElements(curObjectToPrint, xs, ys);
 				if (newY == -2)
@@ -1131,20 +1137,19 @@ public class ReportTemplatePanel extends JPanel
 				if ((insidePanel != null)
 					&& ((insidePanel instanceof ReportChartPanel)
 					|| (insidePanel instanceof MapRenderPanel)))
-					curObjectToPrint.height = curObjectToPrint.rendererPanel.
-getHeight();
+					curObjectToPrint.height = curObjectToPrint.rendererPanel.getHeight();
 
-				objectsTransformed[i] = true;
+				objectsTransformed[curIndex] = true;
 				break;
 			}
 
-			for (int i = 0; i < theLabels.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (labelsTransformed[i])
+				if (labelsTransformed[curIndex])
 					continue;
 
-				FirmedTextPane curLabelToPrint = (FirmedTextPane) reportTemplate.
-					labels.get(i);
+				FirmedTextPane curLabelToPrint = (FirmedTextPane) lIt.next();
 
 				boolean labelCantBePrinted = false;
 				for (int j = 0; j < objectsTransformed.length; j++)
@@ -1178,17 +1183,17 @@ getHeight();
 					-1));
 
 				curLabelToPrint.setLocation(curLabelToPrint.getX(), newY);
-				labelsTransformed[i] = true;
+				labelsTransformed[curIndex] = true;
 				break;
 			}
 
-			for (int i = 0; i < theImages.size(); i++)
+      curIndex = 0;
+      for (ListIterator lIt = theImages.listIterator(); lIt.hasNext(); curIndex++)
 			{
-				if (imagesTransformed[i])
+				if (imagesTransformed[curIndex])
 					continue;
 
-				ImagePanel curImageToPrint = (ImagePanel) reportTemplate.
-					images.get(i);
+				ImagePanel curImageToPrint = (ImagePanel) lIt.next();
 
 				int newY = checkToTopForElements(curImageToPrint, xs, ys);
 				//вернёт -2 если есть нераспечатанные эл-ты
@@ -1208,7 +1213,7 @@ getHeight();
 					-1));
 
 				curImageToPrint.setLocation(curImageToPrint.getX(), newY);
-				imagesTransformed[i] = true;
+				imagesTransformed[curIndex] = true;
 				break;
 			}
 
@@ -1242,14 +1247,14 @@ getHeight();
 */
 	private int checkToTopForElements(
 		Object elem,
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
 		// Находим границы диапазона на котором мы проверяем наличие
 		//объектов сверху
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 
 		int elemX = 0;
 		int elemY = 0;
@@ -1268,10 +1273,10 @@ getHeight();
 			{
 				int newY = tp.getY();
 
-				if (tp.verticalFirmTo.equals(tp.toTop))
+				if (tp.verticalFirmTo.equals(FirmedTextPane.toTop))
 					newY = tp.vertFirmer.y + tp.distanceY;
 
-				if (tp.verticalFirmTo.equals(tp.toBottom))
+				if (tp.verticalFirmTo.equals(FirmedTextPane.toBottom))
 					newY = tp.vertFirmer.y + tp.vertFirmer.height + tp.distanceY;
 
 				return newY;
@@ -1436,17 +1441,17 @@ getHeight();
 	 * @param ys возвращаемые величины для вертикали
 */
 	private void getAxisValuesMatrices(
-		Vector xs,
-		Vector ys)
+		List xs,
+		List ys)
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
 		int elemCount = 0;
 
-		for (int i = 0; i < theLabels.size(); i++)
+    for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext();)
 		{
-			FirmedTextPane curPane = (FirmedTextPane) theLabels.get(i);
+			FirmedTextPane curPane = (FirmedTextPane) lIt.next();
 			//Ищем только несвязные надписи
 			if ((curPane.horizFirmer != null) ||
 				(curPane.vertFirmer != null))
@@ -1460,9 +1465,9 @@ getHeight();
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < theImages.size(); i++)
+    for (ListIterator lIt = theImages.listIterator(); lIt.hasNext();)
 		{
-			ImagePanel curImage = (ImagePanel) theImages.get(i);
+			ImagePanel curImage = (ImagePanel) lIt.next();
 
 			xs.add(new Integer(curImage.getX()));
 			ys.add(new Integer(curImage.getY()));
@@ -1472,9 +1477,9 @@ getHeight();
 			elemCount += 2;
 		}
 
-		for (int i = 0; i < theObjects.size(); i++)
+    for (ListIterator lIt = theObjects.listIterator(); lIt.hasNext();)
 		{
-			RenderingObject curRO = (RenderingObject) theObjects.get(i);
+			RenderingObject curRO = (RenderingObject) lIt.next();
 
 			if (curRO.rendererPanel != null)
 			{
@@ -1529,31 +1534,33 @@ getHeight();
 */
 	private int getLabelAt(int x, int y)
 	{
-		Vector theLabels = this.rtbWindow.layoutWCPanel.labels;
+		List theLabels = this.rtbWindow.layoutWCPanel.labels;
 
-		for (int i = 0; i < theLabels.size(); i++)
+    int curIndex = 0;
+    for (ListIterator lIt = theLabels.listIterator(); lIt.hasNext(); curIndex++)
 		{
-			FirmedTextPane curLabel = (FirmedTextPane) theLabels.get(i);
+			FirmedTextPane curLabel = (FirmedTextPane) lIt.next();
 			if ((curLabel.horizFirmer == null) &&
 				(curLabel.vertFirmer == null) &&
 				curLabel.hasPoint(x, y))
-				return i;
+				return curIndex;
 		}
 		return -1;
 	}
 
 	private int getImageAt(int x, int y)
 	{
-		Vector theImages = this.rtbWindow.layoutWCPanel.images;
+		List theImages = this.rtbWindow.layoutWCPanel.images;
 
-		for (int i = 0; i < theImages.size(); i++)
+    int curIndex = 0;
+    for (ListIterator lIt = theImages.listIterator(); lIt.hasNext(); curIndex++)
 		{
-			ImagePanel curImage = (ImagePanel) theImages.get(i);
+			ImagePanel curImage = (ImagePanel) lIt.next();
 			if ((curImage.getX() < x)
 				 && (x < curImage.getX() + curImage.getWidth())
 				 && (curImage.getY() < y)
 				 && (y < curImage.getY() + curImage.getHeight()))
-				return i;
+				return curIndex;
 		}
 		return -1;
 	}
@@ -1569,10 +1576,12 @@ getHeight();
 */
 	private int getRenderingObjectAt(int x, int y)
 	{
-		Vector theObjects = this.rtbWindow.layoutWCPanel.objects;
-		for (int i = 0; i < theObjects.size(); i++)
+		List theObjects = this.rtbWindow.layoutWCPanel.objects;
+    
+    int curIndex = 0;
+    for (ListIterator lIt = theObjects.listIterator(); lIt.hasNext(); curIndex++)    
 		{
-			RenderingObject curRO = (RenderingObject) theObjects.get(i);
+			RenderingObject curRO = (RenderingObject) lIt.next();
 
 			if (curRO.rendererPanel != null)
 			{
@@ -1580,13 +1589,13 @@ getHeight();
 					(x < curRO.rendererPanel.getX() + curRO.rendererPanel.getWidth()) &&
 					(curRO.rendererPanel.getY() < y) &&
 					(y < curRO.rendererPanel.getY() + curRO.rendererPanel.getHeight()))
-					return i;
+					return curIndex;
 			}
 			else
 			{
 				if ((curRO.x < x) && (x < curRO.x + curRO.width) &&
 					(curRO.y < y) && (y < curRO.y + curRO.height))
-					return i;
+					return curIndex;
 			}
 		}
 		return -1;
@@ -1717,27 +1726,27 @@ getHeight();
 				{
 					TimeGraphProperties tgpDialog = new TimeGraphProperties(
 						null,
-						LangModelReport.String("label_diagrProp"),
+						LangModelReport.getString("label_diagrProp"),
 						true);
 					tgpDialog.setLocation(300, 300);
 					tgpDialog.setVisible(true);
 
-					if (tgpDialog.interval_value == null)
+					if (TimeGraphProperties.interval_value == null)
 						return;
 
-					transf_rep.setReserve(tgpDialog.interval_value);
+					transf_rep.setReserve(TimeGraphProperties.interval_value);
 				}
 
 				if (transf_rep.view_type.equals(ObjectResourceReportModel.
 														  rt_objectsReport))
 				{
 					//Выбор полей
-					if (((Vector) transf_rep.getReserve()).size() == 0)
+					if (((List) transf_rep.getReserve()).size() == 0)
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("error_emptyObjectReport"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("error_emptyObjectReport"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1749,8 +1758,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("label_noSchemeSet"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("label_noSchemeSet"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1758,23 +1767,26 @@ getHeight();
 					String scheme_id = SelectSolutionFrame.selectedScheme.id;
 					transf_rep.setReserve(scheme_id);
 				}
-				if (transf_rep.field.equals(OptimizationReportModel.topology))
+				if (transf_rep.field.equals(MapReportModel.rep_topology))
 				{
-					String scheme_id = SelectSolutionFrame.selectedScheme.id;
-
-					if (SelectSolutionFrame.selectedMap == null)
+					if (transf_rep.getReserve() == null)//////Возможно придётся везде ставить
 					{
-						JOptionPane.showMessageDialog(
-							Environment.getActiveWindow(),
-							LangModelReport.String("label_noselectedTopology"),
-							LangModelReport.String("label_error"),
-							JOptionPane.ERROR_MESSAGE);
-						return;
+						String scheme_id = SelectSolutionFrame.selectedScheme.id;
+
+						if (SelectSolutionFrame.selectedMap == null)
+						{
+							JOptionPane.showMessageDialog(
+								Environment.getActiveWindow(),
+								LangModelReport.getString("label_noselectedTopology"),
+								LangModelReport.getString("label_error"),
+								JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						String map_id = SelectSolutionFrame.selectedMap.id;
+
+						transf_rep.setReserve(scheme_id + ":" + map_id);
 					}
-
-					String map_id = SelectSolutionFrame.selectedMap.id;
-
-					transf_rep.setReserve(scheme_id + ":" + map_id);
 				}
 ////////////
 				if (transf_rep.field.equals(OptimizationReportModel.sourceData)
@@ -1790,8 +1802,8 @@ getHeight();
 					{
 						JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelReport.String("label_noSelectedSolution"),
-							LangModelReport.String("label_error"),
+							LangModelReport.getString("label_noSelectedSolution"),
+							LangModelReport.getString("label_error"),
 							JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -1898,6 +1910,14 @@ getHeight();
 	{
 		if (oe.getActionCommand().equals(SelectReportsPanel.ev_onlyReportRealized))
 		{
+			if (!rtbWindow.isTemplateSchemeMode)
+				this.rtbWindow.innerToolBar.changeViewButton_actionPerformed();
+
+			this.removeAll();
+			this.reportTemplate.objectRenderers.clear();
+			this.reportTemplate.labels.clear();
+			this.reportTemplate.images.clear();
+
 			Point location = new Point (this.imagableRect.x + 10,this.imagableRect.y + 70);
 			Dimension size = new Dimension (this.imagableRect.width - 30,500);
 			this.addReport((ObjectsReport)oe.getSource(),location,size);

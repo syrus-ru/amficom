@@ -1,50 +1,65 @@
+/*
+ * $Id: ObjectResourceFilter.java,v 1.16 2005/05/13 19:05:47 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Filter;
 
-import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import java.io.*;
-import java.util.*;
-import com.syrus.AMFICOM.Client.General.Filter.FilterExpression;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResource;
+import com.syrus.AMFICOM.filter.Filter;
+import com.syrus.AMFICOM.filter.FilterExpressionInterface;
 
-import com.syrus.AMFICOM.filter.*;
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/05/13 19:05:47 $
+ * @module generalclient_v1
+ */
 public abstract class ObjectResourceFilter implements Filter
 {
-	public LogicScheme logicScheme = new LogicScheme(this);
-//	public Vector criteria = new Vector();
+	public LogicScheme logicScheme = null;
+	public String resource_typ = "";
 
-	String id = "";
+	private String id = "";
 
 	public int lastListID = 1;
 
 	public ObjectResourceFilter()
 	{
-		id = "filter" + System.currentTimeMillis();
+		this.getId() = "filter" + System.currentTimeMillis();
+		this.logicScheme = new LogicScheme(this);
 	}
 
 	public ObjectResourceFilter(LogicScheme ls)
 	{
-		id = "filter" + System.currentTimeMillis();
+		this.getId() = "filter" + System.currentTimeMillis();
 		this.logicScheme = ls;
 	}
 
-	public abstract Vector getFilterColumns();
+	public abstract List getFilterColumns();
 	public abstract String getFilterColumnName(String col_id);
 	public abstract String[] getColumnFilterTypes(String col_id);
 	public abstract FilterPanel getColumnFilterPanel(String col_id, String type);
-	public abstract boolean expression(FilterExpression expr, ObjectResource or);
+	public abstract boolean expression(FilterExpressionInterface expr, ObjectResource or);
 	public abstract Object clone();
 
 	public String getId()
 	{
-		return id;
+		return this.getId();
 	}
 
 	public boolean expression(FilterExpressionInterface expr, Object or)
 	{
-		return expression((FilterExpression )expr, (ObjectResource )or);
+		return expression(expr, (ObjectResource)or);
 	}
 
 	public boolean SearchSubstring (String text, String substring)
@@ -52,7 +67,7 @@ public abstract class ObjectResourceFilter implements Filter
 		boolean res = false;
 		if(text.indexOf(substring) >= 0)
 			return true;
-/*			
+/*
 		if (substring.length() <= text.length())
 		{
 			for (int i = 0; i <= text.length() - substring.length(); i++)
@@ -67,67 +82,128 @@ public abstract class ObjectResourceFilter implements Filter
 		return res;
 	}
 
-	public void addCriterium(FilterExpression expr)
+	public void addCriterium(FilterExpressionInterface expr)
 	{
-		expr.setListID(lastListID++);
-		logicScheme.addFilterExpression(expr);
+		expr.setListID(this.lastListID++);
+		this.logicScheme.addFilterExpression(expr);
 //		criteria.add(expr);
 	}
 
-	public void removeCriterium(FilterExpression expr)
+	public void removeCriterium(FilterExpressionInterface expr)
 	{
-		lastListID--;
-		logicScheme.removeFilterExpression(expr);
+		this.lastListID--;
+		this.logicScheme.removeFilterExpression(expr);
 //		criteria.remove(expr);
 	}
 
-	public void replaceCriterium(FilterExpression fe_old, FilterExpression fe_new)
+	public void replaceCriterium(FilterExpressionInterface fe_old, FilterExpressionInterface fe_new)
 	{
-		logicScheme.replaceFilterExpression(fe_old, fe_new);
+		this.logicScheme.replaceFilterExpression(fe_old, fe_new);
 	}
-	
+
 	public void clearCriteria()
 	{
-		lastListID = 1;
-		logicScheme.clearFilterExpressions();
+		this.lastListID = 1;
+		this.logicScheme.clearFilterExpressions();
 //		criteria = new Vector();
 	}
 
-	public Vector getCriteria()
+	public List getCriteria()
 	{
-		return logicScheme.getFilterExpressions();
+		return this.logicScheme.getFilterExpressions();
 //		return criteria;
 	}
 
-	public DataSet filter(DataSet dataSet)
+	public List filter(List list)
 	{
-		DataSet ds = new DataSet(dataSet.elements());
-		for(Enumeration e = dataSet.elements(); e.hasMoreElements();)
-		{
-			ObjectResource or = (ObjectResource )e.nextElement();
-			if (logicScheme.passesAllConstraints(or) == false)
+		List ds = new ArrayList(list);
+		for(Iterator it = list.iterator(); it.hasNext();){
+			ObjectResource or = (ObjectResource )it.next();
+			if (!this.logicScheme.passesAllConstraints(or))
 				ds.remove(or);
-/*				
-			for(Enumeration e2 = criteria.elements(); e2.hasMoreElements();)
-			{
-				FilterExpression expr = (FilterExpression)e2.nextElement();
-				if(expression(expr, or) == false)
-					ds.remove(or);
-			}
-*/
 		}
 		return ds;
 	}
 
-	public void writeObject(java.io.ObjectOutputStream out)
-		throws IOException
-	{
-		logicScheme.writeObject(out);
+	/**
+	 * Filtrate input Collection
+	 * @param col source Collection, which will be filtrate
+	 */
+	public void filtrate(Collection col){
+		for(Iterator it=col.iterator();it.hasNext();){
+			ObjectResource or = (ObjectResource)it.next();
+			if (!this.logicScheme.passesAllConstraints(or)){
+				it.remove();				
+			}
+		}	
+	}
+	
+	/**
+	 * filtrate input Collection to output Collection
+	 * @param input
+	 * @param output
+	 */
+	public void filtrate(final Collection input, Collection output){
+		output.clear();
+		for(Iterator it=input.iterator();it.hasNext();){
+			ObjectResource or = (ObjectResource)it.next();
+			if (this.logicScheme.passesAllConstraints(or)){
+				output.add(or);
+			}
+		}	
+	}
+	
+	/**
+	 * Return new Collection of filtered elements of Collection
+	 * @param col
+	 * @return
+	 */
+	public Collection filter(final Collection col){
+		List resultList = new ArrayList();
+		this.filtrate(col, resultList);
+		return resultList;
+	}
+	
+
+	/**
+	 * Filtrate input Map
+	 * @param map source Map, which will be filtrate
+	 */
+	public void filtrate(Map map){	
+		for(Iterator it=map.keySet().iterator();it.hasNext();){
+			Object key = it.next();
+			ObjectResource or = (ObjectResource)map.get(key);
+			if (!this.logicScheme.passesAllConstraints(or)){
+				it.remove();				
+			}
+		}
+	}
+	
+	/**
+	 * filtrate input Map to output Map
+	 * @param input
+	 * @param output
+	 */
+	public void filtrate(final Map input, Map output){
+		output.clear();		
+		for(Iterator it=input.keySet().iterator();it.hasNext();){
+			Object key = it.next();
+			ObjectResource or = (ObjectResource)input.get(key);
+			if (this.logicScheme.passesAllConstraints(or)){
+				output.put(key,or);
+			}
+		}
+	}
+	
+	/**
+	 * Return new Map of filtered elements of Map
+	 * @param map
+	 * @return
+	 */
+	public Map filter(final Map map){
+		Map resultMap = new HashMap();
+		this.filtrate(map, resultMap);
+		return resultMap;
 	}
 
-	void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-//		logicScheme = new LogicScheme(this);
-	}
 }

@@ -1,26 +1,25 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
-
-public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements PropertyChangeListener
 {
-	Dispatcher dispatcher;
-
 	public MapMarkersLayeredPanel(Dispatcher dispatcher)
 	{
 		super(dispatcher);
@@ -28,15 +27,14 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 		try
 		{
 			jbInit();
-		}
-		catch(Exception ex)
+		} catch(Exception ex)
 		{
 			ex.printStackTrace();
 		}
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -47,12 +45,12 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.register(this, MapNavigateEvent.type);
+		dispatcher.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
 	}
 
-	public void operationPerformed(OperationEvent ae)
+	public void propertyChange(PropertyChangeEvent ae)
 	{
-		if(ae.getActionCommand().equals(MapNavigateEvent.type))
+		if(ae.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
 			for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
@@ -60,62 +58,62 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof MapMarkersPanel)
 				{
-					if(mne.MAP_MARKER_CREATED)
+					if(mne.isMapMarkerCreated())
 					{
-						if ( (mne.meID != null && mne.meID.equals(((MapMarkersPanel)panel).monitored_element_id) )||
-								 (mne.mappathID != null && mne.mappathID.equals(((MapMarkersPanel)panel).map_path_id)) )
+						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
 						{
 
-//							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.delta_x, 1);
-//							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.delta_x, "", d));
+//							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.deltaX, 1);
+//							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.deltaX, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
-							double dist = mne.distance;
-							((MapMarkersPanel)panel).createMarker("", mne.marker_id, dist);
+							double dist = mne.getDistance();
+							Marker m = ((MapMarkersPanel)panel).createMarker("", dist);
+							m.setId(mne.getMarkerId());
 							((MapMarkersPanel)panel).move_notify();
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 							jLayeredPane.repaint();
 						}
 					}
-					if(mne.DATA_ALARMMARKER_CREATED)
+					if(mne.isDataAlarmMarkerCreated())
 					{
-						if ( (mne.meID != null && mne.meID.equals(((MapMarkersPanel)panel).monitored_element_id) )||
-								 (mne.mappathID != null && mne.mappathID.equals(((MapMarkersPanel)panel).map_path_id)) )
+						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
 						{
-							double dist = mne.distance;
+							double dist = mne.getDistance();
 							AlarmMarker am = ((MapMarkersPanel)panel).get_alarm_marker();
 							if(am == null)
 							{
-								((MapMarkersPanel)panel).createAlarmMarker("", mne.marker_id, dist);
-							}
-							else
+								((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
+							} else
 							{
-								am.id = mne.marker_id;
-								((MapMarkersPanel)panel).moveMarker(mne.marker_id, dist);
+								am.setId(mne.getMarkerId());
+								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
 							}
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 							jLayeredPane.repaint();
 						}
 					}
-					if(mne.MAP_MARKER_SELECTED)
+					if(mne.isMapMarkerSelected())
 					{
-						((MapMarkersPanel)panel).activateMarker(mne.marker_id);
+						((MapMarkersPanel)panel).activateMarker(mne.getMarkerId());
 						jLayeredPane.repaint();
 					}
-					if(mne.MAP_MARKER_MOVED)
+					if(mne.isMapMarkerMoved())
 					{
-						((MapMarkersPanel)panel).moveMarker(mne.marker_id, mne.distance);
+						((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), mne.getDistance());
 						jLayeredPane.repaint();
 					}
-					if(mne.MAP_MARKER_DELETED)
+					if(mne.isMapMarkerDeleted())
 					{
-						if (((MapMarkersPanel)panel).deleteMarker(mne.marker_id) == null)
+						if (((MapMarkersPanel)panel).deleteMarker(mne.getMarkerId()) == null)
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(false);
 						jLayeredPane.repaint();
 					}
 				}
 			}
 		}
-		super.operationPerformed(ae);
+		super.propertyChange(ae);
 	}
 
 	public void removeAllGraphPanels()
@@ -126,7 +124,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 			if (panel instanceof MapMarkersPanel)
 			{
 				((MapMarkersPanel)panel).removeAllMarkers();
-			};
+			}
 		}
 
 		super.removeAllGraphPanels();
@@ -142,7 +140,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 			{
 				((MapMarkersPanel)panel).creating_marker = b;
 				return;
-			};
+			}
 		}
 	}
 
@@ -169,6 +167,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	{
 		((MapMarkersToolBar)toolbar).createMarkerTButton.setSelected(false);
 		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
+		((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 	}
 }
 
@@ -182,7 +181,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, createMarker, deleteMarker, separator, events, modeled
+		EX, DX, EY, DY, FIX, SEPARATOR, events, SEPARATOR, createMarker, deleteMarker
 	};
 
 	public MapMarkersToolBar(MapMarkersLayeredPanel panel)
@@ -195,18 +194,19 @@ class MapMarkersToolBar extends TraceEventsToolBar
 		return buttons;
 	}
 
-	protected Hashtable createGraphButtons()
+	protected Map createGraphButtons()
 	{
-		Hashtable buttons = new Hashtable();
+		Map buttons = new HashMap();
 
 		buttons.put(
 				createMarker,
 				createToolButton(
 				createMarkerTButton,
-				btn_size,
 				null,
-				LangModelAnalyse.String("addmarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
+				null,
+				LangModelAnalyse.getString("addmarker"),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -219,10 +219,11 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				deleteMarker,
 				createToolButton(
 				deleteMarkerButton,
-				btn_size,
 				null,
-				LangModelAnalyse.String("removemarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker_delete.gif")),
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
+				null,
+				LangModelAnalyse.getString("removemarker"),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -245,6 +246,6 @@ class MapMarkersToolBar extends TraceEventsToolBar
 	void deleteMarkerButton_actionPerformed(ActionEvent e)
 	{
 		MapMarkersLayeredPanel panel = (MapMarkersLayeredPanel)super.panel;
-		Marker m = panel.deleteActiveMarker();
+		panel.deleteActiveMarker();
 	}
 }

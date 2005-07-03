@@ -1,0 +1,132 @@
+/*
+ * $Id: MCMObjectLoader.java,v 1.12 2005/07/01 09:08:12 arseniy Exp $
+ * 
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+package com.syrus.AMFICOM.mcm;
+
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CORBAObjectLoader;
+import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.12 $, $Date: 2005/07/01 09:08:12 $
+ * @author $Author: arseniy $
+ * @module mcm_v1
+ */
+abstract class MCMObjectLoader extends CORBAObjectLoader {
+
+	public MCMObjectLoader(final MCMServantManager mcmServantManager) {
+		super(mcmServantManager);
+	}
+
+	/**
+	 * @todo После перехода на типы-значения написать более экономичный алгоритм.
+	 * @param entityCode
+	 * @param storableObjects
+	 */
+	private final void insertWithDependencies(final short entityCode, final Set< ? extends StorableObject> storableObjects) {
+		for (final StorableObject storableObject : storableObjects) {
+			for (final Identifiable dependency : storableObject.getDependencies()) {
+				if (dependency instanceof Identifier) {
+					try {
+						StorableObjectPool.getStorableObject((Identifier) dependency, true);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+				}
+			}
+		}
+		try {
+			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+			database.insert(storableObjects);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
+	@Override
+	protected final Set loadStorableObjects(final short entityCode,
+			final Set<Identifier> ids,
+			final TransmitProcedure transmitProcedure) throws ApplicationException {
+		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjects(ids);
+		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
+		if (loadIds.isEmpty())
+			return objects;
+
+		final Set<StorableObject> loadedObjects = super.loadStorableObjects(entityCode, loadIds, transmitProcedure);
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+			this.insertWithDependencies(entityCode, loadedObjects);
+		}
+
+		return objects;
+	}
+
+	@Override
+	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
+			final Set<Identifier> ids,
+			final StorableObjectCondition condition,
+			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
+		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
+
+		final Set<StorableObject> loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
+				loadButIds,
+				condition,
+				transmitButIdsConditionProcedure);
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+			this.insertWithDependencies(entityCode, loadedObjects);
+		}
+
+		return objects;
+	}
+
+	/**
+	 * This method does <em>not</em> override
+	 * {@link CORBAObjectLoader#saveStorableObjects(short, Set, ReceiveProcedure)}
+	 * since it has an extra argument, <code>final boolean force</code>,
+	 * unnecessary in super implementation.
+	 */
+	protected final void saveStorableObjects(final short entityCode,
+			final Set<? extends StorableObject> storableObjects,
+			final boolean force,
+			final ReceiveProcedure receiveProcedure) throws ApplicationException {
+		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
+
+		super.saveStorableObjects(entityCode, storableObjects, receiveProcedure);
+	}
+
+	/**
+	 * Currently not need to implement this method
+	 * @todo Using this method load objects, changed on server relatively to MCM
+	 */
+	@Override
+	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
+		assert false : storableObjects;
+		return null;
+	}
+
+	/**
+	 * Currently not need to implement this method
+	 */
+	@Override
+	public void delete(final Set<? extends Identifiable> identifiables) {
+		assert false : identifiables;
+	}
+}

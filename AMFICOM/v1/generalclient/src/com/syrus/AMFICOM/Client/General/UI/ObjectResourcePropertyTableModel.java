@@ -1,65 +1,39 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\General\GeneralTableModel.java                         * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: ObjectResourcePropertyTableModel.java,v 1.7 2005/05/18 14:01:19 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.StubPropertyDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 import java.awt.Component;
-
-import java.util.Vector;
-
+import java.util.*;
 import javax.swing.table.AbstractTableModel;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/05/18 14:01:19 $
+ * @module generalclient_v1
+ */
 public class ObjectResourcePropertyTableModel extends AbstractTableModel
 {
     private Component parent;
 
-	private Vector columns = new Vector();
-	private ObjectResource or;
+	private List columns = new LinkedList();
+	private StorableObject or;
 	private ObjectResourceDisplayModel displayModel = new StubPropertyDisplayModel();
 
 	public ObjectResourcePropertyTableModel(
-			Vector columns,
+			List columns,
 //			ObjectResourceDisplayModel displayModel,
-			ObjectResource or)
+			StorableObject or)
 	{
-		this.columns = columns;
+		this.columns.addAll(columns);
 //		setDisplayModel(displayModel);
 		setContents(or);
 	}
@@ -67,7 +41,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	public ObjectResourcePropertyTableModel(
 			String[] columns,
 //			ObjectResourceDisplayModel displayModel,
-			ObjectResource or)
+			StorableObject or)
 	{
 		for(int i = 0; i < columns.length; i++)
 			this.columns.add(columns[i]);
@@ -75,7 +49,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 		setContents(or);
 	}
 
-	public ObjectResourcePropertyTableModel(Vector columns)
+	public ObjectResourcePropertyTableModel(List columns)
 	{
 		this(columns, null);
 	}
@@ -87,7 +61,7 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 
 	public ObjectResourcePropertyTableModel()
 	{
-		this(new Vector(), null);
+		this(new LinkedList(), null);
 	}
 
 	public void setDisplayModel(ObjectResourceDisplayModel displayModel)
@@ -102,17 +76,17 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 
 	public String getColumnByNumber(int col_i)
 	{
-		return (String)displayModel.getColumns().get(col_i);
+		return (String )displayModel.getColumns().get(col_i);
 	}
 
-	public void setContents(ObjectResource or)
+	public void setContents(StorableObject or)
 	{
 		this.or = or;
 		displayModel = new StubPropertyDisplayModel(or);
 		super.fireTableDataChanged();
 	}
 
-	public ObjectResource getContents()
+	public StorableObject getContents()
 	{
 		return or;
 	}
@@ -141,11 +115,11 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	//--------------------------------------------------------------------------
 	public String getColumnName(int p_col)
 	{
-		try 
+		try
         {
             return (String)columns.get(p_col);
-        } 
-		catch (Exception ex) 
+        }
+		catch (Exception ex)
         {
             return String.valueOf(p_col);
         }
@@ -208,7 +182,6 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 			String col_id = (String)displayModel.getColumns().get(p_row);
 			ObjectResourceModel model = or.getModel();
 			model.setPropertyValue(col_id, p_obj);
-			System.out.println("set " + col_id + " to " + p_obj);
 			this.fireTableDataChanged();
 		}
 	}
@@ -256,4 +229,3 @@ public class ObjectResourcePropertyTableModel extends AbstractTableModel
 	//Clears the table data
 	//--------------------------------------------------------------------------
 }
-

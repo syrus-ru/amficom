@@ -7,3 +7,6 @@
 *.gz
 *.swp
 *.log
+src
+.classpath
+.project

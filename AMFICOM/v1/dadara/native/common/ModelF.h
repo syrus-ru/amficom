@@ -30,23 +30,34 @@
 #ifndef _MODELF_H
 #define _MODELF_H
 
+#include "byteStream.h"
+
 // инициализация статических данных модуля ModelF (один раз при загрузке)
 // в настоящей версии его вызывать не обязательно
-void MF_init();
+//void MF_init();
+
+// определить этот define, если нужна поддержка старых м.ф. сварки и коннектора
+//#define MF_USE_SPL_AND_CON
 
 // идентификаторы (ID) используемых модельных функций
 
 const int MF_ID_INVALID = 0;
 
+// линейная функция
 const int MF_ID_LIN		= 21;
 
+#ifdef MF_USE_SPL_AND_CON
+// старые м.ф. сварки и коннектора
 const int MF_ID_SPL1	= 12;
-const int MF_ID_CON1c	= 13; // todo: rename
-const int MF_ID_CON1d	= 14; // todo: rename
-const int MF_ID_CON1e	= 15; // todo: rename
+const int MF_ID_CON1c	= 13;
+const int MF_ID_CON1d	= 14;
+const int MF_ID_CON1e	= 15;
+#endif
 
+// ломаная BREAKL
 const int MF_ID_BREAKL	= 22;
 
+// гауссиана
 const int MF_ID_GAUSS	= 16;
 
 // получение характеристик параметров
@@ -57,17 +68,37 @@ const int MF_PAR_FLAG_L = 4;
 
 // выполнение команд (процедур) над функциями
 
+// проверить, лежат ли значения параметров в пределах, допустимых при предв. фитировке
 #define MF_CMD_CHECK_RANGE_PREFIT 1
+
+// проверить, лежат ли значения параметров в пределах, допустимых при окончат. фитировке
 #define MF_CMD_CHECK_RANGE_FINFIT 2
+
+// ограничить значения параметров допустимыми пределами при предв. фитировке
 #define MF_CMD_FIX_RANGE_PREFIT 3
+
+// ограничить значения параметров допустимыми пределами при окончат. фитировке
 #define MF_CMD_FIX_RANGE_FINFIT 4
+
+// отработать преобразование от м.ф. к порогу на величину ACXL
 #define MF_CMD_ACXL_CHANGE 5
 
+// отбработать преобразование согласно ThreshDX, ThreshDY-порогам
+// и одновременно проследить, какой DX-порог срабатывает в данной x-координате
+// Определено только для ломаной, BREAKL
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_DXDYID 7 /* BREAKL only */
+
+// отбработать преобразование согласно ThreshDX, ThreshDY-порогам
+// и одновременно проследить соответствие X-порогов
+// Определено только для ломаной, BREAKL
+#define MF_CMD_CHANGE_BY_THRESH_AND_FIND_TTDXDY 8 /* BREAKL only */
+
+// создать линейную м.ф.
 #define MF_CMD_LIN_SET_BY_X1Y1X2Y2 2101
 
-// номера параметров наиболее типичных функций
-// используется вне реализации ModelF
-// внутри же номера прописаны жестко, в т.ч. в строке сигнатуры
+// номера параметров наиболее типичных функций,
+// для использования вне реализации ModelF
+// внутри же реализации номера прописаны жестко, в т.ч. в строке сигнатуры
 const int MF_PARID_GAUSS_AMPLITUDE = 0;
 const int MF_PARID_GAUSS_CENTER = 1;
 const int MF_PARID_GAUSS_SIGMA = 2;
@@ -112,11 +143,21 @@ public:
 
 	ModelF(int ID, int npars = 0);
 
-	// объект можно инициализировать несколько раз
-	// при этом ModelF сам выделяет память под параметры (если надо), но
-	// сами параметры не инициализируются.
+	// Объект можно инициализировать несколько раз.
+	// Если pars не указано, то ModelF сам размещает параметры,
+	// возможно, в parsStorage, возможно, через new/delete.
+	// Сами параметры не инициализируются.
+	// Если же указан параметр pars, создается mf с уже готовыми параметрами
+	// в указанном месте в свободной памяти, как будто ModelF сама получила
+	// их через new double[]. Когда pars перестанет быть нужным ModelF,
+	// она удалит его через delete[].
+	void init(int ID, int npars = 0, double *pars = 0);
 
-	void init(int ID, int npars = 0);
+	// можно заменить весь массив параметров целиком.
+	// При этом пользователь должен сам создать массив длины NPars,
+	// а после операции замены относиться к нему как к полученному через
+	// метод getP() - удалять его будет ModelF.
+	void setP(double *pars);
 
 	// обнулить значения параметров
 	// XXX: быть может, это стоит делать вместе с init() ?
@@ -158,6 +199,13 @@ public:
 		return calcFunP(parsPtr, x);
 	}
 
+	// вычисление значения функции на сетке
+	void calcFunArrayP(double *pars, double x0, double step, int N, double *output);
+	void calcFunArray(               double x0, double step, int N, double *output)
+	{
+		calcFunArrayP(parsPtr, x0, step, N, output);
+	}
+
 	// расчет значение определенного аттрибута для данной кривой
 	// если для данной кривой этот аттрибут не определен, возвращает default_value
 	double getAttrP(double *pars, const char *name, double default_value);
@@ -170,6 +218,7 @@ public:
 	// Некоторые функции могут изменять число параметров,
 	// для них можно использовать только execCmd.
 	// Для остальных функций используются оба варианта.
+	// Если тип команды не поддерживается - должен возвращать 0.0
 	double execCmdP(double *pars, int command, void *extra = 0);
 	double execCmd(               int command, void *extra = 0)
 	{
@@ -195,6 +244,27 @@ public:
 	{
 		return RMS2LinP(parsPtr, y, i0, x0, length, rough);
 	}
+
+	// округлить параметры
+	void quantize();
+
+	// проверить, доступно ли сохранение в поток
+	static int isByteStreamingPossible(int shapeID);
+
+	// запись параметров в поток байт
+	void saveToByteOut(byteOut &bos);
+
+	// восстановление параметров из потока байт
+	// возвращает 1 в случае ошибки или нехватки входных данных
+	int loadFromByteIn(byteIn &bis);
+};
+
+struct ACXL_data
+{
+	double dA;
+	double dC;
+	double dX;
+	double dL;
 };
 
 /*

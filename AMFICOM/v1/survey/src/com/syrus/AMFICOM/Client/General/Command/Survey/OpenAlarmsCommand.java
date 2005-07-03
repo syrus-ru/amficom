@@ -1,35 +1,36 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmFrame;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.*;
-import com.syrus.AMFICOM.Client.Survey.Alarm.*;
+import java.awt.Component;
+import java.awt.Dimension;
+
+import javax.swing.JDesktopPane;
 
 public class OpenAlarmsCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
 	JDesktopPane desktop;
-	ApplicationModelFactory factory;
 
 	public AlarmFrame frame;
 
 	public OpenAlarmsCommand()
 	{
+		// nothing
 	}
 
-	public OpenAlarmsCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext, ApplicationModelFactory factory)
+	public OpenAlarmsCommand(Dispatcher dispatcher, JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.dispatcher = dispatcher;
 		this.desktop = desktop;
 		this.aContext = aContext;
-		this.factory = factory;
 	}
 
 	public void setParameter(String field, Object value)
@@ -51,11 +52,6 @@ public class OpenAlarmsCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new OpenAlarmsCommand(dispatcher, desktop, aContext, factory);
-	}
-
 	public void execute()
 	{
 		if(!Checker.checkCommandByUserId(
@@ -65,16 +61,9 @@ public class OpenAlarmsCommand extends VoidCommand
 			return;
 		}
 
-		ApplicationContext aC = new ApplicationContext();
-		aC.setApplicationModel(factory.create());
-		aC.setConnectionInterface(aContext.getConnectionInterface());
-		aC.setSessionInterface(aContext.getSessionInterface());
-		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-		aC.setDispatcher(dispatcher);
-
-		DataSourceInterface dataSource = aC.getDataSourceInterface();
-		if(dataSource == null)
-;//			return;
+//		DataSourceInterface dataSource = aC.getDataSourceInterface();
+//		if(dataSource == null)
+//			return;
 				System.out.println("Starting Alarms frame");
 
 //		new SurveyDataSourceImage(dataSource).GetAlarms();
@@ -84,12 +73,20 @@ public class OpenAlarmsCommand extends VoidCommand
 		{
 			Component comp = desktop.getComponent(i);
 			if (comp instanceof AlarmFrame)
+      {
 				frame = (AlarmFrame)comp;
+        dispatcher.notify(
+          new OperationEvent(frame,0,SurveyEvent.ALARM_FRAME_DISPLAYED));
+        break;        
+      }
 		}
 		if (frame == null)
 		{
-			frame = new AlarmFrame(aC);
+			frame = new AlarmFrame(aContext);
 			desktop.add(frame);
+      
+      dispatcher.notify(
+        new OperationEvent(frame,0,SurveyEvent.ALARM_FRAME_DISPLAYED));
 		}
 		Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
 		frame.setLocation(0, 0);
@@ -99,3 +96,4 @@ public class OpenAlarmsCommand extends VoidCommand
 	}
 
 }
+

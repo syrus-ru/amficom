@@ -1,252 +1,312 @@
+/*
+ * $Id: TestProcessor.java,v 1.57 2005/06/23 18:45:06 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
-import java.sql.Timestamp;
-import com.syrus.AMFICOM.util.Identifier;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
-import com.syrus.AMFICOM.measurement.Test;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
-public abstract class TestProcessor extends Thread {
+/**
+ * @version $Revision: 1.57 $, $Date: 2005/06/23 18:45:06 $
+ * @author $Author: bass $
+ * @module mcm_v1
+ */
+
+public abstract class TestProcessor extends SleepButWorkThread {
 	Test test;
-	/*	Number of measurements, passed to transceiver */
-	int n_measurements;
-	/*	Number of reports, received from transceiver */
-	int n_reports;
 	Transceiver transceiver;
-	/*	Measurement results, stored before analysis and/or evaluation */
-	private List measurementResultQueue;
-	long tick_time;
+	private int numberOfReceivedMResults;
+	boolean lastMeasurementAcquisition;
+	private long currentMeasurementStartTime;
+	long forgetFrame;
+	private List<Result> measurementResultList;
 	boolean running;
 
+
 	public TestProcessor(Test test) {
+		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
+					ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+
 		this.test = test;
 
-		Identifier kis_id = test.getKIS().getId();
-		this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kis_id);
-		this.measurementResultQueue = Collections.synchronizedList(new ArrayList());
-		this.tick_time = ApplicationProperties.getInt("TickTime", MeasurementControlModule.TICK_TIME)*1000;
+		this.numberOfReceivedMResults = 0;
+		this.lastMeasurementAcquisition = false;
+		this.currentMeasurementStartTime = this.test.getStartTime().getTime();
+		this.forgetFrame = ApplicationProperties.getInt(MeasurementControlModule.KEY_FORGET_FRAME, MeasurementControlModule.FORGET_FRAME) * 1000;
+		this.measurementResultList = Collections.synchronizedList(new LinkedList<Result>());
 		this.running = true;
 
-		switch (this.test.getStatus().value()) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				this.n_measurements = 0;
-				this.n_reports = 0;
-				try {
-					this.test.setStatus(TestStatus.TEST_STATUS_PROCESSING);
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				List measurments;
-				try {
-					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-					this.n_measurements = measurments.size();
-					this.n_reports = this.n_measurements;
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
+		//	Проверить, не устарел ли этот тест
+		long timePassed = System.currentTimeMillis() - this.test.getStartTime().getTime();
+		if (timePassed > this.forgetFrame) {
+			Log.debugMessage("Passed " + timePassed / 1000 + " sec (more than " + this.forgetFrame / 1000
+					+ " sec) from start time. Aborting test '" + this.test.getId() + "'", Log.DEBUGLEVEL03);
+			this.abort();
+		}
 
-				try {
-					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_SCHEDULED);
-					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
-						this.transceiver.addMeasurement((Measurement)iterator.next(), this);
-					this.n_measurements += measurments.size();
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
+		if (this.running) {
+			// Проверить правильность КИС. Найти приёмопередатчик.
+			Identifier kisId = test.getKISId();
+			this.transceiver = MeasurementControlModule.transceivers.get(kisId);
+			if (this.transceiver == null) {
+				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
+				this.abort();
+			}
+		}
 
-				try {
-					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_PROCESSING);
-					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
-						this.transceiver.addProcessingMeasurement((Measurement)iterator.next(), this);
-					this.n_measurements += measurments.size();
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
-
-				try {
-					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_MEASURED);
-					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
-						this.measurementResultQueue.add(((Measurement)iterator.next()).retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT));
-					this.n_measurements += measurments.size();
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
-
-				try {
-					measurments = this.test.retrieveMeasurementsOrderByStartTime(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
-					for (Iterator iterator = measurments.iterator(); iterator.hasNext();)
-						this.measurementResultQueue.add(((Measurement)iterator.next()).retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT));
-					this.n_measurements += measurments.size();
-				}
-				catch (Exception e) {
-					Log.errorException(e);
-				}
-
-				break;
-			default:
-				Log.errorMessage("TestProcessor.<init> | Inappropriate status " + this.test.getStatus() + " of test '" + this.test.getId().toString() + "'");
-				this.running = false;
+		if (this.running) {
+			// Различные способы обработки теста в зависимости от его статуса
+			switch (this.test.getStatus().value()) {
+				case TestStatus._TEST_STATUS_SCHEDULED:
+					// Нормальная работа
+					this.startWithScheduledTest();
+					break;
+				case TestStatus._TEST_STATUS_PROCESSING:
+					// Перезапуск после сбоя
+					this.startWithProcessingTest();
+					break;
+				default:
+					Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
+					this.abort();
+			}
 		}
 	}
 
-	public abstract void run();
+	private void startWithScheduledTest() {
+		this.updateMyTestStatus(TestStatus.TEST_STATUS_PROCESSING);
+	}
 
-	protected void addMeasurementResult(Result result) {
-		this.measurementResultQueue.add(result);
+	private void startWithProcessingTest() {
+		Measurement lastMeasurement = null;
+		try {
+			lastMeasurement = this.test.retrieveLastMeasurement();
+			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
+					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
+		}
+		catch (ApplicationException ae) {
+			if (ae instanceof ObjectNotFoundException) {
+				this.startWithScheduledTest();
+				return;
+			}
+			Log.errorException(ae);
+			this.abort();
+		}
+
+		Collection results;
+		Result measurementResult = null;
+		if (lastMeasurement != null) {
+			try{
+				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
+				switch (lastMeasurement.getStatus().value()) {
+					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+						this.transceiver.addMeasurement(lastMeasurement, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+						results = lastMeasurement.getResults(true);
+						if (results != null && !results.isEmpty())
+							measurementResult = (Result) results.iterator().next();
+						if (measurementResult != null)
+							this.addMeasurementResult(measurementResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+						results = lastMeasurement.getResults(true);
+						Result analysisResult = null;
+						Result evaluationResult = null;
+						if (results != null && !results.isEmpty()) {
+							Result result;
+							for (Iterator it = results.iterator(); it.hasNext();) {
+								result = (Result) it.next();
+								switch (result.getSort().value()) {
+									case ResultSort._RESULT_SORT_MEASUREMENT:
+										measurementResult = result;
+										break;
+									case ResultSort._RESULT_SORT_ANALYSIS:
+										analysisResult = result;
+										break;
+									case ResultSort._RESULT_SORT_EVALUATION:
+										evaluationResult = result;
+										break;
+								}
+							}
+						}
+						if (measurementResult != null)
+							MeasurementControlModule.resultList.add(measurementResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+						if (analysisResult != null)
+							MeasurementControlModule.resultList.add(analysisResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+						if (evaluationResult != null)
+							MeasurementControlModule.resultList.add(evaluationResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find evaluation result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+
+						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+						try {
+							StorableObjectPool.flush(lastMeasurement.getId(), true);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+
+						break;
+				}
+			}
+			catch (DatabaseException de) {
+				Log.errorException(de);
+				this.abort();
+			}
+		}
+	}
+
+	protected final void addMeasurementResult(Result result) {
+		if (! this.measurementResultList.contains(result))
+			this.measurementResultList.add(result);
+	}
+
+	final void newMeasurementCreation(Date startTime) throws CreateObjectException {
+		Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
+		this.transceiver.addMeasurement(measurement, this);
+		this.currentMeasurementStartTime = startTime.getTime();
+		try {
+			StorableObjectPool.flushGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
+	final void checkIfCompletedOrAborted() {
+		final int numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
+		Log.debugMessage('\'' + this.test.getId().getIdentifierString()
+				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults
+				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements
+				 + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
+		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
+			this.complete();
+		else {
+			if (System.currentTimeMillis() - this.currentMeasurementStartTime > this.forgetFrame) {
+				Log.debugMessage("Passed " + this.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
+						+ this.test.getId() + "'", Log.DEBUGLEVEL03);
+				this.abort();
+			}
+		}
+	}
+
+	final void processMeasurementResult() {
+		Result measurementResult;
+		Measurement measurement;
+		if (!this.measurementResultList.isEmpty()) {
+			measurementResult = this.measurementResultList.remove(0);
+			this.numberOfReceivedMResults++;
+			measurement = (Measurement) measurementResult.getAction();
+
+			Result[] aeResults = null;
+			try {
+				aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				for (int i = 0; i < aeResults.length; i++)
+					if (aeResults[i] != null)
+						MeasurementControlModule.resultList.add(aeResults[i]);
+
+				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED);
+			}
+			catch (TestProcessingException tpe) {
+				Log.errorException(tpe);
+			}
+
+			try {
+				StorableObjectPool.flush(ObjectEntities.RESULT_CODE, false);
+				//- Every action contains in dependencies of it's result
+				//StorableObjectPool.flush(measurement.getId(), false);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+
+			MeasurementControlModule.resultList.add(measurementResult);
+			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+			try {
+				StorableObjectPool.flush(measurement.getId(), false);
+			}
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+		}
+	}
+
+	private final void updateMyTestStatus(TestStatus status) {
+		this.test.setStatus(status);
+		try {
+			StorableObjectPool.flush(this.test.getId(), true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
+
+	protected void complete() {
+		this.updateMyTestStatus(TestStatus.TEST_STATUS_COMPLETED);
+		this.shutdown();
 	}
 
 	protected void abort() {
+		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
+		if (this.transceiver != null)
+			this.transceiver.abortMeasurementsForTestProcessor(this);
+		this.shutdown();
+	}
+
+	private void shutdown() {
 		this.running = false;
-		this.transceiver.abortMeasurements(this);		
-		try {
-			this.test.setStatus(TestStatus.TEST_STATUS_ABORTED);
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-		}
 		this.cleanup();
 	}
 
-	void checkMeasurementResults() {
-		Result measurementResult;
-		Measurement measurement;
-		if (!this.measurementResultQueue.isEmpty()) {
-			measurementResult = (Result)this.measurementResultQueue.remove(0);
-			measurement = measurementResult.getMeasurement();
-			Result analysisResult = null;
-			Result evaluationResult = null;
-			switch (measurement.getStatus().value()) {
-				case MeasurementStatus._MEASUREMENT_STATUS_MEASURED:
-					analysisResult = this.analyse(measurementResult);
-					if (analysisResult != null) {
-						try {
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
-						}
-						catch (Exception e) {
-							Log.errorException(e);
-						}
-						MeasurementControlModule.resultList.add(analysisResult);
-					}
-					evaluationResult = this.evaluate(analysisResult, measurementResult);
-					if (evaluationResult != null)
-						MeasurementControlModule.resultList.add(evaluationResult);
-					MeasurementControlModule.resultList.add(measurementResult);
-					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-					}
-					catch (Exception e) {
-						Log.errorException(e);
-					}
-					this.n_reports ++;
-					break;
-				case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED:
-					try {
-						analysisResult = measurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
-					}
-					catch (Exception e) {
-						Log.errorException(e);
-						analysisResult = null;
-					}
-					evaluationResult = this.evaluate(analysisResult, measurementResult);
-					if (evaluationResult != null)
-						MeasurementControlModule.resultList.add(evaluationResult);
-					MeasurementControlModule.resultList.add(measurementResult);
-					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-					}
-					catch (Exception e) {
-						Log.errorException(e);
-					}
-					this.n_reports ++;
-					break;
-				default:
-					Log.errorMessage("TestProcessor.checkMeasurementResults | Inappropriate status " + measurement.getStatus() + " of measurement '" + measurement.getId() + "'");
-			}
-		}//if (!this.measurementResultQueue.isEmpty())
-	}
-
-	private Result analyse(Result measurementResult) {
-		Identifier analysis_type_id = this.test.getAnalysisTypeId();
-		if (!analysis_type_id.equals("")) {
-			Analysis analysis = null;
-			Measurement measurement = measurementResult.getMeasurement();
-			try {
-				/*!!	During creation of a test we must consider:
-				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
-				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present
-				 *       if necessary.
-				 *    */
-				analysis = Analysis.create(MeasurementControlModule.createIdentifier("analysis"),
-																	 analysis_type_id,
-																	 measurement.getSetup().getCriteriaSet(),
-																	 this.test.getMonitoredElement().getId());
-			}
-			catch (Exception e) {
-				Log.errorException(e);
-			}
-			if (analysis != null) {
-				AnalysisManager analysisManager = AnalysisManager.getAnalysisManager(analysis_type_id);
-				if (analysisManager != null)
-					return analysisManager.analyse(analysis, measurementResult);
-				else
-					Log.errorMessage("Cannot find analysis manager for analysis type '" + analysis_type_id + "' of test '" + this.test.getId() + "'");
-			}
-		}
-		return null;
-	}
-
-	private Result evaluate(Result analysisResult, Result measurementResult) {
-		Identifier evaluation_type_id = this.test.getEvaluationTypeId();
-		if (!evaluation_type_id.equals("")) {
-			Evaluation evaluation = null;
-			Measurement measurement = measurementResult.getMeasurement();
-			try {
-				/*!!	During creation of a test we must consider:
-				 * 		1. dependency among analysis_type_id, evaluation_type_id and measurement_type_id;
-				 *    2. appropriate MeasurementSetup, i. e. criteria, thresholds and etalon are present.
-				 *    */
-				 evaluation = Evaluation.create(MeasurementControlModule.createIdentifier("evaluation"),
-																				evaluation_type_id,
-																				measurement.getSetup().getThresholdSet(),
-																				measurement.getSetup().getEtalon(),
-																				this.test.getMonitoredElement().getId());
-			}
-			catch (Exception e) {
-				Log.errorException(e);
-			}
-			if (evaluation != null) {
-				EvaluationManager evaluationManager = EvaluationManager.getEvaluationManager(evaluation_type_id);
-				if (evaluationManager != null)
-					return evaluationManager.evaluate(evaluation, analysisResult, measurementResult);
-				else
-					Log.errorMessage("Cannot find evaluation manager for evaluation type '" + evaluation_type_id + "' of test '" + this.test.getId() + "'");
-			}
-		}
-		return null;
-	}
-
 	void cleanup() {
-		this.measurementResultQueue.clear();
-		this.transceiver = null;
+		this.measurementResultList.clear();
+		MeasurementControlModule.testProcessors.remove(this.test.getId());
 		this.test = null;
-		MeasurementControlModule.testProcessors.remove(this);
 	}
+
+	public Identifier getTestId() {
+		return this.test.getId();
+	}
+
 }

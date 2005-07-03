@@ -15,7 +15,7 @@ docs
 .sqlj
 .all
 Makefile.inc
-.classpath
-.project
 test
 .settings
+.classpath
+.project

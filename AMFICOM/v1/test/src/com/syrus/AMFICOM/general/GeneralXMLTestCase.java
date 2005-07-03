@@ -1,12 +1,12 @@
 /*
- * $Id: GeneralXMLTestCase.java,v 1.1.1.1 2005/02/04 14:21:34 cvsadmin Exp $
+ * $Id: GeneralXMLTestCase.java,v 1.3 2005/06/02 14:31:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package test.com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.general;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2005/02/04 14:21:34 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.3 $, $Date: 2005/06/02 14:31:02 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class GeneralXMLTestCase extends TestCase {
@@ -95,8 +95,6 @@ public class GeneralXMLTestCase extends TestCase {
 		CharacteristicType chType = CharacteristicType.createInstance(new Identifier("User_1"),
 			"CharacteristicTypeTestCase", "characteristicType created by CharacteristicTypeTestCase",
 			DataType._DATA_TYPE_STRING, CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL);
-
-		GeneralStorableObjectPool.putStorableObject(chType);
 
 	}
 

@@ -20,6 +20,7 @@ public:
 	void operator = (const EventParams& ep);
 	int operator < (const EventParams& ep);
 	int operator == (const EventParams& ep);
+	int operator == (const EventParams* ep);
 	int operator != (const EventParams* const &ep);
 
 	static const int LINEAR;
@@ -111,3 +112,4 @@ public:
 };
 
 #endif // !defined(AFX_EVENTPARAMS_H__4602CAF5_15BD_4327_AD1F_01E97ED71701__INCLUDED_)
+

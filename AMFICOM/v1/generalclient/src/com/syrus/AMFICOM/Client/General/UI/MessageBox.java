@@ -28,31 +28,31 @@ public class MessageBox extends JDialog {
 
   private  MessageBox(Frame frame, String title, boolean modal)
   {
-    super(frame, title, modal);
-    try {
-      jbInit();
-      pack();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
+	 super(frame, title, modal);
+	 try {
+		jbInit();
+		pack();
+	 }
+	 catch(Exception ex) {
+		ex.printStackTrace();
+	 }
   }
 
 
   public MessageBox(String m)
   {
-    this(null, m, true);
+	 this(null, m, true);
 
-    if(m != null)
-       this.message = m;
-    this.messageArea.setText(m);
-    this.messageArea.show(true);
+	 if(m != null)
+		 this.message = m;
+	 this.messageArea.setText(m);
+	 this.messageArea.setVisible(true);
 //    this.setLocation(400,300);
 //    this.setSize(400, 145);
 	setLoc();
-    this.setModal(true);
-    this.show(true);
-    messageArea.show(true);
+	 this.setModal(true);
+	 this.setVisible(true);
+	 messageArea.setVisible(true);
   }
 
 	private void setLoc()
@@ -72,53 +72,53 @@ public class MessageBox extends JDialog {
 
   public MessageBox(String m, int sizeX, int sizeY)
   {
-    this(null, m, true);
-    if(m != null)
-       this.message = m;
-    this.messageArea.setText(m);
-    this.messageArea.show(true);
+	 this(null, m, true);
+	 if(m != null)
+		 this.message = m;
+	 this.messageArea.setText(m);
+	 this.messageArea.setVisible(true);
 //    this.setLocation(400,300);
-    this.setSize(sizeX, sizeY);
+	 this.setSize(sizeX, sizeY);
 	setLoc();
-    this.setModal(true);
-    this.show(true);
-    messageArea.show(true);
+	 this.setModal(true);
+	 this.setVisible(true);
+	 messageArea.setVisible(true);
   }
 
 
-  private void jbInit() throws Exception 
+  private void jbInit() throws Exception
   {
 		this.setResizable(false);
-    panel1.setLayout(verticalFlowLayout1);
-    jButtonOk.setText("Ok");
-    jButtonOk.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        jButtonOk_actionPerformed(e);
-      }
-    });
-    messageArea.setText("");
-    jPanel2.setLayout(borderLayout1);
-    jPanel2.setBorder(BorderFactory.createEtchedBorder());
-    jPanel2.setPreferredSize(new Dimension(400, 70));
-    this.messageArea.setEnabled(false);
+	 panel1.setLayout(verticalFlowLayout1);
+	 jButtonOk.setText("Ok");
+	 jButtonOk.addActionListener(new java.awt.event.ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		  jButtonOk_actionPerformed(e);
+		}
+	 });
+	 messageArea.setText("");
+	 jPanel2.setLayout(borderLayout1);
+	 jPanel2.setBorder(BorderFactory.createEtchedBorder());
+	 jPanel2.setPreferredSize(new Dimension(400, 70));
+	 this.messageArea.setEnabled(false);
 //    this.messageArea.setEditable(false);
 //    messageArea.setBackground(new Color(212, 208, 200));
 	messageArea.setForeground(SystemColor.controlText);
-    this.messageArea.setBorder(null);
+	 this.messageArea.setBorder(null);
 
-    jScrollPane1.setBorder(null);
-    panel1.add(jPanel2, null);
-    jPanel2.add(jScrollPane1, BorderLayout.CENTER);
-    jScrollPane1.getViewport().add(messageArea, null);
-    panel1.add(jPanel1, null);
-    jPanel1.add(jButtonOk, null);
-    this.getContentPane().add(panel1, BorderLayout.CENTER);
+	 jScrollPane1.setBorder(null);
+	 panel1.add(jPanel2, null);
+	 jPanel2.add(jScrollPane1, BorderLayout.CENTER);
+	 jScrollPane1.getViewport().add(messageArea, null);
+	 panel1.add(jPanel1, null);
+	 jPanel1.add(jButtonOk, null);
+	 this.getContentPane().add(panel1, BorderLayout.CENTER);
   }
 
 
   void jButtonOk_actionPerformed(ActionEvent e)
   {
-    this.dispose();
+	 this.dispose();
   }
 
 }

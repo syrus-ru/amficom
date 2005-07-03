@@ -54,13 +54,13 @@ public class ViewShowallCommand extends VoidCommand
 	{	 System.out.println("ViewShowallCommand.execute() - starting ...");
 		 // эмулируем выбор соответствующих пунктов меню
 		 // if(mdiMain.kisSelectFrame!=null ) {mdiMain.kisSelectFrame.place();} else {System.out.println("mdiMain.kisSelectFrame=null");}
-		 new ViewKISCommand(dispatcher, desktop, aContext, mdiMain).execute();
-     new ViewParamCommand(dispatcher, desktop, aContext,  mdiMain.optimizerContext, mdiMain).execute();
-		 new ViewSolutionCommand(dispatcher, desktop, aContext, mdiMain).execute();
-		 new ViewGraphCommand(dispatcher, desktop, aContext, mdiMain.optimizerContext, mdiMain).execute();
-		 new ViewModeCommand(dispatcher, desktop, aContext, mdiMain).execute();
-		 new ViewSchemeCommand(dispatcher, desktop, aContext, new MapOptimizeApplicationModelFactory(), mdiMain).execute();
-		 new ViewMapCommand(dispatcher, desktop, aContext, new MapOptimizeApplicationModelFactory(), mdiMain ).execute();
+		 new ViewKISCommand(this.dispatcher, this.desktop, this.aContext, mdiMain).execute();
+         new ViewParamCommand(dispatcher, this.desktop, this.aContext,  this.mdiMain.optimizerContext, this.mdiMain).execute();
+		 new ViewSolutionCommand(this.dispatcher, desktop, this.aContext, this.mdiMain).execute();
+		 new ViewGraphCommand(dispatcher, desktop, aContext, mdiMain.optimizerContext, this.mdiMain).execute();
+		 new ViewModeCommand(this.dispatcher, desktop, aContext, this.mdiMain).execute();
+		 new ViewSchemeCommand(this.dispatcher, desktop, aContext, new MapOptimizeApplicationModelFactory(), this.mdiMain).execute();
+		 new ViewMapCommand(this.dispatcher, this.desktop, aContext, new MapOptimizeApplicationModelFactory(), this.mdiMain ).execute();
 
 		 dispatcher.notify(new OperationEvent(this, 0, "showallevent"));// используем для выравнивания всех окон с учётом того, что они все должны разместиться
 		 System.out.println("ViewShowallCommand.execute() - done");

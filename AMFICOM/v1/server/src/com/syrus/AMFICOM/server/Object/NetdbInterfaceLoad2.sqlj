@@ -1,25 +1,30 @@
+/*
+ * $Id: NetdbInterfaceLoad2.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import java.sql.*;
-
 import java.util.Vector;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class NetdbInterfaceLoad2
 {
 	protected NetdbInterfaceLoad2()
 	{
 	}
 
-	static public int loadPorts(
+	public static int loadPorts(
 			String[] ids,
 			PortSeq_TransferableHolder portseq)
 	{
@@ -141,7 +146,7 @@ public class NetdbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadEquipments(
+	public static int loadEquipments(
 			String domain_id,
 			String[] ids,
 			EquipmentSeq_TransferableHolder equipments,
@@ -371,7 +376,7 @@ public class NetdbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadLinks(
+	public static int loadLinks(
 			String domain_id,
 			String[] ids,
 			LinkSeq_TransferableHolder links)
@@ -558,7 +563,7 @@ public class NetdbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadCableLinks(
+	public static int loadCableLinks(
 			String domain_id,
 			String[] ids,
 			CableLinkSeq_TransferableHolder links)
@@ -748,7 +753,7 @@ public class NetdbInterfaceLoad2
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int loadTestPorts(
+	public static int loadTestPorts(
 			String[] ids,
 			TestPortSeq_TransferableHolder tportseq)
 	{
@@ -951,6 +956,4 @@ public class NetdbInterfaceLoad2
 		String color,
 		String mark,
 		String link_type_id);
-
 }
-

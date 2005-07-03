@@ -348,3 +348,4 @@ void Neuron::operationPerformed(int commandName)
     }
 
 }
+

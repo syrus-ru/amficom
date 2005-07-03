@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * <p>Title: </p>
@@ -21,16 +22,19 @@ public class DomainDisplayModel extends StubDisplayModel
   {
   }
 
-  public Vector getColumns()
-  {
-    Vector vec = new Vector();
-//    vec.add("id");
-    vec.add("name");
-    vec.add("owner_id");
-    vec.add("modified");
-    vec.add("domain_id");
-    return vec;
-  }
+    List cols = new LinkedList();
+	{
+//    	vec.add("id");
+		cols.add("name");
+//    	vec.add("owner_id");
+		cols.add("modified");
+		cols.add("domain_id");
+	}
+
+	public List getColumns()
+	{
+		return cols;
+	}
 
   public String getColumnName(String col_id)
   {
@@ -48,7 +52,7 @@ public class DomainDisplayModel extends StubDisplayModel
     return s;
   }
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+  public PropertyRenderer getColumnRenderer(StorableObject or, String col_id)
   {
     ObjectResourceModel mod = or.getModel();
     return new JLabelRenderer(mod.getColumnValue(col_id));

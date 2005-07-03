@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.Vector;
 import java.sql.Timestamp;
 import java.sql.SQLException;
-import oracle.sql.BLOB;
-import sqlj.runtime.ref.DefaultContext;
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientThresholdSet_Transferable;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;

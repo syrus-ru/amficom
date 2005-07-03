@@ -32,3 +32,4 @@ private:
 };
 
 #endif // !defined(AFX_VECTOR_H__EB72B4EA_E435_4439_ABF5_DD98179CBB2C__INCLUDED_)
+

@@ -1,0 +1,14 @@
+classes
+docs
+lib
+test
+.classpath
+.project
+.settings
+*.deploy
+*.jpr
+*.jpx
+*.tar
+*.gz
+*.swp
+Makefile.inc

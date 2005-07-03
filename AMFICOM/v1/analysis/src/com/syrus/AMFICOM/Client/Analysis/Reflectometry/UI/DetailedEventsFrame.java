@@ -1,679 +1,298 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.util.Vector;
+import java.awt.*;
 
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JViewport;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.UI.ATable;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
-import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class DetailedEventsFrame extends JInternalFrame
-															 implements OperationListener
+implements EtalonMTMListener,
+    CurrentEventChangeListener, PrimaryRefAnalysisListener
 {
-	private ReflectogramEvent []data;
-	private ReflectogramEvent []data_;
-	private ReflectogramEvent []etalon;
+	private ModelTrace alignedDataMT;
 
-	private Dispatcher dispatcher;
-	private GeneralTableModel tModel;
-	private ATable jTable;
-	private int selected = 0;
-	private int concSelected = 0;
-	private RefAnalysis a;
-	private BellcoreStructure bs;
-	private double res;
+	private WrapperedPropertyTableModel tModel;
+	private WrapperedPropertyTableModel ctModel;
+	private DetailedEventResource res;
+	
+	private WrapperedPropertyTable mainTable;
+	private WrapperedPropertyTable comparativeTable;
+	
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
 
-	BorderLayout borderLayout = new BorderLayout();
-	JPanel mainPanel = new JPanel();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-
-	boolean analysis_performed = false;
-	boolean etalon_loaded = false;
-
-	private CompareTableModel ctModel;
-	private ATable jTableComp;
-
-	BorderLayout borderLayoutComp = new BorderLayout();
-	JPanel mainPanelComp = new JPanel();
-	JScrollPane scrollPaneComp = new JScrollPane();
-	JViewport viewportComp = new JViewport();
+	private JPanel mainPanelComp = new JPanel(new BorderLayout());
+	private JScrollPane scrollPaneComp = new JScrollPane();
+	private JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
+	private static final String[] linearKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
+			DetailedEventWrapper.KEY_MAXDEVIATION,
+			DetailedEventWrapper.KEY_MEAN_DEVIATION };
 
+	private static final String[] dzKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
+			DetailedEventWrapper.KEY_EDZ, DetailedEventWrapper.KEY_ADZ };
+
+	private static final String[] spliceKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL};
+
+	private static final String[] notidKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_MAX_LEVEL, DetailedEventWrapper.KEY_MIN_LEVEL,
+			DetailedEventWrapper.KEY_MAXDEVIATION };
+	
+	private static final String[] reflectionKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
+			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
+	
+	private static final String[] endKeys = new String[] {
+			DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL,
+			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
+	
+	private static final String[] compareKeys = new String[] {
+			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_ETALON_TYPE,
+			DetailedEventWrapper.KEY_ETALON_MAX_DEVIATION,
+			DetailedEventWrapper.KEY_ETALON_MEAN_DEVIATION,
+			DetailedEventWrapper.KEY_LOSS_DIFFERENCE,
+			DetailedEventWrapper.KEY_LOCATION_DIFFERENCE,
+			DetailedEventWrapper.KEY_LENGTH_DIFFERENCE };
+	
 	public DetailedEventsFrame()
 	{
-		this(new Dispatcher());
+		this.init();
+		this.initModule();
 	}
 
-	public DetailedEventsFrame(Dispatcher dispatcher)
+	private void initModule()
 	{
-		super();
-		try
-		{
-			jbInit();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		init_module(dispatcher);
+		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentEventChangeListener(this);
+    Heap.addPrimaryRefAnalysisListener(this);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	private void makeAlignedDataMT()
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.OPEN)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
-				{
-				/*	if ((RefAnalysis)Pool.get("refanalysis", id) != null)
-					{
-						a = (RefAnalysis)Pool.get("refanalysis", id);
-						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-						updTableModel (0);
-					}*/
-					data_ = null;
-					ctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(0, true);
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(true);
-				}
-			}
-			if(rce.CLOSE)
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					data_ = null;
-					tModel.clearTable();
-					ctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(0, true);
-					analysis_performed = false;
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(false);
-				}
-				else if(id.equals("etalon"))
-				{
-					data_ = null;
-					ctModel.clearTable();
-					tabbedPane.setEnabledAt(0, true);
-					tabbedPane.setSelectedIndex(0);
-					etalon_loaded = false;
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
-			if(rce.OPEN_ETALON)
-			{
-				this.etalon = (ReflectogramEvent[])Pool.get("eventparams", "etalon");
-				if(data !=null)
-					this.data_ = ReflectogramMath.alignClone(data, etalon);
-				else
-					data_ = null;
-				ctModel.clearTable();
-				tabbedPane.setEnabledAt(0, true);
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = true;
-				if(analysis_performed)
-					tabbedPane.setEnabledAt(1, true);
-			}
-			if(rce.CLOSE_ETALON)
-			{
-				data_ = null;
-				ctModel.clearTable();
-				tabbedPane.setEnabledAt(0, true);
-				tabbedPane.setSelectedIndex(0);
-				etalon_loaded = false;
-				tabbedPane.setEnabledAt(1, false);
-			}
-
-		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if (rue.ANALYSIS_PERFORMED)
-			{
-				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
-				{
-					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
-					{
-						a = (RefAnalysis)Pool.get("refanalysis", id);
-						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-						this.data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
-						if(data != null && etalon != null)
-							this.data_ = ReflectogramMath.alignClone(data, etalon);
-						if (selected >= a.events.length)
-							selected = a.events.length - 1;
-						updTableModel (selected);
-					}
-				}
-				if (Pool.get("eventparams", "primarytrace") != null)
-					analysis_performed = true;
-				if(etalon_loaded)
-					tabbedPane.setEnabledAt(1, true);
-			}
-			if (rue.EVENT_SELECTED)
-			{
-				selected = Integer.parseInt((String)rue.getSource());
-				updTableModel (selected);
-				setData(selected);
-			}
-			if (rue.CONCAVITY_SELECTED)
-			{
-				concSelected = Integer.parseInt((String)rue.getSource());
-				updConcTableModel (concSelected);
-			}
+		// XXX: is alignment really required? Should it be performed here?
+		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null) {
+			alignedDataMT = null;
+		} else {
+			alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
+			Heap.getMTAEPrimary().getModelTrace(),
+			Heap.getMTMEtalon().getMTAE().getModelTrace());
 		}
 	}
 
-	private void jbInit() throws Exception
-	{
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("eventDetailedParam"),
-												LangModelAnalyse.String("eventDetailedValue")},
-					new Object[] {"", ""},
-					0);
+	private void init() {
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		jTable = new ATable (tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+		res = new DetailedEventResource();
+		tModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, linearKeys);
+		
+		this.mainTable = new WrapperedPropertyTable(tModel);
 
 		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
-//		setContentPane(mainPanel);
-		this.setSize(new Dimension(200, 200));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("eventDetailedTableTitle"));
+		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
 
-		tabbedPane.add("ќсновные", mainPanel);
+		tabbedPane.add(LangModelAnalyse.getString("Title.mains"), mainPanel);
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
-		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
-		jTable.setMinimumSize(new Dimension(200, 200));
+		mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		mainTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+		mainTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(jTable);
+		scrollPane.getViewport().add(mainTable);
 		tabbedPane.setEnabledAt(0, true);
 
+		tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), mainPanelComp);
 
-		tabbedPane.add("—равнительные", mainPanelComp);
+		this.ctModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, compareKeys);
+		this.comparativeTable = new WrapperedPropertyTable(this.ctModel);
+		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.comparativeTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+		this.comparativeTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 
-		ctModel = new CompareTableModel();
-		jTableComp = new ATable (ctModel);
-		jTableComp.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTableComp.getColumnModel().getColumn(1).setPreferredWidth(100);
-
-		mainPanelComp.setLayout(new BorderLayout());
 		mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
 		scrollPaneComp.setViewport(viewportComp);
 		scrollPaneComp.setAutoscrolls(true);
-		jTableComp.setPreferredScrollableViewportSize(new Dimension(200, 213));
-		jTableComp.setMinimumSize(new Dimension(200, 213));
-		jTableComp.setDefaultRenderer(Object.class, new CompareTableRenderer());
+		comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
 
 		mainPanelComp.add(scrollPaneComp, BorderLayout.CENTER);
-		scrollPaneComp.getViewport().add(jTableComp);
+		scrollPaneComp.getViewport().add(comparativeTable);
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 
-		updColorModel();
 	}
 
-
-	private void setData(int nEvent)
+	private void setData()
 	{
-
-		if(etalon == null || data_ == null)
+		int nEvent = Heap.getCurrentEvent1();
+		int nEtalon = Heap.getCurrentEtalonEvent1();
+		if(Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent>=data_.length || nEvent<0)
-		{
-			return;
-		}
-		double delta_x = data_[0].getDeltaX();
+		double deltaX = Heap.getMTAEPrimary().getDeltaX();
 
-		//int dataType = WorkWithReflectoEventsArray.getEventType(data_[nEvent]);
-		int coord = ReflectogramMath.getEventCenter(data_[nEvent]);
-		//int etalonType = WorkWithReflectoEventsArray.getEventType(coord, etalon);
+//		ComplexReflectogramEvent dataEvent =
+//			Heap.getMTAEPrimary().getComplexEvents()[nEvent];
+//		ComplexReflectogramEvent etalonEvent = nEtalon != -1
+//				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
+//				: null;
+        DetailedEvent dataEvent = nEvent != -1
+            ? Heap.getMTAEPrimary().getDetailedEvents()[nEvent]
+            : null;
+        DetailedEvent etalonEvent = nEtalon != -1
+                ? Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon]
+                : null;
+                
+		int dataType = dataEvent != null
+                    ? dataEvent.getEventType()
+                    : SimpleReflectogramEvent.RESERVED; // 'no event'
+		int etalonType = etalonEvent != null
+			        ? etalonEvent.getEventType()
+					: SimpleReflectogramEvent.RESERVED; // 'no event'
 
-		if(data_[nEvent].getType() == etalon[nEvent].getType())
-			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(true);
-		else
-			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(false);
+		((CompareTableRenderer)comparativeTable.getDefaultRenderer(Object.class))
+			.setSameType(dataType == etalonType && dataType != SimpleReflectogramEvent.RESERVED);
 
-		String dataT = LangModelAnalyse.String("eventTypeUnk");
-		String etalonT = LangModelAnalyse.String("eventTypeUnk");
-		if(data_[nEvent].getType() == ReflectogramEvent.CONNECTOR)
-		{
-			dataT = LangModelAnalyse.String("eventType4");
-		}
-		else if(data_[nEvent].getType() == ReflectogramEvent.WELD)
-		{
-			dataT = LangModelAnalyse.String("eventType3");
-		}
-		else if(data_[nEvent].getType() == ReflectogramEvent.LINEAR)
-		{
-			dataT = LangModelAnalyse.String("eventType0");
-		}
-
-		if(etalon[nEvent].getType() == ReflectogramEvent.CONNECTOR)
-		{
-			etalonT = LangModelAnalyse.String("eventType4");
-		}
-		else if(etalon[nEvent].getType() == ReflectogramEvent.WELD)
-		{
-			etalonT = LangModelAnalyse.String("eventType3");
-		}
-		else if(etalon[nEvent].getType() == ReflectogramEvent.LINEAR)
-		{
-			etalonT = LangModelAnalyse.String("eventType0");
-		}
-		ctModel.setValueAt(dataT, 0, 1);
-		ctModel.setValueAt(etalonT, 1, 1);
-
-		double difference = ReflectogramComparer.getDeviation(etalon, data_, nEvent);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(data_, etalon, nEvent);
-		double loss = ReflectogramComparer.getLoss(etalon, data_, nEvent);
-		double locationDiff = ReflectogramComparer.getLocationDifference(etalon, data_, nEvent)*delta_x;
-		double widthDiff = ReflectogramComparer.getWidthDifference(etalon, data_, nEvent)*delta_x;
-
-		difference = ((int)(difference*1000.))/1000.;
-		loss = ((int)(loss*1000.))/1000.;
-		locationDiff = ((int)(locationDiff*1000.))/1000.;
-		widthDiff = ((int)(widthDiff*1000.))/1000.;
-		meanDeviation = ((int)(meanDeviation*1000.))/1000.;
-
-		ctModel.setValueAt(String.valueOf(difference)+" дЅ", 2, 1);
-		ctModel.setValueAt(String.valueOf(meanDeviation)+" дЅ", 3, 1);
-		ctModel.setValueAt(String.valueOf(locationDiff)+" м", 6, 1);
-
-
-		if(etalon[nEvent].getType() == data_[nEvent].getType())
-		{
-			ctModel.setValueAt(String.valueOf(loss)+" дЅ", 4, 1);
-			ctModel.setValueAt(String.valueOf(widthDiff)+" м", 5, 1);
-		}
-		else
-		{
-			ctModel.setValueAt("--", 4, 1);
-			ctModel.setValueAt("--", 5, 1);
-		}
+		// сравнение по модельной кривой
+		ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
+		res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX);
+		comparativeTable.updateUI();
 	}
-
-	private void updColorModel()
+	
+	private void updateTableModel()
 	{
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(ColorManager.getColor("textColor"));
-		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
+		int num = Heap.getCurrentEvent1();
+		if (num < 0) {
 
-		scrollPaneComp.getViewport().setBackground(SystemColor.window);
-		jTableComp.setBackground(SystemColor.window);
-		jTableComp.setForeground(ColorManager.getColor("textColor"));
-		jTableComp.setGridColor(ColorManager.getColor("tableGridColor"));
-	}
-
-	void updTableModel(int num)
-	{
-		if (num == -1)
-			return;
-		TraceEvent ev = a.events[num];
-		Vector row;
-		tModel.clearTable();
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventType" + String.valueOf(ev.getType()))); // тип
-		row.add(String.valueOf(num+1));
-		tModel.insertRow(row);
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventLength")); // прот€женность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.String("km")));
-		tModel.insertRow(row);
-
-		switch (ev.getType())
-			{
-				case TraceEvent.LINEAR:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventFade"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2] * 1000d / res) + " " + LangModelAnalyse.String("dB/km")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventRMSDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[3]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[4]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 break;
-				case TraceEvent.INITIATE:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventAmplitude"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventPoLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEDZ"));
-							 row.add(String.valueOf(Math.round(ev.data[2] * res * 1000d) + " " + LangModelAnalyse.String("mt")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventADZ"));
-							 row.add(String.valueOf(Math.round(ev.data[3] * res * 1000d) + " " + LangModelAnalyse.String("mt")));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.NON_IDENTIFIED:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMinLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.CONNECTOR:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[1] - ev.data[2]) + " " + LangModelAnalyse.String("dB")));
-//							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventFormFactor"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[3])));
-							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.WELD:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
-//							 tModel.insertRow(row);
-						 break;
-				case TraceEvent.TERMINATE:
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-							 tModel.insertRow(row);
-//							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-//							 tModel.insertRow(row);
-							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventFormFactor"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2])));
-							 tModel.insertRow(row);
-						 break;
+            return;
+        }
+		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvents()[num];
+		int eventType = ev.getEventType();
+		double resMt =  Heap.getBSPrimaryTrace().getResolution();
+    double resKm = resMt / 1000.0;
+		res.initAdditional(ev, resKm);
+		switch (eventType)
+		{
+			case SimpleReflectogramEvent.LINEAR:
+				tModel.setKeys(linearKeys);
+				break;
+			case SimpleReflectogramEvent.DEADZONE:
+				tModel.setKeys(dzKeys);
+				break;
+			case SimpleReflectogramEvent.NOTIDENTIFIED:
+				tModel.setKeys(notidKeys);
+				break;
+			case SimpleReflectogramEvent.CONNECTOR:
+				tModel.setKeys(reflectionKeys);
+				break;
+			case SimpleReflectogramEvent.LOSS:
+			case SimpleReflectogramEvent.GAIN:
+				tModel.setKeys(spliceKeys);
+				break;
+			case SimpleReflectogramEvent.ENDOFTRACE:
+				tModel.setKeys(endKeys);
+				break;
 			}
-			jTable.updateUI();
+		mainTable.updateUI();
 	}
 
-	void updConcTableModel(int num)
+	public void etalonMTMCUpdated()
 	{
-		if (num == -1)
-			return;
-		TraceEvent ev = a.concavities[num];
-		Vector row;
-		tModel.clearTable();
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventType" + String.valueOf(ev.getType()))); // тип
-		if ((int)(ev.data[ev.data.length - 2]) == (int)(ev.data[ev.data.length - 1]))
-				row.add( String.valueOf ((int)(ev.data[ev.data.length - 2]) + 1));
-			else
-				row.add( String.valueOf ((int)(ev.data[ev.data.length - 2]) + 1)
-								 + "-" + String.valueOf ((int)(ev.data[ev.data.length - 1]) + 1) ); // номер
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventLength")); // прот€женность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.String("km")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventStartLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventEndLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
-		tModel.insertRow(row);
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventMaxDeviation"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
-		tModel.insertRow(row);
-
-		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventCurveFactor"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[3])));
-		tModel.insertRow(row);
-
-		jTable.updateUI();
-	}
-}
-
-
-
-class CompareTableModel extends AbstractTableModel
-{
-
-//  String[] columnNames = {LangModelModel.String("parameter") ,
-//    LangModelModel.String("value")};
-
-	String[] columnNames = {null ,
-		null};
-
-	Object[][] data = {
-		{LangModelAnalyse.String("eventType"), "--"},
-		{LangModelAnalyse.String("etEventType"), "--"},
-		{LangModelAnalyse.String("maxDeviation"), "--"},
-		{LangModelAnalyse.String("meanDeviation"), "--"},
-		{LangModelAnalyse.String("delta"), "--"},
-		{LangModelAnalyse.String("dWidth"), "--"},
-		{LangModelAnalyse.String("dLocation"), "--"}
-	};
-
-	CompareTableModel()
-	{
-		super();
-	}
-
-	public void clearTable()
-	{
-		setValueAt("--", 0, 1);
-		setValueAt("--", 1, 1);
-		setValueAt("--", 2, 1);
-		setValueAt("--", 3, 1);
-		setValueAt("--", 4, 1);
-		setValueAt("--", 5, 1);
-		setValueAt("--", 6, 1);
-
-		super.fireTableDataChanged();
-	}
-
-	public int getColumnCount() {
-		return columnNames.length;
-	}
-
-	public int getRowCount() {
-		return data.length;
-	}
-
-	public String getColumnName(int col) {
-		return columnNames[col];
-	}
-
-	public Object getValueAt(int row, int col) {
-		return data[row][col];
-	}
-
-	public double getvalueat(int row, int col) {
-		return ((Double)(data[row][col])).doubleValue();
-	}
-
-	public Class getColumnClass(int c) {
-		return getValueAt(0, c).getClass();
-	}
-
-	public boolean isCellEditable(int row, int col)
-	{
-		return false;
-	}
-
-	public void setValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
-
-
-	public void setInicialValueAt(Object value, int row, int col)
-	{
-		data[row][col] = value;
-		fireTableCellUpdated(row, col);
-	}
-}
-
-
-
-
-
-
-class CompareTableRenderer extends DefaultTableCellRenderer
-{
-
-	private boolean sameType = true;
-
-	public void setSameType(boolean key)
-	{
-		sameType = key;
-	}
-
-	public Component getTableCellRendererComponent(JTable table, Object value,
-												boolean isSelected, boolean hasFocus, int row, int column)
-	{
-		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-		if(!sameType && row == 0)
-			c.setForeground(Color.red);
-		else if(!sameType && row == 1)
-			c.setForeground(Color.red);
-		else
-			c.setForeground(Color.black);
-
-		return c;
-	}
-
-	private boolean containsRow(int row, int []array)
-	{
-		if(array == null)
-			return false;
-
-		for(int i=0; i<array.length; i++)
-		{
-			if(array[i] == row)
-				return true;
+        makeAlignedDataMT();
+		this.clearCTModelValues();
+		if(Heap.getRefAnalysisPrimary() != null) {
+			tabbedPane.setEnabledAt(1, true);
 		}
-		return false;
+		this.updateTableModel();
+	}
+
+	public void etalonMTMRemoved()
+	{
+		alignedDataMT = null;
+		this.clearCTModelValues();
+		tabbedPane.setSelectedIndex(0);
+		tabbedPane.setEnabledAt(1, false);
+		this.mainTable.repaint();
+		this.mainTable.revalidate();
+	}
+
+	public void currentEventChanged()
+	{
+		this.updateTableModel();
+		this.setData();
+	}
+
+    public void primaryRefAnalysisCUpdated() {
+        makeAlignedDataMT();
+        if (Heap.getMTMEtalon() != null)
+            tabbedPane.setEnabledAt(1, true);
+        this.updateTableModel();
+        setVisible(true);
+    }
+
+    public void primaryRefAnalysisRemoved() {
+        alignedDataMT = null;
+		this.clearCTModelValues();
+        tabbedPane.setSelectedIndex(0);
+        tabbedPane.setEnabledAt(1, false);
+        setVisible(false);
+    }
+	
+	private void clearCTModelValues() {
+		for(int i=0;i<this.ctModel.getRowCount();i++) {
+			this.ctModel.setValueAt("--", i, 1);
+		}
+	}
+	
+	private class CompareTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
+
+		private boolean	sameType	= true;
+
+		public void setSameType(boolean key) {
+			sameType = key;
+		}
+
+		public Component getTableCellRendererComponent(	JTable table,
+														Object value,
+														boolean isSelected1,
+														boolean hasFocus,
+														int row,
+														int column) {
+			Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
+
+			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
+
+			return component;
+		}
 	}
 }
-
-

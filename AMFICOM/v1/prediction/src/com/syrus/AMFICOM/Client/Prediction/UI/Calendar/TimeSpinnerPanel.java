@@ -1,20 +1,13 @@
 package com.syrus.AMFICOM.Client.Prediction.UI.Calendar;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
-import javax.swing.JFormattedTextField;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
-import javax.swing.text.DateFormatter;
-import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.*;
 
 public class TimeSpinnerPanel extends JPanel
 {
@@ -89,11 +82,8 @@ public class TimeSpinnerPanel extends JPanel
 
 	public long getSelectedTime()
 	{
-		Date date = (Date )jSpin1.getValue();
-		return date.getTime();
+		return ((Date)jSpin1.getValue()).getTime();
 	}
-
-
 
 	void Spin1_mousePressed(MouseEvent e) {
 		spin_pressed = "left";

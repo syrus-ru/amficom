@@ -1,46 +1,30 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry;
 
-import java.awt.Toolkit;
+import java.awt.Image;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
-import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
-
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrame;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.AbstractApplication;
 
-public class AnalyseExt
+public class AnalyseExt extends AbstractApplication
 {
-	ApplicationContext aContext = new ApplicationContext();
-
-	public AnalyseExt(AnalyseApplicationModelFactory factory)
+	public AnalyseExt()
 	{
-		if(!Environment.canRun(Environment.MODULE_SURVEY))
-			return;
-
-		aContext.setApplicationModel(factory.create());
-		AnalyseMainFrame frame = new AnalyseMainFrame(aContext);
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/survey_mini.gif"));
-		frame.setVisible(true);
+		super(Analyse.APPLICATION_NAME);
+	}
+	
+	protected void init() {
+		super.init();
+		
+		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
+		super.startMainFrame(new AnalyseMainFrame(this.aContext), 
+				(Image) UIManager.get(AnalysisResourceKeys.ICON_SURVEY_MINI));
 	}
 
-	public static void main(String[] args)
-	{
-		Environment.initialize();
-		LangModelAnalyse.initialize();
-		LangModelReport.initialize();
-
-		try {
-			UIManager.setLookAndFeel(Environment.getLookAndFeel());
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-
-		new AnalyseExt(new ReflectometryAnalyseApplicationModelFactory());
+	public static void main(String[] args) {
+		new AnalyseExt();
 	}
 }

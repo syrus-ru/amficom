@@ -265,7 +265,7 @@ public class OpticalOptimizerContext
              "В кабеле "+scl.getName()+" не заданы волокна", "ошибка считывания параметров сети", javax.swing.JOptionPane.OK_OPTION);
     return -1;
        }
-       SchemeCableThread thr = (SchemeCableThread)scl.cable_threads.get(0);
+       SchemeCableThread thr = (SchemeCableThread)scl.cable_threads.iterator().next();
        LinkType cl_type = (LinkType)Pool.get(LinkType.typ, thr.link_type_id);
        if(cl_type!=null)
        { attenuation = Double.parseDouble( ( (Characteristic)cl_type.characteristics.get(atten_str)).value);
@@ -341,8 +341,8 @@ public class OpticalOptimizerContext
     }
   //------------------------------------------------------------------------------------------------------
   public void setCableLinksOptimizeAttributes()
-  { for( Enumeration cls = mdiMain.scheme.getAllCableLinks(); cls.hasMoreElements();) //по всем кабелям ( то есть по всем  рёбрам )
-    { SchemeCableLink scl = (SchemeCableLink)cls.nextElement();
+  { for( Iterator cls = mdiMain.scheme.getAllCableLinks().iterator(); cls.hasNext();) //по всем кабелям ( то есть по всем  рёбрам )
+    { SchemeCableLink scl = (SchemeCableLink)cls.next();
       String scl_id = scl.id;
       ElementAttribute att = (ElementAttribute)scl.attributes.get("optimizerRibAttribute");
       //если этот линк уже был прописан при загрузке в путь, то не передааём его в dll, то есть его  для нас не существует
@@ -378,14 +378,14 @@ public class OpticalOptimizerContext
   }
   //------------------------------------------------------------------------------------------------------
   public void setLinksOptimizeAttributes()
-  { for( Enumeration ls = mdiMain.scheme.getAllLinks(); ls.hasMoreElements();) // по всем линкам
-    { SchemeLink sl = (SchemeLink)ls.nextElement();
+  { for( Iterator ls = this.mdiMain.scheme.getAllLinks().iterator(); ls.hasNext();) // по всем линкам
+    { SchemeLink sl = (SchemeLink)ls.next();
       ElementAttribute att = (ElementAttribute )sl.attributes.get("optimizerRibAttribute");
       // КИСовые линки пропускаем, помечая их как "passive"
       if( isLinkRtuConnected(sl) )
       { if(att==null)
         { att = new ElementAttribute();
-          att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
+          att.id = this.mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
           att.name = "Активность";
           att.type_id = "optimizerRibAttribute";
           att.value = "passive";
@@ -398,7 +398,7 @@ public class OpticalOptimizerContext
       if( isLinkTestedBefore(sl.getId()) )
       { if(att==null)
         { att = new ElementAttribute();
-          att.id = mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
+          att.id = this.mdiMain.aContext.getDataSourceInterface().GetUId(ElementAttribute.typ);
           att.name = "Активность";
           att.type_id = "optimizerRibAttribute";
           att.value = "tested";
@@ -457,8 +457,8 @@ public class OpticalOptimizerContext
   return res;
     for( Iterator paths = original_paths.iterator(); paths.hasNext();) // по всем путям
     { SchemePath sp = (SchemePath)paths.next();
-      for(Enumeration links = sp.links.elements(); links.hasMoreElements();)
-      { PathElement link = (PathElement)links.nextElement();
+      for(Iterator links = sp.links.iterator(); links.hasNext();)
+      { PathElement link = (PathElement)links.next();
         if(link.link_id.equals(link_id))
         {  res = true;
       break;
@@ -473,8 +473,9 @@ public class OpticalOptimizerContext
   // были ли уже связаны узлы, которые соединяются линком, другим линком из пути, который был изначально загружен вместе со схемой
   public boolean isLinkNodesConnectedBefore(SchemeLink sl)
   { boolean res = false;
-    String se1_id = ((SchemeElement)mdiMain.scheme.getSchemeElementByPort(sl.source_port_id)).id;
-    String se2_id = ((SchemeElement)mdiMain.scheme.getSchemeElementByPort(sl.target_port_id)).id;
+
+    String se1_id = ((SchemeElement)this.mdiMain.scheme.getSchemeElementByPort(sl.source_port_id)).id;
+    String se2_id = ((SchemeElement)this.mdiMain.scheme.getSchemeElementByPort(sl.target_port_id)).id;
     String ose1_id, ose2_id, osl_id;
     for(Iterator s = originally_lconnected_nodes.iterator(); s.hasNext(); )
     { ose1_id = (String) s.next();  ose2_id = (String) s.next();  osl_id = (String) s.next();

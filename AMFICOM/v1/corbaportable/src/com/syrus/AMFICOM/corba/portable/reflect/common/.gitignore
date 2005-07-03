@@ -1,0 +1,8 @@
+.nbattrs
+*DefaultFactory.java
+*Helper.java
+*Holder.java
+AbstractEventSource.java
+ImmutableObjectResource.java
+MutableObjectResource.java
+ObjectResource.java

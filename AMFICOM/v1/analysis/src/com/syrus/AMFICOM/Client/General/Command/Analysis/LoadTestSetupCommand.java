@@ -2,87 +2,79 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
-
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
-import com.syrus.AMFICOM.Client.Analysis.TestSetupLoadDialog;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
+import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
-public class LoadTestSetupCommand extends VoidCommand
+public class LoadTestSetupCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	public LoadTestSetupCommand(ApplicationContext aContext, String id)
+	public LoadTestSetupCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 	}
 
 	public Object clone()
 	{
-		return new LoadTestSetupCommand(aContext, traceid);
+		return new LoadTestSetupCommand(aContext);
 	}
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
-		if (bs == null || bs.monitored_element_id.equals(""))
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		if (bs == null || bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
-		TestSetupLoadDialog dialog = new TestSetupLoadDialog (aContext);
+		TestSetupLoadDialog dialog = new TestSetupLoadDialog ();
 		dialog.show();
 
 		if(dialog.ret_code == 0)
 			return;
-		if (!(dialog.resource instanceof TestSetup))
-			return;
+//		if (!(dialog.resource instanceof MeasurementSetup))
+//			return;
 
-		TestSetup ts = (TestSetup)dialog.resource;
+		MeasurementSetup ms = dialog.resource;
+		Heap.setContextMeasurementSetup(ms);
 
-		bs.test_setup_id = ts.getId();
+//		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+//		bs.test_setup_id = ts.getId();
 
-		if (Pool.get("eventparams", "etalon") != null)
+		if (Heap.hasEventParamsForEtalonTrace()) // если эталон есть (уже открыт) - то закрыть
 		{
-			aContext.getDispatcher().notify(new RefChangeEvent("etalon", RefChangeEvent.CLOSE_EVENT));
-			aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));
+			Heap.notifyBsHashRemove(Heap.ETALON_TRACE_KEY); // XXX: вызывается как раз в том случае, когда эталон не удален
+			Heap.setCurrentTracePrimary();
 		}
 
-		AnalysisUtil.load_CriteriaSet(dataSource, ts);
+        try {
+    		AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
+    
+    		if (ms.getEtalon() != null)
+    			AnalysisUtil.load_Etalon(ms);
+        } catch (DataFormatException e) {
+            GUIUtil.showDataFormatError();
+        }
+//
+//		if (ms.getThresholdSet() != null)
+//			AnalysisUtil.load_Thresholds(userId, ms);
 
-		if (!ts.etalon_id.equals(""))
-			AnalysisUtil.load_Etalon(dataSource, ts);
-
-		//		if (!ts.threshold_set_id.equals(""))
-		AnalysisUtil.load_Thresholds(dataSource, ts);
-
-		aContext.getDispatcher().notify(new RefUpdateEvent("etalon",
-				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
-				RefChangeEvent.THRESHOLDS_CALC_EVENT));
-/*		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
-				RefChangeEvent.CLOSE_EVENT));
-		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
-				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-		aContext.getDispatcher().notify(new RefUpdateEvent("primarytrace",
-				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));*/
+        // XXX: are these notifications needed?
+		Heap.notifyPrimaryTraceClosed();
+		Heap.notifyPrimaryTraceOpened();
+		Heap.setCurrentTracePrimary();
 	}
 }

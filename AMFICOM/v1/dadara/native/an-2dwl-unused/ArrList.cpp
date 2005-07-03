@@ -71,3 +71,4 @@ void ArrList::qsort(int(*fcmp)(const void**, const void**))
 	if (used > 1)
 		::qsort(storage, used, sizeof(void*), (int(*)(const void*, const void*) )fcmp);
 }
+

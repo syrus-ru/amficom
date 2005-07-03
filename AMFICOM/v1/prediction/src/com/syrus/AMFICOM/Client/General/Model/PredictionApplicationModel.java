@@ -1,9 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
-import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
+
 
 public class PredictionApplicationModel extends ApplicationModel
 {
@@ -46,7 +43,7 @@ public class PredictionApplicationModel extends ApplicationModel
 		add("menuHelpLicense");
 		add("menuHelpAbout");
 	}
-
+/*
 	public DataSourceInterface getDataSource(SessionInterface si)
 	{
 		String connection = Environment.getConnectionType();
@@ -56,5 +53,5 @@ public class PredictionApplicationModel extends ApplicationModel
 		if(connection.equals("Empty"))
 			return new EmptySurveyDataSource(si);
 		return null;
-	}
+	}*/
 }

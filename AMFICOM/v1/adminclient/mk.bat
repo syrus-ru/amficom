@@ -1,1 +1,1 @@
-nmake /f makeadmin %1
+nmake /f makeadminclient %1

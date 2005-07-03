@@ -1,40 +1,121 @@
+/*
+ * $Id: Environment.java,v 1.26 2005/05/18 14:01:20 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
-//import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.XMLFormatter;
+
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.MetalTheme;
+
+import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-import com.syrus.AMFICOM.Client.General.*;
+
+import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
+
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.UI.AMFICOMMetalTheme;
+import com.syrus.AMFICOM.Client.General.UI.ModuleCodeDialog;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.IniFile;
-import java.awt.*;
-import java.io.IOException;
-import java.util.Vector;
-import javax.swing.*;
-import javax.swing.plaf.metal.*;
 
-public class Environment extends Singleton
+/**
+ * Класс Environment используется для хранения общей для приложения информации.
+ *
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/05/18 14:01:20 $
+ * @module generalclient_v1
+ */
+public final class Environment
 {
-	static private Vector windows = new Vector();
-	static public Dispatcher the_dispatcher = new Dispatcher();
+	/**
+	 * @deprecated use Environment.getDispatcher()
+	 */
+	public static Dispatcher the_dispatcher = new Dispatcher();
 
-	static private IniFile iniFile;
-	static private String iniFileName = "Application.properties";
+	private static ArrayList windows = new ArrayList();
 
-	static private String connection = "RISD";
-	static private String checkRun = "no";
+	private static IniFile iniFile;
+	private static String iniFileName = "Application.properties";
 
-	static private boolean initiated = false;
+	private static JFrame activeWindow = null;
 
-	static private JFrame activeWindow = null;
+	/**
+	 * @deprecated
+	 */
+	private static final String FIELD_CONNECTION = "connection";
 
-	static private boolean beep = false;
+	/**
+	 * @deprecated
+	 */
+	public static final String CONNECTION_RISD = "RISD";
+	/**
+	 * @deprecated
+	 */
+	public static final String CONNECTION_EMPTY = "Empty";
+	/**
+	 * @deprecated
+	 */
+	public static final String CONNECTION_JDBC = "JDBC";
+
+	/**
+	 * @deprecated
+	 */
+	private static String connection = CONNECTION_RISD;
+
+	/** Run */
+	private static final String FIELD_RUN = "run";
+
+	private static final String RUN_INSTALLED = "installed";
+	private static final String RUN_NO = "no";
+	private static final String RUN_YES = "yes";
+
+	private static String checkRun = RUN_NO;
+
+	/** Beep */
+	private static final String FIELD_BEEP = "beep";
 
 	private static final String BEEP_DA = "da";
 	private static final String BEEP_NET = "net";
+
+	private static boolean beep = false;
+
+	/** Look and feel */
+	private static final String FIELD_LOOK_AND_FEEL = "lookAndFeel";
 
 	private static final String LOOK_AND_FEEL_GTK = "GTK";
 	private static final String LOOK_AND_FEEL_KUNSTSTOFF = "Kunststoff";
@@ -48,30 +129,112 @@ public class Environment extends Singleton
 
 	private static String lookAndFeel;
 
+	/** Domain */
+	private static final String FIELD_DOMAIN = "domain";
+
+	private static Identifier domainId;
+
+	/** Debug mode */
+	private static final String FIELD_DEBUG = "gubed";
+
 	private static boolean debugMode = false;
 
+	/** Log handler */
+	private static final String FIELD_LOG_HANDLER = "loghandler";
+
+	private static final String LOG_HANDLER_FILE = "file";
+	private static final String LOG_HANDLER_MEMORY = "memory";
+	private static final String LOG_HANDLER_SOCKET = "socket";
+	private static final String LOG_HANDLER_CONSOLE = "console";
+
+	private static Handler handler;
+
+	/** Log level */
+	private static final String FIELD_LOG_LEVEL = "loglevel";
+
+	private static final String LOG_LEVEL_ID_OFF = "off";
+	private static final String LOG_LEVEL_ID_SEVERE = "severe";
+	private static final String LOG_LEVEL_ID_WARNING = "warning";
+	private static final String LOG_LEVEL_ID_INFO = "info";
+	private static final String LOG_LEVEL_ID_CONFIG = "config";
+	private static final String LOG_LEVEL_ID_FINE = "fine";
+	private static final String LOG_LEVEL_ID_FINER = "finer";
+	private static final String LOG_LEVEL_ID_FINEST = "finest";
+	private static final String LOG_LEVEL_ID_ALL = "all";
+
+	private static Level logLevel;
+
+	/** Log formatter */
+	private static final String FIELD_LOG_FORMATTER = "logformatter";
+
+	private static final String LOG_FORMATTER_XML = "xml";
+	private static final String LOG_FORMATTER_SIMPLE = "simple";
+
+	private static Formatter formatter;
+
+	/** Log file */
+	private static String logFileName;
+
+	public static final Level LOG_LEVEL_SEVERE = Level.SEVERE;
+	public static final Level LOG_LEVEL_WARNING = Level.WARNING;
+	public static final Level LOG_LEVEL_INFO = Level.INFO;
+	public static final Level LOG_LEVEL_CONFIG = Level.CONFIG;
+	public static final Level LOG_LEVEL_FINE = Level.FINE;
+	public static final Level LOG_LEVEL_FINER = Level.FINER;
+	public static final Level LOG_LEVEL_FINEST = Level.FINEST;
+
+	private static LookAndFeel lookAndFeel2;
+	
 	static
 	{
-		LangModel.initialize();
-//		LangModelReport.initialize();
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		MetalTheme metalTheme = new AMFICOMMetalTheme();
+		MetalLookAndFeel.setCurrentTheme(metalTheme);
+		KunststoffLookAndFeel.setCurrentTheme(metalTheme);
+		
+		
+		
 		// load values from properties file
 		try
 		{
 			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
-			connection = iniFile.getValue("connection");
-			checkRun = iniFile.getValue("run");
-			lookAndFeel = iniFile.getValue("lookAndFeel");
+			connection = iniFile.getValue(FIELD_CONNECTION);
+			checkRun = iniFile.getValue(FIELD_RUN);
+			lookAndFeel = iniFile.getValue(FIELD_LOOK_AND_FEEL);
+			
+			lookAndFeel2 = getLookAndFeel2();
+			try {
+				UIManager.setLookAndFeel(lookAndFeel2);
+			} catch (UnsupportedLookAndFeelException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			try {
+				domainId = new Identifier(iniFile.getValue(FIELD_DOMAIN));
+			}catch(Exception e) {
+				domainId = Identifier.VOID_IDENTIFIER;
+			}
+			
 
-			String d_val = iniFile.getValue("gubed");
+			String d_val = iniFile.getValue(FIELD_DEBUG);
 			debugMode = (d_val != null);
 
-			String b_val = iniFile.getValue("beep");
+			String b_val = iniFile.getValue(FIELD_BEEP);
 			beep = (b_val == null) ? false : b_val.equals(BEEP_DA);
 			
 			System.out.println("read connection = " + connection);
 			if(connection == null)
 				SetDefaults();
+
+			String lf_val = iniFile.getValue(FIELD_LOG_FORMATTER);
+			String ll_val = iniFile.getValue(FIELD_LOG_LEVEL);
+			String lh_val = iniFile.getValue(FIELD_LOG_HANDLER);
+			initLog(lh_val, ll_val, lf_val);
+			initUIConstats();
 		}
 		catch(IOException e)
 		{
@@ -79,15 +242,243 @@ public class Environment extends Singleton
 			SetDefaults();
 		}
 	}
+	
+	private Environment(){
+		assert false;
+	}
+	
+	private static void initUIConstats() {
+		UIManager.put(ResourceKeys.SIMPLE_DATE_FORMAT, new SimpleDateFormat(LangModel
+				.getString(ResourceKeys.SIMPLE_DATE_FORMAT)));
+		UIManager.put(ResourceKeys.ICON_OPEN_SESSION, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(ResourceKeys.ICON_GENERAL, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/general.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_OPEN_FILE, new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_ADD_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addfile.gif")));
+		UIManager.put(ResourceKeys.ICON_REMOVE_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_PATHMODE , new ImageIcon(Toolkit
+			 .getDefaultToolkit().getImage(
+			 "images/pathmode.gif")
+			 .getScaledInstance(15, 15,
+			 Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP,
+		new ImageIcon(Toolkit
+			 .getDefaultToolkit().getImage(
+			 "images/testsetup.gif")
+			 .getScaledInstance(15, 15,
+			 Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.ICON_MINI_RESULT, new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif")
+										.getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(ResourceKeys.IMAGE_LOGIN_LOGO, new UIDefaults.LazyValue() {
 
-	protected Environment()
+			public Object createValue(UIDefaults table) {
+				return new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
+			}
+		});
+		
+		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new Insets(0, 0, 0, 0);
+			}
+		});
+		
+		UIManager.put(ResourceKeys.INSETS_ICONED_BUTTON, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new Insets(1, 1, 1, 1);
+			}
+		});
+
+		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new EmptyBorder(1, 2, 1, 2);
+			}
+		});
+
+		UIManager.put(ResourceKeys.SIZE_BUTTON, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new Dimension(24, 24);
+			}
+		});
+		
+		UIManager.put(ResourceKeys.SIZE_NULL , new Dimension(0,0));
+		
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		
+		defaults.put("Table.background", Color.WHITE);
+		defaults.put("Table.foreground", Color.BLACK);
+		defaults.put("Table.gridColor", Color.BLACK);
+		defaults.put("Viewport.background", Color.WHITE);
+		
+		Font font = new Font("Dialog", Font.PLAIN, 10);
+		
+		defaults.put("TextField.font", font);
+		
+		defaults.put("ComboBox.font", font);
+		defaults.put("ComboBox.background", defaults.get("window"));
+		defaults.put("ComboBox.disabledBackground", defaults.get("window"));
+		
+		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
+	}
+
+	public static Identifier getDomainId()
 	{
+		return domainId;
+	}
+
+	private static void initLog(String lh, String ll, String lf)
+	{
+		try
+		{
+			if(lh.equalsIgnoreCase(LOG_HANDLER_FILE))
+			{
+				logFileName = "./logs/" + System.currentTimeMillis() + ".log";
+				handler = new FileHandler(logFileName);
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_CONSOLE))
+			{
+				handler = new ConsoleHandler();
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_SOCKET))
+			{
+				throw new UnsupportedOperationException();
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_MEMORY))
+			{
+				throw new UnsupportedOperationException();
+			}
+		}
+		catch(Exception e)
+		{
+			handler = new ConsoleHandler();
+		}
+		
+		try
+		{
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_OFF))
+			{
+				logLevel = Level.OFF;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_SEVERE))
+			{
+				logLevel = Level.SEVERE;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_WARNING))
+			{
+				logLevel = Level.WARNING;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_INFO))
+			{
+				logLevel = Level.INFO;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_CONFIG))
+			{
+				logLevel = Level.CONFIG;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINE))
+			{
+				logLevel = Level.FINE;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINER))
+			{
+				logLevel = Level.FINER;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINEST))
+			{
+				logLevel = Level.FINEST;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_ALL))
+			{
+				logLevel = Level.ALL;
+			}
+			handler.setLevel(logLevel);
+		}
+		catch(Exception e)
+		{
+			handler.setLevel(Level.WARNING);
+		}
+		
+		try
+		{
+			if(lf.equalsIgnoreCase(LOG_FORMATTER_XML))
+			{
+				formatter = new XMLFormatter();
+			}
+			else
+			if(lf.equalsIgnoreCase(LOG_FORMATTER_SIMPLE))
+			{
+				formatter = new SimpleFormatter();
+			}
+			handler.setFormatter(formatter);
+		}
+		catch(Exception e)
+		{
+			handler.setFormatter(new SimpleFormatter());
+		}
+	}
+
+	public static void log(String text)
+	{
+		log(Level.CONFIG, text);
+	}
+
+	public static void log(Level level, String text)
+	{
+		log(level, text, null);
+	}
+
+	public static void log(Level level, String text, String className)
+	{
+		log(level, text, className, null);
+	}
+
+	public static void log(Level level, String text, String className, String methodName)
+	{
+		log(level, text, className, methodName, null);
+	}
+
+	public static synchronized void log(Level level, String text, String className, String methodName, Throwable throwable)
+	{
+		LogRecord logRecord;
+		logRecord = new LogRecord(level, text);
+		logRecord.setLoggerName("");
+		if(className != null)
+		{
+			logRecord.setMillis(System.currentTimeMillis());
+			logRecord.setSourceClassName(className);
+		}
+		if(methodName != null)
+			logRecord.setSourceMethodName(methodName);
+		if(throwable != null)
+			logRecord.setThrown(throwable);
+		handler.publish(logRecord);
 	}
 
 	static public void SetDefaults()
 	{
-		connection = "Empty";
-		checkRun = "yes";
+		connection = CONNECTION_EMPTY;
+		checkRun = RUN_YES;
 		lookAndFeel = LOOK_AND_FEEL_WINDOWS;
 	}
 
@@ -101,61 +492,44 @@ public class Environment extends Singleton
 		return beep;
 	}
 
-	static public void initialize()
+	/**
+	 * @deprecated Method body is empty, do not use anymore.
+	 */
+	public static void initialize()
 	{
-		if(!initiated)
-		{
-//			SystemLogWriter.initialize();
-			initiated = true;
-		}
 	}
 
-	static
-	{
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JDialog.setDefaultLookAndFeelDecorated(true);
-		MetalTheme metalTheme = new AMFICOMMetalTheme();
-		MetalLookAndFeel.setCurrentTheme(metalTheme);
-		KunststoffLookAndFeel.setCurrentTheme(metalTheme);
+	
+	/**
+	 * @deprecated look and feel setups at start self
+	 * @return look and feel
+	 */
+	public static LookAndFeel getLookAndFeel() {
+		return lookAndFeel2;
 	}
-
-	public static LookAndFeel getLookAndFeel()
-	{
-		try
-		{
-			LookAndFeel plaf;
+	
+	private static LookAndFeel getLookAndFeel2() {
+		try {
+			LookAndFeel plaf = null;
 			if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL))
 				plaf = (LookAndFeel) (MetalLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF)
-				|| lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF_SHORT))
-				plaf = (LookAndFeel)
-					(KunststoffLookAndFeel.class.newInstance());
+					|| lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF_SHORT))
+				plaf = (LookAndFeel) (KunststoffLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_WINDOWS))
 				plaf = (LookAndFeel) (WindowsLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF))
 				plaf = (LookAndFeel) (MotifLookAndFeel.class.newInstance());
-//			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
-//				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
+			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
+				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
 			else
 				return getDefaultLookAndFeel();
 			if (plaf.isSupportedLookAndFeel())
 				return plaf;
-			else
-				return getDefaultLookAndFeel();
-		} 
-		catch (NullPointerException npe)
-		{
-			/*
-			 * Thrown if no "lookAndFeel" key in the config file was found.
-			 */
 			return getDefaultLookAndFeel();
-		}
-		catch (IllegalAccessException iae)
-		{
+		} catch (IllegalAccessException iae) {
 			return getDefaultLookAndFeel();
-		}
-		catch (InstantiationException ie)
-		{
+		} catch (InstantiationException ie) {
 			return getDefaultLookAndFeel();
 		}
 	}
@@ -172,75 +546,30 @@ public class Environment extends Singleton
 		}
 		catch (Exception e)
 		{
-			return (LookAndFeel) (UIManager.getLookAndFeel());
+			return UIManager.getLookAndFeel();
 		}
 	}
 
-	static public String getConnectionType()
+	public static Dispatcher getDispatcher()
+	{
+		return the_dispatcher;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public static String getConnectionType()
 	{
 		return connection;
 	}
 
-	static public ConnectionInterface getDefaultConnectionInterface()
-	{
-		System.out.println("	connection = " + connection);
-		if(connection.equals("JDBC"))
-		{
-			try
-			{
-				Class cl = Class.forName(
-						"com.syrus.AMFICOM.Client.General.JDBCConnectionInfo",
-						true,
-						Environment.class.getClassLoader());
-//				Constructor cons = cl.getConstructor(new Class[] {});
-				ConnectionInterface ci = (ConnectionInterface )cl.newInstance();
-//				ConnectionInterface ci = (ConnectionInterface )(cons.newInstance(new Object[] {}));
-				connection = "RISD";
-				return ci;
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-				return new EmptyConnectionInfo();
-			}
-		}
-		else
-		if(connection.equals("RISD"))
-			return new RISDConnectionInfo();
-		else
-		if(connection.equals("Empty"))
-			return new EmptyConnectionInfo();
-		else
-			return new EmptyConnectionInfo();
-	}
-
-	static public SessionInterface getDefaultSessionInterface(ConnectionInterface ci)
-	{
-		if(ci instanceof RISDConnectionInfo)
-			return new RISDSessionInfo(ci);
-		else
-		if(ci instanceof EmptyConnectionInfo)
-			return new EmptySessionInfo(ci);
-		return null;
-	}
-
-	static public DataSourceInterface getDefaultDataSourceInterface(SessionInterface si)
-	{
-		if(si instanceof RISDSessionInfo)
-			return new RISDDataSource(si);
-		else
-		if(si instanceof EmptySessionInfo)
-			return new EmptyDataSource(si);
-		return null;
-	}
-
-	static public void addWindow(Window window)
+	public static void addWindow(Window window)
 	{
 		System.out.println("new window " + window.getName());
 		windows.add(window);
 	}
 
-	static public void disposeWindow(Window window)
+	public static void disposeWindow(Window window)
 	{
 		System.out.println("close window " + window.getName());
 		windows.remove(window);
@@ -248,24 +577,33 @@ public class Environment extends Singleton
 		if(windows.isEmpty())
 		{
 			System.out.println("exit process");
-			try
-			{
-				RISDSessionInfo.getActiveSession().CloseSession();
-			}
-			catch (Exception ex)
-			{
-				// no session to close
-			}
+			saveProperties();			
 			System.exit(0);
 		}
 	}
+	
+	private static void saveProperties()
+	{
+		try
+		{
+			domainId = LoginManager.getDomainId();
+			if (domainId != null)
+				iniFile.setValue(FIELD_DOMAIN, domainId);
+			iniFile.saveKeys();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 
-	static public void setActiveWindow(JFrame window)
+
+	public static void setActiveWindow(JFrame window)
 	{
 		activeWindow = window;
 	}
 
-	static public JFrame getActiveWindow()
+	public static JFrame getActiveWindow()
 	{
 		return activeWindow;
 	}
@@ -323,9 +661,9 @@ public class Environment extends Singleton
 	{
 		if (checkRun == null)
 			return false;
-		if (checkRun.equals("no"))
+		if (checkRun.equals(RUN_NO))
 			return true;
-		if (checkRun.equals("installed"))
+		if (checkRun.equals(RUN_INSTALLED))
 		{
 			if (code[module_index].length() == 0)
 				return true;

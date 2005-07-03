@@ -2,14 +2,9 @@ package com.syrus.AMFICOM.Client.Prediction.UI.Selector;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class ParameterSelector extends JInternalFrame

@@ -1,0 +1,4 @@
+*
+						 * 0 means either zero or unspecified length.
+						 *
+						 * @see #physicalLength()

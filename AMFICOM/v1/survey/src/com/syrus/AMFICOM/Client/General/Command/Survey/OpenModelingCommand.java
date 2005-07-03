@@ -1,18 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import java.awt.*; 
-import javax.swing.*; 
-
-import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.Survey.*;
-//import com.syrus.AMFICOM.Client.Resource.Analysis.*;
-//import com.syrus.AMFICOM.Client.Survey.Analysis.*;
 
-public class OpenModelingCommand extends VoidCommand 
+public class OpenModelingCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
@@ -20,6 +12,7 @@ public class OpenModelingCommand extends VoidCommand
 
 	public OpenModelingCommand()
 	{
+		// nothing
 	}
 
 	public OpenModelingCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
@@ -62,12 +55,8 @@ public class OpenModelingCommand extends VoidCommand
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
 
-        System.out.println("Starting Modeling window");
+		  System.out.println("Starting Modeling window");
 
-		LangModelModel.initialize();
-		LangModelAnalyse.initialize();
-		LangModelSchematics.initialize();
-		LangModelMap.initialize();
 		new com.syrus.AMFICOM.Client.Model.Model(new DefaultModelApplicationModelFactory());
 /*
 		try
@@ -99,3 +88,4 @@ public class OpenModelingCommand extends VoidCommand
 */
 	}
 }
+

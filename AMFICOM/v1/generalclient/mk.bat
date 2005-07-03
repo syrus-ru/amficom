@@ -1,1 +1,1 @@
-nmake /f makegeneral %1
+nmake /f makegeneralclient %1

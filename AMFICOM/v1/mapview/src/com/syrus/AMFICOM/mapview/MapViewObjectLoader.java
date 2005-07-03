@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewObjectLoader.java,v 1.1.1.1 2004/12/22 15:21:52 cvsadmin Exp $
+* $Id: MapViewObjectLoader.java,v 1.10 2005/06/22 19:26:05 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,36 +8,27 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.List;
+import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.1.1.1 $, $Date: 2004/12/22 15:21:52 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.10 $, $Date: 2005/06/22 19:26:05 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public interface MapViewObjectLoader {
+	void delete(final Set<? extends Identifiable> objects);
 
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
+	Set loadMapViews(final Set<Identifier> ids) throws ApplicationException;
 
-	void delete(List ids) throws CommunicationException, DatabaseException;
+	Set loadMapViewsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException;
 
-	MapView loadMapView(Identifier id) throws DatabaseException, CommunicationException;
+	Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
-	List loadMapViews(List ids) throws DatabaseException, CommunicationException;
-
-
-	List loadMapViewsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
-
-	void saveMapView(MapView map, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;	
-
-	void saveMapViews(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
+	void saveMapViews(final Set<MapView> objects, final boolean force) throws ApplicationException;
 }

@@ -1,41 +1,16 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeListSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 
-import com.syrus.AMFICOM.Client.Schematics.Elements.SchemePropsPanel;
 
-public class SchemeCopyCommand extends VoidCommand
+
+public class SchemeCopyCommand extends AbstractCommand
 {
-	ApplicationContext aContext;
+	/*ApplicationContext aContext;
 	SchemePanel schemePanel;
 	UgoPanel ugoPanel;
 
@@ -53,10 +28,6 @@ public class SchemeCopyCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if (dataSource == null)
-			return;
-
 		SchemeGraph graph = schemePanel.getGraph();
 		SchemeGraph ugo_graph = ugoPanel.getGraph();
 
@@ -67,55 +38,61 @@ public class SchemeCopyCommand extends VoidCommand
 		}
 
 		SaveDialog sd;
+		Scheme scheme = schemePanel.getSchemeResource().getScheme();
 		while (true)
 		{
+
 			sd = new SaveDialog(aContext, aContext.getDispatcher(), "Сохранение схемы");
-			int ret = sd.init(schemePanel.scheme, schemePanel.scheme.getName(), false);
+			int ret = sd.init(scheme, scheme.getName(), false);
 
 			if (ret == 0)
 				return;
 
-			if (!MyUtil.validName(sd.name))
+			if (!MiscUtil.validName(sd.name))
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название схемы.", "Ошибка", JOptionPane.OK_OPTION);
 			else
 				break;
 		}
 
-		Scheme scheme = (Scheme)schemePanel.scheme.clone(aContext.getDataSourceInterface());
-		scheme.serializable_ugo = ugo_graph.getArchiveableState(ugo_graph.getRoots());
-		scheme.serializable_cell = graph.getArchiveableState(graph.getRoots());
+		scheme = (Scheme) scheme.clone();
+		scheme.getUgoCell().setData((List)ugo_graph.getArchiveableState(ugo_graph.getRoots()));
+		scheme.getSchemeCell().setData((List)graph.getArchiveableState(graph.getRoots()));
 
-		scheme.name = sd.name;
-		scheme.description = sd.description;
-		scheme.created = System.currentTimeMillis();
-		scheme.created_by = dataSource.getSession().getUserId();
-		scheme.modified_by = dataSource.getSession().getUserId();
-		scheme.owner_id = dataSource.getSession().getUserId();
-		scheme.domain_id = dataSource.getSession().getDomainId();
+		scheme.setName(sd.name);
+		scheme.setDescription(sd.description);
+//		scheme.created = System.currentTimeMillis();
 
-		Pool.put(Scheme.typ, scheme.getId(), scheme);
+		final Identifier domainId = new Identifier(
+				((RISDSessionInfo) aContext
+						.getSessionInterface())
+						.getAccessIdentifier().domain_id);
+		scheme.setDomainId(domainId);
 
-		boolean res = scheme.pack();
+//		if (!res)
+//		{
+//			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
+//																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
+//			return;
+//		}
 
-		if (!res)
-		{
+		try {
+			StorableObjectPool.putStorableObject(scheme);
+
+			JOptionPane.showMessageDialog(
+					Environment.getActiveWindow(),
+					"Схема " + scheme.getName() + " успешно сохранена",
+					"Сообщение",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			aContext.getDispatcher().notify(new TreeListSelectionEvent("",
+					TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+		} catch (ApplicationException ex) {
+			ex.printStackTrace();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка сохранения схемы " +
 																		scheme.getName(), "Ошибка", JOptionPane.OK_OPTION);
-			return;
 		}
 
-		dataSource.SaveScheme(scheme.getId());
-
-		JOptionPane.showMessageDialog(
-				Environment.getActiveWindow(),
-				"Схема "+ scheme.getName() + " успешно сохранена",
-				"Сообщение",
-				JOptionPane.INFORMATION_MESSAGE);
-
-		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
-				TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
-
-		Pool.removeHash("clonedids");
-	}
+		Pool.removeMap("clonedids");
+	}*/
 }
 

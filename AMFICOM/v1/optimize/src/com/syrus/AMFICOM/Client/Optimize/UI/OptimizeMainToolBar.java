@@ -21,14 +21,14 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 	private Dispatcher dispatcher;
 	public JButton start = new JButton();
 	public JButton stop  = new JButton();
-
+	
 	public JButton view_scheme  = new JButton();
-	public JButton view_map     = new JButton();
+ 	public JButton view_map     = new JButton();
 	public JButton view_all     = new JButton();
 	public JButton print        = new JButton();
-  public JButton open_scheme  = new JButton();
-  public JButton open_map     = new JButton();
-  public JButton new_session = new JButton();
+	public JButton open_scheme  = new JButton();
+	public JButton open_map     = new JButton();
+	public JButton new_session = new JButton();
 
 	public final static int img_sz = 16;
 	public final static int btn_sz = 24;
@@ -51,7 +51,7 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		dispatcher.register(this,"scheme_is_opened");
 		dispatcher.register(this,"startevent");
 		dispatcher.register(this,"stopevent");
-    dispatcher.register(this,"close_all");
+		dispatcher.register(this,"close_all");
 	}
 	//-----------------------------------------------------------------------
 	private void jbInit() throws Exception
@@ -61,7 +61,7 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		start.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/opt_start.gif")));
 		start.setMaximumSize(buttonSize);
 		start.setPreferredSize(buttonSize);
-		start.setToolTipText(LangModelOptimize.ToolTip("menuOptimizeStart"));
+		start.setToolTipText(LangModelOptimize.getString("menuOptimizeStart"));
 		start.setName("menuOptimizeStart");
 		start.addActionListener(actionAdapter);
 		start.setEnabled(false);
@@ -69,7 +69,7 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		stop.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/opt_stop.gif")));
 		stop.setMaximumSize(buttonSize);
 		stop.setPreferredSize(buttonSize);
-		stop.setToolTipText(LangModelOptimize.ToolTip("menuOptimizeStop"));
+		stop.setToolTipText(LangModelOptimize.getString("menuOptimizeStop"));
 		stop.setName("menuOptimizeStop");
 		stop.addActionListener(actionAdapter);
 		stop.setEnabled(false);
@@ -77,7 +77,7 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		view_scheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")));
 		view_scheme.setMaximumSize(buttonSize);
 		view_scheme.setPreferredSize(buttonSize);
-		view_scheme.setToolTipText(LangModelOptimize.ToolTip("menuViewScheme"));
+		view_scheme.setToolTipText(LangModelOptimize.getString("menuViewScheme"));
 		view_scheme.setName("menuViewScheme");
 		view_scheme.addActionListener(actionAdapter);
 		view_scheme.setEnabled(false);
@@ -85,7 +85,7 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		view_map.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/map.gif")));
 		view_map.setMaximumSize(buttonSize);
 		view_map.setPreferredSize(buttonSize);
-		view_map.setToolTipText(LangModelOptimize.ToolTip("menuViewMap"));
+		view_map.setToolTipText(LangModelOptimize.getString("menuViewMap"));
 		view_map.setName("menuViewMap");
 		view_map.addActionListener(actionAdapter);
 		view_map.setEnabled(false);
@@ -93,52 +93,44 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 		view_all.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/opt_view_all.gif")));
 		view_all.setMaximumSize(buttonSize);
 		view_all.setPreferredSize(buttonSize);
-		view_all.setToolTipText(LangModelOptimize.ToolTip("menuViewShowall"));
+		view_all.setToolTipText(LangModelOptimize.getString("menuViewShowall"));
 		view_all.setName("menuViewShowall");
 		view_all.addActionListener(actionAdapter);
 		view_all.setEnabled(false);
 
-//		print.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/opt_print.gif")));
-//		print.setMaximumSize(buttonSize);
-//		print.setPreferredSize(buttonSize);
-//		print.setToolTipText("печать");//print.setToolTipText(LangModelOptimize.ToolTip("menuViewShowall"));
-//		print.setName("menuServicePrintScheme");
-//		print.addActionListener(actionAdapter);
-//		print.setEnabled(false);
-
-    open_scheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif")
-                                      .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_open_scheme.gif")));
-    open_scheme.setMaximumSize(buttonSize);
-    open_scheme.setPreferredSize(buttonSize);
-    open_scheme.setToolTipText(LangModelOptimize.ToolTip("menuSchemeOpen"));
-    open_scheme.setName("menuSchemeOpen");
-    open_scheme.addActionListener(actionAdapter);
-    open_scheme.setEnabled(false);
-
-    open_map.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
-                                   .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_open_map.gif")));
-    open_map.setMaximumSize(buttonSize);
-    open_map.setPreferredSize(buttonSize);
-    open_map.setToolTipText(LangModelOptimize.ToolTip("menuMapOpen"));
-    open_map.setName("menuMapOpen");
-    open_map.addActionListener(actionAdapter);
-    open_map.setEnabled(false);
-
-    new_session.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
-                                      .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_new_session.gif")));
-    new_session.setMaximumSize(buttonSize);
-    new_session.setPreferredSize(buttonSize);
-    new_session.setToolTipText(LangModelOptimize.ToolTip("menuSessionNew"));
-    new_session.setName("menuSessionNew");
-    new_session.addActionListener(actionAdapter);
-    new_session.setEnabled(true);
-
-    add(new_session);
-    addSeparator();//addSeparator(new Dimension(btn_sz,btn_sz));
-    add(open_map);
-    add(open_scheme);
-    addSeparator();
-    add(start);
+	    open_scheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif")
+	                                      .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_open_scheme.gif")));
+	    open_scheme.setMaximumSize(buttonSize);
+	    open_scheme.setPreferredSize(buttonSize);
+	    open_scheme.setToolTipText(LangModelOptimize.getString("menuSchemeOpen"));
+	    open_scheme.setName("menuSchemeOpen");
+	    open_scheme.addActionListener(actionAdapter);
+	    open_scheme.setEnabled(false);
+	
+	    open_map.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")
+	                                   .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_open_map.gif")));
+	    open_map.setMaximumSize(buttonSize);
+	    open_map.setPreferredSize(buttonSize);
+	    open_map.setToolTipText(LangModelOptimize.getString("menuMapOpen"));
+	    open_map.setName("menuMapOpen");
+	    open_map.addActionListener(actionAdapter);
+	    open_map.setEnabled(false);
+	
+	    new_session.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
+	                                      .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));//getImage("images/main/opt_new_session.gif")));
+	    new_session.setMaximumSize(buttonSize);
+	    new_session.setPreferredSize(buttonSize);
+	    new_session.setToolTipText(LangModelOptimize.getString("menuSessionNew"));
+	    new_session.setName("menuSessionNew");
+	    new_session.addActionListener(actionAdapter);
+	    new_session.setEnabled(true);
+	
+	    add(new_session);
+	    addSeparator();//addSeparator(new Dimension(btn_sz,btn_sz));
+	    add(open_map);
+	    add(open_scheme);
+	    addSeparator();
+	    add(start);
 		add(stop);
 		addSeparator();
 		add(view_scheme);
@@ -154,21 +146,6 @@ public class OptimizeMainToolBar extends JToolBar implements ApplicationModelLis
 	//-----------------------------------------------------------------------
 	public void modelChanged(String e[])
 	{
-//    // buttonFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
-//    // buttonFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
-//		start.setVisible(aModel.isVisible("menuOptimizeStart"));
-//		start.setEnabled(aModel.isEnabled("menuOptimizeStart"));
-//		stop.setVisible(aModel.isVisible("menuOptimizeStop"));
-//		stop.setEnabled(aModel.isEnabled("menuOptimizeStop"));
-//		view_scheme.setVisible(aModel.isVisible("menuViewScheme)"));
-//		view_scheme.setEnabled(aModel.isEnabled("menuViewScheme)"));
-//		view_map.setVisible(aModel.isVisible("menuViewMap)"));
-//		view_map.setEnabled(aModel.isEnabled("menuViewMap)"));
-//		view_all.setVisible(aModel.isVisible("menuViewShowAll)"));
-//		view_all.setEnabled(aModel.isEnabled("menuViewShowAll)"));
-//    open_scheme.setVisible(aModel.isVisible("menuOpenScheme)"));
-//    open_scheme.setEnabled(aModel.isEnabled("menuOpenScheme)"));
-//		// кнoпка print пока не дублируетс в меню
 	}
 	//-----------------------------------------------------------------------
 	public void this_actionPerformed(ActionEvent e)

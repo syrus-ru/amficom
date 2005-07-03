@@ -1,29 +1,30 @@
+/*
+ * $Id: MapdbInterfaceSave4.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-// Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
-import oracle.sql.*;
-import java.text.*;
-
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
+import java.sql.SQLException;
 
-import com.syrus.AMFICOM.server.*;
-
-public class MapdbInterfaceSave4 extends Object
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
+public class MapdbInterfaceSave4
 {
 	protected MapdbInterfaceSave4()
 	{
 	}
 
-	static public int saveJMaps(ISMMapContext_Transferable[] mapseq)
+	public static int saveJMaps(ISMMapContext_Transferable[] mapseq)
 	{
 		int i;
 		int j;
@@ -114,7 +115,7 @@ public class MapdbInterfaceSave4 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveJMapKISs(MapKISElement_Transferable[] kisseq)
+	public static int saveJMapKISs(MapKISElement_Transferable[] kisseq)
 	{
 		int i;
 		int j;
@@ -227,7 +228,7 @@ public class MapdbInterfaceSave4 extends Object
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int saveJMapPaths(MapPathElement_Transferable[] pathseq)
+	public static int saveJMapPaths(MapPathElement_Transferable[] pathseq)
 	{
 		int i;
 		int j;
@@ -380,6 +381,4 @@ public class MapdbInterfaceSave4 extends Object
 		}// for (paths)
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-

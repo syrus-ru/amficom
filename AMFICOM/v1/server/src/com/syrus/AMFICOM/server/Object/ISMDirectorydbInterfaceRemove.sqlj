@@ -1,26 +1,28 @@
+/*
+ * $Id: ISMDirectorydbInterfaceRemove.sqlj,v 1.2 2004/06/29 07:12:58 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.server.Object;
 
-import sqlj.runtime.*;
-import sqlj.runtime.ref.*;
-import java.sql.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import java.sql.SQLException;
 
-import java.util.Vector;
-
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-
-import com.syrus.AMFICOM.server.*;
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2004/06/29 07:12:58 $
+ * @author $Author: bass $
+ * @module server_v1
+ */
 public class ISMDirectorydbInterfaceRemove
 {
 	protected ISMDirectorydbInterfaceRemove()
 	{
 	}
 
-	static public int removeAccessPortTypes(
+	public static int removeAccessPortTypes(
 			String[] aporttype_ids)
 	{
 		int i;
@@ -56,7 +58,7 @@ public class ISMDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removeKISTypes(
+	public static int removeKISTypes(
 			String[] kistype_ids)
 	{
 		int i;
@@ -90,7 +92,7 @@ public class ISMDirectorydbInterfaceRemove
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int removePathTypes(
+	public static int removePathTypes(
 			String[] pathtype_ids)
 	{
 		int i;
@@ -118,6 +120,4 @@ public class ISMDirectorydbInterfaceRemove
 		}
 		return Constants.ERROR_NO_ERROR;
 	}
-
 }
-
