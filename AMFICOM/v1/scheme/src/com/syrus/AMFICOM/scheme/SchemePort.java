@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.37 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemePort.java,v 1.38 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
@@ -31,7 +30,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
@@ -39,7 +40,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -230,8 +231,13 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	@Override
 	public IdlSchemePort getTransferable(final ORB orb) {
-		return new IdlSchemePort(
-				super.getHeaderTransferable(orb), super.getName(),
+		return IdlSchemePortHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
 				super.portTypeId.getTransferable(),
@@ -253,11 +259,12 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemePort schemePort = (IdlSchemePort) transferable;
-		super.fromTransferable(schemePort.header, schemePort.name,
+		super.fromTransferable(schemePort, schemePort.name,
 				schemePort.description,
 				schemePort.directionType, schemePort.portTypeId,
 				schemePort.portId, schemePort.measurementPortId,

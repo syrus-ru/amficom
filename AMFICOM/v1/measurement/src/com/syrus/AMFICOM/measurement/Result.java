@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.68 2005/06/25 17:50:45 bass Exp $
+ * $Id: Result.java,v 1.69 2005/07/03 19:16:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,13 +29,15 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlResult;
+import com.syrus.AMFICOM.measurement.corba.IdlResultHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/06/25 17:50:45 $
+ * @version $Revision: 1.69 $, $Date: 2005/07/03 19:16:30 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -101,9 +102,9 @@ public final class Result extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlResult rt = (IdlResult) transferable;
-		super.fromTransferable(rt.header);
+		super.fromTransferable(rt);
 
 		this.sort = rt.sort.value();
 		Identifier actionId = null;
@@ -146,7 +147,13 @@ public final class Result extends StorableObject {
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
 		final IdlIdentifier nonVoidIdlIdentifier = this.action.getId().getTransferable();
-		return new IdlResult(super.getHeaderTransferable(orb),
+		return IdlResultHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT)
 						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,

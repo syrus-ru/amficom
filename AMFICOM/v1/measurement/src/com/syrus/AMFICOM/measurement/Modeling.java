@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.52 2005/06/29 14:17:41 arseniy Exp $
+ * $Id: Modeling.java,v 1.53 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,12 +27,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/29 14:17:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
  */
@@ -101,9 +102,9 @@ public final class Modeling extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlModeling mt = (IdlModeling) transferable;
-		super.fromTransferable(mt.header, null, new Identifier(mt.monitoredElementId), null);
+		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
 
 		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId), true);
 
@@ -121,7 +122,13 @@ public final class Modeling extends Action {
 	public IdlModeling getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlModeling(super.getHeaderTransferable(orb),
+		return IdlModelingHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

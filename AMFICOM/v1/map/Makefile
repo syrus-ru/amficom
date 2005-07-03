@@ -3,7 +3,7 @@ MODULE_NAME = map_v1
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
+IDLDIR = ../idl_v1/idl
 
 JAVAC=javac
 
@@ -40,24 +40,44 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/general
 		
 
-.mach:	.corba $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(CLASSDIR)
+.mach: .corba $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix administration com.syrus.AMFICOM \
+		-pkgPrefix map com.syrus.AMFICOM \
+		$(IDLDIR)/map.idl
+	find $(SRCDIR)/com/syrus/AMFICOM/map/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/map/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/map/corba/.cvsignore)
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java 
+		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java
 	touch $@
 
 
 #### XML ####
-.PHONY:	xmlinstall
-xmlinstall:	$(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+.PHONY: xmlinstall
+xmlinstall: $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
 	$(CP) $^ $(LIBDIR)
 
 $(LIBNAME_MAPXML):	$(LIBNAME_GENERALXML)
@@ -78,32 +98,32 @@ $(LIBNAME_GENERALXML):
 
 
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach cleancorba
+.PHONY: clean
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/map/corba
+.PHONY: cleancorba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
-	$(RM) -f .corba
+	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
-
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \

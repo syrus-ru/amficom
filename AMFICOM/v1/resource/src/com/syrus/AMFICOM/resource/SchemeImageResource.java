@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.24 2005/06/25 17:07:52 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.25 2005/07/03 19:16:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,14 +31,16 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/25 17:07:52 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:18 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -56,9 +59,6 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	SchemeImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
-		final ImageResourceData imageResourceData = imageResource.data;
-		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
-		this.data = safeUnpack(imageResourceData.image());
 	}
 
 	/**
@@ -123,7 +123,14 @@ public final class SchemeImageResource extends AbstractImageResource {
 	public IdlImageResource getTransferable(final ORB orb) {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, safePack(this.data));
-		return new IdlImageResource(getHeaderTransferable(orb), imageResourceData);
+		return IdlImageResourceHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				imageResourceData);
 	}
 
 	/**
@@ -226,5 +233,15 @@ public final class SchemeImageResource extends AbstractImageResource {
 	@Override
 	ImageResourceSort getSort() {
 		return ImageResourceSort.SCHEME;
+	}
+
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
+		super.fromTransferable(idlImageResource);
+
+		final ImageResourceData imageResourceData = idlImageResource.data;
+		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
+		this.data = safeUnpack(imageResourceData.image());
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.42 2005/06/25 17:07:53 bass Exp $
+ * $Id: Domain.java,v 1.43 2005/07/03 19:16:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/03 19:16:34 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -20,9 +20,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
+import com.syrus.AMFICOM.administration.corba.IdlDomainHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 public final class Domain extends DomainMember implements Characterizable {
 	private static final long serialVersionUID = 6401785674412391641L;
@@ -104,9 +105,9 @@ public final class Domain extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlDomain dt = (IdlDomain)transferable;
-		super.fromTransferable(dt.header, new Identifier(dt.domainId));
+		super.fromTransferable(dt, new Identifier(dt.domainId));
 		this.name = dt.name;
 		this.description = dt.description;
 
@@ -123,7 +124,13 @@ public final class Domain extends DomainMember implements Characterizable {
 	@Override
 	public IdlDomain getTransferable(final ORB orb) {
 		assert this.isValid(): ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new IdlDomain(super.getHeaderTransferable(orb),
+		return IdlDomainHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

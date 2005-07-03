@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.45 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.46 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -38,11 +37,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElementHelper;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.util.Log;
@@ -51,7 +52,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -66,17 +67,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	private String label;
 
-	private Identifier equipmentTypeId;
+	Identifier equipmentTypeId;
 
-	private Identifier symbolId;
+	Identifier symbolId;
 
-	private Identifier ugoCellId;
+	Identifier ugoCellId;
 
-	private Identifier schemeCellId;
+	Identifier schemeCellId;
 
-	private Identifier parentSchemeProtoGroupId;
+	Identifier parentSchemeProtoGroupId;
 
-	private Identifier parentSchemeProtoElementId;
+	Identifier parentSchemeProtoElementId;
 
 	private SchemeProtoElementDatabase schemeProtoElementDatabase;
 
@@ -641,8 +642,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public IdlSchemeProtoElement getTransferable(final ORB orb) {
-		return new IdlSchemeProtoElement(
-				super.getHeaderTransferable(orb),
+		return IdlSchemeProtoElementHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.name,
 				this.description,
 				this.label,
@@ -1061,12 +1067,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
 		try {
-			super.fromTransferable(schemeProtoElement.header);
+			super.fromTransferable(schemeProtoElement);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);

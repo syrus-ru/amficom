@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.42 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemePath.java,v 1.43 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -38,7 +37,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.util.Log;
 
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -291,8 +292,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	@Override
 	public IdlSchemePath getTransferable(final ORB orb) {
-		return new IdlSchemePath(
-				super.getHeaderTransferable(orb), this.name,
+		return IdlSchemePathHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.name,
 				this.description,
 				this.transmissionPathId.getTransferable(),
 				this.parentSchemeMonitoringSolutionId.getTransferable(),
@@ -471,12 +477,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 		try {
-			super.fromTransferable(schemePath.header);
+			super.fromTransferable(schemePath);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);

@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.26 2005/06/25 17:07:41 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.27 2005/07/03 19:16:31 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,15 +33,17 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.Undoable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
-import com.syrus.AMFICOM.measurement.corba.IntervalDuration;
-import com.syrus.AMFICOM.measurement.corba.IntervalTemporalPatternId;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalDuration;
+import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalTemporalPatternId;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/03 19:16:31 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -125,9 +126,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
-		super.fromTransferable(itpt.header);
+		super.fromTransferable(itpt);
 
 		{
 			final SortedMap<Long, Identifier> map = new TreeMap<Long, Identifier>();
@@ -489,7 +490,15 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			}
 		}
 
-		return new IdlIntervalsTemporalPattern(super.getHeaderTransferable(orb), intervalTemporalPatternsIdT, durationsT);
+		return IdlIntervalsTemporalPatternHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				intervalTemporalPatternsIdT,
+				durationsT);
 	}
 
 	public SortedMap<Long, Identifier> getIntervalsAbstractTemporalPatternMap() {

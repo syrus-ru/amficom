@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.93 2005/06/23 18:45:09 bass Exp $
+ * $Id: general.idl,v 1.94 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,226 +11,273 @@
 
 #include <streams.idl>
 
-module com {
-module syrus {
-module AMFICOM {
+#include "dummy.idl"
+
+#pragma prefix "AMFICOM.syrus.com"
 
 module security {
-module corba {
-	typedef wstring<128> WString128;
+	module corba {
+		typedef wstring<128> WString128;
 
 //////////////////// SecurityKey ///////////////////
-	typedef struct IdlSessionKey {
-		WString128 sessionCode;
-	} SessionKey;
-};
+		typedef struct IdlSessionKey {
+			WString128 sessionCode;
+		} SessionKey;
+	};
 };
 
 module general {
-module corba {
+	module corba {
 
-	typedef string<32> String32;
-	typedef wstring<32> WString32;
-	typedef wstring<64> WString64;
-	typedef sequence<WString64> WString64Seq;
-	typedef wstring<128> WString128;
-	typedef wstring<256> WString256;
+		typedef string<32> String32;
+		typedef wstring<32> WString32;
+		typedef wstring<64> WString64;
+		typedef sequence<WString64> WString64Seq;
+		typedef wstring<128> WString128;
+		typedef wstring<256> WString256;
 
-	typedef struct IdlIdentifier {
-		long long identifierCode;
-	} Identifier;
+		typedef struct IdlIdentifier {
+			long long identifierCode;
+		} Identifier;
 
-	typedef sequence<Identifier> IdentifierSeq;
+		typedef sequence<Identifier> IdentifierSeq;
 
-	typedef struct IdlStorableObject {
-		Identifier id;
-		long long created;
-		long long modified;
-		Identifier creatorId;
-		Identifier modifierId;
-		long long version;
-	} StorableObject;
+		valuetype IdlStorableObject {
+			public Identifier id;
+			public long long created;
+			public long long modified;
+			public Identifier creatorId;
+			public Identifier modifierId;
+			public long long version;
 
-	typedef sequence<StorableObject> StorableObjectSeq;
+			::general::StorableObject getNative();
 
-	enum DataType {
-		DATA_TYPE_INTEGER,
-		DATA_TYPE_DOUBLE,
-		DATA_TYPE_STRING,
-		DATA_TYPE_DATE,
-		DATA_TYPE_LONG,
-		DATA_TYPE_RAW,
-		DATA_TYPE_BOOLEAN
-	};
+			factory defaultInit();
+			factory init(in Identifier id,
+					in long long created,
+					in long long modified,
+					in Identifier creatorId,
+					in Identifier modifierId,
+					in long long version);
+		};
 
-	exception AMFICOMRemoteException {
-		enum ErrorCode {
-			ERROR_LOGIN_NOT_FOUND,
-			ERROR_ILLEGAL_DATA,
-			ERROR_ILLEGAL_OBJECT_ENTITY,
-			ERROR_SAVE,
-			ERROR_NOT_FOUND,
-			ERROR_RETRIEVE,
-			ERROR_UPDATE,
-			ERROR_DELETE,
-			ERROR_VERSION_COLLISION,
-			ERROR_ILLEGAL_LOGIN,
-			ERROR_ILLEGAL_PASSWORD,
-			ERROR_NO_DOMAINS_AVAILABLE,
-			ERROR_NOT_LOGGED_IN,
-			ERROR_ALREADY_LOGGED,
-			ERROR_ACCESS_VALIDATION,
-			ERROR_UNKNOWN
-		} errorCode;
-		enum CompletionStatus {
-			COMPLETED_YES,
-			COMPLETED_NO,
-			COMPLETED_PARTIALLY
-		} completionStatus;
-		wstring message;
-	};
-/*
-	exception RemoteVersionCollisionException {
-		long long desiredVersion;
-		long long actualVersion;
-		wstring message;
-	};
-*/
+		typedef IdlStorableObject StorableObject;
+		typedef sequence<StorableObject> StorableObjectSeq;
+
+		enum DataType {
+			DATA_TYPE_INTEGER,
+			DATA_TYPE_DOUBLE,
+			DATA_TYPE_STRING,
+			DATA_TYPE_DATE,
+			DATA_TYPE_LONG,
+			DATA_TYPE_RAW,
+			DATA_TYPE_BOOLEAN
+		};
+
+		exception AMFICOMRemoteException {
+			enum ErrorCode {
+				ERROR_LOGIN_NOT_FOUND,
+				ERROR_ILLEGAL_DATA,
+				ERROR_ILLEGAL_OBJECT_ENTITY,
+				ERROR_SAVE,
+				ERROR_NOT_FOUND,
+				ERROR_RETRIEVE,
+				ERROR_UPDATE,
+				ERROR_DELETE,
+				ERROR_VERSION_COLLISION,
+				ERROR_ILLEGAL_LOGIN,
+				ERROR_ILLEGAL_PASSWORD,
+				ERROR_NO_DOMAINS_AVAILABLE,
+				ERROR_NOT_LOGGED_IN,
+				ERROR_ALREADY_LOGGED,
+				ERROR_ACCESS_VALIDATION,
+				ERROR_UNKNOWN
+			} errorCode;
+			enum CompletionStatus {
+				COMPLETED_YES,
+				COMPLETED_NO,
+				COMPLETED_PARTIALLY
+			} completionStatus;
+			wstring message;
+		};
+	/*
+		exception RemoteVersionCollisionException {
+			long long desiredVersion;
+			long long actualVersion;
+			wstring message;
+		};
+	*/
 
 ////////////////////// ParameterType //////////////////////
 
-	typedef struct IdlParameterType {
-		StorableObject header;
+		valuetype IdlParameterType: StorableObject {
+			public WString32 codename;
+			public WString256 description;
 
-		WString32 codename;
-		WString256 description;
+			public WString128 name;
+			public DataType dataType;
 
-		WString128 name;
-		DataType dataType;
+			public IdentifierSeq characteristicIds;
 
-		IdentifierSeq characteristicIds;
-	} ParameterType;
+			factory defaultInit();
+			factory init(in Identifier id,
+					in long long created,
+					in long long modified,
+					in Identifier creatorId,
+					in Identifier modifierId,
+					in long long version,
+					in WString32 codename,
+					in WString256 description,
+					in WString128 name,
+					in DataType dataType,
+					in IdentifierSeq characteristicIds);
+		};
 
-	typedef sequence<ParameterType> ParameterTypeSeq;
+		typedef IdlParameterType ParameterType;
+		typedef sequence<ParameterType> ParameterTypeSeq;
 
 //////////////////// CharacteristicType ///////////////////
 
-	typedef struct IdlCharacteristicType {
-		StorableObject header;
+		valuetype IdlCharacteristicType: StorableObject {
+			enum CharacteristicTypeSort {
+				CHARACTERISTICTYPESORT_OPTICAL,
+				CHARACTERISTICTYPESORT_ELECTRICAL,
+				CHARACTERISTICTYPESORT_OPERATIONAL,
+				CHARACTERISTICTYPESORT_INTERFACE,
+				CHARACTERISTICTYPESORT_VISUAL
+			};
 
-		WString32 codename;
-		WString256 description;
-		WString128 name;
-		DataType dataType;
-		enum CharacteristicTypeSort {
-			CHARACTERISTICTYPESORT_OPTICAL,
-			CHARACTERISTICTYPESORT_ELECTRICAL,
-			CHARACTERISTICTYPESORT_OPERATIONAL,
-			CHARACTERISTICTYPESORT_INTERFACE,
-			CHARACTERISTICTYPESORT_VISUAL
-		} sort;
-	} CharacteristicType;
+			public WString32 codename;
+			public WString256 description;
+			public WString128 name;
+			public DataType dataType;
+			public CharacteristicTypeSort sort;
 
-	typedef sequence<CharacteristicType> CharacteristicTypeSeq;
+			factory defaultInit();
+			factory init(in Identifier id,
+					in long long created,
+					in long long modified,
+					in Identifier creatorId,
+					in Identifier modifierId,
+					in long long version,
+					in WString32 codename,
+					in WString256 description,
+					in WString128 name,
+					in DataType dataType,
+					in CharacteristicTypeSort sort);
+		};
+
+		typedef IdlCharacteristicType CharacteristicType;
+		typedef sequence<CharacteristicType> CharacteristicTypeSeq;
 
 ////////////////////// Characteristic /////////////////////
-	typedef struct IdlCharacteristic {
-		StorableObject header;
+		valuetype IdlCharacteristic: StorableObject {
+			public Identifier _typeId;
+			public WString128 name;
+			public WString256 description;
+			public WString256 value;
+			public Identifier characterizableId;
+			public boolean editable;
+			public boolean visible;
 
-		Identifier _typeId;
-		WString128 name;
-		WString256 description;
-		WString256 value;
-		Identifier characterizableId;
-		boolean editable;
-		boolean visible;
+			factory defaultInit();
+			factory init(in Identifier id,
+					in long long created,
+					in long long modified,
+					in Identifier creatorId,
+					in Identifier modifierId,
+					in long long version,
+					in Identifier _typeId,
+					in WString128 name,
+					in WString256 description,
+					in WString256 value,
+					in Identifier characterizableId,
+					in boolean editable,
+					in boolean visible);
+		};
 
-	} Characteristic;
-
-	typedef sequence<Characteristic> CharacteristicSeq;
+		typedef IdlCharacteristic Characteristic;
+		typedef sequence<Characteristic> CharacteristicSeq;
 
 ///////////////////////// Verifiable //////////////////////////
-	abstract interface Verifiable {
-		void verify(in octet i);
-	};
+		abstract interface Verifiable {
+			void verify(in octet i);
+		};
 
 ////////////////////// IdentifierGeneratorServer ///////////////
 
-	abstract interface IdentifierGeneratorServer {
-		Identifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
-		IdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
-	};
+		abstract interface IdentifierGeneratorServer {
+			Identifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
+			IdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
+		};
 
 /////////////////////////// CommonServer //////////////////////
 
-	abstract interface CommonServer:
-			Verifiable,
-			IdentifierGeneratorServer {
-		void delete(in IdentifierSeq ids,
-				in security::corba::SessionKey sessionKey)
-				raises (AMFICOMRemoteException);
+		abstract interface CommonServer:
+				Verifiable,
+				IdentifierGeneratorServer {
+#pragma version CommonServer 2.0
+			void delete(in IdentifierSeq ids,
+					in ::security::corba::SessionKey sessionKey)
+					raises (AMFICOMRemoteException);
 
-		IdentifierSeq transmitRefreshedStorableObjects(
-				in StorableObjectSeq storableObjects,
-				in security::corba::SessionKey sessionKey)
-				raises (AMFICOMRemoteException);
-	};
+			IdentifierSeq transmitRefreshedStorableObjects(
+					in StorableObjectSeq storableObjects,
+					in ::security::corba::SessionKey sessionKey)
+					raises (AMFICOMRemoteException);
+		};
 
 ///////////////////////////// Condition ////////////////////////
 
-	typedef union IdlStorableObjectCondition switch(enum StorableObjectConditionSort {
-			LINKED_IDS,
-			COMPOUND,
-			TYPICAL,
-			EQUIVALENT}) {
-		case LINKED_IDS:
-			struct IdlLinkedIdsCondition {
-				short entityCode;
-				short linkedEntityCode;
-				IdentifierSeq linkedIds;
-			} linkedIdsCondition;
-		case COMPOUND:
-			struct IdlCompoundCondition {
-				enum CompoundConditionSort {
-					AND,
-					OR} sort;
-				sequence<IdlStorableObjectCondition> innerConditions;
-			} compoundCondition;
-		case TYPICAL:
-			struct IdlTypicalCondition {
-				short entityCode;
-				WString256 key;
-				WString256 value;
-				WString256 otherValue;
-				enum TypicalSort {
-					TYPE_NUMBER_INT,
-					TYPE_NUMBER_LONG,
-					TYPE_NUMBER_DOUBLE,
-					TYPE_STRING,
-					TYPE_DATE
-				} type;
-				enum OperationSort {
-					OPERATION_EQUALS,
-					OPERATION_GREAT,
-					OPERATION_LESS,
-					OPERATION_GREAT_EQUALS,
-					OPERATION_LESS_EQUALS,
-					OPERATION_IN_RANGE,
-					OPERATION_SUBSTRING,
-					OPERATION_REGEXP,
-					OPERATION_CI_REGEXP
-				} operation;
-			} typicalCondition;
-		case EQUIVALENT:
-			struct IdlEquivalentCondition {
-				short entityCode;
-			} equivalentCondition;
-	} StorableObjectCondition;
-};
-};
-
-};
-};
+		typedef union IdlStorableObjectCondition switch(enum StorableObjectConditionSort {
+				LINKED_IDS,
+				COMPOUND,
+				TYPICAL,
+				EQUIVALENT}) {
+			case LINKED_IDS:
+				struct IdlLinkedIdsCondition {
+					short entityCode;
+					short linkedEntityCode;
+					IdentifierSeq linkedIds;
+				} linkedIdsCondition;
+			case COMPOUND:
+				struct IdlCompoundCondition {
+					enum CompoundConditionSort {
+						AND,
+						OR} sort;
+					sequence<IdlStorableObjectCondition> innerConditions;
+				} compoundCondition;
+			case TYPICAL:
+				struct IdlTypicalCondition {
+					short entityCode;
+					WString256 key;
+					WString256 value;
+					WString256 otherValue;
+					enum TypicalSort {
+						TYPE_NUMBER_INT,
+						TYPE_NUMBER_LONG,
+						TYPE_NUMBER_DOUBLE,
+						TYPE_STRING,
+						TYPE_DATE
+					} type;
+					enum OperationSort {
+						OPERATION_EQUALS,
+						OPERATION_GREAT,
+						OPERATION_LESS,
+						OPERATION_GREAT_EQUALS,
+						OPERATION_LESS_EQUALS,
+						OPERATION_IN_RANGE,
+						OPERATION_SUBSTRING,
+						OPERATION_REGEXP,
+						OPERATION_CI_REGEXP
+					} operation;
+				} typicalCondition;
+			case EQUIVALENT:
+				struct IdlEquivalentCondition {
+					short entityCode;
+				} equivalentCondition;
+		} StorableObjectCondition;
+	};
 };
 
 #endif // GENERAL_IDL

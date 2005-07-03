@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.63 2005/06/25 17:07:54 bass Exp $
+ * $Id: Link.java,v 1.64 2005/07/03 19:16:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlLink;
+import com.syrus.AMFICOM.configuration.corba.IdlLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,10 +30,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/06/25 17:07:54 $
+ * @version $Revision: 1.64 $, $Date: 2005/07/03 19:16:22 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -141,9 +142,9 @@ public final class Link extends AbstractLink {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlLink idlLink = (IdlLink) transferable;
-		super.fromTransferable(idlLink.header, new Identifier(idlLink.domainId));
+		super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
 
 		this.name = idlLink.name;
 		this.description = idlLink.description;
@@ -165,7 +166,13 @@ public final class Link extends AbstractLink {
 	public IdlLink getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlLink(super.getHeaderTransferable(orb),
+		return IdlLinkHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

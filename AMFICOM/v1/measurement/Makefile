@@ -44,13 +44,13 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
 		-C $(CLASSDIR) com/syrus/AMFICOM/resource
 
-.mach:	.corba .ora $(CLASSDIR)
+.mach: .corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.ora:	$(CLASSDIR)
+.ora: $(CLASSDIR)
 	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
@@ -58,49 +58,66 @@ $(LIBNAME): .mach
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
 	touch $@
-	
 
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix measurement com.syrus.AMFICOM \
+		$(IDLDIR)/measurement.idl
+	find $(SRCDIR)/com/syrus/AMFICOM/measurement/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/measurement/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/.cvsignore)
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach cleanora cleancorba
+.PHONY: clean
+clean: cleanmach cleanora cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY:	cleanora
+.PHONY: cleanora
 cleanora:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/ora
 	$(RM) .ora
 
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
+.PHONY: cleancorba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
 	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
-
-
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
@@ -110,4 +127,3 @@ arch:
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 
-

@@ -14,3 +14,4 @@ lib
 .classpath
 .project
 .settings
+.idl

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.24 2005/06/25 17:50:49 bass Exp $
+ * $Id: EventSource.java,v 1.25 2005/07/03 19:16:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.IdlEventSource;
+import com.syrus.AMFICOM.event.corba.IdlEventSourceHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/25 17:50:49 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:27 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -92,7 +93,8 @@ public final class EventSource extends StorableObject {
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		IdlEventSource est = (IdlEventSource) transferable;
 		try {
 			super.fromTransferable(est);
@@ -110,7 +112,13 @@ public final class EventSource extends StorableObject {
 	 */
 	@Override
 	public IdlEventSource getTransferable(final ORB orb) {
-		return new IdlEventSource(super.getHeaderTransferable(orb),
+		return IdlEventSourceHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.sourceEntityId.getTransferable());
 	}
 

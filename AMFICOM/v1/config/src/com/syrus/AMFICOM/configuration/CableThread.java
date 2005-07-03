@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.33 2005/06/25 17:07:55 bass Exp $
+ * $Id: CableThread.java,v 1.34 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
+import com.syrus.AMFICOM.configuration.corba.IdlCableThreadHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -31,9 +31,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -111,9 +112,9 @@ public final class CableThread extends DomainMember implements TypedObject {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCableThread ctt = (IdlCableThread) transferable;
-		super.fromTransferable(ctt.header, new Identifier(ctt.domainId));
+		super.fromTransferable(ctt, new Identifier(ctt.domainId));
 
 		this.name = ctt.name;
 		this.description = ctt.description;
@@ -126,7 +127,13 @@ public final class CableThread extends DomainMember implements TypedObject {
 	 */
 	@Override
 	public IdlCableThread getTransferable(final ORB orb) {
-		return new IdlCableThread(super.getHeaderTransferable(orb),
+		return IdlCableThreadHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

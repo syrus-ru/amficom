@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.29 2005/06/24 14:21:33 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.30 2005/07/03 19:16:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.event.corba.AlertKind;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/24 14:21:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/03 19:16:27 $
+ * @author $Author: bass $
  * @module event_v1
  */
 

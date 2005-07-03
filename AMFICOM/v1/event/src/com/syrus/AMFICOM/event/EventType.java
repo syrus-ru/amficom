@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.34 2005/06/25 17:50:49 bass Exp $
+ * $Id: EventType.java,v 1.35 2005/07/03 19:16:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.event.corba.AlertKind;
-import com.syrus.AMFICOM.event.corba.UserAlertKinds;
 import com.syrus.AMFICOM.event.corba.IdlEventType;
+import com.syrus.AMFICOM.event.corba.IdlEventTypeHelper;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.UserAlertKinds;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -37,9 +37,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/25 17:50:49 $
+ * @version $Revision: 1.35 $, $Date: 2005/07/03 19:16:27 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -140,10 +141,11 @@ public final class EventType extends StorableObjectType {
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEventType ett = (IdlEventType) transferable;
 
-		super.fromTransferable(ett.header, ett.codename, ett.description);
+		super.fromTransferable(ett, ett.codename, ett.description);
 
 		this.parameterTypeIds = Identifier.fromTransferables(ett.parameterTypeIds);
 
@@ -185,8 +187,13 @@ public final class EventType extends StorableObjectType {
 			userAlertKindsT[i] = new UserAlertKinds(userId.getTransferable(), alertKindsT);
 		}
 
-		return new IdlEventType(
-				super.getHeaderTransferable(orb),
+		return IdlEventTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				parTypeIdsT,
@@ -238,7 +245,7 @@ public final class EventType extends StorableObjectType {
 	}
 
 	public Set getUserAlertKinds(final Identifier userId) {
-		final Set userAlertKinds = (Set) this.userAlertKindsMap.get(userId);
+		final Set userAlertKinds = this.userAlertKindsMap.get(userId);
 		return (userAlertKinds != null) ? Collections.unmodifiableSet(userAlertKinds) : Collections.EMPTY_SET;
 	}
 
@@ -256,7 +263,7 @@ public final class EventType extends StorableObjectType {
 		assert (userId != null) : "User id is NULL";
 		assert (alertKind != null) : "Alert kind is NULL";
 		
-		Set userAlertKinds = (Set) this.userAlertKindsMap.get(userId);
+		Set userAlertKinds = this.userAlertKindsMap.get(userId);
 		if (userAlertKinds == null) {
 			userAlertKinds = new HashSet();
 			this.userAlertKindsMap.put(userId, userAlertKinds);
@@ -269,7 +276,7 @@ public final class EventType extends StorableObjectType {
 		assert (userId != null) : "User id is NULL";
 		assert (alertKind != null) : "Alert kind is NULL";
 		
-		final Set userAlertKinds = (Set) this.userAlertKindsMap.get(userId);
+		final Set userAlertKinds = this.userAlertKindsMap.get(userId);
 		if (userAlertKinds != null) {
 			userAlertKinds.remove(alertKind);
 			if (userAlertKinds.isEmpty())
@@ -309,7 +316,7 @@ public final class EventType extends StorableObjectType {
 		for (final Iterator it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext();) {
 			final Identifier userId = (Identifier) it1.next();
 			System.out.println("User '" + userId + "'");
-			final Set userAlertKinds = (Set) this.userAlertKindsMap.get(userId);
+			final Set userAlertKinds = this.userAlertKindsMap.get(userId);
 			for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext();) {
 				final AlertKind alertKind = (AlertKind) it2.next();
 				System.out.println("	alert kind: " + alertKind.value());

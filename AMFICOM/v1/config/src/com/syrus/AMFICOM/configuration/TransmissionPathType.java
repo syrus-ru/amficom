@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.57 2005/06/25 17:07:55 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.58 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathType;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,9 +35,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -123,9 +124,9 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
-		super.fromTransferable(tptt.header, tptt.codename, tptt.description);
+		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
 
 		final Set characteristicIds = Identifier.fromTransferables(tptt.characteristicIds);
@@ -141,7 +142,13 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	public IdlTransmissionPathType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlTransmissionPathType(super.getHeaderTransferable(orb),
+		return IdlTransmissionPathTypeHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

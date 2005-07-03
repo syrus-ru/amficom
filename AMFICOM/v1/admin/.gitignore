@@ -15,4 +15,5 @@ Makefile.inc
 .project
 .classpath
 .settings
+.idl
 test

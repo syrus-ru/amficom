@@ -1,0 +1,24 @@
+/*-
+ * $Id: dummy.idl,v 1.1 2005/07/03 19:16:34 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef DUMMY_IDL
+#define DUMMY_IDL
+
+#pragma prefix "AMFICOM.syrus.com"
+
+module general {
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+	struct StorableObject {
+		boolean foo;
+	};
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
+	native StorableObject;
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
+};
+
+#endif // DUMMY_IDL

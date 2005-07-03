@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.11 2005/06/25 17:07:53 bass Exp $
+ * $Id: SystemUser.java,v 1.12 2005/07/03 19:16:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserHelper;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -36,10 +36,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/03 19:16:35 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -149,11 +150,11 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 * @throws ApplicationException 
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) 
+	protected void fromTransferable(final IdlStorableObject transferable) 
 	throws ApplicationException {
 		final IdlSystemUser ut = (IdlSystemUser) transferable;
 		try {
-			super.fromTransferable(ut.header);
+			super.fromTransferable(ut);
 		}
 		catch (ApplicationException ae) {
 			// Never
@@ -180,7 +181,13 @@ public final class SystemUser extends StorableObject implements Characterizable,
 		
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		
-		return new IdlSystemUser(super.getHeaderTransferable(orb),
+		return IdlSystemUserHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,

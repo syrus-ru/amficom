@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortFactory.java,v 1.4 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemePortFactory.java,v 1.5 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,43 +8,24 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 final class SchemePortFactory extends StorableObjectFactory {
 	/**
-	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see StorableObjectFactory#newInstance(IDLEntity)
-	 */
-	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new SchemePort((IdlSchemePort) transferable);
-	}
-
-	/**
-	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
-	 */
-	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((IdlSchemePort) transferable).header.id);
-	}
-
-	/**
 	 * @param length
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
-	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+	@Override
+	protected IdlSchemePort[] allocateArrayOfTransferables(final int length) {
 		return new IdlSchemePort[length];
 	}
 }

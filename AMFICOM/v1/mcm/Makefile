@@ -1,14 +1,19 @@
+#
+# $Id: Makefile,v 1.62 2005/07/03 19:16:32 bass Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := mcm_v1
 
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR := ../idl_v1/idl
-LOCALIDLDIR = ./idl
+IDLDIR = ../idl_v1/idl
 
-HOST := mongol
-SERVICE_NAME := mongol
+HOST = mongol
+SERVICE_NAME = mongol
 
 JAVAC=javac
 
@@ -34,7 +39,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mcm/*.java) \
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
-$(LIBNAME):	.mach
+$(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -50,63 +55,80 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/mcm/corba/MCMHolder.class
 	$(CP) $@ $(LIBDIR)
 
-.head:	.mach
+.head: .mach
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.TCPKISConnection
 	touch $@
 
-.mach:	.corba $(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.corba:	$(CLASSDIR)
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
 	$(IDLJ) $(IDLJFLAGS) \
-		$(LOCALIDLDIR)/mcm.idl
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix configuration com.syrus.AMFICOM \
+		-pkgPrefix measurement com.syrus.AMFICOM \
+		-pkgPrefix mcm com.syrus.AMFICOM \
+		$(IDLDIR)/mcm.idl
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-
-.PHONY:	clean
-clean:	cleanmach cleancorba
+.PHONY: clean
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY:	cleanhead
+.PHONY: cleanhead
 cleanhead:
 	$(RM) \
 		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPKISConnection.h
 	$(RM) .head
 	
 
-.PHONY:	cleancorba
-cleancorba:
+.PHONY: cleancorba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
 	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
 	$(CP) $^
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(LOCALIDLDIR)/mcm.idl \
+		$(IDLDIR)/mcm.idl \
 		$(SOURCES)
-

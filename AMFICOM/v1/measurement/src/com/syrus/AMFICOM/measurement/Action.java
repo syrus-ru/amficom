@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.32 2005/06/24 14:09:43 arseniy Exp $
+ * $Id: Action.java,v 1.33 2005/07/03 19:16:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -18,10 +16,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/24 14:09:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/07/03 19:16:30 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -75,7 +74,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(final IDLEntity transferable,
+	protected void fromTransferable(final IdlStorableObject transferable,
 			final ActionType type1,
 			final Identifier monitoredElementId1,
 			final Action parentAction1) throws ApplicationException {

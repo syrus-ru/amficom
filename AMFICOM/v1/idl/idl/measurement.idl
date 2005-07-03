@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.69 2005/06/23 18:45:09 bass Exp $
+ * $Id: measurement.idl,v 1.70 2005/07/03 19:16:34 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,308 +11,491 @@
 
 #include "general.idl"
 
-module com {
-module syrus {
-module AMFICOM {
+#pragma prefix "AMFICOM.syrus.com"
+
 module measurement {
-module corba {
+	module corba {
 
 ////////////////////////// Type ///////////////////////////	
 
-	typedef struct IdlMeasurementType {
-		general::corba::StorableObject header;
+		valuetype IdlMeasurementType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq inParameterTypeIds;
+			public ::general::corba::IdentifierSeq outParameterTypeIds;
+			public ::general::corba::IdentifierSeq measurementPortTypeIds;
 
-		general::corba::IdentifierSeq inParameterTypeIds;
-		general::corba::IdentifierSeq outParameterTypeIds;
-		general::corba::IdentifierSeq measurementPortTypeIds;
-	} MeasurementType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq inParameterTypeIds,
+					in ::general::corba::IdentifierSeq outParameterTypeIds,
+					in ::general::corba::IdentifierSeq measurementPortTypeIds);
+		};
 
-	typedef sequence<MeasurementType> MeasurementTypeSeq;
+		typedef IdlMeasurementType MeasurementType;
+		typedef sequence<MeasurementType> MeasurementTypeSeq;
 
-	typedef struct IdlAnalysisType {
-		general::corba::StorableObject header;
+		valuetype IdlAnalysisType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq inParameterTypeIds;
+			public ::general::corba::IdentifierSeq criteriaParameterTypeIds;
+			public ::general::corba::IdentifierSeq etalonParameterTypeIds;
+			public ::general::corba::IdentifierSeq outParameterTypeIds;
 
-		general::corba::IdentifierSeq inParameterTypeIds;
-		general::corba::IdentifierSeq criteriaParameterTypeIds;
-		general::corba::IdentifierSeq etalonParameterTypeIds;
-		general::corba::IdentifierSeq outParameterTypeIds;
+			public ::general::corba::IdentifierSeq measurementTypeIds;
 
-		general::corba::IdentifierSeq measurementTypeIds;
-	} AnalysisType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq inParameterTypeIds,
+					in ::general::corba::IdentifierSeq criteriaParameterTypeIds,
+					in ::general::corba::IdentifierSeq etalonParameterTypeIds,
+					in ::general::corba::IdentifierSeq outParameterTypeIds,
+					in ::general::corba::IdentifierSeq measurementTypeIds);
+		};
 
-	typedef sequence<AnalysisType> AnalysisTypeSeq;
+		typedef IdlAnalysisType AnalysisType;
+		typedef sequence<AnalysisType> AnalysisTypeSeq;
 
-	typedef struct IdlEvaluationType {
-		general::corba::StorableObject header;
+		valuetype IdlEvaluationType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq inParameterTypeIds;
+			public ::general::corba::IdentifierSeq thresholdParameterTypeIds;
+			public ::general::corba::IdentifierSeq etalonParameterTypeIds;
+			public ::general::corba::IdentifierSeq outParameterTypeIds;
 
-		general::corba::IdentifierSeq inParameterTypeIds;
-		general::corba::IdentifierSeq thresholdParameterTypeIds;
-		general::corba::IdentifierSeq etalonParameterTypeIds;
-		general::corba::IdentifierSeq outParameterTypeIds;
+			public ::general::corba::IdentifierSeq measurementTypeIds;
 
-		general::corba::IdentifierSeq measurementTypeIds;
-	} EvaluationType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq inParameterTypeIds,
+					in ::general::corba::IdentifierSeq thresholdParameterTypeIds,
+					in ::general::corba::IdentifierSeq etalonParameterTypeIds,
+					in ::general::corba::IdentifierSeq outParameterTypeIds,
+					in ::general::corba::IdentifierSeq measurementTypeIds);
+		};
 
-	typedef sequence<EvaluationType> EvaluationTypeSeq;
+		typedef IdlEvaluationType EvaluationType;
+		typedef sequence<EvaluationType> EvaluationTypeSeq;
 
-	typedef struct IdlModelingType {
-		general::corba::StorableObject header;
+		valuetype IdlModelingType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq inParameterTypeIds;
+			public ::general::corba::IdentifierSeq outParameterTypeIds;
 
-		general::corba::IdentifierSeq inParameterTypeIds;
-		general::corba::IdentifierSeq outParameterTypeIds;
-	} ModelingType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq inParameterTypeIds,
+					in ::general::corba::IdentifierSeq outParameterTypeIds);
+		};
 
-	typedef sequence<ModelingType> ModelingTypeSeq;
+		typedef IdlModelingType ModelingType;
+		typedef sequence<ModelingType> ModelingTypeSeq;
 
 /////////////////// Parameter and Set /////////////////////
 
-//	XXX
-//	XXX A shared type that is NOT a StorableObject.
-//	XXX
-	typedef struct IdlParameter {
-		general::corba::Identifier id;
-		general::corba::Identifier _typeId;
-		::CORBA::OctetSeq value;
-	} Parameter;
+		typedef struct IdlParameter {
+			::general::corba::Identifier id;
+			::general::corba::Identifier _typeId;
+			::CORBA::OctetSeq value;
+		} Parameter;
 
-	typedef sequence<Parameter> ParameterSeq;
+		typedef sequence<Parameter> ParameterSeq;
 
-	typedef struct IdlParameterSet {
-		general::corba::StorableObject header;
+		valuetype IdlParameterSet: ::general::corba::StorableObject {
+			enum ParameterSetSort {
+				SET_SORT_MEASUREMENT_PARAMETERS,
+				SET_SORT_ANALYSIS_CRITERIA,
+				SET_SORT_EVALUATION_THRESHOLDS,
+				SET_SORT_ETALON,
+				SET_SORT_MODELING_PARAMETERS,
+				SET_SORT_PREDICTION_PARAMETERS
+			};
 
-		enum ParameterSetSort {
-			SET_SORT_MEASUREMENT_PARAMETERS,
-			SET_SORT_ANALYSIS_CRITERIA,
-			SET_SORT_EVALUATION_THRESHOLDS,
-			SET_SORT_ETALON,
-			SET_SORT_MODELING_PARAMETERS,
-			SET_SORT_PREDICTION_PARAMETERS
-		} sort;
-		general::corba::WString256 description;
-		ParameterSeq parameters;
-		general::corba::IdentifierSeq monitoredElementIds;
-	} ParameterSet;
+			public ParameterSetSort sort;
+			public ::general::corba::WString256 description;
+			public ParameterSeq parameters;
+			public ::general::corba::IdentifierSeq monitoredElementIds;
 
-	typedef sequence<ParameterSet> ParameterSetSeq;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ParameterSetSort sort,
+					in ::general::corba::WString256 description,
+					in ParameterSeq parameters,
+					in ::general::corba::IdentifierSeq monitoredElementIds);
+		};
+
+		typedef IdlParameterSet ParameterSet;
+		typedef sequence<ParameterSet> ParameterSetSeq;
 
 /////////////////// Modeling /////////////////////
 
-	typedef struct IdlModeling {
-		general::corba::StorableObject header;
+		valuetype IdlModeling: ::general::corba::StorableObject {
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::Identifier monitoredElementId;
 
-		general::corba::Identifier _typeId;
-		general::corba::Identifier monitoredElementId;
+			public ::general::corba::WString128 name;
 
-		general::corba::WString128 name;
+			public ::general::corba::Identifier argumentSetId;
 
-		general::corba::Identifier argumentSetId;
-	} Modeling;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::Identifier monitoredElementId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::Identifier argumentSetId);
+		};
 
-	typedef sequence<Modeling> ModelingSeq;
+		typedef IdlModeling Modeling;
+		typedef sequence<Modeling> ModelingSeq;
 
 /////////////////// Measurement /////////////////////
 
-	typedef struct IdlMeasurementSetup {
-		general::corba::StorableObject header;
+		valuetype IdlMeasurementSetup: ::general::corba::StorableObject {
+			public ::general::corba::Identifier parameterSetId;
+			public ::general::corba::Identifier criteriaSetId;
+			public ::general::corba::Identifier thresholdSetId;
+			public ::general::corba::Identifier etalonId;
+			public ::general::corba::WString256 description;
+			public long long measurementDuration;
+			public ::general::corba::IdentifierSeq monitoredElementIds;
+			public ::general::corba::IdentifierSeq measurementTypeIds;
 
-		general::corba::Identifier parameterSetId;
-		general::corba::Identifier criteriaSetId;
-		general::corba::Identifier thresholdSetId;
-		general::corba::Identifier etalonId;
-		general::corba::WString256 description;
-		long long measurementDuration;
-		general::corba::IdentifierSeq monitoredElementIds;
-		general::corba::IdentifierSeq measurementTypeIds;
-	} MeasurementSetup;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier parameterSetId,
+					in ::general::corba::Identifier criteriaSetId,
+					in ::general::corba::Identifier thresholdSetId,
+					in ::general::corba::Identifier etalonId,
+					in ::general::corba::WString256 description,
+					in long long measurementDuration,
+					in ::general::corba::IdentifierSeq monitoredElementIds,
+					in ::general::corba::IdentifierSeq measurementTypeIds);
+		};
 
-	typedef sequence<MeasurementSetup> MeasurementSetupSeq;
+		typedef IdlMeasurementSetup MeasurementSetup;
+		typedef sequence<MeasurementSetup> MeasurementSetupSeq;
 
-	typedef struct IdlMeasurement {
-		general::corba::StorableObject header;
+		valuetype IdlMeasurement: ::general::corba::StorableObject {
+			enum MeasurementStatus {
+				MEASUREMENT_STATUS_SCHEDULED,
+				MEASUREMENT_STATUS_ACQUIRING,
+				MEASUREMENT_STATUS_ACQUIRED,
+				MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
+				MEASUREMENT_STATUS_COMPLETED,
+				MEASUREMENT_STATUS_ABORTED
+			};
 
-		general::corba::Identifier _typeId;
-		general::corba::Identifier monitoredElementId;
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::Identifier monitoredElementId;
 
-		general::corba::WString128 name;
+			public ::general::corba::WString128 name;
 
-		general::corba::Identifier setupId;
-		long long startTime;
-		long long duration;
-		enum MeasurementStatus {
-			MEASUREMENT_STATUS_SCHEDULED,
-			MEASUREMENT_STATUS_ACQUIRING,
-			MEASUREMENT_STATUS_ACQUIRED,
-			MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
-			MEASUREMENT_STATUS_COMPLETED,
-			MEASUREMENT_STATUS_ABORTED
-		} status;
-		general::corba::WString64 localAddress;
-		general::corba::Identifier testId;
-	} Measurement;
+			public ::general::corba::Identifier setupId;
+			public long long startTime;
+			public long long duration;
+			public MeasurementStatus status;
+			public ::general::corba::WString64 localAddress;
+			public ::general::corba::Identifier testId;
 
-	typedef sequence<Measurement> MeasurementSeq;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::Identifier monitoredElementId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::Identifier setupId,
+					in long long startTime,
+					in long long duration,
+					in MeasurementStatus status,
+					in ::general::corba::WString64 localAddress,
+					in ::general::corba::Identifier testId);
+		};
+
+		typedef IdlMeasurement Measurement;
+		typedef sequence<Measurement> MeasurementSeq;
 
 /////////////////////// Temporal Pattern ////////////////////////
 
-	typedef struct IdlCronTemporalPattern {
-		general::corba::StorableObject header;
+		valuetype IdlCronTemporalPattern: ::general::corba::StorableObject {
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64Seq cronStrings;
 
-		general::corba::WString256 description;
-		general::corba::WString64Seq cronStrings;
-	} CronTemporalPattern;
-
-	typedef sequence<CronTemporalPattern> CronTemporalPatternSeq;
-
-//	XXX
-//	XXX Move _inside_ the valuetype
-//	XXX
-//	module IdlIntervalsTemporalPatternPackage {
-		struct IntervalTemporalPatternId {
-			long long ms;
-			general::corba::Identifier temporalPatternId;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64Seq cronStrings);
 		};
 
-		typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
+		typedef IdlCronTemporalPattern CronTemporalPattern;
+		typedef sequence<CronTemporalPattern> CronTemporalPatternSeq;
 
-		struct IntervalDuration {
-			long long ms;
-			long long duration;
+		valuetype IdlIntervalsTemporalPattern: ::general::corba::StorableObject {
+			struct IntervalTemporalPatternId {
+				long long ms;
+				::general::corba::Identifier temporalPatternId;
+			};
+
+			typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
+
+			struct IntervalDuration {
+				long long ms;
+				long long duration;
+			};
+
+			typedef sequence<IntervalDuration> IntervalDurationSeq;
+
+			public IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
+			public IntervalDurationSeq intervalsDuration;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in IntervalTemporalPatternIdSeq intervalsTemporalPatternId,
+					in IntervalDurationSeq intervalsDuration);
 		};
 
-		typedef sequence<IntervalDuration> IntervalDurationSeq;
-//	};
+		typedef IdlIntervalsTemporalPattern IntervalsTemporalPattern;
+		typedef sequence<IntervalsTemporalPattern> IntervalsTemporalPatternSeq;
 
-	typedef struct IdlIntervalsTemporalPattern {
-		general::corba::StorableObject header;
+		valuetype IdlPeriodicalTemporalPattern: ::general::corba::StorableObject {
+			public long long period;
 
-//		IdlIntervalsTemporalPatternPackage::
-		IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
-//		IdlIntervalsTemporalPatternPackage::
-		IntervalDurationSeq intervalsDuration;
-	} IntervalsTemporalPattern;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in long long period);
+		};
 
-	typedef sequence<IntervalsTemporalPattern> IntervalsTemporalPatternSeq;
-
-	typedef struct IdlPeriodicalTemporalPattern {
-		general::corba::StorableObject header;
-
-		long long period;
-	} PeriodicalTemporalPattern;
-
-	typedef sequence<PeriodicalTemporalPattern> PeriodicalTemporalPatternSeq;
+		typedef IdlPeriodicalTemporalPattern PeriodicalTemporalPattern;
+		typedef sequence<PeriodicalTemporalPattern> PeriodicalTemporalPatternSeq;
 
 /////////////////////// Test ////////////////////////
 
-	typedef struct IdlTest {
-		general::corba::StorableObject header;
-		union IdlTestTimeStamps switch (enum TestTemporalType {
-				TEST_TEMPORAL_TYPE_ONETIME,
-				TEST_TEMPORAL_TYPE_PERIODICAL,
-				TEST_TEMPORAL_TYPE_CONTINUOUS}) {
-			case TEST_TEMPORAL_TYPE_ONETIME:
-				long long startTime;
-			case TEST_TEMPORAL_TYPE_PERIODICAL:
-				struct PeriodicalTestTimeStamps {
+		valuetype IdlTest: ::general::corba::StorableObject {
+			union IdlTestTimeStamps switch (enum TestTemporalType {
+					TEST_TEMPORAL_TYPE_ONETIME,
+					TEST_TEMPORAL_TYPE_PERIODICAL,
+					TEST_TEMPORAL_TYPE_CONTINUOUS}) {
+				case TEST_TEMPORAL_TYPE_ONETIME:
 					long long startTime;
-					long long endTime;
-					general::corba::Identifier temporalPatternId;
-				} ptts;
-			case TEST_TEMPORAL_TYPE_CONTINUOUS:
-				struct ContinuousTestTimeStamps {
-					long long startTime;
-					long long endTime;
-				} ctts;
-		} timeStamps;
-		general::corba::Identifier measurementTypeId;
-		general::corba::Identifier analysisTypeId;
-		general::corba::Identifier evaluationTypeId;
-		general::corba::Identifier groupTestId;
-		enum TestStatus {
-			TEST_STATUS_NEW,	//Сохранён в БД на сервере
-			TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
-//			TEST_STATUS_QUEUED,	//Поставлен МУИ в очередь
-			TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
-			TEST_STATUS_COMPLETED,	//Последнее измерение завершено
-			TEST_STATUS_ABORTED	//Прерван
-		} status;		
-		general::corba::Identifier monitoredElementId;
-		enum TestReturnType {
-			TEST_RETURN_TYPE_WHOLE,
-			TEST_RETURN_TYPE_EVENTS,
-			TEST_RETURN_TYPE_REFERENCE
-		} returnType;
-		general::corba::WString256 description;
-		long numberOfMeasurements;
-		general::corba::IdentifierSeq measurementSetupIds;
-	} Test;
+				case TEST_TEMPORAL_TYPE_PERIODICAL:
+					struct PeriodicalTestTimeStamps {
+						long long startTime;
+						long long endTime;
+						::general::corba::Identifier temporalPatternId;
+					} ptts;
+				case TEST_TEMPORAL_TYPE_CONTINUOUS:
+					struct ContinuousTestTimeStamps {
+						long long startTime;
+						long long endTime;
+					} ctts;
+			};
 
-	typedef sequence<Test> TestSeq;
+			enum TestStatus {
+				TEST_STATUS_NEW,	//Сохранён в БД на сервере
+				TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
+//				TEST_STATUS_QUEUED,	//Поставлен МУИ в очередь
+				TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
+				TEST_STATUS_COMPLETED,	//Последнее измерение завершено
+				TEST_STATUS_ABORTED	//Прерван
+			};
+
+			enum TestReturnType {
+				TEST_RETURN_TYPE_WHOLE,
+				TEST_RETURN_TYPE_EVENTS,
+				TEST_RETURN_TYPE_REFERENCE
+			};
+
+			public IdlTestTimeStamps timeStamps;
+			public ::general::corba::Identifier measurementTypeId;
+			public ::general::corba::Identifier analysisTypeId;
+			public ::general::corba::Identifier evaluationTypeId;
+			public ::general::corba::Identifier groupTestId;
+			public TestStatus status;
+			public ::general::corba::Identifier monitoredElementId;
+			public TestReturnType returnType;
+			public ::general::corba::WString256 description;
+			public long numberOfMeasurements;
+			public ::general::corba::IdentifierSeq measurementSetupIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in IdlTestTimeStamps timeStamps,
+					in ::general::corba::Identifier measurementTypeId,
+					in ::general::corba::Identifier analysisTypeId,
+					in ::general::corba::Identifier evaluationTypeId,
+					in ::general::corba::Identifier groupTestId,
+					in TestStatus status,
+					in ::general::corba::Identifier monitoredElementId,
+					in TestReturnType returnType,
+					in ::general::corba::WString256 description,
+					in long numberOfMeasurements,
+					in ::general::corba::IdentifierSeq measurementSetupIds);
+		};
+
+		typedef IdlTest Test;
+		typedef sequence<Test> TestSeq;
 
 //////////////////// Analysis ///////////////////////
 
-	typedef struct IdlAnalysis {
-		general::corba::StorableObject header;
+		valuetype IdlAnalysis: ::general::corba::StorableObject {
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::Identifier monitoredElementId;
+			public ::general::corba::Identifier measurementId;
 
-		general::corba::Identifier _typeId;
-		general::corba::Identifier monitoredElementId;
-		general::corba::Identifier measurementId;
+			public ::general::corba::WString128 name;
 
-		general::corba::WString128 name;
+			public ::general::corba::Identifier criteriaSetId;
 
-		general::corba::Identifier criteriaSetId;
-	} Analysis;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::Identifier monitoredElementId,
+					in ::general::corba::Identifier measurementId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::Identifier criteriaSetId);
+		};
 
-	typedef sequence<Analysis> AnalysisSeq;
+		typedef IdlAnalysis Analysis;
+		typedef sequence<Analysis> AnalysisSeq;
 
 //////////////////// Evaluation /////////////////////
 
-	typedef struct IdlEvaluation {
-		general::corba::StorableObject header;
+		valuetype IdlEvaluation: ::general::corba::StorableObject {
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::Identifier monitoredElementId;
+			public ::general::corba::Identifier measurementId;
 
-		general::corba::Identifier _typeId;
-		general::corba::Identifier monitoredElementId;
-		general::corba::Identifier measurementId;
+			public ::general::corba::Identifier thresholdSetId;
 
-		general::corba::Identifier thresholdSetId;
-	} Evaluation;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::Identifier monitoredElementId,
+					in ::general::corba::Identifier measurementId,
+					in ::general::corba::Identifier thresholdSetId);
+		};
 
-	typedef sequence<Evaluation> EvaluationSeq;
+		typedef IdlEvaluation Evaluation;
+		typedef sequence<Evaluation> EvaluationSeq;
 
 ////////////////////// Result ///////////////////////
 
-	typedef struct IdlResult {
-		general::corba::StorableObject header;
+		valuetype IdlResult: ::general::corba::StorableObject {
+			enum ResultSort {
+				RESULT_SORT_MEASUREMENT,
+				RESULT_SORT_ANALYSIS,
+				RESULT_SORT_EVALUATION,
+				RESULT_SORT_MODELING
+			};
 
-		general::corba::Identifier measurementId;
-		general::corba::Identifier analysisId;
-		general::corba::Identifier evaluationId;
-		general::corba::Identifier modelingId;
-		enum ResultSort {
-			RESULT_SORT_MEASUREMENT,
-			RESULT_SORT_ANALYSIS,
-			RESULT_SORT_EVALUATION,
-			RESULT_SORT_MODELING
-		} sort;
-		ParameterSeq parameters;
-	} Result;
+			public ::general::corba::Identifier measurementId;
+			public ::general::corba::Identifier analysisId;
+			public ::general::corba::Identifier evaluationId;
+			public ::general::corba::Identifier modelingId;
+			public ResultSort sort;
+			public ParameterSeq parameters;
 
-	typedef sequence<Result> ResultSeq;
-};
-};
-};
-};
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier measurementId,
+					in ::general::corba::Identifier analysisId,
+					in ::general::corba::Identifier evaluationId,
+					in ::general::corba::Identifier modelingId,
+					in ResultSort sort,
+					in ParameterSeq parameters);
+		};
+
+		typedef IdlResult Result;
+		typedef sequence<Result> ResultSeq;
+	};
 };
 
 #endif // MEASUREMENT_IDL

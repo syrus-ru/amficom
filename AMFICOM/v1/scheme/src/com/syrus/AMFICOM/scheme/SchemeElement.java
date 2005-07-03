@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.43 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeElement.java,v 1.44 2005/07/03 19:16:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
@@ -34,17 +33,19 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementHelper;
 import com.syrus.util.Log;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/03 19:16:21 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -541,7 +542,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	@Override
 	public IdlSchemeElement getTransferable(final ORB orb) {
-		return new IdlSchemeElement(getHeaderTransferable(orb),
+		return IdlSchemeElementHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.getName(),
 				super.getDescription(),
 				this.label,
@@ -921,11 +928,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
-		super.fromTransferable(schemeElement.header, schemeElement.name,
+		super.fromTransferable(schemeElement, schemeElement.name,
 				schemeElement.description,
 				schemeElement.parentSchemeId,
 				schemeElement.characteristicIds);

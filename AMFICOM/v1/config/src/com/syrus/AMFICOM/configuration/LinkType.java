@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.59 2005/06/25 17:07:54 bass Exp $
+ * $Id: LinkType.java,v 1.60 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -34,9 +34,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/06/25 17:07:54 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -147,9 +148,9 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlLinkType ltt = (IdlLinkType) transferable;
-		super.fromTransferable(ltt.header, ltt.codename, ltt.description);
+		super.fromTransferable(ltt, ltt.codename, ltt.description);
 
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
@@ -170,7 +171,13 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 	public IdlLinkType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlLinkType(super.getHeaderTransferable(orb),
+		return IdlLinkTypeHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

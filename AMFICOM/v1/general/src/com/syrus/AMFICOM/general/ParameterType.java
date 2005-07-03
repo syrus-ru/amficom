@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.39 2005/06/25 17:07:47 bass Exp $
+ * $Id: ParameterType.java,v 1.40 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,15 +14,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/25 17:07:47 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:25 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -136,10 +137,10 @@ public final class ParameterType extends StorableObjectType implements Character
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlParameterType ptt = (IdlParameterType) transferable;
 		try {
-			super.fromTransferable(ptt.header, ptt.codename, ptt.description);
+			super.fromTransferable(ptt, ptt.codename, ptt.description);
 		} catch (ApplicationException ae) {
 			// Never
 			Log.errorException(ae);
@@ -163,7 +164,13 @@ public final class ParameterType extends StorableObjectType implements Character
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlParameterType(super.getHeaderTransferable(orb),
+		return IdlParameterTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,

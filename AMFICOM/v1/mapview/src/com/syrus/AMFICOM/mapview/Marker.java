@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.24 2005/06/25 17:50:48 bass Exp $
+ * $Id: Marker.java,v 1.25 2005/07/03 19:16:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.ListIterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -51,7 +50,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.24 $, $Date: 2005/06/25 17:50:48 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:17 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -490,7 +489,7 @@ public class Marker extends AbstractNode
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
-	public final IDLEntity getTransferable(final ORB orb) {
+	public final IdlStorableObject getTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 

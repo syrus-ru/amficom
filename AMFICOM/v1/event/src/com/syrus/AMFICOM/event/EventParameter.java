@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.19 2005/06/25 17:07:53 bass Exp $
+ * $Id: EventParameter.java,v 1.20 2005/07/03 19:16:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.event;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.event.corba.IdlEventParameter;
+import com.syrus.AMFICOM.event.corba.IdlEventPackage.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/03 19:16:27 $
  * @author $Author: bass $
  * @module event_v1
  */

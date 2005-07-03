@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.26 2005/06/24 14:13:39 bass Exp $
+ * $Id: scheme.idl,v 1.27 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,313 +9,613 @@
 #ifndef SCHEME_IDL
 #define SCHEME_IDL
 
-#include "general.idl"
-
-module com {
-	module syrus {
-		module AMFICOM {
-			module scheme {
-				module corba {
-					typedef struct IdlSchemeProtoGroup {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-
-						general::corba::Identifier symbolId;
-						general::corba::Identifier parentSchemeProtoGroupId;
-					} SchemeProtoGroup;
-
-					typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
-
-					typedef struct IdlSchemeProtoElement {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						general::corba::WString64 label;
-
-						general::corba::Identifier equipmentTypeId;
-						general::corba::Identifier symbolId;
-						general::corba::Identifier ugoCellId;
-						general::corba::Identifier schemeCellId;
-						general::corba::Identifier parentSchemeProtoGroupId;
-						general::corba::Identifier parentSchemeProtoElementId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeProtoElement;
-
-					typedef sequence<SchemeProtoElement> SchemeProtoElementSeq;
-
-					typedef struct IdlScheme {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						general::corba::WString64 label;
-						long width;
-						long height;
-						enum Kind {
-							BUILDING,
-							CABLE_SUBNETWORK,
-							NETWORK,
-							FLOOR,
-							ROOM,
-							RACK,
-							BAY,
-							CARDCAGE
-						} kind;
-
-						general::corba::Identifier domainId;
-						general::corba::Identifier mapId;
-						general::corba::Identifier symbolId;
-						general::corba::Identifier ugoCellId;
-						general::corba::Identifier schemeCellId;
-						general::corba::Identifier parentSchemeElementId;
-					} Scheme;
-
-					typedef sequence<Scheme> SchemeSeq;
-
-					typedef struct IdlSchemeElement {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						general::corba::WString64 label;
-
-						general::corba::Identifier equipmentTypeId;
-						general::corba::Identifier equipmentId;
-						general::corba::Identifier kisId;
-						general::corba::Identifier siteNodeId;
-						general::corba::Identifier symbolId;
-						general::corba::Identifier ugoCellId;
-						general::corba::Identifier schemeCellId;
-						general::corba::Identifier parentSchemeId;
-						general::corba::Identifier parentSchemeElementId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeElement;
-
-					typedef sequence<SchemeElement> SchemeElementSeq;
-
-					typedef struct IdlSchemeOptimizeInfo {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						long optimizationMode;
-						long iterations;
-						double price;
-						double waveLength;
-						double lenMargin;
-						double mutationRate;
-						double mutationDegree;
-						double rtuDeleteProb;
-						double rtuCreateProb;
-						double nodesSpliceProb;
-						double nodesCutProb;
-						double survivorRate;
-
-						general::corba::Identifier parentSchemeId;
-					} SchemeOptimizeInfo;
-
-					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
-
-					typedef struct IdlSchemeOptimizeInfoSwitch {
-						general::corba::StorableObject header;
-					} SchemeOptimizeInfoSwitch;
-
-					typedef sequence<SchemeOptimizeInfoSwitch> SchemeOptimizeInfoSwitchSeq;
-
-					typedef struct IdlSchemeOptimizeInfoRtu {
-						general::corba::StorableObject header;
-					} SchemeOptimizeInfoRtu;
-
-					typedef sequence<SchemeOptimizeInfoRtu> SchemeOptimizeInfoRtuSeq;
-
-					typedef struct IdlSchemeMonitoringSolution {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						long priceUsd;
-						boolean active;
-
-						general::corba::Identifier parentSchemeOptimizeInfoId;
-					} SchemeMonitoringSolution;
-
-					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
-
-					typedef struct IdlSchemeDevice {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-
-						general::corba::Identifier parentSchemeProtoElementId;
-						general::corba::Identifier parentSchemeElementId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeDevice;
-
-					typedef sequence<SchemeDevice> SchemeDeviceSeq;					
-
-					abstract valuetype IdlAbstractSchemePort {
-						enum DirectionType {
-							_IN,
-							_OUT
-						};
-					};
-
-					typedef struct IdlSchemePort {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						IdlAbstractSchemePort::DirectionType directionType;
-
-						general::corba::Identifier portTypeId;
-						general::corba::Identifier portId;
-						general::corba::Identifier measurementPortId;
-						general::corba::Identifier parentSchemeDeviceId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemePort;
-
-					typedef sequence<SchemePort> SchemePortSeq;
-
-					typedef struct IdlSchemeCablePort {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						IdlAbstractSchemePort::DirectionType directionType;
-
-						general::corba::Identifier cablePortTypeId;
-						general::corba::Identifier cablePortId;
-						general::corba::Identifier measurementPortId;
-						general::corba::Identifier parentSchemeDeviceId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeCablePort;
-
-					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
-
-					typedef struct IdlSchemeLink {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						double physicalLength;
-						double opticalLength;
-
-						general::corba::Identifier linkTypeId;
-						general::corba::Identifier linkId;
-						general::corba::Identifier siteNodeId;
-						general::corba::Identifier sourceSchemePortId;
-						general::corba::Identifier targetSchemePortId;
-						general::corba::Identifier parentSchemeId;
-						general::corba::Identifier parentSchemeElementId;
-						general::corba::Identifier parentSchemeProtoElementId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeLink;
-
-					typedef sequence<SchemeLink> SchemeLinkSeq;
-
-					typedef struct IdlSchemeCableLink {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-						double physicalLength;
-						double opticalLength;
-
-						general::corba::Identifier cableLinkTypeId;
-						general::corba::Identifier cableLinkId;
-						general::corba::Identifier sourceSchemeCablePortId;
-						general::corba::Identifier targetSchemeCablePortId;
-						general::corba::Identifier parentSchemeId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeCableLink;
-
-					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
-
-					typedef struct IdlSchemeCableThread {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-
-						general::corba::Identifier cableThreadTypeId;
-						general::corba::Identifier linkId;
-						general::corba::Identifier sourceSchemePortId;
-						general::corba::Identifier targetSchemePortId;
-						general::corba::Identifier parentSchemeCableLinkId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemeCableThread;
-
-					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
-
-					typedef struct IdlCableChannelingItem {
-						general::corba::StorableObject header;
-
-						double startSpare;
-						double endSpare;
-						long rowX;
-						long placeY;
-						long sequentialNumber;
-
-						general::corba::Identifier physicalLinkId;
-						general::corba::Identifier startSiteNodeId;
-						general::corba::Identifier endSiteNodeId;
-						general::corba::Identifier parentSchemeCableLinkId;
-					} CableChannelingItem;
-
-					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
-
-					typedef struct IdlSchemePath {
-						general::corba::StorableObject header;
-
-						general::corba::WString32 name;
-						general::corba::WString256 description;
-
-						general::corba::Identifier transmissionPathId;
-						general::corba::Identifier parentSchemeMonitoringSolutionId;
-						general::corba::Identifier parentSchemeId;
-
-						general::corba::IdentifierSeq characteristicIds;
-					} SchemePath;
-
-					typedef sequence<SchemePath> SchemePathSeq;
-
-					typedef struct IdlPathElement {
-						general::corba::StorableObject header;
-
-						general::corba::Identifier parentSchemePathId;
-						long sequentialNumber;
-						union Data switch (enum Kind{
-								SCHEME_ELEMENT,
-								SCHEME_CABLE_LINK,
-								SCHEME_LINK}) {
-							case SCHEME_ELEMENT:
-								struct SchemeElementData {
-									general::corba::Identifier startAbstractSchemePortId;
-									general::corba::Identifier endAbstractSchemePortId;
-								} schemeElementData;
-							case SCHEME_CABLE_LINK:
-								general::corba::Identifier schemeCableThreadId;
-							case SCHEME_LINK:
-								general::corba::Identifier schemeLinkId;
-						} data;
-					} PathElement;
-
-					typedef sequence<PathElement> PathElementSeq;
-				};
-			};
+#include "administration.idl"
+
+#pragma prefix "AMFICOM.syrus.com"
+
+module scheme {
+	module corba {
+		valuetype IdlSchemeProtoGroup: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::Identifier symbolId;
+			public ::general::corba::Identifier parentSchemeProtoGroupId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier symbolId,
+					in ::general::corba::Identifier parentSchemeProtoGroupId);
 		};
+
+		typedef IdlSchemeProtoGroup SchemeProtoGroup;
+		typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
+
+		valuetype IdlSchemeProtoElement: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64 label;
+
+			public ::general::corba::Identifier equipmentTypeId;
+			public ::general::corba::Identifier symbolId;
+			public ::general::corba::Identifier ugoCellId;
+			public ::general::corba::Identifier schemeCellId;
+			public ::general::corba::Identifier parentSchemeProtoGroupId;
+			public ::general::corba::Identifier parentSchemeProtoElementId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 label,
+					in ::general::corba::Identifier equipmentTypeId,
+					in ::general::corba::Identifier symbolId,
+					in ::general::corba::Identifier ugoCellId,
+					in ::general::corba::Identifier schemeCellId,
+					in ::general::corba::Identifier parentSchemeProtoGroupId,
+					in ::general::corba::Identifier parentSchemeProtoElementId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeProtoElement SchemeProtoElement;
+		typedef sequence<SchemeProtoElement> SchemeProtoElementSeq;
+
+		valuetype IdlScheme: ::administration::corba::DomainMember {
+			enum Kind {
+				BUILDING,
+				CABLE_SUBNETWORK,
+				NETWORK,
+				FLOOR,
+				ROOM,
+				RACK,
+				BAY,
+				CARDCAGE
+			};
+
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64 label;
+			public long width;
+			public long height;
+			public Kind kind;
+
+			public ::general::corba::Identifier mapId;
+			public ::general::corba::Identifier symbolId;
+			public ::general::corba::Identifier ugoCellId;
+			public ::general::corba::Identifier schemeCellId;
+			public ::general::corba::Identifier parentSchemeElementId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 label,
+					in long width,
+					in long height,
+					in Kind kind,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::Identifier mapId,
+					in ::general::corba::Identifier symbolId,
+					in ::general::corba::Identifier ugoCellId,
+					in ::general::corba::Identifier schemeCellId,
+					in ::general::corba::Identifier parentSchemeElementId);
+		};
+
+		typedef IdlScheme Scheme;
+		typedef sequence<Scheme> SchemeSeq;
+
+		valuetype IdlAbstractSchemeElement: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::Identifier parentSchemeId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlAbstractSchemeElement AbstractSchemeElement;
+		typedef sequence<AbstractSchemeElement> AbstractSchemeElementSeq;
+
+		valuetype IdlSchemeElement: AbstractSchemeElement {
+			public ::general::corba::WString64 label;
+
+			public ::general::corba::Identifier equipmentTypeId;
+			public ::general::corba::Identifier equipmentId;
+			public ::general::corba::Identifier kisId;
+			public ::general::corba::Identifier siteNodeId;
+			public ::general::corba::Identifier symbolId;
+			public ::general::corba::Identifier ugoCellId;
+			public ::general::corba::Identifier schemeCellId;
+			public ::general::corba::Identifier parentSchemeElementId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 label,
+					in ::general::corba::Identifier equipmentTypeId,
+					in ::general::corba::Identifier equipmentId,
+					in ::general::corba::Identifier kisId,
+					in ::general::corba::Identifier siteNodeId,
+					in ::general::corba::Identifier symbolId,
+					in ::general::corba::Identifier ugoCellId,
+					in ::general::corba::Identifier schemeCellId,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::Identifier parentSchemeElementId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeElement SchemeElement;
+		typedef sequence<SchemeElement> SchemeElementSeq;
+
+		valuetype IdlSchemeOptimizeInfo: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+			public long optimizationMode;
+			public long iterations;
+			public double price;
+			public double waveLength;
+			public double lenMargin;
+			public double mutationRate;
+			public double mutationDegree;
+			public double rtuDeleteProb;
+			public double rtuCreateProb;
+			public double nodesSpliceProb;
+			public double nodesCutProb;
+			public double survivorRate;
+
+			public ::general::corba::Identifier parentSchemeId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in long optimizationMode,
+					in long iterations,
+					in double price,
+					in double waveLength,
+					in double lenMargin,
+					in double mutationRate,
+					in double mutationDegree,
+					in double rtuDeleteProb,
+					in double rtuCreateProb,
+					in double nodesSpliceProb,
+					in double nodesCutProb,
+					in double survivorRate,
+					in ::general::corba::Identifier parentSchemeId);
+		};
+
+		typedef IdlSchemeOptimizeInfo SchemeOptimizeInfo;
+		typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
+
+		valuetype IdlSchemeOptimizeInfoSwitch: ::general::corba::StorableObject {
+			public ::general::corba::WString128 name;
+			public long priceUsd;
+			public octet noOfPorts;
+			public ::general::corba::Identifier parentSchemeOptimizeInfoId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString128 name,
+					in long priceUsd,
+					in octet noOfPorts,
+					in ::general::corba::Identifier parentSchemeOptimizeInfoId);
+		};
+
+		typedef IdlSchemeOptimizeInfoSwitch SchemeOptimizeInfoSwitch;
+		typedef sequence<SchemeOptimizeInfoSwitch> SchemeOptimizeInfoSwitchSeq;
+
+		valuetype IdlSchemeOptimizeInfoRtu: ::general::corba::StorableObject {
+			public ::general::corba::WString128 name;
+			public long priceUsd;
+			public float rangeDb;
+			public ::general::corba::Identifier parentSchemeOptimizeInfoId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString128 name,
+					in long priceUsd,
+					in float rangeDb,
+					in ::general::corba::Identifier parentSchemeOptimizeInfoId);
+		};
+
+		typedef IdlSchemeOptimizeInfoRtu SchemeOptimizeInfoRtu;
+		typedef sequence<SchemeOptimizeInfoRtu> SchemeOptimizeInfoRtuSeq;
+
+		valuetype IdlSchemeMonitoringSolution: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+			public long priceUsd;
+			public boolean active;
+
+			public ::general::corba::Identifier parentSchemeOptimizeInfoId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in long priceUsd,
+					in boolean active,
+					in ::general::corba::Identifier parentSchemeOptimizeInfoId);
+		};
+
+		typedef IdlSchemeMonitoringSolution SchemeMonitoringSolution;
+		typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
+
+		valuetype IdlSchemeDevice: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::Identifier parentSchemeProtoElementId;
+			public ::general::corba::Identifier parentSchemeElementId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier parentSchemeProtoElementId,
+					in ::general::corba::Identifier parentSchemeElementId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeDevice SchemeDevice;
+		typedef sequence<SchemeDevice> SchemeDeviceSeq;					
+
+		valuetype IdlAbstractSchemePort: ::general::corba::StorableObject {
+			enum DirectionType {
+				_IN,
+				_OUT
+			};
+
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+			public DirectionType directionType;
+
+			public ::general::corba::Identifier measurementPortId;
+			public ::general::corba::Identifier parentSchemeDeviceId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in DirectionType directionType,
+					in ::general::corba::Identifier measurementPortId,
+					in ::general::corba::Identifier parentSchemeDeviceId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlAbstractSchemePort AbstractSchemePort;
+		typedef sequence<AbstractSchemePort> AbstractSchemePortSeq;
+
+		valuetype IdlSchemePort: AbstractSchemePort {
+			public ::general::corba::Identifier portTypeId;
+			public ::general::corba::Identifier portId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in DirectionType directionType,
+					in ::general::corba::Identifier portTypeId,
+					in ::general::corba::Identifier portId,
+					in ::general::corba::Identifier measurementPortId,
+					in ::general::corba::Identifier parentSchemeDeviceId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemePort SchemePort;
+		typedef sequence<SchemePort> SchemePortSeq;
+
+		valuetype IdlSchemeCablePort: AbstractSchemePort {
+			public ::general::corba::Identifier cablePortTypeId;
+			public ::general::corba::Identifier cablePortId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in DirectionType directionType,
+					in ::general::corba::Identifier cablePortTypeId,
+					in ::general::corba::Identifier cablePortId,
+					in ::general::corba::Identifier measurementPortId,
+					in ::general::corba::Identifier parentSchemeDeviceId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeCablePort SchemeCablePort;
+		typedef sequence<SchemeCablePort> SchemeCablePortSeq;
+
+		valuetype IdlAbstractSchemeLink: AbstractSchemeElement {
+			public double physicalLength;
+			public double opticalLength;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in double physicalLength,
+					in double opticalLength,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlAbstractSchemeLink AbstractSchemeLink;
+		typedef sequence<AbstractSchemeLink> AbstractSchemeLinkSeq;
+
+		valuetype IdlSchemeLink: AbstractSchemeLink {
+			public ::general::corba::Identifier linkTypeId;
+			public ::general::corba::Identifier linkId;
+			public ::general::corba::Identifier siteNodeId;
+			public ::general::corba::Identifier sourceSchemePortId;
+			public ::general::corba::Identifier targetSchemePortId;
+			public ::general::corba::Identifier parentSchemeElementId;
+			public ::general::corba::Identifier parentSchemeProtoElementId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in double physicalLength,
+					in double opticalLength,
+					in ::general::corba::Identifier linkTypeId,
+					in ::general::corba::Identifier linkId,
+					in ::general::corba::Identifier siteNodeId,
+					in ::general::corba::Identifier sourceSchemePortId,
+					in ::general::corba::Identifier targetSchemePortId,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::Identifier parentSchemeElementId,
+					in ::general::corba::Identifier parentSchemeProtoElementId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeLink SchemeLink;
+		typedef sequence<SchemeLink> SchemeLinkSeq;
+
+		valuetype IdlSchemeCableLink: AbstractSchemeLink {
+			public ::general::corba::Identifier cableLinkTypeId;
+			public ::general::corba::Identifier cableLinkId;
+			public ::general::corba::Identifier sourceSchemeCablePortId;
+			public ::general::corba::Identifier targetSchemeCablePortId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in double physicalLength,
+					in double opticalLength,
+					in ::general::corba::Identifier cableLinkTypeId,
+					in ::general::corba::Identifier cableLinkId,
+					in ::general::corba::Identifier sourceSchemeCablePortId,
+					in ::general::corba::Identifier targetSchemeCablePortId,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeCableLink SchemeCableLink;
+		typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
+
+		valuetype IdlSchemeCableThread: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::Identifier cableThreadTypeId;
+			public ::general::corba::Identifier linkId;
+			public ::general::corba::Identifier sourceSchemePortId;
+			public ::general::corba::Identifier targetSchemePortId;
+			public ::general::corba::Identifier parentSchemeCableLinkId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier cableThreadTypeId,
+					in ::general::corba::Identifier linkId,
+					in ::general::corba::Identifier sourceSchemePortId,
+					in ::general::corba::Identifier targetSchemePortId,
+					in ::general::corba::Identifier parentSchemeCableLinkId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemeCableThread SchemeCableThread;
+		typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
+
+		valuetype IdlCableChannelingItem: ::general::corba::StorableObject {
+			public double startSpare;
+			public double endSpare;
+			public long rowX;
+			public long placeY;
+			public long sequentialNumber;
+
+			public ::general::corba::Identifier physicalLinkId;
+			public ::general::corba::Identifier startSiteNodeId;
+			public ::general::corba::Identifier endSiteNodeId;
+			public ::general::corba::Identifier parentSchemeCableLinkId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in double startSpare,
+					in double endSpare,
+					in long rowX,
+					in long placeY,
+					in long sequentialNumber,
+					in ::general::corba::Identifier physicalLinkId,
+					in ::general::corba::Identifier startSiteNodeId,
+					in ::general::corba::Identifier endSiteNodeId,
+					in ::general::corba::Identifier parentSchemeCableLinkId);
+		};
+
+		typedef IdlCableChannelingItem CableChannelingItem;
+		typedef sequence<CableChannelingItem> CableChannelingItemSeq;
+
+		valuetype IdlSchemePath: ::general::corba::StorableObject {
+			public ::general::corba::WString32 name;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::Identifier transmissionPathId;
+			public ::general::corba::Identifier parentSchemeMonitoringSolutionId;
+			public ::general::corba::Identifier parentSchemeId;
+
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier transmissionPathId,
+					in ::general::corba::Identifier parentSchemeMonitoringSolutionId,
+					in ::general::corba::Identifier parentSchemeId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlSchemePath SchemePath;
+		typedef sequence<SchemePath> SchemePathSeq;
+
+		valuetype IdlPathElement: ::general::corba::StorableObject {
+			union Data switch (enum Kind{
+					SCHEME_ELEMENT,
+					SCHEME_CABLE_LINK,
+					SCHEME_LINK}) {
+				case SCHEME_ELEMENT:
+					struct SchemeElementData {
+						::general::corba::Identifier startAbstractSchemePortId;
+						::general::corba::Identifier endAbstractSchemePortId;
+					} schemeElementData;
+				case SCHEME_CABLE_LINK:
+					::general::corba::Identifier schemeCableThreadId;
+				case SCHEME_LINK:
+					::general::corba::Identifier schemeLinkId;
+			};
+
+			public ::general::corba::Identifier parentSchemePathId;
+			public long sequentialNumber;
+			public Data data;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier parentSchemePathId,
+					in long sequentialNumber,
+					in Data data);
+		};
+
+		typedef IdlPathElement PathElement;
+		typedef sequence<PathElement> PathElementSeq;
 	};
 };
 

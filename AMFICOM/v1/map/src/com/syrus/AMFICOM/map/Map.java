@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.54 2005/06/25 17:50:44 bass Exp $
+ * $Id: Map.java,v 1.55 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import java.util.Set;
 import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,7 +41,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlMap;
+import com.syrus.AMFICOM.map.corba.IdlMapHelper;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.map.corba.IdlMap;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/06/25 17:50:44 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -171,9 +172,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlMap mt = (IdlMap) transferable;
-		super.fromTransferable(mt.header, new Identifier(mt.domainId));
+		super.fromTransferable(mt, new Identifier(mt.domainId));
 
 		this.name = mt.name;
 		this.description = mt.description;
@@ -223,7 +225,13 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
 		IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
 		IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
-		return new IdlMap(super.getHeaderTransferable(orb),
+		return IdlMapHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.13 2005/06/25 17:07:41 bass Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.14 2005/07/03 19:16:31 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -23,12 +22,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/03 19:16:31 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -77,9 +78,9 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
-		super.fromTransferable(ptpt.header);
+		super.fromTransferable(ptpt);
 		this.period = ptpt.period;
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -147,7 +148,14 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	public IdlPeriodicalTemporalPattern getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlPeriodicalTemporalPattern(super.getHeaderTransferable(orb), this.period);
+		return IdlPeriodicalTemporalPatternHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				this.period);
 	}
 
 	

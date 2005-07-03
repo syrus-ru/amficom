@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.4 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.5 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,16 @@
  */
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:20 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -42,36 +46,126 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 
 	private static SchemeProtoElementWrapper instance;
 
-	public List getKeys() {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	private List<String> keys;
+
+	private SchemeProtoElementWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_LABEL,
+				COLUMN_EQUIPMENT_TYPE_ID,
+				COLUMN_SYMBOL_ID,
+				COLUMN_UGO_CELL_ID,
+				COLUMN_SCHEME_CELL_ID,
+				COLUMN_PARENT_SCHEME_PROTO_GROUP_ID,
+				COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID,
+				COLUMN_CHARACTERISTICS}));
 	}
 
-	public String getName(String key) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	public List<String> getKeys() {
+		return this.keys;
 	}
 
-	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	public String getName(final String key) {
+		return key;
 	}
 
-	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	@Override
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)
+				|| key.equals(COLUMN_LABEL)) {
+			return String.class;
+		} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)
+				|| key.equals(COLUMN_SYMBOL_ID)
+				|| key.equals(COLUMN_UGO_CELL_ID)
+				|| key.equals(COLUMN_SCHEME_CELL_ID)
+				|| key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)
+				|| key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+			return Set.class;
+		}
+		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	public Object getPropertyValue(final String key) {
+		return null;
 	}
 
-	public Object getValue(Object object, String key) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+		// empty
 	}
 
-	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	@Override
+	public Object getValue(final Object object, final String key) {
+		final Object value = super.getValue(object, key);
+		if (value != null) {
+			return value;
+		}
+		if (object instanceof SchemeProtoElement) {
+			final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) object;
+			if (key.equals(COLUMN_NAME)) {
+				return schemeProtoElement.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				return schemeProtoElement.getDescription();
+			} else if (key.equals(COLUMN_LABEL)) {
+				return schemeProtoElement.getLabel();
+			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
+				return schemeProtoElement.equipmentTypeId;
+			} else if (key.equals(COLUMN_SYMBOL_ID)) {
+				return schemeProtoElement.symbolId;
+			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+				return schemeProtoElement.ugoCellId;
+			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+				return schemeProtoElement.schemeCellId;
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
+				return schemeProtoElement.parentSchemeProtoGroupId;
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+				return schemeProtoElement.parentSchemeProtoElementId;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				return schemeProtoElement.getCharacteristics();
+			}
+		}
+		return null;
 	}
 
-	public void setValue(Object object, String key, Object value) {
-		throw new UnsupportedOperationException("SchemeProtoElementWrapper | not implemented yet");
+	public boolean isEditable(final String key) {
+		return false;
+	}
+
+	public void setValue(final Object object, final String key, final Object value) {
+		if (object instanceof SchemeProtoElement) {
+			final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) object;
+			if (key.equals(COLUMN_NAME)) {
+				schemeProtoElement.setName((String) value);
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				schemeProtoElement.setDescription((String) value);
+			} else if (key.equals(COLUMN_LABEL)) {
+				schemeProtoElement.setLabel((String) value);
+				/**
+				 * @todo: Add package-visible setter methods.
+				 */
+//			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
+//				schemeProtoElement.equipmentTypeId = (Identifier) value;
+//			} else if (key.equals(COLUMN_SYMBOL_ID)) {
+//				schemeProtoElement.symbolId = (Identifier) value;
+//			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+//				schemeProtoElement.ugoCellId = (Identifier) value;
+//			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+//				schemeProtoElement.schemeCellId = (Identifier) value;
+//			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
+//				schemeProtoElement.parentSchemeProtoGroupId = (Identifier) value;
+//			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+//				schemeProtoElement.parentSchemeProtoElementId = (Identifier) value;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				schemeProtoElement.setCharacteristics((Set) value);
+			}
+		}
 	}
 
 	public static SchemeProtoElementWrapper getInstance() {

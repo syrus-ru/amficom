@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.39 2005/06/29 12:15:21 arseniy Exp $
+ * $Id: ModelingType.java,v 1.40 2005/07/03 19:16:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,11 +30,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/29 12:15:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:30 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -146,9 +147,9 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlModelingType mtt = (IdlModelingType) transferable;
-		super.fromTransferable(mtt.header, mtt.codename, mtt.description);
+		super.fromTransferable(mtt, mtt.codename, mtt.description);
 
 		this.inParameterTypeIds = Identifier.fromTransferables(mtt.inParameterTypeIds);
 		this.outParameterTypeIds = Identifier.fromTransferables(mtt.outParameterTypeIds);
@@ -166,7 +167,13 @@ public final class ModelingType extends ActionType {
 		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
 		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 
-		return new IdlModelingType(super.getHeaderTransferable(orb),
+		return IdlModelingTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

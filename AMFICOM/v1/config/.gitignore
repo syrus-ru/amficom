@@ -16,4 +16,5 @@ logs
 Makefile.inc
 .project
 .classpath
+.idl
 .settings

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.91 2005/06/30 10:25:11 arseniy Exp $
+ * $Id: KIS.java,v 1.92 2005/07/03 19:16:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlKIS;
+import com.syrus.AMFICOM.configuration.corba.IdlKISHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,11 +35,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/06/30 10:25:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2005/07/03 19:16:22 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -151,9 +152,9 @@ public final class KIS extends DomainMember implements Characterizable {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlKIS kt = (IdlKIS) transferable;
-		super.fromTransferable(kt.header, new Identifier(kt.domainId));
+		super.fromTransferable(kt, new Identifier(kt.domainId));
 
 		this.equipmentId = new Identifier(kt.equipmentId);
 		this.mcmId = new Identifier(kt.mcmId);
@@ -176,7 +177,13 @@ public final class KIS extends DomainMember implements Characterizable {
 	public IdlKIS getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlKIS(super.getHeaderTransferable(orb),
+		return IdlKISHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAMeasurementObjectLoader.java,v 1.25 2005/06/23 18:45:10 bass Exp $
+ * $Id: CORBAMeasurementObjectLoader.java,v 1.26 2005/07/03 19:16:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -42,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/23 18:45:10 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/03 19:16:26 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -58,7 +56,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurementTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENT_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -70,7 +68,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadAnalysisTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.ANALYSIS_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -82,7 +80,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadEvaluationTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.EVALUATION_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -94,7 +92,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadModelingTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MODELING_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -108,7 +106,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurements(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -120,7 +118,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadAnalyses(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.ANALYSIS_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -132,7 +130,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadEvaluations(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.EVALUATION_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -144,7 +142,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadModelings(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MODELING_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -156,7 +154,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurementSetups(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -168,7 +166,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadResults(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.RESULT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -180,7 +178,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadParameterSets(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PARAMETERSET_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -192,7 +190,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadTests(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.TEST_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -204,7 +202,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadCronTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -216,7 +214,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadIntervalsTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -228,7 +226,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadPeriodicalTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -244,7 +242,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurementTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -257,7 +255,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadAnalysisTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -270,7 +268,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadEvaluationTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -283,7 +281,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadModelingTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MODELING_TYPE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -298,7 +296,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -311,7 +309,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -324,7 +322,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -337,7 +335,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadModelingsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MODELING_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -350,7 +348,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadMeasurementSetupsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENTSETUP_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -363,7 +361,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadResultsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.RESULT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -376,7 +374,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadParameterSetsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETERSET_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -389,7 +387,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadTestsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.TEST_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -402,7 +400,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadCronTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CRONTEMPORALPATTERN_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -415,7 +413,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadIntervalsTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -428,7 +426,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 
 	public Set loadPeriodicalTemporalPatternsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -447,7 +445,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.MEASUREMENT_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveMeasurementTypes((IdlMeasurementType[]) transferables, force, sessionKey);
@@ -459,7 +457,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.ANALYSIS_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveAnalysisTypes((IdlAnalysisType[]) transferables, force, sessionKey);
@@ -471,7 +469,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.EVALUATION_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveEvaluationTypes((IdlEvaluationType[]) transferables, force, sessionKey);
@@ -483,7 +481,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.MODELING_TYPE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveModelingTypes((IdlModelingType[]) transferables, force, sessionKey);
@@ -497,7 +495,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.MEASUREMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveMeasurements((IdlMeasurement[]) transferables, force, sessionKey);
@@ -509,7 +507,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.ANALYSIS_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveAnalyses((IdlAnalysis[]) transferables, force, sessionKey);
@@ -521,7 +519,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.EVALUATION_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveEvaluations((IdlEvaluation[]) transferables, force, sessionKey);
@@ -533,7 +531,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.MODELING_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveModelings((IdlModeling[]) transferables, force, sessionKey);
@@ -545,7 +543,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveMeasurementSetups((IdlMeasurementSetup[]) transferables, force, sessionKey);
@@ -557,7 +555,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.RESULT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveResults((IdlResult[]) transferables, force, sessionKey);
@@ -569,7 +567,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.PARAMETERSET_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveParameterSets((IdlParameterSet[]) transferables, force, sessionKey);
@@ -581,7 +579,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.TEST_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
@@ -593,7 +591,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveCronTemporalPatterns((IdlCronTemporalPattern[]) transferables, force, sessionKey);
@@ -605,7 +603,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveIntervalsTemporalPatterns((IdlIntervalsTemporalPattern[]) transferables, force, sessionKey);
@@ -617,7 +615,7 @@ public final class CORBAMeasurementObjectLoader extends CORBAObjectLoader implem
 		super.saveStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receivePeriodicalTemporalPatterns((IdlPeriodicalTemporalPattern[]) transferables, force, sessionKey);

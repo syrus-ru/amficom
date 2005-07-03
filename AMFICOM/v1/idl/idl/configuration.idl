@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.96 2005/06/28 10:41:54 bass Exp $
+ * $Id: configuration.idl,v 1.97 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,311 +9,542 @@
 #ifndef CONFIGURATION_IDL
 #define CONFIGURATION_IDL
 
-#include "general.idl"
+#include "administration.idl"
 
-module com {
-module syrus {
-module AMFICOM {
+#pragma prefix "AMFICOM.syrus.com"
+
 module configuration {
-module corba {
+	module corba {
 
 // Generic interface to Equipment, MonitoredElement, etc
 //	abstract interface MonitoredDomainMember_Transferable {
-//		attribute general::corba::IdentifierSeq monitored_element_ids;
+//		attribute ::general::corba::IdentifierSeq monitored_element_ids;
 //
-//		void getKIS() raises (general::corba::AMFICOMRemoteException);
+//		void getKIS() raises (::general::corba::AMFICOMRemoteException);
 //	};
 
 
 /////////////////////// EquipmentType /////////////////////
-	typedef struct IdlEquipmentType {
-		general::corba::StorableObject header;
+		valuetype IdlEquipmentType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString128 manufacturer;
+			public ::general::corba::WString32 manufacturerCode;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
-		general::corba::WString128 manufacturer;
-		general::corba::WString32 manufacturerCode;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::IdentifierSeq characteristicIds;
-	} EquipmentType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString128 manufacturer,
+					in ::general::corba::WString32 manufacturerCode,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef sequence<EquipmentType> EquipmentTypeSeq;
+		typedef IdlEquipmentType EquipmentType;
+		typedef sequence<EquipmentType> EquipmentTypeSeq;
 
 /////////////////////// TransmissionPathType /////////////////////
-	typedef struct IdlTransmissionPathType {
-		general::corba::StorableObject header;
+		valuetype IdlTransmissionPathType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::IdentifierSeq characteristicIds;
-	} TransmissionPathType;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef sequence<TransmissionPathType> TransmissionPathTypeSeq;
+		typedef IdlTransmissionPathType TransmissionPathType;
+		typedef sequence<TransmissionPathType> TransmissionPathTypeSeq;
 
 /////////////////////// PortType /////////////////////
-	typedef struct IdlPortType {
-		general::corba::StorableObject header;
+		valuetype IdlPortType: ::general::corba::StorableObject {
+			enum PortTypeSort {
+				PORTTYPESORT_OPTICAL,
+				PORTTYPESORT_ELECTRICAL,
+				PORTTYPESORT_THERMAL
+			};
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
-		enum PortTypeSort {
-			PORTTYPESORT_OPTICAL,
-			PORTTYPESORT_ELECTRICAL,
-			PORTTYPESORT_THERMAL
-		} sort;
-		general::corba::IdentifierSeq characteristicIds;
-	} PortType;
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
+			public PortTypeSort sort;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-	typedef sequence<PortType> PortTypeSeq;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in PortTypeSort sort,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef struct IdlMeasurementPortType {
-		general::corba::StorableObject header;
+		typedef IdlPortType PortType;
+		typedef sequence<PortType> PortTypeSeq;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
+		valuetype IdlMeasurementPortType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
 
-		general::corba::IdentifierSeq characteristicIds;
-	} MeasurementPortType;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-	typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlMeasurementPortType MeasurementPortType;
+		typedef sequence<MeasurementPortType> MeasurementPortTypeSeq;
 
 /////////////////////// LinkType /////////////////////
-	abstract valuetype IdlAbstractLinkType {
-		enum LinkTypeSort {
-			LINKTYPESORT_OPTICAL_FIBER,
-			LINKTYPESORT_ETHERNET,
-			LINKTYPESORT_GSM
+		valuetype IdlAbstractLinkType: ::general::corba::StorableObject {
+			enum LinkTypeSort {
+				LINKTYPESORT_OPTICAL_FIBER,
+				LINKTYPESORT_ETHERNET,
+				LINKTYPESORT_GSM
+			};
+
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
+			public LinkTypeSort sort;
+			public ::general::corba::WString128 manufacturer;
+			public ::general::corba::WString32 manufacturerCode;
+			public ::general::corba::Identifier imageId;
+			public ::general::corba::IdentifierSeq characteristicIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in LinkTypeSort sort,
+					in ::general::corba::WString128 manufacturer,
+					in ::general::corba::WString32 manufacturerCode,
+					in ::general::corba::Identifier imageId,
+					in ::general::corba::IdentifierSeq characteristicIds);
 		};
-	};
 
-	typedef IdlAbstractLinkType AbstractLinkType;
+		typedef IdlAbstractLinkType AbstractLinkType;
+		typedef sequence<AbstractLinkType> AbstractLinkTypeSeq;
 
-	typedef struct IdlLinkType {
-		general::corba::StorableObject header;
+		valuetype IdlLinkType: AbstractLinkType {
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in LinkTypeSort sort,
+					in ::general::corba::WString128 manufacturer,
+					in ::general::corba::WString32 manufacturerCode,
+					in ::general::corba::Identifier imageId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
-		AbstractLinkType::LinkTypeSort sort;
-		general::corba::WString128 manufacturer;
-		general::corba::WString32 manufacturerCode;
-		general::corba::Identifier imageId;
-		general::corba::IdentifierSeq characteristicIds;
-	} LinkType;
+		typedef IdlLinkType LinkType;
+		typedef sequence<LinkType> LinkTypeSeq;
 
-	typedef sequence<LinkType> LinkTypeSeq;
+		valuetype IdlCableLinkType: AbstractLinkType {
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in LinkTypeSort sort,
+					in ::general::corba::WString128 manufacturer,
+					in ::general::corba::WString32 manufacturerCode,
+					in ::general::corba::Identifier imageId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef struct IdlCableLinkType {
-		general::corba::StorableObject header;
+		typedef IdlCableLinkType CableLinkType;
+		typedef sequence<CableLinkType> CableLinkTypeSeq;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
-		AbstractLinkType::LinkTypeSort sort;
-		general::corba::WString128 manufacturer;
-		general::corba::WString32 manufacturerCode;
-		general::corba::Identifier imageId;
-		general::corba::IdentifierSeq characteristicIds;
-	} CableLinkType;
+		valuetype IdlCableThreadType: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString128 name;
 
-	typedef sequence<CableLinkType> CableLinkTypeSeq;
+			public long color;
 
-	typedef struct IdlCableThreadType {
-		general::corba::StorableObject header;
+			public ::general::corba::Identifier linkTypeId;
+			public ::general::corba::Identifier cableLinkTypeId;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
-		general::corba::WString128 name;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 name,
+					in long color,
+					in ::general::corba::Identifier linkTypeId,
+					in ::general::corba::Identifier cableLinkTypeId);
+		};
 
-		long color;
-
-		general::corba::Identifier linkTypeId;
-		general::corba::Identifier cableLinkTypeId;
-	} CableThreadType;
-
-	typedef sequence<CableThreadType> CableThreadTypeSeq;
+		typedef IdlCableThreadType CableThreadType;
+		typedef sequence<CableThreadType> CableThreadTypeSeq;
 
 ///////////////////////// Equipment ///////////////////////
-	typedef struct IdlEquipment {
-		general::corba::StorableObject header;
+		valuetype IdlEquipment: ::administration::corba::DomainMember {
+			public ::general::corba::Identifier _typeId;
 
-		general::corba::Identifier domainId;
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
 
-		general::corba::Identifier _typeId;
+			public ::general::corba::WString128 supplier;
+			public ::general::corba::WString32 supplierCode;
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
+			public float longitude;
+			public float latitude;
 
-		general::corba::WString128 supplier;
-		general::corba::WString32 supplierCode;
+			public ::general::corba::WString64 hwSerial;
+			public ::general::corba::WString64 hwVersion;
+			public ::general::corba::WString64 swSerial;
+			public ::general::corba::WString64 swVersion;
+			public ::general::corba::WString64 inventoryNumber;
 
-		float longitude;
-		float latitude;
+			public ::general::corba::Identifier imageId;
 
-		general::corba::WString64 hwSerial;
-		general::corba::WString64 hwVersion;
-		general::corba::WString64 swSerial;
-		general::corba::WString64 swVersion;
-		general::corba::WString64 inventoryNumber;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier imageId;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString128 supplier,
+					in ::general::corba::WString32 supplierCode,
+					in float longitude,
+					in float latitude,
+					in ::general::corba::WString64 hwSerial,
+					in ::general::corba::WString64 hwVersion,
+					in ::general::corba::WString64 swSerial,
+					in ::general::corba::WString64 swVersion,
+					in ::general::corba::WString64 inventoryNumber,
+					in ::general::corba::Identifier imageId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::IdentifierSeq characteristicIds;
-	} Equipment;
-
-	typedef sequence<Equipment> EquipmentSeq;
+		typedef IdlEquipment Equipment;
+		typedef sequence<Equipment> EquipmentSeq;
 
 ///////////////////// Transmission Path ///////////////////
-	typedef struct IdlTransmissionPath {
-		general::corba::StorableObject header;
+		valuetype IdlTransmissionPath: ::administration::corba::DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
 
-		general::corba::Identifier domainId;
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::Identifier startPortId;
+			public ::general::corba::Identifier finishPortId;
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier _typeId;
-		general::corba::Identifier startPortId;
-		general::corba::Identifier finishPortId;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::Identifier startPortId,
+					in ::general::corba::Identifier finishPortId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::IdentifierSeq characteristicIds;
-
-	} TransmissionPath;
-
-	typedef sequence<TransmissionPath> TransmissionPathSeq;
+		typedef IdlTransmissionPath TransmissionPath;
+		typedef sequence<TransmissionPath> TransmissionPathSeq;
 
 /////////////////////////////// Port ////////////////////////////////
 
-	typedef struct IdlPort {
-		general::corba::StorableObject header;
+		valuetype IdlPort: ::general::corba::StorableObject {
+			enum PortSort {
+				PORT_SORT_PORT,
+				PORT_SORT_CABLE_PORT
+			};
 
-		general::corba::Identifier _typeId;
-		general::corba::WString256 description;
-		general::corba::Identifier equipmentId;
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::WString256 description;
+			public ::general::corba::Identifier equipmentId;
 
-		enum PortSort {
-			PORT_SORT_PORT,
-			PORT_SORT_CABLE_PORT
-		} sort;
-		general::corba::IdentifierSeq characteristicIds;
-	} Port;
+			public PortSort sort;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-	typedef sequence<Port> PortSeq;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier equipmentId,
+					in PortSort sort,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+
+		typedef IdlPort Port;
+		typedef sequence<Port> PortSeq;
 
 //////////////////////////////// KIS ////////////////////////////////
-	typedef struct IdlKIS {
-		general::corba::StorableObject header;
+		valuetype IdlKIS: ::administration::corba::DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64 hostname;
+			public short tcpPort;
+			public ::general::corba::Identifier equipmentId;
+			public ::general::corba::Identifier mcmId;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier domainId;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 hostname,
+					in short tcpPort,
+					in ::general::corba::Identifier equipmentId,
+					in ::general::corba::Identifier mcmId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::WString64 hostname;
-		short tcpPort;
-		general::corba::Identifier equipmentId;
-		general::corba::Identifier mcmId;
-		general::corba::IdentifierSeq characteristicIds;
-	} KIS;
-
-	typedef sequence<KIS> KISSeq;
+		typedef IdlKIS KIS;
+		typedef sequence<KIS> KISSeq;
 
 ////////////////////////// MeasurementPort ///////////////////////////
-	typedef struct IdlMeasurementPort {
-		general::corba::StorableObject header;
+		valuetype IdlMeasurementPort: ::general::corba::StorableObject {
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::Identifier kisId;
+			public ::general::corba::Identifier portId;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier _typeId;
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::Identifier kisId;
-		general::corba::Identifier portId;
-		general::corba::IdentifierSeq characteristicIds;
-	} MeasurementPort;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier kisId,
+					in ::general::corba::Identifier portId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef sequence<MeasurementPort> MeasurementPortSeq;
+		typedef IdlMeasurementPort MeasurementPort;
+		typedef sequence<MeasurementPort> MeasurementPortSeq;
 
 ///////////////////// Monitored Element ///////////////////
 
-	typedef struct IdlMonitoredElement {
-		general::corba::StorableObject header;
+		valuetype IdlMonitoredElement: ::administration::corba::DomainMember {
+			enum MonitoredElementSort {
+				MONITOREDELEMENT_SORT_LINK,
+				MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+				MONITOREDELEMENT_SORT_EQUIPMENT,
+				MONITOREDELEMENT_SORT_PORT,
+				MONITOREDELEMENT_SORT_CABLEPORT
+			};
 
-		general::corba::Identifier domainId;
+			public ::general::corba::WString128 name;
+			public ::general::corba::Identifier measurementPortId;
+			public MonitoredElementSort sort;
+			public ::general::corba::WString64 localAddress;
 
-		general::corba::WString128 name;
-		general::corba::Identifier measurementPortId;
-		enum MonitoredElementSort {
-			MONITOREDELEMENT_SORT_LINK,
-			MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
-			MONITOREDELEMENT_SORT_EQUIPMENT,
-			MONITOREDELEMENT_SORT_PORT,
-			MONITOREDELEMENT_SORT_CABLEPORT
-		} sort;
-		general::corba::WString64 localAddress;
+			public ::general::corba::IdentifierSeq monitoredDomainMemberIds;
 
-		general::corba::IdentifierSeq monitoredDomainMemberIds;
-	} MonitoredElement;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::Identifier measurementPortId,
+					in MonitoredElementSort sort,
+					in ::general::corba::WString64 localAddress,
+					in ::general::corba::IdentifierSeq monitoredDomainMemberIds);
+		};
 
-	typedef sequence<MonitoredElement> MonitoredElementSeq;
+		typedef IdlMonitoredElement MonitoredElement;
+		typedef sequence<MonitoredElement> MonitoredElementSeq;
 
 ///////////////////// Link /////////////////////
-	typedef struct IdlLink {
-		general::corba::StorableObject header;
+		valuetype IdlAbstractLink: ::administration::corba::DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::Identifier _typeId;
 
-		general::corba::Identifier domainId;
+			public wstring inventoryNo;
+			public ::general::corba::WString128 supplier;
+			public ::general::corba::WString32 supplierCode;
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::Identifier _typeId;
+			public long color;
+			public ::general::corba::WString32 mark;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		wstring inventoryNo;
-		general::corba::WString128 supplier;
-		general::corba::WString32 supplierCode;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier _typeId,
+					in wstring inventoryNo,
+					in ::general::corba::WString128 supplier,
+					in ::general::corba::WString32 supplierCode,
+					in long color,
+					in ::general::corba::WString32 mark,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		long color;
-		general::corba::WString32 mark;
-		general::corba::IdentifierSeq characteristicIds;
-	} Link;
+		typedef IdlAbstractLink AbstractLink;
+		typedef sequence<AbstractLink> AbstractLinkSeq;
 
-	typedef sequence<Link> LinkSeq;
+		valuetype IdlLink: AbstractLink {
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier _typeId,
+					in wstring inventoryNo,
+					in ::general::corba::WString128 supplier,
+					in ::general::corba::WString32 supplierCode,
+					in long color,
+					in ::general::corba::WString32 mark,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef struct IdlCableLink {
-		general::corba::StorableObject header;
+		typedef IdlLink Link;
+		typedef sequence<Link> LinkSeq;
 
-		general::corba::Identifier domainId;
+		valuetype IdlCableLink: AbstractLink {
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier _typeId,
+					in wstring inventoryNo,
+					in ::general::corba::WString128 supplier,
+					in ::general::corba::WString32 supplierCode,
+					in long color,
+					in ::general::corba::WString32 mark,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::Identifier _typeId;
-
-		wstring inventoryNo;
-		general::corba::WString128 supplier;
-		general::corba::WString32 supplierCode;
-
-		long color;
-		general::corba::WString32 mark;
-		general::corba::IdentifierSeq characteristicIds;
-	} CableLink;
-
-	typedef sequence<CableLink> CableLinkSeq;
+		typedef IdlCableLink CableLink;
+		typedef sequence<CableLink> CableLinkSeq;
 ///////////////////// CableThread /////////////////////
-	typedef struct IdlCableThread {
-		general::corba::StorableObject header;
-		general::corba::Identifier domainId;
+		valuetype IdlCableThread: ::administration::corba::DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::Identifier _typeId;
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::Identifier _typeId;
-	} CableThread;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::Identifier _typeId);
+		};
 
-	typedef sequence<CableThread> CableThreadSeq;
-};
-};
-};
-};
+		typedef IdlCableThread CableThread;
+		typedef sequence<CableThread> CableThreadSeq;
+	};
 };
 
 #endif // CONFIGURATION_IDL

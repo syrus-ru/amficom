@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifierGeneratorServer.java,v 1.5 2005/06/17 13:06:58 bass Exp $
+ * $Id: DatabaseIdentifierGeneratorServer.java,v 1.6 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/03 19:16:25 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -22,7 +22,7 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 
 	public IdlIdentifier getGeneratedIdentifier(short entity) throws AMFICOMRemoteException {
 		try {
-			return (IdlIdentifier) IdentifierGenerator.generateIdentifier(entity).getTransferable();
+			return IdentifierGenerator.generateIdentifier(entity).getTransferable();
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new AMFICOMRemoteException();
@@ -37,7 +37,7 @@ public class DatabaseIdentifierGeneratorServer implements IdentifierGeneratorSer
 			Identifier[] identifiers = IdentifierGenerator.generateIdentifierRange(entity, size);
 			IdlIdentifier[] transferables = new IdlIdentifier[identifiers.length];
 			for (int i = 0; i < identifiers.length; i++)
-				transferables[i] = (IdlIdentifier) identifiers[i].getTransferable();
+				transferables[i] = identifiers[i].getTransferable();
 
 			return transferables;
 		}

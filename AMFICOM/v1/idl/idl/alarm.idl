@@ -1,5 +1,5 @@
 /*-
- * $Id: alarm.idl,v 1.10 2005/06/26 13:31:12 bass Exp $
+ * $Id: alarm.idl,v 1.11 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,31 +9,22 @@
 #ifndef ALARM_IDL
 #define ALARM_IDL
 
-#include "event.idl"
-
-module com {
-module syrus {
-module AMFICOM {
+#pragma prefix "AMFICOM.syrus.com"
 
 module event {
-module corba {
+	module corba {
+		enum AlarmStatus {
+			ALARM_STATUS_GENERATED,
+			ALARM_STATUS_ASSIGNED,
+			ALARM_STATUS_FIXED,
+			ALARM_STATUS_DELETED
+		};
 
-	enum AlarmStatus {
-		ALARM_STATUS_GENERATED,
-		ALARM_STATUS_ASSIGNED,
-		ALARM_STATUS_FIXED,
-		ALARM_STATUS_DELETED
+		enum EventStatus {
+			EVENT_STATUS_GENERATED,
+			EVENT_STATUS_PROCESSED
+		};
 	};
-
-	enum EventStatus {
-		EVENT_STATUS_GENERATED,
-		EVENT_STATUS_PROCESSED
-	};
-};
-};
-
-};
-};
 };
 
 #endif // ALARM_IDL

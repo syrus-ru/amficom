@@ -1,11 +1,16 @@
-MODULE_NAME = leserver_v1
+#
+# $Id: Makefile,v 1.14 2005/07/03 19:16:18 bass Exp $
+#
+# vim:set ft=make:
+#
+
+MODULE_NAME := leserver_v1
 
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR = ../idl_v1/idl
-LOCALIDLDIR = ./idl
 
 HOST = mongol
 SERVICE_NAME = mongol
@@ -16,12 +21,13 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
 
+
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/util.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/leserver/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
@@ -47,48 +53,68 @@ $(LIBNAME_INTERFACE):	.corba
 		-C $(CLASSDIR) com/syrus/AMFICOM/leserver/corba/EventServerHolder.class
 	$(CP) $@ $(LIBDIR)
 
-.mach:	.corba $(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(LOCALIDLDIR)/leserver.idl
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix security com.syrus.AMFICOM \
+		-pkgPrefix administration com.syrus.AMFICOM \
+		-pkgPrefix event com.syrus.AMFICOM \
+		-pkgPrefix leserver com.syrus.AMFICOM \
+		$(IDLDIR)/leserver.idl
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/leserver/corba
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/leserver/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach cleancorba
+.PHONY: clean
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/leserver/corba
+.PHONY: cleancorba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/leserver/corba
 	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
-install: $(LIBNAME) $(LIBNAME_INTERFACE)
-	$(CP) $^ $(LIBDIR)
+.PHONY: install
+install: $(LIBNAME) $(LIBNAME_INTERFACE) $(LIBDIR)
+	$(CP) $^
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(LOCALIDLDIR)/leserver.idl \
+		$(IDLDIR)/leserver.idl \
 		$(SOURCES)
-

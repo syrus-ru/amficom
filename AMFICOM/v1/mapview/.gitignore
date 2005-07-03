@@ -6,6 +6,7 @@ docs
 .mach
 .classpath
 .project
+.idl
 *.jar
 *.jpr*
 *.jpx*

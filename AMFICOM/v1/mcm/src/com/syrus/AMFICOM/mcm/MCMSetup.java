@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.2 2005/06/28 14:03:54 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.3 2005/07/03 19:16:32 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,10 +10,6 @@ package com.syrus.AMFICOM.mcm;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.KEY_MCM_ID;
 import static com.syrus.AMFICOM.mcm.MeasurementControlModule.MCM_ID;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
@@ -92,10 +88,10 @@ public final class MCMSetup {
 		Identifier id = new Identifier(idlMCM.userId);
 		DatabaseObjectLoader.init(id);
 
-		id = new Identifier(idlMCM.header.creatorId);
+		id = new Identifier(idlMCM.creatorId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.header.modifierId);
+		id = new Identifier(idlMCM.modifierId);
 		StorableObjectPool.getStorableObject(id, true);
 
 		id = new Identifier(idlMCM.domainId);
@@ -107,7 +103,7 @@ public final class MCMSetup {
 		id = new Identifier(idlMCM.userId);
 		StorableObjectPool.getStorableObject(id, true);
 
-		id = new Identifier(idlMCM.header.id);
+		id = new Identifier(idlMCM.id);
 		StorableObjectPool.getStorableObject(id, true);
 	}
 

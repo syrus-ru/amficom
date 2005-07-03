@@ -16,4 +16,5 @@ build.xml
 .classpath
 .project
 .settings
+.idl
 .#*

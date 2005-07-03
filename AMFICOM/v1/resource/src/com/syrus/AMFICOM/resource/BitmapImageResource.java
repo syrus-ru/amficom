@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.22 2005/06/25 17:07:52 bass Exp $
+ * $Id: BitmapImageResource.java,v 1.23 2005/07/03 19:16:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Date;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -20,14 +21,16 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.BitmapImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/25 17:07:52 $
+ * @version $Revision: 1.23 $, $Date: 2005/07/03 19:16:18 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -48,11 +51,6 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	 */
 	BitmapImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
-		final ImageResourceData imageResourceData = imageResource.data;
-		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
-		final BitmapImageResourceData bitmapImageResourceData = imageResourceData.bitmapImageResourceData();
-		this.codename = bitmapImageResourceData.codename;
-		this.image = bitmapImageResourceData.image;
 	}
 
 	BitmapImageResource(final Identifier id,
@@ -116,7 +114,14 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 		bitmapImageResourceData.image = this.image;
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.bitmapImageResourceData(bitmapImageResourceData);
-		return new IdlImageResource(getHeaderTransferable(orb), imageResourceData);
+		return IdlImageResourceHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				imageResourceData);
 	}
 
 	@Override
@@ -153,5 +158,17 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	@Override
 	ImageResourceSort getSort() {
 		return ImageResourceSort.BITMAP;
+	}
+
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
+		super.fromTransferable(idlImageResource);
+
+		final ImageResourceData imageResourceData = idlImageResource.data;
+		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
+		final BitmapImageResourceData bitmapImageResourceData = imageResourceData.bitmapImageResourceData();
+		this.codename = bitmapImageResourceData.codename;
+		this.image = bitmapImageResourceData.image;
 	}
 }

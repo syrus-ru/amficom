@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.53 2005/06/25 17:50:44 bass Exp $
+ * $Id: Collector.java,v 1.54 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.util.Set;
 import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -39,14 +38,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlCollector;
+import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/06/25 17:50:44 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -139,9 +140,10 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlCollector ct = (IdlCollector) transferable;
-		super.fromTransferable(ct.header);
+		super.fromTransferable(ct);
 
 		this.name = ct.name;
 		this.description = ct.description;
@@ -170,7 +172,17 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	public IdlCollector getTransferable(final ORB orb) {
 		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlCollector(super.getHeaderTransferable(orb), this.name, this.description, physicalLinkIds, charIds);
+		return IdlCollectorHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				this.name,
+				this.description,
+				physicalLinkIds,
+				charIds);
 	}
 
 	public String getDescription() {

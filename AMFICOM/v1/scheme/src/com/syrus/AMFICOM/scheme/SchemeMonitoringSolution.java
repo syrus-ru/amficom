@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.40 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.41 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,14 +32,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
 import com.syrus.util.Log;
 
 /**
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -252,8 +253,13 @@ public final class SchemeMonitoringSolution extends
 	 */
 	@Override
 	public IdlSchemeMonitoringSolution getTransferable(final ORB orb) {
-		return new IdlSchemeMonitoringSolution(
-				super.getHeaderTransferable(orb), this.name,
+		return IdlSchemeMonitoringSolutionHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.name,
 				this.description, this.price, this.active,
 				this.parentSchemeOptimizeInfoId.getTransferable());
 	}
@@ -361,12 +367,13 @@ public final class SchemeMonitoringSolution extends
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
 		try {
-			super.fromTransferable(schemeMonitoringSolution.header);
+			super.fromTransferable(schemeMonitoringSolution);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.

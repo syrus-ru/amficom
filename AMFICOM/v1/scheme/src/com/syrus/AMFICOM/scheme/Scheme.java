@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.44 2005/06/27 09:49:24 max Exp $
+ * $Id: Scheme.java,v 1.45 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,18 +32,20 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlScheme;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.44 $, $Date: 2005/06/27 09:49:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -426,7 +427,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		/*
 		 * domainId is assumed to be non-null.
 		 */
-		return new IdlScheme(super.getHeaderTransferable(orb),
+		return IdlSchemeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
 				super.getDomainId().getTransferable(),
@@ -738,11 +745,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlScheme scheme = (IdlScheme) transferable;
-		super.fromTransferable(scheme.header, new Identifier(scheme.domainId));
+		super.fromTransferable(scheme, new Identifier(scheme.domainId));
 		this.name = scheme.name;
 		this.description = scheme.description;
 		this.label = scheme.label;

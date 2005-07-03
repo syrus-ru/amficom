@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.38 2005/06/27 13:22:57 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.39 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,20 +12,18 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader {
@@ -71,26 +69,28 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
-		IDLEntity[] transmitStorableObjects(final CommonServer commonServer,
+		IdlStorableObject[] transmitStorableObjects(final CommonServer commonServer,
 				final IdlIdentifier[] idsT,
 				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module csbridge_v1
 	 */
 	public interface TransmitButIdsByConditionProcedure {
-		IDLEntity[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
+		IdlStorableObject[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
 				final IdlIdentifier[] idsT,
 				final IdlSessionKey sessionKeyT,
 				final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException;
@@ -98,13 +98,13 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.38 $, $Date: 2005/06/27 13:22:57 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
 		IdlStorableObject[] receiveStorableObjects(final CommonServer commonServer,
-				final IDLEntity[] transferables,
+				final IdlStorableObject[] transferables,
 				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
@@ -126,7 +126,7 @@ public abstract class CORBAObjectLoader {
 		while (true) {
 			try {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
-				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(server, idsT, sessionKeyT);
+				final IdlStorableObject[] transferables = transmitProcedure.transmitStorableObjects(server, idsT, sessionKeyT);
 				return StorableObjectPool.fromTransferables(entityCode, transferables, true);
 			}
 			catch (final AMFICOMRemoteException are) {
@@ -203,7 +203,7 @@ public abstract class CORBAObjectLoader {
 		while (true) {
 			try {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
-				final IDLEntity[] transferables = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server,
+				final IdlStorableObject[] transferables = transmitButIdsConditionProcedure.transmitStorableObjectsButIdsCondition(server,
 						idsT,
 						sessionKeyT,
 						conditionT);
@@ -236,7 +236,7 @@ public abstract class CORBAObjectLoader {
 			final ReceiveProcedure receiveProcedure) throws ApplicationException {
 		final CommonServer server = this.serverConnectionManager.getServerReference();
 
-		final IDLEntity[] transferables = StorableObject.allocateArrayOfTransferables(entityCode, storableObjects.size());
+		final IdlStorableObject[] transferables = StorableObject.allocateArrayOfTransferables(entityCode, storableObjects.size());
 		int i = 0;
 		for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++) {
 			transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.serverConnectionManager.getCORBAServer().getOrb());

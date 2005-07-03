@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.74 2005/06/27 09:13:59 arseniy Exp $
+ * $Id: StorableObject.java,v 1.75 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.util.Log;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -19,7 +15,11 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
+import com.syrus.util.Log;
 
 /**
  * {@link Object#equals(Object)}and {@link Object#hashCode()} methods are
@@ -29,8 +29,8 @@ import org.omg.CORBA.portable.IDLEntity;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.74 $, $Date: 2005/06/27 09:13:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/07/03 19:16:25 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -106,14 +106,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @throws ApplicationException
 	 */
 	@SuppressWarnings("unused")
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		final IdlStorableObject sot = (IdlStorableObject) transferable;
-		this.id = new Identifier(sot.id);
-		this.created = new Date(sot.created);
-		this.modified = new Date(sot.modified);
-		this.creatorId = new Identifier(sot.creatorId);
-		this.modifierId = new Identifier(sot.modifierId);
-		this.version = sot.version;
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		this.id = new Identifier(transferable.id);
+		this.created = new Date(transferable.created);
+		this.modified = new Date(transferable.modified);
+		this.creatorId = new Identifier(transferable.creatorId);
+		this.modifierId = new Identifier(transferable.modifierId);
+		this.version = transferable.version;
 
 		this.changed = false;
 
@@ -121,7 +120,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.savedModifierId = null;
 		this.savedVersion = 0;		
 	}
-
+	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 * @return <code>true</code> if storable object is valid, <code>false</code> otherwise
@@ -153,7 +152,8 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public IdlStorableObject getHeaderTransferable(@SuppressWarnings("unused") final ORB orb) {
-		return new IdlStorableObject(this.id.getTransferable(),
+		return IdlStorableObjectHelper.init(orb,
+				this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
@@ -165,7 +165,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public abstract IDLEntity getTransferable(final ORB orb);
+	public IdlStorableObject getTransferable(final ORB orb) {
+		return this.getHeaderTransferable(orb);
+	}
 
 	/**
 	 * @see Identifiable#getId()
@@ -349,7 +351,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return headersT;
 	}
 
-	public static final IDLEntity[] allocateArrayOfTransferables(
+	public static final IdlStorableObject[] allocateArrayOfTransferables(
 			final short entityCode,
 			final int length)
 			throws CreateObjectException {

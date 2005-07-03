@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGeneratorServer.java,v 1.5 2005/06/17 13:06:58 bass Exp $
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.6 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionS
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 13:06:58 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/03 19:16:25 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -29,7 +29,7 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 	public IdlIdentifier getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
 		try {
 			Identifier identifier = LocalIdentifierGenerator.generateIdentifier(entityCode);
-			return (IdlIdentifier)identifier.getTransferable();
+			return identifier.getTransferable();
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
@@ -44,7 +44,7 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 			Identifier[] identifiers = LocalIdentifierGenerator.generateIdentifierRange(entityCode, size);
 			IdlIdentifier[] identifiersT = new IdlIdentifier[identifiers.length];
 			for (int i = 0; i < identifiersT.length; i++)
-				identifiersT[i] = (IdlIdentifier)identifiers[i].getTransferable();
+				identifiersT[i] = identifiers[i].getTransferable();
 			return identifiersT;
 		}
 		catch (IllegalObjectEntityException ioee) {

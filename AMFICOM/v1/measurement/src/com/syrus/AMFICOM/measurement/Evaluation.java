@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.70 2005/06/29 14:17:40 arseniy Exp $
+ * $Id: Evaluation.java,v 1.71 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,12 +27,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
+import com.syrus.AMFICOM.measurement.corba.IdlEvaluationHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/06/29 14:17:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -99,9 +100,9 @@ public final class Evaluation extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlEvaluation et = (IdlEvaluation) transferable;
-		super.fromTransferable(et.header, null, new Identifier(et.monitoredElementId), null);
+		super.fromTransferable(et, null, new Identifier(et.monitoredElementId), null);
 
 		super.type = (EvaluationType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
 		final Identifier parentActionId = new Identifier(et.measurementId);
@@ -120,7 +121,13 @@ public final class Evaluation extends Action {
 	public IdlEvaluation getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new IdlEvaluation(super.getHeaderTransferable(orb),
+		return IdlEvaluationHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()

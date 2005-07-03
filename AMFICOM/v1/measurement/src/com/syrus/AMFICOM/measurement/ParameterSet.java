@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.8 2005/06/25 17:07:41 bass Exp $
+ * $Id: ParameterSet.java,v 1.9 2005/07/03 19:16:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,13 +30,15 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/03 19:16:30 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -151,9 +152,9 @@ public final class ParameterSet extends StorableObject {
 	 * </p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlParameterSet st = (IdlParameterSet)transferable;
-		super.fromTransferable(st.header);
+		super.fromTransferable(st);
 		this.sort = st.sort.value();
 		this.description = st.description;
 
@@ -179,7 +180,13 @@ public final class ParameterSet extends StorableObject {
 			pts[i] = this.parameters[i].getTransferable(orb);
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		return new IdlParameterSet(super.getHeaderTransferable(orb),
+		return IdlParameterSetHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				ParameterSetSort.from_int(this.sort),
 				this.description,
 				pts,

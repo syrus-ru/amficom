@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.19 2005/06/24 09:28:55 bass Exp $
+ * $Id: event.idl,v 1.20 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,98 +9,106 @@
 #ifndef EVENT_IDL
 #define	EVENT_IDL
 
-#include "administration.idl"
-#include "configuration.idl"
-#include "measurement.idl"
+#include "general.idl"
 
-module com {
-module syrus {
-module AMFICOM {
+#pragma prefix "AMFICOM.syrus.com"
+
 module event {
-module corba {
+	module corba {
 
 /////////////////////// Event ////////////////////////
 
-//	module IdlEventTypePackage {
-//		XXX
-//		XXX NOT a storable object
-//		XXX
-		enum AlertKind {
-			ALERT_KIND_WINDOW,
-			ALERT_KIND_EMAIL,
-			ALERT_KIND_SMS
+		valuetype IdlEventType: ::general::corba::StorableObject {
+			enum AlertKind {
+				ALERT_KIND_WINDOW,
+				ALERT_KIND_EMAIL,
+				ALERT_KIND_SMS
+			};
+
+			typedef sequence<AlertKind> AlertKindSeq;
+
+			struct UserAlertKinds {
+				::general::corba::Identifier userId;
+				AlertKindSeq alertKinds;
+			};
+
+			typedef sequence<UserAlertKinds> UserAlertKindsSeq;
+
+			public ::general::corba::WString32 codename;
+			public ::general::corba::WString256 description;
+
+			public ::general::corba::IdentifierSeq parameterTypeIds;
+			public UserAlertKindsSeq userAlertKinds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq parameterTypeIds,
+					in UserAlertKindsSeq userAlertKinds);
 		};
 
-		typedef sequence<AlertKind> AlertKindSeq;
+		typedef IdlEventType EventType;
+		typedef sequence<EventType> EventTypeSeq;
 
-//		XXX
-//		XXX NOT a storable object
-//		XXX
-		struct UserAlertKinds {
-			general::corba::Identifier userId;
-			AlertKindSeq alertKinds;
+		valuetype IdlEventSource: ::general::corba::StorableObject {
+			public ::general::corba::Identifier sourceEntityId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier sourceEntityId);
 		};
 
-		typedef sequence<UserAlertKinds> UserAlertKindsSeq;
-//	};
+		typedef IdlEventSource EventSource;
+		typedef sequence<EventSource> EventSourceSeq;
 
-	typedef struct IdlEventType {
-		general::corba::StorableObject header;
+		valuetype IdlEvent: ::general::corba::StorableObject {
+			typedef struct IdlEventParameter {
+				::general::corba::Identifier id;
+				::general::corba::Identifier _typeId;
+				wstring value;
+			} EventParameter;
 
-		general::corba::WString32 codename;
-		general::corba::WString256 description;
+			typedef sequence<EventParameter> EventParameterSeq;
 
-		general::corba::IdentifierSeq parameterTypeIds;
-//		IdlEventTypePackage::
-		UserAlertKindsSeq userAlertKinds;
-	} EventType;
+			public ::general::corba::Identifier _typeId;
+			public ::general::corba::WString256 description;
 
-	typedef sequence<EventType> EventTypeSeq;
+			public EventParameterSeq parameters;
+			public ::general::corba::IdentifierSeq eventSourceIds;
 
-//	module IdlEventPackage {
-//		XXX
-//		XXX NOT a storable object
-//		XXX
-		typedef struct IdlEventParameter {
-			general::corba::Identifier id;
-			general::corba::Identifier _typeId;
-			wstring value;
-		} EventParameter;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier _typeId,
+					in ::general::corba::WString256 description,
+					in EventParameterSeq parameters,
+					in ::general::corba::IdentifierSeq eventSourceIds);
+		};
 
-		typedef sequence<EventParameter> EventParameterSeq;
-//	};
-
-	typedef struct IdlEventSource {
-		general::corba::StorableObject header;
-
-		general::corba::Identifier sourceEntityId;
-	} EventSource;
-
-	typedef sequence<EventSource> EventSourceSeq;
-
-	typedef struct IdlEvent {
-		general::corba::StorableObject header;
-
-		general::corba::Identifier _typeId;
-		general::corba::WString256 description;
-
-//		IdlEventPackage::
-		EventParameterSeq parameters;
-		general::corba::IdentifierSeq eventSourceIds;
-	} Event;
-
-	typedef sequence<Event> EventSeq;
+		typedef IdlEvent Event;
+		typedef sequence<Event> EventSeq;
 
 /////////////////// EventListener ////////////////////
 
-	abstract interface EventListener {
-		void receiveEvent(in Event et) raises (general::corba::AMFICOMRemoteException);
+		abstract interface EventListener {
+			void receiveEvent(in Event et) raises (::general::corba::AMFICOMRemoteException);
+		};
 	};
-
-};
-};
-};
-};
 };
 
 #endif // EVENT_IDL

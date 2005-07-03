@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.11 2005/06/22 10:21:41 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.12 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/07/03 19:16:23 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class MonitoredElementWrapper extends StorableObjectWrapper {
@@ -101,7 +101,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
 				Set meDomainMemeberIds = new HashSet(((Set) value).size());
 				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					meDomainMemeberIds.add((Identifier)it.next());
+					meDomainMemeberIds.add(it.next());
 				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
 			}
 		}

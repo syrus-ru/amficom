@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.82 2005/06/29 14:17:41 arseniy Exp $
+ * $Id: Measurement.java,v 1.83 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,14 +28,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/06/29 14:17:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -121,9 +122,9 @@ public final class Measurement extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurement mt = (IdlMeasurement) transferable;
-		super.fromTransferable(mt.header, null, new Identifier(mt.monitoredElementId), null);
+		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
 
 		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId),
 			true);
@@ -149,7 +150,13 @@ public final class Measurement extends Action {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlMeasurement(super.getHeaderTransferable(orb),
+		return IdlMeasurementHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,

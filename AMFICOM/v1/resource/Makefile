@@ -24,45 +24,65 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 
-.mach:	.corba $(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
-.corba:	$(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix resource com.syrus.AMFICOM \
+		$(IDLDIR)/resource.idl
+	find $(SRCDIR)/com/syrus/AMFICOM/resource/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/resource/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/resource/corba/.cvsignore)
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/corba/*.java
 	touch $@
 
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach cleancorba
+.PHONY: clean
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/resource/corba
+.PHONY: cleancorba
+cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/resource/corba
 	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \

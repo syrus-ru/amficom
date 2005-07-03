@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.48 2005/06/25 17:50:45 bass Exp $
+ * $Id: TopologicalNode.java,v 1.49 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
+import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/06/25 17:50:45 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -90,7 +91,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	}
 
 	TopologicalNode(final IdlTopologicalNode tnt) throws CreateObjectException {
-		super(tnt.header);
+		super(tnt);
 		super.name = tnt.name;
 		super.description = tnt.description;
 		super.location = new DoublePoint(tnt.longitude, tnt.latitude);
@@ -224,7 +225,13 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	@Override
 	public IdlTopologicalNode getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlTopologicalNode(super.getHeaderTransferable(orb),
+		return IdlTopologicalNodeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.name,
 				this.description,
 				this.location.getX(),

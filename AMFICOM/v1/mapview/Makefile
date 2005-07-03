@@ -1,7 +1,15 @@
+#
+# $Id: Makefile,v 1.16 2005/07/03 19:16:17 bass Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME = mapview_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
+
+IDLDIR = ../idl_v1/idl
 
 JAVAC=javac
 
@@ -10,7 +18,7 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
 
 
-APPCLASSPATH = $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xbean.jar
 
 
@@ -21,38 +29,72 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.mach:	$(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR)
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix administration com.syrus.AMFICOM \
+		-pkgPrefix mapview com.syrus.AMFICOM \
+		$(IDLDIR)/mapview.idl
+	find $(SRCDIR)/com/syrus/AMFICOM/mapview/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/mapview/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/mapview/corba/.cvsignore)
+	$(RM) .idl
+
+.PHONY: corba
+corba: .corba
+
+.corba: $(CLASSDIR) .idl
+	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
+		-classpath $(APPCLASSPATH) \
+		-sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/mapview/corba/*.java
+	touch $@
+
+$(SRCDIR):
 $(CLASSDIR):
+$(LIBDIR):
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	cleanmach
+.PHONY: clean
+clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
+.PHONY: cleancorba
+cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mapview/corba
+	$(RM) .corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
+		$(IDLDIR)/mapview.idl \
 		$(SOURCES)
 		
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
-

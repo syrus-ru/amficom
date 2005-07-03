@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.11 2005/06/26 13:31:12 bass Exp $
+ * $Id: administration.idl,v 1.12 2005/07/03 19:16:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,93 +11,158 @@
 
 #include "general.idl"
 
-module com {
-module syrus {
-module AMFICOM {
+#pragma prefix "AMFICOM.syrus.com"
+
 module administration {
-module corba {
+	module corba {
+		valuetype IdlDomainMember: ::general::corba::StorableObject {
+			public ::general::corba::Identifier domainId;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId);
+		};
+
+		typedef IdlDomainMember DomainMember;
+		typedef sequence<DomainMember> DomainMemberSeq;
 
 //////////////////////////////////// User /////////////////////////////////
+		valuetype IdlSystemUser: ::general::corba::StorableObject {
+			enum SystemUserSort {
+				USER_SORT_SYSADMIN,
+				USER_SORT_REGULAR,
+				USER_SORT_SERVERPROCESS,
+				USER_SORT_MCM
+			};
 
+			public ::general::corba::WString32 login;
+			public SystemUserSort sort;
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
 
-	typedef struct IdlSystemUser {
-		general::corba::StorableObject header;
-	
-		general::corba::WString32 login;
-		enum SystemUserSort {
-			USER_SORT_SYSADMIN,
-			USER_SORT_REGULAR,
-			USER_SORT_SERVERPROCESS,
-			USER_SORT_MCM
-		} sort;
-		general::corba::WString128 name;
-		general::corba::WString256 description;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::IdentifierSeq characteristicIds;
-	} SystemUser;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 login,
+					in SystemUserSort sort,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-	typedef sequence<SystemUser> SystemUserSeq;
+		typedef IdlSystemUser SystemUser;
+		typedef sequence<SystemUser> SystemUserSeq;
 
 /////////////////////////////////// Domain ////////////////////////////////
-	typedef struct IdlDomain {
-		general::corba::StorableObject header;
+		valuetype IdlDomain: DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+				
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier domainId;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		
-		general::corba::IdentifierSeq characteristicIds;
-	} Domain;
-
-	typedef sequence<Domain> DomainSeq;
+		typedef IdlDomain Domain;
+		typedef sequence<Domain> DomainSeq;
 
 /////////////////////////////////// Server ////////////////////////////////
-	typedef struct IdlServer {
-		general::corba::StorableObject header;
+		valuetype IdlServer: DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64 hostname;
 
-		general::corba::Identifier domainId;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::WString64 hostname;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 hostname,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
 
-		general::corba::IdentifierSeq characteristicIds;
-	} Server;
-
-	typedef sequence<Server> ServerSeq;
+		typedef IdlServer Server;
+		typedef sequence<Server> ServerSeq;
 
 //////////////////////////////// ServerProcess ////////////////////////////
-	typedef struct IdlServerProcess {
-		general::corba::StorableObject header;
+		valuetype IdlServerProcess: ::general::corba::StorableObject {
+			public ::general::corba::WString32 codename;
+			public ::general::corba::Identifier serverId;
+			public ::general::corba::Identifier userId;
+			public ::general::corba::WString256 description;
 
-		general::corba::WString32 codename;
-		general::corba::Identifier serverId;
-		general::corba::Identifier userId;
-		general::corba::WString256 description;
-	} ServerProcess;
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::WString32 codename,
+					in ::general::corba::Identifier serverId,
+					in ::general::corba::Identifier userId,
+					in ::general::corba::WString256 description);
+		};
 
-	typedef sequence<ServerProcess> ServerProcessSeq;
+		typedef IdlServerProcess ServerProcess;
+		typedef sequence<ServerProcess> ServerProcessSeq;
 
 //////////////////////////////////// MCM //////////////////////////////////
-	typedef struct IdlMCM {
-		general::corba::StorableObject header;
+		valuetype IdlMCM: DomainMember {
+			public ::general::corba::WString128 name;
+			public ::general::corba::WString256 description;
+			public ::general::corba::WString64 hostname;
+			public ::general::corba::Identifier userId;
+			public ::general::corba::Identifier serverId;
+			public ::general::corba::IdentifierSeq characteristicIds;
 
-		general::corba::Identifier domainId;
-
-		general::corba::WString128 name;
-		general::corba::WString256 description;
-		general::corba::WString64 hostname;
-		general::corba::Identifier userId;
-		general::corba::Identifier serverId;
-		general::corba::IdentifierSeq characteristicIds;
-	} MCM;
-	
-	typedef sequence<MCM> MCMSeq;
-};
-};
-};
-};
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in ::general::corba::WString128 name,
+					in ::general::corba::WString256 description,
+					in ::general::corba::WString64 hostname,
+					in ::general::corba::Identifier userId,
+					in ::general::corba::Identifier serverId,
+					in ::general::corba::IdentifierSeq characteristicIds);
+		};
+		
+		typedef IdlMCM MCM;
+		typedef sequence<MCM> MCMSeq;
+	};
 };
 
 #endif // ADMINISTRATION_IDL

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.54 2005/06/29 15:42:28 krupenn Exp $
+ * $Id: NodeLink.java,v 1.55 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Set;
 import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -37,15 +36,17 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
+import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.54 $, $Date: 2005/06/29 15:42:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -166,9 +167,10 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlNodeLink nlt = (IdlNodeLink) transferable;
-		super.fromTransferable(nlt.header);
+		super.fromTransferable(nlt);
 
 		this.name = nlt.name;
 		this.length = nlt.length;
@@ -189,7 +191,13 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	@Override
 	public IdlNodeLink getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlNodeLink(super.getHeaderTransferable(orb),
+		return IdlNodeLinkHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.name,
 				this.physicalLink.getId().getTransferable(),
 				this.startNode.getId().getTransferable(),

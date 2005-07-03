@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.52 2005/06/27 07:13:31 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.53 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -38,15 +37,17 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/06/27 07:13:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -164,9 +165,10 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
-		super.fromTransferable(pltt.header, pltt.codename, pltt.description);
+		super.fromTransferable(pltt, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
 
@@ -190,7 +192,13 @@ public final class PhysicalLinkType extends StorableObjectType
 	@Override
 	public IdlPhysicalLinkType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlPhysicalLinkType(super.getHeaderTransferable(orb),
+		return IdlPhysicalLinkTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.codename,
 				this.name,
 				this.description,
@@ -328,8 +336,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = com.syrus.amficom.map.xml.PhysicalLinkType.Factory.newInstance();
 		fillXMLTransferable(xmlPhysicalLinkType);
 		return xmlPhysicalLinkType;
-	}
-
+}
 	public void fillXMLTransferable(XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject; 
 

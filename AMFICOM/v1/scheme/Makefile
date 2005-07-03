@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.25 2005/06/22 11:55:48 arseniy Exp $
+# $Id: Makefile,v 1.26 2005/07/03 19:16:21 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,7 +9,7 @@ MODULE_NAME := scheme_v1
 LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
 ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.bz2
 
-IDLDIR=../idl_v1/idl
+IDLDIR = ../idl_v1/idl
 
 JAVAC=javac
 
@@ -36,8 +36,7 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-
-.mach:	.corba $(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
@@ -46,20 +45,28 @@ $(LIBNAME): .mach
 .PHONY: idl
 idl: .idl
 
-# Just idl-to-java compilation
 .idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
+	$(IDLJ) $(IDLJFLAGS) \
+		-pkgPrefix general com.syrus.AMFICOM \
+		-pkgPrefix administration com.syrus.AMFICOM \
+		-pkgPrefix scheme com.syrus.AMFICOM \
+		$(IDLDIR)/scheme.idl
+	find $(SRCDIR)/com/syrus/AMFICOM/scheme/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
 	touch $@
 
+.PHONY: idlclean
+idlclean:
+	cd $(SRCDIR)/com/syrus/AMFICOM/scheme/corba && \
+		$(RM) -r $(shell cat <$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/.cvsignore)
+	$(RM) .idl
 
 .PHONY: corba
 corba: .corba
 
-# Compilation of stubs & skeletons
-.corba:	$(CLASSDIR) .idl
+.corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-sourcepath $(SRCDIR) \
 		-classpath $(APPCLASSPATH) \
+		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
 
@@ -68,26 +75,22 @@ $(CLASSDIR):
 $(LIBDIR):
 	mkdir -p $@
 
-.PHONY: idlclean
-idlclean:
-	$(RM) .idl
-
-.PHONY:	clean
+.PHONY: clean
 clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
 
-.PHONY:	cleanmach
+.PHONY: cleanmach
 cleanmach:
 	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY: cleancorba
 cleancorba: idlclean
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/scheme/corba
 	$(RM) .corba
-	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/scheme/corba
 
 #### Install ####
-.PHONY:	install
+.PHONY: install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
@@ -97,7 +100,7 @@ uninstall: $(LIBDIR)/$(LIBNAME)
 	$(RM) $<
 
 #### Archive ####
-.PHONY:	arch
+.PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
@@ -106,5 +109,4 @@ arch:
 
 #### Distribution ####
 .PHONY: dist
-dist:	arch
-
+dist: arch

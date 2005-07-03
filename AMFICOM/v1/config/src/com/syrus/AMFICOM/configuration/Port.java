@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.74 2005/06/28 11:15:24 arseniy Exp $
+ * $Id: Port.java,v 1.75 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -37,10 +37,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/06/28 11:15:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/07/03 19:16:23 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -133,9 +134,9 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlPort pt = (IdlPort) transferable;
-		super.fromTransferable(pt.header);
+		super.fromTransferable(pt);
 
 		this.type = (PortType) StorableObjectPool.getStorableObject(new Identifier(pt._typeId), true);
 
@@ -158,12 +159,18 @@ public final class Port extends StorableObject implements Characterizable, Typed
 	public IdlPort getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlPort(super.getHeaderTransferable(orb),
-				 this.type.getId().getTransferable(),
-				 this.description,
-				 this.equipmentId.getTransferable(),
-				 PortSort.from_int(this.sort),
-				 charIds);
+		return IdlPortHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
+				this.type.getId().getTransferable(),
+				this.description,
+				this.equipmentId.getTransferable(),
+				PortSort.from_int(this.sort),
+				charIds);
 	}
 
 	public StorableObjectType getType() {

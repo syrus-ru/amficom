@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBASchemeObjectLoader.java,v 1.15 2005/06/24 14:13:40 bass Exp $
+ * $Id: CORBASchemeObjectLoader.java,v 1.16 2005/07/03 19:16:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
@@ -45,7 +43,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/06/24 14:13:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/03 19:16:26 $
  * @module csbridge_v1
  */
 public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements SchemeObjectLoader {
@@ -60,7 +58,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadCableChannelingItems(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CABLECHANNELINGITEM_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -72,7 +70,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadPathElements(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PATHELEMENT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -84,7 +82,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCableLinks(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMECABLELINK_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -96,7 +94,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCablePorts(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMECABLEPORT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -108,7 +106,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCableThreads(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMECABLETHREAD_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -120,7 +118,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeDevices(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEDEVICE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -132,7 +130,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeElements(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEELEMENT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -144,7 +142,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeLinks(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMELINK_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -156,7 +154,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeMonitoringSolutions(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -168,7 +166,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfos(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -180,7 +178,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfoSwitches(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -192,7 +190,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfoRtus(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -204,7 +202,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemePaths(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEPATH_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -216,7 +214,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemePorts(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEPORT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -228,7 +226,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeProtoElements(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEPROTOELEMENT_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -240,7 +238,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeProtoGroups(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEMEPROTOGROUP_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -252,7 +250,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemes(final Set ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SCHEME_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey)
@@ -268,7 +266,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadCableChannelingItemsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.CABLECHANNELINGITEM_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -281,7 +279,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadPathElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PATHELEMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -294,7 +292,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCableLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMECABLELINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -307,7 +305,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCablePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMECABLEPORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -320,7 +318,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeCableThreadsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMECABLETHREAD_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -333,7 +331,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeDevicesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEDEVICE_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -346,7 +344,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEELEMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -359,7 +357,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeLinksButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMELINK_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -372,7 +370,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeMonitoringSolutionsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -385,7 +383,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfosButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -398,7 +396,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfoSwitchesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -411,7 +409,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeOptimizeInfoRtusButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -424,7 +422,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemePathsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEPATH_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -437,7 +435,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemePortsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEPORT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -450,7 +448,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeProtoElementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEPROTOELEMENT_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -463,7 +461,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemeProtoGroupsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -476,7 +474,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 
 	public Set loadSchemesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SCHEME_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier ids1[],
 					final IdlSessionKey sessionKey,
@@ -495,7 +493,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.CABLECHANNELINGITEM_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveCableChannelingItems((IdlCableChannelingItem[]) transferables, force, sessionKey);
@@ -507,7 +505,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.PATHELEMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receivePathElements((IdlPathElement[]) transferables, force, sessionKey);
@@ -519,7 +517,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMECABLELINK_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeCableLinks((IdlSchemeCableLink[]) transferables, force, sessionKey);
@@ -531,7 +529,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMECABLEPORT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeCablePorts((IdlSchemeCablePort[]) transferables, force, sessionKey);
@@ -543,7 +541,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMECABLETHREAD_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeCableThreads((IdlSchemeCableThread[]) transferables, force, sessionKey);
@@ -555,7 +553,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEDEVICE_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeDevices((IdlSchemeDevice[]) transferables, force, sessionKey);
@@ -567,7 +565,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEELEMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeElements((IdlSchemeElement[]) transferables, force, sessionKey);
@@ -579,7 +577,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMELINK_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeLinks((IdlSchemeLink[]) transferables, force, sessionKey);
@@ -591,7 +589,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeMonitoringSolutions((IdlSchemeMonitoringSolution[]) transferables, force, sessionKey);
@@ -603,7 +601,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeOptimizeInfos((IdlSchemeOptimizeInfo[]) transferables, force, sessionKey);
@@ -615,7 +613,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeOptimizeInfoSwitches((IdlSchemeOptimizeInfoSwitch[]) transferables, force, sessionKey);
@@ -627,7 +625,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeOptimizeInfoRtus((IdlSchemeOptimizeInfoRtu[]) transferables, force, sessionKey);
@@ -639,7 +637,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEPATH_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemePaths((IdlSchemePath[]) transferables, force, sessionKey);
@@ -651,7 +649,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEPORT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemePorts((IdlSchemePort[]) transferables, force, sessionKey);
@@ -663,7 +661,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEPROTOELEMENT_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeProtoElements((IdlSchemeProtoElement[]) transferables, force, sessionKey);
@@ -675,7 +673,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEMEPROTOGROUP_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemeProtoGroups((IdlSchemeProtoGroup[]) transferables, force, sessionKey);
@@ -687,7 +685,7 @@ public final class CORBASchemeObjectLoader extends CORBAObjectLoader implements 
 		super.saveStorableObjects(ObjectEntities.SCHEME_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((MscharServer) server).receiveSchemes((IdlScheme[]) transferables, force, sessionKey);

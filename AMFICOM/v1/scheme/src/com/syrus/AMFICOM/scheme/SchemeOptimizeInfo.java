@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.35 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.36 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,14 +32,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
 import com.syrus.util.Log;
 
 /**
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -379,8 +380,13 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public IdlSchemeOptimizeInfo getTransferable(final ORB orb) {
-		return new IdlSchemeOptimizeInfo(
-				super.getHeaderTransferable(orb), this.name,
+		return IdlSchemeOptimizeInfoHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.name,
 				this.description, this.optimizationMode,
 				this.iterations, this.price, this.waveLength,
 				this.lenMargin, this.mutationRate,
@@ -642,12 +648,12 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) {
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 		try {
-			super.fromTransferable(schemeOptimizeInfo.header);
+			super.fromTransferable(schemeOptimizeInfo);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.

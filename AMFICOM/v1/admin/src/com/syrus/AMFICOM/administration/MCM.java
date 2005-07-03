@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.37 2005/06/25 17:07:53 bass Exp $
+ * $Id: MCM.java,v 1.38 2005/07/03 19:16:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
+import com.syrus.AMFICOM.administration.corba.IdlMCMHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -33,9 +33,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/03 19:16:34 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -114,9 +115,9 @@ public final class MCM extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMCM mt = (IdlMCM)transferable;
-		super.fromTransferable(mt.header, new Identifier(mt.domainId));
+		super.fromTransferable(mt, new Identifier(mt.domainId));
 		this.name = mt.name;
 		this.description = mt.description;
 		this.hostname = mt.hostname;
@@ -139,7 +140,13 @@ public final class MCM extends DomainMember implements Characterizable {
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMCM(super.getHeaderTransferable(orb),
+		return IdlMCMHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

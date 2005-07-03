@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.134 2005/06/25 17:07:41 bass Exp $
+ * $Id: Test.java,v 1.135 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -36,7 +35,9 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
+import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
@@ -50,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.135 $, $Date: 2005/07/03 19:16:31 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -242,9 +243,9 @@ public final class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	public void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	public void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlTest tt = (IdlTest)transferable;
-		super.fromTransferable(tt.header);
+		super.fromTransferable(tt);
 		this.temporalType = tt.timeStamps.discriminator().value();
 		this.timeStamps = new TestTimeStamps(tt.timeStamps);
 		this.measurementTypeId = new Identifier(tt.measurementTypeId);
@@ -364,7 +365,13 @@ public final class Test extends StorableObject {
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		return new IdlTest(super.getHeaderTransferable(orb),
+		return IdlTestHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.timeStamps.getTransferable(orb),
 				this.measurementTypeId.getTransferable(),
 				this.analysisTypeId.getTransferable(),

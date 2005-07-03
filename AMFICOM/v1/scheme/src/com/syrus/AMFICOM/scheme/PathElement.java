@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.36 2005/06/25 17:07:43 bass Exp $
+ * $Id: PathElement.java,v 1.37 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -33,7 +32,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.Data;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.SchemeElementData;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -608,7 +609,13 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			default:
 				assert false;
 		}
-		return new IdlPathElement(getHeaderTransferable(orb),
+		return IdlPathElementHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}
@@ -813,13 +820,13 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) {
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlPathElement pathElement = (IdlPathElement) transferable;
 		try {
-			super.fromTransferable(pathElement.header);
+			super.fromTransferable(pathElement);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never. Arseniy, don't add any error-handling code,

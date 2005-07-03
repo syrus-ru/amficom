@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.39 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeDevice.java,v 1.40 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -35,14 +34,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDevice;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeDeviceHelper;
 import com.syrus.util.Log;
 
 /**
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -412,8 +413,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public IdlSchemeDevice getTransferable(final ORB orb) {
-		return new IdlSchemeDevice(
-				super.getHeaderTransferable(orb), this.name,
+		return IdlSchemeDeviceHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.name,
 				this.description,
 				this.parentSchemeProtoElementId.getTransferable(),
 				this.parentSchemeElementId.getTransferable(),
@@ -633,12 +639,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
 		try {
-			super.fromTransferable(schemeDevice.header);
+			super.fromTransferable(schemeDevice);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeDevice.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);

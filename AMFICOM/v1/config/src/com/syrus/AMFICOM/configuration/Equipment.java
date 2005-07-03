@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.101 2005/07/01 14:23:45 arseniy Exp $
+ * $Id: Equipment.java,v 1.102 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -37,11 +37,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/07/01 14:23:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.102 $, $Date: 2005/07/03 19:16:23 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -199,9 +200,9 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEquipment et = (IdlEquipment) transferable;
-		super.fromTransferable(et.header, new Identifier(et.domainId));
+		super.fromTransferable(et, new Identifier(et.domainId));
 
 		this.type = (EquipmentType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
 
@@ -231,7 +232,13 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	public IdlEquipment getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlEquipment(super.getHeaderTransferable(orb),
+		return IdlEquipmentHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",

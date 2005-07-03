@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.15 2005/06/25 17:07:41 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.16 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -36,12 +35,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:41 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/03 19:16:31 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -918,9 +919,9 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
-		super.fromTransferable(ctpt.header);
+		super.fromTransferable(ctpt);
 
 		this.description = ctpt.description;
 		this.setTemplates0(ctpt.cronStrings);
@@ -933,7 +934,15 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	 */
 	@Override
 	public IdlCronTemporalPattern getTransferable(final ORB orb) {
-		return new IdlCronTemporalPattern(super.getHeaderTransferable(orb), this.description, getCronStrings());
+		return IdlCronTemporalPatternHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
+				this.description,
+				getCronStrings());
 	}
 
 	protected synchronized void setAttributes(	final Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.81 2005/06/29 12:15:20 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.82 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -31,11 +30,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/06/29 12:15:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.82 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -174,9 +175,9 @@ public final class AnalysisType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlAnalysisType att = (IdlAnalysisType) transferable;
-		super.fromTransferable(att.header, att.codename, att.description);
+		super.fromTransferable(att, att.codename, att.description);
 
 		this.inParameterTypeIds = Identifier.fromTransferables(att.inParameterTypeIds);
 		this.criteriaParameterTypeIds = Identifier.fromTransferables(att.criteriaParameterTypeIds);
@@ -201,7 +202,13 @@ public final class AnalysisType extends ActionType {
 		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
 		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
-		return new IdlAnalysisType(super.getHeaderTransferable(orb),
+		return IdlAnalysisTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,

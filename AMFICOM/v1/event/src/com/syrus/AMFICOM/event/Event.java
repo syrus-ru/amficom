@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.32 2005/06/25 17:07:53 bass Exp $
+ * $Id: Event.java,v 1.33 2005/07/03 19:16:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.event.corba.IdlEventParameter;
 import com.syrus.AMFICOM.event.corba.IdlEvent;
+import com.syrus.AMFICOM.event.corba.IdlEventHelper;
+import com.syrus.AMFICOM.event.corba.IdlEventPackage.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -36,9 +36,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/03 19:16:27 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -139,10 +140,11 @@ public final class Event extends StorableObject implements TypedObject {
 		}
 	}
 
-	protected @Override void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEvent et = (IdlEvent) transferable;
 
-		super.fromTransferable(et.header);
+		super.fromTransferable(et);
 
 		this.type = (EventType) StorableObjectPool.getStorableObject(new Identifier(et._typeId), true);
 
@@ -173,7 +175,13 @@ public final class Event extends StorableObject implements TypedObject {
 
 		IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
-		return new IdlEvent(super.getHeaderTransferable(orb),
+		return IdlEventHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.type.getId().getTransferable(),
 				this.description,
 				ept,

@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.45 2005/06/25 17:07:47 bass Exp $
+ * $Id: Characteristic.java,v 1.46 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/06/25 17:07:47 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/03 19:16:25 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -155,10 +156,10 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
 		
-		super.fromTransferable(ct.header);
+		super.fromTransferable(ct);
 		
 		this.type = (CharacteristicType) StorableObjectPool.getStorableObject(new Identifier(ct._typeId), true);
 		this.name = ct.name;
@@ -178,7 +179,13 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	public IdlCharacteristic getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		return new IdlCharacteristic(super.getHeaderTransferable(orb),
+		return IdlCharacteristicHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.41 2005/06/25 17:50:46 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.42 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Link;
@@ -35,14 +34,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.util.Log;
 
 /**
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -334,8 +335,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public IdlSchemeCableThread getTransferable(final ORB orb) {
-		return new IdlSchemeCableThread(
-				super.getHeaderTransferable(orb), this.name,
+		return IdlSchemeCableThreadHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.name,
 				this.description,
 				this.cableThreadTypeId.getTransferable(),
 				this.linkId.getTransferable(),
@@ -515,12 +521,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
 		try {
-			super.fromTransferable(schemeCableThread.header);
+			super.fromTransferable(schemeCableThread);
 			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeCableThread.characteristicIds), true));
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);

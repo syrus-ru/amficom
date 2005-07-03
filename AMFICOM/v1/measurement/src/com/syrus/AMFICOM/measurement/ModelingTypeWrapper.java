@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.9 2005/06/22 10:22:59 bob Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.10 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class ModelingTypeWrapper extends StorableObjectWrapper {

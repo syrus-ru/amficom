@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.65 2005/06/25 17:50:49 bass Exp $
+ * $Id: MeasurementPort.java,v 1.66 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPort;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,9 +36,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/25 17:50:49 $
+ * @version $Revision: 1.66 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -139,9 +140,9 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlMeasurementPort mpt = (IdlMeasurementPort) transferable;
-		super.fromTransferable(mpt.header);
+		super.fromTransferable(mpt);
 
 		this.type = (MeasurementPortType) StorableObjectPool.getStorableObject(new Identifier(mpt._typeId), true);
 
@@ -164,7 +165,13 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	public IdlMeasurementPort getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMeasurementPort(super.getHeaderTransferable(orb),
+		return IdlMeasurementPortHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,

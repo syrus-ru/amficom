@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.4 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: UserEventNotifier.java,v 1.5 2005/07/03 19:16:18 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,15 +15,15 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.event.Event;
 import com.syrus.AMFICOM.event.EventType;
-import com.syrus.AMFICOM.event.corba.AlertKind;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/20 15:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:18 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 final class UserEventNotifier extends SleepButWorkThread {

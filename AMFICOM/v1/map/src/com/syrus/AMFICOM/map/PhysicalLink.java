@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.71 2005/06/29 15:43:58 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.72 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import java.util.Set;
 import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -48,8 +47,10 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -59,8 +60,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.71 $, $Date: 2005/06/29 15:43:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -253,9 +254,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlPhysicalLink plt = (IdlPhysicalLink) transferable;
-		super.fromTransferable(plt.header);
+		super.fromTransferable(plt);
 
 		this.name = plt.name;
 		this.description = plt.description;
@@ -295,7 +297,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
-		return new IdlPhysicalLink(super.getHeaderTransferable(orb),
+		return IdlPhysicalLinkHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.name,
 				this.description,
 				this.physicalLinkType.getId().getTransferable(),
@@ -582,10 +590,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public void addNodeLink(final NodeLink addNodeLink) {
 		if(!this.nodeLinks.contains(addNodeLink)) {
-			this.nodeLinks.add(addNodeLink);
-			this.nodeLinksSorted = false;
-			super.markAsChanged();
-		}
+		this.nodeLinks.add(addNodeLink);
+		this.nodeLinksSorted = false;
+		super.markAsChanged();
+	}
 	}
 
 	/**

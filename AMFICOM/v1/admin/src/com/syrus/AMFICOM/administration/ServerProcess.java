@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.17 2005/06/25 17:07:53 bass Exp $
+ * $Id: ServerProcess.java,v 1.18 2005/07/03 19:16:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
+import com.syrus.AMFICOM.administration.corba.IdlServerProcessHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/03 19:16:35 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -102,10 +103,10 @@ public final class ServerProcess extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) {
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlServerProcess spt = (IdlServerProcess) transferable;
 		try {
-			super.fromTransferable(spt.header);
+			super.fromTransferable(spt);
 		}
 		catch (ApplicationException ae) {
 			// Never
@@ -126,7 +127,13 @@ public final class ServerProcess extends StorableObject {
 	public IdlServerProcess getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new IdlServerProcess(super.getHeaderTransferable(orb),
+		return IdlServerProcessHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.codename,
 				this.serverId.getTransferable(),
 				this.userId.getTransferable(),

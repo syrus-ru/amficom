@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.45 2005/06/27 07:13:31 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.46 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -47,7 +46,9 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -55,8 +56,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/06/27 07:13:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -160,9 +161,10 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
-		super.fromTransferable(sntt.header, sntt.codename, sntt.description);
+		super.fromTransferable(sntt, sntt.codename, sntt.description);
 
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);
@@ -199,7 +201,13 @@ implements Characterizable, Namable, XMLBeansTransferable {
 	@Override
 	public IdlSiteNodeType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		return new IdlSiteNodeType(super.getHeaderTransferable(orb),
+		return IdlSiteNodeTypeHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				this.codename,
 				this.name,
 				this.description,
@@ -302,8 +310,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = com.syrus.amficom.map.xml.SiteNodeType.Factory.newInstance();
 		fillXMLTransferable(xmlSiteNodeType);
 		return xmlSiteNodeType;
-	}
-
+}
 	public void fillXMLTransferable(final XmlObject xmlObject) {
 		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject; 
 

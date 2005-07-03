@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.74 2005/06/25 17:07:55 bass Exp $
+ * $Id: TransmissionPath.java,v 1.75 2005/07/03 19:16:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,8 +36,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.74 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.75 $, $Date: 2005/07/03 19:16:22 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -138,9 +139,9 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
-		super.fromTransferable(tpt.header, new Identifier(tpt.domainId));
+		super.fromTransferable(tpt, new Identifier(tpt.domainId));
 
 		this.name = tpt.name;
 		this.description = tpt.description;
@@ -160,7 +161,13 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	public IdlTransmissionPath getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlTransmissionPath(super.getHeaderTransferable(orb),
+		return IdlTransmissionPathHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

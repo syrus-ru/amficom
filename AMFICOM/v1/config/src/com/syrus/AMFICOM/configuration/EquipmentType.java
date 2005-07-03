@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.71 2005/06/25 17:07:55 bass Exp $
+ * $Id: EquipmentType.java,v 1.72 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
+import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,9 +35,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.72 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -133,9 +134,9 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEquipmentType ett = (IdlEquipmentType) transferable;
-		super.fromTransferable(ett.header, ett.codename, ett.description);
+		super.fromTransferable(ett, ett.codename, ett.description);
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
@@ -153,7 +154,13 @@ public final class EquipmentType extends StorableObjectType implements Character
 	public IdlEquipmentType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlEquipmentType(super.getHeaderTransferable(orb),
+		return IdlEquipmentTypeHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

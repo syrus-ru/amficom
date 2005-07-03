@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.10 2005/06/22 17:32:49 arseniy Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.11 2005/07/03 19:16:17 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.mserver;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -27,6 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.mcm.corba.MCM;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
+ * @author $Author: bass $
  * @module mserver_v1
  */
 final class CORBAMServerObjectLoader {
@@ -53,25 +52,25 @@ final class CORBAMServerObjectLoader {
 
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitProcedure {
-		IDLEntity[] transmitStorableObjects(final MCM mcmRef,
+		IdlStorableObject[] transmitStorableObjects(final MCM mcmRef,
 				final IdlIdentifier loadIdsT[],
 				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
 	}
 
 	/**
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.10 $, $Date: 2005/06/22 17:32:49 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
 	interface TransmitButIdsByConditionProcedure {
-		IDLEntity[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
+		IdlStorableObject[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
 				final IdlIdentifier loadButIdsT[],
 				final IdlStorableObjectCondition conditionT,
 				final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException;
@@ -184,7 +183,7 @@ final class CORBAMServerObjectLoader {
 		while (true) {
 			try {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
-				final IDLEntity[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
+				final IdlStorableObject[] transferables = transmitProcedure.transmitStorableObjects(mcmRef, loadIdsT, sessionKeyT);
 
 				final Set mcmLoadedObjects = StorableObjectPool.fromTransferables(entityCode, transferables, true);
 				Identifier.subtractFromIdentifiers(loadIds, mcmLoadedObjects);
@@ -314,12 +313,12 @@ final class CORBAMServerObjectLoader {
 		/*	^Just debug output -- nothing more^*/
 
 		final IdlIdentifier[] loadButIdsT = Identifier.createTransferables(loadButIds);
-		final IdlStorableObjectCondition conditionT = (IdlStorableObjectCondition) condition.getTransferable();
+		final IdlStorableObjectCondition conditionT = condition.getTransferable();
 		int numEfforts = 0;
 		while (true) {
 			try {
 				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
-				final IDLEntity[] transferables = transmitButIdsByConditionProcedure.transmitStorableObjectsButIdsByCondition(mcmRef,
+				final IdlStorableObject[] transferables = transmitButIdsByConditionProcedure.transmitStorableObjectsButIdsByCondition(mcmRef,
 						loadButIdsT,
 						conditionT,
 						sessionKeyT);

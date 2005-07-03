@@ -1,0 +1,53 @@
+/*-
+ * $Id: mapview.idl,v 1.1 2005/07/03 19:16:34 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+#ifndef MAPVIEW_IDL
+#define MAPVIEW_IDL
+
+#include "administration.idl"
+
+#pragma prefix "AMFICOM.syrus.com"
+
+module mapview {
+	module corba {
+		valuetype IdlMapView: ::administration::corba::DomainMember {
+			public wstring name;
+			public wstring description;
+
+			public double longitude;
+			public double latitude;
+			public double scale;
+			public double defaultScale;
+
+			public ::general::corba::Identifier mapId;
+			public ::general::corba::IdentifierSeq schemeIds;
+
+			factory defaultInit();
+			factory init(in ::general::corba::Identifier id,
+					in long long created,
+					in long long modified,
+					in ::general::corba::Identifier creatorId,
+					in ::general::corba::Identifier modifierId,
+					in long long version,
+					in ::general::corba::Identifier domainId,
+					in wstring name,
+					in wstring description,
+					in double longitude,
+					in double latitude,
+					in double scale,
+					in double defaultScale,
+					in ::general::corba::Identifier mapId,
+					in ::general::corba::IdentifierSeq schemeIds);
+		};
+
+		typedef IdlMapView MapView;
+		typedef sequence<MapView> MapViewSeq;
+	};
+};
+
+#endif // MAPVIEW_IDL

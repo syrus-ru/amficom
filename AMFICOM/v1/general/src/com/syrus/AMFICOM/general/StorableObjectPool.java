@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.117 2005/06/30 15:19:58 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.118 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,15 +21,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/06/30 15:19:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2005/07/03 19:16:25 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -946,7 +945,7 @@ public abstract class StorableObjectPool {
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable: dependencies) {
-			StorableObject dependencyObject = null;
+		StorableObject dependencyObject = null;
 			if (identifiable instanceof Identifier)
 				dependencyObject = getStorableObject((Identifier) identifiable, false);
 			else if (identifiable instanceof StorableObject)
@@ -1018,7 +1017,7 @@ public abstract class StorableObjectPool {
 	/*	From transferable*/
 
 	public static Set fromTransferables(final short entityCode,
-			final IDLEntity transferables[],
+			final IdlStorableObject transferables[],
 			final boolean continueOnError)
 			throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
@@ -1040,7 +1039,7 @@ public abstract class StorableObjectPool {
 		return storableObjects;
 	}
 
-	public static StorableObject fromTransferable(final short entityCode, final IDLEntity transferable) throws ApplicationException {
+	public static StorableObject fromTransferable(final short entityCode, final IdlStorableObject transferable) throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode);
@@ -1067,7 +1066,7 @@ public abstract class StorableObjectPool {
 	 * @throws ApplicationException
 	 */
 	private final StorableObject fromTransferableImpl(
-			final short entityCode, final IDLEntity transferable)
+			final short entityCode, final IdlStorableObject transferable)
 			throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode);
 
@@ -1086,7 +1085,7 @@ public abstract class StorableObjectPool {
 
 		StorableObject storableObject = null;
 		try {
-			storableObject = this.getStorableObjectImpl(factory.getId(transferable), false);
+			storableObject = this.getStorableObjectImpl(new Identifier(transferable.id), false);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
@@ -1098,7 +1097,7 @@ public abstract class StorableObjectPool {
 			/*
 			 * Арсений, береги скобки!
 			 */
-			storableObject = factory.newInstance(transferable);
+			storableObject = transferable.getNative();
 		} else {
 			/*
 			 * Сохраним скобки для будущих поколений!
@@ -1120,8 +1119,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.117 $, $Date: 2005/06/30 15:19:58 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.118 $, $Date: 2005/07/03 19:16:25 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

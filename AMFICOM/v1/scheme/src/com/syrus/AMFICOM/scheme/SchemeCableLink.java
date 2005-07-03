@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.41 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.42 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
@@ -34,14 +33,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
 import com.syrus.util.Log;
 
 /**
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -261,8 +262,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public IdlSchemeCableLink getTransferable(final ORB orb) {
-		return new IdlSchemeCableLink(
-				super.getHeaderTransferable(orb), super.getName(),
+		return IdlSchemeCableLinkHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
@@ -427,12 +433,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	/**
 	 * @param transferable
 	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeCableLink schemeCableLink = (IdlSchemeCableLink) transferable;
-		super.fromTransferable(schemeCableLink.header, schemeCableLink.name,
+		super.fromTransferable(schemeCableLink, schemeCableLink.name,
 				schemeCableLink.description,
 				schemeCableLink.physicalLength,
 				schemeCableLink.opticalLength, schemeCableLink.cableLinkTypeId,

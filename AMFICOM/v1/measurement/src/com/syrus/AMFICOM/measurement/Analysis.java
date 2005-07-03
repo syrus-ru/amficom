@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.73 2005/06/29 14:17:40 arseniy Exp $
+ * $Id: Analysis.java,v 1.74 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,12 +27,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/29 14:17:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/07/03 19:16:31 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -101,9 +102,9 @@ public final class Analysis extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlAnalysis at = (IdlAnalysis) transferable;
-		super.fromTransferable(at.header, null, new Identifier(at.monitoredElementId), null);
+		super.fromTransferable(at, null, new Identifier(at.monitoredElementId), null);
 
 		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at._typeId), true);
 		final Identifier parentActionId = new Identifier(at.measurementId);
@@ -123,7 +124,13 @@ public final class Analysis extends Action {
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		return new IdlAnalysis(super.getHeaderTransferable(orb),
+		return IdlAnalysisHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version,
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.22 2005/06/25 17:07:53 bass Exp $
+ * $Id: ServerCore.java,v 1.23 2005/07/03 19:16:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.23 $, $Date: 2005/07/03 19:16:25 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -209,7 +209,7 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	protected final IdlStorableObject[] receiveStorableObjects(final short entityCode,
-			final IDLEntity[] transferables,
+			final IdlStorableObject[] transferables,
 			final boolean force,
 			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 		try {

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.33 2005/06/25 17:50:46 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.34 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,16 +29,18 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItemHelper;
 import com.syrus.util.Log;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/03 19:16:20 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -302,8 +303,13 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 */
 	@Override
 	public IdlCableChannelingItem getTransferable(final ORB orb) {
-		return new IdlCableChannelingItem(
-				super.getHeaderTransferable(orb), this.startSpare,
+		return IdlCableChannelingItemHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version, this.startSpare,
 				this.endSpare, this.rowX, this.placeY,
 				this.sequentialNumber,
 				this.physicalLinkId.getTransferable(),
@@ -456,12 +462,13 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 	/**
 	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IDLEntity)
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
-	protected void fromTransferable(final IDLEntity transferable) {
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 		try {
-			super.fromTransferable(cableChannelingItem.header);
+			super.fromTransferable(cableChannelingItem);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.62 2005/06/25 17:07:55 bass Exp $
+ * $Id: MonitoredElement.java,v 1.63 2005/07/03 19:16:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElement;
+import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -31,9 +31,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.63 $, $Date: 2005/07/03 19:16:22 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -132,9 +133,9 @@ public final class MonitoredElement extends DomainMember {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws CreateObjectException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		IdlMonitoredElement met = (IdlMonitoredElement) transferable;
-		super.fromTransferable(met.header, new Identifier(met.domainId));
+		super.fromTransferable(met, new Identifier(met.domainId));
 		this.measurementPortId = new Identifier(met.measurementPortId);
 		this.sort = met.sort.value();
 		this.localAddress = met.localAddress;
@@ -152,7 +153,13 @@ public final class MonitoredElement extends DomainMember {
 	public IdlMonitoredElement getTransferable(final ORB orb) {
 		final IdlIdentifier[] mdmIds = Identifier.createTransferables(this.monitoredDomainMemberIds);
 
-		return new IdlMonitoredElement(super.getHeaderTransferable(orb),
+		return IdlMonitoredElementHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.measurementPortId.getTransferable(),

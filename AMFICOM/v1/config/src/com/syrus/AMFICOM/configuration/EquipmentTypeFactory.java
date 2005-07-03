@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeFactory.java,v 1.3 2005/06/22 10:05:17 bass Exp $
+ * $Id: EquipmentTypeFactory.java,v 1.4 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,43 +8,24 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:05:17 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:23 $
  * @module config_v1
  */
 final class EquipmentTypeFactory extends StorableObjectFactory {
 	/**
-	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see StorableObjectFactory#newInstance(IDLEntity)
-	 */
-	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new EquipmentType((IdlEquipmentType) transferable);
-	}
-
-	/**
-	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
-	 */
-	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((IdlEquipmentType) transferable).header.id);
-	}
-
-	/**
 	 * @param length
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
-	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+	@Override
+	protected IdlEquipmentType[] allocateArrayOfTransferables(final int length) {
 		return new IdlEquipmentType[length];
 	}
 }

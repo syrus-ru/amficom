@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.15 2005/06/25 17:07:52 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.16 2005/07/03 19:16:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:52 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/03 19:16:18 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -73,12 +72,6 @@ public abstract class AbstractImageResource extends StorableObject {
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-	}
-
-	@Override
-	protected void fromTransferable(IDLEntity transferable) throws ApplicationException {
-		IdlImageResource irt = (IdlImageResource) transferable;
-		super.fromTransferable(irt.header);
 	}
 
 	@Override

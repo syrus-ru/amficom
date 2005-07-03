@@ -1,5 +1,5 @@
 /*
- * $Id: Alerter.java,v 1.2 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: Alerter.java,v 1.3 2005/07/03 19:16:18 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.syrus.AMFICOM.event.corba.AlertKind;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/20 15:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/03 19:16:18 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 abstract class Alerter {

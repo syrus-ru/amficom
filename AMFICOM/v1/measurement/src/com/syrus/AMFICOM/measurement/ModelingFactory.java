@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingFactory.java,v 1.3 2005/06/23 18:45:09 bass Exp $
+ * $Id: ModelingFactory.java,v 1.4 2005/07/03 19:16:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,43 +8,24 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/23 18:45:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:31 $
  * @module measurement_v1
  */
 final class ModelingFactory extends StorableObjectFactory {
 	/**
-	 * @param transferable
-	 * @throws CreateObjectException
-	 * @see StorableObjectFactory#newInstance(IDLEntity)
-	 */
-	protected StorableObject newInstance(final IDLEntity transferable) throws CreateObjectException {
-		return new Modeling((IdlModeling) transferable);
-	}
-
-	/**
-	 * @param transferable
-	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#getId(org.omg.CORBA.portable.IDLEntity)
-	 */
-	protected Identifier getId(final IDLEntity transferable) {
-		return new Identifier(((IdlModeling) transferable).header.id);
-	}
-
-	/**
 	 * @param length
 	 * @see com.syrus.AMFICOM.general.StorableObjectFactory#allocateArrayOfTransferables(int)
 	 */
-	protected IDLEntity[] allocateArrayOfTransferables(final int length) {
+	@Override
+	protected IdlModeling[] allocateArrayOfTransferables(final int length) {
 		return new IdlModeling[length];
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.26 2005/06/21 12:44:27 bass Exp $
+ * $Id: AbstractNode.java,v 1.27 2005/07/03 19:16:28 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -28,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/21 12:44:27 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/03 19:16:28 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -105,10 +103,10 @@ public abstract class AbstractNode
 		}
 	}
 
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
-		IdlStorableObject sot = (IdlStorableObject) transferable;
-		super.fromTransferable(sot);
-		this.characteristics = new HashSet();
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		super.fromTransferable(transferable);
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	public Identifier getImageId() {

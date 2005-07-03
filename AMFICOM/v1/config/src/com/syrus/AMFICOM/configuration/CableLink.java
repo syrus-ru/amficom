@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.3 2005/06/25 17:07:54 bass Exp $
+ * $Id: CableLink.java,v 1.4 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLink;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,11 +30,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/25 17:07:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:23 $
  * @module config_v1
  */
 public final class CableLink extends AbstractLink {
@@ -142,9 +143,9 @@ public final class CableLink extends AbstractLink {
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCableLink idlCableLink = (IdlCableLink) transferable;
-		super.fromTransferable(idlCableLink.header, new Identifier(idlCableLink.domainId));
+		super.fromTransferable(idlCableLink, new Identifier(idlCableLink.domainId));
 
 		this.name = idlCableLink.name;
 		this.description = idlCableLink.description;
@@ -167,7 +168,13 @@ public final class CableLink extends AbstractLink {
 	public IdlCableLink getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlCableLink(super.getHeaderTransferable(orb),
+		return IdlCableLinkHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,

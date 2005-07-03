@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAAdministrationObjectLoader.java,v 1.28 2005/06/22 19:29:31 arseniy Exp $
+ * $Id: CORBAAdministrationObjectLoader.java,v 1.29 2005/07/03 19:16:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,10 @@ package com.syrus.AMFICOM.administration;
 
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
-import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.administration.corba.IdlServer;
+import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.administration.corba.IdlSystemUser;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,13 +25,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/22 19:29:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/07/03 19:16:26 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader implements AdministrationObjectLoader {
@@ -48,7 +46,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadSystemUsers(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SYSTEMUSER_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -60,7 +58,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadDomains(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.DOMAIN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -72,7 +70,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadServers(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SERVER_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -84,7 +82,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadMCMs(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MCM_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -96,7 +94,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadServerProcesses(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.SERVERPROCESS_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(
+			public IdlStorableObject[] transmitStorableObjects(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey)
@@ -112,7 +110,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadSystemUsersButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SYSTEMUSER_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -125,7 +123,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadDomainsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.DOMAIN_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -138,7 +136,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadServersButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVER_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -151,7 +149,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadMCMsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.MCM_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -164,7 +162,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 
 	public Set loadServerProcessesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.SERVERPROCESS_CODE, ids, condition, new TransmitButIdsByConditionProcedure() {
-			public IDLEntity[] transmitStorableObjectsButIdsCondition(
+			public IdlStorableObject[] transmitStorableObjectsButIdsCondition(
 					final CommonServer server,
 					final IdlIdentifier[] idsT,
 					final IdlSessionKey sessionKey,
@@ -183,7 +181,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		super.saveStorableObjects(ObjectEntities.SYSTEMUSER_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveSystemUsers((IdlSystemUser[]) transferables, force, sessionKey);
@@ -195,7 +193,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		super.saveStorableObjects(ObjectEntities.DOMAIN_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveDomains((IdlDomain[]) transferables, force, sessionKey);
@@ -207,7 +205,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		super.saveStorableObjects(ObjectEntities.SERVER_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveServers((IdlServer[]) transferables, force, sessionKey);
@@ -219,7 +217,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		super.saveStorableObjects(ObjectEntities.MCM_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveMCMs((IdlMCM[]) transferables, force, sessionKey);
@@ -231,7 +229,7 @@ public final class CORBAAdministrationObjectLoader extends CORBAObjectLoader imp
 		super.saveStorableObjects(ObjectEntities.SERVERPROCESS_CODE, storableObjects, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(
 					final CommonServer server,
-					final IDLEntity transferables[],
+					final IdlStorableObject transferables[],
 					final IdlSessionKey sessionKey)
 					throws AMFICOMRemoteException {
 				return ((CMServer) server).receiveServerProcesses((IdlServerProcess[]) transferables, force, sessionKey);

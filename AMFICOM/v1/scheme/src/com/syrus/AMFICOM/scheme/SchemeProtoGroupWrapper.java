@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.4 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.5 2005/07/03 19:16:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,14 @@
  */
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:20 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -31,32 +33,40 @@ public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 
 	private static SchemeProtoGroupWrapper instance;
 
-	public List getKeys() {
+	private List<String> keys;
+
+	private SchemeProtoGroupWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {}));
+	}
+
+	public List<String> getKeys() {
+		return this.keys;
+	}
+
+	public String getName(final String key) {
+		return key;
+	}
+
+	@Override
+	public Class getPropertyClass(final String key) {
 		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
 	}
 
-	public String getName(String key) {
+	public Object getPropertyValue(final String key) {
+		return null;
+	}
+
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+		// empty
+	}
+
+	@Override
+	public Object getValue(final Object object, final String key) {
 		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
 	}
 
-	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
-	}
-
-	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
-	}
-
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
-	}
-
-	public Object getValue(Object object, String key) {
-		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
-	}
-
-	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemeProtoGroupWrapper | not implemented yet");
+	public boolean isEditable(final String key) {
+		return false;
 	}
 
 	public void setValue(Object object, String key, Object value) {

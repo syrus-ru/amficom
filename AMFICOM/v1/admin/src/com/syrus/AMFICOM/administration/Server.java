@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.40 2005/06/25 17:07:53 bass Exp $
+ * $Id: Server.java,v 1.41 2005/07/03 19:16:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.IdlServer;
+import com.syrus.AMFICOM.administration.corba.IdlServerHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -33,9 +33,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/25 17:07:53 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/03 19:16:35 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -107,9 +108,9 @@ public final class Server extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlServer st = (IdlServer) transferable;
-		super.fromTransferable(st.header, new Identifier(st.domainId));
+		super.fromTransferable(st, new Identifier(st.domainId));
 		this.name = st.name;
 		this.description = st.description;
 		this.hostname = st.hostname;
@@ -130,7 +131,13 @@ public final class Server extends DomainMember implements Characterizable {
 
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlServer(super.getHeaderTransferable(orb),
+		return IdlServerHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,

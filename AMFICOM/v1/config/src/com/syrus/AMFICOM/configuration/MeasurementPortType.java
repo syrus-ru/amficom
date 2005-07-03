@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.58 2005/06/25 17:07:55 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.59 2005/07/03 19:16:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortType;
+import com.syrus.AMFICOM.configuration.corba.IdlMeasurementPortTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -35,9 +35,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/06/25 17:07:55 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/03 19:16:22 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -121,9 +122,9 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
-		super.fromTransferable(mptt.header, mptt.codename, mptt.description);
+		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
 
 		final Set characteristicIds = Identifier.fromTransferables(mptt.characteristicIds);
@@ -139,7 +140,13 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 	public IdlMeasurementPortType getTransferable(final ORB orb) {
 		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlMeasurementPortType(super.getHeaderTransferable(orb),
+		return IdlMeasurementPortTypeHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

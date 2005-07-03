@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.51 2005/06/25 17:50:49 bass Exp $
+ * $Id: CableLinkType.java,v 1.52 2005/07/03 19:16:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
+import com.syrus.AMFICOM.configuration.corba.IdlCableLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/06/25 17:50:49 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/03 19:16:23 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -145,9 +146,9 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	@Override
-	protected void fromTransferable(final IDLEntity transferable) throws ApplicationException {
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlCableLinkType cltt = (IdlCableLinkType) transferable;
-		super.fromTransferable(cltt.header, cltt.codename, cltt.description);
+		super.fromTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
 		this.manufacturerCode = cltt.manufacturerCode;
@@ -167,7 +168,13 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	public IdlCableLinkType getTransferable(final ORB orb) {
 		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
-		return new IdlCableLinkType(super.getHeaderTransferable(orb),
+		return IdlCableLinkTypeHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",

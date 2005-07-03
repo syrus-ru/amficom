@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.67 2005/06/29 14:34:07 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.68 2005/07/03 19:16:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Set;
 
-import org.omg.CORBA.portable.IDLEntity;
-
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -21,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -34,8 +32,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/06/29 14:34:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/07/03 19:16:32 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 final class MCMMeasurementObjectLoader extends MCMObjectLoader implements MeasurementObjectLoader {
@@ -50,7 +48,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadMeasurementTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENT_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitMeasurementTypes(idsT, sessionKey);
@@ -60,7 +58,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadAnalysisTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.ANALYSIS_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitAnalysisTypes(idsT, sessionKey);
@@ -70,7 +68,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadEvaluationTypes(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.EVALUATION_TYPE_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitEvaluationTypes(idsT, sessionKey);
@@ -94,7 +92,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadMeasurementSetups(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.MEASUREMENTSETUP_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitMeasurementSetups(idsT, sessionKey);
@@ -108,7 +106,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadParameterSets(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PARAMETERSET_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitParameterSets(idsT, sessionKey);
@@ -125,7 +123,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadCronTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.CRONTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitCronTemporalPatterns(idsT, sessionKey);
@@ -135,7 +133,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadIntervalsTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitIntervalsTemporalPatterns(idsT, sessionKey);
@@ -145,7 +143,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 
 	public Set loadPeriodicalTemporalPatterns(final Set<Identifier> ids) throws ApplicationException {
 		return super.loadStorableObjects(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, ids, new TransmitProcedure() {
-			public IDLEntity[] transmitStorableObjects(CommonServer server,
+			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).transmitPeriodicalTemporalPatterns(idsT, sessionKey);
@@ -163,7 +161,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -178,7 +176,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -193,7 +191,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -222,7 +220,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -241,7 +239,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -264,7 +262,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -279,7 +277,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -294,7 +292,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 				ids,
 				condition,
 				new TransmitButIdsByConditionProcedure() {
-					public IDLEntity[] transmitStorableObjectsButIdsCondition(CommonServer server,
+					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
 							IdlIdentifier[] idsT,
 							IdlSessionKey sessionKey,
 							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
@@ -310,10 +308,10 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	public void saveMeasurements(final Set<Measurement> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.MEASUREMENT_CODE, storableObjects, force, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(final CommonServer server,
-					final IDLEntity[] transferables,
+					final IdlStorableObject[] transferables,
 					final IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
-			}
+	}
 		});
 	}
 
@@ -332,7 +330,7 @@ final class MCMMeasurementObjectLoader extends MCMObjectLoader implements Measur
 	public void saveTests(final Set<Test> storableObjects, final boolean force) throws ApplicationException {
 		super.saveStorableObjects(ObjectEntities.TEST_CODE, storableObjects, force, new ReceiveProcedure() {
 			public IdlStorableObject[] receiveStorableObjects(final CommonServer server,
-					final IDLEntity[] transferables,
+					final IdlStorableObject[] transferables,
 					final IdlSessionKey sessionKey) throws AMFICOMRemoteException {
 				return ((MServer) server).receiveTests((IdlTest[]) transferables, force, sessionKey);
 			}
