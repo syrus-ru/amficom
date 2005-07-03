@@ -1,6 +1,6 @@
 MODULE_NAME = tools
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME = $(MODULE_NAME).jar
+ARCHFILE = $(MODULE_NAME).tar.gz
 
 LIBDIR=../lib
 
@@ -25,11 +25,11 @@ $(LIBNAME): .mach
 $(CLASSDIR):	
 	mkdir -p $@
 
-.PHONY:	clean
-clean:	
+.PHONY: clean
+clean: 
 	rm -f $(LIBNAME)
 
-.mach:	$(CLASSDIR)
+.mach: $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(PMD_JARS) \
 		$(SOURCES)
