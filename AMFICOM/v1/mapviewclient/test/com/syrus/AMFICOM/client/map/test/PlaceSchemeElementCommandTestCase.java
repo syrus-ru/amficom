@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommandTestCase.java,v 1.1 2005/07/01 16:07:55 krupenn Exp $
+ * $Id: PlaceSchemeElementCommandTestCase.java,v 1.2 2005/07/03 13:56:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,17 +26,17 @@ public class PlaceSchemeElementCommandTestCase extends SchemeBindingTestCase {
 		
 		Collection siteNodes = new ArrayList(METS.map.getSiteNodes());
 		assertEquals(siteNodes.size(), 6);
-		assertTrue(siteNodes.contains(this.site1));
-		assertTrue(siteNodes.contains(this.site2));
-		assertTrue(siteNodes.contains(this.site3));
-		assertTrue(siteNodes.contains(this.site4));
-		assertTrue(siteNodes.contains(this.site5));
+		assertTrue(siteNodes.contains(this.building1));
+		assertTrue(siteNodes.contains(this.well1));
+		assertTrue(siteNodes.contains(this.well2));
+		assertTrue(siteNodes.contains(this.well3));
+		assertTrue(siteNodes.contains(this.building2));
 
-		siteNodes.remove(this.site1);
-		siteNodes.remove(this.site2);
-		siteNodes.remove(this.site3);
-		siteNodes.remove(this.site4);
-		siteNodes.remove(this.site5);
+		siteNodes.remove(this.building1);
+		siteNodes.remove(this.well1);
+		siteNodes.remove(this.well2);
+		siteNodes.remove(this.well3);
+		siteNodes.remove(this.building2);
 
 		SiteNode site = (SiteNode )siteNodes.iterator().next();
 		
@@ -47,19 +47,19 @@ public class PlaceSchemeElementCommandTestCase extends SchemeBindingTestCase {
 	}
 
 	public void testPlaceToSite() {
-		Point location = new Point(20, 20);
+		Point location = this.building1location;
 		PlaceSchemeElementCommand command = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element1, location);
 		command.setNetMapViewer(METS.netMapViewer);
 		command.execute();
 		
 		Collection siteNodes = METS.map.getSiteNodes();
 		assertEquals(siteNodes.size(), 5);
-		assertTrue(siteNodes.contains(this.site1));
-		assertTrue(siteNodes.contains(this.site2));
-		assertTrue(siteNodes.contains(this.site3));
-		assertTrue(siteNodes.contains(this.site4));
-		assertTrue(siteNodes.contains(this.site5));
+		assertTrue(siteNodes.contains(this.building1));
+		assertTrue(siteNodes.contains(this.well1));
+		assertTrue(siteNodes.contains(this.well2));
+		assertTrue(siteNodes.contains(this.well3));
+		assertTrue(siteNodes.contains(this.building2));
 
-		assertSame(this.site1, SchemeSampleData.scheme1element1.getSiteNode());
+		assertSame(this.building1, SchemeSampleData.scheme1element1.getSiteNode());
 	}
 }
