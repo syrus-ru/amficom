@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.26 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.27 2005/07/03 13:56:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/03 13:56:15 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -90,14 +90,14 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			Identifier userId = LoginManager.getUserId();
 			for(Iterator iter = this.schemeCableLink.getCableChannelingItems().iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
-				SiteNode smsne = cci.getStartSiteNode();
-				SiteNode emsne = cci.getEndSiteNode();
+				SiteNode currentStartNode = cci.getStartSiteNode();
+				SiteNode currentEndNode = cci.getEndSiteNode();
 
 				// если элемент привязки не соответствует топологической схеме
 				// (один из узлов привязки не нанесен на карту) то элемент
 				// привязки опускается
-				if(smsne == null
-					|| emsne == null)
+				if(currentStartNode == null
+					|| currentEndNode == null)
 				{
 					continue;
 				}
@@ -106,15 +106,15 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				boolean exists = false;
 				
 				// переходим к следующему узлу кабельного пути
-				if(bufferStartSite.equals(smsne))
+				if(bufferStartSite.equals(currentStartNode))
 				{
-					bufferStartSite = emsne;
+					bufferStartSite = currentEndNode;
 					exists = true;
 				}
 				else
-				if(bufferStartSite.equals(emsne))
+				if(bufferStartSite.equals(currentEndNode))
 				{
-					bufferStartSite = smsne;
+					bufferStartSite = currentStartNode;
 					exists = true;
 				}
 				
@@ -124,11 +124,11 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				// создать на месте разрыва непроложенную линию из одного фрагмента
 				if(!exists)
 				{
-					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
+					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
 					this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, userId));
 					unbound.setCablePath(this.cablePath);
 
-					bufferStartSite = emsne;
+					bufferStartSite = currentEndNode;
 				}
 				// в противном случае привязать кабель к существующей линии
 				{
@@ -138,7 +138,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 					// если линия не существует, опустить данный элемент привязки
 					if(link == null)
 					{
-						UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
+						UnboundLink unbound = super.createUnboundLinkWithNodeLink(currentStartNode, currentEndNode);
 						this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, userId));
 						unbound.setCablePath(this.cablePath);
 					}
