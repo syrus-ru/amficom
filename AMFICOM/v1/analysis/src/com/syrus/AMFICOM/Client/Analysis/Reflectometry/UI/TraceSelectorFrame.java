@@ -19,7 +19,8 @@ import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class TraceSelectorFrame extends JInternalFrame
-implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, PropertyChangeListener
+implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
+		PropertyChangeListener, RefMismatchListener
 {
 	Dispatcher dispatcher;
 	protected static List traces = new LinkedList();
@@ -52,6 +53,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentTraceChangeListener(this);
+		Heap.addRefMismatchListener(this);
 	}
 
 	private void jbInit() throws Exception
@@ -205,5 +207,22 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener, 
 			TraceResource tr = (TraceResource)evt.getSource();
 			this.dispatcher.firePropertyChange(new RefUpdateEvent(this, tr, RefUpdateEvent.TRACE_CHANGED_EVENT));
 		}
+	}
+
+	private void updMismatchmark() {
+		int index = traces.indexOf(Heap.PRIMARY_TRACE_KEY);
+		if (index >= 0) {
+			((TraceResource)tModel.getObject(index)).setAlarm(
+					Heap.getRefMismatch() != null);
+		}
+		jTable.repaint(); // XXX: is this correct way of refreshing?
+	}
+
+	public void refMismatchCUpdated() {
+		updMismatchmark();
+	}
+
+	public void refMismatchRemoved() {
+		updMismatchmark();
 	}
 }

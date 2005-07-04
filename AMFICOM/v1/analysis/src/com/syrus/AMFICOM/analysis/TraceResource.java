@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceResource.java,v 1.1 2005/05/31 10:43:02 stas Exp $
+ * $Id: TraceResource.java,v 1.2 2005/07/04 13:40:21 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.*;
 import java.util.List;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/31 10:43:02 $
+ * @author $Author: saa $
+ * @version $Revision: 1.2 $, $Date: 2005/07/04 13:40:21 $
  * @module analysis_v1
  */
 
@@ -26,6 +26,7 @@ public class TraceResource {
 	private String	title;
 	private Color		color;
 	private boolean	isShown;
+	private boolean isAlarm = false;
 	
 	private List						propertyChangeListeners;
 
@@ -95,6 +96,14 @@ public class TraceResource {
 		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.contains(propertyChangeListener)) {
 			this.propertyChangeListeners.remove(propertyChangeListener);
 		}
+	}
+
+	public boolean isAlarm() {
+		return isAlarm;
+	}
+
+	public void setAlarm(boolean isAlarm) {
+		this.isAlarm = isAlarm;
 	}
 }
 
