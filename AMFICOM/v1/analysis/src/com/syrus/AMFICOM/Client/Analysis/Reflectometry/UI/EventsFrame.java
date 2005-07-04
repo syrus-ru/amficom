@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -60,7 +61,7 @@ import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends JInternalFrame
 implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
-    CurrentEventChangeListener, PropertyChangeListener
+    CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener
 {
 	ApplicationContext aContext;
 	private WrapperedTableModel tModel;
@@ -178,6 +179,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
+        Heap.addRefMismatchListener(this);
 	}
 
 	public String getReportTitle()
@@ -404,11 +406,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		double sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 
 		int nRows = view.nRows(Heap.getEventList());
-		
-    CompositeEventList eList = Heap.getEventList();
-    CompositeEventList.Walker w = eList.new Walker();
-    
-    clearTable();
+
+		CompositeEventList eList = Heap.getEventList();
+		CompositeEventList.Walker w = eList.new Walker();
+
+		clearTable();
+
 		for (int row = 0; row < nRows; row++, view.toNextRow(w))
 		{
             // nPri или nEt может быть -1, но не оба одновременно
@@ -444,17 +447,34 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
             //SimpleReflectogramEventComparer comp = Heap.getEventComparer();
             String colorCode = null;
 
-            if (Heap.getMTMEtalon() == null) {
-                // no etalon - use default colors
-            } else if (nPrimary < 0) {
-                colorCode = isSelected1
-                    ? AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED
-                    : AnalysisResourceKeys.COLOR_EVENTS_LOST;
-            } else if (nEtalon < 0) {
-                colorCode = isSelected1
-                ? AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED
-                : AnalysisResourceKeys.COLOR_EVENTS_NEW;
-            } else {
+            chooseColor: {
+	            if (Heap.getMTMEtalon() == null) {
+	            	break chooseColor; // no etalon - use default colors
+	            }
+	            if (nPrimary < 0) {
+	                colorCode = isSelected1
+	                    ? AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED
+	                    : AnalysisResourceKeys.COLOR_EVENTS_LOST;
+	                break chooseColor; // etalon-only event
+	            }
+	            // nPrimary >= 0
+	            if(Heap.getRefMismatch() != null) {
+	            	SimpleReflectogramEvent ev = Heap.getMTAEPrimary().getSimpleEvent(nPrimary);
+	            	int dist = Heap.getRefMismatch().pointCoord;
+	            	if (ev.getBegin() <= dist && ev.getEnd() > dist) {
+		                colorCode = isSelected1
+		                    ? AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED
+		                    : AnalysisResourceKeys.COLOR_EVENTS_ALARM;
+		                break chooseColor; // mismatched event
+	            	}
+	            }
+	            if (nEtalon < 0) {
+	                colorCode = isSelected1
+	                ? AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED
+	                : AnalysisResourceKeys.COLOR_EVENTS_NEW;
+	                break chooseColor; // probe-only event
+	            }
+	            // event changed?
                 //System.err.println("row " + row + " column " + column);
                 // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
                 DetailedEvent pri =
@@ -502,6 +522,14 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         	for (Iterator it = alarms.iterator(); it.hasNext(); ) {
         		ReflectogramAlarm al = (ReflectogramAlarm)it.next();
         		System.out.println("- " + al);
+        	}
+        	// FIXME: this code should become a command  
+        	if (alarms.size() > 0) {
+        		ReflectogramAlarm first = (ReflectogramAlarm)
+        				alarms.iterator().next();
+        		Heap.setRefMismatch(first);
+        	} else {
+        		Heap.setRefMismatch(null);
         	}
         }
     }
@@ -570,4 +598,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     		return;
     	setTableModel();
     }
+
+	public void refMismatchCUpdated() {
+		updateEventsModel();
+	}
+
+	public void refMismatchRemoved() {
+		updateEventsModel();
+	}
 }
