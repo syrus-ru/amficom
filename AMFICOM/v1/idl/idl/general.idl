@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.94 2005/07/03 19:16:33 bass Exp $
+ * $Id: general.idl,v 1.95 2005/07/04 15:42:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,10 @@ module general {
 
 		typedef sequence<Identifier> IdentifierSeq;
 
+		exception IdlCreateObjectException {
+			wstring detailMessage;
+		};
+
 		valuetype IdlStorableObject {
 			public Identifier id;
 			public long long created;
@@ -50,7 +54,7 @@ module general {
 			public Identifier modifierId;
 			public long long version;
 
-			::general::StorableObject getNative();
+			::general::StorableObject getNative() raises (IdlCreateObjectException);
 
 			factory defaultInit();
 			factory init(in Identifier id,
