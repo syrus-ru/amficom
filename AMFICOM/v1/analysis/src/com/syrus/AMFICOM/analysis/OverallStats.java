@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.2 2005/06/02 12:53:29 stas Exp $
+ * $Id: OverallStats.java,v 1.3 2005/07/04 14:12:44 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/07/04 14:12:44 $
  * @module analysis_v1
  */
 
@@ -37,7 +37,9 @@ public class OverallStats {
 	private String maxDeviation;
 	private String meanDeviation;
 	private String dLoss;
-	
+
+	private String mismatch;
+
 	private List						propertyChangeListeners;
 	
 	public void initGeneralStatistics(TraceEvent ev, BellcoreStructure bs) {
@@ -60,11 +62,22 @@ public class OverallStats {
 		setTotalEvents(String.valueOf(evNum));
 	}
 	
-	public void initCompareStatistics(double maxDeviation1, double meanDeviation1, double etalonLength1,	double lossDifference1) {
+	public void initCompareStatistics(double maxDeviation1,
+			double meanDeviation1,
+			double etalonLength1,
+			double lossDifference1,
+			ReflectogramAlarm alarm) {
 		setEtalonLength(String.valueOf(MathRef.round_3(etalonLength1)) + " " + LangModelAnalyse.getString("km"));
 		setMaxDeviation(String.valueOf(MathRef.round_4(maxDeviation1)) + " " + LangModelAnalyse.getString("dB"));
 		setMeanDeviation(String.valueOf(MathRef.round_4(meanDeviation1)) + " " + LangModelAnalyse.getString("dB"));
 		setDLoss(String.valueOf(MathRef.round_4(lossDifference1)) + " " + LangModelAnalyse.getString("dB"));
+		if (alarm == null) {
+			setMismatch(LangModelAnalyse.getString(("mismatchNo")));
+		} else {
+			setMismatch(String.valueOf(MathRef.round_3(alarm.getDistance()))
+					+ " "
+					+ LangModelAnalyse.getString(("mismatchDistance")));
+		}
 	}
 	
 	public String getTotalAttenuation() {
@@ -208,6 +221,18 @@ public class OverallStats {
 			String oldValue = this.meanDeviation;
 			this.meanDeviation = meanDeviation;
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_MEAN_DEVIATION, oldValue, meanDeviation));
+		}
+	}
+
+	public String getMismatch() {
+		return this.mismatch;
+	}
+
+	public void setMismatch(String mismatch) {
+		if (this.mismatch == null || !this.mismatch.equals(mismatch)) {
+			String oldValue = this.mismatch;
+			this.mismatch = mismatch;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_MISMATCH, oldValue, mismatch));
 		}
 	}
 

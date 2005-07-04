@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.2 2005/06/02 12:53:29 stas Exp $
+ * $Id: OverallStatsWrapper.java,v 1.3 2005/07/04 14:12:44 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/07/04 14:12:44 $
  * @module analysis_v1
  */
 
@@ -34,6 +34,7 @@ public class OverallStatsWrapper implements Wrapper {
 	public static final String KEY_MAX_DEVIATION = "maxDeviation";
 	public static final String KEY_MEAN_DEVIATION = "meanDeviation";
 	public static final String KEY_D_LOSS = "dLoss";
+	public static final String KEY_MISMATCH = "mismatch";
 	
 	private static OverallStatsWrapper	instance;
 
@@ -48,7 +49,7 @@ public class OverallStatsWrapper implements Wrapper {
 		String[] keysArray = new String[] { KEY_LENGTH, KEY_LOSS, KEY_ATTENUATION,
 				KEY_RETURN_LOSS, KEY_NOISE_LEVEL, KEY_NOISE_DD, KEY_NOISE_DDRMS,
 				KEY_EVENTS, KEY_ETALON_LENGTH, KEY_MAX_DEVIATION, KEY_MEAN_DEVIATION,
-				KEY_D_LOSS };
+				KEY_D_LOSS, KEY_MISMATCH };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -111,6 +112,10 @@ public class OverallStatsWrapper implements Wrapper {
 				return stats.getMeanDeviation();
 			} else if (key.equals(KEY_D_LOSS)) {
 				return stats.getDLoss();
+			} else if (key.equals(KEY_MEAN_DEVIATION)) {
+				return stats.getMeanDeviation();
+			} else if (key.equals(KEY_MISMATCH)) {
+				return stats.getMismatch();
 			}
 		}
 		return null;

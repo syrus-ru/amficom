@@ -16,7 +16,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends JInternalFrame
-implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
+implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+		RefMismatchListener
 {
 	private WrapperedPropertyTableModel tModel;
 	private WrapperedPropertyTable jTable;
@@ -58,6 +59,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 	{
 		Heap.addEtalonMTMListener(this);
         Heap.addPrimaryRefAnalysisListener(this);
+        Heap.addRefMismatchListener(this);
 	}
 
 	public String getReportTitle()
@@ -117,7 +119,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 				OverallStatsWrapper.KEY_ETALON_LENGTH,
 				OverallStatsWrapper.KEY_MAX_DEVIATION,
 				OverallStatsWrapper.KEY_MEAN_DEVIATION,
-				OverallStatsWrapper.KEY_D_LOSS });
+				OverallStatsWrapper.KEY_D_LOSS,
+				OverallStatsWrapper.KEY_MISMATCH });
 		jTableWholeComp = new WrapperedPropertyTable(wctModel);
 		jTableWholeComp.getColumnModel().getColumn(0).setPreferredWidth(130);
 
@@ -134,6 +137,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 
 	private void setWholeData()
 	{
+		ReflectogramAlarm mismatch = Heap.getRefMismatch();
 		ModelTraceManager etalonMTM = Heap.getMTMEtalon();
 		ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
 		if(etalonMTM == null || dataMTAE == null || dataMTAE.getNEvents() == 0)
@@ -155,7 +159,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
 //		double dataLength = ReflectogramMath.getEndOfTraceBegin(dataSRE) * deltaX;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
-		stats.initCompareStatistics(maxDeviation, meanDeviation, etalonLength, lossDifference);
+		stats.initCompareStatistics(maxDeviation, meanDeviation, etalonLength,
+				lossDifference, mismatch);
 		jTableWholeComp.updateUI();
 	}
 
@@ -202,5 +207,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable
         setVisible(false);
     }
 
+	public void refMismatchCUpdated() {
+		setWholeData();
+	}
+
+	public void refMismatchRemoved() {
+		setWholeData();
+	}
 }
 
