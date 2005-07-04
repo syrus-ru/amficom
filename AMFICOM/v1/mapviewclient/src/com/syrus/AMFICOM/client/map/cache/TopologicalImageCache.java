@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.7 2005/07/01 07:58:04 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.8 2005/07/04 14:40:52 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/07/01 07:58:04 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/04 14:40:52 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -40,11 +40,11 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private static final double ACTIVE_AREA_SIZE = 0.25;
 
-	/**
-	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
-	 * в процентах от габарита окна карты
-	 */
-	private static final double BORDER_AREA_SIZE = 0.1;
+//	/**
+//	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
+//	 * в процентах от габарита окна карты
+//	 */
+//	private static final double BORDER_AREA_SIZE = 0.1;
 	
 	/**
 	 * Пороговая длина радиус-вектора от точки входа в активную область. Если
@@ -96,7 +96,8 @@ public class TopologicalImageCache implements MapImageRenderer
 	/**
 	 * Список уже подгруженных для текущего режима работы сегментов
 	 */
-	private List cacheOfImages = Collections.synchronizedList(new ArrayList());
+	private List<TopologicalImageQuery> cacheOfImages =
+		Collections.synchronizedList(new ArrayList<TopologicalImageQuery>());
 
 	/**
 	 * Ссылка на экземпляр потока, осуществляющего подгрузку данных по запросам

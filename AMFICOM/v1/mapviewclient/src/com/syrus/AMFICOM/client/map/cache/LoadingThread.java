@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.5 2005/07/01 07:58:35 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.6 2005/07/04 14:40:52 peskovsky Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,8 @@ public class LoadingThread extends Thread {
     /**
      * ќчередь запросов на получение изображений с сервера
      */
-    private List requestQueue = Collections.synchronizedList(new LinkedList());
+    private List<TopologicalImageQuery> requestQueue = 
+    	Collections.synchronizedList(new LinkedList<TopologicalImageQuery>());
 
     /**
      * «апрос, обрабатываемый в текущий момент
@@ -195,10 +196,9 @@ public class LoadingThread extends Thread {
     
     private void setRequestInItsPlace(TopologicalImageQuery requestToAdd) {
         // »щем первый запрос с приоритетом ниже, чем у нового запроса
-        ListIterator lIt = this.requestQueue.listIterator();
+        ListIterator<TopologicalImageQuery> lIt = this.requestQueue.listIterator();
         for (; lIt.hasNext();) {
-            TopologicalImageQuery curRequest = (TopologicalImageQuery) lIt
-                    .next();
+            TopologicalImageQuery curRequest = lIt.next();
             if (requestToAdd.getPriority() < curRequest.getPriority()) {
                 // ƒобавл€ем перед этим запросом
                 lIt.previous();
