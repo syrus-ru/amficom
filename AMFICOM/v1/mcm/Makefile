@@ -1,16 +1,16 @@
 #
-# $Id: Makefile,v 1.62 2005/07/03 19:16:32 bass Exp $
+# $Id: Makefile,v 1.63 2005/07/04 11:57:48 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME := mcm_v1
+MODULE_NAME := mcm
 
-LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
-LIBNAME_INTERFACE := $(subst _v1,_interface,$(MODULE_NAME)).jar
-ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(MODULE_NAME).jar
+LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR = ../idl_v1/idl
+IDLDIR := ../idl/idl
 
 HOST = mongol
 SERVICE_NAME = mongol

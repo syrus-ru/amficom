@@ -1,6 +1,6 @@
-MODULE_NAME = scheduler_v1
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+MODULE_NAME := scheduler
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 HOST=mongol
 SERVICE_NAME=mongol

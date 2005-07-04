@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.8 2005/05/04 10:42:41 bass Exp $
+# $Id: Makefile,v 1.9 2005/07/04 11:57:46 bass Exp $
 #
 # vim:ft=make:
 #
 
-MODULE_NAME = corbaportable_v1
+MODULE_NAME := corbaportable
 
 JAVACFLAGS = -source 1.4
 SUNJAVACFLAGS = -target 1.4

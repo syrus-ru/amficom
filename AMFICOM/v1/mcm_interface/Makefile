@@ -1,12 +1,12 @@
 #
-# $Id: Makefile,v 1.1 2005/07/03 16:53:33 bass Exp $
+# $Id: Makefile,v 1.2 2005/07/04 11:57:47 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME := mcm_interface
 
-IDLDIR = ../idl_v1/idl
+IDLDIR := ../idl/idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

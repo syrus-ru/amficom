@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.26 2005/07/03 19:16:34 bass Exp $
+# $Id: Makefile,v 1.27 2005/07/04 11:57:46 bass Exp $
 #
 # vim:ft=make:
 #
 
-MODULE_NAME = idl_v1
+MODULE_NAME = idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -13,15 +13,15 @@ $(call checkenve,JAVA_HOME)
 idl: .idl
 
 .idl:
-	$(MAKE) -C ../event_v1 $@
-	$(MAKE) -C ../general_v1 $@
-	$(MAKE) -C ../resource_v1 $@
-	$(MAKE) -C ../admin_v1 $@
-	$(MAKE) -C ../config_v1 $@
-	$(MAKE) -C ../measurement_v1 $@
-	$(MAKE) -C ../map_v1 $@
-	$(MAKE) -C ../scheme_v1 $@
-	$(MAKE) -C ../mapview_v1 $@
+	$(MAKE) -C ../event $@
+	$(MAKE) -C ../general $@
+	$(MAKE) -C ../resource $@
+	$(MAKE) -C ../admin $@
+	$(MAKE) -C ../config $@
+	$(MAKE) -C ../measurement $@
+	$(MAKE) -C ../map $@
+	$(MAKE) -C ../scheme $@
+	$(MAKE) -C ../mapview $@
 	$(MAKE) -C ../cmserver_interface $@
 	$(MAKE) -C ../mscharserver_interface $@
 	$(MAKE) -C ../mcm_interface $@
@@ -31,15 +31,15 @@ idl: .idl
 
 .PHONY: idlclean
 idlclean:
-	$(MAKE) -C ../event_v1 $@
-	$(MAKE) -C ../general_v1 $@
-	$(MAKE) -C ../resource_v1 $@
-	$(MAKE) -C ../admin_v1 $@
-	$(MAKE) -C ../config_v1 $@
-	$(MAKE) -C ../measurement_v1 $@
-	$(MAKE) -C ../map_v1 $@
-	$(MAKE) -C ../scheme_v1 $@
-	$(MAKE) -C ../mapview_v1 $@
+	$(MAKE) -C ../event $@
+	$(MAKE) -C ../general $@
+	$(MAKE) -C ../resource $@
+	$(MAKE) -C ../admin $@
+	$(MAKE) -C ../config $@
+	$(MAKE) -C ../measurement $@
+	$(MAKE) -C ../map $@
+	$(MAKE) -C ../scheme $@
+	$(MAKE) -C ../mapview $@
 	$(MAKE) -C ../cmserver_interface $@
 	$(MAKE) -C ../mscharserver_interface $@
 	$(MAKE) -C ../mcm_interface $@

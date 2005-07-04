@@ -1,8 +1,8 @@
-MODULE_NAME = filterclient_v1
+MODULE_NAME := filterclient
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(MODULE_NAME).jar
+LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 JAVAC=javac
 

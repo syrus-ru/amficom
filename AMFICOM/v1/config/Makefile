@@ -1,14 +1,14 @@
-MODULE_NAME = configuration_v1
+MODULE_NAME := configuration
 
-LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR = ../idl_v1/idl
+IDLDIR := ../idl/idl
 
 HOST = mongol
 SERVICE_NAME = mongol
 
-JAVAC=javac
+JAVAC := javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

@@ -1,13 +1,13 @@
 #
-# $Id: Makefile,v 1.4 2005/07/03 19:08:17 bass Exp $
+# $Id: Makefile,v 1.5 2005/07/04 11:57:45 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = schemeclient_v1
+MODULE_NAME := schemeclient
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 JAVAC=$(JAVA_HOME)/bin/javac
 

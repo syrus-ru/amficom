@@ -1,12 +1,12 @@
 #
-# $Id: Makefile,v 1.6 2005/04/18 13:15:52 saa Exp $
+# $Id: Makefile,v 1.7 2005/07/04 11:57:46 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = analysis_v1
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+MODULE_NAME := analysis
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 LIBDIR=../lib
 CLASSPATH = $(LIBDIR)/corba.jar;$(LIBDIR)/util.jar;$(LIBDIR)/general.jar;$(LIBDIR)/config.jar;$(LIBDIR)/admin.jar;$(LIBDIR)/corbaportable.jar;$(LIBDIR)/filter.jar;$(LIBDIR)/measurement.jar;$(LIBDIR)/scheme.jar;$(LIBDIR)/generalclient.jar;$(LIBDIR)/schemeclient.jar;$(LIBDIR)/mapclient.jar;../dadara/classes

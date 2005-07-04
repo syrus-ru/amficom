@@ -1,15 +1,15 @@
 #
-# $Id: Makefile,v 1.26 2005/07/03 19:16:21 bass Exp $
+# $Id: Makefile,v 1.27 2005/07/04 11:57:47 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME := scheme_v1
+MODULE_NAME := scheme
 
-LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.bz2
+LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.bz2
 
-IDLDIR = ../idl_v1/idl
+IDLDIR := ../idl/idl
 
 JAVAC=javac
 

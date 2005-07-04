@@ -1,12 +1,12 @@
 #
-# $Id: Makefile,v 1.8 2005/06/22 11:56:15 arseniy Exp $
+# $Id: Makefile,v 1.9 2005/07/04 11:57:46 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = filter_v1
+MODULE_NAME := filter
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
+LIBNAME := $(MODULE_NAME).jar
 
 JAVAC=javac
 
