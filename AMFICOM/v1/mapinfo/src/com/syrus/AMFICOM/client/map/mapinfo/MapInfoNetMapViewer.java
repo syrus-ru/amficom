@@ -129,7 +129,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 					Log.DEBUGLEVEL10);
 
 		}
-		
+		this.visualComponent.forceLNLRepaint();
 		long t2 = System.currentTimeMillis();		
 		this.visualComponent.repaint();
 		long t3 = System.currentTimeMillis();
