@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.14 2005/06/28 11:15:24 arseniy Exp $
+ * $Id: PortTypeWrapper.java,v 1.15 2005/07/04 11:33:30 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,14 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/28 11:15:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/04 11:33:30 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 public final class PortTypeWrapper extends StorableObjectWrapper {
 
-	public static final String		COLUMN_SORT				= "sort";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_KIND = "kind";
 
 	private static PortTypeWrapper	instance;
 
@@ -31,7 +32,12 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 
 	private PortTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_SORT,
+				COLUMN_KIND,
+				COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -51,6 +57,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof PortType) {
@@ -63,6 +70,8 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 				return type.getName();
 			if (key.equals(COLUMN_SORT))
 				return new Integer(type.getSort().value());
+			if (key.equals(COLUMN_KIND))
+				return new Integer(type.getKind().value());
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
@@ -98,7 +107,8 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
+	@Override
+	public Class getPropertyClass(final String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
@@ -108,7 +118,8 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_NAME)) {
 			return String.class;
 		}
-		if (key.equals(COLUMN_SORT)) {
+		if (key.equals(COLUMN_SORT)
+				|| key.equals(COLUMN_KIND)) {
 			return Integer.class;
 		}
 		if (key.equals(COLUMN_CHARACTERISTICS)) {

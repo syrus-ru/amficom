@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.38 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemePort.java,v 1.39 2005/07/04 11:33:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/04 11:33:30 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -92,7 +92,7 @@ public final class SchemePort extends AbstractSchemePort {
 				port, measurementPort,
 				parentSchemeDevice);
 
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_PORT;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
 
 		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPORT_CODE);
 	}
@@ -180,6 +180,7 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
+	@Override
 	public AbstractSchemeLink getAbstractSchemeLink() {
 		return getSchemeLink();
 	}
@@ -187,9 +188,10 @@ public final class SchemePort extends AbstractSchemePort {
 	/**
 	 * @see AbstractSchemePort#getPort()
 	 */
+	@Override
 	public Port getPort() {
 		final Port port = super.getPort();
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		return port;
 	}
 
@@ -198,11 +200,11 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public SchemeCableThread getSchemeCableThread() {
 		try {
-			final Set schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true);
+			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true);
 			assert schemeCableThreads != null && schemeCableThreads.size() <= 1;
 			return schemeCableThreads.isEmpty()
 					? null
-					: (SchemeCableThread) schemeCableThreads.iterator().next();
+					: schemeCableThreads.iterator().next();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -214,11 +216,11 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public SchemeLink getSchemeLink() {
 		try {
-			final Set schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMELINK_CODE), true, true);
+			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMELINK_CODE), true, true);
 			assert schemeLinks != null && schemeLinks.size() <= 1;
 			return schemeLinks.isEmpty()
 					? null
-					: (SchemeLink) schemeLinks.iterator().next();
+					: schemeLinks.iterator().next();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -251,8 +253,9 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
+	@Override
 	public void setPort(final Port port) {
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_PORT: ErrorMessages.NATURE_INVALID;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : ErrorMessages.NATURE_INVALID;
 		super.setPort(port);
 	}
 

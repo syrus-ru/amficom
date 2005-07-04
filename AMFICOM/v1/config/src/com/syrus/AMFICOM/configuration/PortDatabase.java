@@ -1,5 +1,5 @@
-/*
- * $Id: PortDatabase.java,v 1.62 2005/06/28 11:15:24 arseniy Exp $
+/*-
+ * $Id: PortDatabase.java,v 1.63 2005/07/04 11:33:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/28 11:15:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/07/04 11:33:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class PortDatabase extends CharacterizableDatabase {
@@ -37,30 +37,31 @@ public final class PortDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private Port fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Port fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Port)
 			return (Port)storableObject;
 		throw new IllegalDataException("PortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.PORT_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {		
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ PortWrapper.COLUMN_EQUIPMENT_ID + COMMA
-				+ PortWrapper.COLUMN_SORT;		
+				+ PortWrapper.COLUMN_EQUIPMENT_ID;
 		}
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 
@@ -68,34 +69,34 @@ public final class PortDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}	
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Port port = this.fromStorableObject(storableObject);
-		Identifier typeId = port.getType().getId();
-		Identifier equipmentId = port.getEquipmentId();
+		final Port port = this.fromStorableObject(storableObject);
+		final Identifier typeId = port.getType().getId();
+		final Identifier equipmentId = port.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
-			+ DatabaseIdentifier.toSQLString(equipmentId) + COMMA
-			+ port.getSort().value();
+			+ DatabaseIdentifier.toSQLString(equipmentId);
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Port port = (storableObject == null) ? new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+		final Port port = (storableObject == null) ? new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 				null,
 				0L,
 				null,
 				null,
-				null,
-				0) : this.fromStorableObject(storableObject);
+				null) : this.fromStorableObject(storableObject);
 		PortType portType;
 		try {
-			Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
+			final Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
 			portType = (portTypeId != null) ? (PortType) StorableObjectPool.getStorableObject(portTypeId, true) : null;
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -103,13 +104,13 @@ public final class PortDatabase extends CharacterizableDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				portType,
 				(description != null) ? description : "",
-				DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID),
-				resultSet.getInt(PortWrapper.COLUMN_SORT));
+				DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID));
 		return port;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Port port = this.fromStorableObject(storableObject);
+		final Port port = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  port.getId() + "'; argument: " + arg);
@@ -117,17 +118,17 @@ public final class PortDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-		throws IllegalDataException, SQLException {
-		Port port = this.fromStorableObject(storableObject);
-		Identifier typeId = port.getType().getId();
-		Identifier equipmentId = port.getEquipmentId();
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Port port = this.fromStorableObject(storableObject);
+		final Identifier typeId = port.getType().getId();
+		final Identifier equipmentId = port.getEquipmentId();
 
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
-		preparedStatement.setInt(++startParameterNumber, port.getSort().value());
 		return startParameterNumber;
 	}
-
 }

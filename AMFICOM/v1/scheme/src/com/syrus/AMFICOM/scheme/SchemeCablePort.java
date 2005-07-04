@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.38 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.39 2005/07/04 11:33:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/04 11:33:30 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -91,7 +91,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				name, description, directionType, portType, port,
 				measurementPort, parentSchemeDevice);
 
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE;
 
 		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 	}
@@ -180,6 +180,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	/**
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
+	@Override
 	public AbstractSchemeLink getAbstractSchemeLink() {
 		return getSchemeCableLink();
 	}
@@ -187,9 +188,10 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	/**
 	 * @see AbstractSchemePort#getPort()
 	 */
+	@Override
 	public Port getPort() {
 		final Port port = super.getPort();
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE : ErrorMessages.OBJECT_BADLY_INITIALIZED;
 		return port;
 	}
 
@@ -198,11 +200,11 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 */
 	public SchemeCableLink getSchemeCableLink() {
 		try {
-			final Set schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true);
+			final Set<SchemeCableLink> schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true);
 			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
 			return schemeCableLinks.isEmpty()
 					? null
-					: (SchemeCableLink) schemeCableLinks.iterator().next();
+					: schemeCableLinks.iterator().next();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
 			return null;
@@ -235,8 +237,9 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
+	@Override
 	public void setPort(final Port port) {
-		assert port == null || port.getSort().value() == PortSort._PORT_SORT_CABLE_PORT: ErrorMessages.NATURE_INVALID;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE : ErrorMessages.NATURE_INVALID;
 		super.setPort(port);
 	}
 
