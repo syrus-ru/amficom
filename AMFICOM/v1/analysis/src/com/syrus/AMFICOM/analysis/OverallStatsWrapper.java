@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.3 2005/07/04 14:12:44 saa Exp $
+ * $Id: OverallStatsWrapper.java,v 1.4 2005/07/04 14:15:46 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.analysis;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/04 14:12:44 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/04 14:15:46 $
  * @module analysis_v1
  */
 
