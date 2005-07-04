@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.118 2005/07/03 19:16:25 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.119 2005/07/04 11:32:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.118 $, $Date: 2005/07/03 19:16:25 $
+ * @version $Revision: 1.119 $, $Date: 2005/07/04 11:32:03 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -217,7 +217,7 @@ public abstract class StorableObjectPool {
 	 * @return Set of StorableObject matching condition
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition,
+	public static <T> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
 		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -394,7 +394,7 @@ public abstract class StorableObjectPool {
 		return storableObjects == null ? Collections.EMPTY_SET : storableObjects;
 	}
 
-	private final Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition,
+	private final <T> Set<T> getStorableObjectsByConditionImpl(final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
 		final Set<Identifier> emptySet = Collections.emptySet();
@@ -1120,7 +1120,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.118 $, $Date: 2005/07/03 19:16:25 $
+	 * @version $Revision: 1.119 $, $Date: 2005/07/04 11:32:03 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
