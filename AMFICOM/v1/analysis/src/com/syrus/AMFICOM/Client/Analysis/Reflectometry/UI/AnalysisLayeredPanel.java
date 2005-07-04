@@ -172,7 +172,9 @@ implements CurrentEventChangeListener,
 				if (alarm != null) {
 					updated = true;
 					double dist = alarm.getDistance(); // XXX: брать дистанцию потенциального аларма или или дистанцию несоответствия (на которой он был обнаружен)? 
-					((MapMarkersPanel)panel).createAlarmMarker("", refMismatchMarkerId, dist); // @todo: add a name (text) for the marker
+					((MapMarkersPanel)panel).createAlarmMarker(
+							LangModelAnalyse.getString("mismatch"),
+							refMismatchMarkerId, dist);
 				}
 				if (updated)
 					jLayeredPane.repaint();
