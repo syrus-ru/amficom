@@ -14,3 +14,4 @@ IdlParameterType.java
 IdlStorableObject.java
 IdlStorableObjectCondition.java
 Verifiable.java
+IdlCreateObjectException.java

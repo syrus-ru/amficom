@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.120 2005/07/04 13:00:51 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.121 2005/07/04 15:23:09 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.io.LRUMapSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.120 $, $Date: 2005/07/04 13:00:51 $
+ * @version $Revision: 1.121 $, $Date: 2005/07/04 15:23:09 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -1097,7 +1098,12 @@ public abstract class StorableObjectPool {
 			/*
 			 * Арсений, береги скобки!
 			 */
-			storableObject = transferable.getNative();
+			try {
+				storableObject = transferable.getNative();
+			} catch (final IdlCreateObjectException coe) {
+				Log.debugException(coe, Log.SEVERE);
+				throw new CreateObjectException(coe.detailMessage);
+			}
 		} else {
 			/*
 			 * Сохраним скобки для будущих поколений!
@@ -1120,7 +1126,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.120 $, $Date: 2005/07/04 13:00:51 $
+	 * @version $Revision: 1.121 $, $Date: 2005/07/04 15:23:09 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
