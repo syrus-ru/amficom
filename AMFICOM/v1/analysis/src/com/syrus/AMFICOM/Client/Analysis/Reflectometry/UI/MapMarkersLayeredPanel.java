@@ -179,7 +179,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 	JToggleButton createMarkerTButton = new JToggleButton();
 	JButton deleteMarkerButton = new JButton();
 
-	protected static String[] buttons = new String[]
+	protected static String[] buttons1 = new String[]
 	{
 		EX, DX, EY, DY, FIX, SEPARATOR, events, SEPARATOR, createMarker, deleteMarker
 	};
@@ -191,14 +191,14 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected String[] getButtons()
 	{
-		return buttons;
+		return buttons1;
 	}
 
 	protected Map createGraphButtons()
 	{
-		Map buttons = new HashMap();
+		Map buttons2 = new HashMap();
 
-		buttons.put(
+		buttons2.put(
 				createMarker,
 				createToolButton(
 				createMarkerTButton,
@@ -215,7 +215,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons2.put(
 				deleteMarker,
 				createToolButton(
 				deleteMarkerButton,
@@ -233,19 +233,19 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				},
 				true));
 
-		buttons.putAll(super.createGraphButtons());
-		return buttons;
+		buttons2.putAll(super.createGraphButtons());
+		return buttons2;
 	}
 
 	void createMarkerTButton_actionPerformed(ActionEvent e)
 	{
-		MapMarkersLayeredPanel panel = (MapMarkersLayeredPanel)super.panel;
-		panel.createMarker (createMarkerTButton.isSelected());
+		MapMarkersLayeredPanel panel1 = (MapMarkersLayeredPanel)super.panel;
+		panel1.createMarker (createMarkerTButton.isSelected());
 	}
 
 	void deleteMarkerButton_actionPerformed(ActionEvent e)
 	{
-		MapMarkersLayeredPanel panel = (MapMarkersLayeredPanel)super.panel;
-		panel.deleteActiveMarker();
+		MapMarkersLayeredPanel panel1 = (MapMarkersLayeredPanel)super.panel;
+		panel1.deleteActiveMarker();
 	}
 }
