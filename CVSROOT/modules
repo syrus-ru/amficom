@@ -48,6 +48,7 @@ database_v2	AMFICOM/v2/database
 #M	AMFICOM_v1	Composite module of AMFICOM version 1
 AMFICOM_v1	&tools\
 		&idl \
+		&idl_meta \
 		&kisserver \
 		&general \
 		&csbridge \
@@ -109,6 +110,8 @@ AMFICOM_v1	&tools\
 #M	idl		Client-side AMFICOM CORBA object & interface
 idl			AMFICOM/v1/idl
 idl_v1			AMFICOM/v1/idl
+#M	idl_meta	For Saa with Love ;-)
+idl_meta		AMFICOM/v1/idl_meta
 #M	kisserver	Agent-side AMFICOM CORBA object & interface
 kisserver		AMFICOM/v1/kisserver
 kisserver_v1		AMFICOM/v1/kisserver
