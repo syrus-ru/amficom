@@ -1,5 +1,5 @@
 /*-
- * $Id: ImageToByte.java,v 1.1 2005/07/04 08:08:00 max Exp $
+ * $Id: ImageToByte.java,v 1.2 2005/07/04 08:11:11 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,13 @@ package com.syrus.AMFICOM.mscharserver;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
+
+/**
+ * @author Maxim Selivanov
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/07/04 08:11:11 $
+ * @module mshserver_v1
+ */
 
 public class ImageToByte {
 	
