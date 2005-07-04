@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.64 2005/07/03 19:16:22 bass Exp $
+ * $Id: Link.java,v 1.65 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/07/03 19:16:22 $
+ * @version $Revision: 1.65 $, $Date: 2005/07/04 13:00:53 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -152,9 +152,10 @@ public final class Link extends AbstractLink {
 		this.supplier = idlLink.supplier;
 		this.supplierCode = idlLink.supplierCode;
 
-		final Set characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(idlLink.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 
 		super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
 	}

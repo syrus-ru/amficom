@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.4 2005/07/03 19:16:23 bass Exp $
+ * $Id: CableLink.java,v 1.5 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:23 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/04 13:00:53 $
  * @module config_v1
  */
 public final class CableLink extends AbstractLink {
@@ -153,9 +153,10 @@ public final class CableLink extends AbstractLink {
 		this.supplier = idlCableLink.supplier;
 		this.supplierCode = idlCableLink.supplierCode;
 
-		Set characteristicIds = Identifier.fromTransferables(idlCableLink.characteristicIds);
+		Set<Identifier> characteristicIds = Identifier.fromTransferables(idlCableLink.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(idlCableLink.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 
 		super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
 	}

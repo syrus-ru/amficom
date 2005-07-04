@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.68 2005/07/04 11:33:30 bass Exp $
+ * $Id: PortType.java,v 1.69 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/07/04 11:33:30 $
+ * @version $Revision: 1.69 $, $Date: 2005/07/04 13:00:53 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -146,9 +146,10 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.sort = ptt.sort.value();
 		this.kind = ptt.kind.value();
 
-		final Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 
 	/**

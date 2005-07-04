@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.31 2005/06/25 17:50:46 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.32 2005/07/04 13:00:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/06/25 17:50:46 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/04 13:00:50 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -72,7 +72,7 @@ public abstract class AbstractSchemePort extends
 	 */
 	AbstractSchemePort(final Identifier id) {
 		super(id);
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public abstract class AbstractSchemePort extends
 		this.measurementPortId = Identifier.possiblyVoid(measurementPort);
 		this.parentSchemeDeviceId = Identifier.possiblyVoid(parentSchemeDevice);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -214,7 +214,7 @@ public abstract class AbstractSchemePort extends
 		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
 
 		if (!this.portId.isVoid())
-			return (PortType) getPort().getType();
+			return getPort().getType();
 
 		try {
 			return (PortType) StorableObjectPool.getStorableObject(this.portTypeId, true);
@@ -287,7 +287,7 @@ public abstract class AbstractSchemePort extends
 		super.markAsChanged();
 	}
 
-	public final void setCharacteristics(final Set characteristics) {
+	public final void setCharacteristics(final Set<Characteristic> characteristics) {
 		setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -296,10 +296,10 @@ public abstract class AbstractSchemePort extends
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
 	 */
-	public final void setCharacteristics0(final Set characteristics) {
+	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
 		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (this.characteristics == null)
-			this.characteristics = new HashSet(characteristics.size());
+			this.characteristics = new HashSet<Characteristic>(characteristics.size());
 		else
 			this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
@@ -433,7 +433,8 @@ public abstract class AbstractSchemePort extends
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true);
+			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

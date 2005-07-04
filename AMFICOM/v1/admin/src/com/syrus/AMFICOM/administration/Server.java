@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.41 2005/07/03 19:16:35 bass Exp $
+ * $Id: Server.java,v 1.42 2005/07/04 13:00:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/03 19:16:35 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/04 13:00:54 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -115,9 +115,10 @@ public final class Server extends DomainMember implements Characterizable {
 		this.description = st.description;
 		this.hostname = st.hostname;
 
-		final Set characteristicIds = Identifier.fromTransferables(st.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(st.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(st.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

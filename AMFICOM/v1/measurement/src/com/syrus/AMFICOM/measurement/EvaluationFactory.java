@@ -1,5 +1,5 @@
 /*-
- * $Id: EvaluationFactory.java,v 1.4 2005/07/03 19:16:31 bass Exp $
+ * $Id: EvaluationFactory.java,v 1.5 2005/07/04 13:00:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,13 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/04 13:00:49 $
  * @module measurement_v1
  */
 final class EvaluationFactory extends StorableObjectFactory {

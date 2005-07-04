@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.119 2005/07/04 11:32:03 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.120 2005/07/04 13:00:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/07/04 11:32:03 $
+ * @version $Revision: 1.120 $, $Date: 2005/07/04 13:00:51 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -181,10 +181,10 @@ public abstract class StorableObjectPool {
 				+ ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
 	}
 
-	public static Set getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
+	public static <T> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty())
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 
 		assert StorableObject.hasSingleGroupEntities(ids);
 		final short groupCode = StorableObject.getGroupCodeOfIdentifiables(ids);
@@ -1120,7 +1120,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.119 $, $Date: 2005/07/04 11:32:03 $
+	 * @version $Revision: 1.120 $, $Date: 2005/07/04 13:00:51 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

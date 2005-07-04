@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.48 2005/07/03 19:16:28 bass Exp $
+ * $Id: Mark.java,v 1.49 2005/07/04 13:00:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/04 13:00:48 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -112,10 +113,11 @@ public final class Mark extends AbstractNode {
 			this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
 
 			super.characteristics = new HashSet(mt.characteristicIds.length);
-			Set characteristicIds = new HashSet(mt.characteristicIds.length);
+			Set<Identifier> characteristicIds = new HashSet(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			super.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
+			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+			this.setCharacteristics0(characteristics0);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkFactory.java,v 1.5 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemeCableLinkFactory.java,v 1.6 2005/07/04 13:00:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,13 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/04 13:00:50 $
  * @module scheme_v1
  */
 final class SchemeCableLinkFactory extends StorableObjectFactory {

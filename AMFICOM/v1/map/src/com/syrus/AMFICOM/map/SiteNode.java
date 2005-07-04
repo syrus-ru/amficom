@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.52 2005/07/03 19:16:28 bass Exp $
+ * $Id: SiteNode.java,v 1.53 2005/07/04 13:00:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -58,7 +59,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/04 13:00:48 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -117,11 +118,12 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			this.type = (SiteNodeType) StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
 
 			this.characteristics = new HashSet(snt.characteristicIds.length);
-			Set characteristicIds = new HashSet(snt.characteristicIds.length);
+			Set<Identifier> characteristicIds = new HashSet(snt.characteristicIds.length);
 			for (int i = 0; i < snt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
-			this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
+			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+			this.setCharacteristics0(characteristics0);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

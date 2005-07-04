@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.102 2005/07/03 19:16:23 bass Exp $
+ * $Id: Equipment.java,v 1.103 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/07/03 19:16:23 $
+ * @version $Revision: 1.103 $, $Date: 2005/07/04 13:00:53 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -219,9 +219,10 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
 
-		final Set characteristicIds = Identifier.fromTransferables(et.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(et.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(et.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 
 	/**

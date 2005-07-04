@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.43 2005/07/03 19:16:34 bass Exp $
+ * $Id: Domain.java,v 1.44 2005/07/04 13:00:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/07/03 19:16:34 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/04 13:00:54 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -111,9 +111,10 @@ public final class Domain extends DomainMember implements Characterizable {
 		this.name = dt.name;
 		this.description = dt.description;
 
-		final Set characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(dt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

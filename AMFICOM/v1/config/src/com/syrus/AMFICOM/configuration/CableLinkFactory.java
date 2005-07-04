@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkFactory.java,v 1.2 2005/07/03 19:16:23 bass Exp $
+ * $Id: CableLinkFactory.java,v 1.3 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,12 @@
 package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLink;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/03 19:16:23 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/04 13:00:53 $
  * @module config_v1
  */
 final class CableLinkFactory extends StorableObjectFactory {

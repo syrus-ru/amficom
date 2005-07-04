@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.75 2005/07/03 19:16:22 bass Exp $
+ * $Id: TransmissionPath.java,v 1.76 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.75 $, $Date: 2005/07/03 19:16:22 $
+ * @version $Revision: 1.76 $, $Date: 2005/07/04 13:00:53 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -148,9 +148,10 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		this.startPortId = new Identifier(tpt.startPortId);
 		this.finishPortId = new Identifier(tpt.finishPortId);
 
-		final Set characteristicIds = Identifier.fromTransferables(tpt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(tpt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(tpt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 
 	/**

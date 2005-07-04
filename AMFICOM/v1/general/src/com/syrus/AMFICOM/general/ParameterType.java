@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.40 2005/07/03 19:16:25 bass Exp $
+ * $Id: ParameterType.java,v 1.41 2005/07/04 13:00:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:25 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/04 13:00:51 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -148,9 +148,10 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.name = ptt.name;
 		this.dataType = ptt.dataType.value();
 		
-		final Set characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

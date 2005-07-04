@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.55 2005/07/03 19:16:28 bass Exp $
+ * $Id: NodeLink.java,v 1.56 2005/07/04 13:00:48 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/04 13:00:48 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -180,8 +180,9 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
 		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
-		Set characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
-		this.characteristics.addAll(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		Set<Identifier> characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 
 	/**

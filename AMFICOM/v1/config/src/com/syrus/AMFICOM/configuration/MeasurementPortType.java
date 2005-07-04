@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.59 2005/07/03 19:16:22 bass Exp $
+ * $Id: MeasurementPortType.java,v 1.60 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/07/03 19:16:22 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/04 13:00:53 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -127,9 +127,10 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
 
-		final Set characteristicIds = Identifier.fromTransferables(mptt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(mptt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(mptt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 
 	/**

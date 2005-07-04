@@ -1,5 +1,5 @@
 /*-
- * $Id: EventSourceFactory.java,v 1.4 2005/07/03 19:16:27 bass Exp $
+ * $Id: EventSourceFactory.java,v 1.5 2005/07/04 13:00:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,12 @@
 package com.syrus.AMFICOM.event;
 
 import com.syrus.AMFICOM.event.corba.IdlEventSource;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectFactory;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/03 19:16:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/04 13:00:47 $
  * @module event_v1
  */
 final class EventSourceFactory extends StorableObjectFactory {

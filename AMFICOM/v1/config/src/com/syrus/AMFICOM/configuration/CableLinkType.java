@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.52 2005/07/03 19:16:23 bass Exp $
+ * $Id: CableLinkType.java,v 1.53 2005/07/04 13:00:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/07/03 19:16:23 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/04 13:00:53 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -155,9 +155,10 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
 
-		final Set characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
+		final Set<Identifier> characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(cltt.characteristicIds.length);
-		this.setCharacteristics0(StorableObjectPool.getStorableObjects(characteristicIds, true));
+		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
+		this.setCharacteristics0(characteristics0);
 	}
 	
 	/**
