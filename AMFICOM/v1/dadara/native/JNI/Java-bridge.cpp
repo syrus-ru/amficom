@@ -845,7 +845,9 @@ jobject ReliabilityEvent_C2J(JNIEnv *env, ReliabilityEvent &re, jclass clazz)
 	int rel = re.nSigma < 0 ? -1 : (int)floor(re.nSigma / SIGMA_PREC + 0.5);
 	if (rel > NSIGMA_MAX)
 		rel = NSIGMA_MAX;
-	env->SetIntField(obj, env->GetFieldID(clazz, N_RE_nSigma, S_RE_nSigma), rel);
+	jfieldID sigmaFID = env->GetFieldID(clazz, N_RE_nSigma, S_RE_nSigma);
+	assert(sigmaFID);
+	env->SetIntField(obj, sigmaFID, rel);
 
 	return obj;
 }
