@@ -20,6 +20,8 @@ public class MapImagePanel extends JPanel
 	private Image mapImage = null;
 
 	private final MapInfoNetMapViewer viewer;
+	
+	private boolean forceLNLRepaint = false;
 
 	public MapImagePanel(MapInfoNetMapViewer viewer)
 	{
@@ -73,7 +75,13 @@ public class MapImagePanel extends JPanel
 	public void setImage(Image newImage)
 	{
 		if (newImage != null)
+		{
+//			if (	(newImage.getWidth(this) != this.mapImage.getWidth(this))
+//					||(newImage.getHeight(this) != this.mapImage.getHeight(this)))
+//				this.mapImage = new BufferedImage()
+			
 			this.mapImage = newImage;
+		}
 	}
 
 	public void paintComponent(Graphics g)
@@ -87,22 +95,31 @@ public class MapImagePanel extends JPanel
 
 		long t3 = System.currentTimeMillis();
 		
-		try
+		if (this.forceLNLRepaint)
 		{
-			this.viewer.getLogicalNetLayer().paint(g, this.viewer.getVisibleBounds());
-		} catch (MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try
+			{
+				this.viewer.getLogicalNetLayer().paint(g, this.viewer.getVisibleBounds());
+			} catch (MapConnectionException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MapDataException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.forceLNLRepaint = false;			
 		}
 		
 		long t4 = System.currentTimeMillis();
 		
 		Log.debugMessage("MapImagePanel.paintComponent | " + "repainted for " +
 				(t2 - t1) + " " + (t3 - t2) + " " + (t4 - t3) + " ms.", Log.FINEST);		
+	}
+
+	public void forceLNLRepaint()
+	{
+		this.forceLNLRepaint = true;
 	}
 }
