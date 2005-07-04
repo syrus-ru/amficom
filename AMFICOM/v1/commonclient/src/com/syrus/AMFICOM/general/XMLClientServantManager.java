@@ -1,5 +1,5 @@
 /*
- * $Id: XMLClientServantManager.java,v 1.12 2005/06/21 14:14:04 bass Exp $
+ * $Id: XMLClientServantManager.java,v 1.13 2005/07/04 08:46:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,9 @@
  */
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.METHOD_NOT_NEEDED;
+
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.Context;
@@ -22,7 +23,6 @@ import org.omg.CORBA.Policy;
 import org.omg.CORBA.Request;
 import org.omg.CORBA.SetOverrideType;
 
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/21 14:14:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/04 08:46:03 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 abstract class XMLClientServantManager implements BaseConnectionManager {
@@ -48,103 +48,94 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 	protected LoginServer loginServer;
 	protected EventServer eventServer;
 	protected IdentifierGeneratorServer identifierGeneratorServer;
-	
+
 	public XMLClientServantManager() {
 		this.createLoginServer();
-		
+
 	}
-	
+
 	private void createLoginServer() {
 		this.loginServer = new LoginServer() {
 			private static final long serialVersionUID = 6881608272719879636L;
 
-			public IdlDomain[] transmitAvailableDomains(IdlSessionKey arg0) throws AMFICOMRemoteException {
-				try {
-					Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true, true);
-					IdlDomain[] transferables = new IdlDomain[storableObjectsByCondition.size()];
-					int i = 0;
-					for (Iterator iterator = storableObjectsByCondition.iterator(); iterator.hasNext();i++) {
-						Domain domain = (Domain) iterator.next();
-						transferables[i] = (IdlDomain) domain.getTransferable();
-					}
-					return transferables;
-				} catch (ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_NO_DOMAINS_AVAILABLE, CompletionStatus.COMPLETED_NO, "There is no available domains.");
-			}
-			
-			public Request _create_request(	Context ctx,
-											String operation,
-											NVList arg_list,
-											NamedValue result) {
+			public Request _create_request(Context ctx, String operation, NVList arg_list, NamedValue result) {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
-			public Request _create_request(	Context ctx,
-											String operation,
-											NVList arg_list,
-											NamedValue result,
-											ExceptionList exclist,
-											ContextList ctxlist) {
+
+			public Request _create_request(Context ctx,
+					String operation,
+					NVList arg_list,
+					NamedValue result,
+					ExceptionList exclist,
+					ContextList ctxlist) {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
+
 			public Object _duplicate() {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
+
 			public DomainManager[] _get_domain_managers() {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
+
 			public Object _get_interface_def() {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
+
 			public Policy _get_policy(int policy_type) {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
+
 			public int _hash(int maximum) {
+				assert false : METHOD_NOT_NEEDED;
 				return 0;
 			}
-			
+
 			public boolean _is_a(String repositoryIdentifier) {
+				assert false : METHOD_NOT_NEEDED;
 				return false;
 			}
-			
+
 			public boolean _is_equivalent(Object other) {
+				assert false : METHOD_NOT_NEEDED;
 				return false;
 			}
-			
+
 			public boolean _non_existent() {
+				assert false : METHOD_NOT_NEEDED;
 				return false;
 			}
-			
+
 			public void _release() {
-				// nothing
+				assert false : METHOD_NOT_NEEDED;
 			}
-			
+
 			public Request _request(String operation) {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
-			public Object _set_policy_override(	Policy[] policies,
-												SetOverrideType set_add) {
+
+			public Object _set_policy_override(Policy[] policies, SetOverrideType set_add) {
+				assert false : METHOD_NOT_NEEDED;
 				return null;
 			}
-			
-			public IdlSessionKey login(	String login,
-													String password,
-													IdlIdentifierHolder identifierTransferableHolder) throws AMFICOMRemoteException {
+
+			public IdlSessionKey login(String login, String password, IdlIdentifierHolder identifierTransferableHolder)
+					throws AMFICOMRemoteException {
 				IdlSessionKey transferable = new IdlSessionKey(new Date().toString());
 				try {
 					Set users = StorableObjectPool.getStorableObjectsByCondition(new TypicalCondition(login, OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN), true, true);
 					if (users.isEmpty()) {
 						throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_LOGIN, CompletionStatus.COMPLETED_NO, "Error during acquire user");
 					}
-					identifierTransferableHolder.value = (IdlIdentifier) ((SystemUser)users.iterator().next()).getId().getTransferable();
+					identifierTransferableHolder.value = ((SystemUser) users.iterator().next()).getId().getTransferable();
 				} catch (ApplicationException e) {
 					throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_LOGIN, CompletionStatus.COMPLETED_NO, "Error during acquire user");
 				}
@@ -153,41 +144,35 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 			}
 			
 			public void logout(IdlSessionKey arg0) throws AMFICOMRemoteException {
-				// nothing				
-			}
-			
-			/* (non-Javadoc)
-			 * @see com.syrus.AMFICOM.leserver.corba.LoginServerOperations#selectDomain(com.syrus.AMFICOM.security.corba.IdlSessionKey, com.syrus.AMFICOM.general.corba.IdlIdentifier)
-			 */
-			public void selectDomain(	IdlSessionKey arg0,
-										IdlIdentifier arg1) throws AMFICOMRemoteException {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			public void validateAccess(	IdlSessionKey arg0,
-										IdlIdentifierHolder arg1,
-										IdlIdentifierHolder arg2) throws AMFICOMRemoteException {
-				//	nothing		
-			}
-			
-			public void verify(byte i) {
-				// nothing				
+				// Nothing
 			}
 
-			/**
-			 * @todo This is just to enable compatibility and compile. No sense. 
-			 */
-			public void setPassword(IdlSessionKey arg0, IdlIdentifier arg1, String arg2) throws AMFICOMRemoteException {
-				/*Don't know, what to write here*/
-				throw new UnsupportedOperationException(ErrorMessages.METHOD_NOT_NEEDED);
+			public IdlDomain[] transmitAvailableDomains(IdlSessionKey arg0) throws AMFICOMRemoteException {
+				return new IdlDomain[0];
 			}
-			
+
+			public void selectDomain(IdlSessionKey arg0, IdlIdentifier arg1) throws AMFICOMRemoteException {
+				// Nothing
+			}
+
+			public void validateAccess(IdlSessionKey arg0, IdlIdentifierHolder arg1, IdlIdentifierHolder arg2)
+					throws AMFICOMRemoteException {
+				// Nothing
+			}
+
+			public void verify(byte i) {
+				assert false : METHOD_NOT_NEEDED;
+			}
+
+			public void setPassword(IdlSessionKey arg0, IdlIdentifier arg1, String arg2) throws AMFICOMRemoteException {
+				throw new UnsupportedOperationException(METHOD_NOT_NEEDED);
+			}
+
 		};
-		
+
 		this.identifierGeneratorServer = new LocalIdentifierGeneratorServer();
 	}
-	
+
 	public final LoginServer getLoginServerReference() {
 		return this.loginServer;
 	}
@@ -201,11 +186,12 @@ abstract class XMLClientServantManager implements BaseConnectionManager {
 	}	
 
 	public final CommonServer getServerReference() {
-		assert false : ErrorMessages.METHOD_NOT_NEEDED;
+		assert false : METHOD_NOT_NEEDED;
 		return null;
 	}
-	
-	public CORBAServer getCORBAServer() {		
+
+	public CORBAServer getCORBAServer() {
+		assert false : METHOD_NOT_NEEDED;
 		return null;
 	}
 
