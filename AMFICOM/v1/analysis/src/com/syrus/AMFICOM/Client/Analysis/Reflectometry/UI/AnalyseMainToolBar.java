@@ -13,11 +13,11 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class AnalyseMainToolBar extends AbstractMainToolBar {
 
-	public AnalyseMainToolBar() {
-		this.initItems();
+	public AnalyseMainToolBar(boolean evaluation) {
+		this.initItems(evaluation);
 	}
 
-	private void initItems() {
+	private void initItems(boolean evaluation) {
 		final JButton traceDownload = new JButton();
 		final JButton traceAddCompare = new JButton();
 		final JButton traceRemoveCompare = new JButton();
@@ -28,6 +28,9 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 
 		final JButton buttonFileClose = new JButton();
 		final JButton buttonExit = new JButton();
+
+		final JButton checkMismatch = evaluation ? new JButton() : null;
+
 		traceDownload.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_TRACE));
 		traceDownload.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		traceDownload.setToolTipText(LangModelAnalyse.getString("menuTraceDownload"));
@@ -51,16 +54,26 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 		buttonFileOpen.setToolTipText(LangModelAnalyse.getString("menuFileOpen"));
 		buttonFileOpen.setName("menuFileOpen");
 		buttonFileOpen.addActionListener(super.actionListener);
+
 		fileAdd.setIcon(UIManager.getIcon(ResourceKeys.ICON_ADD_FILE));
 		fileAdd.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		fileAdd.setToolTipText(LangModelAnalyse.getString("menuFileAddCompare"));
 		fileAdd.setName("menuFileAddCompare");
 		fileAdd.addActionListener(super.actionListener);
+
 		fileRemove.setIcon(UIManager.getIcon(ResourceKeys.ICON_REMOVE_FILE));
 		fileRemove.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		fileRemove.setToolTipText(LangModelAnalyse.getString("menuFileRemoveCompare"));
 		fileRemove.setName("menuFileRemoveCompare");
 		fileRemove.addActionListener(super.actionListener);
+
+		if (checkMismatch != null) {
+			checkMismatch.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_CHECK_MISMATCH));
+			checkMismatch.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			checkMismatch.addActionListener(super.actionListener);
+			checkMismatch.setName("commandCheckMismatch");
+			checkMismatch.setToolTipText(LangModelAnalyse.getString("commandCheckMismatch"));
+		}
 
 		addApplicationModelListener(new ApplicationModelListener() {
 
@@ -90,6 +103,11 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 				buttonFileClose.setEnabled(aModel.isEnabled("menuFileClose"));
 				buttonExit.setVisible(aModel.isVisible("menuExit"));
 				buttonExit.setEnabled(aModel.isEnabled("menuExit"));
+
+				if (checkMismatch != null) {
+					checkMismatch.setVisible(aModel.isVisible("commandCheckMismatch"));
+					checkMismatch.setEnabled(aModel.isEnabled("commandCheckMismatch"));
+				}
 			}
 		});
 
@@ -101,6 +119,9 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 		super.add(traceDownload);
 		super.add(traceAddCompare);
 		super.add(traceRemoveCompare);
+		if (checkMismatch != null) {
+			super.addSeparator();
+			super.add(checkMismatch);
+		}
 	}
-
 }

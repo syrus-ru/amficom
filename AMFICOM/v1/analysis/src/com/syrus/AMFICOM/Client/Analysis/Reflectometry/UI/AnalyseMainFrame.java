@@ -51,7 +51,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	public AnalyseMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("AnalyseExtTitle"), new AnalyseMainMenuBar(aContext
-				.getApplicationModel()), new AnalyseMainToolBar());
+				.getApplicationModel()), new AnalyseMainToolBar(false));
 
 		this.addComponentListener(new ComponentAdapter() {
 			/* (non-Javadoc)

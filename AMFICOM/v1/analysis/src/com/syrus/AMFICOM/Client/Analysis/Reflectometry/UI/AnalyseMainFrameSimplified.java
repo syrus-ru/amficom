@@ -67,7 +67,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	public AnalyseMainFrameSimplified(ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("AnalyseTitle"), new AnalyseMainMenuBar(aContext
-				.getApplicationModel()), new AnalyseMainToolBar());
+				.getApplicationModel()), new AnalyseMainToolBar(false));
 
 		this.setWindowArranger(new WindowArranger(this) {
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AddTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.CheckMismatchCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateAnalysisReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.CreateTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileAddCommand;
@@ -66,7 +67,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 	public ThresholdsMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelAnalyse.getString("ThresholdsTitle"), new AnalyseMainMenuBar(aContext
-			.getApplicationModel()), new AnalyseMainToolBar());
+			.getApplicationModel()), new AnalyseMainToolBar(true));
 
 		this.setWindowArranger( new WindowArranger(this) {
 
@@ -248,6 +249,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setCommand("menuWindowThresholds", new ShowWindowCommand(this.thresholdsFrame));
 		aModel.setCommand("menuWindowThresholdsSelection", new ShowWindowCommand(this.thresholdsSelectionFrame));
 
+		aModel.setCommand("commandCheckMismatch", new CheckMismatchCommand());
+
 		aModel.fireModelChanged("");
 	}
 
@@ -271,6 +274,9 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setVisible("menuWindowFilteredFrame", false);
 		aModel.setVisible("menuWindowDerivHistoFrame", false);
 		aModel.setVisible("menuNetStudy", false);
+
+		aModel.setEnabled("commandCheckMismatch", false);
+		aModel.setVisible("commandCheckMismatch", true);
 	}
 
 	public void setDomainSelected() {
@@ -451,13 +457,15 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 	public void etalonMTMCUpdated() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuTraceCloseEtalon", true);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
+		aModel.setEnabled("commandCheckMismatch", true);
+		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
 	}
 
 	public void etalonMTMRemoved() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuTraceCloseEtalon", false);
-		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon"});
+		aModel.setEnabled("commandCheckMismatch", false);
+		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon", "commandCheckMismatch"});
 	}
 
 	public void currentTraceChanged(String id) {

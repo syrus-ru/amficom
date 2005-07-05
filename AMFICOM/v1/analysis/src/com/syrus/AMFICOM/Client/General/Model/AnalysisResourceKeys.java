@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.19 2005/07/04 12:24:35 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.20 2005/07/05 15:40:05 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/04 12:24:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/05 15:40:05 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -69,6 +69,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_DOWNLOAD_TRACE			= "com.syrus.AMFICOM.icon.analisys.downloadTrace";
 	String	ICON_ANALYSIS_DOWNLOAD_ADD				= "com.syrus.AMFICOM.icon.analisys.downloadAdd";
 	String	ICON_ANALYSIS_DOWNLOAD_REMOVE			= "com.syrus.AMFICOM.icon.analisys.downloadRemove";
+	String	ICON_ANALYSIS_CHECK_MISMATCH			= "com.syrus.AMFICOM.icon.analisys.checkMismatch";
 	String	ICON_ANALYSIS_MARKER					= "com.syrus.AMFICOM.icon.analisys.marker";
 	String	ICON_ANALYSIS_DELETE_MARKER				= "com.syrus.AMFICOM.icon.analisys.deleteMarker";
 	String	ICON_ANALYSIS_THRESHOLD					= "com.syrus.AMFICOM.icon.analisys.threshold";

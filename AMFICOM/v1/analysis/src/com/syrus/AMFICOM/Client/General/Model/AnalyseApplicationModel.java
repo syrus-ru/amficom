@@ -1,7 +1,7 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
-import java.awt.*;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Toolkit;
 
@@ -80,6 +80,8 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("toolBar");
 		add("statusBar");
 		add("reflectometryFrame");
+
+		add("commandCheckMismatch");
 		this.initUIConstats();
 	}
 
@@ -112,6 +114,8 @@ public class AnalyseApplicationModel extends ApplicationModel {
 				.getImage("images/download_add.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DOWNLOAD_REMOVE, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/download_remove.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_CHECK_MISMATCH, new ImageIcon(Toolkit.getDefaultToolkit()
+				.getImage("images/check_mismatch.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MARKER, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/marker.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER, new ImageIcon(Toolkit.getDefaultToolkit()
