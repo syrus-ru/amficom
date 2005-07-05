@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.35 2005/07/03 19:16:27 bass Exp $
+ * $Id: EventType.java,v 1.36 2005/07/05 16:10:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/03 19:16:27 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/05 16:10:22 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -71,7 +71,7 @@ public final class EventType extends StorableObjectType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	EventType(final IdlEventType ett) throws CreateObjectException {
+	public EventType(final IdlEventType ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		}
