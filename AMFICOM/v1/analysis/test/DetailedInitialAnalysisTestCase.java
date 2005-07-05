@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.12 2005/07/05 13:31:46 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.13 2005/07/05 13:33:10 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/07/05 13:31:46 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/05 13:33:10 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -594,7 +594,9 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                         // -- end processing
                         if (ete.hasEndMin() || ete.hasEndMax()
                                 || ete.getEventType()
-                                    != SimpleReflectogramEvent.LINEAR)
+                                    != SimpleReflectogramEvent.LINEAR
+                                    && ete.getEventType()
+                                    	!= SimpleReflectogramEvent.ENDOFTRACE)
                         {
                             if (ete.hasEndMin())
                                 dEMin = ete.getEndMin() - etEnd;
