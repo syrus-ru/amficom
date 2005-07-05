@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.11 2005/06/23 06:39:53 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.12 2005/07/05 13:31:46 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/06/23 06:39:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/05 13:31:46 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -204,11 +204,30 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                     continue; // no results
                 if (fName == null)
                     continue;
+                ToleranceSimpleReflectogramEvent[][] etalons =
+                	(ToleranceSimpleReflectogramEvent[][])resultList.
+                		toArray(new ToleranceSimpleReflectogramEvent
+                				[resultList.size()][]);
+                // assert etalon correctness
+                for (int i = 0; i < etalons.length; i++) {
+                	for (int j = 0; j < etalons[i].length; j++) {
+                		int beg = etalons[i][j].getBegin();
+                		int end = etalons[i][j].getEnd();
+                		assertTrue(fName + " - etalon begin<=end mismatch: "
+                				+ beg + ">" + end,
+                				beg <= end);
+                	}
+                	for (int j = 1; j < etalons[i].length; j++) {
+                		int end = etalons[i][j - 1].getEnd();
+                		int beg = etalons[i][j].getBegin();
+                		assertTrue(fName + " - etalon end/begin mismatch: "
+                				+ end + "/" + beg,
+                				beg == end);
+                	}
+                }
                 // test trace
                 int rc = performTraceTest(fName,
-                        (ToleranceSimpleReflectogramEvent[][])resultList.
-                            toArray(new ToleranceSimpleReflectogramEvent
-                                [resultList.size()][]),
+                        etalons,
                         fails,
                         true);
                 traceStatus[rc]++;
