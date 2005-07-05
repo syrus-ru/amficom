@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.18 2005/07/03 19:16:35 bass Exp $
+ * $Id: ServerProcess.java,v 1.19 2005/07/05 15:23:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/03 19:16:35 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/05 15:23:17 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -66,7 +66,7 @@ public final class ServerProcess extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ServerProcess(final IdlServerProcess spt) {
+	public ServerProcess(final IdlServerProcess spt) {
 		this.fromTransferable(spt);
 	}
 
