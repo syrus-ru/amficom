@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.25 2005/07/03 19:16:18 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.26 2005/07/05 15:43:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:18 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/05 15:43:46 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -57,7 +57,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	SchemeImageResource(final IdlImageResource imageResource) throws CreateObjectException {
+	public SchemeImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
 	}
 

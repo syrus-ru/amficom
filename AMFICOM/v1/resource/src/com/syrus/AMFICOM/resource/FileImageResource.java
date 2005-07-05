@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.24 2005/07/03 19:16:18 bass Exp $
+ * $Id: FileImageResource.java,v 1.25 2005/07/05 15:43:46 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/07/03 19:16:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/05 15:43:46 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -46,7 +46,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
 	 * @throws CreateObjectException
 	 */
-	FileImageResource(final IdlImageResource imageResource) throws CreateObjectException {
+	public FileImageResource(final IdlImageResource imageResource) throws CreateObjectException {
 		super(imageResource);
 	}
 
