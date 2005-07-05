@@ -505,42 +505,12 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		}
 	}
 
-    private void updateCompDebug() {
-        // FIXME: debug: development-time console code for comparison
-        if (Heap.getBSPrimaryTrace() != null
-        		&& Heap.getMinuitAnalysisParams() != null
-        		&& Heap.getMTMEtalon() != null) {
-        	List alarms = CoreAnalysisManager.compareAndMakeAlarms(
-        			Heap.getRefAnalysisPrimary().getAR(),
-        			new Etalon(Heap.getMTMEtalon(),
-        					Heap.getMinTraceLevel(),
-        					Heap.getAnchorer()));
-        	if (alarms.size() == 0)
-        		System.out.println("No alarms");
-        	else
-        		System.out.println(alarms.size() + " alarms:");
-        	for (Iterator it = alarms.iterator(); it.hasNext(); ) {
-        		ReflectogramAlarm al = (ReflectogramAlarm)it.next();
-        		System.out.println("- " + al);
-        	}
-        	// FIXME: this code should become a command  
-        	if (alarms.size() > 0) {
-        		ReflectogramAlarm first = (ReflectogramAlarm)
-        				alarms.iterator().next();
-        		Heap.setRefMismatch(first);
-        	} else {
-        		Heap.setRefMismatch(null);
-        	}
-        }
-    }
-
 	public void etalonMTMCUpdated()
 	{
 		etalonOpened = true;
 		updateEventsModel();
         updateTableModel();
         updateColors();
-        updateCompDebug();
 	}
 
 	public void etalonMTMRemoved()
@@ -563,7 +533,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         	primaryOpened = true;
         	updateEventsModel();
             updateTableModel();
-            updateCompDebug();
         }
         setVisible(true);
     }
