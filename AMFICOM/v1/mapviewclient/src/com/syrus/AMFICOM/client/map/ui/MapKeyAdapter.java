@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.9 2005/06/24 12:44:17 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.10 2005/07/05 14:05:57 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,17 +13,21 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
+import java.util.Iterator;
 
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.9 $, $Date: 2005/06/24 12:44:17 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/05 14:05:57 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -40,9 +44,10 @@ public final class MapKeyAdapter extends KeyAdapter
 	{
 		int code = ke.getKeyCode();
 
+		LogicalNetLayer logicalNetLayer = this.viewer.getLogicalNetLayer();
 		if (ke.isAltDown())
 		{
-			this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
+			logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
 		}
 
 //		if (ke.isShiftDown() && ke.isControlDown())
@@ -53,11 +58,11 @@ public final class MapKeyAdapter extends KeyAdapter
 //		{
 			if (ke.isShiftDown())
 			{
-				this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
+				logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
 			}
 			if(ke.isControlDown())
 			{
-				this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
+				logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
 			}
 //		}
 
@@ -69,13 +74,31 @@ public final class MapKeyAdapter extends KeyAdapter
 			}
 			if(ke.isControlDown() && code == KeyEvent.VK_Z)
 			{
-				this.viewer.getLogicalNetLayer().undo();
+				logicalNetLayer.undo();
 				this.viewer.repaint(false);
 			}
 			if(ke.isControlDown() && code == KeyEvent.VK_Y)
 			{
-				this.viewer.getLogicalNetLayer().redo();
+				logicalNetLayer.redo();
 				this.viewer.repaint(false);
+			}
+			if(ke.isControlDown() && code == KeyEvent.VK_1)
+			{
+				Rectangle2D.Double visibleBounds = this.viewer.getVisibleBounds();
+				long f;
+				long d;
+				f = System.currentTimeMillis();
+				java.util.Collection nodeLinks = logicalNetLayer.getMapView().getMap().getNodeLinks();
+				d = System.currentTimeMillis();
+				System.out.println("get node links in " + String.valueOf(d - f) + " ms");
+				f = System.currentTimeMillis();
+
+				for(Iterator iter = nodeLinks.iterator(); iter.hasNext();) {
+					NodeLink nodeLink = (NodeLink )iter.next();
+					logicalNetLayer.getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds);
+				}
+				d = System.currentTimeMillis();
+				System.out.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms"));
 			}
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
