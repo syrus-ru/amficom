@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.1 2005/07/03 13:56:51 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.2 2005/07/05 14:04:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,20 +7,16 @@
  */
 package com.syrus.AMFICOM.client.map.test;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
-import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
@@ -36,7 +32,12 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 	 * building(start) ..... well1 ........... well3 ..... building(end)
 	 *
 	 */
-	public void test1() {
+	public void testSingleCCI() throws Exception {
+		CableChannelingItem cci1 = METS.generateCCI(
+				SchemeSampleData.scheme1clink0, 
+				this.building1, 
+				this.well1, 
+				this.link1);
 
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
@@ -80,9 +81,9 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 		
-		assertSame(unboundLink.getStartNode(), this.building1); 
+		assertSame(unboundLink.getStartNode(), this.well1); 
 		assertSame(unboundLink.getEndNode(), this.building2);
-		assertSame(unboundNodeLink.getStartNode(), this.building1); 
+		assertSame(unboundNodeLink.getStartNode(), this.well1); 
 		assertSame(unboundNodeLink.getEndNode(), this.building2);
 		assertEquals(unboundLink.getNodeLinks().size(), 1);
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
