@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/07/04 11:57:45 bass Exp $
+# $Id: Makefile,v 1.18 2005/07/05 15:53:51 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -44,7 +44,6 @@ idl: .idl
 		-pkgPrefix administration com.syrus.AMFICOM \
 		-pkgPrefix mapview com.syrus.AMFICOM \
 		$(IDLDIR)/mapview.idl
-	find $(SRCDIR)/com/syrus/AMFICOM/mapview/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
 	touch $@
 
 .PHONY: idlclean
