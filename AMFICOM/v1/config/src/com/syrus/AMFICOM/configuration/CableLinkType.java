@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.53 2005/07/04 13:00:53 bass Exp $
+ * $Id: CableLinkType.java,v 1.54 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -67,7 +67,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 
-	CableLinkType(final IdlCableLinkType cltt) throws CreateObjectException {
+	public CableLinkType(final IdlCableLinkType cltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(cltt);
 		} catch (ApplicationException ae) {

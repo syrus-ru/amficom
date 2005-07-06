@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.61 2005/07/04 13:00:53 bass Exp $
+ * $Id: LinkType.java,v 1.62 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -69,7 +69,7 @@ public final class LinkType extends AbstractLinkType implements Characterizable 
 		}
 	}
 
-	LinkType(final IdlLinkType ltt) throws CreateObjectException {
+	public LinkType(final IdlLinkType ltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(ltt);
 		} catch (ApplicationException ae) {

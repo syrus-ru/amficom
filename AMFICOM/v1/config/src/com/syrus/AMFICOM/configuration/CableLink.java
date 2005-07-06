@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.5 2005/07/04 13:00:53 bass Exp $
+ * $Id: CableLink.java,v 1.6 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/06 15:49:25 $
  * @module config_v1
  */
 public final class CableLink extends AbstractLink {
@@ -53,7 +53,7 @@ public final class CableLink extends AbstractLink {
 		}
 	}
 
-	CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
+	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
 		try {
 			this.fromTransferable(idlCableLink);
 		} catch (final ApplicationException ae) {

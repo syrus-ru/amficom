@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.76 2005/07/04 13:00:53 bass Exp $
+ * $Id: TransmissionPath.java,v 1.77 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.76 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.77 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -68,7 +68,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		}
 	}
 
-	TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
+	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
 			this.fromTransferable(tpt);
 		} catch (ApplicationException ae) {

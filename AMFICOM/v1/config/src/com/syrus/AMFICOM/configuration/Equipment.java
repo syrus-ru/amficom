@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.103 2005/07/04 13:00:53 bass Exp $
+ * $Id: Equipment.java,v 1.104 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.104 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -79,7 +79,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		}
 	}
 
-	Equipment(final IdlEquipment et) throws CreateObjectException {
+	public Equipment(final IdlEquipment et) throws CreateObjectException {
 		try {
 			this.fromTransferable(et);
 		} catch (ApplicationException ae) {

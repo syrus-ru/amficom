@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.73 2005/07/04 13:00:53 bass Exp $
+ * $Id: EquipmentType.java,v 1.74 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.74 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -65,7 +65,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 		}
 	}
 
-	EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
+	public EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
 		try {
 			this.fromTransferable(ett);
 		} catch (ApplicationException ae) {

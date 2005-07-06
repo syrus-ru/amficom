@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.77 2005/07/04 13:00:53 bass Exp $
+ * $Id: Port.java,v 1.78 2005/07/06 15:49:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.78 $, $Date: 2005/07/06 15:49:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -64,7 +64,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		}
 	}
 
-	Port(final IdlPort pt) throws CreateObjectException {
+	public Port(final IdlPort pt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pt);
 		} catch (ApplicationException ae) {
