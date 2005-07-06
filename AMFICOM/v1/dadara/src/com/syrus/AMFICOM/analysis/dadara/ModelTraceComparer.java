@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.27 2005/07/06 10:33:05 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.28 2005/07/06 16:27:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.27 $, $Date: 2005/07/06 10:33:05 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/06 16:27:21 $
  * @module
  */
 public class ModelTraceComparer
@@ -189,6 +189,8 @@ public class ModelTraceComparer
     	if (alarmBegin < 0)
     		return false;
     	alarm.setCoord(mtm.fixAlarmPos(alarmBegin, true)); // XXX: кажется, эта дистанция не используется
+		if (alarmEnd < alarm.getCoord())
+			alarmEnd = alarm.getCoord();
     	alarm.setEndCoord(alarmEnd);
     	return true;
     }
@@ -243,6 +245,8 @@ public class ModelTraceComparer
 			{
 				// привязываем к началу события
 				int alarmCoord = mtm.fixAlarmPos(alarmStart, true);
+				if (alarmEnd < alarmCoord)
+					alarmEnd = alarmCoord;
 				int level = Thresh.IS_KEY_HARD[key]
 					? ReflectogramMismatch.SEVERITY_HARD
 					: ReflectogramMismatch.SEVERITY_SOFT;
