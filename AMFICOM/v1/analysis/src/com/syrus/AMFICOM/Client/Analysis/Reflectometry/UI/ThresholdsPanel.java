@@ -327,6 +327,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
             if (dashStroke)
                 ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
             for (int key = 0; key < 4; key++) {
+            	if (curves[key] == null)
+            		continue;
                 // определяем цвет
                 g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
                         ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
@@ -340,6 +342,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
             //this.fps.inc();
         } else { // update range only
             for (int key = 0; key < 4; key++) {
+            	if (curves[key] == null)
+            		continue;
             	// последнее событие рисуем вместе с конечной точкой
                 drawModelCurve(g, r, curves[key],
                 		nEvent != etalon.getMTAE().getNEvents() - 1);
