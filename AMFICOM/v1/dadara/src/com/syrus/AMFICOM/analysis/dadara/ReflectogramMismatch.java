@@ -59,10 +59,10 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/07/06 10:17:22 $
+ * @version $Revision: 1.1 $, $Date: 2005/07/06 10:33:05 $
  * @module dadara
  */
-public class ReflectogramAlarm {
+public class ReflectogramMismatch {
 	// Alarm levels. Must be comparable with >; >=
 	public static final int SEVERITY_NONE = 0; // just a convenience level, not a real alarm
 	public static final int SEVERITY_SOFT = 1; // soft alarm ('warning')
@@ -205,14 +205,14 @@ public class ReflectogramAlarm {
 	 * Creates an empty 'no alarm' alarm
 	 * with level = LEVEL_NONE and type = TYPE_UNDEFINED.
 	 */
-	public ReflectogramAlarm()
+	public ReflectogramMismatch()
 	{ // all initialization is already done
 	}
 
-	public static ReflectogramAlarm createFromDIS(DataInputStream dis)
+	public static ReflectogramMismatch createFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException
 	{
-		ReflectogramAlarm ret = new ReflectogramAlarm();
+		ReflectogramMismatch ret = new ReflectogramMismatch();
 		ret.severity = dis.readInt();
 		ret.setCoord(dis.readInt());
 		ret.setEndCoord(dis.readInt());
@@ -266,11 +266,11 @@ public class ReflectogramAlarm {
         }
 	}
 
-	public static ReflectogramAlarm createFromByteArray(byte[] bar) throws DataFormatException
+	public static ReflectogramMismatch createFromByteArray(byte[] bar) throws DataFormatException
 	{
             try {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
-                ReflectogramAlarm ret;
+                ReflectogramMismatch ret;
                 ret = createFromDIS(dis);
                 dis.close();
                 return ret;
@@ -292,7 +292,7 @@ public class ReflectogramAlarm {
 		}
 	}
 
-	public static byte[] alarmsToByteArray(ReflectogramAlarm[] ralarms) {
+	public static byte[] alarmsToByteArray(ReflectogramMismatch[] ralarms) {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		DataOutputStream dos = new DataOutputStream(baos);
 		try
@@ -310,7 +310,7 @@ public class ReflectogramAlarm {
 	}
 
     // seem to be unused
-	public static ReflectogramAlarm[] alarmsFromByteArray(byte[] bar)
+	public static ReflectogramMismatch[] alarmsFromByteArray(byte[] bar)
     throws DataFormatException
 	{
 		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
@@ -318,7 +318,7 @@ public class ReflectogramAlarm {
 		try
 		{
 			int count = dis.readInt();
-			ReflectogramAlarm[] ret = new ReflectogramAlarm[count]; // exception possible when input data is malformed
+			ReflectogramMismatch[] ret = new ReflectogramMismatch[count]; // exception possible when input data is malformed
 			for (int i = 0; i < count; i++)
 				ret[i] = createFromDIS(dis);
 			dis.close();
@@ -342,7 +342,7 @@ public class ReflectogramAlarm {
      * 
      * @param that
      */
-    public void toHardest(ReflectogramAlarm that)
+    public void toHardest(ReflectogramMismatch that)
     {
         if (that.severity > this.severity
                 || that.severity == this.severity && that.getCoord() < this.getCoord())
@@ -357,7 +357,7 @@ public class ReflectogramAlarm {
     
     public String toString()
     {
-        return "ReflectogramAlarm(level=" + severity
+        return "ReflectogramMismatch(level=" + severity
         + ",type=" + getAlarmType()
         + ",begin=" + getCoord()
         + ",end=" + getEndCoord()

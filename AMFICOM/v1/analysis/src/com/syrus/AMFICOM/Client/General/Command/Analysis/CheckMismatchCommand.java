@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckMismatchCommand.java,v 1.1 2005/07/05 15:40:05 saa Exp $
+ * $Id: CheckMismatchCommand.java,v 1.2 2005/07/06 10:33:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.List;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 public class CheckMismatchCommand extends AbstractCommand {
@@ -33,11 +33,11 @@ public class CheckMismatchCommand extends AbstractCommand {
 	    	else
 	    		System.out.println(alarms.size() + " alarms:");
 	    	for (Iterator it = alarms.iterator(); it.hasNext(); ) {
-	    		ReflectogramAlarm al = (ReflectogramAlarm)it.next();
+	    		ReflectogramMismatch al = (ReflectogramMismatch)it.next();
 	    		System.out.println("- " + al);
 	    	}
 	    	if (alarms.size() > 0) {
-	    		ReflectogramAlarm first = (ReflectogramAlarm)
+	    		ReflectogramMismatch first = (ReflectogramMismatch)
 	    				alarms.iterator().next();
 	    		Heap.setRefMismatch(first);
 	    	} else {

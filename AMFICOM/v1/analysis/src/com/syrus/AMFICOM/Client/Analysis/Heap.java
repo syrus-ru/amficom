@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.74 2005/07/01 17:53:02 saa Exp $
+ * $Id: Heap.java,v 1.75 2005/07/06 10:33:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.74 $, $Date: 2005/07/01 17:53:02 $
+ * @version $Revision: 1.75 $, $Date: 2005/07/06 10:33:20 $
  * @module
  */
 public class Heap
@@ -119,7 +119,7 @@ public class Heap
 
     private static Marker markerObject = null;
 
-    private static ReflectogramAlarm refMismatch = null; // это еще не аларм, это - "несоответствие".
+    private static ReflectogramMismatch refMismatch = null; // это еще не аларм, это - "несоответствие".
 
     // listeners
 
@@ -862,11 +862,11 @@ public class Heap
     }
 
 
-	public static ReflectogramAlarm getRefMismatch() {
+	public static ReflectogramMismatch getRefMismatch() {
 		return refMismatch;
 	}
 
-	public static void setRefMismatch(ReflectogramAlarm refMismatch) {
+	public static void setRefMismatch(ReflectogramMismatch refMismatch) {
 		Heap.refMismatch = refMismatch;
 		if (refMismatch == null)
 			notifyRefMismatchRemoved();

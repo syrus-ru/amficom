@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.92 2005/07/06 10:17:22 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.93 2005/07/06 10:33:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.92 $, $Date: 2005/07/06 10:17:22 $
+ * @version $Revision: 1.93 $, $Date: 2005/07/06 10:33:05 $
  * @module
  */
 
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
@@ -759,9 +759,9 @@ public class CoreAnalysisManager
         // проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
-            ReflectogramAlarm alarm = new ReflectogramAlarm();
-            alarm.setSeverity(ReflectogramAlarm.SEVERITY_HARD);
-            alarm.setAlarmType(ReflectogramAlarm.TYPE_LINEBREAK);
+            ReflectogramMismatch alarm = new ReflectogramMismatch();
+            alarm.setSeverity(ReflectogramMismatch.SEVERITY_HARD);
+            alarm.setAlarmType(ReflectogramMismatch.TYPE_LINEBREAK);
             alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
             alarm.setDeltaX(etMTM.getMTAE().getDeltaX());
             // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
@@ -777,7 +777,7 @@ public class CoreAnalysisManager
         }
         else // обрыв не обнаружен
         {
-            ReflectogramAlarm alarm =
+            ReflectogramMismatch alarm =
             		ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
             // обеспечиваем EventAnchorer-привязку результатов анализа

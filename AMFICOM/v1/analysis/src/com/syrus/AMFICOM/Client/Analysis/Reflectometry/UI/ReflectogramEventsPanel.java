@@ -23,7 +23,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public boolean draw_noise_level = false;
 
 	//protected ModelTraceAndEvents mtae; // использовалось только в методах, вызываемых из paint()
-	protected ReflectogramAlarm[] alarms;
+	protected ReflectogramMismatch[] alarms;
 
 	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
@@ -39,7 +39,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		this.dispatcher = dispatcher1;
 	}
 
-	public void updateAlarms (ReflectogramAlarm[] alarms1)
+	public void updateAlarms (ReflectogramMismatch[] alarms1)
 	{
 		this.alarms = alarms1;
 		if (alarms1 != null)

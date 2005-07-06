@@ -179,7 +179,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		super.updColorModel();
 	}
 /*
-	public void updateAlarms (ReflectogramAlarm[] alarms)
+	public void updateAlarms (ReflectogramMismatch[] alarms)
 	{
 		if (this.alarms != null)
 		{

@@ -1,5 +1,5 @@
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.6 2005/06/28 15:08:53 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.7 2005/07/06 10:33:20 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
@@ -101,9 +101,9 @@ public class CoreAnalysisManagerTestCase extends TestCase {
         }
 
         if (verbose) {
-	        ReflectogramAlarm res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
+	        ReflectogramMismatch res = ModelTraceComparer.compareMTAEToMTM(mtm.getMTAE(), mtm);
 	        System.out.println("pre-compare alarm: " + res);
-	        ReflectogramAlarm res2 = ModelTraceComparer.compareMTAEToMTM(mtm2.getMTAE(), mtm);
+	        ReflectogramMismatch res2 = ModelTraceComparer.compareMTAEToMTM(mtm2.getMTAE(), mtm);
 	        System.out.println("compare alarm: " + res2);
 	       	assertTrue(res == null); // mtm should cover itself
 	       	assertTrue(res2 == null); // restored mtae should be the same

@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.analysis.OverallStatsWrapper;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -157,7 +157,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 
 	private void setWholeData()
 	{
-		ReflectogramAlarm mismatch = Heap.getRefMismatch();
+		ReflectogramMismatch mismatch = Heap.getRefMismatch();
 		ModelTraceManager etalonMTM = Heap.getMTMEtalon();
 		ModelTraceAndEvents dataMTAE = Heap.getMTAEPrimary();
 		if(etalonMTM == null || dataMTAE == null || dataMTAE.getNEvents() == 0)

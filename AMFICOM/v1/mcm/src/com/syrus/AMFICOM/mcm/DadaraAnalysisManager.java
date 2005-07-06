@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.52 2005/06/27 09:24:39 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.53 2005/07/06 10:33:35 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/27 09:24:39 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/06 10:33:35 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -200,8 +200,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// === Формируем результаты ===
 
 		// добавляем алармы в результаты анализа
-		ReflectogramAlarm[] alarms = (ReflectogramAlarm[]) alarmList.toArray(new ReflectogramAlarm[alarmList.size()]);
-		outParameters.put(CODENAME_ALARMS, ReflectogramAlarm.alarmsToByteArray(alarms));
+		ReflectogramMismatch[] alarms = (ReflectogramMismatch[]) alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
+		outParameters.put(CODENAME_ALARMS, ReflectogramMismatch.alarmsToByteArray(alarms));
 
 		// формируем результаты анализа
 		Parameter[] ret = new Parameter[outParameters.size()];
