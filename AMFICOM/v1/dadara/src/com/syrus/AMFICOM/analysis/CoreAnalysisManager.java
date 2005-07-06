@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.90 2005/06/30 16:19:20 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.91 2005/07/06 08:11:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.90 $, $Date: 2005/06/30 16:19:20 $
+ * @version $Revision: 1.91 $, $Date: 2005/07/06 08:11:10 $
  * @module
  */
 
@@ -540,6 +540,19 @@ public class CoreAnalysisManager
 	}
 
 	/**
+	 * Постоянная компонета запаса (дБ) генерируемых DY-порогов
+	 */
+	private static final double MTM_DY_MARGIN = 0.03;
+	/**
+	 * Фактор запаса (разы) DY-порогов, генерируемых по набору (2 и более) м.ф.
+	 */
+	private static final double MTM_DY_FACTOR_MF_BASED = 1.2;
+	/**
+	 * Фактор запаса (разы) DY-порогов, генерируемых на основе одной р/г и ее м.ф.
+	 */
+	private static final double MTM_DY_FACTOR_BS_BASED = 3.0;
+
+	/**
 	 * Создает эталонный MTM по непустому набору рефлектограмм и параметрам
 	 * анализа.
 	 * <ul>
@@ -568,11 +581,11 @@ public class CoreAnalysisManager
 		ModelTraceManager mtm = new ModelTraceManager(mtae);
 		if (bsColl.size() > 1) {
 			// extend to max dev of _mf_
-			mtm.updateThreshToContain(av.maxYMF, av.minYMF, 0.03, 1.2); 
+			mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED); 
 		}
 		else {
 			// extend to a single curve: original (noisy) _bs_
-			mtm.updateThreshToContain(av.av.y, av.av.y, 0.03, 3.0);
+			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN, MTM_DY_FACTOR_BS_BASED);
 		}
 		return mtm;
 	}
