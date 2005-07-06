@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.85 2005/07/06 06:26:29 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.86 2005/07/06 08:25:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.85 $, $Date: 2005/07/06 06:26:29 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/06 08:25:51 $
  * @module
  */
 public class ModelTraceManager
@@ -222,7 +222,11 @@ implements DataStreamable, Cloneable
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
-	/** создает MTM на основе эталонной пары {события + м.ф.} ModelTraceAndEvents
+	/**
+	 * создает MTM на основе эталонной пары {события + м.ф.}
+	 * ModelTraceAndEvents.
+	 * Создаваемые DY-пороги нулевые и требуют дальнейшего расширения
+	 * через {@link #updateThreshToContain}
 	 * 
 	 * @param mtae опорная кривая
 	 */

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.17 2005/06/15 15:00:01 saa Exp $
+ * $Id: ThreshDY.java,v 1.18 2005/07/06 08:23:07 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/06/15 15:00:01 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/06 08:23:07 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -33,12 +33,21 @@ public class ThreshDY extends Thresh
 		this.typeL = that.typeL;
 		this.values = that.values;
 	}
+
+	/**
+	 * Создает DY-порог, изначально нулевой.
+	 * Для работы пороги надо будет расширить, см., напр.,
+	 * {@link ModelTraceManager#updateThreshToContain}
+	 * @param eventId номер события, к которому "относится" этот порог
+	 * @param typeL true для L-порога, false для A-порога
+	 * @param xMin мин. X-координата доминирование порога
+	 * @param xMax макс. X-координата доминирование порога
+	 */
 	protected ThreshDY(int eventId, boolean typeL, int xMin, int xMax)
 	{
 		super(eventId, eventId, xMin, xMax);
 		this.typeL = typeL;
-		//this.values = new double[] { 0.1, 0.2, -0.1, -0.2 }; // defaults?
-		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 }; // FIXME: default values of thresholds
+		this.values = new double[] { 0.0, 0.0, -0.0, -0.0 };
 	}
 
 	/**
