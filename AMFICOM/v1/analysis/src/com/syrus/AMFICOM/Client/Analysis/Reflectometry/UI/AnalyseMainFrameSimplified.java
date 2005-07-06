@@ -37,12 +37,6 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.ExitCommand;
-import com.syrus.AMFICOM.client.model.OpenSessionCommand;
-import com.syrus.AMFICOM.client.model.SessionChangePasswordCommand;
-import com.syrus.AMFICOM.client.model.SessionCloseCommand;
-import com.syrus.AMFICOM.client.model.SessionDomainCommand;
-import com.syrus.AMFICOM.client.model.SessionOptionsCommand;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.io.BellcoreStructure;
 

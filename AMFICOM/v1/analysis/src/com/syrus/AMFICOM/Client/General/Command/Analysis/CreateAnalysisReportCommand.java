@@ -1,11 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ReportTable;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.SimpleResizableFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 public class CreateAnalysisReportCommand extends AbstractCommand
 {

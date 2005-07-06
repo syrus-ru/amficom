@@ -1,16 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.TextWriter;
 
 public class FileSaveAsTextCommand extends AbstractCommand
 {
