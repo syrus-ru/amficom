@@ -120,20 +120,22 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	{
 		paint_scales(g);
 
-		if (draw_events)
-		{
-			paint_reflectogram_events(g);
-		} else
-		{
-			paint_trace(g);
+		if (showAll) {
+			if (draw_events)
+			{
+				paint_reflectogram_events(g);
+			} else
+			{
+				paint_trace(g);
+			}
+			if (draw_modeled)
+			{
+				paint_modeled_trace(g);
+			}
+				
+			if (draw_alarms)
+				paint_alarms(g);
 		}
-		if (draw_modeled)
-		{
-			paint_modeled_trace(g);
-		}
-
-		if (draw_alarms)
-			paint_alarms(g);
 
 		if (draw_min_trace_level && draw_events)
 		{

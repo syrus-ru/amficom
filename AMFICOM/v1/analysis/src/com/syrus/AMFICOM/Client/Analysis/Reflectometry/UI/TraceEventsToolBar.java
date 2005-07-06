@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.4 2005/05/25 15:15:08 stas Exp $
+* $Id: TraceEventsToolBar.java,v 1.5 2005/07/06 14:08:30 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/25 15:15:08 $
- * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/07/06 14:08:30 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
@@ -91,11 +91,12 @@ public class TraceEventsToolBar extends ScalableToolBar
 		return buttons;
 	}
 
+	// FIXME: эта кнопочка выглядит как старая, отключающая расцветку событий, и называется тоже так. Но её действие новое - отключение отображение исходной (Bellcore) р/г
 	void eventsTButton_actionPerformed(ActionEvent e)
 	{
 		TraceEventsLayeredPanel panel = (TraceEventsLayeredPanel)super.panel;
 		boolean b = eventsTButton.isSelected();
-		panel.drawEvents (b);
+		panel.setGraphsShown (b);
 	}
 
 	void modeledTButton_actionPerformed(ActionEvent e)

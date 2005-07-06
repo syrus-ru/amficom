@@ -162,7 +162,8 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	public void paint(Graphics g)
 	{
 		paint_scales(g);
-		paint_trace(g);
+		if (showAll)
+			paint_trace(g);
 		paint_scale_digits(g);
 	}
 

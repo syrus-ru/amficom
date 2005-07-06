@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class TraceEventsPanel extends ScaledGraphPanel
 {
-	protected boolean draw_events = true;
+	protected final boolean draw_events = true;
 
 	protected SimpleReflectogramEvent[] sevents;
 
@@ -55,19 +55,21 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	{
 		paint_scales(g);
 
-		if (draw_events)
-		{
-			paint_events(g);
-		} else
-		{
-			paint_trace(g);
+		if (showAll) {
+			if (draw_events)
+			{
+				paint_events(g);
+			} else
+			{
+				paint_trace(g);
+			}
 		}
 		paint_scale_digits(g);
 	}
 
 	protected void paint_events(Graphics g)
 	{
-		if (!isShown) {
+		if (!showGraph) {
 			return;
 		}
 			

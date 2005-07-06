@@ -16,7 +16,7 @@ public class SimpleGraphPanel extends JPanel
 
 	protected boolean weakColor;
 	
-	protected boolean isShown = true;
+	protected boolean showGraph = true;
 
 	protected double[] y; // array of graphic points
 	protected double deltaX;  // range between two neighbour points
@@ -27,6 +27,8 @@ public class SimpleGraphPanel extends JPanel
 	protected int end = 0; // номер конечной точки
 	protected double top = 0; // столько находится за пределами экрана вверху (в единицах измерения - для рефлектограммы дБ)
 	protected double bottom = 0; // столько находится за пределами экрана внизу (в единицах измерения - для рефлектограммы дБ)
+
+	protected boolean showAll = true;
 
     /**
      * Диапазон на графике рефлектограммы
@@ -123,12 +125,12 @@ public class SimpleGraphPanel extends JPanel
 		setDefaultScales();
 	}
 	
-	public void setShown(boolean isShown) {
-	    this.isShown = isShown;
+	public void setShowGraph(boolean isShown) {
+	    this.showGraph = isShown;
 	}
 	
-	public boolean isShown() {
-    return this.isShown;
+	public boolean isShowGraph() {
+    return this.showGraph;
 	}
 	
 	public void setWeakColors(boolean weakColors)
@@ -249,7 +251,7 @@ public class SimpleGraphPanel extends JPanel
 
 	protected void paint_trace(Graphics g)
 	{
-		if (!isShown) {
+		if (!showGraph) {
 			return;
 		}
 
@@ -266,6 +268,11 @@ public class SimpleGraphPanel extends JPanel
 
 	public void paint(Graphics g)
 	{
-		paint_trace(g);
+		if (showAll)
+			paint_trace(g);
+	}
+
+	public void setShowAll(boolean b) {
+		this.showAll = b;
 	}
 }

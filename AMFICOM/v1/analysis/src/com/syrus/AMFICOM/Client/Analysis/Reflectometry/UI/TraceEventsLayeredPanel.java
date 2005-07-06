@@ -57,16 +57,13 @@ implements PropertyChangeListener
 		}
 	}
 
-	public void drawEvents (boolean b)
+	public void setGraphsShown (boolean b)
 	{
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof TraceEventsPanel)
-			{
-				((TraceEventsPanel)panel).draw_events = b;
-				jLayeredPane.repaint();
-			}
+			panel.showGraph = b;
+			jLayeredPane.repaint();
 		}
 	}
 
@@ -103,7 +100,7 @@ implements PropertyChangeListener
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof TraceEventsPanel)
-				((TraceEventsPanel)panel).draw_events = ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
+				((TraceEventsPanel)panel).showGraph = ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
 			if (panel instanceof ReflectogramEventsPanel)
 				((ReflectogramEventsPanel)panel).draw_modeled = ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
 		}

@@ -148,7 +148,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 				TraceResource tr = (TraceResource)evt.getNewValue();
 				SimpleGraphPanel p = (SimpleGraphPanel)traces.get(tr.getId());
 				if (p != null) {
-					p.setShown(tr.isShown());
+					p.setShowAll(tr.isShown());
 					panel.repaint();
 				}
 			}

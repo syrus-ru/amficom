@@ -509,10 +509,12 @@ public class AnalysisPanel extends MapMarkersPanel
 		if (show_markers)
 		{
 			paint_analysis_markers(g);
-			if(loss_analysis)
-				paint_loss_ana(g);
-			if(reflection_analysis)
-				paint_reflection_ana(g);
+			if (showAll) {
+				if(loss_analysis)
+					paint_loss_ana(g);
+				if(reflection_analysis)
+					paint_reflection_ana(g);
+			}
 		}
 	}
 
@@ -531,6 +533,8 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected void paint_loss_ana(Graphics g)
 	{
+		if (!showGraph)
+			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 		for (int i = 0; i < 2; i++)
 		{
@@ -551,6 +555,8 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected void paint_reflection_ana(Graphics g)
 	{
+		if (!showGraph)
+			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 
 		if ((lines[0].point[1] > start) && (lines[0].point[0] < end))

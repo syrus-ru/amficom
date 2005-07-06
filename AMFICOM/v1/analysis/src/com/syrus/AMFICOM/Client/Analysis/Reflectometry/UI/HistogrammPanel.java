@@ -96,8 +96,10 @@ public class HistogrammPanel extends ScaledGraphPanel
 	{
 		paint_trace(g);
 		paint_scales(g);
-		paint_gauss(g);
-		paint_threshold(g);
+		if (showAll) {
+			paint_gauss(g);
+			paint_threshold(g);
+		}
 		paint_scale_digits(g);
 		paint_level(g);
 	}
