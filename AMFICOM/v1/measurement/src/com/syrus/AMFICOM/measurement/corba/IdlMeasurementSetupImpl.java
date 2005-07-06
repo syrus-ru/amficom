@@ -1,0 +1,75 @@
+/*-
+ * $Id: IdlMeasurementSetupImpl.java,v 1.1 2005/07/06 19:10:54 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+package com.syrus.AMFICOM.measurement.corba;
+
+import static com.syrus.util.Log.SEVERE;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.util.Log;
+
+/**
+ * @author Andrew ``Bass'' Shcheglov
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2005/07/06 19:10:54 $
+ * @module measurement_v1
+ */
+final class IdlMeasurementSetupImpl extends IdlMeasurementSetup {
+	private static final long serialVersionUID = -6499686203350494198L;
+
+	IdlMeasurementSetupImpl() {
+		// empty
+	}
+
+	IdlMeasurementSetupImpl(final IdlIdentifier id,
+			final long created,
+			final long modified,
+			final IdlIdentifier creatorId,
+			final IdlIdentifier modifierId,
+			final long version,
+			final IdlIdentifier parameterSetId,
+			final IdlIdentifier criteriaSetId,
+			final IdlIdentifier thresholdSetId,
+			final IdlIdentifier etalonId,
+			final String description,
+			final long measurementDuration,
+			final IdlIdentifier monitoredElementIds[],
+			final IdlIdentifier measurementTypeIds[]) {
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
+		this.parameterSetId = parameterSetId;
+		this.criteriaSetId = criteriaSetId;
+		this.thresholdSetId = thresholdSetId;
+		this.etalonId = etalonId;
+		this.description = description;
+		this.measurementDuration = measurementDuration;
+		this.monitoredElementIds = monitoredElementIds;
+		this.measurementTypeIds = measurementTypeIds;
+	}
+
+	/**
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
+	 */
+	@Override
+	public MeasurementSetup getNative() throws IdlCreateObjectException {
+		try {
+			return new MeasurementSetup(this);
+		} catch (final CreateObjectException coe) {
+			Log.debugException(coe, SEVERE);
+			throw new IdlCreateObjectException(coe.getMessage());
+		}
+	}
+}

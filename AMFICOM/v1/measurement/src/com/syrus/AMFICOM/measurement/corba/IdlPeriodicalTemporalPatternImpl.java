@@ -1,0 +1,61 @@
+/*-
+ * $Id: IdlPeriodicalTemporalPatternImpl.java,v 1.1 2005/07/06 19:10:54 bass Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
+package com.syrus.AMFICOM.measurement.corba;
+
+import static com.syrus.util.Log.SEVERE;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.measurement.PeriodicalTemporalPattern;
+import com.syrus.util.Log;
+
+/**
+ * @author Andrew ``Bass'' Shcheglov
+ * @author $Author: bass $
+ * @version $Revision: 1.1 $, $Date: 2005/07/06 19:10:54 $
+ * @module measurement_v1
+ */
+final class IdlPeriodicalTemporalPatternImpl extends IdlPeriodicalTemporalPattern {
+	private static final long serialVersionUID = 6707009090450723106L;
+
+	IdlPeriodicalTemporalPatternImpl() {
+		// empty
+	}
+
+	IdlPeriodicalTemporalPatternImpl(final IdlIdentifier id,
+			final long created,
+			final long modified,
+			final IdlIdentifier creatorId,
+			final IdlIdentifier modifierId,
+			final long version,
+			final long period) {
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
+		this.period = period;
+	}
+
+	/**
+	 * @throws IdlCreateObjectException
+	 * @see com.syrus.AMFICOM.general.corba.IdlStorableObject#getNative()
+	 */
+	@Override
+	public PeriodicalTemporalPattern getNative() throws IdlCreateObjectException {
+		try {
+			return new PeriodicalTemporalPattern(this);
+		} catch (final CreateObjectException coe) {
+			Log.debugException(coe, SEVERE);
+			throw new IdlCreateObjectException(coe.getMessage());
+		}
+	}
+}

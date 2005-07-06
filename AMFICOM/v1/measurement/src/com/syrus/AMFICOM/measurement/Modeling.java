@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.53 2005/07/03 19:16:31 bass Exp $
+ * $Id: Modeling.java,v 1.54 2005/07/06 19:10:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/07/03 19:16:31 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/06 19:10:54 $
  * @author $Author: bass $
  * @author arseniy
  * @module measurement_v1
@@ -67,7 +67,7 @@ public final class Modeling extends Action {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	Modeling(final IdlModeling mt) throws CreateObjectException {
+	public Modeling(final IdlModeling mt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mt);
 		} catch (ApplicationException ae) {

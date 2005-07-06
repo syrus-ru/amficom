@@ -67,7 +67,6 @@ idl: .idl
 		-pkgPrefix general com.syrus.AMFICOM \
 		-pkgPrefix measurement com.syrus.AMFICOM \
 		$(IDLDIR)/measurement.idl
-	find $(SRCDIR)/com/syrus/AMFICOM/measurement/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
 	touch $@
 
 .PHONY: idlclean

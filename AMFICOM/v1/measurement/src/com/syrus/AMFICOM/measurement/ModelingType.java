@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.40 2005/07/03 19:16:30 bass Exp $
+ * $Id: ModelingType.java,v 1.41 2005/07/06 19:10:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:30 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/06 19:10:54 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -73,7 +73,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	ModelingType(final IdlModelingType mtt) throws CreateObjectException {
+	public ModelingType(final IdlModelingType mtt) throws CreateObjectException {
 		try {
 			this.fromTransferable(mtt);
 		} catch (ApplicationException ae) {
