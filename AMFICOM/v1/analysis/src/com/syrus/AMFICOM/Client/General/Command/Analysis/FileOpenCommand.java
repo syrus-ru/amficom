@@ -65,7 +65,8 @@ public class FileOpenCommand extends AbstractCommand
                     //System.out.println("reading file: N=" + N);
                     double[] dl = new double[N];
                     for (int i = 0; i < N; i++)
-                        dl[i] = Double.parseDouble((String )al.get(i));
+                        dl[i] = Double.parseDouble(((String)al.get(i))
+                        		.replaceFirst("\\S+\\s+", "")); // cut first column if present
                     bs = new BellcoreCreator(dl).getBS();
                     br.close();
                 }
