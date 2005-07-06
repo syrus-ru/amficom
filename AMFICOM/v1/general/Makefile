@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.48 2005/07/04 15:23:09 bass Exp $
+# $Id: Makefile,v 1.49 2005/07/06 12:23:01 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -10,8 +10,6 @@ LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDLDIR := ../idl/idl
-
-JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -59,7 +57,7 @@ corba: .corba
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
