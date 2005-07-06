@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/02/28 15:02:39 bass Exp $
+# $Id: Makefile,v 1.21 2005/07/06 12:14:55 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -26,10 +26,6 @@ SERVER_INCLUDED_CLASSES = \
 	com.syrus.util.corba.VisiBrokerORBUtil \
 	com.syrus.util.corba.AuroraORBUtil \
 	com.syrus.util.database.DatabaseConnection
-
-JAVACFLAGS = -source 1.4
-SUNJAVACFLAGS = -target 1.4
-JIKESFLAGS = -target 1.4.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
