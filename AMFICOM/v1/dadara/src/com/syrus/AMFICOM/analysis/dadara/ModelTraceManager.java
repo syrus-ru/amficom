@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.84 2005/07/01 09:32:14 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.85 2005/07/06 06:26:29 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.84 $, $Date: 2005/07/01 09:32:14 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/06 06:26:29 $
  * @module
  */
 public class ModelTraceManager
@@ -494,7 +494,8 @@ implements DataStreamable, Cloneable
      *   в пределах одного события.
      * @param nEvent Номер события
      * @return четыре пороговые кривые в формате ModelTraceRange,
-     *   в виде массива.
+     *   в виде массива. В массиве возможны значения null, если соотв. порог
+     *   не проявляется.
      */
     public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
         // check if the answer is already present
@@ -517,12 +518,16 @@ implements DataStreamable, Cloneable
         for (int key = 0; key < 4; key++)
         {
             SimpleReflectogramEvent sre =
-                getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY); 
-            ModelFunction tmp = getMF().copy();
-            tmp.changeByThresh(tmpTDX, tmpTDY, key);
-            thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
-                    sre.getBegin(),
-                    sre.getEnd());
+                getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY);
+            if (sre != null) {
+	            ModelFunction tmp = getMF().copy();
+	            tmp.changeByThresh(tmpTDX, tmpTDY, key);
+	            thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
+	                    sre.getBegin(),
+	                    sre.getEnd());
+            } else {
+            	thSingleMTRCache[key] = null;
+            }
         }
 
         // make a copy of resulting array for client
@@ -810,6 +815,8 @@ implements DataStreamable, Cloneable
 		for (int k = 0; k < 4; k++)
 		{
             ModelTraceRange cmtr = mtrs[keys[k]];
+            if (cmtr == null)
+            	continue; // этой кривой нет (порог не проявляется)
             int xL = Math.max((int)x0 - xRange, cmtr.getBegin());
             int xR = Math.min((int)x0 + xRange, cmtr.getEnd());
             if (xR < xL)
@@ -906,6 +913,7 @@ implements DataStreamable, Cloneable
 	}
 
     // допускает указание иных порогов, нежели текущие
+	// возвращает null, если диапазон пуст
     private SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent,
             int key, ThreshDX[] threshDX, ThreshDY[] threshDY)
     {
