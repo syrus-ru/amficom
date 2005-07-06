@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/06/27 09:49:24 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/07/06 13:29:55 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.16 $, $Date: 2005/06/27 09:49:24 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/06 13:29:55 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -117,7 +117,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
 					case ObjectEntities.SCHEMECABLELINK_CODE:
-						return super.conditionTest(schemeCableThread.getParentSchemeCableLink().getId());
+						return super.conditionTest(schemeCableThread.parentSchemeCableLinkId);
 					default:
 						throw newIllegalObjectEntityException();
 				}
@@ -135,9 +135,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SchemeDevice schemeDevice = (SchemeDevice) storableObject;
 				switch (super.linkedEntityCode) {
 				case ObjectEntities.SCHEMEELEMENT_CODE:
-					return super.conditionTest(schemeDevice.getParentSchemeElement().getId());
+					return super.conditionTest(schemeDevice.parentSchemeElementId);
 				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
-					return super.conditionTest(schemeDevice.getParentSchemeProtoElement().getId());
+					return super.conditionTest(schemeDevice.parentSchemeProtoElementId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
@@ -145,7 +145,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final PathElement pathElement = (PathElement) storableObject;
 				switch (super.linkedEntityCode) {
 					case ObjectEntities.SCHEMEPATH_CODE:
-						return super.conditionTest(pathElement.getParentSchemePath().getId());
+						return super.conditionTest(pathElement.parentSchemePathId);
 					default:
 						throw newIllegalObjectEntityException();
 				}
@@ -153,7 +153,17 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SchemeProtoElement protoElement = (SchemeProtoElement) storableObject;
 				switch (super.linkedEntityCode) {
 				case ObjectEntities.SCHEMEPROTOELEMENT_CODE:
-					return super.conditionTest(protoElement.getParentSchemeProtoElement().getId());
+					return super.conditionTest(protoElement.parentSchemeProtoElementId);
+				case ObjectEntities.SCHEMEPROTOGROUP_CODE:
+					return super.conditionTest(protoElement.parentSchemeProtoGroupId);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			case ObjectEntities.SCHEMEPROTOGROUP_CODE:
+				final SchemeProtoGroup protoGroup = (SchemeProtoGroup) storableObject;
+				switch (super.linkedEntityCode) {
+				case ObjectEntities.SCHEMEPROTOGROUP_CODE:
+					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
