@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.24 $, $Date: 2005/06/28 10:05:28 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/06 08:35:53 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -375,17 +375,6 @@ public class ModelFunction {
 		nFit4(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
 			noise, null);
 	}
-
-    /**
-     * @deprecated use {@link #createFitedAsBreakL(double[], int, int, double[], SimpleReflectogramEvent[])}
-     */
-    @Deprecated
-	public static ModelFunction createFitedAsBreakL(double[] y,
-            int begin, int end,
-            double[] noise)
-    {
-        return createFitedAsBreakL(y, begin, end, noise, null);
-    }
 
     public static ModelFunction createFitedAsBreakL(double[] y,
             int begin, int end,
