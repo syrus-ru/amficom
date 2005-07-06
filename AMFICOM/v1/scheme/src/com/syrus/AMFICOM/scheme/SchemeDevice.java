@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.40 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemeDevice.java,v 1.41 2005/07/06 13:25:32 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:20 $
+ * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2005/07/06 13:25:32 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -54,9 +54,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	private String description;
 
-	private Identifier parentSchemeElementId;
+	Identifier parentSchemeElementId;
 	
-	private Identifier parentSchemeProtoElementId;
+	Identifier parentSchemeProtoElementId;
 
 	private SchemeDeviceDatabase schemeDeviceDatabase;
 
