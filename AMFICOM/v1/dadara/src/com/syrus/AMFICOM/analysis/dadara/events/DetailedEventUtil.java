@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventUtil.java,v 1.2 2005/05/05 15:24:25 saa Exp $
+ * $Id: DetailedEventUtil.java,v 1.3 2005/07/06 08:25:26 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.analysis.dadara.events;
 /**
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/05 15:24:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/06 08:25:26 $
  * @module
  */
 public class DetailedEventUtil {
@@ -28,7 +28,7 @@ public class DetailedEventUtil {
             return ((NotIdentifiedDetailedEvent)ev).getLoss();
         if (ev instanceof ConnectorDetailedEvent)
             return ((ConnectorDetailedEvent)ev).getLoss();
-        throw new NoSuchFieldException();        
+        throw new NoSuchFieldException(); // XXX: is this a proper name for this exception?
     }
     public static double getLossDiff(DetailedEvent ev1, DetailedEvent ev2)
     throws NoSuchFieldException {
