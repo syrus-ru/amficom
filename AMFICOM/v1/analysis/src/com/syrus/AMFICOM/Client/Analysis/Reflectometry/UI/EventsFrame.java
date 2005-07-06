@@ -460,7 +460,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	            // nPrimary >= 0
 	            if(Heap.getRefMismatch() != null) {
 	            	SimpleReflectogramEvent ev = Heap.getMTAEPrimary().getSimpleEvent(nPrimary);
-	            	int dist = Heap.getRefMismatch().pointCoord;
+	            	int dist = Heap.getRefMismatch().getCoord();
 	            	if (ev.getBegin() <= dist && ev.getEnd() > dist) {
 		                colorCode = isSelected1
 		                    ? AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED

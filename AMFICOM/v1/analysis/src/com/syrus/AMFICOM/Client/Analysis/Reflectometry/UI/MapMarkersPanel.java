@@ -283,7 +283,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 						this,
 						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
 						m.getId(),
-						alarms[i].pointCoord * deltaX,
+						alarms[i].getCoord() * deltaX,
 						scheme_path_id,
 						monitored_element_id);
 				} else
