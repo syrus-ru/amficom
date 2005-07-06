@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.86 2005/07/06 08:25:51 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.87 2005/07/06 16:26:15 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.86 $, $Date: 2005/07/06 08:25:51 $
+ * @version $Revision: 1.87 $, $Date: 2005/07/06 16:26:15 $
  * @module
  */
 public class ModelTraceManager
@@ -1014,7 +1014,7 @@ implements DataStreamable, Cloneable
      * точка возникновения аларма.
      * Не использует анализа пороговых кривых, а опирается только на
      * границы события и значения его HARD DX-порогов.
-     * Обдает предпочтение отражательным событиям и сваркам, затем
+     * Отдает предпочтение отражательным событиям и сваркам, затем
      * неид., и только потом уже линейным.
      * @param x координата точки аларма
      * @param oneMorePoint увеличить диапазон захвата еще на 1 точку.
@@ -1026,17 +1026,19 @@ implements DataStreamable, Cloneable
     	int pref = -1; // предпочтительность (высший - для конн. и сварок, низший - для лин.)
     	int found = -1; // номер найденного события
 
+    	int addOne = oneMorePoint ? 1 : 0;
+
     	// сначала проверяем все DX-пороги с учетом ширин этих порогов,
     	// а затем - просто все события (на случай отсутствия DX-порогов).
     	for (int i = 0; i < tDX.length; i++) {
     		int keyU = Thresh.HARD_UP;
     		int keyD = Thresh.HARD_DOWN;
-    		int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD));
-    		int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD));
-    		if (tDX[i].xMin - dxMin <= x && tDX[i].xMax + dxMax >= x) {
+    		int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) - addOne; // negative
+    		int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) + addOne; // positive
+    		if (tDX[i].xMin + dxMin <= x && tDX[i].xMax + dxMax >= x) {
     			// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
     			int nEv = tDX[i].eventId0;
-    			System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIXME: debug sysout
     			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
     			int curPref = getEventAlarmPref(eventType);
     			if (curPref > pref) {
@@ -1050,7 +1052,7 @@ implements DataStreamable, Cloneable
     	for (int nEv = 0; nEv < nEvents; nEv++) {
     		SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
     		if (ev.getBegin() <= x && ev.getEnd() >= x) {
-    			System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIXME: debug sysout
     			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
     			int curPref = getEventAlarmPref(eventType);
     			if (curPref > pref) {
@@ -1067,6 +1069,8 @@ implements DataStreamable, Cloneable
      * корректирует дистанцию аларма, привязывая его к началу события,
      * если это событие - отражательное или сварка.
      * Для лин. и неид. событий привязка не производится.
+     * После вызова этого метода, надо скорректировать конец аларма
+     * на тот случай, если она окажется меньше скорректированной дистанции.
      * @param x дистанция;
      * @param oneMorePoint расширение диапазона захвата на 1 точку сверх порогов
      *  (see {@link #findSupposedAlarmEventByPos}).
