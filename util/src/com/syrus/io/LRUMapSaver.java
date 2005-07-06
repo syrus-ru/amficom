@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.14 2005/06/17 11:25:48 bass Exp $
+ * $Id: LRUMapSaver.java,v 1.15 2005/07/06 12:15:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/17 11:25:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/06 12:15:16 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class LRUMapSaver {
@@ -44,17 +44,17 @@ public class LRUMapSaver {
 			// empty
 	}
 
-	public static void save(LRUMap lruMap, String objectEntityName, boolean cleanLRUMap) {
+	public static void save(final LRUMap lruMap, final String objectEntityName, final boolean cleanLRUMap) {
 		File tempFile = null;
 		try {
 			init();
-			File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
+			final File saveFile = new File(saveDir.getPath() + File.separator + objectEntityName + EXTENSION);
 			tempFile = new File(saveFile.getPath() + ".swp");
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
+			final ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10);
-			Set keys = new HashSet();
-			for (Iterator it = lruMap.keyIterator(); it.hasNext();) {
-				Object key = it.next();
+			final Set<Object> keys = new HashSet<Object>();
+			for (final Iterator it = lruMap.keyIterator(); it.hasNext();) {
+				final Object key = it.next();
 				keys.add(key);
 			}
 			if(keys == null || keys.isEmpty()) {

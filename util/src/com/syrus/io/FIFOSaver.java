@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.9 2005/06/17 11:25:48 bass Exp $
+ * $Id: FIFOSaver.java,v 1.10 2005/07/06 12:15:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 11:25:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/06 12:15:16 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class FIFOSaver {
@@ -100,18 +100,18 @@ public final class FIFOSaver {
 		}
 	}
 	
-	public static Map load() {
+	public static Map<String, Fifo> load() {
 		init();
-		Map codeNameFifo = new HashMap();
-		File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
+		final Map<String, Fifo> codeNameFifo = new HashMap<String, Fifo>();
+		final File[] fifoFiles = saveDir.listFiles(new FifoFileFilter());
 		if(fifoFiles == null)
 			return codeNameFifo;
 		for (int i = 0; i < fifoFiles.length; i++) {
-			File file = fifoFiles[i];
-			String fileName = file.getName();
-			int offset = fileName.indexOf(EXTENSION);
-			String codeName = fileName.substring(0 , offset);
-			Fifo fifo = load(codeName);
+			final File file = fifoFiles[i];
+			final String fileName = file.getName();
+			final int offset = fileName.indexOf(EXTENSION);
+			final String codeName = fileName.substring(0 , offset);
+			final Fifo fifo = load(codeName);
 			codeNameFifo.put(codeName, fifo);
 		}
 		return codeNameFifo;

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.11 2005/06/20 14:24:40 bass Exp $
+ * $Id: BellcoreReader.java,v 1.12 2005/07/06 12:15:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/20 14:24:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/06 12:15:16 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class BellcoreReader extends DataReader {
@@ -297,7 +297,8 @@ public final class BellcoreReader extends DataReader {
 	 * @todo Parameter <code>n</code> is never read. Method is used only
 	 *       locally. Wouldn't it be wise to remove it?
 	 */
-	private int readCksum(@SuppressWarnings("unusedArgument") final int n) {
+	private int readCksum(@SuppressWarnings("unused")
+	final int n) {
 		return 1;
 	}
 
