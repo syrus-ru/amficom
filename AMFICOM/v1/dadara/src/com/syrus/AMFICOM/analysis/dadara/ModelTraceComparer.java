@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.25 2005/06/30 15:44:34 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.26 2005/07/06 10:17:22 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,13 +29,13 @@ import com.syrus.util.Log;
  * <li> createEventAnchor
  * </ul>
  * @author $Author: saa $
- * @version $Revision: 1.25 $, $Date: 2005/06/30 15:44:34 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/06 10:17:22 $
  * @module
  */
 public class ModelTraceComparer
 {
     private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
-        ReflectogramAlarm.LEVEL_SOFT;
+        ReflectogramAlarm.SEVERITY_SOFT;
     
     private ModelTraceComparer() {
         // non-instantiable
@@ -89,9 +89,9 @@ public class ModelTraceComparer
         SimpleReflectogramEventComparer rc = new SimpleReflectogramEventComparer(events, etEvents);
         ReflectogramAlarm out = new ReflectogramAlarm();
         ReflectogramAlarm cur = new ReflectogramAlarm();
-        cur.alarmType = ReflectogramAlarm.TYPE_EVENTLISTCHANGED;
-        cur.level = ALARM_LEVEL_FOR_EVENT_CHANGE;
-        cur.deltaX = mtm.getMTAE().getDeltaX();
+        cur.setAlarmType(ReflectogramAlarm.TYPE_EVENTLISTCHANGED);
+        cur.setSeverity(ALARM_LEVEL_FOR_EVENT_CHANGE);
+        cur.setDeltaX(mtm.getMTAE().getDeltaX());
         int i;
         for (i = 0; i < etEvents.length; i++)
         {
@@ -99,11 +99,11 @@ public class ModelTraceComparer
             if (rc.isEtalonEventReliablyLost(i)
             	&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR)
             {
-                cur.pointCoord = etEvents[i].getBegin();
-                cur.endPointCoord = etEvents[i].getEnd();
+                cur.setCoord(etEvents[i].getBegin());
+                cur.setEndCoord(etEvents[i].getEnd());
                 System.out.println("MTC: compareEventsToMTM: etalon event #"
-                        + i + " ( " + cur.pointCoord + " .. "
-                        + cur.endPointCoord + ") is reliably lost");
+                        + i + " ( " + cur.getCoord() + " .. "
+                        + cur.getEndCoord() + ") is reliably lost");
                 out.toHardest(cur);
             }
         }
@@ -113,15 +113,15 @@ public class ModelTraceComparer
             if (rc.isProbeEventReliablyNew(i)
             	&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR)
             {
-                cur.pointCoord = events[i].getBegin();
-                cur.endPointCoord = events[i].getEnd();
+                cur.setCoord(events[i].getBegin());
+                cur.setEndCoord(events[i].getEnd());
                 System.out.println("MTC: compareEventsToMTM: probe event #"
-                        + i + " ( " + cur.pointCoord + " .. "
-                        + cur.endPointCoord + ") is reliably new");
+                        + i + " ( " + cur.getCoord() + " .. "
+                        + cur.getEndCoord() + ") is reliably new");
                 out.toHardest(cur);
             }
         }
-        return out.alarmType > ReflectogramAlarm.LEVEL_NONE
+        return out.getAlarmType() > ReflectogramAlarm.SEVERITY_NONE
             ? out
             : null;
     }
@@ -188,8 +188,8 @@ public class ModelTraceComparer
     	// apply results
     	if (alarmBegin < 0)
     		return false;
-    	alarm.pointCoord = mtm.fixAlarmPos(alarmBegin, true); // XXX: кажется, эта дистанция не используется
-    	alarm.endPointCoord = alarmEnd;
+    	alarm.setCoord(mtm.fixAlarmPos(alarmBegin, true)); // XXX: кажется, эта дистанция не используется
+    	alarm.setEndCoord(alarmEnd);
     	return true;
     }
 
@@ -244,22 +244,22 @@ public class ModelTraceComparer
 				// привязываем к началу события
 				int alarmCoord = mtm.fixAlarmPos(alarmStart, true);
 				int level = Thresh.IS_KEY_HARD[key]
-					? ReflectogramAlarm.LEVEL_HARD
-					: ReflectogramAlarm.LEVEL_SOFT;
-				if (level == alarm.level && alarmCoord < alarm.pointCoord
-						|| level > alarm.level)
+					? ReflectogramAlarm.SEVERITY_HARD
+					: ReflectogramAlarm.SEVERITY_SOFT;
+				if (level == alarm.getSeverity() && alarmCoord < alarm.getCoord()
+						|| level > alarm.getSeverity())
 				{
-					alarm.level = level;
-					alarm.pointCoord = alarmCoord;
-					alarm.endPointCoord = alarmEnd;
-					alarm.alarmType = ReflectogramAlarm.TYPE_OUTOFMASK;
-                    alarm.deltaX = mtm.getMTAE().getDeltaX();
+					alarm.setSeverity(level);
+					alarm.setCoord(alarmCoord);
+					alarm.setEndCoord(alarmEnd);
+					alarm.setAlarmType(ReflectogramAlarm.TYPE_OUTOFMASK);
+                    alarm.setDeltaX(mtm.getMTAE().getDeltaX());
 				}
 			}
 		}
-		if (alarm.level > ReflectogramAlarm.LEVEL_NONE) {
+		if (alarm.getSeverity() > ReflectogramAlarm.SEVERITY_NONE) {
 			fillAlarmMismatch(y, mtm, alarm);
-			Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.level
+			Log.debugMessage("ModelTraceComparer.compareTraceToMTM | level " + alarm.getSeverity()
 					+ " mismatch "
 					+ (alarm.hasMismatch()
 						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()
@@ -356,11 +356,11 @@ public class ModelTraceComparer
 	 * @param et Эталон
 	 */
 	public static void setAlarmAnchors(ReflectogramAlarm ra, Etalon et) {
-		int distance = ra.pointCoord;
-		ra.ref1Id = null; // это делать надо - устанавливаем в "пока не найдено"
-		ra.ref2Id = null; // (надо)
-		ra.ref1Coord = 0; // это делать не обязательно
-		ra.ref2Coord = 0; // (не обязательно)
+		int distance = ra.getCoord();
+		SOAnchor ref1Id = null; // устанавливаем в "пока не найдено"
+		SOAnchor ref2Id = null;
+		int ref1Coord = 0; // это делать не обязательно
+		int ref2Coord = 0;
 		ModelTraceAndEvents mtae = et.getMTM().getMTAE();
 		EventAnchorer anc = et.getAnc();
 		int len = mtae.getNEvents();
@@ -394,28 +394,23 @@ public class ModelTraceComparer
 	
 				// выбираем самое близкое pos слева
 				if (pos <= distance) {
-					if (ra.ref1Id == null || pos > ra.ref1Coord) {
-						ra.ref1Id = ea;
-						ra.ref1Coord = pos;
+					if (ref1Id == null || pos > ref1Coord) {
+						ref1Id = ea;
+						ref1Coord = pos;
 					}
 				}
 				// выбираем самое близкое pos справа
 				if (pos >= distance) {
-					if (ra.ref2Id == null || pos < ra.ref2Coord) {
-						ra.ref2Id = ea;
-						ra.ref2Coord = pos;
+					if (ref2Id == null || pos < ref2Coord) {
+						ref2Id = ea;
+						ref2Coord = pos;
 					}
 				}
 			}
-			// если объекты привязки найдены только с одной стороны от аларма,
-			// удалаяем привязку (хотя, строго говоря, это делать не обязательно:
-			// такие алармы, во-первых, в принципе имеют право на существование,
-			// а, во-вторых, все равно должны считаться не имеющими привязки).
-			if (ra.ref1Id == null || ra.ref2Id == null) {
-				ra.ref1Id = null;
-				ra.ref2Id = null;
-				ra.ref1Coord = 0;
-				ra.ref2Coord = 0;
+			if (ref1Id != null && ref2Id != null) {
+				ra.setAnchors(ref1Id, ref1Coord, ref2Id, ref2Coord);
+			} else {
+				ra.unSetAnchors();
 			}
 		}
 	}

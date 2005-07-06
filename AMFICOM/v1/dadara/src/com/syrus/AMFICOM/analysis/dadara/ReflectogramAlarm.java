@@ -14,12 +14,16 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * Несет информацию о типе, уровне и дистанции события и привязке дистанции.
  * <p>
  * Дистанция и привязка требуют особого пояснения.
- * Поле {@link #pointCoord} содержит локальную оптическую дистанцию (в точках)
- * объекта или события, с которым ассоциировано отклонение. Для перевода
+ * Свойство {@link #getCoord} содержит локальную оптическую дистанцию (в точках)
+ * объекта или события, с которым ассоциировано отклонение.
+ * Свойство {@link #getDistance()} представляет ту же локальную оптическую
+ * дистанцию в метрах.
+ * Для перевода
  * локальной оптической дистанции в схемную оптическую дистанцию есть два способа:
  * <ol>
- * <li> Непосредственная подстановка локальной оптической дистанции в качестве
- * схемной оптической дистанции. При этом возникает погрешность, определяемая
+ * <li> Непосредственная подстановка локальной оптической дистанции
+ * {@link #getDistance()} в качестве схемной оптической дистанции.
+ * При этом возникает погрешность, определяемая
  * отличием схемных оптических дистанций от истинных оптических дистанций
  * (из-за ограничений возможности точной схемной привязки), а
  * также отличием локальных оптических дистанций от истинных.
@@ -27,61 +31,62 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * непринципиальны, это сильно усложняет задачу определения, относится ли
  * событие к данному точечному объекту (муфте и пр.) или к смежному с ним
  * кабелю.
- * <li> Использование привязки
- *   {@link #ref1Id}/{@link #ref1Coord},
- *   {@link #ref2Id}/{@link #ref2Coord}.
+ * <li> В случае, если {@link #hasAnchors()} возвращает true, возможно
+ * использование привязки
+ *   {@link #getAnchor1Id}/{@link #getAnchor1Coord},
+ *   {@link #getAnchor2Id}/{@link #getAnchor2Coord}.
  * Эта информация указывает локальную оптическую дистанцию (тоже в точках)
- * для 0, 1 или 2 объектов, находящихся по разную сторону от аларма.
- * Это позволяет точнее определять место аларма. В случае, если
- * при задании эталона была предоставлена привязка для каждого объекта,
+ * для 2 объектов, находящихся по разную сторону от аларма.
+ * Это позволяет точнее определять место аларма. В случае, если в момент
+ * задания эталона была предоставлена привязка для каждого объекта,
  * точность указания объекта, соответствующего аларму, становится абсолютной,
- * а соотношение дистанций аларма и объектов, передает всю возможную
+ * а соотношение дистанций аларма и объектов передает всю возможную
  * информацию о пропорциях положения.
  * <p> Для восстановления схемной оптической или физической дистанции,
- * надо использовать пропорции
+ * надо использовать пропорцию
  * 
- * <pre> pointCoord-ref1Coord : ref2Coord-pointCoord = L1 : L2 </pre>
+ * <pre> (coord - anchor1Coord) : (anchor2Coord - coord) = L1 : L2 </pre>
  * 
  * Где L1 и L2 - схемные (оптические или физические) расстояния до аларма
  * от соответвующих объектов схемы.
  * <p> Если объекты привязки определены, то они лежат по разные стороны
  * от аларма (по оси дистанции).
  * <p> Если аларм приходится на точечное событие (сварка, коннектор),
- * уже имеющее привязку к схеме, то ref1Id и ref2Id совпадают,
+ * уже имеющее привязку к схеме, то anchor1Id и anchor2Id совпадают,
  * а соотв. дистанции нулевые.
- * <p> Если хотя бы одно их ref1Id, ref2Id - null, то считается, что привязки
+ * <p> Если {@link #hasAnchors()} возвращает false, то привязки
  * нет и нужно использовать первый способ трансляции в схемные дистанции.
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/07/06 09:29:35 $
- * @module
+ * @version $Revision: 1.20 $, $Date: 2005/07/06 10:17:22 $
+ * @module dadara
  */
 public class ReflectogramAlarm {
 	// Alarm levels. Must be comparable with >; >=
-	public static final int LEVEL_NONE = 0; // just a convenience level, not a real alarm
-	public static final int LEVEL_SOFT = 1; // soft alarm ('warning')
-	public static final int LEVEL_HARD = 2; // hard alarm ('alarm')
+	public static final int SEVERITY_NONE = 0; // just a convenience level, not a real alarm
+	public static final int SEVERITY_SOFT = 1; // soft alarm ('warning')
+	public static final int SEVERITY_HARD = 2; // hard alarm ('alarm')
 
 	public static final int TYPE_UNDEFINED = 0;
 	public static final int TYPE_LINEBREAK = 1; // обрыв линии
 	public static final int TYPE_OUTOFMASK = 2; // выход за маски
 	public static final int TYPE_EVENTLISTCHANGED = 3; // новое/потерянное событие в пределах масок
 
-	public int level = LEVEL_NONE;
+	private int severity = SEVERITY_NONE;
 	// оптическая дистанция (в точках) события эталона или точки на
 	// событии эталона, в котором/которой произошел аларм.
 	// Может отличаться от фактической точки выхода за пределы порогов.
-	public int pointCoord = 0;
-	public int endPointCoord = 0; // ?
-	public int alarmType = TYPE_UNDEFINED;
-    public double deltaX = 0.0;
+	private int coord = 0;
+	private int endCoord = 0; // для отображения
+	private int alarmType = TYPE_UNDEFINED;
+    private double deltaX = 0.0;
 
     // информация о (максимум двух) ближайших привязанных объектах
-    public SOAnchor ref1Id = null; // null, если привязка #1 не определена
-    public int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
-    public SOAnchor ref2Id = null; // null, если привязка #2 не определена
-    public int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
+    private SOAnchor ref1Id = null; // null, если привязка #1 не определена
+    private int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
+    private SOAnchor ref2Id = null; // null, если привязка #2 не определена
+    private int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
 
     // оценка степени превышения предупр. порога по сравнению с тревожным
     // состояние "не определено" - если min > max
@@ -100,6 +105,7 @@ public class ReflectogramAlarm {
     	this.minMismatch = min;
     	this.maxMismatch = max;
     }
+
     /**
      * Устанавливает степень превышения предупр. порога в состояние "не определено" 
      */
@@ -139,25 +145,62 @@ public class ReflectogramAlarm {
     		throw new IllegalArgumentException();
     }
 
-    /*
-	public int getLevel()
-	{
-		return level;
-	}
-	public int getPoint()
-	{
-		return pointCoord;
-	}
-*/
     public int getSeverity() {
-        return level;
+        return severity;
+    }
+    public void setSeverity(int severity) {
+        this.severity = severity;
     }
 	public int getSpecificType() {
-		return alarmType;
+		return getAlarmType();
 	}
     public double getDistance() {
-        return deltaX * pointCoord;
+        return getDeltaX() * getCoord();
     }
+    public void setAnchors(SOAnchor anchor1, int coord1,
+    		SOAnchor anchor2, int coord2) {
+    	if (anchor1 == null || anchor2 == null) {
+    		throw new IllegalArgumentException("null anchor in setAnchor");
+    	}
+    	ref1Id = anchor1;
+    	ref1Coord = coord1;
+    	ref2Id = anchor2;
+    	ref2Coord = coord2;
+    }
+    public void unSetAnchors() {
+    	ref1Id = null;
+    	ref1Coord = 0;
+    	ref2Id = null;
+    	ref2Coord = 0;
+    }
+    public boolean hasAnchors() {
+    	return ref1Id != null && ref2Id != null;
+    }
+    public SOAnchor getAnchor1Id() {
+    	if (! hasAnchors()) {
+    		throw new IllegalStateException();
+    	}
+    	return ref1Id;
+    }
+    public SOAnchor getAnchor2Id() {
+    	if (! hasAnchors()) {
+    		throw new IllegalStateException();
+    	}
+    	return ref2Id;
+    }
+    public int getAnchor1Coord() {
+    	if (! hasAnchors()) {
+    		throw new IllegalStateException();
+    	}
+    	return ref1Coord;
+    }
+    public int getAnchor2Coord() {
+    	if (! hasAnchors()) {
+    		throw new IllegalStateException();
+    	}
+    	return ref2Coord;
+    }
+
 	/**
 	 * Creates an empty 'no alarm' alarm
 	 * with level = LEVEL_NONE and type = TYPE_UNDEFINED.
@@ -170,11 +213,11 @@ public class ReflectogramAlarm {
 	throws IOException, SignatureMismatchException
 	{
 		ReflectogramAlarm ret = new ReflectogramAlarm();
-		ret.level = dis.readInt();
-		ret.pointCoord = dis.readInt();
-		ret.endPointCoord = dis.readInt();
-		ret.alarmType = dis.readInt();
-        ret.deltaX = dis.readDouble();
+		ret.severity = dis.readInt();
+		ret.setCoord(dis.readInt());
+		ret.setEndCoord(dis.readInt());
+		ret.setAlarmType(dis.readInt());
+        ret.setDeltaX(dis.readDouble());
         if (dis.readBoolean()) {
         	ret.minMismatch = dis.readDouble(); // XXX: неплохо бы покомпактнее
         	ret.maxMismatch = dis.readDouble();
@@ -200,11 +243,11 @@ public class ReflectogramAlarm {
 	throws IOException
 	{
 		// ориентировочно, занимает суммарно от 26 до 66 байт
-		dos.writeInt(this.level);
-		dos.writeInt(this.pointCoord);
-		dos.writeInt(this.endPointCoord);
-		dos.writeInt(this.alarmType);
-        dos.writeDouble(this.deltaX);
+		dos.writeInt(this.severity);
+		dos.writeInt(this.getCoord());
+		dos.writeInt(this.getEndCoord());
+		dos.writeInt(this.getAlarmType());
+        dos.writeDouble(this.getDeltaX());
         if (hasMismatch()) {
         	dos.writeBoolean(true);
         	dos.writeDouble(this.minMismatch);
@@ -301,27 +344,59 @@ public class ReflectogramAlarm {
      */
     public void toHardest(ReflectogramAlarm that)
     {
-        if (that.level > this.level
-                || that.level == this.level && that.pointCoord < this.pointCoord)
+        if (that.severity > this.severity
+                || that.severity == this.severity && that.getCoord() < this.getCoord())
         {
-            this.level = that.level;
-            this.pointCoord = that.pointCoord;
-            this.endPointCoord = that.endPointCoord;
-            this.alarmType = that.alarmType;
-            this.deltaX = that.deltaX;
+            this.severity = that.severity;
+            this.setCoord(that.getCoord());
+            this.setEndCoord(that.getEndCoord());
+            this.setAlarmType(that.getAlarmType());
+            this.setDeltaX(that.getDeltaX());
         }
     }
     
     public String toString()
     {
-        return "ReflectogramAlarm(level=" + level
-        + ",type=" + alarmType
-        + ",begin=" + pointCoord
-        + ",end=" + endPointCoord
+        return "ReflectogramAlarm(level=" + severity
+        + ",type=" + getAlarmType()
+        + ",begin=" + getCoord()
+        + ",end=" + getEndCoord()
         + ",distance=" + getDistance()
         + (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
         + (ref1Id != null ?  ",anc1=" + ref1Id + "@" + ref1Coord : "")
         + (ref2Id != null ?  ",anc2=" + ref2Id + "@" + ref2Coord : "")
         + ")";
     }
+
+	public void setCoord(int coord) {
+		this.coord = coord;
+	}
+
+	public int getCoord() {
+		return this.coord;
+	}
+
+	public void setEndCoord(int endCoord) {
+		this.endCoord = endCoord;
+	}
+
+	public int getEndCoord() {
+		return this.endCoord;
+	}
+
+	public void setAlarmType(int alarmType) {
+		this.alarmType = alarmType;
+	}
+
+	public int getAlarmType() {
+		return this.alarmType;
+	}
+
+	public void setDeltaX(double deltaX) {
+		this.deltaX = deltaX;
+	}
+
+	public double getDeltaX() {
+		return this.deltaX;
+	}
 }

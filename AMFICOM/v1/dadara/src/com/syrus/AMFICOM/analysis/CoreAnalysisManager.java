@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.91 2005/07/06 08:11:10 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.92 2005/07/06 10:17:22 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.91 $, $Date: 2005/07/06 08:11:10 $
+ * @version $Revision: 1.92 $, $Date: 2005/07/06 10:17:22 $
  * @module
  */
 
@@ -760,12 +760,12 @@ public class CoreAnalysisManager
         if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
         {
             ReflectogramAlarm alarm = new ReflectogramAlarm();
-            alarm.level = ReflectogramAlarm.LEVEL_HARD;
-            alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;
-            alarm.pointCoord = etMTM.fixAlarmPos(breakPos, false); // корректируем с учетом событий
-            alarm.deltaX = etMTM.getMTAE().getDeltaX();
+            alarm.setSeverity(ReflectogramAlarm.SEVERITY_HARD);
+            alarm.setAlarmType(ReflectogramAlarm.TYPE_LINEBREAK);
+            alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
+            alarm.setDeltaX(etMTM.getMTAE().getDeltaX());
             // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
-            alarm.endPointCoord = Math.min(ar.getDataLength(), etMinLength);
+            alarm.setEndCoord(Math.min(ar.getDataLength(), etMinLength));
 
             // устанавливаем привязку аларма к событиям
             ModelTraceComparer.setAlarmAnchors(alarm, etalon);
