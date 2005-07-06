@@ -14,20 +14,22 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * provides access to f(x) values, fitting procedure, RMS calculation,
  * Threshold function build procedure.
  * 
- * Does not cares for begin and end of <i>Amficom</i> events.
+ * Does not cares for begin and end of <i>Amficom</i> events, otherwise than
+ * to hint BreakL fitter about recommended stop points.
+ *
  * Does not remember the original r/g itself.</p>
  *
  * <p>Input X for the model function is integer.
  * The physical X-scale is not concerned.</p>
  *
- * <p>Output Y = f(X), its units are rgdB derived from Y=5.0*log_10(I).</p>
+ * <p>Output Y = f(X), its units are rgdB derived from Y=5.0*log_10(I) rule.</p>
  *
- * <p>Should be constructed as one of three AMFICOM-specific simple functions.
- * The modelling function will probably change when fit() will be called.</p>
+ * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.25 $, $Date: 2005/07/06 08:35:53 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/06 08:42:32 $
  * @author $Author: saa $
- * @module analysis_v1
+ * @author saa
+ * @module dadara
  */
 
 public class ModelFunction {
@@ -200,11 +202,6 @@ public class ModelFunction {
 	{
 		nSetAsLinear(x1, y1, x2, y2);
 	}
-
-	/*public int steal_shapeID() // debug etc
-	 {
-	 return shapeID;
-	 }*/
 
 	/**
 	 * @return The width of the event.
