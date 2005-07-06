@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.6 2005/06/21 12:44:31 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.7 2005/07/06 13:26:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,13 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/21 12:44:31 $
+ * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/07/06 13:26:34 $
  * @module scheme_v1
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
@@ -36,6 +38,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final long firstLong,
 			final long secondLong,
 			final OperationSort operation,
@@ -49,6 +52,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final double firstDouble,
 			final double secondDouble,
 			final OperationSort operation,
@@ -62,6 +66,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final String value,
 			final OperationSort operation,
 			final Short entityCode,
@@ -73,6 +78,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final Date firstDate,
 			final Date secondDate,
 			final OperationSort operation,
@@ -90,7 +96,8 @@ final class TypicalConditionImpl extends TypicalCondition {
 	 * @param storableObjects
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set storableObjects) {
+	@Override
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		return this.type != TypicalSort._TYPE_STRING
 				|| this.operation != OperationSort._OPERATION_EQUALS
 				|| storableObjects == null
@@ -101,6 +108,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 	 * @param storableObject
 	 * @see com.syrus.AMFICOM.general.StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) {
 		throw new UnsupportedOperationException();
 	}
