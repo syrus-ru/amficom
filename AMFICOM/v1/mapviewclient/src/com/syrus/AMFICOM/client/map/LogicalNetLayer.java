@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.85 2005/07/01 16:22:35 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.86 2005/07/07 11:49:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,9 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -69,7 +71,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.85 $, $Date: 2005/07/01 16:22:35 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/07 11:49:03 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -389,35 +391,36 @@ public class LogicalNetLayer
 		Font font = p.getFont();
 		Color background = p.getBackground();
 
-//		long f;
-//		long d;
+		long f;
+		long d;
 
-//		System.out.println("------------------ paint called ----------------------");
-//		try {
-//			throw new Exception("stacktrace");
-//		}
-//		catch (Exception e) {
+		System.out.println("------------------ paint called ----------------------");
+		try {
+			throw new Exception("stacktrace");
+		}
+		catch (Exception e) {
+//			Log.debugException(e, Log.FINE);
 //			e.printStackTrace();
-//		}
-//		System.out.println("--------------------------------------");
-//		f = System.currentTimeMillis();
+		}
+		System.out.println("--------------------------------------");
+		f = System.currentTimeMillis();
 		drawLines(p, visibleBounds);
-//		d = System.currentTimeMillis();
+		d = System.currentTimeMillis();
 //		detailedDateFormat.format(new Date(System.currentTimeMillis()))
-//		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
-//		f = System.currentTimeMillis();
+		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawNodes(p, visibleBounds);
-//		d = System.currentTimeMillis();
-//		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
-//		f = System.currentTimeMillis();
+		d = System.currentTimeMillis();
+		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawSelection(p, visibleBounds);
-//		d = System.currentTimeMillis();
-//		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
-//		f = System.currentTimeMillis();
+		d = System.currentTimeMillis();
+		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
+		f = System.currentTimeMillis();
 		drawTempLines(p, visibleBounds);
-//		d = System.currentTimeMillis();
-//		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
-//		System.out.println("--------------------------------------");
+		d = System.currentTimeMillis();
+		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
+		System.out.println("--------------------------------------");
 
 		// revert graphics to previous settings
 		p.setColor(color);
@@ -433,15 +436,13 @@ public class LogicalNetLayer
 	public void drawLines(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		Iterator e;
-	
 		this.elementsToDisplay.clear();
 
 		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
 		if (! this.aContext.getApplicationModel().isEnabled(MapApplicationModel.MODE_NODE_LINK))
 		{
-			Command com = getContext().getApplicationModel().getCommand(MapApplicationModel.MODE_LINK);
-			com.execute();
+			Command modeCommand = getContext().getApplicationModel().getCommand(MapApplicationModel.MODE_LINK);
+			modeCommand.execute();
 		}
 
 		if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH)
@@ -449,25 +450,27 @@ public class LogicalNetLayer
 			this.elementsToDisplay.addAll(getMapView().getMap().getAllPhysicalLinks());
 			for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();)
 			{
-				MeasurementPath mpath = 
+				MeasurementPath measurementPath = 
 					(MeasurementPath)it.next();
 
-				getMapViewController().getController(mpath).paint(mpath, g, visibleBounds);
+//				if(getMapViewController().getController(measurementPath).isElementVisible(measurementPath, visibleBounds))
+						getMapViewController().getController(measurementPath).paint(measurementPath, g, visibleBounds);
 				
 				// to avoid multiple cicling through scheme elements
 				// use once sorted cable links
-				for(Iterator it2 = mpath.getSortedCablePaths().iterator(); it2.hasNext();)
+				for(Iterator it2 = measurementPath.getSortedCablePaths().iterator(); it2.hasNext();)
 				{
-					CablePath cpath = 
+					CablePath cablePath = 
 						(CablePath)it2.next();
-					this.elementsToDisplay.removeAll(cpath.getLinks());
+					this.elementsToDisplay.removeAll(cablePath.getLinks());
 				}
 			}
 			for(Iterator it = this.elementsToDisplay.iterator(); it.hasNext();)
 			{
-				PhysicalLink mple = 
+				PhysicalLink physicalLink = 
 					(PhysicalLink)it.next();
-				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
+//				if(getMapViewController().getController(physicalLink).isElementVisible(physicalLink, visibleBounds))
+					getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		}
 		else
@@ -476,38 +479,48 @@ public class LogicalNetLayer
 			this.elementsToDisplay.addAll(getMapView().getMap().getAllPhysicalLinks());
 			for(Iterator it = this.mapView.getCablePaths().iterator(); it.hasNext();)
 			{
-				CablePath cpath = 
+				CablePath cablePath = 
 					(CablePath)it.next();
-				getMapViewController().getController(cpath).paint(cpath, g, visibleBounds);
-				this.elementsToDisplay.removeAll(cpath.getLinks());
+//				if(getMapViewController().getController(cablePath).isElementVisible(cablePath, visibleBounds))
+					getMapViewController().getController(cablePath).paint(cablePath, g, visibleBounds);
+				this.elementsToDisplay.removeAll(cablePath.getLinks());
 			}
 			for(Iterator it = this.elementsToDisplay.iterator(); it.hasNext();)
 			{
-				PhysicalLink mple = 
+				PhysicalLink physicalLink = 
 					(PhysicalLink)it.next();
-				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
+//				if(getMapViewController().getController(physicalLink).isElementVisible(physicalLink, visibleBounds))
+					getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		}
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
-			e = getMapView().getMap().getAllPhysicalLinks().iterator();
-			while (e.hasNext())
+			Iterator iterator = getMapView().getMap().getAllPhysicalLinks().iterator();
+			while (iterator.hasNext())
 			{
-				PhysicalLink mple = 
-					(PhysicalLink)e.next();
-				getMapViewController().getController(mple).paint(mple, g, visibleBounds);
+				PhysicalLink physicalLink = 
+					(PhysicalLink)iterator.next();
+//				if(getMapViewController().getController(physicalLink).isElementVisible(physicalLink, visibleBounds))
+					getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
 			}
 		}
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
-			e = getMapView().getMap().getAllNodeLinks().iterator();
-			while (e.hasNext())
+			MapViewController.nullTime1();
+			MapViewController.nullTime2();
+			MapViewController.nullTime3();
+			Iterator iterator = getMapView().getMap().getAllNodeLinks().iterator();
+			while (iterator.hasNext())
 			{
-				NodeLink curNodeLink = (NodeLink)e.next();
-				getMapViewController().getController(curNodeLink).paint(curNodeLink, g, visibleBounds);
+				NodeLink nodeLink = (NodeLink)iterator.next();
+//				if(getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds))
+					getMapViewController().getController(nodeLink).paint(nodeLink, g, visibleBounds);
 			}
+			System.out.println("pre paint " + String.valueOf(MapViewController.getTime1()) + " ms");
+			System.out.println("paint " + String.valueOf(MapViewController.getTime2()) + " ms");
+			System.out.println("post paint " + String.valueOf(MapViewController.getTime3()) + " ms");
 		}
 	}
 
@@ -1105,4 +1118,174 @@ public class LogicalNetLayer
 		return this.mapContext;
 	}
 
+	/**
+	 * Объект, замещающий при отображении несколько NodeLink'ов 
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.86 $, $Date: 2005/07/07 11:49:03 $
+	 * @module mapviewclient_v1_modifying
+	 */
+	private class VisualMapElement
+	{
+		public AbstractNode startNode;
+		public AbstractNode endNode;		
+
+		public VisualMapElement(AbstractNode startNode, AbstractNode endNode)
+		{
+			this.startNode = startNode;
+			this.endNode = endNode;			
+		}
+	}
+	
+	/**
+	 * Список VisualMapElement'ов, которые будут отображаться при текущем масштабе
+	 */
+	private List<VisualMapElement> visualElements = new ArrayList<VisualMapElement>();
+
+	/**
+	 * Линки с экранной длиной меньшей, этого параметра сливаются с соседними
+	 * в один общий отображаемый элемент
+	 */
+	private static final int MINIMUM_SCREEN_LENGTH = 20;
+	
+	/**
+	 * Обновляет список элементов которые должны отображаться при текущем массштабе.
+	 */
+	public void calculateVisualLinks()
+	{
+		long startTime = System.currentTimeMillis();
+		
+		this.visualElements.clear();
+		
+		Map map = this.getMapView().getMap();
+		
+		//Таблица, в которой содержится информация о том, обрабатывался ли
+		//уже узел или нет
+		java.util.Map nodesCalculated = new HashMap(map.getNodes().size());
+		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();)
+		{
+			AbstractNode node = (AbstractNode)nodesIt.next();
+			nodesCalculated.put(node,Boolean.FALSE);
+		}
+		
+		//Запускаем рекурсию. 
+		//Если очередной затравочный узел уже обработан - рекурсию с него не запускаем.
+		//Если карта - это связный граф, то рекурсия будет запущена один раз.
+		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();)
+		{
+			AbstractNode startRecursionNode = (AbstractNode) nodesIt.next();
+			if (nodesCalculated.get(startRecursionNode).equals(Boolean.FALSE))
+				pullVisualLinksFromNode (
+						startRecursionNode,
+						null,
+						nodesCalculated,
+						map);
+		}
+		long endTime = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
+				+ "optimized map for " + (endTime - startTime) + "ms.",
+				Log.FINEST);
+	}
+	/**
+	 * Рекурсивная процедура обхода сегмента схемы карты, которому принадлежит
+	 * "затравочный" узел.
+	 * @param nodeToPullFrom Затравочный узел, число входящих/исходящих линков = 1.
+	 * @param incomingLink Линк, по которому мы пришли в данный узел. Для первого
+	 * уровня рекурсии = null.
+	 * @param nodesCalculated Таблица содержащая информацию о том, обработан ли тот или 
+	 * иной узел.
+	 * @param map Объект "карта"
+	 */
+	private void pullVisualLinksFromNode (
+			AbstractNode nodeToPullFrom,
+			NodeLink incomingLink,
+			java.util.Map nodesCalculated,
+			Map map)
+	{
+		//Рассматриваемый узел
+		AbstractNode nodeProcessed = null;
+		
+		if (incomingLink.getStartNode() == nodeToPullFrom)
+			nodeProcessed = incomingLink.getEndNode();
+		else if (incomingLink.getEndNode() == nodeToPullFrom)
+			nodeProcessed = incomingLink.getStartNode();
+		
+		if (nodeProcessed == null)
+			throw new AssertionError("LogicalNetLayer | pullVisualLinksFromNode | The nodeProcessed can't be null");
+		
+		if (nodesCalculated.get(nodeProcessed).equals(Boolean.TRUE))
+		{
+			//Условие останова - данный узел уже рассматривался.
+			//Создаём элемент отображения и выходим.
+			this.visualElements.add(new VisualMapElement(nodeToPullFrom,nodeProcessed));
+			return;
+		}
+
+		//Получаем список всех входящих/исходящих линий для данного узла
+		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks(nodeProcessed);
+		//Исключаем из списка линк, по которому мы пришли в данный узел
+		allLinksForNodeProcessed.remove(incomingLink);
+		
+		//Отмечаем в таблице, что узел обработан. 
+		nodesCalculated.put(nodeProcessed,Boolean.TRUE);
+		
+		//TODO Здесь длина - топологическая. А нужна физическая!
+		if (incomingLink.getLengthLt() >= MINIMUM_SCREEN_LENGTH)
+		{
+			//Создаём элемент отображения и дальше тянем новый(е) элемент отображения,
+			//начиная от рассматриваемого элемента.
+			this.visualElements.add(new VisualMapElement(nodeToPullFrom,nodeProcessed));
+			
+			for (NodeLink outgoingLink: allLinksForNodeProcessed)
+			{
+				pullVisualLinksFromNode (
+						nodeProcessed,
+						outgoingLink,
+						nodesCalculated,
+						map);
+			}
+		}
+		else
+		{
+			//Тянем элемент отображения дальше. В случае ветвления - на более поздних
+			//этапах для каждой ветви будет создан отдельный элемент отображения (довольно
+			//длинный), начинающийся в том узле из которого мы пришли на этот уровень
+			//рекурсии
+			for (NodeLink outgoingLink: allLinksForNodeProcessed)
+			{
+				pullVisualLinksFromNode (
+						nodeToPullFrom,
+						outgoingLink,
+						nodesCalculated,
+						map);
+			}
+		}
+	}
+	
+	/**
+	 * Отрисовывает элементы отображения, расположенные в заданных границах
+	 * @param g
+	 * @param visibleBounds
+	 * @throws MapConnectionException
+	 * @throws MapDataException
+	 */
+	private void drawVisualLinks(Graphics g, Rectangle2D.Double visibleBounds)
+		throws MapConnectionException,MapDataException
+	{
+		for (VisualMapElement vmElement: this.visualElements)
+		{
+			if (visibleBounds.intersectsLine(
+					vmElement.startNode.getLocation().getX(),
+					vmElement.startNode.getLocation().getY(),
+					vmElement.endNode.getLocation().getX(),
+					vmElement.endNode.getLocation().getY()))
+			{
+				Point from = this.converter.convertMapToScreen(
+						vmElement.startNode.getLocation());
+				Point to = this.converter.convertMapToScreen(
+						vmElement.endNode.getLocation());
+				
+				g.drawLine(from.x,from.y,to.x,to.y);
+			}
+		}
+	}
 }
