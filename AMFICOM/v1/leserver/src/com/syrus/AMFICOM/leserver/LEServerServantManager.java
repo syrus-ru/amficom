@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.8 2005/06/22 17:03:28 arseniy Exp $
+ * $Id: LEServerServantManager.java,v 1.9 2005/07/07 19:41:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/22 17:03:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/07 19:41:33 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -31,6 +31,7 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager {
 		assert timeout >= 10L * 60L * 1000L: ErrorMessages.TIMEOUT_TOO_SHORT; //not less then 10 min
 	}
 
+	@Override
 	protected void onLoseConnection(final String servantName) {
 		// TODO Remove session of client
 		super.onLoseConnection(servantName);

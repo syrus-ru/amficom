@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.9 2005/06/22 17:01:10 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.10 2005/07/07 19:38:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 17:01:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/07 19:38:17 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -105,7 +105,7 @@ public class VerifiedConnectionManager {
 
 	private void activateVerifiableReference(final String servantName) {
 		try {
-			Verifiable reference = VerifiableHelper.narrow(this.corbaServer.resolveReference(servantName));
+			final Verifiable reference = VerifiableHelper.narrow(this.corbaServer.resolveReference(servantName));
 			this.referencesMap.put(servantName, reference);
 			if (this.disconnectedServants.remove(servantName))
 				this.onRestoreConnection(servantName);
