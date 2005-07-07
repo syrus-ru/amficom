@@ -2,13 +2,11 @@
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestMonitoredElement
-TEST_PACKAGE=com.syrus.AMFICOM.configuration
+TEST_CLASS=TestMeasurementType
+TEST_PACKAGE=com.syrus.AMFICOM.measurement
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
-
-JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)

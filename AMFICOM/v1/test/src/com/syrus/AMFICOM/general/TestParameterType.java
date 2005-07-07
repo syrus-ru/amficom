@@ -1,5 +1,5 @@
 /*
- * $Id: TestParameterType.java,v 1.12 2005/06/30 07:54:03 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestParameterType.java,v 1.13 2005/07/07 18:15:21 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.general;
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/30 07:54:03 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/07 18:15:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -32,48 +32,85 @@ public class TestParameterType extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		final String codename = ParameterTypeCodenames.REFLECTOGRAMMA_ETALON;
-		final String name = "Reflectogramma-etalon";
-		String description = "Raflectogramma, marked as etalon";
-		DataType dataType = DataType.DATA_TYPE_RAW;
-		ParameterType parameterType = ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
-				codename,
-				description,
-				name,
-				dataType);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_WAVELENGTH.stringValue(),
+				"Длина волны",
+				"Длина волны",
+				DataType.DATA_TYPE_INTEGER);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_LENGTH.stringValue(),
+				"Длина рефлектограммы",
+				"Длина рефлектограммы",
+				DataType.DATA_TYPE_DOUBLE);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_RESOLUTION.stringValue(),
+				"Разрешение",
+				"Разрешение",
+				DataType.DATA_TYPE_DOUBLE);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.stringValue(),
+				"Ширина импульса в режиме низкого разрешения",
+				"Ширина импульса",
+				DataType.DATA_TYPE_INTEGER);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.stringValue(),
+				"Ширина импульса в режиме высокого разрешения",
+				"Ширина импульса",
+				DataType.DATA_TYPE_INTEGER);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.stringValue(),
+				"Показатель преломления",
+				"Показатель преломления",
+				DataType.DATA_TYPE_DOUBLE);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_AVERAGE_COUNT.stringValue(),
+				"Количество усреднений",
+				"Количество усреднений",
+				DataType.DATA_TYPE_DOUBLE);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_FLAG_GAIN_SPLICE_ON.stringValue(),
+				"Особый режим",
+				"Особый режим",
+				DataType.DATA_TYPE_BOOLEAN);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.TRACE_FLAG_LIVE_FIBER_DETECT.stringValue(),
+				"Особый режим",
+				"Особый режим",
+				DataType.DATA_TYPE_BOOLEAN);
+
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.REFLECTOGRAMMA.stringValue(),
+				"Рефлектограмма",
+				"Рефлектограмма",
+				DataType.DATA_TYPE_RAW);
+
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.REFLECTOGRAMMA_ETALON.stringValue(),
+				"Эталонная рефлектограмма",
+				"Эталонная рефлектограмма",
+				DataType.DATA_TYPE_RAW);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.DADARA_ETALON.stringValue(),
+				"Эталон для анализа",
+				"Эталон для анализа",
+				DataType.DATA_TYPE_RAW);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.DADARA_CRITERIA.stringValue(),
+				"Критерий анализа",
+				"Критерий анализа",
+				DataType.DATA_TYPE_RAW);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue(),
+				"Результат анализа",
+				"Результат анализа",
+				DataType.DATA_TYPE_RAW);
+		ParameterType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				ParameterTypeCodename.DADARA_ALARMS.stringValue(),
+				"Отклонения",
+				"Отклонения",
+				DataType.DATA_TYPE_RAW);
 
 		StorableObjectPool.flush(ObjectEntities.PARAMETER_TYPE_CODE, true);
-	}
-
-	public void _testRetrieveByCondition() throws ApplicationException {
-		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
-				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
-				StorableObjectWrapper.COLUMN_CODENAME);
-		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
-				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
-				StorableObjectWrapper.COLUMN_CODENAME);
-		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
-		for (Iterator it = parameterTypes.iterator(); it.hasNext();) {
-			ParameterType parameterType = (ParameterType) it.next();
-			System.out.println("id: '" + parameterType.getId() + "' codename: '" + parameterType.getCodename() + "', description: '" + parameterType.getDescription() + "'");
-		}
-	}
-
-	public void _testDelete() throws ApplicationException {
-		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
-				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
-				StorableObjectWrapper.COLUMN_CODENAME);
-		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
-				OperationSort.OPERATION_EQUALS,
-				new Short(ObjectEntities.PARAMETER_TYPE_CODE),
-				StorableObjectWrapper.COLUMN_CODENAME);
-		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
-		StorableObjectPool.delete(parameterTypes);
 	}
 
 }
