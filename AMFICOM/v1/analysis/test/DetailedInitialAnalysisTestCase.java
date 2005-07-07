@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.13 2005/07/05 13:33:10 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.14 2005/07/07 12:22:29 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/07/05 13:33:10 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/07 12:22:29 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -159,7 +159,14 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             timeAcc += dt;
         }
     }
+
     public final void testAnalysisDB()
+    throws IOException {
+    	double res = evaluateAnalysisDB(false);
+    	System.out.println("evaluateAnalysisDB = " + res);
+    }
+
+    public final double evaluateAnalysisDB(boolean verbose)
     throws IOException {
         File file = new File("test/testAnalysisDB.dat"); // FIXME
         FileReader fr = new FileReader(file);
@@ -229,40 +236,47 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 int rc = performTraceTest(fName,
                         etalons,
                         fails,
-                        true);
+                        verbose);
                 traceStatus[rc]++;
                 totalTraces++;
-                System.out.println("^^^"
-                        + " Tesing " + fName
-                        + " complete, rc = " + rc);
-                System.out.println("");
+                
+                if (verbose) {
+	                System.out.println("^^^"
+	                        + " Tesing " + fName
+	                        + " complete, rc = " + rc);
+	                System.out.println("");
+                }
             }
         }
-        System.out.println("Total number of traces : " + totalTraces);
-        System.out.println("Total fail counts:");
-        s = "Lost   events: ";
-        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
-            if (i != 0)
-                s += "; ";
-            s += fails.getLoss(i);
+        if (verbose) {
+	        System.out.println("Total number of traces : " + totalTraces);
+	        System.out.println("Total fail counts:");
+	        s = "Lost   events: ";
+	        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
+	            if (i != 0)
+	                s += "; ";
+	            s += fails.getLoss(i);
+	        }
+	        System.out.println(s);
+	        s = "New/Ch events: ";
+	        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
+	            if (i != 0)
+	                s += "; ";
+	            s += fails.getNew(i);
+	        }
+	        System.out.println(s);
+	        s = "Whole  traces: ";
+	        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
+	            if (i != 0)
+	                s += "; ";
+	            s += traceStatus[i];
+	        }
+	        System.out.println(s);
         }
-        System.out.println(s);
-        s = "New/Ch events: ";
-        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
-            if (i != 0)
-                s += "; ";
-            s += fails.getNew(i);
-        }
-        System.out.println(s);
-        s = "Whole  traces: ";
-        for (int i = 0; i < MAX_ERROR_CODE_P1; i++) {
-            if (i != 0)
-                s += "; ";
-            s += traceStatus[i];
-        }
-        System.out.println(s);
 
         assertTrue(totalTraces > 0);
+
+        double evaluationResult = 0.0;
 
         if (totalTraces > 0) {
             double weightedRoughness = 0;
@@ -281,45 +295,52 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             weightedRoughness *= 100.0 / totalTraces;
             sumRoughness *= 100.0 / totalTraces;
             failedTraces *= 100.0 / totalTraces;
-            System.out.println("Sum roughness %      : " + sumRoughness);
-            System.out.println("Weighted roughness % : " + weightedRoughness);
-            System.out.println("Failed traces %      : " + failedTraces);
+            if (verbose) {
+	            System.out.println("Sum roughness %      : " + sumRoughness);
+	            System.out.println("Weighted roughness % : " + weightedRoughness);
+	            System.out.println("Failed traces %      : " + failedTraces);
+            }
+            evaluationResult = weightedRoughness; // This is our criteria
         }
 
-        if (fails.getConnBeginPosNumber() > 0)
-            System.out.println("Connector Begin: "
-                    + fails.getAvConnBeginRoughness() + " ("
-                    + fails.getConnBeginPosNumber() + " records)");
-        if (fails.getConnEndPosNumber() > 0)
-            System.out.println("Connector End:   "
-                    + fails.getAvConnEndRoughness() + " ("
-                    + fails.getConnEndPosNumber() + " records)");
-        if (fails.getPositionNumber() > 0)
-            System.out.println("Other positions: "
-                    + fails.getAvPositionRoughness() + " ("
-                    + fails.getPositionNumber() + " records)");
+        if (verbose) {
+	        if (fails.getConnBeginPosNumber() > 0)
+	            System.out.println("Connector Begin: "
+	                    + fails.getAvConnBeginRoughness() + " ("
+	                    + fails.getConnBeginPosNumber() + " records)");
+	        if (fails.getConnEndPosNumber() > 0)
+	            System.out.println("Connector End:   "
+	                    + fails.getAvConnEndRoughness() + " ("
+	                    + fails.getConnEndPosNumber() + " records)");
+	        if (fails.getPositionNumber() > 0)
+	            System.out.println("Other positions: "
+	                    + fails.getAvPositionRoughness() + " ("
+	                    + fails.getPositionNumber() + " records)");
+	
+	        if (fails.getConnBeginPosNumber() > 0
+	                && fails.getConnEndPosNumber() > 0
+	                && fails.getPositionNumber() > 0) {
+	            System.out.println("Total roughness: " +
+	                    (         fails.getAvConnBeginRoughness()
+	                            + fails.getAvConnEndRoughness()
+	                            + fails.getAvPositionRoughness()
+	                    ));
+	        }
+	        System.out.println("Hash result:     "
+	        		+ Integer.toHexString(fails.getHash()));
+	        long time1 = System.currentTimeMillis();
+	        boolean printTiming = true;
+	        if (printTiming) {
+	            long dtAn = fails.getTimeAcc();
+	            System.out.println();
+	            System.out.println("--------------");
+	            System.out.println("Analysis time :  " + dtAn);
+	            System.out.println("TestCase time :  " + (time1 - time0 - dtAn));
+	            System.out.println("Total time    :  " + (time1 - time0));
+	        }
+        }
 
-        if (fails.getConnBeginPosNumber() > 0
-                && fails.getConnEndPosNumber() > 0
-                && fails.getPositionNumber() > 0) {
-            System.out.println("Total roughness: " +
-                    (         fails.getAvConnBeginRoughness()
-                            + fails.getAvConnEndRoughness()
-                            + fails.getAvPositionRoughness()
-                    ));
-        }
-        System.out.println("Hash result:     "
-        		+ Integer.toHexString(fails.getHash()));
-        long time1 = System.currentTimeMillis();
-        boolean printTiming = true;
-        if (printTiming) {
-            long dtAn = fails.getTimeAcc();
-            System.out.println();
-            System.out.println("--------------");
-            System.out.println("Analysis time :  " + dtAn);
-            System.out.println("TestCase time :  " + (time1 - time0 - dtAn));
-            System.out.println("Total time    :  " + (time1 - time0));
-        }
+        return evaluationResult;
     }
 
     private ToleranceSimpleReflectogramEvent[] loadEvents(
@@ -483,13 +504,13 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                 + " km=" + re[k].getBegin()*dxkm);
                 } else if (rcomp.getProbeIdByEtalonId(et) != k) {
                     // new event: etalon2probe mapping gives another probe event
-                    if (verbose)
-                        level = ets[i][et].getNewLevel();
+                	level = ets[i][et].getNewLevel();
                     if (re[k].getEventType() == SimpleReflectogramEvent.LINEAR) {
                         level += eventNewLinearForgive;
                         if (level > NO_ERROR)
                             level = NO_ERROR;
                     }
+                    if (verbose)
                         System.out.println("["+level+"]"
                                 + "new event   "
                                 //+ " # " + k
@@ -568,7 +589,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                 problem = "begin moved too much to left ";
                             if (dBeginS > dBMax)
                                 problem = "begin moved too much to right";
-                            if (problem != null) {
+                            if (problem != null && verbose) {
                                 System.out.println(problem
                                         + " T=" + re[k].getEventType()
                                         + " B=" + re[k].getBegin()
@@ -589,7 +610,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             // имеет асимпотики - лин. в нуле, sqrt на +inf
                             beginRoughness *= 1.0 / (1.0 + Math.sqrt(beginRoughness));
                             //System.out.println("beginRoughness = " + beginRoughness); // FIXME
-                            incRoughnessCounter(ets[i][et], re[k], dxkm, true, fails, beginRoughness);
+                            incRoughnessCounter(ets[i][et], re[k], dxkm,
+                            		true, fails, beginRoughness, verbose);
                         }
                         // -- end processing
                         if (ete.hasEndMin() || ete.hasEndMax()
@@ -607,7 +629,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                                 problem = "end   moved too much to left ";
                             if (dEndS > dEMax)
                                 problem = "end   moved too much to right";
-                            if (problem != null) {
+                            if (problem != null && verbose) {
                                 System.out.println("end   moved too much "
                                         + " T=" + re[k].getEventType()
                                         + " B=" + re[k].getBegin()
@@ -628,7 +650,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                             double endRoughness =
                                 Math.abs(dEndS) / (dEMax - dEMin);
                             endRoughness *= 1.0 / (1.0 + Math.sqrt(endRoughness));
-                            incRoughnessCounter(ets[i][et], re[k], dxkm, false, fails, endRoughness);
+                            incRoughnessCounter(ets[i][et], re[k], dxkm,
+                            		false, fails, endRoughness, verbose);
                         }
                     }
                 }
@@ -682,18 +705,21 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
     private void incRoughnessCounter(SimpleReflectogramEvent et,
             SimpleReflectogramEvent re, double dxkm,
-            boolean isBegin, FailCounter fails, double roughness0) {
+            boolean isBegin, FailCounter fails, double roughness0,
+            boolean verbose) {
         double roughness = roughness0 / (1.0 + Math.sqrt(roughness0));
         if (roughness > 0.1 && true) { // if verbose
             int etPos = isBegin ? et.getBegin() : et.getEnd();
             int rePos = isBegin ? re.getBegin() : re.getEnd();
-            System.out.println("incRoughness: " + roughness
-                    + " for " + (isBegin ? "begin" : "end  ")
-                    + " T=" + re.getEventType() + "/" + et.getEventType()
-                    + " etPos=" + etPos
-                    + " rePos=" + rePos
-                    + " km=" + rePos * dxkm
-                    );
+            if (verbose) {
+	            System.out.println("incRoughness: " + roughness
+	                    + " for " + (isBegin ? "begin" : "end  ")
+	                    + " T=" + re.getEventType() + "/" + et.getEventType()
+	                    + " etPos=" + etPos
+	                    + " rePos=" + rePos
+	                    + " km=" + rePos * dxkm
+	                    );
+            }
         }
         if (isBegin) {
             if (et.getEventType()
