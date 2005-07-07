@@ -55,7 +55,6 @@ idl: .idl
 		-pkgPrefix administration com.syrus.AMFICOM \
 		-pkgPrefix map com.syrus.AMFICOM \
 		$(IDLDIR)/map.idl
-	find $(SRCDIR)/com/syrus/AMFICOM/map/corba -type f -name '*DefaultFactory.java' -exec $(RM) \{\} \;
 	touch $@
 
 .PHONY: idlclean

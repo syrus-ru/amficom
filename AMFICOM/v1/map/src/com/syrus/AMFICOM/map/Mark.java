@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.49 2005/07/04 13:00:48 bass Exp $
+ * $Id: Mark.java,v 1.50 2005/07/07 13:12:30 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/04 13:00:48 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/07 13:12:30 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -96,7 +96,7 @@ public final class Mark extends AbstractNode {
 		}
 	}
 
-	Mark(final IdlMark mt) throws CreateObjectException {
+	public Mark(final IdlMark mt) throws CreateObjectException {
 		super(mt);
 		super.name = mt.name;
 		super.description = mt.description;

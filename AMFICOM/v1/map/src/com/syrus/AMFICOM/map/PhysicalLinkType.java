@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.53 2005/07/03 19:16:28 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.54 2005/07/07 13:12:30 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/07 13:12:30 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -101,7 +101,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 	}
 
-	PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
+	public PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
 		try {
 			this.fromTransferable(pltt);
 		} catch (ApplicationException ae) {

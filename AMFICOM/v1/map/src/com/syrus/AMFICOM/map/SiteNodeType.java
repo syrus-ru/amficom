@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.46 2005/07/03 19:16:28 bass Exp $
+ * $Id: SiteNodeType.java,v 1.47 2005/07/07 13:12:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/07 13:12:30 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -96,7 +96,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		}
 	}
 
-	SiteNodeType(final IdlSiteNodeType sntt) throws CreateObjectException {
+	public SiteNodeType(final IdlSiteNodeType sntt) throws CreateObjectException {
 		try {
 			this.fromTransferable(sntt);
 		} catch (ApplicationException ae) {

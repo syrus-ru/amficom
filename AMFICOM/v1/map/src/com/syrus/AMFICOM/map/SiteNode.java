@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.53 2005/07/04 13:00:48 bass Exp $
+ * $Id: SiteNode.java,v 1.54 2005/07/07 13:12:30 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/04 13:00:48 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/07 13:12:30 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -104,7 +104,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	SiteNode(final IdlSiteNode snt) throws CreateObjectException {
+	public SiteNode(final IdlSiteNode snt) throws CreateObjectException {
 		super(snt);
 		super.name = snt.name;
 		super.description = snt.description;
