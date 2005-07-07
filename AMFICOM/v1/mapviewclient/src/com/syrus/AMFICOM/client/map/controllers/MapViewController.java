@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.32 2005/06/24 13:04:41 krupenn Exp $
+ * $Id: MapViewController.java,v 1.33 2005/07/07 11:44:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/06/24 13:04:41 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/07 11:44:36 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -119,6 +119,10 @@ public final class MapViewController {
 	private MapView mapView;
 
 	private NetMapViewer netMapViewer;
+
+	private static long time1 = 0L;
+	private static long time2 = 0L;
+	private static long time3 = 0L;
 
 	/**
 	 * Приветный конструктор. Использовать 
@@ -561,6 +565,42 @@ public final class MapViewController {
 	 */
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
+	}
+
+	public static long getTime1() {
+		return time1;
+	}
+
+	public static void addTime1(long difftime) {
+		MapViewController.time1 += difftime;
+	}
+
+	public static void nullTime1() {
+		time1 = 0L;
+	}
+
+	public static long getTime2() {
+		return time2;
+	}
+
+	public static void addTime2(long difftime) {
+		MapViewController.time2 += difftime;
+	}
+
+	public static void nullTime2() {
+		time2 = 0L;
+	}
+
+	public static long getTime3() {
+		return time3;
+	}
+
+	public static void addTime3(long difftime) {
+		MapViewController.time3 += difftime;
+	}
+
+	public static void nullTime3() {
+		time3 = 0L;
 	}
 
 /* from SiteNode
