@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.1 2005/07/07 13:00:19 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.2 2005/07/07 13:05:57 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -31,7 +31,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 13:00:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/07 13:05:57 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -170,7 +170,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
     	System.out.println("evaluateAnalysisDB = " + res);
     }
 
-    public final double evaluateAnalysisDB(AnalysisParameters ap,
+    public static final double evaluateAnalysisDB(AnalysisParameters ap,
     		boolean verbose)
     throws IOException {
         File file = new File("test/testAnalysisDB.dat"); // FIXME
@@ -349,7 +349,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         return evaluationResult;
     }
 
-    private ToleranceSimpleReflectogramEvent[] loadEvents(
+    private static ToleranceSimpleReflectogramEvent[] loadEvents(
             BufferedReader br) throws IOException {
 //        ToleranceSimpleReflectogramEvent[] ret =
 //            new ToleranceSimpleReflectogramEvent[nEvents];
@@ -418,7 +418,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             ret.toArray(new ToleranceSimpleReflectogramEvent[ret.size()]);
     }
 
-    private int performTraceTest(String fName,
+    private static int performTraceTest(String fName,
             ToleranceSimpleReflectogramEvent[][] ets,
             FailCounter fails, AnalysisParameters ap, boolean verbose) {
         String fPrefix = "test/ref/";
@@ -706,7 +706,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
         return bestWorstLevel;
     }
 
-    private void incRoughnessCounter(SimpleReflectogramEvent et,
+    private static void incRoughnessCounter(SimpleReflectogramEvent et,
             SimpleReflectogramEvent re, double dxkm,
             boolean isBegin, FailCounter fails, double roughness0,
             boolean verbose) {
