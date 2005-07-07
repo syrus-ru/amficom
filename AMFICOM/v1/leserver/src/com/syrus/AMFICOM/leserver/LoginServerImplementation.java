@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.26 2005/06/25 18:05:56 bass Exp $
+ * $Id: LoginServerImplementation.java,v 1.27 2005/07/07 19:42:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/06/25 18:05:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/07 19:42:26 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class LoginServerImplementation extends LoginServerPOA {
@@ -53,13 +53,10 @@ final class LoginServerImplementation extends LoginServerPOA {
 	private UserLoginDatabase userLoginDatabase;
 	private ShadowDatabase shadowDatabase;
 
-	private ORB orb;
-
-	protected LoginServerImplementation(final ORB orb) {
+	protected LoginServerImplementation() {
 		this.tc = new TypicalCondition("", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.shadowDatabase = new ShadowDatabase();
-		this.orb = orb;
 	}
 
 	public IdlSessionKey login(String login, String password, IdlIdentifierHolder userIdTH)
@@ -122,24 +119,29 @@ final class LoginServerImplementation extends LoginServerPOA {
 	 * TODO Implement check user access on domains and return only accesible for the user.
 	 */
 	public IdlDomain[] transmitAvailableDomains(IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		SessionKey sessionKey = new SessionKey(sessionKeyT);
-		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
+		final SessionKey sessionKey = new SessionKey(sessionKeyT);
+		final UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin == null)
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_LOGGED_IN, CompletionStatus.COMPLETED_YES, ErrorMessages.NOT_LOGGED_IN);
 
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
 		try {
-			Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
+			final Set domains = StorableObjectPool.getStorableObjectsByCondition(ec, true, true);
 
 			if (domains.size() == 0)
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_NO_DOMAINS_AVAILABLE,
 						CompletionStatus.COMPLETED_YES,
 						"No domains found for user '" + userLogin.getUserId() + "'");
 
-			IdlDomain[] domainsT = new IdlDomain[domains.size()];
+			final ORB orb = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer().getOrb();
+			final IdlDomain[] domainsT = new IdlDomain[domains.size()];
 			int i = 0;
-			for (Iterator it = domains.iterator(); it.hasNext(); i++)
-				domainsT[i] = ((Domain) it.next()).getTransferable(this.orb);
+			for (final Iterator it = domains.iterator(); it.hasNext(); i++) {
+				final Domain domain = (Domain) it.next();
+				Log.debugMessage("LoginServerImplementation.transmitAvailableDomains | Domain '" + domain.getId()
+						+ "', '" + domain.getName() + "'", Log.DEBUGLEVEL08);
+				domainsT[i] = domain.getTransferable(orb);
+			}
 			return domainsT;
 		}
 		catch (ApplicationException ae) {
@@ -148,8 +150,8 @@ final class LoginServerImplementation extends LoginServerPOA {
 	}
 
 	public void selectDomain(IdlSessionKey sessionKeyT, IdlIdentifier domainIdT) throws AMFICOMRemoteException {
-		SessionKey sessionKey = new SessionKey(sessionKeyT);
-		UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
+		final SessionKey sessionKey = new SessionKey(sessionKeyT);
+		final UserLogin userLogin = LoginProcessor.getUserLogin(sessionKey);
 		if (userLogin != null) {
 			userLogin.setDomainId(new Identifier(domainIdT));
 			try {

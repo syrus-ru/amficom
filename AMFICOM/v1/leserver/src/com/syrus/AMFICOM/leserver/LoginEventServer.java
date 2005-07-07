@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.20 2005/06/25 17:07:42 bass Exp $
+ * $Id: LoginEventServer.java,v 1.21 2005/07/07 19:42:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/25 17:07:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/07/07 19:42:26 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class LoginEventServer {
@@ -76,6 +76,7 @@ public final class LoginEventServer {
 		 * Add shutdown hook.
 		 */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				shutdown();
 			}
@@ -91,7 +92,7 @@ public final class LoginEventServer {
 		DatabaseContextSetup.initDatabaseContext();
 
 		/*	Retrieve info about server*/
-		Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		try {
 			final Server server = new Server(serverId);
 
@@ -113,7 +114,7 @@ public final class LoginEventServer {
 	
 			/*	Activate servants*/
 			final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new LoginServerImplementation(corbaServer.getOrb()), loginProcessCodename);
+			corbaServer.activateServant(new LoginServerImplementation(), loginProcessCodename);
 			corbaServer.activateServant(new EventServerImplementation(), eventProcessCodename);
 			corbaServer.printNamingContext();
 		}
