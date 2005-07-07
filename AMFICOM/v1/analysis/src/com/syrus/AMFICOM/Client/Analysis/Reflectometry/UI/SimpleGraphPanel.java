@@ -17,7 +17,7 @@ public class SimpleGraphPanel extends JPanel
 	protected Color traceColor; // color really used to paint graphic itself (shadowed color)
 
 	protected boolean weakColor;
-	
+
 	protected boolean showGraph = true;
 
 	protected double[] y; // array of graphic points
@@ -243,29 +243,16 @@ public class SimpleGraphPanel extends JPanel
 			//yArr[j] = Math.round((float )vy);
 		}
 		g.drawPolyline(xArr, yArr, N + 1);
-//		for (int j = 0; j < N; j++)
-//		{
-//			g.drawLine(
-//				(int)((j + x0    )*scaleX+1), (int)((maxY - y[j + i0] - top) * scaleY),
-//				(int)((j + x0 + 1)*scaleX+1), (int)((maxY - y[j + i0 + 1] - top) * scaleY));
-//		}
 	}
 
-	protected void paint_trace(Graphics g)
-	{
+	protected void paint_trace(Graphics g) {
 		if (!showGraph) {
 			return;
 		}
-
 		g.setColor(traceColor);
-
 		int iFrom = Math.max(0, -start);
 		int iTo = Math.min(end + 1, y.length) - start - 1;
 		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
-		
-//		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
-//			g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY),
-//				 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY));
 	}
 
 	public void paint(Graphics g)
