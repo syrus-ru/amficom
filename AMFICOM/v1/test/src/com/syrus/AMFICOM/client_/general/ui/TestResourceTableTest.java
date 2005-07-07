@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceTableTest.java,v 1.1 2004/12/23 12:52:33 cvsadmin Exp $
+ * $Id: TestResourceTableTest.java,v 1.1.1.1 2004/12/23 12:52:33 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author $Author: cvsadmin $
- * @version $Revision: 1.1 $, $Date: 2004/12/23 12:52:33 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2004/12/23 12:52:33 $
  * @module general_v1
  */
 public class TestResourceTableTest {

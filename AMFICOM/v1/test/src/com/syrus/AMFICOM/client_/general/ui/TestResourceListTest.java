@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceListTest.java,v 1.1 2005/01/14 11:10:28 cvsadmin Exp $
+ * $Id: TestResourceListTest.java,v 1.1.1.1 2005/01/14 11:10:28 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 
 /**
  * @author $Author: cvsadmin $
- * @version $Revision: 1.1 $, $Date: 2005/01/14 11:10:28 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/01/14 11:10:28 $
  * @module general_v1
  */
 public class TestResourceListTest {
