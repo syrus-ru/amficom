@@ -9,8 +9,7 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.*;
 
-// XXX: from analysis_v1's point of view, superclass for MapMarkersPanel need not extend ThresholdsPanel and can extend ReflectogramEventsPanel instead
-public class MapMarkersPanel extends ThresholdsPanel
+public class MapMarkersPanel extends ReflectogramEventsPanel
 {
 	protected Identifier monitored_element_id = null;
 	protected Identifier scheme_path_id = null;
@@ -30,9 +29,6 @@ public class MapMarkersPanel extends ThresholdsPanel
 	public MapMarkersPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);
-
-		edit_thresholds = false;
-        paint_thresholds = false;
 
 		try
 		{

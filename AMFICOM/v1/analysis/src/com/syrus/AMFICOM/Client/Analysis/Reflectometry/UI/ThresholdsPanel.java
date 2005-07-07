@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 /**
  * Отображает пороги
  */
-public class ThresholdsPanel extends ReflectogramEventsPanel
+public class ThresholdsPanel extends MapMarkersPanel
 {
 	protected boolean paint_thresholds = true;
 	protected boolean edit_thresholds = true;

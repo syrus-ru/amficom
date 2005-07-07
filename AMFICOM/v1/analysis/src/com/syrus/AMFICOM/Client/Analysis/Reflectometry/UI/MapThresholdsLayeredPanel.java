@@ -27,8 +27,8 @@ public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 	public void addGraphPanel(SimpleGraphPanel panel)
 	{
 		super.addGraphPanel(panel);
-		if (panel instanceof MapMarkersPanel)
-			((MapMarkersPanel)panel).paint_thresholds =
+		if (panel instanceof ThresholdsPanel)
+			((ThresholdsPanel)panel).paint_thresholds =
 			((MapThresholdsToolBar)toolbar).showThresholdsButton.isSelected();
 	}
 
