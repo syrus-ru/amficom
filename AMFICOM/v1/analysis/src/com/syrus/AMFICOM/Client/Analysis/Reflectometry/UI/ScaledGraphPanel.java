@@ -1,7 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Stroke;
+import java.awt.event.MouseEvent;
 
 import javax.swing.UIManager;
 

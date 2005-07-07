@@ -1,12 +1,13 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 
 public final class PathElementsPanel extends AnalysisPanel

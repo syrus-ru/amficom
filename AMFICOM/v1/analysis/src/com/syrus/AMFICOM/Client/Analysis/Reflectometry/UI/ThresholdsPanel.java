@@ -1,15 +1,25 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Robot;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceRangeImplMTRSubrange;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.Thresh;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
