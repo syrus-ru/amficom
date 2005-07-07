@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.15 2005/07/04 11:57:47 bass Exp $
+# $Id: Makefile,v 1.16 2005/07/07 16:55:58 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,8 +14,6 @@ IDLDIR := ../idl/idl
 
 HOST = mongol
 SERVICE_NAME = mongol
-
-JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
