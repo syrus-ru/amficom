@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.9 2005/06/22 17:32:49 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.10 2005/07/07 19:40:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,15 @@ import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Verifiable;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.AMFICOM.mcm.corba.MCM;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 17:32:49 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/07 19:40:03 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -58,7 +60,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
-			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
+			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
 		}
 		catch (IllegalDataException e) {
 			// Never
@@ -69,7 +71,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 
 	public EventServer getEventServerReference() throws CommunicationException {
 		try {
-			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
+			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
 		}
 		catch (IllegalDataException e) {
 			// Never
@@ -87,11 +89,13 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 		return (MCM) reference;
 	}
 
+	@Override
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("MServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 		//@todo Generate event "Connection with servantName lost"
 	}
 
+	@Override
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("MServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);

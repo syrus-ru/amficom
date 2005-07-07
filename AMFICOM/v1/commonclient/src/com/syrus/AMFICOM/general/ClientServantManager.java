@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.6 2005/06/17 11:50:08 bass Exp $
+ * $Id: ClientServantManager.java,v 1.7 2005/07/07 19:39:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,18 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServerHelper;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:50:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/07 19:39:33 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
@@ -51,7 +55,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
-			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
+			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -63,7 +67,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 
 	public EventServer getEventServerReference() throws CommunicationException {
 		try {
-			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
+			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -75,7 +79,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 
 	public IdentifierGeneratorServer getIGSReference() throws CommunicationException {
 		try {
-			return (IdentifierGeneratorServer) super.getVerifiableReference(this.commonServerServantName);
+			return IdentifierGeneratorServerHelper.narrow(super.getVerifiableReference(this.commonServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -87,7 +91,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 
 	public CommonServer getServerReference() throws CommunicationException {
 		try {
-			return (CommonServer) super.getVerifiableReference(this.commonServerServantName);
+			return CommonServerHelper.narrow(super.getVerifiableReference(this.commonServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -97,6 +101,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		}
 	}
 
+	@Override
 	protected final void onLoseConnection(final String servantName) {
 		Log.debugMessage("AbstractClientServantManager.onLoseConnection() | Connection with '" + servantName + "' lost",
 				Log.DEBUGLEVEL08);
@@ -105,6 +110,7 @@ abstract class ClientServantManager extends VerifiedConnectionManager implements
 		 */
 	}
 
+	@Override
 	protected final void onRestoreConnection(final String servantName) {
 		Log.debugMessage("AbstractClientServantManager.onRestoreConnection() | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);

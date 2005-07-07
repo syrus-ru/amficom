@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.8 2005/06/16 10:46:10 bass Exp $
+ * $Id: CMServerServantManager.java,v 1.9 2005/07/07 19:39:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,16 +19,19 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.ServerConnectionManager;
 import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.CommonServerHelper;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/16 10:46:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/07 19:39:19 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
@@ -56,7 +59,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
-			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
+			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
 		}
 		catch (final IllegalDataException ide) {
 			// Never
@@ -67,7 +70,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 
 	public EventServer getEventServerReference() throws CommunicationException {
 		try {
-			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
+			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
 		}
 		catch (final IllegalDataException ide) {
 			// Never
@@ -86,7 +89,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 
 	public CommonServer getServerReference() throws CommunicationException {
 		try {
-			return (CommonServer) super.getVerifiableReference(this.mServerServantName);
+			return CommonServerHelper.narrow(super.getVerifiableReference(this.mServerServantName));
 		}
 		catch (final IllegalDataException ide) {
 			// Never
@@ -116,6 +119,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 * @todo Generate event "Connection lost" and ask Bass to do the same
 	 *       for MscharServer.
 	 */
+	@Override
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("CMServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Log.DEBUGLEVEL08);
 	}
@@ -126,6 +130,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 	 * @todo Generate event "Connection restored" and ask Bass to do the
 	 *       same for MscharServer.
 	 */
+	@Override
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("CMServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Log.DEBUGLEVEL08);

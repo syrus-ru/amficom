@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.1 2005/06/07 16:47:00 bass Exp $
+ * $Id: MscharServerServantManager.java,v 1.2 2005/07/07 19:40:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,16 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.leserver.corba.EventServer;
+import com.syrus.AMFICOM.leserver.corba.EventServerHelper;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/06/07 16:47:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/07 19:40:13 $
  * @module mscharserver_v1
  */
 public final class MscharServerServantManager extends RunnableVerifiedConnectionManager
@@ -54,7 +56,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 
 	public LoginServer getLoginServerReference() throws CommunicationException {
 		try {
-			return (LoginServer) super.getVerifiableReference(this.loginServerServantName);
+			return LoginServerHelper.narrow(super.getVerifiableReference(this.loginServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -66,7 +68,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 
 	public EventServer getEventServerReference() throws CommunicationException {
 		try {
-			return (EventServer) super.getVerifiableReference(this.eventServerServantName);
+			return EventServerHelper.narrow(super.getVerifiableReference(this.eventServerServantName));
 		} catch (final IllegalDataException ide) {
 			/*
 			 * Never.
@@ -89,6 +91,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 	 * @see com.syrus.AMFICOM.general.VerifiedConnectionManager#onLoseConnection(String)
 	 * @todo Generate event "Connection lost".
 	 */
+	@Override
 	protected void onLoseConnection(final String servantName) {
 		Log.debugMessage("MscharServerServantManager.onLoseConnection | Connection with '"
 				+ servantName
@@ -101,6 +104,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 	 * @see com.syrus.AMFICOM.general.VerifiedConnectionManager#onRestoreConnection(String)
 	 * @todo Generate event "Connection restored".
 	 */
+	@Override
 	protected void onRestoreConnection(final String servantName) {
 		Log.debugMessage("MscharServerServantManager.onRestoreConnection | Connection with '"
 				+ servantName
