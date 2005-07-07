@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.85 2005/07/03 19:16:30 bass Exp $
+ * $Id: MeasurementType.java,v 1.86 2005/07/07 17:58:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/07/03 19:16:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.86 $, $Date: 2005/07/07 17:58:18 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -196,11 +196,11 @@ public final class MeasurementType extends ActionType implements Namable {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
-				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET
-				&& this.measurementPortTypeIds != null && this.measurementPortTypeIds != Collections.EMPTY_SET;
+				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && !this.inParameterTypeIds.contains(null)
+				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET && !this.outParameterTypeIds.contains(null)
+				&& this.measurementPortTypeIds != null && this.measurementPortTypeIds != Collections.EMPTY_SET && !this.measurementPortTypeIds.contains(null);
 	}
-	
+
 	public Set<Identifier> getInParameterTypeIds() {
 		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}

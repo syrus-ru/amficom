@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.41 2005/07/06 19:10:54 bass Exp $
+ * $Id: ModelingType.java,v 1.42 2005/07/07 17:58:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/06 19:10:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/07/07 17:58:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -188,10 +188,11 @@ public final class ModelingType extends ActionType {
 	 */
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET
-			&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET;
+		return super.isValid()
+				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && !this.inParameterTypeIds.contains(null)
+				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET && !this.outParameterTypeIds.contains(null);
 	}
-	
+
 	public Set<Identifier> getInParameterTypeIds() {
 		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}

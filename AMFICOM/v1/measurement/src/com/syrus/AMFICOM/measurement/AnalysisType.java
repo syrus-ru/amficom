@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.82 2005/07/03 19:16:31 bass Exp $
+ * $Id: AnalysisType.java,v 1.83 2005/07/07 17:58:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/07/03 19:16:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/07/07 17:58:18 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -220,13 +220,14 @@ public final class AnalysisType extends ActionType {
 
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET &&
-			this.criteriaParameterTypeIds != null && this.criteriaParameterTypeIds != Collections.EMPTY_SET &&
-			this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET &&
-			this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET &&
-			this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET;
+		return super.isValid()
+				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && !this.inParameterTypeIds.contains(null)
+				&& this.criteriaParameterTypeIds != null && this.criteriaParameterTypeIds != Collections.EMPTY_SET && !this.criteriaParameterTypeIds.contains(null)
+				&& this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET && !this.etalonParameterTypeIds.contains(null)
+				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET && !this.outParameterTypeIds.contains(null)
+				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET && !this.measurementTypeIds.contains(null);
 	}
-	
+
 	public Set<Identifier> getInParameterTypeIds() {
 		return Collections.unmodifiableSet(this.inParameterTypeIds);
 	}
