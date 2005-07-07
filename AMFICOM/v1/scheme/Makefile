@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.28 2005/07/07 15:52:11 bass Exp $
+# $Id: Makefile,v 1.29 2005/07/07 16:10:02 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -10,8 +10,6 @@ LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.bz2
 
 IDLDIR := ../idl/idl
-
-JAVAC=javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
