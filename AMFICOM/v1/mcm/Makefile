@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.63 2005/07/04 11:57:48 bass Exp $
+# $Id: Makefile,v 1.64 2005/07/07 16:50:36 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,8 +14,6 @@ IDLDIR := ../idl/idl
 
 HOST = mongol
 SERVICE_NAME = mongol
-
-JAVAC=javac
 
 TRANSCEIVER_DIR := ./transceiver
 
