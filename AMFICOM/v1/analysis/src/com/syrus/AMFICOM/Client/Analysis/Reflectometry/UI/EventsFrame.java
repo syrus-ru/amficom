@@ -421,6 +421,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
             res.initGeneral(ev, nPri + 1, resKm, sigma);
             tModel.addObject(res);
 		}
+		updateTableModel();
 		jTable.updateUI();
 	}
 	
