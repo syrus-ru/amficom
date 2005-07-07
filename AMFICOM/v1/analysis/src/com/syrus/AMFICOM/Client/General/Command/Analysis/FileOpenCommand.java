@@ -36,7 +36,7 @@ public class FileOpenCommand extends AbstractCommand
     public static BellcoreStructure readTraceFromFile(File file) {
         TraceReader tr = new TraceReader();
         BellcoreStructure bs = null;
-        System.out.println("FileName: " + file.getName());
+        //System.out.println("FileName: " + file.getName());
         try
         {
             bs = tr.getData(file);
