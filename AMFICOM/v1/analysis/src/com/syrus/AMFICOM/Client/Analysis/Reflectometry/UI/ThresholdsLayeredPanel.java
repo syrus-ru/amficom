@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Map;
 

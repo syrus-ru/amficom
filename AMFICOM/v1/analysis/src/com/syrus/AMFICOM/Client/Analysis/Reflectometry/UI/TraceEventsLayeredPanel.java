@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
