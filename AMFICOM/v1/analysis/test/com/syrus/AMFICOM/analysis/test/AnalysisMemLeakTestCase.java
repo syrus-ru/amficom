@@ -1,5 +1,6 @@
+package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.3 2005/06/30 16:20:01 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.1 2005/07/07 13:00:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.

@@ -1,5 +1,6 @@
+package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.8 2005/07/06 16:29:00 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.1 2005/07/07 13:00:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.

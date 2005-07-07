@@ -1,5 +1,6 @@
+package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.15 2005/07/07 12:27:35 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.1 2005/07/07 13:00:19 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +31,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/07/07 12:27:35 $
+ * @version $Revision: 1.1 $, $Date: 2005/07/07 13:00:19 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {

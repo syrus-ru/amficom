@@ -1,6 +1,7 @@
+package com.syrus.AMFICOM.analysis.test;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 /*-
- * $Id: ToleranceSimpleReflectogramEvent.java,v 1.1 2005/06/01 07:20:19 saa Exp $
+ * $Id: ToleranceSimpleReflectogramEvent.java,v 1.1 2005/07/07 13:00:19 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
