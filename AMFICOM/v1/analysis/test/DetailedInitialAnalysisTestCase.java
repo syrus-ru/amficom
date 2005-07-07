@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.14 2005/07/07 12:22:29 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.15 2005/07/07 12:27:35 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/07/07 12:22:29 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/07 12:27:35 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -162,11 +162,15 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
     public final void testAnalysisDB()
     throws IOException {
-    	double res = evaluateAnalysisDB(false);
+    	AnalysisParameters ap = new AnalysisParameters(
+                A_PARAMS,
+                ClientAnalysisManager.getDefaultAPClone());
+    	double res = evaluateAnalysisDB(ap, true);
     	System.out.println("evaluateAnalysisDB = " + res);
     }
 
-    public final double evaluateAnalysisDB(boolean verbose)
+    public final double evaluateAnalysisDB(AnalysisParameters ap,
+    		boolean verbose)
     throws IOException {
         File file = new File("test/testAnalysisDB.dat"); // FIXME
         FileReader fr = new FileReader(file);
@@ -236,6 +240,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 int rc = performTraceTest(fName,
                         etalons,
                         fails,
+                        ap,
                         verbose);
                 traceStatus[rc]++;
                 totalTraces++;
@@ -414,16 +419,13 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 
     private int performTraceTest(String fName,
             ToleranceSimpleReflectogramEvent[][] ets,
-            FailCounter fails, boolean verbose) {
+            FailCounter fails, AnalysisParameters ap, boolean verbose) {
         String fPrefix = "test/ref/";
         boolean compareBeginEnd = true;
 
         BellcoreStructure bs = FileOpenCommand.readTraceFromFile(
                 new File(fPrefix + fName));
         double dxkm = bs.getResolution() / 1000;
-        AnalysisParameters ap = new AnalysisParameters(
-                A_PARAMS,
-                ClientAnalysisManager.getDefaultAPClone());
         long t0 = System.currentTimeMillis();
         ReliabilitySimpleReflectogramEvent re[] =
             	(ReliabilitySimpleReflectogramEvent[])CoreAnalysisManager.
