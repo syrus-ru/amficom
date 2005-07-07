@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.12 2005/06/23 08:26:05 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.13 2005/07/07 11:45:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/23 08:26:05 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/07 11:45:15 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -156,6 +156,10 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		NodeLink nodeLink = (NodeLink )mapElement;
 		
+		long f;
+		long d;
+		f = System.currentTimeMillis();
+
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
 
@@ -177,7 +181,15 @@ public final class NodeLinkController extends AbstractLinkController {
 				basistroke.getDashArray(), 
 				basistroke.getDashPhase());
 
+		d = System.currentTimeMillis();
+		MapViewController.addTime1(d - f);
+		f = System.currentTimeMillis();
+
 		paint(nodeLink, g, visibleBounds, str, color);
+
+		d = System.currentTimeMillis();
+		MapViewController.addTime2(d - f);
+		f = System.currentTimeMillis();
 
 		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 		Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
@@ -224,6 +236,8 @@ public final class NodeLinkController extends AbstractLinkController {
 					centerX,
 					centerY);
 		}
+		d = System.currentTimeMillis();
+		MapViewController.addTime3(d - f);
 	}
 
 	/**
