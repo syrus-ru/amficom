@@ -5,8 +5,6 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDLDIR := ../idl/idl
 
-JAVAC=javac
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)
@@ -19,7 +17,7 @@ XMLBEANSCLASSPATH=$(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
 LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
 
-SCOMP=$(shell which scomp)
+SCOMP=$(shell which scomp 2>/dev/null)
 ifeq ($(SCOMP),)
 SCOMP=$(XMLBEANS_HOME)/bin/scomp
 endif
@@ -66,9 +64,9 @@ idlclean:
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) .idl
+.corba: $(CLASSDIR) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java
 	touch $@
@@ -97,9 +95,7 @@ $(LIBNAME_GENERALXML):
 
 
 
-$(SRCDIR):
 $(CLASSDIR):
-$(LIBDIR):
 	mkdir -p $@
 
 .PHONY: clean
