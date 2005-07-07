@@ -5,8 +5,6 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDLDIR := ../idl/idl
 
-JAVAC=javac
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,IDLJ)

@@ -8,8 +8,6 @@ IDLDIR := ../idl/idl
 HOST = aldan
 SERVICE_NAME = hodja
 
-JAVAC=javac
-
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
 	-compile=false \
@@ -25,6 +23,7 @@ JPUB_FLAGS = \
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
 
 
@@ -78,9 +77,9 @@ idlclean:
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) .idl
+.corba: $(CLASSDIR) .idl .ora
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
