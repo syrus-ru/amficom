@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.121 2005/07/04 15:23:09 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.122 2005/07/07 17:57:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/07/04 15:23:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.122 $, $Date: 2005/07/07 17:57:39 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -946,14 +946,16 @@ public abstract class StorableObjectPool {
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable: dependencies) {
-		StorableObject dependencyObject = null;
+			assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
+
+			StorableObject dependencyObject = null;
 			if (identifiable instanceof Identifier)
 				dependencyObject = getStorableObject((Identifier) identifiable, false);
 			else if (identifiable instanceof StorableObject)
 				dependencyObject = (StorableObject) identifiable;
 			else
 				throw new IllegalDataException("dependency for object '" + id
-						+ "' neither Identifier nor StorableObject");
+						+ "' neither Identifier nor StorableObject -- " + identifiable.getClass().getName());
 
 			if (dependencyObject != null)
 				this.checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
@@ -1125,8 +1127,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.121 $, $Date: 2005/07/04 15:23:09 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.122 $, $Date: 2005/07/07 17:57:39 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
