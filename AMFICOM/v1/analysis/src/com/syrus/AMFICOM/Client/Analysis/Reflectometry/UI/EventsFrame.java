@@ -426,8 +426,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	
 	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
 	{
-        int viewMode;
-
 		public Component getTableCellRendererComponent(	JTable table1,
 														Object value,
 														boolean isSelected1,
@@ -555,12 +553,11 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
     	
     	if (showPrimary && showEtalon) {
     		view.setViewMode(TableView.COMP);
-    	} else if (showPrimary) {
-            view.setViewMode(TableView.PRIM);
     	} else if (showEtalon) {
             view.setViewMode(TableView.ETAL);
-    	} else 
-    		return;
+    	} else {
+            view.setViewMode(TableView.PRIM);
+    	}
     	setTableModel();
     }
 
