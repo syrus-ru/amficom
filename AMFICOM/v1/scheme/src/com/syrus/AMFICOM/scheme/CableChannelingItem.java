@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.34 2005/07/03 19:16:20 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.35 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.35 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -125,7 +125,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	/**
 	 * @param transferable
 	 */
-	CableChannelingItem(final IdlCableChannelingItem transferable) {
+	public CableChannelingItem(final IdlCableChannelingItem transferable) {
 		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLECHANNELINGITEM_CODE);
 		fromTransferable(transferable);
 	}

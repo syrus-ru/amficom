@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.43 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemePath.java,v 1.44 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -117,7 +117,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemePath(final IdlSchemePath transferable) throws CreateObjectException {
+	public SchemePath(final IdlSchemePath transferable) throws CreateObjectException {
 		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
 		fromTransferable(transferable);
 	}

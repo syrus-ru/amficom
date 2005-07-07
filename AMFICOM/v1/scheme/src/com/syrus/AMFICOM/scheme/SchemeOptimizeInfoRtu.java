@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.6 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.7 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtu extends AbstractCloneableStorableObject {
 	private static final long serialVersionUID = 6687067380421014690L;
 
-	@SuppressWarnings("unusedThrown")
+	public @SuppressWarnings("unusedThrown")
 	SchemeOptimizeInfoRtu(@SuppressWarnings("unusedArgument") final IdlSchemeOptimizeInfoRtu transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}

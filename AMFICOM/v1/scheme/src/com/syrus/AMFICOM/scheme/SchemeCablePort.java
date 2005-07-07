@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.39 2005/07/04 11:33:30 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.40 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/07/04 11:33:30 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -100,7 +100,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeCablePort(final IdlSchemeCablePort transferable) throws CreateObjectException {
+	public SchemeCablePort(final IdlSchemeCablePort transferable) throws CreateObjectException {
 		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLEPORT_CODE);
 		fromTransferable(transferable);
 	}

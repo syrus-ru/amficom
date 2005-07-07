@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.43 2005/07/06 13:25:32 max Exp $
+ * $Id: SchemeCableThread.java,v 1.44 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.43 $, $Date: 2005/07/06 13:25:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -122,7 +122,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeCableThread(final IdlSchemeCableThread transferable) throws CreateObjectException {
+	public SchemeCableThread(final IdlSchemeCableThread transferable) throws CreateObjectException {
 		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLETHREAD_CODE);
 		fromTransferable(transferable);
 	}

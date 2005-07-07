@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.44 2005/07/03 19:16:21 bass Exp $
+ * $Id: SchemeElement.java,v 1.45 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/03 19:16:21 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -151,7 +151,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeElement(final IdlSchemeElement transferable) throws CreateObjectException {
+	public SchemeElement(final IdlSchemeElement transferable) throws CreateObjectException {
 		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEELEMENT_CODE);
 		fromTransferable(transferable);
 	}

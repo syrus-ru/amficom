@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.41 2005/07/06 13:25:32 max Exp $
+ * $Id: SchemeDevice.java,v 1.42 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.41 $, $Date: 2005/07/06 13:25:32 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -115,7 +115,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param transferable
 	 * @throws CreateObjectException
 	 */
-	SchemeDevice(final IdlSchemeDevice transferable) throws CreateObjectException {
+	public SchemeDevice(final IdlSchemeDevice transferable) throws CreateObjectException {
 		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
 		fromTransferable(transferable);
 	}

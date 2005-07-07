@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.6 2005/06/25 17:07:43 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.7 2005/07/07 15:52:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoSwitch;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/25 17:07:43 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/07 15:52:10 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitch extends AbstractCloneableStorableObject {
 	private static final long serialVersionUID = 2583191675321445786L;
 
-	@SuppressWarnings("unusedThrown")
+	public @SuppressWarnings("unusedThrown")
 	SchemeOptimizeInfoSwitch(@SuppressWarnings("unusedArgument") final IdlSchemeOptimizeInfoSwitch transferable) throws CreateObjectException {
 		throw new UnsupportedOperationException();
 	}
