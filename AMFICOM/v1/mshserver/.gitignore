@@ -1,6 +1,5 @@
-.classpath
-.project
 .settings
+.idl
 .corba
 .mach
 *.jar
