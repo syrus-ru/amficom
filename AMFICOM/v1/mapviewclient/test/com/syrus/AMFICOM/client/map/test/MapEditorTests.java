@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTests.java,v 1.3 2005/07/03 13:56:51 krupenn Exp $
+ * $Id: MapEditorTests.java,v 1.4 2005/07/07 11:43:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,6 +38,9 @@ public class MapEditorTests {
 		
 		suite.addTestSuite(PlaceSchemeElementCommandTestCase.class);
 		suite.addTestSuite(PlaceSchemeCableLinkCommandNoCCITestCase.class);
+		suite.addTestSuite(PlaceSchemeCableLinkCommandWithCCITestCase.class);
+		suite.addTestSuite(BindPhysicalNodeToSiteCommandBundleTestCase.class);
+		suite.addTestSuite(BindUnboundLinkToPhysicalLinkCommandBundleTestCase.class);
 
 		TestSetup wrapper = new TestSetup(suite) {
 			protected void setUp() {
