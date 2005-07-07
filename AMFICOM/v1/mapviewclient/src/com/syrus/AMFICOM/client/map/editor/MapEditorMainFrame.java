@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.45 2005/06/16 10:57:20 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.46 2005/07/07 11:47:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,7 +66,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.45 $, $Date: 2005/06/16 10:57:20 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/07 11:47:05 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -107,10 +107,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	}
 
 	public void disposeModule() {
-		super.disposeModule();
 		if(getMapFrame() != null)
 			getMapFrame().saveConfig();
 		setContext(null);
+		super.disposeModule();
 	}
 
 	protected void initModule() {
