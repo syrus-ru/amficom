@@ -260,13 +260,11 @@ public class ThresholdsPanel extends MapMarkersPanel
 
 		paint_scale_digits(g);
 
-		if (showAll) {
-			if (paint_thresholds) {
-				if(isToPaintAllThresholds())
-					paintAllThresholds(g, null);
-				else
-					paintOneThreshold(g, null);
-			}
+		if (paint_thresholds) {
+			if(isToPaintAllThresholds())
+				paintAllThresholds(g, null);
+			else
+				paintOneThreshold(g, null);
 		}
 	}
 
