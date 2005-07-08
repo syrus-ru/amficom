@@ -7,10 +7,11 @@ TARGET_CLASS_LIST=src_mapviewclient.txt
 TARGET_SRC=$(LIBSRC)\mapviewclientsource.zip
 TARGET_DOC=$(LIBDOC)\mapviewclientdoc.zip
 
-SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\admin.jar;$(LIB)\resource.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\measurement.jar;$(LIB)\map.jar;$(LIB)\scheme.jar;$(LIB)\mapview.jar;$(LIB)\csbridge.jar;$(LIB)\commonclient.jar;$(LIB)\mapclient.jar;$(LIB)\schemeclient.jar;$(LIB)\generalxml.jar;$(LIB)\mapxml.jar
+SERVERCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\event.jar;$(LIB)\admin.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\measurement.jar;$(LIB)\resource.jar;$(LIB)\scheme.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\generalxml.jar;$(LIB)\mapxml.jar
+CLIENTSERVERCP=$(LIB)\leserver_interface.jar;$(LIB)\cmserver_interface.jar;$(LIB)\mscharserver_interface.jar;$(LIB)\csbridge.jar
+CLIENTCP=$(LIB)\filterclient.jar;$(LIB)\commonclient.jar;$(LIB)\generalclient.jar;$(LIB)\dadara.jar;$(LIB)\schemeclient.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\mapperservlet.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(XMLBEANSCP)
+CLASSPATH=$(SERVERCP):$(CLIENTSERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(XMLBEANSCP)
 
 .PHONY:	$(TARGET)
 
@@ -28,6 +29,7 @@ impl:
 		-sourcepath $(SRC) \
 		src\com\syrus\AMFICOM\client\model\*.java \
 		src\com\syrus\AMFICOM\client\map\*.java \
+		src\com\syrus\AMFICOM\client\map\cache\*.java \
 		src\com\syrus\AMFICOM\client\map\command\*.java \
 		src\com\syrus\AMFICOM\client\map\command\action\*.java \
 		src\com\syrus\AMFICOM\client\map\command\editor\*.java \
