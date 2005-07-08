@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.75 2005/07/06 10:33:20 saa Exp $
+ * $Id: Heap.java,v 1.76 2005/07/08 10:08:37 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
  
 package com.syrus.AMFICOM.Client.Analysis;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,7 +28,9 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
+import com.syrus.AMFICOM.analysis.TraceAndMTAE;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -78,7 +80,7 @@ import com.syrus.util.Log;
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.75 $, $Date: 2005/07/06 10:33:20 $
+ * @version $Revision: 1.76 $, $Date: 2005/07/08 10:08:37 $
  * @module
  */
 public class Heap
@@ -95,7 +97,8 @@ public class Heap
     private static AnalysisParameters currentAP;
 	private static AnalysisParameters defaultAP;
 	private static AnalysisParameters initialAP;
-	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
+	//private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
+	private static HashMap tAMs = new HashMap();	// <TraceAndMTAE>, *
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
@@ -166,35 +169,60 @@ public class Heap
         return refAnalysisPrimary;
     }
 
+    public static TraceAndMTAE getAnyTamByKey(String key) {
+    	return (TraceAndMTAE) tAMs.get(key);
+    }
+    private static void setAnyTamByKey(String key, TraceAndMTAE tam) {
+    	tAMs.put(key, tam);
+    }
+    private static void removeAnyTamBykey(String key) {
+    	tAMs.remove(key);
+    }
+
     public static BellcoreStructure getAnyBSTraceByKey(String key) {
-        return (BellcoreStructure) bsHash.get(key);
+    	TraceAndMTAE tam = getAnyTamByKey(key);
+        return tam != null ? tam.getBS() : null;
     }
 
     public static BellcoreStructure getBSPrimaryTrace() {
-        return (BellcoreStructure) bsHash.get(PRIMARY_TRACE_KEY);
+        return getAnyBSTraceByKey(PRIMARY_TRACE_KEY);
     }
 
     public static void setBSPrimaryTrace(BellcoreStructure primaryTrace) {
-        bsHash.put(PRIMARY_TRACE_KEY, primaryTrace);
+    	setAnyTamByKey(PRIMARY_TRACE_KEY, new TraceAndMTAE(
+    			primaryTrace,
+    			getMinuitAnalysisParams()));
+    }
+
+    public static ModelTraceAndEvents getAnyMTAE(String key) {
+    	if (key.equals(PRIMARY_TRACE_KEY)) {
+    		return getMTAEPrimary();
+    	} else if (key.equals(ETALON_TRACE_KEY)) {
+    		return getMTMEtalon() != null ? getMTMEtalon().getMTAE() : null;
+    	} else {
+    		return getAnyTamByKey(key) != null ? getAnyTamByKey(key).getMTAE() : null;
+    	}
     }
 
     public static BellcoreStructure getBSEtalonTrace() {
-        return (BellcoreStructure) bsHash.get(ETALON_TRACE_KEY);
+        return getAnyBSTraceByKey(ETALON_TRACE_KEY);
     }
 
     public static void setBSEtalonTrace(BellcoreStructure etalonTrace) {
         if (etalonTrace != null)
-            bsHash.put(ETALON_TRACE_KEY, etalonTrace);
+        	setAnyTamByKey(ETALON_TRACE_KEY, new TraceAndMTAE(
+        			etalonTrace,
+        			getMinuitAnalysisParams()));
         else
-            bsHash.remove(ETALON_TRACE_KEY);
+        	removeAnyTamBykey(ETALON_TRACE_KEY);
     }
 
     public static BellcoreStructure getBSReferenceTrace() {
-        return (BellcoreStructure) bsHash.get(REFERENCE_TRACE_KEY);
+        return getAnyBSTraceByKey(REFERENCE_TRACE_KEY);
     }
 
     public static boolean hasSecondaryBSKey(String id) {
-        return bsHash.containsKey(id);
+        return tAMs.containsKey(id);
     }
 
     /**
@@ -259,11 +287,11 @@ public class Heap
     // --------
 
     public static boolean hasEmptyAllBSMap() {
-        return bsHash.isEmpty();
+        return tAMs.isEmpty();
     }
 
     private static String getFirstSecondaryBSKey() {
-        Iterator it = bsHash.keySet().iterator();
+        Iterator it = tAMs.keySet().iterator();
         while (it.hasNext()) {
             String key = (String) it.next();
             if (key == PRIMARY_TRACE_KEY)
@@ -274,7 +302,7 @@ public class Heap
     }
 
     public static void updateCurrentTraceWhenBSRemoved() {
-        if (!bsHash.containsKey(currentTrace))
+        if (!tAMs.containsKey(currentTrace))
             currentTrace = getFirstSecondaryBSKey();
         if (currentTrace == null)
             currentTrace = PRIMARY_TRACE_KEY;
@@ -320,7 +348,11 @@ public class Heap
     }
 
     public static Collection getBSCollection() {
-    	return Collections.unmodifiableCollection(bsHash.values());
+    	ArrayList coll = new ArrayList(tAMs.size());
+    	for (Iterator it = tAMs.values().iterator(); it.hasNext();) {
+    		coll.add(((TraceAndMTAE)it.next()).getBS());
+    	}
+    	return coll;
     }
 
     public static double getMinTraceLevel() {
@@ -340,11 +372,11 @@ public class Heap
 	}
 
     private static void removeAllBS() {
-        bsHash = new HashMap();
+    	tAMs = new HashMap();
     }
 
     public static void removeAnyBSByName(String id) {
-        bsHash.remove(id);
+    	removeAnyTamBykey(id);
     }
 
     public static void setEtalonEtalonMetas(ParameterSet metas) {
@@ -445,6 +477,12 @@ public class Heap
 
     public static void notifyAnalysisParametersUpdated() {
         Log.debugMessage("Heap.notifyAnalysisParametersUpdated | ", Log.FINEST);
+        // notify tams
+    	for (Iterator it = tAMs.values().iterator(); it.hasNext();) {
+    		((TraceAndMTAE)it.next()).
+    				setAnalysisParameters(getMinuitAnalysisParams());
+    	}
+        // notify subscribers
         for (Iterator it = analysisParametersListeners.iterator(); it.hasNext(); )
             ((AnalysisParametersListener) it.next()).analysisParametersUpdated();
     }
@@ -454,6 +492,7 @@ public class Heap
         for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
             ((RefMismatchListener) it.next()).refMismatchCUpdated();
     }
+
     private static void notifyRefMismatchRemoved() {
         Log.debugMessage("Heap.notifyRefMismatchRemoved | ", Log.FINEST);
         for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
@@ -681,12 +720,16 @@ public class Heap
     }
 
     public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
-        bsHash.put(key, bs);
+    	tAMs.put(key, new TraceAndMTAE(
+    			bs,
+    			getMinuitAnalysisParams()));
         notifyBsHashAdd(key, bs);
     }
 
     public static void setBSReferenceTrace(BellcoreStructure bs) {
-        bsHash.put(REFERENCE_TRACE_KEY, bs);
+        tAMs.put(REFERENCE_TRACE_KEY, new TraceAndMTAE(
+        		bs,
+        		getMinuitAnalysisParams()));
         notifyBsHashAdd(REFERENCE_TRACE_KEY, bs);
     }
 

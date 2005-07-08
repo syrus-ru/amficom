@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.Identifier;
 
-public class MapMarkersPanel extends ReflectogramEventsPanel
+public class MapMarkersPanel extends ActiveReflectogramPanel
 {
 	protected Identifier monitored_element_id = null;
 	protected Identifier scheme_path_id = null;

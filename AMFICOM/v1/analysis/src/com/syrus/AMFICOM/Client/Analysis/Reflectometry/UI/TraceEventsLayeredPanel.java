@@ -46,7 +46,7 @@ implements PropertyChangeListener
 			for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 			{
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-				if (panel instanceof ReflectogramEventsPanel)
+				if (panel instanceof ReflectogramPanel)
 				{
 					if(rue.minTraceLevelChanged())
 					{
@@ -57,8 +57,9 @@ implements PropertyChangeListener
 		}
 	}
 
-	public void setGraphsShown (boolean b)
+	public void updDrawGraphs()
 	{
+		boolean b = graphsShowDesired();
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
@@ -67,42 +68,29 @@ implements PropertyChangeListener
 		}
 	}
 
-	public void drawModeled (boolean b)
+	public void updDrawModeled()
 	{
+		boolean b = modelShowDesired();
 		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof ReflectogramEventsPanel)
+			if (panel instanceof ReflectogramPanel)
 			{
-				((ReflectogramEventsPanel)panel).draw_modeled = b;
+				((ReflectogramPanel)panel).draw_modeled = b;
 				jLayeredPane.repaint();
 			}
 		}
 	}
 
-	public void updEvents(String id)
-	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof TraceEventsPanel)
-			{
-				((TraceEventsPanel)panel).updEvents(id);
-				jLayeredPane.repaint();
-				return;
-			}
-		}
+	public boolean graphsShowDesired() {
+		return ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
 	}
-
+	public boolean modelShowDesired() {
+		return ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
+	}
 	public void updPaintingMode()
 	{
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof TraceEventsPanel)
-				((TraceEventsPanel)panel).showGraph = ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
-			if (panel instanceof ReflectogramEventsPanel)
-				((ReflectogramEventsPanel)panel).draw_modeled = ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
-		}
+		updDrawGraphs();
+		updDrawModeled();
 	}
 }

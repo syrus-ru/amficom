@@ -237,7 +237,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 		if (showAll) {
 			if (draw_events)
 			{
-				paint_reflectogram_events(g);
+				paint_events(g);
 			} else
 			{
 				paint_trace(g);

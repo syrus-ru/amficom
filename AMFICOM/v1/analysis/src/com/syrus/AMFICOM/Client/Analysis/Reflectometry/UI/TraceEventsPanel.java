@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 public class TraceEventsPanel extends ScaledGraphPanel
 {
-	protected final boolean draw_events = true;
+	protected boolean draw_events = true;
 
 	protected SimpleReflectogramEvent[] sevents;
 
@@ -33,10 +33,13 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	public void updEvents(String id)
 	{
-        if (!id.equals(Heap.PRIMARY_TRACE_KEY))
-            return; // XXX: do not expect any refAnalysis other than one for PRIMARY_TRACE
-        sevents = Heap.getMTAEPrimary().getSimpleEvents();
-        
+//        if (!id.equals(Heap.PRIMARY_TRACE_KEY))
+//            return; // XXX: do not expect any refAnalysis other than one for PRIMARY_TRACE
+//        sevents = Heap.getMTAEPrimary().getSimpleEvents();
+//        sevents = Heap.getAnyMTAE(id).getSimpleEvents();
+		sevents = Heap.getAnyMTAE(id) != null
+    		? Heap.getAnyMTAE(id).getSimpleEvents()
+    		: null; // XXX: наверное, лучше инкапсулировать sevents, и обращаться к Heap каждый раз, а не отслеживать изменения
 	}
 
 	protected void updColorModel()
@@ -55,17 +58,18 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	public void paint(Graphics g)
 	{
 		paint_scales(g);
+		paint_specific(g);
+		paint_scale_digits(g);
+	}
 
+	protected void paint_specific(Graphics g) {
 		if (showAll) {
-			if (draw_events)
-			{
+			if (draw_events) {
 				paint_events(g);
-			} else
-			{
+			} else {
 				paint_trace(g);
 			}
 		}
-		paint_scale_digits(g);
 	}
 
 	protected void paint_events(Graphics g)

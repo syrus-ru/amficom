@@ -20,6 +20,8 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	public double grid_shift_y = 0;
 	public double grid_shift_x = 0;
 
+	public boolean draw_scales = true;
+
 	protected ResizableLayeredPanel parent;
 
 	protected int cell_w = 40; // ширина €чейки сетки в пикселах
@@ -171,8 +173,11 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		paint_scale_digits(g);
 	}
 
-	protected void paint_scales(Graphics g)
+	void paint_scales(Graphics g)
 	{
+		if (! draw_scales)
+			return;
+
 		int jh = getHeight();
 		int jw = getWidth();
 
@@ -205,6 +210,9 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 
 	protected void paint_scale_digits(Graphics g)
 	{
+		if (! draw_scales)
+			return;
+
 		int jh = getHeight();
 		int jw = getWidth();
 

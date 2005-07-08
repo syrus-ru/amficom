@@ -74,6 +74,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
+		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)panel;
 	    // XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
@@ -81,15 +82,20 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).draw_min_trace_level = true;
-		} else
-		{
-			p = new SimpleGraphPanel(y, deltaX);
+		} else {
+			//p = new SimpleGraphPanel(y, deltaX);
+			p = new ReflectogramPanel(panel, id, true);
+		}
+		if (p instanceof ReflectogramPanel) {
+			((ReflectogramPanel)p).setGraphModelShowMode(
+					ppp.graphsShowDesired(),
+					ppp.modelShowDesired());
 		}
 		p.setWeakColors(true);
 
-		((ThresholdsLayeredPanel)panel).addGraphPanel(p);
-		panel.updScale2fit();
-		((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
+		ppp.addGraphPanel(p);
+		ppp.updScale2fit();
+		ppp.updScale2fitCurrentEv(.2, 1.);
 		p.setColorModel(id);
 		traces.put(id, p);
 

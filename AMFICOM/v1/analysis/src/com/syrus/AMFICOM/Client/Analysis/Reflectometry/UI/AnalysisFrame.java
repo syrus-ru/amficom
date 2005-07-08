@@ -1,17 +1,21 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.ComponentEvent;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisFrame extends ScalableFrame
@@ -81,6 +85,8 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
+		AnalysisLayeredPanel ppp = (AnalysisLayeredPanel)panel;
+
 		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
 			try
@@ -93,16 +99,23 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
 
-			p = new AnalysisPanel((AnalysisLayeredPanel)panel, dispatcher, y, deltaX);
+			p = new AnalysisPanel(ppp, dispatcher, y, deltaX);
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;
-		} else
-			p = new SimpleGraphPanel(y, deltaX);
+		} else {
+			//p = new SimpleGraphPanel(y, deltaX);
+			p = new ReflectogramPanel(panel, id, true);
+		}
+		if (p instanceof ReflectogramPanel) {
+			((ReflectogramPanel)p).setGraphModelShowMode(
+					ppp.graphsShowDesired(),
+					ppp.modelShowDesired());
+		}
 		p.setColorModel(id);
-		((AnalysisLayeredPanel)panel).addGraphPanel(p);
-		((AnalysisLayeredPanel)panel).updPaintingMode();
-		panel.updScale2fit();
+		ppp.addGraphPanel(p);
+		ppp.updPaintingMode();
+		ppp.updScale2fit();
 		traces.put(id, p);
 
 		setVisible(true);
