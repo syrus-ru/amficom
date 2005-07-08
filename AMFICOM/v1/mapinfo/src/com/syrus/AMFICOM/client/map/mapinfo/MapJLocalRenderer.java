@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.5 2005/07/01 08:00:05 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.6 2005/07/08 14:36:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.5 $, $Date: 2005/07/01 08:00:05 $
+ * @version $Revision: 1.1.2.6 $, $Date: 2005/07/08 14:36:35 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer
@@ -122,9 +122,6 @@ public class MapJLocalRenderer
 		for (int i = 0; i < query.getLayerVisibilities().length; i++)
 			this.setLayerVisibility(i, layerVisibilities[i], labelVisibilities[i]);
 
-		Log.debugMessage("MapJRenderer - renderToStream - Before rendering.",
-				Log.DEBUGLEVEL10);
-
 		long time1 = System.currentTimeMillis();
 		this.renderer.render(ImageRequestComposer.create(this.mapJObject,
 				NUM_OF_COLORS, BACKGROUND_COLOR, "image/gif"));
@@ -140,9 +137,10 @@ public class MapJLocalRenderer
 
 		long time3 = System.currentTimeMillis();
 
-		Log.debugMessage("MapJLocalRenderer.renderToStream | rendered image for "
-				+ (time2 - time1) + " | created new Image for " + (time3 - time2),
-				Log.FINEST);
+		Log.debugMessage("MapJLocalRenderer.renderToStream | finished\n "
+				+ (time2 - time1) + " (rendered image)\n"
+				+ (time3 - time2) + " created new BufferedImage.",
+				Log.INFO);
 
 		return imageToReturn;
 	}

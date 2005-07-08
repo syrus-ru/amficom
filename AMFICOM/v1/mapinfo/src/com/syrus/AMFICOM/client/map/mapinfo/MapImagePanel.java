@@ -114,8 +114,10 @@ public class MapImagePanel extends JPanel
 		
 		long t4 = System.currentTimeMillis();
 		
-		Log.debugMessage("MapImagePanel.paintComponent | " + "repainted for " +
-				(t2 - t1) + " " + (t3 - t2) + " " + (t4 - t3) + " ms.", Log.FINEST);		
+		Log.debugMessage("MapImagePanel.paintComponent | " + "times (ms)\n"
+				+	(t2 - t1) + " (super paint)\n"
+				+ (t3 - t2) + " (map image paint)\n"
+				+ (t4 - t3) + " (LogicalNetLayer paint)", Log.FINEST);		
 	}
 
 	public void forceLNLRepaint()

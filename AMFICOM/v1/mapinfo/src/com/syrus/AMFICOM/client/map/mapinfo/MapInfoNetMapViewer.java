@@ -134,8 +134,9 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		this.visualComponent.repaint();
 		long t3 = System.currentTimeMillis();
 		
-		Log.debugMessage("MapInfoNetMapViewer.repaint | " + "visual component was repainted for " +
-				(t2 - t1) + " " + (t3 - t2) + " ms.", Log.FINEST);		
+		Log.debugMessage("MapInfoNetMapViewer.repaint | finished\n"
+				+ (t2 - t1) + "(image loaded)\n"
+				+ (t3 - t2) + "(visual component repainted).", Log.FINEST);		
 	}
 
 	/*
