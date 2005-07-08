@@ -1,5 +1,5 @@
 /*-
-* $Id: ScalableToolBar.java,v 1.4 2005/05/25 15:15:08 stas Exp $
+* $Id: ScalableToolBar.java,v 1.5 2005/07/08 11:58:08 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/25 15:15:08 $
- * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/07/08 11:58:08 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
@@ -40,7 +40,7 @@ public class ScalableToolBar extends ToolBarPanel
 	private JButton dyButton = new JButton();
 	private JButton fitButton = new JButton();
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
 		EX, DX, EY, DY, FIX
 	};
@@ -57,9 +57,9 @@ public class ScalableToolBar extends ToolBarPanel
 
 	protected Map createGraphButtons()
 	{
-		Map buttons = super.createGraphButtons();
+		Map buttons1 = super.createGraphButtons();
 
-		buttons.put(
+		buttons1.put(
 				EX,
 				createToolButton(
 				exButton,
@@ -76,7 +76,7 @@ public class ScalableToolBar extends ToolBarPanel
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				EY,
 				createToolButton(
 				eyButton,
@@ -93,7 +93,7 @@ public class ScalableToolBar extends ToolBarPanel
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				DX,
 				createToolButton(
 				dxButton,
@@ -110,7 +110,7 @@ public class ScalableToolBar extends ToolBarPanel
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				DY,
 				createToolButton(
 				dyButton,
@@ -127,7 +127,7 @@ public class ScalableToolBar extends ToolBarPanel
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				FIX,
 				createToolButton(
 				fitButton,
@@ -145,7 +145,7 @@ public class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 
-		return buttons;
+		return buttons1;
 	}
 
 	void dxButton_actionPerformed(ActionEvent e)

@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.6 2005/07/08 10:08:37 saa Exp $
+* $Id: TraceEventsToolBar.java,v 1.7 2005/07/08 11:58:08 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,16 +20,20 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/08 10:08:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/08 11:58:08 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */
 public class TraceEventsToolBar extends ScalableToolBar
 {
+	// теперь у нас появилось больше одного элемента для отображения, и нужны
+	// кнопки для управления, что именно отображать
+	protected static final String trace = "traceButton";
 	protected static final String events = "eventsButton";
 	protected static final String modeled = "modeledButton";
 
+	JToggleButton traceTButton = new JToggleButton();
 	JToggleButton eventsTButton = new JToggleButton();
 	JToggleButton modeledTButton = new JToggleButton();
 
@@ -38,9 +42,9 @@ public class TraceEventsToolBar extends ScalableToolBar
 		super(panel);
 	}
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, SEPARATOR, events, modeled
+		EX, DX, EY, DY, FIX, SEPARATOR, trace, modeled, events
 	};
 
 	protected String[] getButtons()
@@ -50,9 +54,26 @@ public class TraceEventsToolBar extends ScalableToolBar
 
 	protected Map createGraphButtons()
 	{
-		Map buttons = super.createGraphButtons();
+		Map buttons1 = super.createGraphButtons();
 
-		buttons.put(
+		buttons1.put(
+				trace,
+				createToolButton(
+				traceTButton,
+				null,
+				UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON),
+				null,
+				LangModelAnalyse.getString("showevents"), // FIXME: showtrace
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS), // FIXME: ICON_ANALYSIS_TRACE
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						traceTButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons1.put(
 				events,
 				createToolButton(
 				eventsTButton,
@@ -69,7 +90,7 @@ public class TraceEventsToolBar extends ScalableToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				modeled,
 				createToolButton(
 				modeledTButton,
@@ -88,13 +109,17 @@ public class TraceEventsToolBar extends ScalableToolBar
 				true));
 
 		eventsTButton.doClick();
-		return buttons;
+		return buttons1;
 	}
 
-	// FIXME: эта кнопочка выглядит как старая, отключающая расцветку событий, и называется тоже так. Но её действие новое - отключение отображение исходной (Bellcore) р/г
-	void eventsTButton_actionPerformed(ActionEvent e)
+	void traceTButton_actionPerformed(ActionEvent e)
 	{
 		((TraceEventsLayeredPanel)super.panel).updDrawGraphs();
+	}
+
+	void eventsTButton_actionPerformed(ActionEvent e)
+	{
+		((TraceEventsLayeredPanel)super.panel).updDrawEvents();
 	}
 
 	void modeledTButton_actionPerformed(ActionEvent e)

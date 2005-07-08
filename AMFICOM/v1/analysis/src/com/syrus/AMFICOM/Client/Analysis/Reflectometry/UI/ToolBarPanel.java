@@ -1,5 +1,5 @@
 /*-
-* $Id: ToolBarPanel.java,v 1.3 2005/04/18 13:17:41 saa Exp $
+* $Id: ToolBarPanel.java,v 1.4 2005/07/08 11:58:08 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import javax.swing.JToolBar;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/18 13:17:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/08 11:58:08 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -35,7 +35,7 @@ public class ToolBarPanel extends JToolBar
 
 	protected Map actions = new HashMap();
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
 	};
 
@@ -45,7 +45,6 @@ public class ToolBarPanel extends JToolBar
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout (new BoxLayout(this, BoxLayout.X_AXIS));
 	}
-	
 
 	protected String[] getButtons()
 	{

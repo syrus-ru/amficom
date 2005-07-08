@@ -1,5 +1,5 @@
 /*-
- * $Id: ThresholdsToolBar.java,v 1.1 2005/07/08 11:27:48 saa Exp $
+ * $Id: ThresholdsToolBar.java,v 1.2 2005/07/08 11:58:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,9 +28,10 @@ class ThresholdsToolBar extends TraceEventsToolBar
 	private JButton fitEvButton = new JButton();
 	protected JToggleButton showThresholdButton = new JToggleButton();
 
-	protected static String[] buttons = new String[]
+	private static String[] buttons = new String[]
 	{
-		FIT_EVENT, ALL_TRESHOLDS, SEPARATOR, EX, DX, EY, DY, FIX, SEPARATOR, modeled
+		FIT_EVENT, ALL_TRESHOLDS, SEPARATOR, EX, DX, EY, DY, FIX,
+		SEPARATOR, trace, modeled, events
 	};
 
 	public ThresholdsToolBar (ThresholdsLayeredPanel panel)
@@ -45,9 +46,9 @@ class ThresholdsToolBar extends TraceEventsToolBar
 
 	protected Map createGraphButtons()
 	{
-		Map buttons = super.createGraphButtons();
+		Map buttons1 = super.createGraphButtons();
 
-		buttons.put(
+		buttons1.put(
 				FIT_EVENT,
 				createToolButton(
 				fitEvButton,
@@ -64,7 +65,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
-		buttons.put(
+		buttons1.put(
 				ALL_TRESHOLDS,
 				createToolButton(
 				showThresholdButton,
@@ -85,7 +86,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 		if (!modeledTButton.isSelected())
 			modeledTButton.doClick();
 
-		return buttons;
+		return buttons1;
 	}
 
 	void fitEvButton_actionPerformed(ActionEvent e)

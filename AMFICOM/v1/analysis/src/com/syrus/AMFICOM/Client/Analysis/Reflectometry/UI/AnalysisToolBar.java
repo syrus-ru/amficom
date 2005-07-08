@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisToolBar.java,v 1.1 2005/07/08 11:26:29 saa Exp $
+ * $Id: AnalysisToolBar.java,v 1.2 2005/07/08 11:58:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,9 +35,11 @@ class AnalysisToolBar extends TraceEventsToolBar
 	JButton centerAButton = new JButton();
 	JButton centerBButton = new JButton();
 
-	protected static String[] buttons1 = new String[]
+	private static String[] buttons = new String[]
 	{
-		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled
+		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana,
+		SEPARATOR, cA, cB,
+		SEPARATOR, trace, modeled, events
 	};
 
 	public AnalysisToolBar (AnalysisLayeredPanel panel)
@@ -47,7 +49,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 
 	protected String[] getButtons()
 	{
-		return buttons1;
+		return buttons;
 	}
 
 	protected Map createGraphButtons()

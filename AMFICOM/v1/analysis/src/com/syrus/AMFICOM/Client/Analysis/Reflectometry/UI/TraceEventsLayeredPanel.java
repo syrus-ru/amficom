@@ -68,6 +68,20 @@ implements PropertyChangeListener
 		}
 	}
 
+	public void updDrawEvents()
+	{
+		boolean b = eventsShowDesired();
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ReflectogramPanel)
+			{
+				((ReflectogramPanel)panel).draw_events = b;
+				jLayeredPane.repaint();
+			}
+		}
+	}
+
 	public void updDrawModeled()
 	{
 		boolean b = modelShowDesired();
@@ -82,8 +96,11 @@ implements PropertyChangeListener
 		}
 	}
 
-	public boolean graphsShowDesired() {
+	public boolean eventsShowDesired() {
 		return ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
+	}
+	public boolean graphsShowDesired() {
+		return ((TraceEventsToolBar)toolbar).traceTButton.isSelected();
 	}
 	public boolean modelShowDesired() {
 		return ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
@@ -92,5 +109,6 @@ implements PropertyChangeListener
 	{
 		updDrawGraphs();
 		updDrawModeled();
+		updDrawEvents();
 	}
 }
