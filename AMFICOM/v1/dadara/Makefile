@@ -5,8 +5,6 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 NATIVE_DIR := ./native/common
 
-JAVAC = javac
-
 include ../tools/Makefile.inc
 
 APPCLASSPATH = $(LIBDIR)/util.jar
