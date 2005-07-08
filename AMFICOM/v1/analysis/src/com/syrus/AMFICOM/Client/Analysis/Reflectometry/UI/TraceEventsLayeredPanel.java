@@ -57,45 +57,6 @@ implements PropertyChangeListener
 		}
 	}
 
-	public void updDrawGraphs()
-	{
-		boolean b = graphsShowDesired();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			panel.showGraph = b;
-			jLayeredPane.repaint();
-		}
-	}
-
-	public void updDrawEvents()
-	{
-		boolean b = eventsShowDesired();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof ReflectogramPanel)
-			{
-				((ReflectogramPanel)panel).draw_events = b;
-				jLayeredPane.repaint();
-			}
-		}
-	}
-
-	public void updDrawModeled()
-	{
-		boolean b = modelShowDesired();
-		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-		{
-			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-			if (panel instanceof ReflectogramPanel)
-			{
-				((ReflectogramPanel)panel).draw_modeled = b;
-				jLayeredPane.repaint();
-			}
-		}
-	}
-
 	public boolean eventsShowDesired() {
 		return ((TraceEventsToolBar)toolbar).eventsTButton.isSelected();
 	}
@@ -105,10 +66,10 @@ implements PropertyChangeListener
 	public boolean modelShowDesired() {
 		return ((TraceEventsToolBar)toolbar).modeledTButton.isSelected();
 	}
-	public void updPaintingMode()
-	{
-		updDrawGraphs();
-		updDrawModeled();
-		updDrawEvents();
+
+	public void updPaintingMode() {
+		// just mark to repaint
+		// all updates will displayed via *ShowDesired() methods
+		jLayeredPane.repaint();
 	}
 }

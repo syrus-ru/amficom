@@ -30,7 +30,7 @@ public class MapMarkersPanel extends ActiveReflectogramPanel
 	protected boolean useXORMode = true;
 	protected boolean paintMarkerXOR = false;
 
-	public MapMarkersPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
+	public MapMarkersPanel(TraceEventsLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);
 

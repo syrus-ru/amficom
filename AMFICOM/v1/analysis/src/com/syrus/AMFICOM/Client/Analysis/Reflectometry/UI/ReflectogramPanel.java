@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramPanel.java,v 1.1 2005/07/08 10:08:37 saa Exp $
+ * $Id: ReflectogramPanel.java,v 1.2 2005/07/08 12:36:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,17 +21,16 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 /**
  * Отрисовывает рефлектограмму (исходную и модельную, с учетом расцветки)
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/08 10:08:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/08 12:36:08 $
  * @module
  */
 public class ReflectogramPanel extends TraceEventsPanel {
-	public boolean draw_modeled = false;
 	private ModelTrace mt = null; // модельная кривая
 
 	/**
 	 * создает полноценную панель с рефлектограммой - с сеткой координат
 	 */
-	public ReflectogramPanel(ResizableLayeredPanel panel,
+	public ReflectogramPanel(TraceEventsLayeredPanel panel,
 			double[] y, double deltaX) {
 		super(panel, y, deltaX);
 	}
@@ -40,7 +39,7 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	 * создает панель с рефлектограммой без сетки координат
 	 * @param arg должен быть true
 	 */
-	public ReflectogramPanel(ResizableLayeredPanel panel,
+	public ReflectogramPanel(TraceEventsLayeredPanel panel,
 			String id, boolean arg) {
 		super(panel,
 				Heap.getAnyTamByKey(id).getTraceData(),
@@ -52,16 +51,10 @@ public class ReflectogramPanel extends TraceEventsPanel {
 		updEvents(id);
 	}
 
-	public void setGraphModelShowMode(boolean draw_graphs,
-			boolean draw_modeled) {
-		this.showGraph = draw_graphs;
-		this.draw_modeled = draw_modeled;
-	}
-
 	protected void paint_specific(Graphics g) {
 		super.paint_specific(g);
 		if (showAll) {
-			if (draw_modeled) {
+			if (isDraw_modeled()) {
 				paint_modeled_trace(g);
 			}
 		}
@@ -129,5 +122,15 @@ public class ReflectogramPanel extends TraceEventsPanel {
 			return;
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MODELED));
 		drawModelCurve(g, mt, false);
+	}
+
+	protected boolean isShowGraph() {
+		return ((TraceEventsLayeredPanel)parent).graphsShowDesired();
+	}
+	protected boolean isDraw_events() {
+		return ((TraceEventsLayeredPanel)parent).eventsShowDesired();
+	}
+	protected boolean isDraw_modeled() {
+		return ((TraceEventsLayeredPanel)parent).modelShowDesired();
 	}
 }

@@ -540,7 +540,7 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected void paint_loss_ana(Graphics g)
 	{
-		if (!showGraph)
+		if (!isShowGraph())
 			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 		for (int i = 0; i < 2; i++)
@@ -562,7 +562,7 @@ public class AnalysisPanel extends MapMarkersPanel
 
 	protected void paint_reflection_ana(Graphics g)
 	{
-		if (!showGraph)
+		if (!isShowGraph())
 			return;
 		((Graphics2D) g).setStroke(ANA_LINE_STROKE);
 

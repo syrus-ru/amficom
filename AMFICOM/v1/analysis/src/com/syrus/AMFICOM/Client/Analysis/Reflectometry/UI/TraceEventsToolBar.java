@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.7 2005/07/08 11:58:08 saa Exp $
+* $Id: TraceEventsToolBar.java,v 1.8 2005/07/08 12:36:08 saa Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/08 11:58:08 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/08 12:36:08 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -114,17 +114,17 @@ public class TraceEventsToolBar extends ScalableToolBar
 
 	void traceTButton_actionPerformed(ActionEvent e)
 	{
-		((TraceEventsLayeredPanel)super.panel).updDrawGraphs();
+		((TraceEventsLayeredPanel)super.panel).updPaintingMode();
 	}
 
 	void eventsTButton_actionPerformed(ActionEvent e)
 	{
-		((TraceEventsLayeredPanel)super.panel).updDrawEvents();
+		((TraceEventsLayeredPanel)super.panel).updPaintingMode();
 	}
 
 	void modeledTButton_actionPerformed(ActionEvent e)
 	{
-		((TraceEventsLayeredPanel)super.panel).updDrawModeled();
+		((TraceEventsLayeredPanel)super.panel).updPaintingMode();
 	}
 }
 

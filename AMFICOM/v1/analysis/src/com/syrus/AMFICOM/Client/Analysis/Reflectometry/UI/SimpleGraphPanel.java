@@ -18,8 +18,6 @@ public class SimpleGraphPanel extends JPanel
 
 	protected boolean weakColor;
 
-	protected boolean showGraph = true;
-
 	protected double[] y; // array of graphic points
 	protected double deltaX;  // range between two neighbour points
 	protected double maxY, minY; // maximum & minimum value of graph
@@ -126,15 +124,7 @@ public class SimpleGraphPanel extends JPanel
 		init (y, deltaX);
 		setDefaultScales();
 	}
-	
-	public void setShowGraph(boolean isShown) {
-	    this.showGraph = isShown;
-	}
-	
-	public boolean isShowGraph() {
-    return this.showGraph;
-	}
-	
+
 	public void setWeakColors(boolean weakColors)
 	{
 	    this.weakColor = weakColors;
@@ -246,7 +236,7 @@ public class SimpleGraphPanel extends JPanel
 	}
 
 	protected void paint_trace(Graphics g) {
-		if (!showGraph) {
+		if (!isShowGraph()) {
 			return;
 		}
 		g.setColor(traceColor);
@@ -263,5 +253,9 @@ public class SimpleGraphPanel extends JPanel
 
 	public void setShowAll(boolean b) {
 		this.showAll = b;
+	}
+
+	protected boolean isShowGraph() {
+		return true;
 	}
 }

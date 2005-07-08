@@ -105,12 +105,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			((AnalysisPanel)p).draw_noise_level = true;
 		} else {
 			//p = new SimpleGraphPanel(y, deltaX);
-			p = new ReflectogramPanel(panel, id, true);
-		}
-		if (p instanceof ReflectogramPanel) {
-			((ReflectogramPanel)p).setGraphModelShowMode(
-					ppp.graphsShowDesired(),
-					ppp.modelShowDesired());
+			p = new ReflectogramPanel(ppp, id, true);
 		}
 		p.setColorModel(id);
 		ppp.addGraphPanel(p);

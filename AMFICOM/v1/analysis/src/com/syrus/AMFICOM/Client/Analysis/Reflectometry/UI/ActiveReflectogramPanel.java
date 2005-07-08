@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 
@@ -15,7 +14,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
  * Интерактивная панель с рефлектограммой - может отслеживать и изменять
  * уровень шума
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/08 10:08:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/08 12:36:08 $
  * @module
  */
 public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
@@ -23,7 +22,7 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
 	protected Dispatcher dispatcher;
 	protected boolean moving_level = false;
 
-	public ActiveReflectogramPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
+	public ActiveReflectogramPanel(TraceEventsLayeredPanel panel, Dispatcher dispatcher, double[] y, double deltaX)
 	{
 		super (panel, y, deltaX);
 		init_module(dispatcher);

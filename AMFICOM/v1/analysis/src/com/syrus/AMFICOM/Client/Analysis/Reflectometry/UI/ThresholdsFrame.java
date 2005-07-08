@@ -78,18 +78,13 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 	    // XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			p = new ThresholdsPanel(panel, dispatcher, y, deltaX);
+			p = new ThresholdsPanel(ppp, dispatcher, y, deltaX);
 			((ThresholdsPanel)p).updEvents(Heap.PRIMARY_TRACE_KEY);
 			((ThresholdsPanel)p).updateNoiseLevel();
 			((ThresholdsPanel)p).draw_min_trace_level = true;
 		} else {
 			//p = new SimpleGraphPanel(y, deltaX);
-			p = new ReflectogramPanel(panel, id, true);
-		}
-		if (p instanceof ReflectogramPanel) {
-			((ReflectogramPanel)p).setGraphModelShowMode(
-					ppp.graphsShowDesired(),
-					ppp.modelShowDesired());
+			p = new ReflectogramPanel(ppp, id, true);
 		}
 		p.setWeakColors(true);
 

@@ -55,7 +55,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 
     private FPSCounter fps = new FPSCounter();
 
-	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
+	public ThresholdsPanel(TraceEventsLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
 		super (panel, dispatcher, y, deltaX);		
 	}
@@ -235,14 +235,14 @@ public class ThresholdsPanel extends MapMarkersPanel
 		paint_scales(g);
 
 		if (showAll) {
-			if (draw_events)
+			if (isDraw_events())
 			{
 				paint_events(g);
 			} else
 			{
 				paint_trace(g);
 			}
-			if (draw_modeled)
+			if (isDraw_modeled())
 			{
 				paint_modeled_trace(g);
 			}
@@ -251,11 +251,11 @@ public class ThresholdsPanel extends MapMarkersPanel
 				paint_alarms(g);
 		}
 
-		if (draw_min_trace_level && draw_events)
+		if (draw_min_trace_level && isDraw_events())
 		{
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		} else if (draw_noise_level && draw_events)
+		} else if (draw_noise_level && isDraw_events())
 			paint_noise_level(g);
 
 		paint_scale_digits(g);

@@ -11,8 +11,6 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 public class TraceEventsPanel extends ScaledGraphPanel
 {
-	protected boolean draw_events = true;
-
 	protected SimpleReflectogramEvent[] sevents;
 
 	protected Color connectColor;
@@ -64,7 +62,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	protected void paint_specific(Graphics g) {
 		if (showAll) {
-			if (draw_events) {
+			if (isDraw_events()) {
 				paint_events(g);
 			} else {
 				paint_trace(g);
@@ -74,7 +72,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	protected void paint_events(Graphics g)
 	{
-		if (!showGraph) {
+		if (!isShowGraph()) {
 			return;
 		}
 			
@@ -123,5 +121,9 @@ public class TraceEventsPanel extends ScaledGraphPanel
 //				g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
 //									 (int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
 		}
+	}
+
+	protected boolean isDraw_events() {
+		return true;
 	}
 }

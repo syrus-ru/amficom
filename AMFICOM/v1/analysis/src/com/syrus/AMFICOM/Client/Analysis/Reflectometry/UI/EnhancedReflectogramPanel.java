@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.1 2005/07/08 10:08:37 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.2 2005/07/08 12:36:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/08 10:08:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/08 12:36:08 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
@@ -32,7 +32,7 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 	protected double noise_level = 28; // ???!
 	protected ReflectogramMismatch[] alarms;
 
-	public EnhancedReflectogramPanel(ResizableLayeredPanel panel, double[] y, double deltaX) {
+	public EnhancedReflectogramPanel(TraceEventsLayeredPanel panel, double[] y, double deltaX) {
 		super(panel, y, deltaX);
 	}
 
@@ -52,11 +52,11 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 			if (draw_alarms)
 				paint_alarms(g);
 		}
-		if (draw_min_trace_level && draw_events)
+		if (draw_min_trace_level && isDraw_events())
 		{
 			paint_noise_level(g);
 			paint_min_trace_level(g);
-		} else if (draw_noise_level && draw_events)
+		} else if (draw_noise_level && isDraw_events())
 			paint_noise_level(g);
 
 	}
