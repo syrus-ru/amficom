@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.25 2005/06/21 12:52:14 bass Exp $
+ * $Id: AbstractLinkController.java,v 1.26 2005/07/08 14:34:31 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/06/21 12:52:14 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.26 $, $Date: 2005/07/08 14:34:31 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -54,8 +54,34 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
 
+	protected CharacteristicType thicknessCharType = null;
+	protected CharacteristicType styleCharType = null;
+	protected CharacteristicType colorCharType = null;
+	protected CharacteristicType alarmedThicknessCharType = null;
+	protected CharacteristicType alarmedColorCharType = null;	
+	
 	public AbstractLinkController(NetMapViewer netMapViewer) {
 		super(netMapViewer);
+
+		Identifier userId = LoginManager.getUserId();
+
+		this.styleCharType = getCharacteristicType(
+				userId, 
+				AbstractLinkController.ATTRIBUTE_STYLE);
+		this.thicknessCharType = getCharacteristicType(
+				userId, 
+				AbstractLinkController.ATTRIBUTE_THICKNESS);
+		this.colorCharType = getCharacteristicType(
+				userId, 
+				AbstractLinkController.ATTRIBUTE_COLOR);
+
+		this.alarmedThicknessCharType = getCharacteristicType(
+				userId, 
+				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
+
+		this.alarmedColorCharType = getCharacteristicType(
+				userId, 
+				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
 	}
 
 	/**

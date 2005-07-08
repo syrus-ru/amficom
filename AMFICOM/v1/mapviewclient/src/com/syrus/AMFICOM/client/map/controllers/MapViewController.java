@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.33 2005/07/07 11:44:36 krupenn Exp $
+ * $Id: MapViewController.java,v 1.34 2005/07/08 14:34:31 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/07/07 11:44:36 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.34 $, $Date: 2005/07/08 14:34:31 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -123,6 +123,9 @@ public final class MapViewController {
 	private static long time1 = 0L;
 	private static long time2 = 0L;
 	private static long time3 = 0L;
+	private static long time4 = 0L;
+	private static long time5 = 0L;
+	private static long time6 = 0L;	
 
 	/**
 	 * Приветный конструктор. Использовать 
@@ -595,14 +598,50 @@ public final class MapViewController {
 		return time3;
 	}
 
+	public static long getTime4() {
+		return time4;
+	}
+
+	public static long getTime5() {
+		return time5;
+	}
+
+	public static long getTime6() {
+		return time6;
+	}
+	
 	public static void addTime3(long difftime) {
 		MapViewController.time3 += difftime;
 	}
 
+	public static void addTime4(long difftime) {
+		MapViewController.time4 += difftime;
+	}
+
+	public static void addTime5(long difftime) {
+		MapViewController.time5 += difftime;
+	}
+
+	public static void addTime6(long difftime) {
+		MapViewController.time6 += difftime;
+	}
+	
 	public static void nullTime3() {
 		time3 = 0L;
 	}
 
+	public static void nullTime4() {
+		time4 = 0L;
+	}
+
+	public static void nullTime5() {
+		time5 = 0L;
+	}
+
+	public static void nullTime6() {
+		time6 = 0L;
+	}
+	
 /* from SiteNode
 
 	//Возвращяет длинну линий внутри данного узла,

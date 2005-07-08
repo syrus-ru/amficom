@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.33 2005/07/01 16:16:05 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.34 2005/07/08 14:34:31 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -44,22 +45,22 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/07/01 16:16:05 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.34 $, $Date: 2005/07/08 14:34:31 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
 	/**
 	 * Хэш-таблица цветов типов линий. Для того, чтобы объект {@link Color} 
 	 * не создавался каждый раз из атрибута при вызове 
-	 * {@link #getColor(Identifier, PhysicalLinkType)}, созданный объект помещается в
+	 * {@link #getColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
 	private static java.util.Map colorsHolder = new HashMap();
 	/**
 	 * Хэш-таблица цветов сигнала тревоги для типов линий. Для того, чтобы 
 	 * объект {@link Color} не создавался каждый раз из атрибута при вызове 
-	 * {@link #getAlarmedColor(Identifier, PhysicalLinkType)}, созданный объект помещается в
+	 * {@link #getAlarmedColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
 	private static java.util.Map alarmedColorsHolder = new HashMap();
@@ -75,6 +76,8 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Instance
 	 */
 	private static LinkTypeController instance = null;
+	
+	private Map strokesHolder = new HashMap();
 	
 	static {
 		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
@@ -221,17 +224,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public void setLineSize(Identifier userId, PhysicalLinkType linkType, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_THICKNESS);
-		Characteristic attribute = getCharacteristic(linkType, cType);
+		Characteristic attribute = getCharacteristic(linkType, this.thicknessCharType);
 		if(attribute == null)
 		{
 			try
 			{
 				attribute = Characteristic.createInstance(
 						userId,
-						cType,
+						this.thicknessCharType,
 						"name",
 						"1",
 						String.valueOf(size),
@@ -265,12 +265,9 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return толщина линии
 	 */
-	public int getLineSize(Identifier userId, PhysicalLinkType linkType)
+	public int getLineSize(PhysicalLinkType linkType)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_THICKNESS);
-		Characteristic ea = getCharacteristic(linkType, cType);
+		Characteristic ea = getCharacteristic(linkType, this.thicknessCharType);
 		if(ea == null)
 			return MapPropertiesManager.getThickness();
 		return Integer.parseInt(ea.getValue());
@@ -285,17 +282,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public void setStyle(Identifier userId, PhysicalLinkType linkType, String style)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic attribute = getCharacteristic(linkType, cType);
+		Characteristic attribute = getCharacteristic(linkType, this.styleCharType);
 		if(attribute == null)
 		{
 			try
 			{
 				attribute = Characteristic.createInstance(
 						userId,
-						cType,
+						this.styleCharType,
 						"name",
 						"1",
 						style,
@@ -329,12 +323,9 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return стиль
 	 */
-	public String getStyle(Identifier userId, PhysicalLinkType linkType)
+	public String getStyle(PhysicalLinkType linkType)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic ea = getCharacteristic(linkType, cType);
+		Characteristic ea = getCharacteristic(linkType, this.styleCharType);
 		if(ea == null)
 			return MapPropertiesManager.getStyle();
 		return ea.getValue();
@@ -348,16 +339,21 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return стиль
 	 */
-	public Stroke getStroke(Identifier userId, PhysicalLinkType linkType)
+	public Stroke getStroke(PhysicalLinkType linkType)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic ea = getCharacteristic(linkType, cType);
-		if(ea == null)
-			return MapPropertiesManager.getStroke();
-
-		return LineComboBox.getStrokeByType(ea.getValue());
+		Stroke resultStroke = (Stroke)this.strokesHolder.get(linkType);
+		if (resultStroke == null)
+		{
+			Characteristic ea = getCharacteristic(linkType, this.styleCharType);
+			if(ea == null)
+				resultStroke = MapPropertiesManager.getStroke();
+			else
+				resultStroke = LineComboBox.getStrokeByType(ea.getValue());
+			
+			this.strokesHolder.put(linkType,resultStroke);
+		}
+		
+		return resultStroke;
 	}
 
 	/**
@@ -369,17 +365,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public void setColor(Identifier userId, PhysicalLinkType linkType, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_COLOR);
-		Characteristic attribute = getCharacteristic(linkType, cType);
+		Characteristic attribute = getCharacteristic(linkType, this.colorCharType);
 		if(attribute == null)
 		{
 			try
 			{
 				attribute = Characteristic.createInstance(
 						userId,
-						cType,
+						this.colorCharType,
 						"name",
 						"1",
 						String.valueOf(color.getRGB()),
@@ -416,15 +409,12 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return цвет
 	 */
-	public Color getColor(Identifier userId, PhysicalLinkType linkType)
+	public Color getColor(PhysicalLinkType linkType)
 	{
 		Color color = (Color )colorsHolder.get(linkType);
 		if(color == null)
 		{
-			CharacteristicType cType = getCharacteristicType(
-					userId, 
-					AbstractLinkController.ATTRIBUTE_COLOR);
-			Characteristic ea = getCharacteristic(linkType, cType);
+			Characteristic ea = getCharacteristic(linkType, this.colorCharType);
 
 			if(ea == null)
 				color = MapPropertiesManager.getColor();
@@ -445,17 +435,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public void setAlarmedColor(Identifier userId, PhysicalLinkType linkType, Color color)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
-		Characteristic attribute = getCharacteristic(linkType, cType);
+		Characteristic attribute = getCharacteristic(linkType, this.alarmedColorCharType);
 		if(attribute == null)
 		{
 			try
 			{
 				attribute = Characteristic.createInstance(
 						userId,
-						cType,
+						this.alarmedColorCharType,
 						"name",
 						"1",
 						String.valueOf(color.getRGB()),
@@ -494,15 +481,12 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return цвет
 	 */
-	public Color getAlarmedColor(Identifier userId, PhysicalLinkType linkType)
+	public Color getAlarmedColor(PhysicalLinkType linkType)
 	{
 		Color color = (Color )alarmedColorsHolder.get(linkType);
 		if(color == null)
 		{
-			CharacteristicType cType = getCharacteristicType(
-					userId, 
-					AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
-			Characteristic ea = getCharacteristic(linkType, cType);
+			Characteristic ea = getCharacteristic(linkType, this.alarmedColorCharType);
 			if(ea == null)
 				color = MapPropertiesManager.getAlarmedColor();
 			color = new Color(Integer.parseInt(ea.getValue()));
@@ -522,17 +506,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public void setAlarmedLineSize(Identifier userId, PhysicalLinkType linkType, int size)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic attribute = getCharacteristic(linkType, cType);
+		Characteristic attribute = getCharacteristic(linkType, this.alarmedThicknessCharType);
 		if(attribute == null)
 		{
 			try
 			{
 				attribute = Characteristic.createInstance(
 						userId,
-						cType,
+						this.alarmedThicknessCharType,
 						"name",
 						"1",
 						String.valueOf(size),
@@ -567,12 +548,9 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @return толщина линии
 	 */
-	public int getAlarmedLineSize(Identifier userId, PhysicalLinkType linkType)
+	public int getAlarmedLineSize(PhysicalLinkType linkType)
 	{
-		CharacteristicType cType = getCharacteristicType(
-				userId, 
-				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = getCharacteristic(linkType, cType);
+		Characteristic ea = getCharacteristic(linkType, this.alarmedThicknessCharType);
 		if(ea == null)
 			return MapPropertiesManager.getAlarmedThickness();
 		return Integer.parseInt(ea.getValue());

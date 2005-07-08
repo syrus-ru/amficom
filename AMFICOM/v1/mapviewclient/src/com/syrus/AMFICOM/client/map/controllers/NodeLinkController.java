@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.13 2005/07/07 11:45:15 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.14 2005/07/08 14:34:31 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * Контроллер фрагмента линии.
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/07/07 11:45:15 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.14 $, $Date: 2005/07/08 14:34:31 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -163,32 +163,27 @@ public final class NodeLinkController extends AbstractLinkController {
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
 
-		BasicStroke basistroke;
-		Color color;
-		int lineSize;
+		d = System.currentTimeMillis();
+		MapViewController.addTime1(d - f);
 		
 		PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
 
-		lineSize = plc.getLineSize(nodeLink.getPhysicalLink());
-		basistroke = (BasicStroke )plc.getStroke(nodeLink.getPhysicalLink());
-		color = plc.getColor(nodeLink.getPhysicalLink());
-	
-		Stroke str = new BasicStroke(
-				lineSize, 
-				basistroke.getEndCap(), 
-				basistroke.getLineJoin(), 
-				basistroke.getMiterLimit(), 
-				basistroke.getDashArray(), 
-				basistroke.getDashPhase());
-
-		d = System.currentTimeMillis();
-		MapViewController.addTime1(d - f);
-		f = System.currentTimeMillis();
-
-		paint(nodeLink, g, visibleBounds, str, color);
-
+		f = System.currentTimeMillis();		
+		Stroke stroke = plc.getStroke(nodeLink.getPhysicalLink());
 		d = System.currentTimeMillis();
 		MapViewController.addTime2(d - f);
+		
+		f = System.currentTimeMillis();		
+		Color color = plc.getColor(nodeLink.getPhysicalLink());
+		d = System.currentTimeMillis();
+		MapViewController.addTime3(d - f);
+	
+
+		f = System.currentTimeMillis();
+		paint(nodeLink, g, visibleBounds, stroke, color);
+		d = System.currentTimeMillis();
+		MapViewController.addTime4(d - f);
+		
 		f = System.currentTimeMillis();
 
 		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
@@ -237,7 +232,7 @@ public final class NodeLinkController extends AbstractLinkController {
 					centerY);
 		}
 		d = System.currentTimeMillis();
-		MapViewController.addTime3(d - f);
+		MapViewController.addTime5(d - f);
 	}
 
 	/**
