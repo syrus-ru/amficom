@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.86 2005/07/07 11:49:03 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.87 2005/07/08 14:33:00 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -70,8 +70,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.86 $, $Date: 2005/07/07 11:49:03 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.87 $, $Date: 2005/07/08 14:33:00 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -518,9 +518,13 @@ public class LogicalNetLayer
 //				if(getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds))
 					getMapViewController().getController(nodeLink).paint(nodeLink, g, visibleBounds);
 			}
-			System.out.println("pre paint " + String.valueOf(MapViewController.getTime1()) + " ms");
-			System.out.println("paint " + String.valueOf(MapViewController.getTime2()) + " ms");
-			System.out.println("post paint " + String.valueOf(MapViewController.getTime3()) + " ms");
+			Log.debugMessage("LogicalNetLayer.drawLines | \n" + 
+					String.valueOf(MapViewController.getTime1()) + " (isElementVisible)"
+					+ String.valueOf(MapViewController.getTime2()) + " (getStroke)"
+					+ String.valueOf(MapViewController.getTime3()) + " (getColor)"
+					+ String.valueOf(MapViewController.getTime4()) + " (paint)"
+					+ String.valueOf(MapViewController.getTime5()) + " (painting labels)",
+					Log.INFO);
 		}
 	}
 
@@ -1120,8 +1124,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.86 $, $Date: 2005/07/07 11:49:03 $
+	 * @author $Author: peskovsky $
+	 * @version $Revision: 1.87 $, $Date: 2005/07/08 14:33:00 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
