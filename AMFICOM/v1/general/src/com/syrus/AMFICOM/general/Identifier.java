@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.50 2005/06/25 17:07:47 bass Exp $
+ * $Id: Identifier.java,v 1.51 2005/07/08 09:47:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.50 $, $Date: 2005/06/25 17:07:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/07/08 09:47:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class Identifier implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
@@ -115,7 +115,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlIdentifier getTransferable(final ORB orb) {
+	public IdlIdentifier getTransferable(@SuppressWarnings("unused") final ORB orb) {
 		return this.getTransferable();
 	}
 
