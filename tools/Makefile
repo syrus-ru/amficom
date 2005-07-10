@@ -22,9 +22,6 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com rulesets
 
-$(CLASSDIR):	
-	mkdir -p $@
-
 .PHONY: clean
 clean: 
 	rm -f $(LIBNAME)

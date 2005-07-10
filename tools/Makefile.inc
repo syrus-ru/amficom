@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.25 2005/06/22 10:58:07 arseniy Exp $
+# $Id: Makefile.inc,v 1.26 2005/07/10 13:15:46 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -17,10 +17,9 @@ CLASS_SUFFIXES = \
 	.class \
 	$$%.class
 
-# User may override either of IDLDIR, SRCDIR, CLASSDIR
-IDLDIR ?= idl
-SRCDIR ?= src
-CLASSDIR ?= classes
+IDLDIR := ../idl/idl
+SRCDIR := src
+CLASSDIR := classes
 
 ifeq ($(shell hostname -s),bass)
 LIBDIR ?= lib
@@ -30,8 +29,8 @@ LIBDIR ?= ../lib
 EXTLIBDIR ?= ../../extlib
 endif
 
-checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing `$(MAKE)'))
-checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing `$(MAKE)'))
+checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing "$(MAKE)"))
+checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing "$(MAKE)"))
 pathsearch = $(firstword $(wildcard $(addsuffix /$(1), $(subst :, , $(PATH)))))
 
 # User may override database connection settings
@@ -159,13 +158,70 @@ endif
 
 JAVA = $(JAVA_HOME)/bin/java
 
+# Default IDL to Java compiler type, one of:
+#	IDLJ,
+#	VBJ_IDL2JAVA,
+#	TCOO_IDL2JAVA,
+#	ORBACUS_JIDL.
+# May be changed by user.
+IDL2JAVA ?= IDLJ
+
+# Sun idlj
+# Do not modify!
 IDLJ = $(JAVA_HOME)/bin/idlj
-IDLJFLAGS += \
-	-fallTIE \
-	-i $(IDLDIR) \
-	-td $(SRCDIR)
+IDLJFLAGS = -fallTIE -i $(IDLDIR) -td $(SRCDIR)
+
+# Borland VisiBroker for Java idl2java
+# Do not modify!
+VBJ_IDL2JAVA = $(VBROKER_HOME)/bin/idl2java
+VBJ_IDL2JAVAFLAGS = -DSTRICT -DNO_ALIASES -DMY_COMPILER_IS_NOT_BRAINDEAD -package com.syrus.AMFICOM
+
+# The Community OpenORB idl2java
+# Do not modify!
+TCOO_IDL2JAVA = $(TCOO_HOME)/OpenORB/bin/idl2java
+TCOO_IDL2JAVAFLAGS = -DNO_DEFAULT_FACTORIES -DNO_STRUCT_RECURSION -DMY_COMPILER_IS_NOT_BRAINDEAD
+
+# IONA ORBacus jidl
+# Do not modify!
+ORBACUS_JIDL = jidl
+ORBACUS_JIDLFLAGS = -I. -DSTRICT -DNO_ALIASES -DMY_COMPILER_IS_NOT_BRAINDEAD --auto-package
+
+# Figuring out what flags to use based on user's choice.
+# Do not modify!
+IDL2JAVAFLAGS := $($(IDL2JAVA)FLAGS)
+IDL2JAVA := $($(IDL2JAVA))
+
+# Modules to build IDL within.
+IDL_MODULES = event general resource admin config measurement map scheme mapview cmserver_interface leserver_interface mcm_interface mscharserver_interface mserver_interface
+
+# Figuring out what command(s) to run for "idl" target.
+ifeq ($(IDL_SOURCES),)
+ifeq ($(MODULE_NAME),idl)
+IDL_COMMAND = $(foreach idl_module,$(IDL_MODULES),$(MAKE) -C ../$(idl_module) idl;)
+else
+IDL_COMMAND = $(error IDL compilation is not supported for module: $(MODULE_NAME))
+endif
+else
+IDL_COMMAND = $(foreach idl_source,$(IDL_SOURCES),$(IDL2JAVA) $(IDL2JAVAFLAGS) $(idl_source);)
+endif
 
 PMD_JAR = $(shell find $(PMD_HOME) -name pmd-*.jar)
 PMD_JARS = $(shell find $(PMD_HOME) -name '*\.[jz][ai][pr]' -printf '%p:')
 
 PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rulesets/clone.xml,rulesets/codesize.xml,rulesets/coupling.xml,rulesets/design.xml,rulesets/favorites.xml,rulesets/junit.xml,rulesets/naming.xml,rulesets/newrules.xml,rulesets/scratchpad.xml,rulesets/strictexception.xml,rulesets/strings.xml
+
+#
+# Targets
+#
+
+$(SRCDIR):
+$(CLASSDIR):
+$(LIBDIR):
+	mkdir -p $@
+
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR) $(IDL_SOURCES)
+	$(IDL_COMMAND)
+	touch $@
