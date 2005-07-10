@@ -3,18 +3,16 @@ MODULE_NAME := event
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/alarm.idl $(IDLDIR)/event.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java)
-
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -24,19 +22,6 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
-	touch $@
-
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix event com.syrus.AMFICOM \
-		$(IDLDIR)/alarm.idl
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix event com.syrus.AMFICOM \
-		$(IDLDIR)/event.idl
 	touch $@
 
 .PHONY: idlclean
@@ -54,11 +39,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba
@@ -88,7 +68,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/event.idl \
 		$(SOURCES)
-		
+
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/event text $(PMD_RULES) 

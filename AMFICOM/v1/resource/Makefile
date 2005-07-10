@@ -3,11 +3,10 @@ MODULE_NAME := resource
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/resource.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar
@@ -28,16 +27,6 @@ $(LIBNAME): .mach
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix resource com.syrus.AMFICOM \
-		$(IDLDIR)/resource.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/resource/corba && \
@@ -53,11 +42,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

@@ -3,7 +3,7 @@ MODULE_NAME := measurement
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/measurement.idl
 
 HOST = aldan
 SERVICE_NAME = hodja
@@ -24,7 +24,6 @@ JPUB_FLAGS = \
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDLJ)
 
 
 APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
@@ -58,16 +57,6 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/ora/*.java
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix measurement com.syrus.AMFICOM \
-		$(IDLDIR)/measurement.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/measurement/corba && \
@@ -83,11 +72,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java 
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleanora cleancorba
@@ -121,7 +105,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/measurement.idl \
 		$(SOURCES)
-		
+
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/measurement text $(PMD_RULES) 

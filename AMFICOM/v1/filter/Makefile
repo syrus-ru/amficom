@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2005/07/07 16:08:02 arseniy Exp $
+# $Id: Makefile,v 1.11 2005/07/10 13:41:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -19,23 +19,12 @@ export: $(LIBNAME)
 .PHONY: all
 all: .all
 
-.all: .idl .sqlj
+.all: .sqlj
 	echo $(APPCLASSPATH)
 	$(JAVAC) $(JAVACFLAGS) \
 		 -classpath $(APPCLASSPATH) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
-
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR) $(CLASSDIR)
-	touch $@
-
-.PHONY: idlclean
-idlclean:
-	$(RM) -r \
-		.idl
 
 .PHONY: sqlj
 sqlj: .sqlj
@@ -52,11 +41,8 @@ sqljclean:
 	$(RM) \
 		.sqlj
 
-$(SRCDIR) $(CLASSDIR):
-	mkdir -p $@
-
 .PHONY: clean
-clean: sqljclean idlclean
+clean: sqljclean
 	$(RM) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
@@ -82,4 +68,3 @@ $(LIBNAME): .all
 #### Install ####
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
-

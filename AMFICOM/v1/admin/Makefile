@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/07/07 15:24:33 arseniy Exp $
+# $Id: Makefile,v 1.19 2005/07/10 13:41:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,14 +9,13 @@ MODULE_NAME := administration
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/administration.idl
 
 HOST = mongol
 SERVICE_NAME = mongol
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
@@ -36,16 +35,6 @@ $(LIBNAME): .mach
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix administration com.syrus.AMFICOM \
-		$(IDLDIR)/administration.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/administration/corba && \
@@ -61,11 +50,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/administration/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

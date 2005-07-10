@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/07/07 16:38:36 arseniy Exp $
+# $Id: Makefile,v 1.19 2005/07/10 13:41:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -8,8 +8,6 @@ MODULE_NAME := csbridge
 MODULE_VERSION = $(shell date +%Y%m%d)
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
-
-IDLDIR := ../idl/idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -50,10 +48,6 @@ $(LIBNAME): .mach
 
 .corba: $(CLASSDIR)
 	touch $@
-
-$(CLASSDIR):
-	mkdir -p $@
-	
 
 .PHONY:	clean
 clean:	cleanmach cleancorba

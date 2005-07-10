@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/07/04 11:57:45 bass Exp $
+# $Id: Makefile,v 1.6 2005/07/10 13:41:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -22,10 +22,6 @@ $(call checkenve,IDL2JAVA)
 		-classpath $(AMFICOMCLASSPATH):$(DEPRECATEDCLASSPATH):$(EXTCLASSPATH) \
 		$(shell find $(SRCDIR) -name '*.java')
 	touch $@
-
-
-$(CLASSDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach

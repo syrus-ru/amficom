@@ -3,14 +3,13 @@ MODULE_NAME := configuration
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/configuration.idl
 
 HOST = mongol
 SERVICE_NAME = mongol
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
@@ -30,17 +29,6 @@ $(LIBNAME): .mach
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix administration com.syrus.AMFICOM \
-		-pkgPrefix configuration com.syrus.AMFICOM \
-		$(IDLDIR)/configuration.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/configuration/corba && \
@@ -56,11 +44,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.29 2005/07/07 16:10:02 arseniy Exp $
+# $Id: Makefile,v 1.30 2005/07/10 13:41:29 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,11 +9,10 @@ MODULE_NAME := scheme
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.bz2
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/scheme.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 # Directories that contain both hand-written and generated files.
@@ -40,17 +39,6 @@ $(LIBNAME): .mach
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix administration com.syrus.AMFICOM \
-		-pkgPrefix scheme com.syrus.AMFICOM \
-		$(IDLDIR)/scheme.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	cd $(SRCDIR)/com/syrus/AMFICOM/scheme/corba && \
@@ -66,11 +54,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

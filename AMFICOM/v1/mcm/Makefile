@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.64 2005/07/07 16:50:36 arseniy Exp $
+# $Id: Makefile,v 1.65 2005/07/10 13:41:29 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -10,7 +10,7 @@ LIBNAME := $(MODULE_NAME).jar
 LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/mcm.idl
 
 HOST = mongol
 SERVICE_NAME = mongol
@@ -19,7 +19,6 @@ TRANSCEIVER_DIR := ./transceiver
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 JAVAH := javah
 JAVAH_FLAGS := \
@@ -65,18 +64,6 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix configuration com.syrus.AMFICOM \
-		-pkgPrefix measurement com.syrus.AMFICOM \
-		-pkgPrefix mcm com.syrus.AMFICOM \
-		$(IDLDIR)/mcm.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
@@ -91,11 +78,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

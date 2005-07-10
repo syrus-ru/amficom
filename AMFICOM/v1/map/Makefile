@@ -3,11 +3,10 @@ MODULE_NAME := map
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/map.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 XMLDIR=./xml
@@ -42,17 +41,6 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
-	touch $@
-
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix administration com.syrus.AMFICOM \
-		-pkgPrefix map com.syrus.AMFICOM \
-		$(IDLDIR)/map.idl
 	touch $@
 
 .PHONY: idlclean
@@ -93,11 +81,6 @@ $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/General.xsd
 
-
-
-$(CLASSDIR):
-	mkdir -p $@
-
 .PHONY: clean
 clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
@@ -124,11 +107,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/map.idl \
 		$(SOURCES)
-		
+
 .PHONY: pmd
 pmd:
 	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
-
-#### Compile and install jar to libdir
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	

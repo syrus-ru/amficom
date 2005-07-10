@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/07/07 16:41:21 arseniy Exp $
+# $Id: Makefile,v 1.18 2005/07/10 13:41:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -10,14 +10,13 @@ LIBNAME := $(MODULE_NAME).jar
 LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/mscharserver.idl
 
 HOST = mongol
 SERVICE_NAME = mongol
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
@@ -51,21 +50,6 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SOURCES)
 	touch $@
 
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix security com.syrus.AMFICOM \
-		-pkgPrefix resource com.syrus.AMFICOM \
-		-pkgPrefix map com.syrus.AMFICOM \
-		-pkgPrefix scheme com.syrus.AMFICOM \
-		-pkgPrefix mapview com.syrus.AMFICOM \
-		-pkgPrefix mscharserver com.syrus.AMFICOM \
-		$(IDLDIR)/mscharserver.idl
-	touch $@
-
 .PHONY: idlclean
 idlclean:
 	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mscharserver/corba
@@ -80,11 +64,6 @@ corba: .corba
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mscharserver/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
 
 .PHONY: clean
 clean: cleanmach cleancorba

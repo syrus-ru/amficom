@@ -3,8 +3,6 @@ MODULE_NAME := commonclient
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
-
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
@@ -34,9 +32,6 @@ $(LIBNAME): .mach
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
-
-$(CLASSDIR):
-	mkdir -p $@
 
 .PHONY:	clean
 clean:	cleanmach

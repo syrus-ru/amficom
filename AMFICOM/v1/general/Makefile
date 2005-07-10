@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.49 2005/07/06 12:23:01 arseniy Exp $
+# $Id: Makefile,v 1.50 2005/07/10 13:41:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -9,11 +9,10 @@ MODULE_NAME := general
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-IDLDIR := ../idl/idl
+IDL_SOURCES = $(IDLDIR)/general.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,IDLJ)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
@@ -31,16 +30,6 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
-	touch $@
-
-.PHONY: idl
-idl: .idl
-
-.idl: $(SRCDIR)
-	$(IDLJ) $(IDLJFLAGS) \
-		-pkgPrefix general com.syrus.AMFICOM \
-		-pkgPrefix security com.syrus.AMFICOM \
-		$(IDLDIR)/general.idl
 	touch $@
 
 .PHONY: idlclean
@@ -62,12 +51,6 @@ corba: .corba
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
 	touch $@
-
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
-	mkdir -p $@
-
 
 .PHONY: clean
 clean: cleanmach cleancorba

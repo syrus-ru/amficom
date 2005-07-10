@@ -34,10 +34,6 @@ $(LIBNAME):	.mach .native
 .native:
 	$(MAKE) -C native
 
-$(CLASSDIR):
-	mkdir $@
-
-
 clean:	cleanmach
 	$(RM) $(LIBNAME)
 	$(MAKE) -C native $@
