@@ -17,3 +17,5 @@ logs
 *.jpx
 .settings
 common.properties
+.classpath
+.project
