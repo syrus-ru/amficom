@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.1 2005/07/03 19:16:33 bass Exp $
+ * $Id: leserver.idl,v 1.2 2005/07/10 13:49:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,13 @@
 #include "administration.idl"
 #include "event.idl"
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module leserver {
 module corba {
@@ -48,11 +54,21 @@ module corba {
 
 	interface EventServer : general::corba::Verifiable {
 
+#ifdef STRICT
+		void eventGeneration(in event::corba::Event event_)
+#else // STRICT
 		void eventGeneration(in event::corba::Event event)
+#endif // STRICT
 			raises (general::corba::AMFICOMRemoteException);
 	};
 
 };
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // LOGINSERVER_IDL

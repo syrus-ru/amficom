@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.95 2005/07/04 15:42:01 bass Exp $
+ * $Id: general.idl,v 1.96 2005/07/10 13:49:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,13 @@
 
 #include "dummy.idl"
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module security {
 	module corba {
@@ -54,9 +60,11 @@ module general {
 			public Identifier modifierId;
 			public long long version;
 
-			::general::StorableObject getNative() raises (IdlCreateObjectException);
+			general::StorableObject getNative() raises (IdlCreateObjectException);
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
+#endif // NO_DEFAULT_FACTORIES
 			factory init(in Identifier id,
 					in long long created,
 					in long long modified,
@@ -96,12 +104,20 @@ module general {
 				ERROR_ALREADY_LOGGED,
 				ERROR_ACCESS_VALIDATION,
 				ERROR_UNKNOWN
+#ifdef STRICT				
+			} error_code;
+#else // STRICT
 			} errorCode;
+#endif // STRICT
 			enum CompletionStatus {
 				COMPLETED_YES,
 				COMPLETED_NO,
 				COMPLETED_PARTIALLY
+#ifdef STRICT				
+			} completion_status;
+#else // STRICT
 			} completionStatus;
+#endif // STRICT
 			wstring message;
 		};
 	/*
@@ -114,16 +130,26 @@ module general {
 
 ////////////////////// ParameterType //////////////////////
 
+#ifdef NO_ALIASES
+		valuetype IdlParameterType: IdlStorableObject {
+#else // NO_ALIASES
 		valuetype IdlParameterType: StorableObject {
+#endif // NO_ALIASES
 			public WString32 codename;
 			public WString256 description;
 
 			public WString128 name;
+#ifdef STRICT
+			public DataType data_type;
+#else // STRICT
 			public DataType dataType;
+#endif // STRICT
 
 			public IdentifierSeq characteristicIds;
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
+#endif // NO_DEFAULT_FACTORIES
 			factory init(in Identifier id,
 					in long long created,
 					in long long modified,
@@ -142,7 +168,11 @@ module general {
 
 //////////////////// CharacteristicType ///////////////////
 
+#ifdef NO_ALIASES
+		valuetype IdlCharacteristicType: IdlStorableObject {
+#else // NO_ALIASES
 		valuetype IdlCharacteristicType: StorableObject {
+#endif // NO_ALIASES
 			enum CharacteristicTypeSort {
 				CHARACTERISTICTYPESORT_OPTICAL,
 				CHARACTERISTICTYPESORT_ELECTRICAL,
@@ -154,10 +184,16 @@ module general {
 			public WString32 codename;
 			public WString256 description;
 			public WString128 name;
+#ifdef STRICT
+			public DataType data_type;
+#else // STRICT
 			public DataType dataType;
+#endif // STRICT
 			public CharacteristicTypeSort sort;
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
+#endif // NO_DEFAULT_FACTORIES
 			factory init(in Identifier id,
 					in long long created,
 					in long long modified,
@@ -175,7 +211,11 @@ module general {
 		typedef sequence<CharacteristicType> CharacteristicTypeSeq;
 
 ////////////////////// Characteristic /////////////////////
+#ifdef NO_ALIASES
+		valuetype IdlCharacteristic: IdlStorableObject {
+#else // NO_ALIASES
 		valuetype IdlCharacteristic: StorableObject {
+#endif // NO_ALIASES
 			public Identifier _typeId;
 			public WString128 name;
 			public WString256 description;
@@ -184,7 +224,9 @@ module general {
 			public boolean editable;
 			public boolean visible;
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
+#endif // NO_DEFAULT_FACTORIES
 			factory init(in Identifier id,
 					in long long created,
 					in long long modified,
@@ -222,12 +264,12 @@ module general {
 				IdentifierGeneratorServer {
 #pragma version CommonServer 2.0
 			void delete(in IdentifierSeq ids,
-					in ::security::corba::SessionKey sessionKey)
+					in security::corba::SessionKey sessionKey)
 					raises (AMFICOMRemoteException);
 
 			IdentifierSeq transmitRefreshedStorableObjects(
 					in StorableObjectSeq storableObjects,
-					in ::security::corba::SessionKey sessionKey)
+					in security::corba::SessionKey sessionKey)
 					raises (AMFICOMRemoteException);
 		};
 
@@ -249,7 +291,11 @@ module general {
 					enum CompoundConditionSort {
 						AND,
 						OR} sort;
+#ifdef NO_STRUCT_RECURSION
+					::CORBA::AnySeq innerConditions;
+#else // NO_STRUCT_RECURSION
 					sequence<IdlStorableObjectCondition> innerConditions;
+#endif // NO_STRUCT_RECURSION
 				} compoundCondition;
 			case TYPICAL:
 				struct IdlTypicalCondition {
@@ -283,5 +329,11 @@ module general {
 		} StorableObjectCondition;
 	};
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // GENERAL_IDL

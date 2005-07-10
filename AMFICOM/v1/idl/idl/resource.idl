@@ -1,5 +1,5 @@
 /*-
- * $Id: resource.idl,v 1.17 2005/07/03 19:16:34 bass Exp $
+ * $Id: resource.idl,v 1.18 2005/07/10 13:49:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,34 +11,50 @@
 
 #include "general.idl"
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module resource {
 	module corba {
-		valuetype IdlImageResource: ::general::corba::StorableObject {
+#ifdef NO_ALIASES
+		valuetype IdlImageResource: general::corba::IdlStorableObject {
+#else // NO_ALIASES
+		valuetype IdlImageResource: general::corba::StorableObject {
+#endif // NO_ALIASES
 			union ImageResourceData switch (enum ImageResourceSort {
 					BITMAP,
 					FILE,
 					SCHEME}) {
 				case BITMAP:
 					struct BitmapImageResourceData {
-						::general::corba::WString32 codename;
+						general::corba::WString32 codename;
 						::CORBA::OctetSeq image;
+#ifdef STRICT
+					} bitmap_image_resource_data;
+#else // STRICT
 					} bitmapImageResourceData;
+#endif // STRICT
 				case FILE:
-					::general::corba::WString256 fileName;
+					general::corba::WString256 fileName;
 				case SCHEME:
 					::CORBA::OctetSeq image;
 			};
 
 			public ImageResourceData data;
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
-			factory init(in ::general::corba::Identifier id,
+#endif // NO_DEFAULT_FACTORIES
+			factory init(in general::corba::Identifier id,
 					in long long created,
 					in long long modified,
-					in ::general::corba::Identifier creatorId,
-					in ::general::corba::Identifier modifierId,
+					in general::corba::Identifier creatorId,
+					in general::corba::Identifier modifierId,
 					in long long version,
 					in ImageResourceData data);
 		};
@@ -47,5 +63,11 @@ module resource {
 		typedef sequence<ImageResource> ImageResourceSeq;
 	};
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // RESOURCE_IDL

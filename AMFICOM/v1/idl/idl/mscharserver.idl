@@ -1,5 +1,5 @@
 /*-
- * $Id: mscharserver.idl,v 1.4 2005/07/03 19:16:33 bass Exp $
+ * $Id: mscharserver.idl,v 1.5 2005/07/10 13:49:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,13 @@
 #include "scheme.idl"
 #include "mapview.idl"
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module mscharserver {
 	module corba {
@@ -531,5 +537,11 @@ module mscharserver {
 		};
 	};
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // MSCHARSERVER_IDL

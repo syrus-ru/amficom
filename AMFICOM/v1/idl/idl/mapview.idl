@@ -1,5 +1,5 @@
 /*-
- * $Id: mapview.idl,v 1.1 2005/07/03 19:16:34 bass Exp $
+ * $Id: mapview.idl,v 1.2 2005/07/10 13:49:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,11 +11,21 @@
 
 #include "administration.idl"
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module mapview {
 	module corba {
-		valuetype IdlMapView: ::administration::corba::DomainMember {
+#ifdef NO_ALIASES
+		valuetype IdlMapView: administration::corba::IdlDomainMember {
+#else // NO_ALIASES
+		valuetype IdlMapView: administration::corba::DomainMember {
+#endif // NO_ALIASES
 			public wstring name;
 			public wstring description;
 
@@ -24,30 +34,38 @@ module mapview {
 			public double scale;
 			public double defaultScale;
 
-			public ::general::corba::Identifier mapId;
-			public ::general::corba::IdentifierSeq schemeIds;
+			public general::corba::Identifier mapId;
+			public general::corba::IdentifierSeq schemeIds;
 
+#ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
-			factory init(in ::general::corba::Identifier id,
+#endif // NO_DEFAULT_FACTORIES
+			factory init(in general::corba::Identifier id,
 					in long long created,
 					in long long modified,
-					in ::general::corba::Identifier creatorId,
-					in ::general::corba::Identifier modifierId,
+					in general::corba::Identifier creatorId,
+					in general::corba::Identifier modifierId,
 					in long long version,
-					in ::general::corba::Identifier domainId,
+					in general::corba::Identifier domainId,
 					in wstring name,
 					in wstring description,
 					in double longitude,
 					in double latitude,
 					in double scale,
 					in double defaultScale,
-					in ::general::corba::Identifier mapId,
-					in ::general::corba::IdentifierSeq schemeIds);
+					in general::corba::Identifier mapId,
+					in general::corba::IdentifierSeq schemeIds);
 		};
 
 		typedef IdlMapView MapView;
 		typedef sequence<MapView> MapViewSeq;
 	};
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // MAPVIEW_IDL

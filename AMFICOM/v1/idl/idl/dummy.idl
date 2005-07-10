@@ -1,5 +1,5 @@
 /*-
- * $Id: dummy.idl,v 1.1 2005/07/03 19:16:34 bass Exp $
+ * $Id: dummy.idl,v 1.2 2005/07/10 13:49:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,13 @@
 #ifndef DUMMY_IDL
 #define DUMMY_IDL
 
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+module com {
+module syrus {
+module AMFICOM {
+#else // MY_COMPILER_IS_NOT_BRAINDEAD
 #pragma prefix "AMFICOM.syrus.com"
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 module general {
 #ifndef MY_COMPILER_IS_NOT_BRAINDEAD
@@ -20,5 +26,11 @@ module general {
 	native StorableObject;
 #endif // MY_COMPILER_IS_NOT_BRAINDEAD
 };
+
+#ifndef MY_COMPILER_IS_NOT_BRAINDEAD
+};
+};
+};
+#endif // MY_COMPILER_IS_NOT_BRAINDEAD
 
 #endif // DUMMY_IDL
