@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.43 2005/07/10 15:06:07 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.44 2005/07/10 16:12:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,21 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.util.Log.SEVERE;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -23,14 +33,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -48,7 +56,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/10 15:06:07 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/10 16:12:12 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -60,13 +68,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 
 	private String description;
 
-	Identifier symbolId;
+	private Identifier symbolId;
 
+	/**
+	 * Used in a condition, so left package-visible.
+	 */
 	Identifier parentSchemeProtoGroupId;
 
-	private SchemeProtoGroupDatabase schemeProtoGroupDatabase;
-
-	private ArrayList itemListeners = new ArrayList();
+	private ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
 	/**
 	 * @param id
@@ -76,9 +85,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	SchemeProtoGroup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		try {
-			this.schemeProtoGroupDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMEPROTOGROUP_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -108,15 +116,12 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		this.description = description;
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
-
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	public SchemeProtoGroup(final IdlSchemeProtoGroup transferable) {
-		this.schemeProtoGroupDatabase = (SchemeProtoGroupDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -148,15 +153,14 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 			final BitmapImageResource symbol,
 			final SchemeProtoGroup parentSchemeProtoGroup)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
 		
 		try {
 			final Date created = new Date();
 			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEPROTOGROUP_CODE),
+					IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOGROUP_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, symbol,
 					parentSchemeProtoGroup);
@@ -190,7 +194,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		else if (childItem instanceof LibraryEntry)
 			addChild((LibraryEntry) childItem);
 		else
-			throw new UnsupportedOperationException(ErrorMessages.UNSUPPORTED_CHILD_TYPE);
+			throw new UnsupportedOperationException(UNSUPPORTED_CHILD_TYPE);
 	}
 
 	/**
@@ -213,7 +217,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @param schemeProtoElement cannot be <code>null</code>.
 	 */
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
-		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeProtoElement != null: NON_NULL_EXPECTED;
 		schemeProtoElement.setParentSchemeProtoGroup(this);
 	}
 
@@ -225,8 +229,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @todo add sanity checks for my own id.
 	 */
 	public void addSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
-		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert schemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
+		assert schemeProtoGroup != this: CIRCULAR_DEPS_PROHIBITED;
 		schemeProtoGroup.setParentSchemeProtoGroup(this);
 	}
 
@@ -273,10 +277,10 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *         <em>immutable</em> shared instance, let me know.
 	 * @see Item#getChildren()
 	 */
-	public List getChildren() {
-		final Set schemeProtoGroups = getSchemeProtoGroups();
-		final Set schemeProtoElements = getSchemeProtoElements();
-		final List children = new ArrayList(schemeProtoGroups.size() + schemeProtoElements.size());
+	public List<Item> getChildren() {
+		final Set<SchemeProtoGroup> schemeProtoGroups = getSchemeProtoGroups();
+		final Set<SchemeProtoElement> schemeProtoElements = getSchemeProtoElements();
+		final List<Item> children = new ArrayList<Item>(schemeProtoGroups.size() + schemeProtoElements.size());
 		children.addAll(schemeProtoGroups);
 		children.addAll(schemeProtoElements);
 		return children;
@@ -288,7 +292,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.symbolId != null
-				&& this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.parentSchemeProtoGroupId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.symbolId);
 		dependencies.add(this.parentSchemeProtoGroupId);
@@ -301,7 +305,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -316,7 +320,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
@@ -331,22 +335,28 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	/**
 	 * @see Item#getParent()
 	 */
-	public Item getParent() {
-		return getParentSchemeProtoGroup();
+	public SchemeProtoGroup getParent() {
+		return this.getParentSchemeProtoGroup();
+	}
+
+	Identifier getParentSchemeProtoGroupId() {
+		assert this.parentSchemeProtoGroupId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeProtoGroupId.isVoid() || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		return this.parentSchemeProtoGroupId;
 	}
 
 	/**
+	 * A wrapper around {@link #getParentSchemeProtoGroupId()}.
+	 *
 	 * @return <code>schemeProtoGroup</code> parent for this
 	 *         <code>schemeProtoGroup</code>, or <code>null</code> if
 	 *         none.
 	 */
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
-		assert this.parentSchemeProtoGroupId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-
 		try {
-			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
+			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -355,12 +365,13 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeProtoElements() {
+	public Set<SchemeProtoElement> getSchemeProtoElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPROTOELEMENT_CODE), true, true));
+			final Set<SchemeProtoElement> schemeProtoElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(schemeProtoElements);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
 		}
 	}
 
@@ -368,25 +379,32 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeProtoGroups() {
+	public Set<SchemeProtoGroup> getSchemeProtoGroups() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPROTOGROUP_CODE), true, true));
+			final Set<SchemeProtoGroup> schemeProtoGroups = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true, true);
+			return Collections.unmodifiableSet(schemeProtoGroups);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
 		}
 	}
 
+	Identifier getSymbolId() {
+		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
+		assert this.symbolId.isVoid() || this.symbolId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		return this.symbolId;
+	}
+
 	/**
+	 * A wrapper around {@link #getSymbolId()}.
+	 *
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) StorableObjectPool
-					.getStorableObject(this.symbolId, true);
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -437,8 +455,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *       done so far).
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
-		assert schemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeProtoElements().contains(schemeProtoElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoElement != null: NON_NULL_EXPECTED;
+		assert getSchemeProtoElements().contains(schemeProtoElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoGroup(null);
 	}
 
@@ -451,8 +469,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *       <code>schemeProtoGroup</code>.
 	 */
 	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
-		assert schemeProtoGroup != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeProtoGroups().contains(schemeProtoGroup): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
+		assert getSchemeProtoGroups().contains(schemeProtoGroup): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoGroup.setParentSchemeProtoGroup(null);
 	}
 
@@ -478,10 +496,10 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 		super.setAttributes(created, modified, creatorId, modifierId,
 				version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeProtoGroupId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert symbolId != null: NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroupId != null: NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -493,8 +511,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null: OBJECT_NOT_INITIALIZED;
+		assert description != null: NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -505,8 +523,8 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0: OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -530,17 +548,27 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param parentSchemeProtoGroupId
+	 */
+	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
+		assert !parentSchemeProtoGroupId.equals(this.id) : CIRCULAR_DEPS_PROHIBITED;
+		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
+			return;
+		}
+		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeProtoGroupId()}
+	 *
 	 * @param parentSchemeProtoGroup
 	 * @todo Check whether <code>parentSchemeProtoGroup</code> is not a
 	 *       lower-level descendant of <code>this</code>.
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		assert parentSchemeProtoGroup != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		final Identifier newParentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
-		if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
-			return;
-		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
-		super.markAsChanged();
+		this.setParentSchemeProtoGroupId(Identifier.possiblyVoid(parentSchemeProtoGroup));
 	}
 
 	/**
@@ -557,19 +585,19 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *
 	 * @param schemeProtoElements
 	 */
-	public void setSchemeProtoElements(final Set schemeProtoElements) {
-		assert schemeProtoElements != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeProtoElementIterator = getSchemeProtoElements().iterator(); oldSchemeProtoElementIterator.hasNext();) {
-			final SchemeProtoElement oldSchemeProtoElement = (SchemeProtoElement) oldSchemeProtoElementIterator.next();
+	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) {
+		assert schemeProtoElements != null: NON_NULL_EXPECTED;
+		for (final SchemeProtoElement oldSchemeProtoElement : this.getSchemeProtoElements()) {
 			/*
 			 * Check is made to prevent SchemeProtoElements from
 			 * permanently losing their parents.
 			 */
 			assert !schemeProtoElements.contains(oldSchemeProtoElement);
-			removeSchemeProtoElement(oldSchemeProtoElement);
+			this.removeSchemeProtoElement(oldSchemeProtoElement);
 		}
-		for (final Iterator schemeProtoElementIterator = schemeProtoElements.iterator(); schemeProtoElementIterator.hasNext();)
-			addSchemeProtoElement((SchemeProtoElement) schemeProtoElementIterator.next());
+		for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
+			this.addSchemeProtoElement(schemeProtoElement);
+		}
 	}
 
 	/**
@@ -582,24 +610,36 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 *
 	 * @param schemeProtoGroups
 	 */
-	public void setSchemeProtoGroups(final Set schemeProtoGroups) {
-		assert schemeProtoGroups != null: ErrorMessages.NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeProtoGroupIterator = getSchemeProtoGroups().iterator(); oldSchemeProtoGroupIterator.hasNext();)
-			removeSchemeProtoGroup((SchemeProtoGroup) oldSchemeProtoGroupIterator.next());
-		for (final Iterator schemeProtoGroupIterator = schemeProtoGroups.iterator(); schemeProtoGroupIterator.hasNext();)
-			addSchemeProtoGroup((SchemeProtoGroup) schemeProtoGroupIterator.next());
+	public void setSchemeProtoGroups(final Set<SchemeProtoGroup> schemeProtoGroups) {
+		assert schemeProtoGroups != null: NON_NULL_EXPECTED;
+		for (final SchemeProtoGroup oldSchemeProtoGroup : this.getSchemeProtoGroups()) {
+			this.removeSchemeProtoGroup(oldSchemeProtoGroup);
+		}
+		for (final SchemeProtoGroup schemeProtoGroup : schemeProtoGroups) {
+			this.addSchemeProtoGroup(schemeProtoGroup);
+		}
 	}
 
 	/**
+	 * @param symbolId
+	 */
+	void setSymbolId(final Identifier symbolId) {
+		assert symbolId.isVoid() || symbolId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		if (this.symbolId.equals(symbolId)) {
+			return;
+		}
+		this.symbolId = symbolId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setSymbolId(Identifier)}.
+	 *
 	 * @param symbol
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
 	 */
 	public void setSymbol(final BitmapImageResource symbol) {
-		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
-		if (this.symbolId.equals(newSymbolId))
-			return;
-		this.symbolId = newSymbolId;
-		super.markAsChanged();
+		this.setSymbolId(Identifier.possiblyVoid(symbol));
 	}
 
 	/**
