@@ -1,18 +1,25 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.4 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.5 2005/07/10 15:06:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/10 15:06:07 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -37,36 +44,112 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 
 	private static SchemeCablePortWrapper instance;
 
-	public List getKeys() {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	private List<String> keys;
+
+	private SchemeCablePortWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_DIRECTION_TYPE,
+				COLUMN_CABLE_PORT_TYPE_ID,
+				COLUMN_CABLE_PORT_ID,
+				COLUMN_MEASUREMENT_PORT_ID,
+				COLUMN_PARENT_DEVICE_ID,
+				COLUMN_CHARACTERISTICS}));
 	}
 
-	public String getName(String key) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	public List<String> getKeys() {
+		return this.keys;
 	}
 
-	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	public String getName(final String key) {
+		return key;
 	}
 
-	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	@Override
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
+			return Integer.class;
+		} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)
+				|| key.equals(COLUMN_CABLE_PORT_ID)
+				|| key.equals(COLUMN_MEASUREMENT_PORT_ID)
+				|| key.equals(COLUMN_PARENT_DEVICE_ID)) {
+			return Identifier.class;
+		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+			return Set.class;
+		}
+		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	public Object getPropertyValue(final String key) {
+		return null;
 	}
 
-	public Object getValue(Object object, String key) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+		// empty
 	}
 
-	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	@Override
+	public Object getValue(final Object object, final String key) {
+		final Object value = super.getValue(object, key);
+		if (value != null) {
+			return value;
+		}
+		if (object instanceof SchemeCablePort) {
+			final SchemeCablePort schemeCablePort = (SchemeCablePort) object;
+			if (key.equals(COLUMN_NAME)) {
+				return schemeCablePort.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				return schemeCablePort.getDescription();
+			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
+				return new Integer(schemeCablePort.getDirectionType().value());
+			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
+				return schemeCablePort.portTypeId;
+			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
+				return schemeCablePort.portId;
+			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
+				return schemeCablePort.measurementPortId;
+			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
+				return schemeCablePort.parentSchemeDeviceId;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				return schemeCablePort.getCharacteristics();
+			}
+		}
+		return null;
 	}
 
-	public void setValue(Object object, String key, Object value) {
-		throw new UnsupportedOperationException("SchemeCablePortWrapper | not implemented yet");
+	public boolean isEditable(final String key) {
+		return false;
+	}
+
+	public void setValue(final Object object, final String key, final Object value) {
+		if (object instanceof SchemeCablePort) {
+			final SchemeCablePort schemeCablePort = (SchemeCablePort) object;
+			if (key.equals(COLUMN_NAME)) {
+				schemeCablePort.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				schemeCablePort.getDescription();
+			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
+				schemeCablePort.setDirectionType(DirectionType.from_int(((Integer) value).intValue()));
+			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
+				schemeCablePort.portTypeId = (Identifier) value;
+			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
+				schemeCablePort.portId = (Identifier) value;
+			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
+				schemeCablePort.measurementPortId = (Identifier) value;
+			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
+				schemeCablePort.parentSchemeDeviceId = (Identifier) value;
+			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
+				schemeCablePort.setCharacteristics((Set<Characteristic>) value);
+			}
+		}
 	}
 
 	public static SchemeCablePortWrapper getInstance() {

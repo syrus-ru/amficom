@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.5 2005/07/03 19:16:20 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.6 2005/07/10 15:06:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -16,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/10 15:06:07 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -147,21 +148,21 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 				schemeProtoElement.setDescription((String) value);
 			} else if (key.equals(COLUMN_LABEL)) {
 				schemeProtoElement.setLabel((String) value);
+			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
 				/**
-				 * @todo: Add package-visible setter methods.
+				 * @bug changed status is not updated.
 				 */
-//			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-//				schemeProtoElement.equipmentTypeId = (Identifier) value;
-//			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-//				schemeProtoElement.symbolId = (Identifier) value;
-//			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
-//				schemeProtoElement.ugoCellId = (Identifier) value;
-//			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
-//				schemeProtoElement.schemeCellId = (Identifier) value;
-//			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
-//				schemeProtoElement.parentSchemeProtoGroupId = (Identifier) value;
-//			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-//				schemeProtoElement.parentSchemeProtoElementId = (Identifier) value;
+				schemeProtoElement.equipmentTypeId = (Identifier) value;
+			} else if (key.equals(COLUMN_SYMBOL_ID)) {
+				schemeProtoElement.symbolId = (Identifier) value;
+			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+				schemeProtoElement.ugoCellId = (Identifier) value;
+			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+				schemeProtoElement.schemeCellId = (Identifier) value;
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
+				schemeProtoElement.parentSchemeProtoGroupId = (Identifier) value;
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+				schemeProtoElement.parentSchemeProtoElementId = (Identifier) value;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				schemeProtoElement.setCharacteristics((Set) value);
 			}
