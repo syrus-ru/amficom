@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2005/07/10 13:41:30 bass Exp $
+# $Id: Makefile,v 1.23 2005/07/11 09:29:18 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -61,7 +61,7 @@ sqljclean:
 		.sqlj
 
 .PHONY: clean
-clean: sqljclean idlclean
+clean: sqljclean
 	$(RM) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
