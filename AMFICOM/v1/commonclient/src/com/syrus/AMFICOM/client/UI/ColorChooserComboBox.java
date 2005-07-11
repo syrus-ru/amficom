@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.2 2005/06/17 11:50:08 bass Exp $
+ * $Id: ColorChooserComboBox.java,v 1.3 2005/07/11 12:38:10 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,12 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:50:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
  * @module commonclient_v1
  */
 
-public class ColorChooserComboBox extends JComboBox {
+public class ColorChooserComboBox extends AComboBox {
 	private static final long serialVersionUID = 3258133565697832497L;
 
 	JButton addColorButton;
@@ -42,6 +42,7 @@ public class ColorChooserComboBox extends JComboBox {
 	
 	public ColorChooserComboBox() {
 		this(DEFAULT_COLOR_SET);
+		setFontSize(SMALL_FONT);
 	}
 	
 	public ColorChooserComboBox(Color[] colors) {

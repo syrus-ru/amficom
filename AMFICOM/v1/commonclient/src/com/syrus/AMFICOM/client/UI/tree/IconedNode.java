@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedNode.java,v 1.2 2005/06/21 14:58:43 bob Exp $
+ * $Id: IconedNode.java,v 1.3 2005/07/11 12:38:10 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.logic.AbstractItem;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
  * @module generalclient_v1
  */
 
-public class IconedNode extends AbstractItem {
+public class IconedNode extends AbstractItem implements Namable {
 	private Object object;
 	private String name;
 	private Icon icon;

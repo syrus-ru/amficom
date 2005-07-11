@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.7 2005/06/23 14:44:52 bob Exp $
+ * $Id: ResourceKeys.java,v 1.8 2005/07/11 12:38:10 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/23 14:44:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/11 12:38:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -79,4 +79,5 @@ public interface ResourceKeys {
 	String	I18N_CHOOSE_COLOR						= "choose_color";											//$NON-NLS-1$
 	String	I18N_CUSTOM								= "custom";												//$NON-NLS-1$
 
+	String	I18N_COMMIT		= "commit";									//$NON-NLS-1$
 }

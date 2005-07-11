@@ -11,6 +11,11 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JDialog;
@@ -22,9 +27,11 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/15 08:33:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -79,6 +86,58 @@ public final class CommonUIUtilities {
 		}
 	}
 	
+	public static Collection<Object> getChildObjects(Item node) {
+		Collection<Object> childObjects = new ArrayList<Object>(node.getChildren().size());
+		for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
+			childObjects.add(((Item)it.next()).getObject());
+		}
+		return childObjects;
+	}
+	
+	public static List<Object> getObjectsToAdd(Collection newObjs, Collection existingObjs) {
+		List<Object> toAdd = new LinkedList<Object>();
+		for (Iterator it = newObjs.iterator(); it.hasNext();) {
+			Object itObj = it.next();
+			if (itObj instanceof StorableObject) {
+				if (!contains(existingObjs, (StorableObject) itObj))
+					toAdd.add(itObj);	
+			} else {
+				if (!existingObjs.contains(itObj))
+					toAdd.add(itObj);
+			}
+		}
+		return toAdd;
+	}
+
+	public static boolean contains(Collection collection, StorableObject obj) {
+		for (Iterator it = collection.iterator(); it.hasNext();) {
+			Object itObj = it.next();
+			if (itObj instanceof StorableObject) {
+				if (((StorableObject)itObj).getId().equals(obj.getId()))
+					return true;
+			}
+		}
+		return false;		
+	}
+	
+	public static List<Item> getItemsToRemove(Collection newObjs, Collection<Item> existingObjs) {
+		List<Item> toRemove = new LinkedList<Item>(existingObjs);
+		for (Iterator it = existingObjs.iterator(); it.hasNext();) {
+			Item childItem = (Item) it.next();
+			Object obj = childItem.getObject();
+			if (obj instanceof StorableObject) {
+				StorableObject so = (StorableObject)obj;
+				if (contains(newObjs, so)) {
+					toRemove.remove(childItem);
+				}
+			} else {
+				if (newObjs.contains(obj)) {
+					toRemove.remove(childItem);
+				}
+			}
+		}
+		return toRemove;
+	}
 
 	public static synchronized void invokeAsynchronously(final Runnable doRun,
 											final String dialogTitle) {

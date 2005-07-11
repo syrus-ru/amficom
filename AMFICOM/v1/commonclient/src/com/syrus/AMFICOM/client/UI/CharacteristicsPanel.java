@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.11 2005/07/11 08:19:41 bass Exp $
+ * $Id: CharacteristicsPanel.java,v 1.12 2005/07/11 12:38:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client.UI;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,6 +16,8 @@ import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,24 +30,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 
-import com.syrus.AMFICOM.client.UI.tree.IconedNode;
-import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -61,21 +61,21 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
-import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:38:09 $
  * @module commonclient_v1
  */
 
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	protected static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL };
+		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,	
+		CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+		CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+	};
 
 	protected ApplicationContext aContext;
 	protected CharacteristicTypeSort selectedTypeSort;
@@ -87,7 +87,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	JPanel pnPanel0 = new JPanel();
 	PropsADToolBar toolBar;
-	IconedTreeUI treeUI;
+	AComboBox characteristicTypeSortCombo;
 	WrapperedTable wTable;
 	WrapperedTableModel wtModel;
 
@@ -103,6 +103,34 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
+	private class CharacteristicTypeSortRenderer extends JLabel implements ListCellRenderer {
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			CharacteristicTypeSort sort = (CharacteristicTypeSort)value;
+			String name;
+			switch (sort.value()) {
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
+					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPTICAL);
+					break;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
+					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_ELECTRICAL);
+					break;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
+					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPERATIONAL);
+					break;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
+					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_INTERFACE);
+					break;
+				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
+					name = LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_VISUAL);
+					break;
+				default:
+					throw new UnsupportedOperationException("CharacteristicTypeSortRenderer: unknown CharacteristicTypeSort " + sort.value()); //$NON-NLS-1$
+			}
+			this.setText(name);
+			return this;
+		}
+	}
+	
 	public CharacteristicsPanel() {
 		super();
 
@@ -145,17 +173,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.wTable.getColumnModel().getColumn(0).setPreferredWidth(180);
 		this.wTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		this.treeUI = new IconedTreeUI(createRoot());
-		JTree tree = this.treeUI.getTree();
-		tree.setRootVisible(false);
-		tree.addTreeSelectionListener(new TreeSelectionListener() {
-			public void valueChanged(TreeSelectionEvent e) {
-				tree_valueChanged(e);
+		this.characteristicTypeSortCombo = new AComboBox(sorts);
+		this.characteristicTypeSortCombo.addItem(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
+		this.characteristicTypeSortCombo.setRenderer(new CharacteristicTypeSortRenderer());
+		this.characteristicTypeSortCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				item_stateChanged(e);
 			}
 		});
-		JComponent treePanel = this.treeUI.getTree();
-		treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		treePanel.setPreferredSize(null);
 
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -181,8 +206,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints(treePanel, gbcPanel0);
-		this.pnPanel0.add(treePanel);
+		gbPanel0.setConstraints(this.characteristicTypeSortCombo, gbcPanel0);
+		this.pnPanel0.add(this.characteristicTypeSortCombo);
 
 		JScrollPane tablePane = new JScrollPane(this.wTable);
 		tablePane.getViewport().setBackground(SystemColor.window);
@@ -322,34 +347,10 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		setPropsEditable(false);
 	}
 
-	void tree_valueChanged(TreeSelectionEvent e) {
-		Item node = (Item) e.getPath().getLastPathComponent();
-		if (node == null)
-			return;
-
-		this.selectedTypeSort = (CharacteristicTypeSort) node.getObject();
+	void item_stateChanged(ItemEvent e) {
+		this.selectedTypeSort = (CharacteristicTypeSort) e.getItem();
 		setPropsEditable(this.editableSorts.contains(this.selectedTypeSort));
 		elementSelected(this.selectedTypeSort);
-	}
-
-	private Item createRoot() {
-		Item root = new IconedNode(ResourceKeys.I18N_ROOT, LangModelGeneral.getString(ResourceKeys.I18N_ROOT));
-		root.addChild(new IconedNode(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
-				LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPTICAL), false));
-		root.addChild(new IconedNode(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
-				LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_ELECTRICAL), false));
-		root.addChild(new IconedNode(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
-				LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_OPERATIONAL), false));
-		root.addChild(new IconedNode(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
-				LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_INTERFACE), false));
-		root.addChild(new IconedNode(
-				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-				LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTICTYPESORT_VISUAL), false));
-		return root;
 	}
 
 	void setCharacteristicValue(Collection characteristics, String name,
@@ -489,7 +490,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			});
 			
-			this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+			this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 			this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			this.commitButton.setFocusPainted(false);
 			this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
