@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableDomainMember.java,v 1.4 2005/06/21 15:10:04 bass Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.5 2005/07/11 08:19:00 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Date;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.Identifier;
@@ -17,7 +18,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/21 15:10:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 08:19:00 $
  * @module admin_v1
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
@@ -65,7 +66,7 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 			/*
 			 * Never.
 			 */
-			Log.debugException(cnse, Log.SEVERE);
+			Log.debugException(cnse, Level.SEVERE);
 			return null;
 		}
 	}

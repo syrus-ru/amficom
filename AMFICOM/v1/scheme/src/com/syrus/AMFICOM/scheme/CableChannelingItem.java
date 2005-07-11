@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.35 2005/07/07 15:52:10 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.36 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -235,7 +236,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.endSiteNodeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -251,7 +252,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		try {
 			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -261,7 +262,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		try {
 			return (PhysicalLink) StorableObjectPool.getStorableObject(this.physicalLinkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -288,7 +289,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.startSiteNodeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -393,7 +394,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeCableLink == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.44 2005/07/10 16:12:12 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.45 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
-import static com.syrus.util.Log.SEVERE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/10 16:12:12 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */

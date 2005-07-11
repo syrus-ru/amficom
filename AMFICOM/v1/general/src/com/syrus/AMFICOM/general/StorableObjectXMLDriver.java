@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.21 2005/06/17 12:38:53 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.22 2005/07/11 08:18:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.21 $, $Date: 2005/06/17 12:38:53 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/11 08:18:56 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -127,13 +128,13 @@ public class StorableObjectXMLDriver {
 		String className = ObjectGroupEntities.getPackageName(id.getMajor()) + "."
 				+ ObjectGroupEntities.getGroupName(id.getMajor()).replaceAll("Group$", "") + "StorableObjectPool";
 		try {
-			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + className, Log.INFO);
+			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + className, Level.INFO);
 			Class clazz = Class.forName(className);
-			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + clazz.getName(), Log.INFO);
+			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + clazz.getName(), Level.INFO);
 			Method method = clazz.getMethod("getStorableObject", new Class[] { Identifier.class, boolean.class});
 			storableObject = (StorableObject) method.invoke(null, new Object[] { id, Boolean.TRUE});
 			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | id "
-					+ storableObject.getId().getIdentifierString(), Log.INFO);
+					+ storableObject.getId().getIdentifierString(), Level.INFO);
 
 		} catch (ClassNotFoundException e) {
 			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className

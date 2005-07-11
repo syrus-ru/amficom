@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlServerImpl.java,v 1.1 2005/07/05 15:23:17 bass Exp $
+ * $Id: IdlServerImpl.java,v 1.2 2005/07/11 08:19:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.administration.corba;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -17,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/05 15:23:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 08:19:00 $
  * @module admin_v1
  */
 final class IdlServerImpl extends IdlServer {
@@ -60,7 +62,7 @@ final class IdlServerImpl extends IdlServer {
 		try {
 			return new Server(this);
 		} catch (final CreateObjectException coe) {
-			Log.debugException(coe, Log.SEVERE);
+			Log.debugException(coe, Level.SEVERE);
 			throw new IdlCreateObjectException(coe.getMessage());
 		}
 	}

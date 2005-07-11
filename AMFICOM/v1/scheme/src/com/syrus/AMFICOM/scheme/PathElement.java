@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.39 2005/07/07 15:52:10 bass Exp $
+ * $Id: PathElement.java,v 1.40 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -481,7 +482,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			 * Never.
 			 */
 			assert false: ae.getMessage();
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -502,7 +503,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		try {
 			return (SchemePath) StorableObjectPool.getStorableObject(this.parentSchemePathId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -528,7 +529,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			 * Never.
 			 */
 			assert false: ae.getMessage();
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -551,7 +552,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			 * Never.
 			 */
 			assert false: ae.getMessage();
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -582,7 +583,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			 * Never.
 			 */
 			assert false: ae.getMessage();
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}

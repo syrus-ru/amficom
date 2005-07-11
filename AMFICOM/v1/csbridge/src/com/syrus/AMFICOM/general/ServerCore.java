@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.23 2005/07/03 19:16:25 bass Exp $
+ * $Id: ServerCore.java,v 1.24 2005/07/11 08:18:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/07/03 19:16:25 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/11 08:18:59 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -71,7 +72,7 @@ public abstract class ServerCore implements CommonServer {
 					new IdlIdentifierHolder(),
 					new IdlIdentifierHolder());
 	
-			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Log.INFO);
+			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Level.INFO);
 			StorableObjectPool.delete(Identifier.fromTransferables(idsT));
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -86,9 +87,9 @@ public abstract class ServerCore implements CommonServer {
 	 */
 	public final void verify(final byte b) {
 		try {
-			Log.debugMessage("ServerCore.verify() | Verifying value: " + b, Log.CONFIG);
+			Log.debugMessage("ServerCore.verify() | Verifying value: " + b, Level.CONFIG);
 		} catch (final Throwable t) {
-			Log.debugException(t, Log.SEVERE);
+			Log.debugException(t, Level.SEVERE);
 		}
 	}
 
@@ -105,7 +106,7 @@ public abstract class ServerCore implements CommonServer {
 			Log.debugMessage("ServerCore.getGeneratedIdentifierRange() | Generating "
 					+ size + " identifiers of type: "
 					+ ObjectEntities.codeToString(entityCode),
-					Log.CONFIG);
+					Level.CONFIG);
 			return Identifier.createTransferables(IdentifierGenerator.generateIdentifierRange(entityCode, size));
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
@@ -121,7 +122,7 @@ public abstract class ServerCore implements CommonServer {
 		try {
 			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier of type: "
 					+ ObjectEntities.codeToString(entityCode),
-					Log.CONFIG);
+					Level.CONFIG);
 			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
@@ -145,7 +146,7 @@ public abstract class ServerCore implements CommonServer {
 			this.validateAccess(sessionKeyT, userIdH, domainIdH);
 
 			Log.debugMessage("ServerCore.transmitStorableObjects() | Requested " + length + " storable object(s) of type: "
-					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)), Log.FINEST);
+					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)), Level.FINEST);
 
 			final Set storableObjects = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(idsT), true);
 			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
@@ -182,7 +183,7 @@ public abstract class ServerCore implements CommonServer {
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userId, domainId);
 			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsCondition() | Requested storable object(s) of type: "
-					+ ObjectEntities.codeToString(entityCode), Log.FINEST);
+					+ ObjectEntities.codeToString(entityCode), Level.FINEST);
 
 			/**
 			 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
@@ -223,7 +224,7 @@ public abstract class ServerCore implements CommonServer {
 					storableObjects.add(StorableObjectPool.fromTransferable(entityCode, transferables[i]));
 				}
 				catch (final ApplicationException ae) {
-					Log.debugException(ae, Log.SEVERE);
+					Log.debugException(ae, Level.SEVERE);
 				}
 			}
 
@@ -291,7 +292,7 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable t) {
-		Log.debugException(t, Log.SEVERE);
+		Log.debugException(t, Level.SEVERE);
 		return new AMFICOMRemoteException(
 				ErrorCode.ERROR_UNKNOWN,
 				CompletionStatus.COMPLETED_PARTIALLY,
@@ -301,7 +302,7 @@ public abstract class ServerCore implements CommonServer {
 	private AMFICOMRemoteException processDefaultApplicationException(
 			final ApplicationException ae,
 			final ErrorCode errorCode) {
-		Log.debugException(ae, Log.SEVERE);
+		Log.debugException(ae, Level.SEVERE);
 		return new AMFICOMRemoteException(errorCode,
 				CompletionStatus.COMPLETED_NO,
 				ae.getMessage());
@@ -310,7 +311,7 @@ public abstract class ServerCore implements CommonServer {
 	private AMFICOMRemoteException processDefaultIllegalObjectEntityException(
 			final IllegalObjectEntityException ioee,
 			final short entityCode) {
-		Log.debugException(ioee, Log.SEVERE);
+		Log.debugException(ioee, Level.SEVERE);
 		return new AMFICOMRemoteException(
 				ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 				CompletionStatus.COMPLETED_NO,
@@ -320,7 +321,7 @@ public abstract class ServerCore implements CommonServer {
 	}
 
 	private AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige, final short entityCode) {
-		Log.debugException(ige, Log.SEVERE);
+		Log.debugException(ige, Level.SEVERE);
 		return new AMFICOMRemoteException(
 				ErrorCode.ERROR_RETRIEVE,
 				CompletionStatus.COMPLETED_NO,

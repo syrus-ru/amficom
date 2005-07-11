@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.40 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemePort.java,v 1.41 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -206,7 +207,7 @@ public final class SchemePort extends AbstractSchemePort {
 					? null
 					: schemeCableThreads.iterator().next();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -222,7 +223,7 @@ public final class SchemePort extends AbstractSchemePort {
 					? null
 					: schemeLinks.iterator().next();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.122 2005/07/07 17:57:39 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.123 2005/07/11 08:18:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -28,8 +29,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/07/07 17:57:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.123 $, $Date: 2005/07/11 08:18:56 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -619,7 +620,7 @@ public abstract class StorableObjectPool {
 		else
 			Log.debugMessage("StorableObjectPool.delete | Unable to delete object: '" + id + "' of group "
 					+ ObjectGroupEntities.codeToString(groupCode) + '(' + groupCode
-					+ ") since the corresponding pool is not registered", Log.SEVERE);
+					+ ") since the corresponding pool is not registered", Level.SEVERE);
 	}
 
 	/**
@@ -664,7 +665,7 @@ public abstract class StorableObjectPool {
 			} else {
 				Log.debugMessage("StorableObjectPool.delete | Unable to delete identifiables of group: "
 						+ ObjectGroupEntities.codeToString(groupCode) + '(' + groupCode
-						+ ") since the corresponding pool is not registered", Log.SEVERE);
+						+ ") since the corresponding pool is not registered", Level.SEVERE);
 			}
 		}
 	}
@@ -1033,7 +1034,7 @@ public abstract class StorableObjectPool {
 				storableObjects.add(fromTransferable(entityCode, transferables[i]));
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
-					Log.debugException(ae, Log.SEVERE);
+					Log.debugException(ae, Level.SEVERE);
 					continue;
 				} // else
 				throw ae;
@@ -1103,7 +1104,7 @@ public abstract class StorableObjectPool {
 			try {
 				storableObject = transferable.getNative();
 			} catch (final IdlCreateObjectException coe) {
-				Log.debugException(coe, Log.SEVERE);
+				Log.debugException(coe, Level.SEVERE);
 				throw new CreateObjectException(coe.detailMessage);
 			}
 		} else {
@@ -1127,8 +1128,8 @@ public abstract class StorableObjectPool {
 	 * Aborts execution at first <code>ApplicationException</code> caught.
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.122 $, $Date: 2005/07/07 17:57:39 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.123 $, $Date: 2005/07/11 08:18:56 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {

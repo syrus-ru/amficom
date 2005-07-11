@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.21 2005/06/22 15:05:19 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.22 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/06/22 15:05:19 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -144,7 +145,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		try {
 			return (AbstractLink) StorableObjectPool.getStorableObject(this.linkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -161,7 +162,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		try {
 			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -196,7 +197,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -213,7 +214,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -228,7 +229,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
 		if (this.linkId.equals(newLinkId)) {
-			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 			return;
 		}
 
@@ -264,7 +265,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		else {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
 			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			this.abstractLinkTypeId = newAbstractLinkTypeId;

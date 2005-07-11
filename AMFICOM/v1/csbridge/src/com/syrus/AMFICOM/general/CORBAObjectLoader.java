@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.39 2005/07/03 19:16:25 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.40 2005/07/11 08:18:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
  * @author $Author: bass $
  * @module csbridge_v1
  */
@@ -71,7 +72,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
+	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -83,7 +84,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
+	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -99,7 +100,7 @@ public abstract class CORBAObjectLoader {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.39 $, $Date: 2005/07/03 19:16:25 $
+	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -136,7 +137,7 @@ public abstract class CORBAObjectLoader {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("CORBAObjectLoader.loadStorableObjects() | Login restoration cancelled by user", Log.INFO);
+							Log.debugMessage("CORBAObjectLoader.loadStorableObjects() | Login restoration cancelled by user", Level.INFO);
 							return Collections.EMPTY_SET;
 						}
 						throw new LoginException(are.message);
@@ -217,7 +218,7 @@ public abstract class CORBAObjectLoader {
 								continue;
 							}
 							Log.debugMessage("CORBAObjectLoader.loadStorableObjectsButIdsCondition() | Login restoration cancelled by user",
-									Log.INFO);
+									Level.INFO);
 							return Collections.EMPTY_SET;
 						}
 						throw new LoginException(are.message);

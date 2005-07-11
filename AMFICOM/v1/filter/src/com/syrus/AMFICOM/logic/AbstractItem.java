@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.11 2005/04/08 09:06:41 bass Exp $
+ * $Id: AbstractItem.java,v 1.12 2005/07/11 08:18:59 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/08 09:06:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:59 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -79,7 +80,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	public void addChild(Item childItem) {
 		Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
-				+ childItem.toString(), Log.FINEST);
+				+ childItem.toString(), Level.FINEST);
 
 		if (!this.canHaveChildren())
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
@@ -110,7 +111,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	public void setParent(Item parent) {
 		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
-				+ (parent == null ? "'null'" : parent.toString()), Log.FINEST);
+				+ (parent == null ? "'null'" : parent.toString()), Level.FINEST);
 
 		Item oldParent = this.parent;
 		/* yeah, really compare reference */
@@ -146,7 +147,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
 					+ (oldParent == null ? "'null'" : oldParent.toString()) + ", newParent:"
-					+ (newParent == null ? "'null'" : newParent.toString()), Log.FINEST);
+					+ (newParent == null ? "'null'" : newParent.toString()), Level.FINEST);
 		}
 		/* yeah, really compare reference */
 		// if (thisParent == this)

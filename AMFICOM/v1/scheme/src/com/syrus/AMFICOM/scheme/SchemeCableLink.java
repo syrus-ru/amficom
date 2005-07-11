@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.44 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.45 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -188,7 +189,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final Set<CableChannelingItem> cableChannelingItems = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLECHANNELINGITEM_CODE), true, true);
 			return Collections.unmodifiableSet(cableChannelingItems);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -233,7 +234,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true);
 			return Collections.unmodifiableSet(schemeCableThreads);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}

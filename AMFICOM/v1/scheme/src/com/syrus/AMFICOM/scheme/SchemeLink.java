@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.41 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeLink.java,v 1.42 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -439,7 +440,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		if (super.parentSchemeId.isVoid()) {
 			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 
@@ -453,7 +454,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		if (this.parentSchemeElementId.isVoid()) {
 			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 
@@ -461,7 +462,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			assert super.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -472,7 +473,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 
@@ -480,7 +481,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			assert super.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -490,7 +491,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.siteNodeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -632,7 +633,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				 */
 				assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 				if (parentScheme == null) {
-					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 					return;
 				}
 				this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
@@ -642,7 +643,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				 */
 				assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 				if (parentScheme == null) {
-					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+					Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 					return;
 				}
 				this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
@@ -664,7 +665,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			assert this.parentSchemeElementId.isVoid()
 					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
@@ -675,7 +676,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 */
 			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 				StorableObjectPool.delete(this.id);
 				return;
 			}
@@ -688,7 +689,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 */
 			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
@@ -710,7 +711,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			assert this.parentSchemeElementId.isVoid()
 					&& this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
@@ -721,7 +722,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 */
 			assert this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
@@ -732,7 +733,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 			 */
 			assert !this.parentSchemeProtoElementId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 				StorableObjectPool.delete(this.id);
 				return;
 			}

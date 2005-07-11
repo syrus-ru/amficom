@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.44 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemePath.java,v 1.45 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -253,7 +254,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -264,7 +265,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -281,7 +282,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATHELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -311,7 +312,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			return (TransmissionPath) StorableObjectPool.getStorableObject(this.transmissionPathId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -433,7 +434,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert this.parentSchemeId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}

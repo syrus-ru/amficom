@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.93 2005/07/04 13:00:53 bass Exp $
+ * $Id: KIS.java,v 1.94 2005/07/11 08:18:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/07/04 13:00:53 $
+ * @version $Revision: 1.94 $, $Date: 2005/07/11 08:18:58 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -328,7 +329,7 @@ public final class KIS extends DomainMember implements Characterizable {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id,
 					ObjectEntities.MEASUREMENTPORT_CODE), true, breakOnLoadError);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.11 2005/06/29 14:22:43 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.12 2005/07/11 08:18:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.mscharserver;
 
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/29 14:22:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends MscharServerSchemeTransmit {
@@ -73,7 +74,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			//validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit "
-					+ '\'', Log.INFO);
+					+ '\'', Level.INFO);
 			TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
 			byte[] image;
 			try {
@@ -98,7 +99,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			//validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image"
-					+ '\'', Log.INFO);
+					+ '\'', Level.INFO);
 			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
@@ -112,7 +113,7 @@ public final class MscharServerImpl extends MscharServerSchemeTransmit {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 			//validateAccess(idlSessionKey, userId, domainId);
-			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Log.INFO);
+			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Level.INFO);
 			List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
 			IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;

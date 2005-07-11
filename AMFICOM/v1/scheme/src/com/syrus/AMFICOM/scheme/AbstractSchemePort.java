@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.32 2005/07/04 13:00:50 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.33 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
@@ -33,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/07/04 13:00:50 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -171,7 +172,7 @@ public abstract class AbstractSchemePort extends
 		try {
 			return (MeasurementPort) StorableObjectPool.getStorableObject(this.measurementPortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -191,7 +192,7 @@ public abstract class AbstractSchemePort extends
 		try {
 			return (SchemeDevice) StorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -205,7 +206,7 @@ public abstract class AbstractSchemePort extends
 		try {
 			return (Port) StorableObjectPool.getStorableObject(this.portId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -219,7 +220,7 @@ public abstract class AbstractSchemePort extends
 		try {
 			return (PortType) StorableObjectPool.getStorableObject(this.portTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -347,7 +348,7 @@ public abstract class AbstractSchemePort extends
 		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeDevice == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
@@ -368,7 +369,7 @@ public abstract class AbstractSchemePort extends
 
 		final Identifier newPortId = Identifier.possiblyVoid(port);
 		if (this.portId.equals(newPortId)) {
-			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 			return;
 		}
 
@@ -402,7 +403,7 @@ public abstract class AbstractSchemePort extends
 		else {
 			final Identifier newPortTypeId = portType.getId();
 			if (this.portTypeId.equals(newPortTypeId)) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			this.portTypeId = newPortTypeId;

@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.5 2005/05/26 15:36:29 bass Exp $
+ * $Id: DatabaseContext.java,v 1.6 2005/07/11 08:18:55 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.logging.Level;
+
 import com.syrus.util.Log;
 
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/26 15:36:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 08:18:55 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -33,7 +35,7 @@ public final class DatabaseContext {
 				+ entity + " already registered";
 		Log.debugMessage("DatabaseContext.registerDatabase() | Database for type: "
 				+ entity + " registered",
-				Log.FINEST);
+				Level.FINEST);
 		ENTITY_CODE_DATABASE_MAP.put(entityCode, database);
 	}
 

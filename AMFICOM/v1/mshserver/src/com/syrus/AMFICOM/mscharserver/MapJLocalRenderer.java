@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.4 2005/06/28 08:11:40 max Exp $
+ * $Id: MapJLocalRenderer.java,v 1.5 2005/07/11 08:18:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
@@ -37,8 +38,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/06/28 08:11:40 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 08:18:57 $
  * @module mscharserver_v1
  */
 public class MapJLocalRenderer
@@ -183,13 +184,13 @@ public class MapJLocalRenderer
 	
 	public List <MapFeature> findFeature(String searchName) throws IllegalDataException {
 		List <MapFeature> featureList = new LinkedList<MapFeature>();
-		Log.debugMessage("Starting search procedure.", Log.INFO);
+		Log.debugMessage("Starting search procedure.", Level.INFO);
 		@SuppressWarnings("unchecked") Iterator<FeatureLayer> layersIt = this.mapJObject.getLayers().iterator(
 				LayerType.FEATURE);
-		Log.debugMessage("Got layers Iterator.", Log.INFO);		
+		Log.debugMessage("Got layers Iterator.", Level.INFO);		
 		for(;layersIt.hasNext();) {
 			FeatureLayer currLayer = layersIt.next();
-			Log.debugMessage("Searching at FeatureLayer: " + currLayer.getName(), Log.INFO);
+			Log.debugMessage("Searching at FeatureLayer: " + currLayer.getName(), Level.INFO);
 			try {
 				
 				@SuppressWarnings("unchecked") List<String> labelColumnsList = currLayer.getLabelProperties().getLabelColumns();

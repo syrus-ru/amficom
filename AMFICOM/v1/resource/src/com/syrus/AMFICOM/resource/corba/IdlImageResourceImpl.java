@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlImageResourceImpl.java,v 1.1 2005/07/05 15:43:46 bass Exp $
+ * $Id: IdlImageResourceImpl.java,v 1.2 2005/07/11 08:18:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.resource.corba;
 import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._BITMAP;
 import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._FILE;
 import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._SCHEME;
-import static com.syrus.util.Log.SEVERE;
+import static java.util.logging.Level.SEVERE;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/05 15:43:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:57 $
  * @module resource_v1
  */
 final class IdlImageResourceImpl extends IdlImageResource {

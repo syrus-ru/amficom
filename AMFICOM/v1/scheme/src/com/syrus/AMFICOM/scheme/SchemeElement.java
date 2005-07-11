@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.45 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeElement.java,v 1.46 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -362,7 +363,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return (Equipment) StorableObjectPool.getStorableObject(this.equipmentId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -376,7 +377,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return (EquipmentType) StorableObjectPool.getStorableObject(this.equipmentTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -386,7 +387,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this.kisId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -409,7 +410,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 		if (super.parentSchemeId.isVoid()) {
 			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 
@@ -422,14 +423,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 		if (this.parentSchemeElementId.isVoid()) {
 			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 		
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -455,7 +456,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -468,7 +469,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEDEVICE_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -481,7 +482,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -494,7 +495,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -507,7 +508,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEME_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -517,7 +518,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		try {
 			return (SiteNode) StorableObjectPool.getStorableObject(this.siteNodeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -531,7 +532,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			return (BitmapImageResource) StorableObjectPool
 					.getStorableObject(this.symbolId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -573,7 +574,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.ugoCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -692,7 +693,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 		final Identifier newEquipmentId = Identifier.possiblyVoid(equipment);
 		if (this.equipmentId.equals(newEquipmentId)) {
-			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 			return;
 		}
 
@@ -726,7 +727,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		else {
 			final Identifier newEquipmentTypeId = equipmentType.getId();
 			if (this.equipmentTypeId.equals(newEquipmentTypeId)) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			this.equipmentTypeId = newEquipmentTypeId;
@@ -776,7 +777,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			 * Moving from a scheme element to a scheme.
 			 */
 			if (parentScheme == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			super.parentSchemeId = parentScheme.getId();
@@ -795,7 +796,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			 * Moving from a scheme to a scheme element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
@@ -805,7 +806,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			 * Moving from a scheme element to another scheme element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 				StorableObjectPool.delete(this.id);
 				return;
 			}

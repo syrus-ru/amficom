@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.44 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.45 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -210,7 +211,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		try {
 			return (CableThreadType) StorableObjectPool.getStorableObject(this.cableThreadTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -255,7 +256,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		try {
 			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -275,7 +276,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		try {
 			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -310,7 +311,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		try {
 			return (SchemePort) StorableObjectPool.getStorableObject(this.sourceSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -324,7 +325,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		try {
 			return (SchemePort) StorableObjectPool.getStorableObject(this.targetSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -479,7 +480,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert this.parentSchemeCableLinkId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeCableLink == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}

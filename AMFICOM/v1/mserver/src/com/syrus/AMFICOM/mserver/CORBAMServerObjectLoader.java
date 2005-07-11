@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.11 2005/07/03 19:16:17 bass Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.12 2005/07/11 08:18:57 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.mserver;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
  * @author $Author: bass $
  * @module mserver_v1
  */
@@ -53,7 +54,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
+	 * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -65,7 +66,7 @@ final class CORBAMServerObjectLoader {
 
 	/**
 	 * @author $Author: bass $
-	 * @version $Revision: 1.11 $, $Date: 2005/07/03 19:16:17 $
+	 * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -209,7 +210,7 @@ final class CORBAMServerObjectLoader {
 							if (LoginManager.restoreLogin()) {
 								continue;
 							}
-							Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjectsFromMCM() | Login restoration cancelled", Log.INFO);
+							Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjectsFromMCM() | Login restoration cancelled", Level.INFO);
 							return;
 						}
 						throw new LoginException(are.message);
@@ -349,7 +350,7 @@ final class CORBAMServerObjectLoader {
 								continue;
 							}
 							Log.debugMessage("CORBAMServerObjectLoader.loadStorableObjectsButIdsByConditionFromMCM | Login restoration cancelled",
-									Log.INFO);
+									Level.INFO);
 							return;
 						}
 						throw new LoginException(are.message);

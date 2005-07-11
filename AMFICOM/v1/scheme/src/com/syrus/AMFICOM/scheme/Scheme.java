@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.46 2005/07/07 15:52:10 bass Exp $
+ * $Id: Scheme.java,v 1.47 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -314,7 +315,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return (Map) StorableObjectPool.getStorableObject(this.mapId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -332,7 +333,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -344,7 +345,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -358,7 +359,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -370,7 +371,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -387,7 +388,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -399,7 +400,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEOPTIMIZEINFO_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -413,7 +414,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return (BitmapImageResource) StorableObjectPool
 					.getStorableObject(this.symbolId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -453,7 +454,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.ugoCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -779,7 +780,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPATH_CODE), true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}

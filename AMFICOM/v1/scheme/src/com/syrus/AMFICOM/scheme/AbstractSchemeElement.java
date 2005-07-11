@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.26 2005/06/22 15:05:19 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.27 2005/07/11 08:19:03 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,7 +34,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/22 15:05:19 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/11 08:19:03 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -151,7 +152,7 @@ public abstract class AbstractSchemeElement extends
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -220,7 +221,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(this.id);
 			return;
 		}

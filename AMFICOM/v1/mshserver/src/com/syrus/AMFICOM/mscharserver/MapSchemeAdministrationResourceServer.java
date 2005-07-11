@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.8 2005/06/29 14:22:43 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.9 2005/07/11 08:18:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
@@ -28,8 +30,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/29 14:22:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/07/11 08:18:57 $
+ * @author $Author: bass $
  * @module mscharserver_v1
  */
 public class MapSchemeAdministrationResourceServer {
@@ -164,13 +166,13 @@ public class MapSchemeAdministrationResourceServer {
 					processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 			System.exit(0);
 		}
 	}
 
 	protected static synchronized void shutdown() {
-		Log.debugMessage("MapSchemeAdministrationResourceServer.shutdown | serializing StorableObjectPool" , Log.INFO);
+		Log.debugMessage("MapSchemeAdministrationResourceServer.shutdown | serializing StorableObjectPool" , Level.INFO);
 		StorableObjectPool.serialize();
 	}
 

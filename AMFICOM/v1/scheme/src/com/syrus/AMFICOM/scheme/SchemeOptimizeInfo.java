@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.37 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.38 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -317,7 +318,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -341,7 +342,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -353,7 +354,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -365,7 +366,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -555,7 +556,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}

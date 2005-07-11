@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsCondition.java,v 1.10 2005/06/21 12:43:47 bass Exp $
+ * $Id: DatabaseLinkedIdsCondition.java,v 1.11 2005/07/11 08:18:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
@@ -26,7 +27,7 @@ import com.syrus.util.Log;
  *	}
  * </pre>
  *
- * @version $Revision: 1.10 $, $Date: 2005/06/21 12:43:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 08:18:56 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -51,19 +52,19 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-			, Log.WARNING);
+			, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ LinkedIdsCondition.class.getName(), Log.WARNING);
+					+ LinkedIdsCondition.class.getName(), Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-			, Log.WARNING);
+			, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-			, Log.WARNING);
+			, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -75,28 +76,28 @@ public final class DatabaseLinkedIdsCondition extends AbstractDatabaseLinkedIdsC
 			} else		
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 					+ "constructor throws an exception in class "
-					+ className, Log.WARNING);
+					+ className, Level.WARNING);
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalAccessException"
-			, Log.SEVERE);
+			, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught an IllegalArgumentException"
-			, Log.SEVERE);
+			, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(LINKED_IDS_CONDITION_INIT + "Caught a SecurityException"
-			, Log.SEVERE);
+			, Level.SEVERE);
 		}
 	}	
 

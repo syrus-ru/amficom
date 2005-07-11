@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.27 2005/06/28 15:43:56 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.28 2005/07/11 08:18:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -122,8 +123,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.27 $, $Date: 2005/06/28 15:43:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/07/11 08:18:55 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -240,19 +241,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -264,29 +265,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -339,19 +340,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -363,29 +364,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -438,19 +439,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -462,29 +463,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -523,19 +524,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -547,29 +548,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -625,19 +626,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -649,29 +650,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-						+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -690,7 +691,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		Log.debugMessage(TYPICAL_CONDITION_INIT
 			+ "Try reflect class " + className ,
-		Log.INFO);
+		Level.INFO);
 		try {
 			Constructor ctor;
 			switch (transferable.type.value()) {
@@ -750,19 +751,19 @@ public class TypicalCondition implements StorableObjectCondition {
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
-					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
-					+ CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
@@ -774,29 +775,29 @@ public class TypicalCondition implements StorableObjectCondition {
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
-					+ className + CREATING_A_DUMMY_CONDITION, Log.WARNING);
+					+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(iae, Log.SEVERE);
+			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
-			Log.debugException(se, Log.SEVERE);
+			Log.debugException(se, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-					+ CREATING_A_DUMMY_CONDITION, Log.SEVERE);
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
 		} finally {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
@@ -812,7 +813,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 						+ "Object: " + storableObject.toString() + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
-					Log.WARNING);
+					Level.WARNING);
 				return false;
 			}
 
@@ -821,7 +822,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE
 						+ "Object: " + storableObjects + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
-					Log.WARNING);
+					Level.WARNING);
 				return false;
 			}
 		};

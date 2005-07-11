@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.43 2005/07/11 07:58:14 bass Exp $
+ * $Id: SchemeDevice.java,v 1.44 2005/07/11 08:19:02 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/11 07:58:14 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/11 08:19:02 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -348,14 +349,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 		if (this.parentSchemeElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
-					Log.FINE);
+					Level.FINE);
 			return null;
 		}
 
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -370,13 +371,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
-					Log.FINE);
+					Level.FINE);
 		}
 
 		try {
 			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return null;
 		}
 	}
@@ -390,7 +391,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Set<SchemeCablePort> schemecablePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLEPORT_CODE), true, true);
 			return Collections.unmodifiableSet(schemecablePorts);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -404,7 +405,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Set<SchemePort> schemePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPORT_CODE), true, true);
 			return Collections.unmodifiableSet(schemePorts);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Log.SEVERE);
+			Log.debugException(ae, Level.SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -552,7 +553,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to another element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 				StorableObjectPool.delete(super.id);
 				return;
 			}
@@ -564,7 +565,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to an element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
@@ -586,7 +587,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to another protoelement.
 			 */
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Log.WARNING);
+				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
 				StorableObjectPool.delete(super.id);
 				return;
 			}
@@ -598,7 +599,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to a protoelement.
 			 */
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Log.INFO);
+				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();

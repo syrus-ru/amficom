@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.2 2005/07/07 19:40:13 arseniy Exp $
+ * $Id: MscharServerServantManager.java,v 1.3 2005/07/11 08:18:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mscharserver;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.general.BaseConnectionManager;
@@ -27,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/07/07 19:40:13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 08:18:57 $
  * @module mscharserver_v1
  */
 public final class MscharServerServantManager extends RunnableVerifiedConnectionManager
@@ -96,7 +98,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 		Log.debugMessage("MscharServerServantManager.onLoseConnection | Connection with '"
 				+ servantName
 				+ "' lost",
-				Log.WARNING);
+				Level.WARNING);
 	}
 
 	/**
@@ -109,7 +111,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 		Log.debugMessage("MscharServerServantManager.onRestoreConnection | Connection with '"
 				+ servantName
 				+ "' restored",
-				Log.INFO);
+				Level.INFO);
 				
 	}
 

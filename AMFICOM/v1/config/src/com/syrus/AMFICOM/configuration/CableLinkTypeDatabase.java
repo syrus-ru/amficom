@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.32 2005/06/24 12:18:46 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.33 2005/07/11 08:18:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -22,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/24 12:18:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/07/11 08:18:58 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkTypeDatabase extends CharacterizableDatabase {
@@ -65,7 +66,7 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	protected boolean checkEntity(short conditionCode) {
-		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINK_TYPE_CODE, Log.FINEST);
+		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINK_TYPE_CODE, Level.FINEST);
 		return ObjectEntities.CABLELINK_TYPE_CODE == conditionCode;		
 	}
 
