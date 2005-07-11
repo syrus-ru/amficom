@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.9 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: MapState.java,v 1.10 2005/07/11 08:35:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ package com.syrus.AMFICOM.client.map;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/06/06 12:20:29 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/11 08:35:39 $
  * @module mapviewclient_v1
  */
 public final class MapState 
@@ -78,6 +78,8 @@ public final class MapState
 	public static final int MEASURE_DISTANCE = 306;
 	/** Режим перемещения узла с фиксированной длиной фрагмента. */
 	public static final int MOVE_FIXDIST = 307;
+	/** Режи навигации. */
+	public static final int NAVIGATE = 308;
 
 	/** Флаг состояния режимов для работы с картой. */
 	protected int operationMode = NO_OPERATION;
