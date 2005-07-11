@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.28 2005/07/11 08:34:58 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.29 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -30,8 +31,8 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/07/11 08:34:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -68,7 +69,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

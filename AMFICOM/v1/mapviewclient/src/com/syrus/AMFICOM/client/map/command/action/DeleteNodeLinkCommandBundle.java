@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.25 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.26 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -34,8 +35,8 @@ import com.syrus.util.Log;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/22 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -234,7 +235,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 		
 		// фрагмент может быть удален в результате атомарной команды в составе
 		// другой команды удалени€, в этом случае у него будет выставлен

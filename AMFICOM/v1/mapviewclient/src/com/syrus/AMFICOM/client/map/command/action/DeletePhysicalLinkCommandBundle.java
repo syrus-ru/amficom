@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.19 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.20 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -35,8 +36,8 @@ import com.syrus.util.Log;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/22 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v1
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -60,7 +61,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 		
 		// связь может быть удалена в результате атомарной команды в составе
 		// другой команды удаления, в этом случае у неё будет выставлен

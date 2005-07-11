@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.41 2005/07/11 08:57:12 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.42 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -54,8 +55,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.41 $, $Date: 2005/07/11 08:57:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -194,8 +195,8 @@ public final class MapMouseListener implements MouseListener
 					}
 					catch(Exception e)
 					{
-						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Log.FINER);
-						Log.debugException(e, Log.FINER);
+						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Level.FINER);
+						Log.debugException(e, Level.FINER);
 					}
 					break;
 			}//switch (mapState.getOperationMode()
@@ -471,8 +472,8 @@ public final class MapMouseListener implements MouseListener
 						}
 						catch(Exception e)
 						{
-							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Log.FINER);
-							Log.debugException(e, Log.FINER);
+							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Level.FINER);
+							Log.debugException(e, Level.FINER);
 						}
 						break;
 				}//switch (mapState.getOperationMode()

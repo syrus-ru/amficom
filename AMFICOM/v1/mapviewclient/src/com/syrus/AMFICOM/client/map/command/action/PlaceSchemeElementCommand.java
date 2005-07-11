@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.21 2005/06/24 12:50:40 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.22 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
@@ -28,8 +29,8 @@ import com.syrus.util.Log;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/24 12:50:40 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -80,7 +81,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		if ( !this.aContext.getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))

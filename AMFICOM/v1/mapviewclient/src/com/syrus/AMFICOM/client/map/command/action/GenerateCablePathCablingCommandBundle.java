@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.25 2005/06/29 15:51:17 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.26 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -35,8 +36,8 @@ import com.syrus.util.Log;
  *  из непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним.
  *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
  *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/29 15:51:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -68,7 +69,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

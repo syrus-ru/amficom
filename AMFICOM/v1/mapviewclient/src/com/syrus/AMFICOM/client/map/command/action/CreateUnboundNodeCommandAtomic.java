@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.19 2005/07/01 16:22:36 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.20 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,8 @@
 */
 
 package com.syrus.AMFICOM.client.map.command.action;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.UnboundNodeController;
 import com.syrus.AMFICOM.client.model.Command;
@@ -26,8 +28,8 @@ import com.syrus.util.Log;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/07/01 16:22:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand
@@ -63,7 +65,7 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		if ( !getLogicalNetLayer().getContext().getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))

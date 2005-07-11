@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.87 2005/07/08 14:33:00 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.88 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
@@ -70,8 +71,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.87 $, $Date: 2005/07/08 14:33:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -180,7 +181,7 @@ public class LogicalNetLayer
 	 */
 	public void updateZoom()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "updateZoom()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "updateZoom()" + " | " + "method call", Level.FINER);
 		
 		if(getMapView() == null)
 			return;
@@ -217,7 +218,7 @@ public class LogicalNetLayer
 	public void setMapView(MapView mapView)
 		throws MapConnectionException, MapDataException
 	{
-		Log.debugMessage(getClass().getName() + "::" + "setMapView(" + mapView + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "setMapView(" + mapView + ")" + " | " + "method call", Level.FINER);
 
 		if(	getContext() != null
 			&& getContext().getDispatcher() != null)
@@ -278,7 +279,7 @@ public class LogicalNetLayer
 	 */
 	public void setDefaultScale(double defaultScale)
 	{
-		Log.debugMessage(getClass().getName() + "::" + "setDefaultScale(" + defaultScale + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "setDefaultScale(" + defaultScale + ")" + " | " + "method call", Level.FINER);
 		
 		this.defaultScale = defaultScale;
 		updateZoom();
@@ -308,7 +309,7 @@ public class LogicalNetLayer
 	 */
 	public void setMapState(MapState state)
 	{
-		Log.debugMessage(getClass().getName() + "::" + "setMapState(" + state + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "setMapState(" + state + ")" + " | " + "method call", Level.FINER);
 		
 		this.mapState = state;
 	}
@@ -524,7 +525,7 @@ public class LogicalNetLayer
 					+ String.valueOf(MapViewController.getTime3()) + " (getColor)"
 					+ String.valueOf(MapViewController.getTime4()) + " (paint)"
 					+ String.valueOf(MapViewController.getTime5()) + " (painting labels)",
-					Log.INFO);
+					Level.INFO);
 		}
 	}
 
@@ -690,7 +691,7 @@ public class LogicalNetLayer
 	 */
 	public void notifySchemeEvent(MapElement mapElement)
 	{
-		Log.debugMessage(getClass().getName() + "::" + "notifySchemeEvent(" + mapElement + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "notifySchemeEvent(" + mapElement + ")" + " | " + "method call", Level.FINER);
 /*		
 		SchemeNavigateEvent sne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.this.aContext.getDispatcher();
@@ -788,7 +789,7 @@ public class LogicalNetLayer
 	 */
 	public void setCurrentMapElement(MapElement curMapElement)
 	{
-		Log.debugMessage(getClass().getName() + "::" + "setCurrentMapElement(" + curMapElement + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "setCurrentMapElement(" + curMapElement + ")" + " | " + "method call", Level.FINER);
 		
 		this.currentMapElement = curMapElement;
 
@@ -832,7 +833,7 @@ public class LogicalNetLayer
 	public MapElement getMapElementAtPoint(Point point, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		Log.debugMessage(getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "getMapElementAtPoint(" + point + ")" + " | " + "method call", Level.FINER);
 		
 		int showMode = getMapState().getShowMode();
 		MapElement curME = VoidElement.getInstance(this.getMapView());
@@ -919,7 +920,7 @@ public class LogicalNetLayer
 	 */
 	public void deselectAll()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "deselectAll()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "deselectAll()" + " | " + "method call", Level.FINER);
 
 		Collection selectedElements = new LinkedList();
 		selectedElements.addAll(this.mapView.getMap().getSelectedElements());
@@ -939,7 +940,7 @@ public class LogicalNetLayer
 	 */
 	public void selectAll()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "selectAll()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "selectAll()" + " | " + "method call", Level.FINER);
 		
 		Iterator e = this.mapView.getAllElements().iterator();
 		Map map = this.mapView.getMap();
@@ -978,7 +979,7 @@ public class LogicalNetLayer
 	 */
 	public NodeLink getEditedNodeLink(Point point)
 	{
-		Log.debugMessage(getClass().getName() + "::" + "getEditedNodeLink(" + point + ")" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "getEditedNodeLink(" + point + ")" + " | " + "method call", Level.FINER);
 		
 		NodeLinkController nlc = null;
 		
@@ -1124,8 +1125,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.87 $, $Date: 2005/07/08 14:33:00 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.88 $, $Date: 2005/07/11 13:18:04 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1187,7 +1188,7 @@ public class LogicalNetLayer
 		long endTime = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
 				+ "optimized map for " + (endTime - startTime) + "ms.",
-				Log.FINEST);
+				Level.FINEST);
 	}
 	/**
 	 * Рекурсивная процедура обхода сегмента схемы карты, которому принадлежит

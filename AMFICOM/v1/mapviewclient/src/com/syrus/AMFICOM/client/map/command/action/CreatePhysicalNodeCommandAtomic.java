@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.18 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.19 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,8 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.model.Command;
@@ -23,8 +25,8 @@ import com.syrus.util.Log;
 /**
  * создание топологического узла, внесение его в пул и на карту - 
  * атомарное действие 
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/06/22 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v1
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
@@ -51,7 +53,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		try
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.15 2005/06/22 08:43:46 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.16 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -32,8 +33,8 @@ import com.syrus.util.Log;
 /**
  * Команда создания метки на линии
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/06/22 08:43:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
@@ -73,7 +74,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	{
 		try
 		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;

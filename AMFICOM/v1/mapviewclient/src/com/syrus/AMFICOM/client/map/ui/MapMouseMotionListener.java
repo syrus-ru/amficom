@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.20 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.21 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
@@ -36,8 +37,8 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.20 $, $Date: 2005/06/22 08:43:49 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
@@ -126,8 +127,8 @@ public final class MapMouseMotionListener implements MouseMotionListener
 					}
 					catch(Exception e)
 					{
-						Log.debugMessage("MapMouseMotionListener::mouseDragged | current execution point with call stack:", Log.FINER);
-						Log.debugException(e, Log.FINER);
+						Log.debugMessage("MapMouseMotionListener::mouseDragged | current execution point with call stack:", Level.FINER);
+						Log.debugException(e, Level.FINER);
 					}
 					break;
 			}//switch (mapState.getOperationMode()

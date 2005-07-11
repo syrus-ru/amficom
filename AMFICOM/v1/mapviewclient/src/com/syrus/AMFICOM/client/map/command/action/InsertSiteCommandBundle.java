@@ -1,11 +1,12 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.21 2005/06/24 12:50:39 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.22 2005/07/11 13:18:03 bass Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -29,8 +30,8 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/24 12:50:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -68,7 +69,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 
 	public void execute() {
 		Log.debugMessage(getClass()
-				.getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		if(!this.aContext.getApplicationModel().isEnabled(
 				MapApplicationModel.ACTION_EDIT_MAP))

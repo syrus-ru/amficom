@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.16 2005/06/29 15:51:17 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.17 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
@@ -29,9 +30,9 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.16 $, $Date: 2005/06/29 15:51:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 {
@@ -60,7 +61,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 	{
 		try
 		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 			DoublePoint coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// получить линию связи, которой принадлежит фрагмент

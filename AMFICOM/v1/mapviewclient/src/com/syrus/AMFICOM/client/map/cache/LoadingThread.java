@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.7 2005/07/08 13:39:02 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.8 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -154,7 +155,7 @@ public class LoadingThread extends Thread {
                                 + (t2 - t1) + "(setting layer visibilities)\n"
                                 + (t3 - t2) + "(requesting for rendering)\n"
                                 + (t4 - t3) + "(after synchronized)\n"
-                                + (t5 - t4) + "(setting image) ms.",Log.INFO);
+                                + (t5 - t4) + "(setting image) ms.",Level.INFO);
 
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;

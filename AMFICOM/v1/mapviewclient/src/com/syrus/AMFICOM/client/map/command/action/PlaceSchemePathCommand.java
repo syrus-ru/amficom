@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.29 2005/06/24 14:13:40 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.30 2005/07/11 13:18:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.awt.Point;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
@@ -35,7 +36,7 @@ import com.syrus.util.Log;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/06/24 14:13:40 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/11 13:18:04 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -63,7 +64,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();

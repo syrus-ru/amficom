@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.20 2005/06/29 15:51:17 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.21 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
@@ -36,8 +37,8 @@ import com.syrus.util.Log;
  * данная команда
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/06/29 15:51:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -220,7 +221,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	{
 		try
 		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 			// анализируется элемент в точке, в которой отпущена мышка		
 			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
 			// если мышка отпущена на том же элементе, то линию не рисовать

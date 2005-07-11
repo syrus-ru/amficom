@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandBundle.java,v 1.10 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandBundle.java,v 1.11 2005/07/11 13:18:03 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.logging.Level;
+
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.mapview.UnboundLink;
@@ -19,8 +21,8 @@ import com.syrus.util.Log;
 /**
  * создание неприв€занной линии, состо€щей из одного фрагмента, 
  * внесение ее в пул и на карту
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 13:18:03 $
  * @module mapviewclient_v1
  */
 public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle
@@ -45,7 +47,7 @@ public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle
 	
 	public void execute()
 	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Log.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		try {
 			this.unbound = super.createUnboundLinkWithNodeLink(this.startNode, this.endNode);
