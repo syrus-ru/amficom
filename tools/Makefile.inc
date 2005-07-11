@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.26 2005/07/10 13:15:46 bass Exp $
+# $Id: Makefile.inc,v 1.27 2005/07/11 08:43:57 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -130,15 +130,15 @@ JIKESFLAGS += \
 	+Pall \
 	+Pno-switchcheck \
 	+T=2
-ifeq ($(JAVAC),)
-JAVAC = $(call pathsearch,jikes$(exesuffix))
+#ifeq ($(JAVAC),)
+#JAVAC = $(call pathsearch,jikes$(exesuffix))
 ifeq ($(JAVAC),)
 JAVAC = $(JAVA_HOME)/bin/javac
 JAVACFLAGS := $(JAVACFLAGS) $(SUNJAVACFLAGS)
 else
 JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
 endif
-endif
+#endif
 
 CP = $(call pathsearch,cp$(exesuffix))
 ifeq ($(CP),)
