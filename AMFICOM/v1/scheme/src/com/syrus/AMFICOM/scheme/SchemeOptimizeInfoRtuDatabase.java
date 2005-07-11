@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.4 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.5 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +17,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase {
@@ -32,7 +33,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+		return SCHEMEOPTIMIZEINFORTU_CODE;
 	}
 
 	/**

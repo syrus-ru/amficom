@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.22 2005/07/11 08:19:02 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.23 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,25 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
+import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -33,7 +40,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -140,12 +147,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Overridden by descendants to add extra checks.
 	 */
 	public AbstractLink getAbstractLink() {
-		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 
 		try {
 			return (AbstractLink) StorableObjectPool.getStorableObject(this.linkId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -154,7 +161,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Overridden by descendants to add extra checks.
 	 */
 	public AbstractLinkType getAbstractLinkType() {
-		assert this.assertAbstractLinkTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 
 		if (!this.linkId.isVoid())
 			return getAbstractLink().getType();
@@ -162,7 +169,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		try {
 			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -190,14 +197,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public AbstractSchemePort getSourceAbstractSchemePort() {
 		assert this.sourceAbstractSchemePortId != null
-				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceAbstractSchemePortId.isVoid()
-				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -207,14 +214,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public AbstractSchemePort getTargetAbstractSchemePort() {
 		assert this.sourceAbstractSchemePortId != null
-				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetAbstractSchemePortId.isVoid()
-				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 
 		try {
 			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -225,11 +232,11 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param abstractLink
 	 */
 	public void setAbstractLink(final AbstractLink abstractLink) {
-		assert this.assertAbstractLinkTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
 		if (this.linkId.equals(newLinkId)) {
-			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -238,7 +245,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
-			this.abstractLinkTypeId = Identifier.VOID_IDENTIFIER;
+			this.abstractLinkTypeId = VOID_IDENTIFIER;
 		else if (newLinkId.isVoid())
 			/*
 			 * Erasing old object value, preserving old object-type
@@ -257,15 +264,15 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param abstractLinkType
 	 */
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		assert this.assertAbstractLinkTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert abstractLinkType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert abstractLinkType != null: NON_NULL_EXPECTED;
 
 		if (!this.linkId.isVoid())
 			this.getAbstractLink().setType(abstractLinkType);
 		else {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
 			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			this.abstractLinkTypeId = newAbstractLinkTypeId;
@@ -300,12 +307,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
 		assert this.sourceAbstractSchemePortId != null
-				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceAbstractSchemePortId.isVoid()
-				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 		final Identifier newSourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
 		assert newSourceAbstractSchemePortId.isVoid()
-				|| !newSourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !newSourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId))
 			return;
 		this.sourceAbstractSchemePortId = newSourceAbstractSchemePortId;
@@ -319,12 +326,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
 		assert this.sourceAbstractSchemePortId != null
-				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetAbstractSchemePortId.isVoid()
-				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 		final Identifier newTargetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
 		assert newTargetAbstractSchemePortId.isVoid()
-				|| !newTargetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
+				|| !newTargetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
 		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId))
 			return;
 		this.targetAbstractSchemePortId = newTargetAbstractSchemePortId;
@@ -344,12 +351,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
 
-		assert abstractLinkTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert linkId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert abstractLinkTypeId != null: NON_NULL_EXPECTED;
+		assert linkId != null: NON_NULL_EXPECTED;
 		assert abstractLinkTypeId.isVoid() ^ linkId.isVoid();
 
-		assert sourceAbstractSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert targetAbstractSchemePortId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert sourceAbstractSchemePortId != null: NON_NULL_EXPECTED;
+		assert targetAbstractSchemePortId != null: NON_NULL_EXPECTED;
 
 		this.physicalLength = physicalLength;
 		this.opticalLength = opticalLength;
@@ -366,7 +373,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	public Set<Identifiable> getDependencies() {
 		assert this.abstractLinkTypeId != null && this.linkId != null
 				&& this.sourceAbstractSchemePortId != null
-				&& this.targetAbstractSchemePortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.abstractLinkTypeId);
@@ -374,7 +381,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		dependencies.add(this.sourceAbstractSchemePortId);
 		dependencies.add(this.targetAbstractSchemePortId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 

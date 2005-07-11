@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.43 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.44 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,21 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -22,14 +31,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -42,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -73,7 +80,7 @@ public final class SchemeMonitoringSolution extends
 	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE);
 		try {
 			this.schemeMonitoringSolutionDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -112,7 +119,7 @@ public final class SchemeMonitoringSolution extends
 	 * @param transferable
 	 */
 	public SchemeMonitoringSolution(final IdlSchemeMonitoringSolution transferable) {
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE);
+		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -145,15 +152,15 @@ public final class SchemeMonitoringSolution extends
 			final boolean active,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE),
+							.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, price, active,
 					parentSchemeOptimizeInfo);
@@ -166,7 +173,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void addSchemePath(final SchemePath schemePath) {
-		assert schemePath != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePath != null: NON_NULL_EXPECTED;
 		schemePath.setParentSchemeMonitoringSolution(this);
 	}
 
@@ -185,11 +192,11 @@ public final class SchemeMonitoringSolution extends
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.parentSchemeOptimizeInfoId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeOptimizeInfoId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -197,7 +204,7 @@ public final class SchemeMonitoringSolution extends
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -205,7 +212,7 @@ public final class SchemeMonitoringSolution extends
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
@@ -215,12 +222,12 @@ public final class SchemeMonitoringSolution extends
 	 *         if none.
 	 */
 	public SchemeOptimizeInfo getParentSchemeOptimizeInfo() {
-		assert this.parentSchemeOptimizeInfoId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
 
 		try {
 			return (SchemeOptimizeInfo) StorableObjectPool.getStorableObject(this.parentSchemeOptimizeInfoId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -241,9 +248,9 @@ public final class SchemeMonitoringSolution extends
 	 */
 	public Set getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPATH_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -266,8 +273,8 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void removeSchemePath(final SchemePath schemePath) {
-		assert schemePath != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemePaths().contains(schemePath): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemePath != null: NON_NULL_EXPECTED;
+		assert getSchemePaths().contains(schemePath): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePath.setParentSchemeMonitoringSolution(null);
 	}
 
@@ -291,9 +298,9 @@ public final class SchemeMonitoringSolution extends
 			final Identifier parentSchemeOptimizeInfoId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeOptimizeInfoId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeOptimizeInfoId != null: NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -306,8 +313,8 @@ public final class SchemeMonitoringSolution extends
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -318,8 +325,8 @@ public final class SchemeMonitoringSolution extends
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -352,7 +359,7 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	public void setSchemePaths(final Set schemePaths) {
-		assert schemePaths != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePaths != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePathIterator = getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
 			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
 			/*

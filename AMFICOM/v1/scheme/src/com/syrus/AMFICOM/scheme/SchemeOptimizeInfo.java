@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.38 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.39 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,26 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -22,14 +36,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -42,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -89,7 +101,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFO_CODE);
 		try {
 			this.schemeOptimizeInfoDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -154,7 +166,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 */
 	public SchemeOptimizeInfo(final IdlSchemeOptimizeInfo transferable) {
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE);
+		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFO_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -203,16 +215,16 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			final double nodesSpliceProb,
 			final double nodesCutProb, final double survivorRate,
 			final Scheme parentScheme) throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentScheme != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentScheme != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEOPTIMIZEINFO_CODE),
+							.getGeneratedIdentifier(SCHEMEOPTIMIZEINFO_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					optimizationMode, iterations, price,
@@ -230,17 +242,17 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
 		schemeMonitoringSolution.setParentSchemeOptimizeInfo(this);
 	}
 
 	public void addSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		assert schemeOptimizeInfoRtu != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
 		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(this);
 	}
 
 	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		assert schemeOptimizeInfoSwitch != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
 	}
 
@@ -259,11 +271,11 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -271,7 +283,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -295,7 +307,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
@@ -312,13 +324,13 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public Scheme getParentScheme() {
-		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -340,9 +352,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeMonitoringSolutions() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -352,9 +364,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeOptimizeInfoRtus() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -364,9 +376,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 */
 	public Set getSchemeOptimizeInfoSwitches() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -402,20 +414,20 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
-		assert schemeMonitoringSolution != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeMonitoringSolutions().contains(schemeMonitoringSolution): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
+		assert getSchemeMonitoringSolutions().contains(schemeMonitoringSolution): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
-		assert schemeOptimizeInfoRtu != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeOptimizeInfoRtus().contains(schemeOptimizeInfoRtu): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
+		assert getSchemeOptimizeInfoRtus().contains(schemeOptimizeInfoRtu): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
-		assert schemeOptimizeInfoSwitch != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeOptimizeInfoSwitches().contains(schemeOptimizeInfoSwitch): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
+		assert getSchemeOptimizeInfoSwitches().contains(schemeOptimizeInfoSwitch): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
 	}
 
@@ -455,9 +467,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeId != null && !parentSchemeId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeId != null && !parentSchemeId.isVoid(): NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -480,8 +492,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -520,8 +532,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -553,10 +565,10 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param parentScheme
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
@@ -589,7 +601,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemeMonitoringSolutions(final Set schemeMonitoringSolutions) {
-		assert schemeMonitoringSolutions != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeMonitoringSolutionIterator = getSchemeMonitoringSolutions().iterator(); oldSchemeMonitoringSolutionIterator.hasNext();) {
 			final SchemeMonitoringSolution oldSchemeMonitoringSolution = (SchemeMonitoringSolution) oldSchemeMonitoringSolutionIterator.next();
 			/*
@@ -604,7 +616,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus) {
-		assert schemeOptimizeInfoRtus != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoRtuIterator = getSchemeOptimizeInfoRtus().iterator(); oldSchemeOptimizeInfoRtuIterator.hasNext();) {
 			final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu = (SchemeOptimizeInfoRtu) oldSchemeOptimizeInfoRtuIterator.next();
 			/*
@@ -619,7 +631,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches) {
-		assert schemeOptimizeInfoSwitches != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoSwitchIterator = getSchemeOptimizeInfoSwitches().iterator(); oldSchemeOptimizeInfoSwitchIterator.hasNext();) {
 			final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch = (SchemeOptimizeInfoSwitch) oldSchemeOptimizeInfoSwitchIterator.next();
 			/*

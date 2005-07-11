@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.45 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemePath.java,v 1.46 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,21 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.CHILDREN_ALIEN;
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +30,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -27,14 +41,12 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -48,7 +60,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -78,7 +90,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		super(id);
 		
 		this.characteristics = new HashSet();
-		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
+		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(SCHEMEPATH_CODE);
 		try {
 			this.schemePathDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -119,7 +131,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @throws CreateObjectException
 	 */
 	public SchemePath(final IdlSchemePath transferable) throws CreateObjectException {
-		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPATH_CODE);
+		this.schemePathDatabase = (SchemePathDatabase) DatabaseContext.getDatabase(SCHEMEPATH_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -153,10 +165,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
 			final Scheme parentScheme)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentScheme != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolution == null
 				|| parentSchemeMonitoringSolution.getParentSchemeOptimizeInfo() == null
 				|| parentSchemeMonitoringSolution.getParentSchemeOptimizeInfo()
@@ -166,7 +178,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		try {
 			final Date created = new Date();
 			final SchemePath schemePath = new SchemePath(
-					IdentifierPool.getGeneratedIdentifier(ObjectEntities.SCHEMEPATH_CODE),
+					IdentifierPool.getGeneratedIdentifier(SCHEMEPATH_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					transmissionPath,
@@ -185,7 +197,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristic != null: NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
 		super.markAsChanged();
 	}
@@ -198,7 +210,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public void addPathElement(final PathElement pathElement) {
-		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert pathElement != null: NON_NULL_EXPECTED;
 		pathElement.setParentSchemePath(this);
 	}
 
@@ -224,12 +236,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.transmissionPathId != null
-				&& this.parentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.parentSchemeMonitoringSolutionId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.transmissionPathId);
 		dependencies.add(this.parentSchemeMonitoringSolutionId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -237,7 +249,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -245,27 +257,27 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
 	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
-		assert this.parentSchemeMonitoringSolutionId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeMonitoringSolutionId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
 	public Scheme getParentScheme() {
-		assert this.parentSchemeId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -280,9 +292,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	private Set getPathElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PATHELEMENT_CODE), true, true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -308,11 +320,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public TransmissionPath getTransmissionPath() {
-		assert this.transmissionPathId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.transmissionPathId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (TransmissionPath) StorableObjectPool.getStorableObject(this.transmissionPathId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -322,8 +334,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic != null: NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -337,8 +349,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public void removePathElement(final PathElement pathElement) {
-		assert pathElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getPathElements().contains(pathElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert pathElement != null: NON_NULL_EXPECTED;
+		assert getPathElements().contains(pathElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		pathElement.setParentSchemePath(null);
 	}
 
@@ -363,11 +375,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert transmissionPathId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeMonitoringSolutionId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeId != null && !parentSchemeId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert transmissionPathId != null: NON_NULL_EXPECTED;
+		assert parentSchemeMonitoringSolutionId != null: NON_NULL_EXPECTED;
+		assert parentSchemeId != null && !parentSchemeId.isVoid() : NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -390,7 +402,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
 	public void setCharacteristics0(final Set characteristics) {
-		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
 			this.characteristics = new HashSet(characteristics.size());
 		else
@@ -402,8 +414,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -414,8 +426,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -431,10 +443,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid() : ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
@@ -447,7 +459,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	public void setPathElements(final SortedSet pathElements) {
-		assert pathElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert pathElements != null: NON_NULL_EXPECTED;
 		final SortedSet oldPathElements = this.getPathElements();
 		for (final Iterator oldPathElementIterator = oldPathElements.iterator(); oldPathElementIterator.hasNext();)
 			/*
@@ -506,9 +518,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public SchemeElement getStartSchemeElement() {
 		final SortedSet pathElements = this.getPathElements();
-		assert !pathElements.isEmpty(): ErrorMessages.NON_EMPTY_EXPECTED;
+		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement startPathElement = (PathElement) pathElements.first();
-		assert startPathElement.getKind().value() == Kind._SCHEME_ELEMENT: ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert startPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return startPathElement.getSchemeElement();
 	}
 
@@ -518,9 +530,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public SchemeElement getEndSchemeElement() {
 		final SortedSet pathElements = this.getPathElements();
-		assert !pathElements.isEmpty(): ErrorMessages.NON_EMPTY_EXPECTED;
+		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement endPathElement = (PathElement) pathElements.last();
-		assert endPathElement.getKind().value() == Kind._SCHEME_ELEMENT: ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert endPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return endPathElement.getSchemeElement();
 	}
 
@@ -529,7 +541,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @deprecated
 	 */
 	public PathElement getNextNode(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		for (final Iterator pathElementIterator = getPathElements().tailSet(pathElement) .iterator(); pathElementIterator.hasNext();) {
 			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
@@ -543,7 +555,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public PathElement getNextPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		final SortedSet pathElements  = getPathElements().tailSet(pathElement);
 		if (pathElements.size() == 1)
@@ -578,7 +590,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public double[] getOpticalDistanceFromStart(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		double opticalDistanceFromStart = 0;
 		final SortedSet pathElements = getPathElements();
@@ -656,7 +668,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @deprecated
 	 */
 	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		double physicalDistanceFromStart = 0;
 		final SortedSet pathElements = getPathElements();
@@ -677,7 +689,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @deprecated
 	 */
 	public PathElement getPreviousNode(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		if (pathElement.getKind().value() == Kind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
 			return pathElement;
@@ -695,7 +707,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public PathElement getPreviousPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 		final SortedSet pathElements = getPathElements().headSet(pathElement);
 		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
 	}
@@ -704,7 +716,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public boolean hasNextPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 		return pathElement.getSequentialNumber() < getPathElements().size() - 1;
 	}
 
@@ -712,7 +724,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param pathElement
 	 */
 	public boolean hasPreviousPathElement(final PathElement pathElement) {
-		assert assertContains(pathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(pathElement): CHILDREN_ALIEN;
 		return pathElement.getSequentialNumber() > 0;
 	}
 
@@ -752,8 +764,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return;
 		}
 		final SortedSet pathElements = getPathElements();
-		assert assertContains(startPathElement): ErrorMessages.CHILDREN_ALIEN;
-		assert assertContains(endPathElement): ErrorMessages.CHILDREN_ALIEN;
+		assert assertContains(startPathElement): CHILDREN_ALIEN;
+		assert assertContains(endPathElement): CHILDREN_ALIEN;
 
 		double oldOpticalLength = 0;
 		for (final Iterator pathElementIterator = pathElements.tailSet(startPathElement).iterator(); pathElementIterator.hasNext();) {

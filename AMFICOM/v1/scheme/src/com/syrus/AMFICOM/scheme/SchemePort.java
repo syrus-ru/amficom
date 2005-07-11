@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.41 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemePort.java,v 1.42 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,18 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Date;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -21,13 +30,11 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,7 +48,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -57,7 +64,7 @@ public final class SchemePort extends AbstractSchemePort {
 	SchemePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPORT_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 		try {
 			this.schemePortDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -95,7 +102,7 @@ public final class SchemePort extends AbstractSchemePort {
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
 
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPORT_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 	}
 
 	/**
@@ -103,7 +110,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	public SchemePort(final IdlSchemePort transferable) throws CreateObjectException {
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEPORT_CODE);
+		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -144,17 +151,17 @@ public final class SchemePort extends AbstractSchemePort {
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeDevice != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert directionType != null: NON_NULL_EXPECTED;
+		assert parentSchemeDevice != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemePort schemePort = new SchemePort(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEPORT_CODE),
+							.getGeneratedIdentifier(SCHEMEPORT_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, directionType,
 					portType, port, measurementPort,
@@ -192,7 +199,7 @@ public final class SchemePort extends AbstractSchemePort {
 	@Override
 	public Port getPort() {
 		final Port port = super.getPort();
-		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : OBJECT_BADLY_INITIALIZED;
 		return port;
 	}
 
@@ -201,13 +208,13 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public SchemeCableThread getSchemeCableThread() {
 		try {
-			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true);
+			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);
 			assert schemeCableThreads != null && schemeCableThreads.size() <= 1;
 			return schemeCableThreads.isEmpty()
 					? null
 					: schemeCableThreads.iterator().next();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -217,13 +224,13 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public SchemeLink getSchemeLink() {
 		try {
-			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMELINK_CODE), true, true);
+			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMELINK_CODE), true, true);
 			assert schemeLinks != null && schemeLinks.size() <= 1;
 			return schemeLinks.isEmpty()
 					? null
 					: schemeLinks.iterator().next();
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -256,7 +263,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	@Override
 	public void setPort(final Port port) {
-		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : ErrorMessages.NATURE_INVALID;
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE : NATURE_INVALID;
 		super.setPort(port);
 	}
 

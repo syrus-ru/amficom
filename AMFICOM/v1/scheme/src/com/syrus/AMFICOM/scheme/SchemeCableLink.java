@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.45 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.46 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,23 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -24,13 +36,11 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -43,7 +53,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -58,7 +68,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		super(id);
 	
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.SCHEMECABLELINK_CODE).retrieve(this);
+			DatabaseContext.getDatabase(SCHEMECABLELINK_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -136,16 +146,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final SchemeCablePort targetSchemeCablePort,
 			final Scheme parentScheme)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentScheme != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentScheme != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeCableLink schemeCableLink = new SchemeCableLink(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMECABLELINK_CODE),
+							.getGeneratedIdentifier(SCHEMECABLELINK_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, physicalLength,
 					opticalLength, cableLinkType, link,
@@ -162,12 +172,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
-		assert cableChannelingItem != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert cableChannelingItem != null: NON_NULL_EXPECTED;
 		cableChannelingItem.setParentSchemeCableLink(this);
 	}
 
 	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		assert schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCableThread != null: NON_NULL_EXPECTED;
 		schemeCableThread.setParentSchemeCableLink(this);
 	}
 
@@ -186,10 +196,10 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	public Set<CableChannelingItem> getCableChannelingItems() {
 		try {
-			final Set<CableChannelingItem> cableChannelingItems = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.CABLECHANNELINGITEM_CODE), true, true);
+			final Set<CableChannelingItem> cableChannelingItems = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
 			return Collections.unmodifiableSet(cableChannelingItems);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -200,7 +210,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	@Override
 	public CableLink getAbstractLink() {
 		final AbstractLink abstractLink = super.getAbstractLink();
-		assert abstractLink == null || abstractLink instanceof CableLink : ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert abstractLink == null || abstractLink instanceof CableLink : OBJECT_BADLY_INITIALIZED;
 		return (CableLink) abstractLink;
 	}
 
@@ -219,8 +229,8 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public Scheme getParentScheme() {
-		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
+		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 
 		return super.getParentScheme();
 	}
@@ -231,10 +241,10 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	public Set<SchemeCableThread> getSchemeCableThreads() {
 		try {
-			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, ObjectEntities.SCHEMECABLETHREAD_CODE), true, true);
+			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);
 			return Collections.unmodifiableSet(schemeCableThreads);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -245,7 +255,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	@Override
 	public SchemeCablePort getSourceAbstractSchemePort() {
 		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
-		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: OBJECT_BADLY_INITIALIZED;
 		return (SchemeCablePort) sourceAbstractSchemePort;
 	}
 
@@ -255,7 +265,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	@Override
 	public SchemeCablePort getTargetAbstractSchemePort() {
 		final AbstractSchemePort targetAbstractSchemePort = super.getTargetAbstractSchemePort();
-		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: OBJECT_BADLY_INITIALIZED;
 		return (SchemeCablePort) targetAbstractSchemePort;
 	}
 
@@ -284,14 +294,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
-		assert cableChannelingItem != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getCableChannelingItems().contains(cableChannelingItem): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert cableChannelingItem != null: NON_NULL_EXPECTED;
+		assert getCableChannelingItems().contains(cableChannelingItem): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		cableChannelingItem.setParentSchemeCableLink(null);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		assert schemeCableThread != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeCableThreads().contains(schemeCableThread): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCableThread != null: NON_NULL_EXPECTED;
+		assert getSchemeCableThreads().contains(schemeCableThread): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCableThread.setParentSchemeCableLink(null);
 	}
 
@@ -326,11 +336,11 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, physicalLength, opticalLength, cableLinkTypeId, linkId, sourceSchemeCablePortId, targetSchemeCablePortId, parentSchemeId);
 
-		assert !parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert !parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 	}
 
 	public void setCableChannelingItems(final Set<CableChannelingItem> cableChannelingItems) {
-		assert cableChannelingItems != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert cableChannelingItems != null: NON_NULL_EXPECTED;
 		for (final Iterator<CableChannelingItem> oldCableChannelingItemIterator = getCableChannelingItems().iterator(); oldCableChannelingItemIterator.hasNext();) {
 			final CableChannelingItem oldCableChannelingItem = oldCableChannelingItemIterator.next();
 			/*
@@ -350,7 +360,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public void setAbstractLink(final AbstractLink abstractLink) {
-		assert abstractLink == null || abstractLink instanceof CableLink : ErrorMessages.NATURE_INVALID;
+		assert abstractLink == null || abstractLink instanceof CableLink : NATURE_INVALID;
 		this.setAbstractLink((CableLink) abstractLink);
 	}
 
@@ -368,7 +378,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public void setAbstractLinkType(final AbstractLinkType abstractLinkType) {
-		assert abstractLinkType instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		assert abstractLinkType instanceof CableLinkType : NATURE_INVALID;
 		this.setAbstractLinkType((CableLinkType) abstractLinkType);
 	}
 
@@ -385,13 +395,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public void setParentScheme(final Scheme parentScheme) {
-		assert super.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
+		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		super.setParentScheme(parentScheme);
 	}
 
 	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) {
-		assert schemeCableThreads != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCableThreads != null: NON_NULL_EXPECTED;
 		for (final Iterator<SchemeCableThread> oldSchemeCableThreadIterator = getSchemeCableThreads().iterator(); oldSchemeCableThreadIterator.hasNext();) {
 			final SchemeCableThread oldSchemeCableThread = oldSchemeCableThreadIterator.next();
 			/*
@@ -411,7 +421,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
-		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
+		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: NATURE_INVALID;
 		this.setSourceAbstractSchemePort((SchemeCablePort) sourceAbstractSchemePort);
 	}
 
@@ -425,7 +435,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 */
 	@Override
 	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
-		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: ErrorMessages.NATURE_INVALID;
+		assert targetAbstractSchemePort == null || targetAbstractSchemePort instanceof SchemeCablePort: NATURE_INVALID;
 		this.setTargetAbstractSchemePort((SchemeCablePort) targetAbstractSchemePort);
 	}
 

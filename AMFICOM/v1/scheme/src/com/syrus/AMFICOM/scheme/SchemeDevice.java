@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.44 2005/07/11 08:19:02 bass Exp $
+ * $Id: SchemeDevice.java,v 1.45 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,29 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -24,14 +41,12 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -44,7 +59,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -74,7 +89,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(SCHEMEDEVICE_CODE);
 		try {
 			this.schemeDeviceDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -104,12 +119,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.name = name;
 		this.description = description;
 
-		assert parentSchemeProtoElement == null || parentSchemeElement == null: ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;		
+		assert parentSchemeProtoElement == null || parentSchemeElement == null: EXACTLY_ONE_PARENT_REQUIRED;		
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
 		this.characteristics = new HashSet();
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(SCHEMEDEVICE_CODE);
 	}
 
 	/**
@@ -117,7 +132,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	public SchemeDevice(final IdlSchemeDevice transferable) throws CreateObjectException {
-		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEMEDEVICE_CODE);
+		this.schemeDeviceDatabase = (SchemeDeviceDatabase) DatabaseContext.getDatabase(SCHEMEDEVICE_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -180,15 +195,15 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	public static SchemeDevice createInstance(final Identifier creatorId,
 			final String name, final String description)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
+							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, null);
@@ -211,16 +226,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final String name, final String description,
 			final SchemeProtoElement parentSchemeProtoElement)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeProtoElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
+							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					parentSchemeProtoElement, null);
@@ -244,16 +259,16 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final String name, final String description,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeElement != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeDevice schemeDevice = new SchemeDevice(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEMEDEVICE_CODE),
+							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					null, parentSchemeElement);
@@ -271,7 +286,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristic != null: NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
 		super.markAsChanged();
 	}
@@ -280,7 +295,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param schemeCablePort cannot be <code>null</code>.
 	 */
 	public void addSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		assert schemeCablePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCablePort != null: NON_NULL_EXPECTED;
 		schemeCablePort.setParentSchemeDevice(this);
 	}
 
@@ -288,7 +303,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param schemePort cannot be <code>null</code>.
 	 */
 	public void addSchemePort(final SchemePort schemePort) {
-		assert schemePort != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePort != null: NON_NULL_EXPECTED;
 		schemePort.setParentSchemeDevice(this);
 	}
 
@@ -314,12 +329,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.parentSchemeElementId != null
-				&& this.parentSchemeProtoElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.add(this.parentSchemeProtoElementId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -327,7 +342,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -335,7 +350,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
@@ -343,20 +358,20 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	public SchemeElement getParentSchemeElement() {
-//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict())
-			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
-					Level.FINE);
+					FINE);
 			return null;
 		}
 
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -365,19 +380,19 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
-//		assert this.assertParentSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict())
-			throw new IllegalStateException(ErrorMessages.OBJECT_BADLY_INITIALIZED);
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 
 		if (this.parentSchemeProtoElementId.isVoid()) {
 			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
-					Level.FINE);
+					FINE);
 		}
 
 		try {
 			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -388,10 +403,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set<SchemeCablePort> getSchemeCablePorts() {
 		try {
-			final Set<SchemeCablePort> schemecablePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLEPORT_CODE), true, true);
+			final Set<SchemeCablePort> schemecablePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true, true);
 			return Collections.unmodifiableSet(schemecablePorts);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -402,10 +417,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public Set<SchemePort> getSchemePorts() {
 		try {
-			final Set<SchemePort> schemePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPORT_CODE), true, true);
+			final Set<SchemePort> schemePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true, true);
 			return Collections.unmodifiableSet(schemePorts);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -434,8 +449,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic != null: NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -447,8 +462,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param schemeCablePort
 	 */
 	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
-		assert schemeCablePort != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeCablePorts().contains(schemeCablePort): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCablePort != null: NON_NULL_EXPECTED;
+		assert getSchemeCablePorts().contains(schemeCablePort): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCablePort.setParentSchemeDevice(null);
 	}
 
@@ -459,8 +474,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @param schemePort
 	 */
 	public void removeSchemePort(final SchemePort schemePort) {
-		assert schemePort != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemePorts().contains(schemePort): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemePort != null: NON_NULL_EXPECTED;
+		assert getSchemePorts().contains(schemePort): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePort.setParentSchemeDevice(null);
 	}
 
@@ -483,10 +498,10 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null: NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
 		assert parentSchemeProtoElementId.isVoid() ^ parentSchemeElementId.isVoid();
 
 		this.name = name;
@@ -509,7 +524,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
 	public void setCharacteristics0(final Set characteristics) {
-		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
 			this.characteristics = new HashSet(characteristics.size());
 		else
@@ -521,8 +536,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -533,8 +548,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -545,7 +560,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeElementId;
 		if (this.parentSchemeProtoElementId.isVoid()) {
@@ -553,7 +568,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to another element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(super.id);
 				return;
 			}
@@ -565,11 +580,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to an element.
 			 */
 			if (parentSchemeElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
-			this.parentSchemeProtoElementId = Identifier.VOID_IDENTIFIER;
+			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		}
 		this.parentSchemeElementId = newParentSchemeElementId;
 		super.markAsChanged();
@@ -579,7 +594,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo skip check if parentless.
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.assertParentSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		Identifier newParentSchemeProtoElementId;
 		if (this.parentSchemeElementId.isVoid()) {
@@ -587,7 +602,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from a protoelement to another protoelement.
 			 */
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(super.id);
 				return;
 			}
@@ -599,18 +614,18 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			 * Moving from an element to a protoelement.
 			 */
 			if (parentSchemeProtoElement == null) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
-			this.parentSchemeElementId = Identifier.VOID_IDENTIFIER;
+			this.parentSchemeElementId = VOID_IDENTIFIER;
 		}
 		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
 		super.markAsChanged();
 	}
 
 	public void setSchemeCablePorts(final Set schemeCablePorts) {
-		assert schemeCablePorts != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCablePorts != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeCablePortIterator = getSchemeCablePorts().iterator(); oldSchemeCablePortIterator.hasNext();) {
 			final SchemeCablePort oldSchemeCablePort = (SchemeCablePort) oldSchemeCablePortIterator.next();
 			/*
@@ -625,7 +640,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	public void setSchemePorts(final Set schemePorts) {
-		assert schemePorts != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePorts != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePortIterator = getSchemePorts().iterator(); oldSchemePortIterator.hasNext();) {
 			final SchemePort oldSchemePort = (SchemePort) oldSchemePortIterator.next();
 			/*

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.27 2005/07/11 08:19:03 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.28 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,19 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -20,7 +28,6 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -34,7 +41,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/11 08:19:03 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -100,7 +107,7 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#addCharacteristic(Characteristic)
 	 */
 	public final void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristic != null: NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
 		super.markAsChanged();
 	}
@@ -117,11 +124,11 @@ public abstract class AbstractSchemeElement extends
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.parentSchemeId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -129,7 +136,7 @@ public abstract class AbstractSchemeElement extends
 	 * @see Describable#getDescription()
 	 */
 	public final String getDescription() {
-		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null: OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -137,7 +144,7 @@ public abstract class AbstractSchemeElement extends
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
@@ -152,7 +159,7 @@ public abstract class AbstractSchemeElement extends
 		try {
 			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -162,8 +169,8 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#removeCharacteristic(Characteristic)
 	 */
 	public final void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic != null: NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -182,7 +189,7 @@ public abstract class AbstractSchemeElement extends
 	 * @see Characterizable#setCharacteristics0(Set)
 	 */
 	public final void setCharacteristics0(final Set characteristics) {
-		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
 			this.characteristics = new HashSet(characteristics.size());
 		else
@@ -194,8 +201,8 @@ public abstract class AbstractSchemeElement extends
 	 * @see Describable#setDescription(String)
 	 */
 	public final void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -206,8 +213,8 @@ public abstract class AbstractSchemeElement extends
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public final void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -221,7 +228,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
 		if (parentScheme == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(this.id);
 			return;
 		}
@@ -262,9 +269,9 @@ public abstract class AbstractSchemeElement extends
 			final String name, final String description, final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert parentSchemeId != null: NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;

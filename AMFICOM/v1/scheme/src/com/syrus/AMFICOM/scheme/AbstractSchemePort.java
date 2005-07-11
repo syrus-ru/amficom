@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.33 2005/07/11 08:19:02 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.34 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,24 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
@@ -23,7 +36,6 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -34,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/07/11 08:19:02 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -123,7 +135,7 @@ public abstract class AbstractSchemePort extends
 	}
 
 	public final void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristic != null: NON_NULL_EXPECTED;
 		this.characteristics.add(characteristic);
 		super.markAsChanged();
 	}
@@ -131,7 +143,7 @@ public abstract class AbstractSchemePort extends
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
 	public final DirectionType getDirectionType() {
-		assert this.directionType != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
 		return this.directionType;
 	}
 
@@ -144,10 +156,10 @@ public abstract class AbstractSchemePort extends
 	 */
 	@Override
 	public final Set<Identifiable> getDependencies() {
-		assert this.portTypeId != null && this.portId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.portTypeId.isVoid() ^ this.portId.isVoid(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeDeviceId != null && !this.parentSchemeDeviceId.isVoid(): ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.portTypeId != null && this.portId != null: OBJECT_NOT_INITIALIZED;
+		assert this.portTypeId.isVoid() ^ this.portId.isVoid(): OBJECT_BADLY_INITIALIZED;
+		assert this.measurementPortId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeDeviceId != null && !this.parentSchemeDeviceId.isVoid(): OBJECT_NOT_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.portTypeId);
@@ -155,7 +167,7 @@ public abstract class AbstractSchemePort extends
 		dependencies.add(this.measurementPortId);
 		dependencies.add(this.parentSchemeDeviceId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -163,16 +175,16 @@ public abstract class AbstractSchemePort extends
 	 * @see Describable#getDescription()
 	 */
 	public final String getDescription() {
-		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null: OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
 	public final MeasurementPort getMeasurementPort() {
-		assert this.measurementPortId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (MeasurementPort) StorableObjectPool.getStorableObject(this.measurementPortId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -181,18 +193,18 @@ public abstract class AbstractSchemePort extends
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public final String getName() {
-		assert this.name != null && this.name.length() != 0: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0: OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
 	public final SchemeDevice getParentSchemeDevice() {
-		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		
 		try {
 			return (SchemeDevice) StorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -201,18 +213,18 @@ public abstract class AbstractSchemePort extends
 	 * Overridden by descendants to add extra checks.
 	 */
 	public Port getPort() {
-		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 
 		try {
 			return (Port) StorableObjectPool.getStorableObject(this.portId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
 	public final PortType getPortType() {
-		assert this.assertPortTypeSetStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 
 		if (!this.portId.isVoid())
 			return getPort().getType();
@@ -220,14 +232,14 @@ public abstract class AbstractSchemePort extends
 		try {
 			return (PortType) StorableObjectPool.getStorableObject(this.portTypeId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
 	public final void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic != null: NON_NULL_EXPECTED;
+		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -256,16 +268,16 @@ public abstract class AbstractSchemePort extends
 			final Identifier parentSchemeDeviceId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert directionType != null: NON_NULL_EXPECTED;
 
-		assert portTypeId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert portId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert portTypeId != null: NON_NULL_EXPECTED;
+		assert portId != null: NON_NULL_EXPECTED;
 		assert portTypeId.isVoid() ^ portId.isVoid();
 
-		assert measurementPortId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
+		assert measurementPortId != null: NON_NULL_EXPECTED;
+		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid(): NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -280,8 +292,8 @@ public abstract class AbstractSchemePort extends
 	 * @param directionType
 	 */
 	public final void setDirectionType(final DirectionType directionType) {
-		assert this.directionType != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert directionType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
+		assert directionType != null: NON_NULL_EXPECTED;
 		if (this.directionType.value() == directionType.value())
 			return;
 		this.directionType = directionType;
@@ -298,7 +310,7 @@ public abstract class AbstractSchemePort extends
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
 	 */
 	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
-		assert characteristics != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
 			this.characteristics = new HashSet<Characteristic>(characteristics.size());
 		else
@@ -310,8 +322,8 @@ public abstract class AbstractSchemePort extends
 	 * @see Describable#setDescription(String)
 	 */
 	public final void setDescription(final String description) {
-		assert this.description != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null: OBJECT_NOT_INITIALIZED;
+		assert description != null: NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -333,8 +345,8 @@ public abstract class AbstractSchemePort extends
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public final void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -345,10 +357,10 @@ public abstract class AbstractSchemePort extends
 	 * @param parentSchemeDevice
 	 */
 	public final void setParentSchemeDevice(final SchemeDevice parentSchemeDevice) {
-		assert this.parentSchemeDeviceId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeDeviceId.isVoid(): ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		if (parentSchemeDevice == null) {
-			Log.debugMessage(ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL, Level.WARNING);
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
@@ -365,11 +377,11 @@ public abstract class AbstractSchemePort extends
 	 * @param port
 	 */
 	public void setPort(final Port port) {
-		assert this.assertPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
+		assert this.assertPortTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newPortId = Identifier.possiblyVoid(port);
 		if (this.portId.equals(newPortId)) {
-			Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
@@ -378,7 +390,7 @@ public abstract class AbstractSchemePort extends
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
-			this.portTypeId = Identifier.VOID_IDENTIFIER;
+			this.portTypeId = VOID_IDENTIFIER;
 		else if (newPortId.isVoid())
 			/*
 			 * Erasing old object value, preserving old object-type
@@ -395,15 +407,15 @@ public abstract class AbstractSchemePort extends
 	 * @param portType
 	 */
 	public final void setPortType(final PortType portType) {
-		assert this.assertPortTypeSetNonStrict(): ErrorMessages.OBJECT_BADLY_INITIALIZED;
-		assert portType != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.assertPortTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert portType != null: NON_NULL_EXPECTED;
 
 		if (!this.portId.isVoid())
 			this.getPort().setType(portType);
 		else {
 			final Identifier newPortTypeId = portType.getId();
 			if (this.portTypeId.equals(newPortTypeId)) {
-				Log.debugMessage(ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING, Level.INFO);
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
 			this.portTypeId = newPortTypeId;

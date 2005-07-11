@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.47 2005/07/11 08:19:03 bass Exp $
+ * $Id: Scheme.java,v 1.48 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,25 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -22,14 +35,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -46,7 +57,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/11 08:19:03 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -91,7 +102,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	Scheme(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 		try {
 			this.schemeDatabase.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -142,14 +153,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	public Scheme(final IdlScheme transferable) {
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(ObjectEntities.SCHEME_CODE);
+		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -197,18 +208,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final SchemeImageResource schemeCell,
 			final SchemeElement parentSchemeElement)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert domainId != null && !domainId.isVoid(): ErrorMessages.NON_VOID_EXPECTED;
-		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert label != null: NON_NULL_EXPECTED;
+		assert domainId != null && !domainId.isVoid(): NON_VOID_EXPECTED;
+		assert kind != null: NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final Scheme scheme = new Scheme(
 					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CODE),
+							.getGeneratedIdentifier(SCHEME_CODE),
 					created, created, creatorId, creatorId,
 					0L, domainId, name, description, label, width,
 					height, kind, map, symbol,
@@ -226,7 +237,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeCableLink cannot be <code>null</code>.
 	 */
 	public void addSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		assert schemeCableLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCableLink != null: NON_NULL_EXPECTED;
 		schemeCableLink.setParentScheme(this);
 	}
 
@@ -234,7 +245,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeElement cannot be <code>null</code>.
 	 */
 	public void addSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeElement != null: NON_NULL_EXPECTED;
 		schemeElement.setParentScheme(this);
 	}
 
@@ -242,7 +253,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeLink cannot be <code>null</code>.
 	 */
 	public void addSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeLink != null: NON_NULL_EXPECTED;
 		schemeLink.setParentScheme(this);
 	}
 
@@ -250,7 +261,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeOptimizeInfo cannot be <code>null</code>.
 	 */
 	public void addSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
-		assert schemeOptimizeInfo != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
 		schemeOptimizeInfo.setParentScheme(this);
 	}
 
@@ -277,7 +288,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 				&& this.ugoCellId != null
 				&& this.schemeCellId != null
 				&& this.currentSchemeMonitoringSolutionId != null
-				&& this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+				&& this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.mapId);
 		dependencies.add(this.symbolId);
@@ -285,7 +296,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		dependencies.add(this.schemeCellId);
 		dependencies.add(this.parentSchemeElementId);
 		dependencies.remove(null);
-		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
 	}
 
@@ -293,7 +304,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		return this.description;
 	}
 
@@ -306,16 +317,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 *         empty string if none. Never returns <code>null</code>s.
 	 */
 	public String getLabel() {
-		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.label != null: OBJECT_NOT_INITIALIZED;
 		return this.label;
 	}
 
 	public Map getMap() {
-		assert this.mapId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.mapId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (Map) StorableObjectPool.getStorableObject(this.mapId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -324,16 +335,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
 	}
 
 	public SchemeElement getParentSchemeElement() {
-		assert this.parentSchemeElementId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -343,9 +354,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeCableLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLELINK_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -354,12 +365,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.schemeCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -369,15 +380,15 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEELEMENT_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
 
 	public Kind getKind() {
-		assert this.kind != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		return this.kind;
 	}
 
@@ -386,9 +397,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMELINK_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -398,9 +409,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Set getSchemeOptimizeInfos() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEOPTIMIZEINFO_CODE), true, true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
@@ -409,12 +420,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (BitmapImageResource) StorableObjectPool
 					.getStorableObject(this.symbolId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -449,12 +460,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
 			return (SchemeImageResource) StorableObjectPool
 					.getStorableObject(this.ugoCellId, true);
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
@@ -470,8 +481,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeCableLink
 	 */
 	public void removeSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		assert schemeCableLink != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeCableLinks().contains(schemeCableLink): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCableLink != null: NON_NULL_EXPECTED;
+		assert getSchemeCableLinks().contains(schemeCableLink): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCableLink.setParentScheme(null);
 	}
 
@@ -482,8 +493,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeElement
 	 */
 	public void removeSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeElements().contains(schemeElement): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeElement != null: NON_NULL_EXPECTED;
+		assert getSchemeElements().contains(schemeElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeElement.setParentScheme(null);
 	}
 
@@ -494,8 +505,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeLink
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
-		assert schemeLink != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeLinks().contains(schemeLink): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink != null: NON_NULL_EXPECTED;
+		assert getSchemeLinks().contains(schemeLink): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentScheme(null);
 	}
 
@@ -506,8 +517,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeOptimizeInfo
 	 */
 	public void removeSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
-		assert schemeOptimizeInfo != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert getSchemeOptimizeInfos().contains(schemeOptimizeInfo): ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
+		assert getSchemeOptimizeInfos().contains(schemeOptimizeInfo): REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfo.setParentScheme(null);
 	}
 
@@ -542,15 +553,15 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 
-		assert name != null && name.length() != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-		assert description != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert mapId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert symbolId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert ugoCellId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert schemeCellId != null: ErrorMessages.NON_NULL_EXPECTED;
-		assert parentSchemeElementId != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		assert description != null: NON_NULL_EXPECTED;
+		assert label != null: NON_NULL_EXPECTED;
+		assert kind != null: NON_NULL_EXPECTED;
+		assert mapId != null: NON_NULL_EXPECTED;
+		assert symbolId != null: NON_NULL_EXPECTED;
+		assert ugoCellId != null: NON_NULL_EXPECTED;
+		assert schemeCellId != null: NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
@@ -573,8 +584,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert description != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert this.description != null : OBJECT_NOT_INITIALIZED;
+		assert description != null : NON_NULL_EXPECTED;
 		if (this.description.equals(description))
 			return;
 		this.description = description;
@@ -593,8 +604,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 *        an empty string as an argument.
 	 */
 	public void setLabel(final String label) {
-		assert this.label != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert label != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.label != null: OBJECT_NOT_INITIALIZED;
+		assert label != null: NON_NULL_EXPECTED;
 		if (this.label.equals(label))
 			return;
 		this.label = label;
@@ -613,8 +624,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert name != null && name.length() != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		if (this.name.equals(name))
 			return;
 		this.name = name;
@@ -630,7 +641,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeCableLinks(final Set schemeCableLinks) {
-		assert schemeCableLinks != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeCableLinks != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeCableLinkIterator = getSchemeCableLinks().iterator(); oldSchemeCableLinkIterator.hasNext();) {
 			final SchemeCableLink oldSchemeCableLink = (SchemeCableLink) oldSchemeCableLinkIterator.next();
 			/*
@@ -657,7 +668,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeElements(final Set schemeElements) {
-		assert schemeElements != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeElements != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
 			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
 			/*
@@ -675,8 +686,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param kind
 	 */
 	public void setKind(final Kind kind) {
-		assert this.kind != null: ErrorMessages.OBJECT_NOT_INITIALIZED;
-		assert kind != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert this.kind != null: OBJECT_NOT_INITIALIZED;
+		assert kind != null: NON_NULL_EXPECTED;
 		if (this.kind.value() == kind.value())
 			return;
 		this.kind = kind;
@@ -684,7 +695,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeLinks(final Set schemeLinks) {
-		assert schemeLinks != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeLinks != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
 			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
 			/*
@@ -699,7 +710,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void setSchemeOptimizeInfos(final Set schemeOptimizeInfos) {
-		assert schemeOptimizeInfos != null: ErrorMessages.NON_NULL_EXPECTED;
+		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoIterator = getSchemeOptimizeInfos().iterator(); oldSchemeOptimizeInfoIterator.hasNext();) {
 			final SchemeOptimizeInfo oldSchemeOptimizeInfo = (SchemeOptimizeInfo) oldSchemeOptimizeInfoIterator.next();
 			/*
@@ -766,27 +777,27 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public void addSchemePath(final SchemePath schemePath) {
-		assert schemePath != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePath != null : NON_NULL_EXPECTED;
 		schemePath.setParentScheme(this);
 	}
 
 	public void removeSchemePath(final SchemePath schemePath) {
-		assert schemePath != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert this.getSchemePaths().contains(schemePath) : ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemePath != null : NON_NULL_EXPECTED;
+		assert this.getSchemePaths().contains(schemePath) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePath.setParentScheme(null);
 	}
 
 	public Set getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPATH_CODE), true));
+			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true));
 		} catch (final ApplicationException ae) {
-			Log.debugException(ae, Level.SEVERE);
+			Log.debugException(ae, SEVERE);
 			return Collections.EMPTY_SET;
 		}
 	}
 
 	public void setSchemePaths(final Set schemePaths) {
-		assert schemePaths != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert schemePaths != null : NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePathIterator = this.getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
 			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
 			/*

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.7 2005/06/17 11:01:18 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.8 2005/07/11 12:12:57 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.scheme;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +19,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/17 11:01:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/11 12:12:57 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -111,7 +112,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	}
 
 	protected short getEntityCode() {
-		return ObjectEntities.CABLECHANNELINGITEM_CODE;
+		return CABLECHANNELINGITEM_CODE;
 	}
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
