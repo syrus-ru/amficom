@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLogger.java,v 1.3 2005/07/11 07:53:55 bass Exp $
+ * $Id: AbstractLogger.java,v 1.4 2005/07/11 10:24:30 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,18 @@
 
 package com.syrus.util;
 
+import static com.syrus.util.Log.DEBUG_LEVEL_MAP;
+
 import java.io.File;
-import java.io.PrintWriter;
 import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
-import java.text.SimpleDateFormat;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 07:53:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 10:24:30 $
  * @module util
  */
 abstract class AbstractLogger implements Logger {
@@ -42,7 +44,7 @@ abstract class AbstractLogger implements Logger {
 	boolean echoDebug;
 	boolean echoError;
 	boolean thisLevelOnly;
-	int logDebugLevel;
+	private Level logDebugLevel;
 	String baseLogPath;
 	private Date logDate;
 	private String debugLogFileName;
@@ -70,7 +72,7 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugMessage(final String message, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if (!this.thisLevelOnly && debugLevel.intValue() <= this.logDebugLevel || debugLevel.intValue() == this.logDebugLevel) {
+			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				logTimeStamp(this.debugLog);
 				this.debugLog.println(message);
@@ -89,7 +91,7 @@ abstract class AbstractLogger implements Logger {
 	public synchronized void debugException(final Throwable t, final Level debugLevel) {
 		this.checkLogRollover();
 		try {
-			if (!this.thisLevelOnly && debugLevel.intValue() <= this.logDebugLevel || debugLevel.intValue() == this.logDebugLevel) {
+			if ((!this.thisLevelOnly && debugLevel.intValue() >= this.logDebugLevel.intValue()) || debugLevel.intValue() == this.logDebugLevel.intValue()) {
 				this.debugLog = new PrintWriter(new FileWriter(this.debugLogFileName, true), true);
 				logTimeStamp(this.debugLog);
 				this.debugLog.println("Exception: " + t.getMessage());
@@ -180,5 +182,12 @@ abstract class AbstractLogger implements Logger {
 		if (!file.exists())
 			file.mkdirs();
 		return logPath;
+	}
+
+	/**
+	 * @param debugLevel AMFICOM-standard debug level, ranging from 1 to 10.
+	 */
+	void setDebugLevel(final int debugLevel) {
+		this.logDebugLevel = DEBUG_LEVEL_MAP.get(new Integer(debugLevel));
 	}
 }

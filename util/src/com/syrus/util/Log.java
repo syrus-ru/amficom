@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.10 2005/07/11 08:24:21 bass Exp $
+ * $Id: Log.java,v 1.11 2005/07/11 10:24:30 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 
 package com.syrus.util;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/11 08:24:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 10:24:30 $
  * @module util
  */
 public class Log {
@@ -27,7 +29,23 @@ public class Log {
 	public static final Level DEBUGLEVEL09 = new CustomLevel("DEBUGLEVEL09", 100);
 	public static final Level DEBUGLEVEL10 = new CustomLevel("DEBUGLEVEL10", 50);
 
+	static final Map<Integer, Level> DEBUG_LEVEL_MAP;
+
 	private static Logger logger;
+
+	static {
+		DEBUG_LEVEL_MAP = new HashMap<Integer, Level>(10);
+		DEBUG_LEVEL_MAP.put(new Integer(1), DEBUGLEVEL01);
+		DEBUG_LEVEL_MAP.put(new Integer(2), DEBUGLEVEL02);
+		DEBUG_LEVEL_MAP.put(new Integer(3), DEBUGLEVEL03);
+		DEBUG_LEVEL_MAP.put(new Integer(4), DEBUGLEVEL04);
+		DEBUG_LEVEL_MAP.put(new Integer(5), DEBUGLEVEL05);
+		DEBUG_LEVEL_MAP.put(new Integer(6), DEBUGLEVEL06);
+		DEBUG_LEVEL_MAP.put(new Integer(7), DEBUGLEVEL07);
+		DEBUG_LEVEL_MAP.put(new Integer(8), DEBUGLEVEL08);
+		DEBUG_LEVEL_MAP.put(new Integer(9), DEBUGLEVEL09);
+		DEBUG_LEVEL_MAP.put(new Integer(10), DEBUGLEVEL10);
+	}
 
 	private Log() {
 		assert false;
