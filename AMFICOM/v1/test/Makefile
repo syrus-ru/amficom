@@ -2,8 +2,10 @@
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-TEST_CLASS=TestMeasurementType
-TEST_PACKAGE=com.syrus.AMFICOM.measurement
+#TEST_CLASS=TestMeasurementType
+#TEST_PACKAGE=com.syrus.AMFICOM.measurement
+TEST_CLASS=TestCMServer
+TEST_PACKAGE=com.syrus.AMFICOM.cmserver
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class

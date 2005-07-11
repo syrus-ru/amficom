@@ -4,8 +4,10 @@
 
 #TEST_CLASS=TestInitialSetup
 #TEST_PACKAGE=com.syrus.AMFICOM.setup
-TEST_CLASS=TestMeasurementType
-TEST_PACKAGE=com.syrus.AMFICOM.measurement
+#TEST_CLASS=TestMeasurementType
+#TEST_PACKAGE=com.syrus.AMFICOM.measurement
+TEST_CLASS=TestCMServer
+TEST_PACKAGE=com.syrus.AMFICOM.cmserver
 
 JUNITCLASSPATH=$ECLIPSE_HOME/plugins/org.junit_3.8.1/junit.jar
 JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.jar

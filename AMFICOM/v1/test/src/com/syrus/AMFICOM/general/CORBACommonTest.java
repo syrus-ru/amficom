@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACommonTest.java,v 1.4 2005/06/30 07:54:03 arseniy Exp $
+ * $Id: CORBACommonTest.java,v 1.5 2005/07/11 10:28:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
+import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
@@ -20,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/30 07:54:03 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 10:28:45 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -38,6 +39,10 @@ public class CORBACommonTest extends CommonTest {
 	private static MServer mServerRef;
 	private static CMServer cmServerRef;
 
+	public static LoginServer getLoginServerRef() {
+		return loginServerRef;
+	}
+
 	public static IdlSessionKey getIdlSessionKey() {
 		return idlSessionKey;
 	}
@@ -50,16 +55,16 @@ public class CORBACommonTest extends CommonTest {
 		return cmServerRef;
 	}
 
+	@Override
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 
 		try {
-
 			final String serverHostName = ApplicationProperties.getString(KEY_SERVER_HOST_NAME, SERVER_HOST_NAME);
 			final String contextName = ContextNameFactory.generateContextName(serverHostName);
 			final CORBAServer corbaServer = new CORBAServer(contextName);
 
-			loginServerRef = (LoginServer) corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
+			loginServerRef = LoginServerHelper.narrow(corbaServer.resolveReference(ServerProcessWrapper.LOGIN_PROCESS_CODENAME));
 			final String login = ApplicationProperties.getString(KEY_LOGIN, LOGIN);
 			final String password = ApplicationProperties.getString(KEY_PASSWORD, PASSWORD);
 			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
@@ -75,6 +80,7 @@ public class CORBACommonTest extends CommonTest {
 		}
 	}
 
+	@Override
 	void oneTimeTearDown() {
 		try {
 			loginServerRef.logout(idlSessionKey);
