@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.9 2005/06/22 15:05:19 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.10 2005/07/11 12:16:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
@@ -22,7 +23,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/06/22 15:05:19 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/11 12:16:34 $
  * @module schemeclient_v1
  */
 
@@ -35,7 +36,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(eqt);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return eqt;
 	}
@@ -46,7 +47,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return type;
 	}
@@ -57,7 +58,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return type;
 	}
@@ -68,7 +69,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return type;
 	}
@@ -79,7 +80,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return type;
 	}
@@ -90,7 +91,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return type;
 	}
@@ -102,7 +103,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(eq);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return eq;
 	}
@@ -114,7 +115,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(kis);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return kis;
 	}
@@ -126,7 +127,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(link);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return link;
 	}
@@ -138,7 +139,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(cableLink);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return cableLink;
 	}
@@ -149,7 +150,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(port);
 		} catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return port;
 	}
@@ -160,7 +161,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
-			 Log.debugException(e, Log.SEVERE);
+			 Log.debugException(e, Level.SEVERE);
 		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: ResourceStorableObjectPool.putStorableObject()");
 		}
@@ -173,7 +174,7 @@ public class SchemeObjectsFactory {
 		try {
 			StorableObjectPool.putStorableObject(ir);
 		} catch (IllegalObjectEntityException e) {
-			 Log.debugException(e, Log.SEVERE);
+			 Log.debugException(e, Level.SEVERE);
 		} catch (UnsupportedOperationException e) {
 			System.err.println("Unsupported operation: ResourceStorableObjectPool.putStorableObject()");
 		}
@@ -218,7 +219,7 @@ public class SchemeObjectsFactory {
 			StorableObjectPool.putStorableObject(measurementPort);
 		} 
 		catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 		}
 		return measurementPort;
 	}

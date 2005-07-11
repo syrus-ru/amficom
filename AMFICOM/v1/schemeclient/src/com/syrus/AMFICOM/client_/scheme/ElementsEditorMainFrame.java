@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.6 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.7 2005/07/11 12:16:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
 
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
@@ -59,8 +60,8 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:05 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:16:34 $
  * @module schemeclient_v1
  */
 
@@ -106,7 +107,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | EDITOR_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
 				elementsTab = new ElementsTabbedPane(aContext);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(aContext, elementsTab);
 				editorFrame.setClosable(false);
@@ -118,7 +119,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		
 		this.frames.put(GENERAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
 				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
 				desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ElementsEditorMainFrame.this.aContext);
@@ -128,7 +129,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 
 		this.frames.put(CHARACTERISTIC_PROPERIES_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
 				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
 				desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ElementsEditorMainFrame.this.aContext);
@@ -138,7 +139,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 
 		this.frames.put(ADDITIONAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
 				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
 				desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ElementsEditorMainFrame.this.aContext);
@@ -149,7 +150,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | TREE_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
 				treeFrame.setIconifiable(true);
 				treeFrame.setClosable(true);

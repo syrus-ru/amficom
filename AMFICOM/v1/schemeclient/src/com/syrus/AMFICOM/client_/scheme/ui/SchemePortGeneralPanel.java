@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.11 2005/06/23 12:58:23 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.12 2005/07/11 12:16:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.logging.Level;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/06/23 12:58:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:16:34 $
  * @module schemeclient_v1
  */
 
@@ -346,7 +347,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				port = schemePort.getPort();
 				mPort = schemePort.getMeasurementPort();
 			} catch (IllegalStateException e1) {
-				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Log.FINEST); //$NON-NLS-1$
+				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				parent = null;
 			}
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
@@ -439,7 +440,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 							Log.errorException(e);
 						}
 					} else {
-						Log.debugMessage("KIS is null. Cannot create MeasurementPort", Log.FINEST); //$NON-NLS-1$
+						Log.debugMessage("KIS is null. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
 					}
 				} else if (mp != null) {
 					mp.setName(schemePort.getName());

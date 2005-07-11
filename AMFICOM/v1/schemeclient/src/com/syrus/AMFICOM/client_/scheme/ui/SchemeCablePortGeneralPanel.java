@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.10 2005/06/23 12:58:23 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.11 2005/07/11 12:16:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/06/23 12:58:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 12:16:34 $
  * @module schemeclient_v1
  */
 
@@ -291,7 +292,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
 				port = schemePort.getPort();
 			} catch (IllegalStateException e1) {
-				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Log.FINEST); //$NON-NLS-1$
+				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				parent = null;
 			}
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);

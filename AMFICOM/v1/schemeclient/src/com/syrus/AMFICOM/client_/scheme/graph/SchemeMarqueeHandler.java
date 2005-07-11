@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.11 2005/06/24 14:13:36 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.12 2005/07/11 12:16:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.*;
 
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/06/24 14:13:36 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:16:35 $
  * @module schemeclient_v1
  */
 
@@ -426,7 +427,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 									Log.errorException(e1);
 								}
 							} else {
-								Log.debugMessage("neither Scheme nor SchemeElement is opened", Log.SEVERE); //$NON-NLS-1$
+								Log.debugMessage("neither Scheme nor SchemeElement is opened", Level.SEVERE); //$NON-NLS-1$
 							}
 						}
 					}
