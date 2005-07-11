@@ -328,7 +328,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		if(element != null) {
 			if(element instanceof SchemeElement) {
 				SchemeElement schemeElement = (SchemeElement )element;
-				this.schemePane.getCurrentPanel().getSchemeResource().setSchemeElement(schemeElement);
+				this.schemePane.openSchemeCellContainer(schemeElement);
 				this.crossingScrollPane.setVisible(false);
 				this.schemePane.getGraph().setVisible(true);
 				sen = true;
