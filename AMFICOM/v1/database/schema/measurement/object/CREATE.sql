@@ -1,10 +1,11 @@
--- $Id: CREATE.sql,v 1.8 2005/06/15 10:04:54 bass Exp $
+-- $Id: CREATE.sql,v 1.9 2005/07/11 19:07:42 arseniy Exp $
 
 @@parameterset;
 @@setmelink;
 @@parameter;
 @@measurementsetup;
 @@measurementsetupmelink;
+@@measurementsetupmtlink;
 @@crontemporalpattern;
 @@periodicaltemporalpattern;
 @@test;

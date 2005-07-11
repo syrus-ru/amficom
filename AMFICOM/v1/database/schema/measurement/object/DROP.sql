@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.9 2005/06/15 10:04:54 bass Exp $
+-- $Id: DROP.sql,v 1.10 2005/07/11 19:07:42 arseniy Exp $
 
 DROP TABLE ResultParameter;
 DROP TABLE Result;
@@ -11,6 +11,7 @@ DROP TABLE Test;
 DROP TABLE PeriodicalTemporalPattern;
 DROP TABLE CronTemporalPattern;
 DROP TYPE CronStringArray;
+DROP TABLE MeasurementSetupMTLink;
 DROP TABLE MeasurementSetupMELink;
 DROP TABLE MeasurementSetup;
 DROP TABLE Parameter;
