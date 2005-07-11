@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.42 2005/07/07 15:52:10 bass Exp $
+ * $Id: SchemeDevice.java,v 1.43 2005/07/11 07:58:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/07 15:52:10 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/11 07:58:14 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -385,12 +385,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeCablePorts() {
+	public Set<SchemeCablePort> getSchemeCablePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLEPORT_CODE), true, true));
+			final Set<SchemeCablePort> schemecablePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMECABLEPORT_CODE), true, true);
+			return Collections.unmodifiableSet(schemecablePorts);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -398,12 +399,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemePorts() {
+	public Set<SchemePort> getSchemePorts() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPORT_CODE), true, true));
+			final Set<SchemePort> schemePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.SCHEMEPORT_CODE), true, true);
+			return Collections.unmodifiableSet(schemePorts);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Log.SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
