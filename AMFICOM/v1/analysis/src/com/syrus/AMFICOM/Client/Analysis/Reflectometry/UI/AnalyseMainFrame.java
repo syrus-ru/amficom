@@ -2,6 +2,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.event.*;
+import java.util.logging.Level;
 
 import javax.swing.*;
 
@@ -80,7 +81,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(SELECTOR_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | SELECTOR_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | SELECTOR_FRAME", Level.FINEST);
 				TraceSelectorFrame selectFrame = new TraceSelectorFrame(AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(selectFrame);
 				return selectFrame;
@@ -90,7 +91,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(PRIMARY_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | PRIMARY_PARAMETERS_FRAME", Level.FINEST);
 				PrimaryParametersFrame paramFrame = new PrimaryParametersFrame();
 				desktopPane.add(paramFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, paramFrame);
@@ -101,7 +102,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(STATS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | STATS_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | STATS_FRAME", Level.FINEST);
 				OverallStatsFrame statsFrame = new OverallStatsFrame(AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(statsFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, statsFrame);
@@ -112,7 +113,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(NOISE_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | NOISE_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | NOISE_FRAME", Level.FINEST);
 				ScalableFrame noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
 				noiseFrame.setTitle(LangModelAnalyse.getString("Noise level"));
 				desktopPane.add(noiseFrame);
@@ -136,7 +137,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		
 		this.frames.put(NOISE_HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | NOISE_HISTOGRAMM_FRAME", Level.FINEST);
 				
 				ScalableLayeredPanel layeredPanel = new ScalableLayeredPanel();
 				noiseHistogrammPanel = new NoiseHistogrammPanel(layeredPanel);
@@ -216,7 +217,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(EVENTS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | EVENTS_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | EVENTS_FRAME", Level.FINEST);
 				EventsFrame eventsFrame = new EventsFrame(aContext);
 				desktopPane.add(eventsFrame);
 				analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE, eventsFrame);
@@ -227,7 +228,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(DETAILED_EVENTS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | DETAILED_EVENTS_FRAME", Level.FINEST);
 				DetailedEventsFrame detailedEvFrame = new DetailedEventsFrame();
 				desktopPane.add(detailedEvFrame);
 				return detailedEvFrame;
@@ -237,7 +238,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(ANALYSIS_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | ANALYSIS_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | ANALYSIS_FRAME", Level.FINEST);
 				PathElementsFrame analysisFrame = new PathElementsFrame(aContext, AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(analysisFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL,
@@ -249,7 +250,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(MARKERS_INFO_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | MARKERS_INFO_FRAME", Level.FINEST);
 				MarkersInfoFrame mInfoFrame = new MarkersInfoFrame(AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(mInfoFrame);
 				return mInfoFrame;
@@ -259,7 +260,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(ANALYSIS_SELECTION_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | ANALYSIS_SELECTION_FRAME", Level.FINEST);
 				AnalysisSelectionFrame analysisSelectionFrame = new AnalysisSelectionFrame(aContext);
 				desktopPane.add(analysisSelectionFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.TABLE,
@@ -271,7 +272,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		this.frames.put(HISTOGRAMM_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
-				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Log.FINEST);
+				Log.debugMessage(".createValue | HISTOGRAMM_FRAME", Level.FINEST);
 				HistogrammFrame histogrammFrame = new HistogrammFrame(AnalyseMainFrame.this.dispatcher);
 				desktopPane.add(histogrammFrame);
 				AnalyseMainFrame.this.analysisReportCommand.setParameter(CreateAnalysisReportCommand.PANEL,

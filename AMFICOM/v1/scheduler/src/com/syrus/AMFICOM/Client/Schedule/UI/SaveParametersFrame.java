@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -34,7 +35,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:05 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/11 08:19:42 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
@@ -129,7 +130,7 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 								Test test = (Test) iterator.next();
 								if (test.isChanged()) {
 									Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | set " + test.getId()
-											+ ", " + returnType.value(), Log.FINEST);
+											+ ", " + returnType.value(), Level.FINEST);
 									test.setReturnType(returnType);
 								}
 							}

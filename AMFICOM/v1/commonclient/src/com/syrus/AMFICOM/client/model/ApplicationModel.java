@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.4 2005/06/17 14:32:06 bob Exp $
+ * $Id: ApplicationModel.java,v 1.5 2005/07/11 08:19:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
@@ -20,8 +21,8 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/06/17 14:32:06 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 08:19:41 $
  * @module generalclient_v1
  */
 public class ApplicationModel {
@@ -87,7 +88,7 @@ public class ApplicationModel {
 					final boolean accessible,
 					final boolean selected) {
 		if (command == null) {
-			Log.debugMessage("ApplicationModel.add | name: " + name + " , command is null ", Log.WARNING);
+			Log.debugMessage("ApplicationModel.add | name: " + name + " , command is null ", Level.WARNING);
 			this.add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
 		} else {
 			this.appications.put(name,
@@ -348,8 +349,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: bob $
-	 * @version $Revision: 1.4 $, $Date: 2005/06/17 14:32:06 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.5 $, $Date: 2005/07/11 08:19:41 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry {

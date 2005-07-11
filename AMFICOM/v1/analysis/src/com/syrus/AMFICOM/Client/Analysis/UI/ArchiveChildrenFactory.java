@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.14 2005/06/23 18:45:05 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.15 2005/07/11 08:24:11 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:05 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/11 08:24:11 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -326,12 +327,12 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			}
 		} else if (nodeObject instanceof Date) {
 			Date startDate = (Date) nodeObject;
-			Log.debugMessage("ArchiveChildrenFactory.populate | startDate is " + startDate, Log.FINEST);
+			Log.debugMessage("ArchiveChildrenFactory.populate | startDate is " + startDate, Level.FINEST);
 			calendar.setTime(startDate);
 			calendar.add(Calendar.MONTH, 1);
 			calendar.add(Calendar.SECOND, -1);
 			Date endDate = calendar.getTime();
-			Log.debugMessage("ArchiveChildrenFactory.populate | endDate is " + endDate, Log.FINEST);
+			Log.debugMessage("ArchiveChildrenFactory.populate | endDate is " + endDate, Level.FINEST);
 			Item parent = item.getParent();
 			Object parentObject = parent.getObject();
 			if (parentObject.equals(DATES)) {

@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/06/23 18:45:05 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/11 08:19:42 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -1063,7 +1064,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				ParameterType parameterType = (ParameterType) type;
 				String codename = parameterType.getCodename();
 				String stringValue = setParameters[i].getStringValue();
-				Log.debugMessage("ReflectometryTestPanel.setSet | codename: " + codename + ", stringValue:" + stringValue, Log.FINEST);
+				Log.debugMessage("ReflectometryTestPanel.setSet | codename: " + codename + ", stringValue:" + stringValue, Level.FINEST);
 				if (codename.equals(ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString())) {
 					this.refractTextField.setText(stringValue);
 				} else if (codename.equals(ParameterTypeCodename.TRACE_WAVELENGTH.toString())) {

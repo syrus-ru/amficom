@@ -4,6 +4,7 @@ import java.awt.*;
 import java.beans.*;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -130,7 +131,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 
 		traces.add(id);
 
-		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Log.FINEST);
+		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Level.FINEST);
 		
 		TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);
@@ -177,7 +178,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 
     String name = LangModelAnalyse.getString("etalon");
 
-		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Log.FINEST);
+		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Level.FINEST);
 		
 		TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);

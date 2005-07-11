@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.27 2005/07/03 19:16:31 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.28 2005/07/11 08:20:01 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -43,7 +44,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/07/03 19:16:31 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/11 08:20:01 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -333,7 +334,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(ms);
 			Log.debugMessage("IntervalsTemporalPattern.printStructure | ms:"
 					+ ms.longValue()
-					+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Log.FINEST);
+					+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Level.FINEST);
 		}
 
 		if (this.undoIntervalsAbstractTemporalPatternMap != null) {
@@ -342,7 +343,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 				final Identifier abstractTemporalPatternId = this.undoIntervalsAbstractTemporalPatternMap.get(ms);
 				Log.debugMessage("IntervalsTemporalPattern.printStructure | UNDO ms:"
 						+ ms.longValue()
-						+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Log.FINEST);
+						+ (abstractTemporalPatternId.isVoid() ? "" : (", id:" + abstractTemporalPatternId.toString())), Level.FINEST);
 			}
 		}
 	}
@@ -817,7 +818,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 					}
 					break;
 				default:
-					Log.debugMessage("IntervalsTemporalPattern.disjoin | temporalPatternId isn't support as temporal pattern", Log.FINEST);
+					Log.debugMessage("IntervalsTemporalPattern.disjoin | temporalPatternId isn't support as temporal pattern", Level.FINEST);
 					break;
 			}
 

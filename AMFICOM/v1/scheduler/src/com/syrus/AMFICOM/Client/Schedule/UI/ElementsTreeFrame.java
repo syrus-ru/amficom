@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -142,7 +143,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Log.FINEST);
+		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Level.FINEST);
 		this.paramMap.put(ObjectEntities.MONITOREDELEMENT, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();

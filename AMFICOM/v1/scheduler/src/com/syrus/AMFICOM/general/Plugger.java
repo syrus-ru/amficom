@@ -1,5 +1,5 @@
 /*-
- * $Id: Plugger.java,v 1.2 2005/05/17 07:30:44 bob Exp $
+ * $Id: Plugger.java,v 1.3 2005/07/11 08:19:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Hashtable;
+import java.util.logging.Level;
 
 import javax.swing.UIDefaults;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,8 +29,8 @@ import org.xml.sax.SAXException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/17 07:30:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 08:19:42 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */
@@ -83,25 +84,25 @@ public class Plugger {
 			Constructor constructor = clazz.getConstructor(classes);
 			object = constructor.newInstance(arguments);
 		} catch (ClassNotFoundException e) {
-			Log.debugMessage("Plugger.reflectClass | Class " + className + " not found -- " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | Class " + className + " not found -- " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (SecurityException e) {
-			Log.debugMessage("Plugger.reflectClass | Security exception-- " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | Security exception-- " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (NoSuchMethodException e) {
-			Log.debugMessage("Plugger.reflectClass | No such constuctor -- " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | No such constuctor -- " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (IllegalArgumentException e) {
-			Log.debugMessage("Plugger.reflectClass | Illegal argument -- " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | Illegal argument -- " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (InstantiationException e) {
-			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (IllegalAccessException e) {
-			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		} catch (InvocationTargetException e) {
-			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Log.WARNING);
+			Log.debugMessage("Plugger.reflectClass | " + e.getMessage(), Level.WARNING);
 			Log.errorException(e);
 		}
 
@@ -119,7 +120,7 @@ public class Plugger {
 				this.doc = factory.newDocumentBuilder().parse(this.file);
 				this.plugin = this.doc.getElementsByTagName("plugin").item(0);
 			} else {
-				Log.debugMessage("Plugger.parseXmlFile | " + this.file.getAbsolutePath() + " not found.", Log.FINEST);
+				Log.debugMessage("Plugger.parseXmlFile | " + this.file.getAbsolutePath() + " not found.", Level.FINEST);
 				return null;
 			}
 			return this.doc;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.15 2005/06/22 10:22:59 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.16 2005/07/11 08:20:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/07/11 08:20:01 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -113,12 +114,12 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 				buffer.append(parameterType.getDescription() + ':' + string);
 				java.util.Set characteristics = parameterType.getCharacteristics();
 				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
-					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Log.FINEST);
+					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
 				if (!characteristics.isEmpty()) {
 					for (Iterator it = characteristics.iterator(); it.hasNext();) {
 						Characteristic characteristic = (Characteristic) it.next();
 						StorableObjectType type = characteristic.getType();
-						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Log.FINEST);
+						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
 							buffer.append(' ' + characteristic.getValue());
 							/* TODO check for all codename ?*/

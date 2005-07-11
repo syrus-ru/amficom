@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.9 2005/07/11 07:53:55 bass Exp $
+ * $Id: Log.java,v 1.10 2005/07/11 08:24:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,11 @@ package com.syrus.util;
 
 import java.util.logging.Level;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/11 08:24:21 $
+ * @module util
+ */
 public class Log {
 	public static final Level DEBUGLEVEL01 = new CustomLevel("DEBUGLEVEL01", Level.SEVERE.intValue());
 	public static final Level DEBUGLEVEL02 = new CustomLevel("DEBUGLEVEL02", Level.WARNING.intValue());
@@ -21,55 +26,6 @@ public class Log {
 	public static final Level DEBUGLEVEL08 = new CustomLevel("DEBUGLEVEL08", 200);
 	public static final Level DEBUGLEVEL09 = new CustomLevel("DEBUGLEVEL09", 100);
 	public static final Level DEBUGLEVEL10 = new CustomLevel("DEBUGLEVEL10", 50);
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#SEVERE
-	 */
-	public static final Level SEVERE = Level.SEVERE;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#WARNING
-	 */
-	public static final Level WARNING = Level.WARNING;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#INFO
-	 */
-	public static final Level INFO = Level.INFO;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#CONFIG
-	 */
-	public static final Level CONFIG = Level.CONFIG;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#FINE
-	 */
-	public static final Level FINE = Level.FINE;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#FINER
-	 */
-	public static final Level FINER = Level.FINER;
-
-	/**
-	 * Value: {@value}
-	 *
-	 * @see java.util.logging.Level#FINEST
-	 */
-	public static final Level FINEST = Level.FINEST;
 
 	private static Logger logger;
 

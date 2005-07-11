@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.14 2005/06/15 10:39:18 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.15 2005/07/11 08:19:41 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,14 @@ import gnu.trove.TIntObjectHashMap;
 
 import java.beans.PropertyChangeListener;
 import java.util.Date;
+import java.util.logging.Level;
 
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/15 10:39:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bass $
  * @module commonclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -151,7 +152,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 			instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
 		} else {
 			final String xmlPath = ApplicationProperties.getString(XML_PATH_KEY, null);
-			Log.debugMessage("ClientSessionEnvironment.createMeasurementSession | xmlPath " + xmlPath, Log.FINEST);
+			Log.debugMessage("ClientSessionEnvironment.createMeasurementSession | xmlPath " + xmlPath, Level.FINEST);
 			MClientXMLServantManager mClientServantManager = MClientXMLServantManager.create();
 			ClientPoolContext clientPoolContext = new MClientPoolContext(xmlPath);
 			instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, xmlPath);

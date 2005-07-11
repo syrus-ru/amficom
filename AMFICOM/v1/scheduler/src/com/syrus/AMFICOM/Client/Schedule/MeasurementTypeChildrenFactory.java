@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.5 2005/06/17 11:01:14 bass Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.6 2005/07/11 08:19:42 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.UIManager;
 
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:01:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 08:19:42 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -141,7 +142,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					}
 				}
 			} catch (ApplicationException e) {
-				Log.debugException(e, Log.WARNING);
+				Log.debugException(e, Level.WARNING);
 			}
 		
 	}

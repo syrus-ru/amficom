@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.6 2005/06/17 14:32:06 bob Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.7 2005/07/11 08:19:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.AbstractButton;
 import javax.swing.JMenu;
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 14:32:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -46,7 +47,7 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 				String s = jb.getName();
 				Command command = applicationModel.getCommand(s);
 				Log.debugMessage(
-					"AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Log.FINEST);
+					"AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Level.FINEST);
 				command.execute();
 			}
 		};

@@ -1,5 +1,5 @@
 /*
- * $Id: TestTemporalStamps.java,v 1.6 2005/06/23 18:45:05 bass Exp $
+ * $Id: TestTemporalStamps.java,v 1.7 2005/07/11 08:19:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.Undoable;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/23 18:45:05 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 08:19:42 $
  * @author $Author: bass $
  * @module scheduler_v1
  */
@@ -61,7 +62,7 @@ public class TestTemporalStamps implements Undoable  {
 		this.undoEndTime = this.endTime;
 		
 		this.endTime = endTime;		
-		Log.debugMessage("TestTemporalStamps.setEndTime | " + endTime, Log.FINEST);
+		Log.debugMessage("TestTemporalStamps.setEndTime | " + endTime, Level.FINEST);
 	}
 	
 	public void setStartTime(Date startTime) {
@@ -69,7 +70,7 @@ public class TestTemporalStamps implements Undoable  {
 		this.undoStartTime = this.startTime;
 		
 		this.startTime = startTime;
-		Log.debugMessage("TestTemporalStamps.setStartTime | " + startTime, Log.FINEST);
+		Log.debugMessage("TestTemporalStamps.setStartTime | " + startTime, Level.FINEST);
 	}
 	
 	public void undo() {
@@ -90,8 +91,8 @@ public class TestTemporalStamps implements Undoable  {
 			((Undoable) this.temporalPattern).undo();
 		}
 		
-		Log.debugMessage("TestTemporalStamps.undo | startTime is " + this.startTime, Log.FINEST);
-		Log.debugMessage("TestTemporalStamps.undo | endTime is " + this.endTime, Log.FINEST);
+		Log.debugMessage("TestTemporalStamps.undo | startTime is " + this.startTime, Level.FINEST);
+		Log.debugMessage("TestTemporalStamps.undo | endTime is " + this.endTime, Level.FINEST);
 
 	}	
 	

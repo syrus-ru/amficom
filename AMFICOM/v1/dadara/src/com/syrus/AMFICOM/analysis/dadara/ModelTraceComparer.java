@@ -1,11 +1,13 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.28 2005/07/06 16:27:21 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.29 2005/07/11 08:24:11 bass Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.analysis.dadara;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
@@ -28,8 +30,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: saa $
- * @version $Revision: 1.28 $, $Date: 2005/07/06 16:27:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/11 08:24:11 $
  * @module
  */
 public class ModelTraceComparer
@@ -268,7 +270,7 @@ public class ModelTraceComparer
 					+ (alarm.hasMismatch()
 						? "" + alarm.getMinMismatch() + ".." + alarm.getMaxMismatch()
 						: "<absent>"),
-					Log.FINEST);
+					Level.FINEST);
 			return alarm;
 		}
 		else

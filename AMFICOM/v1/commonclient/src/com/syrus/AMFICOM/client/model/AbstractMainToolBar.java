@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.8 2005/06/15 08:33:25 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.9 2005/07/11 08:19:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/15 08:33:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -53,7 +54,7 @@ public abstract class AbstractMainToolBar extends JToolBar {
 				AbstractButton jb = (AbstractButton) e.getSource();
 				String s = jb.getName();
 				Command command = model.getCommand(s);
-				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + (command != null ? '[' + command.getClass().getName() + ']' : "'null'"), Log.FINEST);
+				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + (command != null ? '[' + command.getClass().getName() + ']' : "'null'"), Level.FINEST);
 				command.execute();
 				this.executed = false;
 			}

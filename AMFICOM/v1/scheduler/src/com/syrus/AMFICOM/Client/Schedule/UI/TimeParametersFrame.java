@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -1010,7 +1011,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 			if (test != null) {
 				TestTemporalType temporalType = test.getTemporalType();
-				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Log.FINEST);
+				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Level.FINEST);
 				switch (temporalType.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 						result = this.oneRadioButton.isSelected();
@@ -1023,11 +1024,11 @@ public class TimeParametersFrame extends JInternalFrame {
 						break;
 				}
 				if (test.getGroupTestId() != null) {
-					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Log.FINEST);
+					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Level.FINEST);
 					result = this.groupRadioButton.isSelected();
 				}
 			}
-			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Log.FINEST);
+			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Level.FINEST);
 			return result;
 		}
 		

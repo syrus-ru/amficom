@@ -15,6 +15,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -152,12 +153,12 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				Test test1 = (Test) it.next();
 				Identifier groupTestId = test1.getGroupTestId();
 				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
-						+ groupTestId, Log.FINEST);
+						+ groupTestId, Level.FINEST);
 				if (groupTestId != null && !groupTestId.equals(test1.getId())) {
 					continue;
 				}
 				if (model.getIndexOfObject(test1) < 0) {
-					Log.debugMessage("TableFrame.setTests | added ", Log.FINEST);
+					Log.debugMessage("TableFrame.setTests | added ", Level.FINEST);
 					model.getValues().add(test1);
 				}
 			}

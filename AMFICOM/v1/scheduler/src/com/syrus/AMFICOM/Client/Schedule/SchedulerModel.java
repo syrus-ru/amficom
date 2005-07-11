@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -699,7 +700,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 			// COMMAND_REFRESH_TEST, null, null));
 		} else {
-			Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Log.FINEST);
+			Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
 		}
 	}
 
@@ -991,7 +992,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			e1.printStackTrace();
 		}
 
-		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Log.FINEST);
+		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
 		long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			try {
@@ -1058,11 +1059,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 
 		long t1 = System.currentTimeMillis();
-		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Log.FINEST);
+		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Level.FINEST);
 	}
 
 	private void addGroupTests() {
-		Log.debugMessage("SchedulerModel.addGroupTests | ", Log.FINEST);
+		Log.debugMessage("SchedulerModel.addGroupTests | ", Level.FINEST);
 		Identifier meId = this.monitoredElement.getId();
 		Identifier testGroupId = (Identifier) (this.meTestGroup != null ? this.meTestGroup.get(meId) : null);
 		if (testGroupId != null) {
@@ -1120,8 +1121,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							- firstTime;
 
 					assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime),
-						Log.FINEST);
-					assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Log.FINEST);
+						Level.FINEST);
+					assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
 
 					this.selectedTestIds.clear();
 
@@ -1175,7 +1176,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							this.testIds.add(testId.getId());
 							this.selectedTestIds.add(testId);
 							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId() + " at "
-									+ startDate + "," + endDate, Log.FINEST);
+									+ startDate + "," + endDate, Level.FINEST);
 						}
 					}
 
@@ -1194,7 +1195,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							final Date endDate,
 							final Identifier monitoredElementId) {
 		boolean result = true;
-		Log.debugMessage("SchedulerModel.isValid | ", Log.FINEST);
+		Log.debugMessage("SchedulerModel.isValid | ", Level.FINEST);
 		try {
 			for (Iterator iterator = StorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator
 					.hasNext();) {
@@ -1206,11 +1207,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				}
 				Log
 						.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate,
-							Log.FINEST);
+							Level.FINEST);
 
 				Log
 						.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime,
-							Log.FINEST);
+							Level.FINEST);
 				if (test.getMonitoredElement().getId().equals(monitoredElementId)
 						&& ((endDate != null && endDate.after(startTime) && endDate.before(endTime)) || (startDate
 								.after(startTime) && startDate.before(endTime)))) {
@@ -1222,7 +1223,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.debugMessage("SchedulerModel.isValid | result is " + result, Log.FINEST);
+		Log.debugMessage("SchedulerModel.isValid | result is " + result, Level.FINEST);
 		return result;
 	}
 

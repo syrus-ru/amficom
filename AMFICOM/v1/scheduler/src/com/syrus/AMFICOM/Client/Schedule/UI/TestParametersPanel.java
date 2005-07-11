@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -113,8 +114,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 		while (keys.hasMoreElements()) {
 			String codename = (String) keys.nextElement();
 			final String className = (String) bundle.getObject(codename);
-			Log.debugMessage("TestParametersPanel.preparePanels | codename " + codename, Log.FINEST);
-			Log.debugMessage("TestParametersPanel.preparePanels | className " + className, Log.FINEST);
+			Log.debugMessage("TestParametersPanel.preparePanels | codename " + codename, Level.FINEST);
+			Log.debugMessage("TestParametersPanel.preparePanels | className " + className, Level.FINEST);
 			this.panels.put(codename, new UIDefaults.LazyValue() {
 
 				public Object createValue(UIDefaults table) {
@@ -300,7 +301,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 								if (test.isChanged()) {
 									Log.debugMessage(
 										"TestParametersPanel$ListSelectionListener.valueChanged | set to test "
-												+ test.getId() + " > " + measurementSetup1.getId(), Log.FINEST);
+												+ test.getId() + " > " + measurementSetup1.getId(), Level.FINEST);
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
@@ -408,7 +409,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		
 		if (this.measurementSetupId != null && measurementSetup != null
 				&& this.measurementSetupId.equals(measurementSetup.getId()) || this.msList == null) {
-			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Log.FINEST);
+			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
 			 if (this.msList == null) {
 				 this.measurementSetupId = measurementSetup.getId();
 			 }
@@ -470,7 +471,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	public void setMeasurementSetups(Collection measurementSetups) {
 		
-		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Log.FINEST);
+		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
 		
 		if (this.msList == null)
 			this.msList = new LinkedList();

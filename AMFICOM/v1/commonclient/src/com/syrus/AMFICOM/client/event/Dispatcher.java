@@ -8,13 +8,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.7 $, $Date: 2005/06/21 12:24:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bass $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -41,7 +42,7 @@ public class Dispatcher {
 		if (!listeners.contains(listener)) {
 			listeners.add(listener);
 		} else {
-			Log.debugMessage("Dispatcher.addPropertyChangeListener | already added listener: " + listener.getClass().getName(), Log.WARNING);
+			Log.debugMessage("Dispatcher.addPropertyChangeListener | already added listener: " + listener.getClass().getName(), Level.WARNING);
 		}	
 	}
 
@@ -53,7 +54,7 @@ public class Dispatcher {
 			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 		if (listeners != null) {
 			if (!listeners.remove(listener)) {
-				Log.debugMessage("Dispatcher.removePropertyChangeListener | there is no added listener: " + listener.getClass().getName() , Log.WARNING);
+				Log.debugMessage("Dispatcher.removePropertyChangeListener | there is no added listener: " + listener.getClass().getName() , Level.WARNING);
 			}
 		}		
 	}
@@ -63,14 +64,14 @@ public class Dispatcher {
 	}
 	
 	private void printListeners() {
-		Log.debugMessage("Dispatcher.printListeners | this.hashCode(): " + this.hashCode(), Log.FINEST);
+		Log.debugMessage("Dispatcher.printListeners | this.hashCode(): " + this.hashCode(), Level.FINEST);
 		for (Iterator iterator = this.events.keySet().iterator(); iterator.hasNext();) {
 			String propertyName = (String)iterator.next();
 			List<PropertyChangeListener> listeners = this.events.get(propertyName);
-			Log.debugMessage("Dispatcher.printListeners | propertyName: " + propertyName, Log.FINEST);
+			Log.debugMessage("Dispatcher.printListeners | propertyName: " + propertyName, Level.FINEST);
 			for (Iterator iterator2 = listeners.iterator(); iterator2.hasNext();) {
 				PropertyChangeListener changeListener = (PropertyChangeListener) iterator2.next();
-				Log.debugMessage("Dispatcher.printListeners | changeListener : " + changeListener.getClass().getName(), Log.FINEST);
+				Log.debugMessage("Dispatcher.printListeners | changeListener : " + changeListener.getClass().getName(), Level.FINEST);
 			}
 		}
 	}
@@ -104,7 +105,7 @@ public class Dispatcher {
 			}
 		} else {
 			Log.debugMessage("Dispatcher.firePropertyChange | listener for '" + propertyName + "' is "
-					+ (listeners == null ? "'null'" : "empty"), Log.FINEST);
+					+ (listeners == null ? "'null'" : "empty"), Level.FINEST);
 		}
 	}
 }
