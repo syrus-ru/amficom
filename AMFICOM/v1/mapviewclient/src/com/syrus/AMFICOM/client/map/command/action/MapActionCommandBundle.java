@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.26 2005/06/29 15:51:17 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.27 2005/07/11 14:44:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/06/29 15:51:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/11 14:44:20 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -315,7 +315,6 @@ public class MapActionCommandBundle extends CommandBundle
 	protected void removeUnboundLink(UnboundLink link)
 		throws Throwable
 	{
-		this.removePhysicalLink(link);
 		link.sortNodes();
 		List sortedNodes = new LinkedList();
 		sortedNodes.addAll(link.getSortedNodes());
@@ -331,6 +330,7 @@ public class MapActionCommandBundle extends CommandBundle
 		{
 			this.removeNodeLink((NodeLink)it3.next());
 		}
+		this.removePhysicalLink(link);
 	}
 
 	/**
