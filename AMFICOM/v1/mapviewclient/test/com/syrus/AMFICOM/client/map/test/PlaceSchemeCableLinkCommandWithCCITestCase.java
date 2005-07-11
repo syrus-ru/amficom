@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.3 2005/07/07 11:43:20 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.4 2005/07/11 13:16:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -488,7 +488,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 
 		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
-		assertEquals(cciList.size(), 3);
+		assertEquals(cciList.size(), 4);
 		cciList.remove(cci1);
 		cciList.remove(cci3);
 
