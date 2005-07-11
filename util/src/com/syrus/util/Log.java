@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.8 2005/06/17 11:25:48 bass Exp $
+ * $Id: Log.java,v 1.9 2005/07/11 07:53:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,66 +8,68 @@
 
 package com.syrus.util;
 
+import java.util.logging.Level;
+
 public class Log {
-	public static final int DEBUGLEVEL01 = 1;
-	public static final int DEBUGLEVEL02 = 2;
-	public static final int DEBUGLEVEL03 = 3;
-	public static final int DEBUGLEVEL04 = 4;
-	public static final int DEBUGLEVEL05 = 5;
-	public static final int DEBUGLEVEL06 = 6;
-	public static final int DEBUGLEVEL07 = 7;
-	public static final int DEBUGLEVEL08 = 8;
-	public static final int DEBUGLEVEL09 = 9;
-	public static final int DEBUGLEVEL10 = 10;
+	public static final Level DEBUGLEVEL01 = new CustomLevel("DEBUGLEVEL01", Level.SEVERE.intValue());
+	public static final Level DEBUGLEVEL02 = new CustomLevel("DEBUGLEVEL02", Level.WARNING.intValue());
+	public static final Level DEBUGLEVEL03 = new CustomLevel("DEBUGLEVEL03", Level.INFO.intValue());
+	public static final Level DEBUGLEVEL04 = new CustomLevel("DEBUGLEVEL04", Level.CONFIG.intValue());
+	public static final Level DEBUGLEVEL05 = new CustomLevel("DEBUGLEVEL05", Level.FINE.intValue());
+	public static final Level DEBUGLEVEL06 = new CustomLevel("DEBUGLEVEL06", Level.FINER.intValue());
+	public static final Level DEBUGLEVEL07 = new CustomLevel("DEBUGLEVEL07", Level.FINEST.intValue());
+	public static final Level DEBUGLEVEL08 = new CustomLevel("DEBUGLEVEL08", 200);
+	public static final Level DEBUGLEVEL09 = new CustomLevel("DEBUGLEVEL09", 100);
+	public static final Level DEBUGLEVEL10 = new CustomLevel("DEBUGLEVEL10", 50);
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#SEVERE
 	 */
-	public static final int SEVERE = DEBUGLEVEL01;
+	public static final Level SEVERE = Level.SEVERE;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#WARNING
 	 */
-	public static final int WARNING = DEBUGLEVEL02;
+	public static final Level WARNING = Level.WARNING;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#INFO
 	 */
-	public static final int INFO = DEBUGLEVEL03;
+	public static final Level INFO = Level.INFO;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#CONFIG
 	 */
-	public static final int CONFIG = DEBUGLEVEL04;
+	public static final Level CONFIG = Level.CONFIG;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#FINE
 	 */
-	public static final int FINE = DEBUGLEVEL05;
+	public static final Level FINE = Level.FINE;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#FINER
 	 */
-	public static final int FINER = DEBUGLEVEL06;
+	public static final Level FINER = Level.FINER;
 
 	/**
 	 * Value: {@value}
 	 *
 	 * @see java.util.logging.Level#FINEST
 	 */
-	public static final int FINEST = DEBUGLEVEL07;
+	public static final Level FINEST = Level.FINEST;
 
 	private static Logger logger;
 
@@ -84,21 +86,21 @@ public class Log {
 	 * @param debugLevel
 	 * @return always true, can be used as <code>assert Log.debugMessage(...)</code>
 	 */
-	public static boolean debugMessage(String message, int debugLevel) {
+	public static boolean debugMessage(final String message, final Level debugLevel) {
 		try {
 			logger.debugMessage(message, debugLevel);
-		} catch (NullPointerException npe) {
+		} catch (final NullPointerException npe) {
 			System.out.println(message);
 		}
 		return true;
 	}
 
-	public static void debugException(Throwable throwable, int debugLevel) {
+	public static void debugException(final Throwable t, final Level debugLevel) {
 		try {
-			logger.debugException(throwable, debugLevel);
+			logger.debugException(t, debugLevel);
 		} catch (NullPointerException npe) {
-			System.out.println(throwable.getMessage());
-			throwable.printStackTrace();
+			System.out.println(t.getMessage());
+			t.printStackTrace();
 		}
 	}
 
@@ -116,6 +118,14 @@ public class Log {
 		} catch (NullPointerException npe) {
 			System.out.println(throwable.getMessage());
 			throwable.printStackTrace();
+		}
+	}
+
+	private static class CustomLevel extends Level {
+		private static final long serialVersionUID = 8040407643584688402L;
+
+		private CustomLevel(String name, int value) {
+			super(name, value);
 		}
 	}
 }
