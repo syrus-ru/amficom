@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.6 2005/06/21 12:52:14 bass Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.7 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/21 12:52:14 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 

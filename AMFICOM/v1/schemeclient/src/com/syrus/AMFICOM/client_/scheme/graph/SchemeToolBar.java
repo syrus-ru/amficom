@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.5 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.6 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,17 @@ import java.util.Map;
 import javax.swing.ButtonGroup;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SetBackgroundSizeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SetLinkModeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SetPathModeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SetTopLevelModeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -37,7 +43,7 @@ public class SchemeToolBar extends ElementsToolBar {
 			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
 			Constants.ZOOM_ACTUAL, Constants.SEPARATOR, Constants.BACKGROUND_SIZE,
 			Constants.SEPARATOR, Constants.LINK_MODE, Constants.PATH_MODE,
-			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE 
+			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE, Constants.HORIZONTAL_GLUE 
 	};
 	
 	public SchemeToolBar(UgoTabbedPane sourcePane,
@@ -55,11 +61,11 @@ public class SchemeToolBar extends ElementsToolBar {
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
 
 		bttns.put(Constants.GROUP, createToolButton(mh.gr2, btn_size, null,
-				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane), false));
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane, DeviceGroup.SCHEME_ELEMENT), false));
 		bttns.put(Constants.CREATE_UGO, createToolButton(
 				mh.scheme_ugo, btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
 				Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane, aContext), true));
+				new CreateTopLevelSchemeAction(pane), true));
 		bttns.put(Constants.BACKGROUND_SIZE, createToolButton(mh.bSize, btn_size,
 				null, LangModelGraph.getString(Constants.BACKGROUND_SIZE), Constants.ICON_SCHEME_SIZE, new SetBackgroundSizeAction(
 						pane), true));

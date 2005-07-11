@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.6 2005/06/22 15:05:19 bass Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.7 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,19 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.configuration.AbstractLink;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 15:05:19 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -34,34 +38,26 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 	public void setObject(Object or) {
 		this.schemeLink = (SchemeLink)or;
 		
-		typeCombo.removeAllItems();
+		cmbTypeCombo.removeAllItems();
 		if (schemeLink != null) {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 			try {
-				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
+			cbLinkBox.setVisible(((SchemeLink)schemeLink).getParentScheme() != null); 
 		}
 		super.setObject(or);
 	}
 
 	public void commitChanges() {
-		if (schemeLink != null && MiscUtil.validName(nameText.getText())) {
+		if (schemeLink != null && MiscUtil.validName(tfNameText.getText())) {
 			AbstractLink link = schemeLink.getAbstractLink();
-			if (linkBox.isSelected()) {
+			if (cbLinkBox.isSelected()) {
 				if (link == null) {
 					try {
-						Identifier userId = LoginManager.getUserId();
-						Identifier domainId = LoginManager.getDomainId();
-						final AbstractLinkType type = this.schemeLink.getAbstractLinkType();
-						if (this.schemeLink instanceof SchemeLink) {
-							link = Link.createInstance(userId, domainId, this.schemeLink.getName(), this.schemeLink.getDescription(), ((SchemeLink) this.schemeLink).getAbstractLinkType(), "", "", "", 0, "");							
-						} else if (this.schemeLink instanceof SchemeCableLink) {
-							link = CableLink.createInstance(userId, domainId, this.schemeLink.getName(), this.schemeLink.getDescription(), ((SchemeCableLink) this.schemeLink).getAbstractLinkType(), "", "", "", 0, "");							
-						} else {
-							assert false;
-						}
+						link = SchemeObjectsFactory.createLink();
 						schemeLink.setAbstractLink(link);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);

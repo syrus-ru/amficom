@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.4 2005/05/26 07:40:51 stas Exp $
+ * $Id: Constants.java,v 1.5 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import javax.swing.*;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -83,7 +86,9 @@ public interface Constants {
 	public static final String ERROR = "error"; //$NON-NLS-1$
 	public static final String ERROR_COMPONENT_NOT_FOUND = "error_component_not_found"; //$NON-NLS-1$
 	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "error_hierarchy_port_not_found"; //$NON-NLS-1$
-	public static final String ERROR_PORTTYPE_NOT_FOUND = "error_porttype_not_found";//$NON-NLS-1$
+	public static final String ERROR_PORTTYPE_NOT_FOUND = "error_porttype_not_found";
+	public static final String ERROR_LINKTYPE_NOT_FOUND = "error_linktype_not_found";//$NON-NLS-1$
+	public static final String ERROR_CABLELINKTYPE_NOT_FOUND = "error_cablelinktype_not_found";//$NON-NLS-1$
 	public static final String ERROR_GROUPED_DEVICE = "error_grouped_device";//$NON-NLS-1$
 	
 	// list of button keys
@@ -102,6 +107,7 @@ public interface Constants {
 	public static final String ZOOM_OUT = "zoom_out"; //$NON-NLS-1$
 	public static final String ZOOM_ACTUAL = "zoom_actual"; //$NON-NLS-1$
 	public static final String SEPARATOR = "separator";  //$NON-NLS-1$
+	public static final String HORIZONTAL_GLUE = "horizontal_glue";  //$NON-NLS-1$
 	public static final String BACKGROUND_SIZE = "background";  //$NON-NLS-1$
 
 	public static final int CREATING_PATH_MODE = 3;

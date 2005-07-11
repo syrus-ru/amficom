@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.4 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.5 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,46 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -82,16 +108,16 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return panels;
 	}
 	
-	public UgoPanel getCurrentPanel() {
+	public ElementsPanel getCurrentPanel() {
 		if (tabs.getSelectedIndex() != -1)
-			return (UgoPanel)graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
+			return (ElementsPanel)graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
 		return null;
 //		SchemePanel newPanel = new SchemePanel(aContext);
 //		addPanel(newPanel);
 //		return newPanel;
 	}
 	
-	public void addPanel(UgoPanel p) {
+	public void addPanel(ElementsPanel p) {
 		SchemeGraph graph = p.getGraph();
 		graph.setMarqueeHandler(marqueeHandler);
 		graph.addKeyListener(new SchemeKeyListener());
@@ -107,7 +133,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		graph.setGraphChanged(false);
 	}
 	
-	public void selectPanel(UgoPanel p) {
+	public void selectPanel(ElementsPanel p) {
 		Object[] comp = tabs.getComponents();
 		for (int i = 0; i < comp.length; i++) {
 			UgoPanel p1 = (UgoPanel)graphPanelsMap.get(comp[i]);
@@ -142,58 +168,105 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			removePanel((UgoPanel)graphPanelsMap.get(comp[i]));
 	}
 	
+	public void propertyChange(PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
+			SchemeEvent see = (SchemeEvent) ae;
+			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
+				Scheme scheme = (Scheme) see.getObject();
+				openScheme(scheme);
+			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
+				SchemeElement schemeElement = (SchemeElement) see.getObject();
+				openSchemeElement(schemeElement);
+			} else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
+				Object obj = see.getObject();
+				if (obj instanceof Scheme) {
+					Scheme scheme = (Scheme)obj;
+					SchemeGraph graph = getGraph();
+					graph.setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
+				}
+			}
+		}
+		super.propertyChange(ae);
+	}
+	
+	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
+		if (schemeCellContainer instanceof Scheme) {
+			openScheme((Scheme)schemeCellContainer);
+		} else if (schemeCellContainer instanceof SchemeElement) {
+			openSchemeElement((SchemeElement)schemeCellContainer);
+		} else {
+			Log.debugMessage("Error: try to open SchemeProtoElement in SchemeTabbedPane ", Level.FINER);
+		}
+	}
+	
 	public void openScheme(Scheme sch) {
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel)it.next(); 
-			if (sch.equals(p.getSchemeResource().getScheme())) {
-				selectPanel(p);
-				if (p instanceof SchemePanel
-						&& p.getGraph().isGraphChanged()) {
-					int ret = JOptionPane.showConfirmDialog(
-							Environment.getActiveWindow(), "Схема " + sch.getName()
+			UgoPanel p = (UgoPanel)it.next();
+			if (p instanceof SchemePanel) {
+				SchemePanel sp = (SchemePanel)p;
+				if (sch.equals(sp.getSchemeResource().getScheme())) {
+					selectPanel(sp);
+					if (p.getGraph().isGraphChanged()) {
+						int ret = JOptionPane.showConfirmDialog(
+								Environment.getActiveWindow(), "Схема " + sch.getName()
 									+ " уже открыта. Открыть сохраненную ранее версию?",
-							"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
-					if (ret == JOptionPane.YES_OPTION) {
-						super.openScheme(sch);
-						setGraphChanged(false);
+									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+						if (ret == JOptionPane.YES_OPTION) {
+							sp.getSchemeResource().setScheme(sch);
+							GraphActions.clearGraph(sp.getGraph());
+							if (sch.getSchemeCell() != null)
+								sp.insertCell(sch.getSchemeCell().getData(), new Point(0, 0), true);
+							fixImages(getGraph());
+							setGraphChanged(false);
+						}		
 					}
+					updateTitle(sch.getName());
+					return;
 				}
-				updateTitle(sch.getName());
-				return;
-			}
+			}				
 		}
 
 		SchemePanel p = new SchemePanel(aContext);
 		addPanel(p);
-		super.openScheme(sch);
+		p.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
+		if (sch.getSchemeCell() != null)
+			p.insertCell(sch.getSchemeCell().getData(), new Point(0, 0), true);
+		fixImages(getGraph());
 		setGraphChanged(false);
 	}
 	
 	public void openSchemeElement(SchemeElement se) {
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel)it.next();
-			if (se.equals(p.getSchemeResource().getSchemeElement())) {
-				selectPanel(p);
-				if (p instanceof ElementsPanel
-						&& p.getGraph().isGraphChanged()) {
-					int ret = JOptionPane.showConfirmDialog(
-							Environment.getActiveWindow(), "Элемент " + se.getName()
-									+ " уже открыт. Открыть сохраненную ранее версию?",
-							"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
-					if (ret == JOptionPane.YES_OPTION) {
-						super.openSchemeElement(se);
-						setGraphChanged(false);
+			UgoPanel p1 = (UgoPanel)it.next();
+			if (p1 instanceof ElementsPanel) {
+				ElementsPanel p = (ElementsPanel)p1;
+				if (se.equals(p.getSchemeResource().getSchemeElement())) {
+					selectPanel(p);
+					if (p.getGraph().isGraphChanged()) {
+						int ret = JOptionPane.showConfirmDialog(
+								Environment.getActiveWindow(), "Элемент " + se.getName()
+								+ " уже открыт. Открыть сохраненную ранее версию?",
+								"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+						if (ret == JOptionPane.YES_OPTION) {
+							p.getSchemeResource().setSchemeElement(se);
+							GraphActions.clearGraph(p.getGraph());
+							p.insertCell(se.getSchemeCell().getData(), new Point(0, 0), true);
+							fixImages(getGraph());
+							setGraphChanged(false);
+						}
 					}
+					return;
 				}
-				return;
 			}
 		}
-		SchemePanel p = new SchemePanel(aContext);
+		ElementsPanel p = new ElementsPanel(aContext);
 		addPanel(p);
-		super.openSchemeElement(se);
+		p.getSchemeResource().setSchemeElement(se);
+		p.insertCell(se.getSchemeCell().getData(), new Point(0, 0), true);
+		fixImages(getGraph());
 		updateTitle(se.getName());
 		setGraphChanged(false);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: PortEdge.java,v 1.2 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,21 +8,25 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
-import java.awt.*;
+import java.awt.Font;
 import java.awt.Point;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.Port;
 
 /**
  * used just for identification of link between PortCell and DeviceCell
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 

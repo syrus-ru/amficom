@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.3 2005/04/28 16:02:36 stas Exp $
+ * $Id: DefaultLink.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,27 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.EdgeView;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/04/28 16:02:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -35,18 +44,18 @@ public class DefaultLink extends DefaultEdge {
 			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
 			ConnectionSet cs) {
 
-		// we can connect cable to CablePortCell or not connect at all
+		// we can connect cable to PortCell or not connect at all
 		PortCell sourceCablePortCell = null;
 		PortCell targetCablePortCell = null;
 
 		if (firstPort != null) {
 			Object o = ((DefaultPort) firstPort.getCell()).getParent();
-			if (o instanceof CablePortCell)
+			if (o instanceof PortCell)
 				sourceCablePortCell = (PortCell) o;
 		}
 		if (port != null) {
 			Object o = ((DefaultPort) port.getCell()).getParent();
-			if (o instanceof CablePortCell)
+			if (o instanceof PortCell)
 				targetCablePortCell = (PortCell) o;
 		}
 		DefaultLink cell = new DefaultLink(userObject);
@@ -109,39 +118,46 @@ public class DefaultLink extends DefaultEdge {
 			}
 
 			if (source != null && !source.equals(_source)) {
+				if (_source != null) {
+					if (((DefaultPort) _source).getParent() instanceof PortCell)
+						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_source).getParent(), true);
+				}
+				
 				_source = source;
 				cell._source = cell.source;
 
-				SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, true);
 				if (((DefaultPort) source).getParent() instanceof PortCell)
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
 							(PortCell) ((DefaultPort) source).getParent(), true);
 			}
 			if (source == null && _source != null) {
+				if (((DefaultPort) _source).getParent() instanceof PortCell)
+					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_source).getParent(), true);
+				
 				_source = source;
 				cell._source = cell.source;
-
-				SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, true);
 			}
 
 			if (target != null && !target.equals(_target))
-			// (_target == null ||
-			// !((PortCell)((DefaultPort)target).getParent()).getSchemePortId().equals(
-			// ((PortCell)((DefaultPort)_target).getParent()).getSchemePortId())))
 			{
+				if (_target != null) {
+					if (((DefaultPort) _target).getParent() instanceof PortCell)
+						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_target).getParent(), false);
+				}
+				
 				_target = target;
 				cell._target = cell.target;
 
-				SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, false);
 				if (((DefaultPort) target).getParent() instanceof PortCell)
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
 							(PortCell) ((DefaultPort) target).getParent(), false);
 			}
 			if (target == null && _target != null) {
+				if (((DefaultPort) _target).getParent() instanceof PortCell)
+					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_target).getParent(), false);
+				
 				_target = target;
 				cell._target = cell.target;
-
-				SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, false);
 			}
 
 			int n = points.size();
@@ -192,6 +208,8 @@ public class DefaultLink extends DefaultEdge {
 	}
 
 	public SchemeLink getSchemeLink() {
+		if (scheme_link_id == null)
+			return null;
 		try {
 			return (SchemeLink) SchemeStorableObjectPool.getStorableObject(scheme_link_id, true);
 		} catch (Exception ex) {

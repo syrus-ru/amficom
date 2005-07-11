@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortPropertiesManager.java,v 1.4 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeProtoGroupPropertiesManager.java,v 1.1 2005/07/11 12:31:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,44 +12,43 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.SchemeCablePortWrapper;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroupWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.1 $, $Date: 2005/07/11 12:31:40 $
  * @module schemeclient_v1
  */
 
-public class SchemeCablePortPropertiesManager implements VisualManager {
-	private static SchemeCablePortPropertiesManager instance;
-	private SchemeCablePortGeneralPanel generalPanel;
-	private SchemeCablePortCharacteristicsPanel charPanel;
-	private EmptyStorableObjectEditor emptyPanel;
+public class SchemeProtoGroupPropertiesManager implements VisualManager {
+	private static SchemeProtoGroupPropertiesManager instance;
+	private SchemeProtoGroupGeneralPanel generalPanel;
+	private EmptyStorableObjectEditor charPanel;
+	private EmptyStorableObjectEditor ugoPanel;
 	
-	private SchemeCablePortPropertiesManager() {
+	private SchemeProtoGroupPropertiesManager() {
 		// empty
 	}
 	
-	public static SchemeCablePortPropertiesManager getInstance(ApplicationContext aContext) {
+	public static SchemeProtoGroupPropertiesManager getInstance(ApplicationContext aContext) {
 		if (instance == null)
-			instance = new SchemeCablePortPropertiesManager();
+			instance = new SchemeProtoGroupPropertiesManager();
 		instance.setContext(aContext);
 		return instance;
 	}
-
+	
 	public void setContext(ApplicationContext aContext) {
 		if (generalPanel == null)
-			generalPanel = new SchemeCablePortGeneralPanel(); 
+			generalPanel = new SchemeProtoGroupGeneralPanel();
 		generalPanel.setContext(aContext);
 		if (charPanel == null)
-			charPanel = new SchemeCablePortCharacteristicsPanel(); 
-		charPanel.setContext(aContext);
-		if (emptyPanel == null)
-			emptyPanel = new EmptyStorableObjectEditor();
+			charPanel = new EmptyStorableObjectEditor();
+		if (ugoPanel == null)
+			ugoPanel = new EmptyStorableObjectEditor();
 	}
 	
 	/**
-	 * @return SchemeCablePortGeneralPanel
+	 * @return SchemeProtoElementGeneralPanel
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
@@ -57,7 +56,7 @@ public class SchemeCablePortPropertiesManager implements VisualManager {
 	}
 
 	/**
-	 * @return SchemeCablePortCharacteristicsPanel
+	 * @return SchemeProtoElementCharacteristicsPanel
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
@@ -65,18 +64,20 @@ public class SchemeCablePortPropertiesManager implements VisualManager {
 	}
 
 	/**
-	 * @return SchemeCablePortController
+	 * @return SchemeProtoElementController
 	 * @see VisualManager#getController()
 	 */
 	public StorableObjectWrapper getController() {
-		return SchemeCablePortWrapper.getInstance();
+		return SchemeProtoGroupWrapper.getInstance();
 	}
-	
+
 	/**
-	 * @return EmptyStorableObjectEditor
+	 * @return SchemeProtoElementUgoPanel
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return emptyPanel;
+		return ugoPanel;
 	}
 }
+
+

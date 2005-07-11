@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.io.*;
-
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 //import com.syrus.io.DirectoryToFile;
 

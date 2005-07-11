@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePropertiesManager.java,v 1.1 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemePropertiesManager.java,v 1.2 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,8 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
@@ -16,7 +17,7 @@ import com.syrus.AMFICOM.scheme.SchemeWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -24,7 +25,7 @@ public class SchemePropertiesManager implements VisualManager {
 	private static SchemePropertiesManager instance;
 	private SchemeGeneralPanel generalPanel;
 	private EmptyStorableObjectEditor charPanel;
-	private SchemeUgoPanel ugoPanel;
+	private SchemeCellPanel ugoPanel;
 	
 	private SchemePropertiesManager() {
 		// empty
@@ -44,7 +45,7 @@ public class SchemePropertiesManager implements VisualManager {
 		if (charPanel == null)
 			charPanel = new EmptyStorableObjectEditor();
 		if (ugoPanel == null)
-			ugoPanel = new SchemeUgoPanel();
+			ugoPanel = new SchemeCellPanel();
 		ugoPanel.setContext(aContext);
 	}
 	

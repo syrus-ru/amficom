@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.3 2005/05/26 07:40:48 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.4 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:48 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 
 public class ObjectSelectedEvent extends PropertyChangeEvent {
 	public static final long PORT_TYPE = 						0x00000001;
+	public static final long CABLEPORT_TYPE = 			0x00000040;
 	public static final long MEASUREMENTPORT_TYPE = 0x00000002;
 	public static final long MEASUREMENT_TYPE = 		0x00000004;
 	public static final long LINK_TYPE = 						0x00000008;

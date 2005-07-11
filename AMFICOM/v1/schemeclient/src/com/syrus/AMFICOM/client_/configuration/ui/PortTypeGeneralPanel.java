@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.10 2005/06/23 12:58:11 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.11 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,30 +8,45 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/06/23 12:58:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +56,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	protected String[] sorts = new String[] {
 			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_OPTICAL),
 			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_THERMAL),
-			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_ELECTICAL)
+			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_ELECTICAL),
 	};  
 	
 	JPanel pnPanel0 = new JPanel();
@@ -54,6 +69,8 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
 	
+	PortTypeKind kind;
+	
 	protected PortTypeGeneralPanel() {
 		super();
 		try {
@@ -65,6 +82,10 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
+	}
+	
+	public void setPortKind(PortTypeKind kind) {
+		this.kind = kind;
 	}
 
 	protected PortTypeGeneralPanel(PortType portType) {
@@ -189,7 +210,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(cmbSortCombo);
 		addToUndoableListener(taDescriptionArea);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -235,30 +256,36 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		if (MiscUtil.validName(tfNameText.getText())) {
 			if (portType == null) {
 				try {
-					portType = SchemeObjectsFactory.createPortType(tfNameText.getText());
+					portType = SchemeObjectsFactory.createPortType(tfNameText.getText(), this.kind);
+					apply();
 					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, portType, PortTypePropertiesManager.getInstance(aContext, this.kind), ObjectSelectedEvent.PORT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
+			} else {
+				apply();
 			}
-			
-			portType.setName(this.tfNameText.getText());
-			portType.setDescription(this.taDescriptionArea.getText());
-
-			if (cmbSortCombo.getSelectedItem().equals(sorts[0]))
-				portType.setSort(PortTypeSort.PORTTYPESORT_OPTICAL);
-			else if (cmbSortCombo.getSelectedItem().equals(sorts[1]))
-				portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
-			else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
-				portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
-			
-			try {
-				StorableObjectPool.flush(portType.getId(), true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
 		}
+	}
+	
+	private void apply() {
+		portType.setName(this.tfNameText.getText());
+		portType.setDescription(this.taDescriptionArea.getText());
+
+		if (cmbSortCombo.getSelectedItem().equals(sorts[0]))
+			portType.setSort(PortTypeSort.PORTTYPESORT_OPTICAL);
+		else if (cmbSortCombo.getSelectedItem().equals(sorts[1]))
+			portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
+		else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
+			portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
+		
+		try {
+			StorableObjectPool.flush(portType.getId(), true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
 	}
 }

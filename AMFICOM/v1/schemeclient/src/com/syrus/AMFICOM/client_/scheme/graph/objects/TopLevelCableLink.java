@@ -1,5 +1,5 @@
 /*
- * $Id: TopLevelCableLink.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: TopLevelCableLink.java,v 1.2 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,17 @@
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
 import java.awt.Point;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.Port;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 

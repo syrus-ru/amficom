@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.8 2005/06/23 12:58:23 stas Exp $
+ * $Id: AbstractSchemeLinkGeneralPanel.java,v 1.9 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,7 +30,6 @@ import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
-import com.syrus.AMFICOM.client.UI.ColorListCellRenderer;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -47,7 +45,7 @@ import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/06/23 12:58:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -55,30 +53,32 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	ApplicationContext aContext;
 	protected AbstractSchemeLink schemeLink;
 	
-	JPanel panel0 = new JPanel();
-	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
-	JTextField nameText = new JTextField();
-	JButton commitButton = new JButton();
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox typeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel opticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
-	JTextField opticalText = new JTextField();
-	JLabel physicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JTextField physicalText = new JTextField();
-	JCheckBox linkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
-	JLabel invNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
-	JTextField invNumberText = new JTextField();
-	JLabel supplierLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
-	JTextField supplierText = new JTextField();
-	JLabel supplierCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
-	JTextField supplierCodeText = new JTextField();
-	JLabel markLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
-	JTextField markText = new JTextField();
-	JLabel colorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
-	JComboBox colorCombo = new ColorChooserComboBox();
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea descrArea = new JTextArea(2,10);
+	JPanel pnPanel0 = new JPanel();
+	JPanel pnGeneralPanel = new JPanel();
+	JPanel pnLinkPanel = new JPanel();
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
+	JTextField tfNameText = new JTextField();
+	JButton btCommitBut = new JButton();
+	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
+	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
+	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
+	JTextField tfOpticalText = new JTextField();
+	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
+	JTextField tfPhysicalText = new JTextField();
+	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
+	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
+	JTextField tfInvNumberText = new JTextField();
+	JLabel lbSupplierLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
+	JTextField tfSupplierText = new JTextField();
+	JLabel lbSupplierCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
+	JTextField tfSupplierCodeText = new JTextField();
+	JLabel lbMarkLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
+	JTextField tfMarkText = new JTextField();
+	JLabel lbColorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
+	JComboBox cmbColorCombo = new ColorChooserComboBox();
+	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
+	JTextArea taDescrArea = new JTextArea(2,10);
 	
 	protected AbstractSchemeLinkGeneralPanel(AbstractSchemeLink schemeLink) {
 		this();
@@ -99,326 +99,320 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	}
 	
 	private void jbInit() throws Exception {
-		GridBagLayout gbpanel0 = new GridBagLayout();
-		GridBagConstraints gbcpanel0 = new GridBagConstraints();
-		panel0.setLayout(gbpanel0);
+		GridBagLayout gbPanel0 = new GridBagLayout();
+		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		pnPanel0.setLayout( gbPanel0 );
 
-		GridBagLayout gbgeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcgeneralPanel = new GridBagConstraints();
-		generalPanel.setLayout(gbgeneralPanel);
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 11;
+		gbcPanel0.gridwidth = 3;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
+		pnPanel0.add( lbDescrLabel );
 
-		nameLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(nameLabel, gbcgeneralPanel);
-		generalPanel.add(nameLabel);
+		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 12;
+		gbcPanel0.gridwidth = 10;
+		gbcPanel0.gridheight = 2;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
+		pnPanel0.add( scpDescrArea );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(nameText, gbcgeneralPanel);
-		generalPanel.add(nameText);
-		
-		gbcgeneralPanel.gridx = 7;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(commitButton, gbcgeneralPanel);
-		generalPanel.add(commitButton);
+		GridBagLayout gbPanel2 = new GridBagLayout();
+		GridBagConstraints gbcPanel2 = new GridBagConstraints();
+		pnGeneralPanel.setLayout( gbPanel2 );
 
-		opticalLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(opticalLabel, gbcgeneralPanel);
-		generalPanel.add(opticalLabel);
+		gbcPanel2.gridx = 0;
+		gbcPanel2.gridy = 0;
+		gbcPanel2.gridwidth = 2;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbNameLabel, gbcPanel2 );
+		pnGeneralPanel.add( lbNameLabel );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(opticalText, gbcgeneralPanel);
-		generalPanel.add(opticalText);
+		gbcPanel2.gridx = 2;
+		gbcPanel2.gridy = 0;
+		gbcPanel2.gridwidth = 8;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 1;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( tfNameText, gbcPanel2 );
+		pnGeneralPanel.add( tfNameText );
 
-		physicalLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 4;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,1);
-		gbgeneralPanel.setConstraints(physicalLabel, gbcgeneralPanel);
-		generalPanel.add(physicalLabel);
+		gbcPanel2.gridx = 10;
+		gbcPanel2.gridy = 0;
+		gbcPanel2.gridwidth = 1;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( btCommitBut, gbcPanel2 );
+		pnGeneralPanel.add( btCommitBut );
 
-		gbcgeneralPanel.gridx = 5;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 3;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(physicalText, gbcgeneralPanel);
-		generalPanel.add(physicalText);
+		gbcPanel2.gridx = 0;
+		gbcPanel2.gridy = 1;
+		gbcPanel2.gridwidth = 2;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbTypeLabel, gbcPanel2 );
+		pnGeneralPanel.add( lbTypeLabel );
 
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 3;
-		gbcgeneralPanel.gridwidth = 3;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(linkBox, gbcgeneralPanel);
-		generalPanel.add(linkBox);
+		gbcPanel2.gridx = 2;
+		gbcPanel2.gridy = 1;
+		gbcPanel2.gridwidth = 9;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 1;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( cmbTypeCombo, gbcPanel2 );
+		pnGeneralPanel.add( cmbTypeCombo );
 
-		invNumberLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(invNumberLabel, gbcgeneralPanel);
-		generalPanel.add(invNumberLabel);
+		gbcPanel2.gridx = 0;
+		gbcPanel2.gridy = 2;
+		gbcPanel2.gridwidth = 2;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbLengthLabel, gbcPanel2 );
+		pnGeneralPanel.add( lbLengthLabel );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(invNumberText, gbcgeneralPanel);
-		generalPanel.add(invNumberText);
+		gbcPanel2.gridx = 2;
+		gbcPanel2.gridy = 2;
+		gbcPanel2.gridwidth = 3;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbOpticalLabel, gbcPanel2 );
+		pnGeneralPanel.add( lbOpticalLabel );
 
-		supplierLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 5;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(supplierLabel, gbcgeneralPanel);
-		generalPanel.add(supplierLabel);
+		gbcPanel2.gridx = 5;
+		gbcPanel2.gridy = 2;
+		gbcPanel2.gridwidth = 6;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 1;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( tfOpticalText, gbcPanel2 );
+		pnGeneralPanel.add( tfOpticalText );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 5;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(supplierText, gbcgeneralPanel);
-		generalPanel.add(supplierText);
+		gbcPanel2.gridx = 2;
+		gbcPanel2.gridy = 3;
+		gbcPanel2.gridwidth = 3;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbPhysicalLabel, gbcPanel2 );
+		pnGeneralPanel.add( lbPhysicalLabel );
 
-		supplierCodeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 6;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(supplierCodeLabel, gbcgeneralPanel);
-		generalPanel.add(supplierCodeLabel);
+		gbcPanel2.gridx = 5;
+		gbcPanel2.gridy = 3;
+		gbcPanel2.gridwidth = 6;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 1;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( tfPhysicalText, gbcPanel2 );
+		pnGeneralPanel.add( tfPhysicalText );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 6;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(supplierCodeText, gbcgeneralPanel);
-		generalPanel.add(supplierCodeText);
+		gbcPanel2.gridx = 0;
+		gbcPanel2.gridy = 4;
+		gbcPanel2.gridwidth = 10;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( cbLinkBox, gbcPanel2 );
+		pnGeneralPanel.add( cbLinkBox );
 
-		markLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 7;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(markLabel, gbcgeneralPanel);
-		generalPanel.add(markLabel);
+		pnLinkPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbLinkPanel = new GridBagLayout();
+		GridBagConstraints gbcLinkPanel = new GridBagConstraints();
+		pnLinkPanel.setLayout( gbLinkPanel );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 7;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(markText, gbcgeneralPanel);
-		generalPanel.add(markText);
+		gbcLinkPanel.gridx = 0;
+		gbcLinkPanel.gridy = 0;
+		gbcLinkPanel.gridwidth = 2;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 0;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( lbInvNumberLabel, gbcLinkPanel );
+		pnLinkPanel.add( lbInvNumberLabel );
 
-		colorLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 8;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(colorLabel, gbcgeneralPanel);
-		generalPanel.add(colorLabel);
+		gbcLinkPanel.gridx = 2;
+		gbcLinkPanel.gridy = 0;
+		gbcLinkPanel.gridwidth = 9;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 1;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( tfInvNumberText, gbcLinkPanel );
+		pnLinkPanel.add( tfInvNumberText );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 8;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,1);
-		gbgeneralPanel.setConstraints(colorCombo, gbcgeneralPanel);
-		generalPanel.add(colorCombo);
+		gbcLinkPanel.gridx = 0;
+		gbcLinkPanel.gridy = 1;
+		gbcLinkPanel.gridwidth = 2;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 0;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( lbSupplierLabel, gbcLinkPanel );
+		pnLinkPanel.add( lbSupplierLabel );
 
-		typeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(typeLabel, gbcgeneralPanel);
-		generalPanel.add(typeLabel);
+		gbcLinkPanel.gridx = 2;
+		gbcLinkPanel.gridy = 1;
+		gbcLinkPanel.gridwidth = 9;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 1;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( tfSupplierText, gbcLinkPanel );
+		pnLinkPanel.add( tfSupplierText );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(typeCombo, gbcgeneralPanel);
-		generalPanel.add(typeCombo);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 0;
-		gbcpanel0.gridwidth = 8;
-		gbcpanel0.gridheight = 9;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(generalPanel, gbcpanel0);
-		panel0.add(generalPanel);
+		gbcLinkPanel.gridx = 0;
+		gbcLinkPanel.gridy = 2;
+		gbcLinkPanel.gridwidth = 2;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 0;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( lbSupplierCodeLabel, gbcLinkPanel );
+		pnLinkPanel.add( lbSupplierCodeLabel );
 
-		descrLabel.setFocusable(false);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 9;
-		gbcpanel0.gridwidth = 3;
-		gbcpanel0.gridheight = 1;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 0;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(descrLabel, gbcpanel0);
-		panel0.add(descrLabel);
+		gbcLinkPanel.gridx = 2;
+		gbcLinkPanel.gridy = 2;
+		gbcLinkPanel.gridwidth = 9;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 1;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( tfSupplierCodeText, gbcLinkPanel );
+		pnLinkPanel.add( tfSupplierCodeText );
 
-		JScrollPane scpdescrArea = new JScrollPane(descrArea);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 10;
-		gbcpanel0.gridwidth = 8;
-		gbcpanel0.gridheight = 2;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 1;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
-		panel0.add(scpdescrArea);
+		gbcLinkPanel.gridx = 0;
+		gbcLinkPanel.gridy = 3;
+		gbcLinkPanel.gridwidth = 2;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 0;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( lbMarkLabel, gbcLinkPanel );
+		pnLinkPanel.add( lbMarkLabel );
 
-		colorCombo.setRenderer(ColorListCellRenderer.getInstance());
-		for (int i = 0; i < SchemeResourceKeys.DEFAULT_COLOR_SET.length; i++)
-			colorCombo.addItem(SchemeResourceKeys.DEFAULT_COLOR_SET[i]);
-		
-		linkBox.addChangeListener(new ChangeListener() {
+		gbcLinkPanel.gridx = 2;
+		gbcLinkPanel.gridy = 3;
+		gbcLinkPanel.gridwidth = 9;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 1;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( tfMarkText, gbcLinkPanel );
+		pnLinkPanel.add( tfMarkText );
+
+		gbcLinkPanel.gridx = 0;
+		gbcLinkPanel.gridy = 4;
+		gbcLinkPanel.gridwidth = 2;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 0;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( lbColorLabel, gbcLinkPanel );
+		pnLinkPanel.add( lbColorLabel );
+
+		gbcLinkPanel.gridx = 2;
+		gbcLinkPanel.gridy = 4;
+		gbcLinkPanel.gridwidth = 9;
+		gbcLinkPanel.gridheight = 1;
+		gbcLinkPanel.fill = GridBagConstraints.BOTH;
+		gbcLinkPanel.weightx = 1;
+		gbcLinkPanel.weighty = 0;
+		gbcLinkPanel.anchor = GridBagConstraints.NORTH;
+		gbLinkPanel.setConstraints( cmbColorCombo, gbcLinkPanel );
+		pnLinkPanel.add( cmbColorCombo );
+		gbcPanel2.gridx = 0;
+		gbcPanel2.gridy = 5;
+		gbcPanel2.gridwidth = 12;
+		gbcPanel2.gridheight = 6;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( pnLinkPanel, gbcPanel2 );
+		pnGeneralPanel.add( pnLinkPanel );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 12;
+		gbcPanel0.gridheight = 11;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
+		pnPanel0.add( pnGeneralPanel );
+
+
+		cbLinkBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				setLinkEnabled(linkBox.isSelected());
+				setLinkEnabled(cbLinkBox.isSelected());
 			}
 		});
 		
-		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		addToUndoableListener(nameText);
-		addToUndoableListener(typeCombo);
-		addToUndoableListener(opticalText);
-		addToUndoableListener(physicalText);
-		addToUndoableListener(linkBox);
-		addToUndoableListener(invNumberText);
-		addToUndoableListener(supplierText);
-		addToUndoableListener(supplierCodeText);
-		addToUndoableListener(markText);
-		addToUndoableListener(colorCombo);
-		addToUndoableListener(descrArea);
+		addToUndoableListener(tfNameText);
+		addToUndoableListener(cmbTypeCombo);
+		addToUndoableListener(tfOpticalText);
+		addToUndoableListener(tfPhysicalText);
+		addToUndoableListener(cbLinkBox);
+		addToUndoableListener(tfInvNumberText);
+		addToUndoableListener(tfSupplierText);
+		addToUndoableListener(tfSupplierCodeText);
+		addToUndoableListener(tfMarkText);
+		addToUndoableListener(cmbColorCombo);
+		addToUndoableListener(taDescrArea);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
+		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.btCommitBut.setFocusPainted(false);
+		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.btCommitBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				commitChanges();
 			}
@@ -426,7 +420,7 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 	}
 	
 	public JComponent getGUI() {
-		return panel0;
+		return pnPanel0;
 	}
 
 	public void setObject(Object or) {
@@ -434,34 +428,34 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 		setLinkEnabled(false);
 		
 		if (schemeLink != null) {
-			this.nameText.setText(schemeLink.getName());
-			this.descrArea.setText(schemeLink.getDescription());
-			this.opticalText.setText(Double.toString(schemeLink.getOpticalLength()));
-			this.physicalText.setText(Double.toString(schemeLink.getPhysicalLength()));
-			this.typeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
+			this.tfNameText.setText(schemeLink.getName());
+			this.taDescrArea.setText(schemeLink.getDescription());
+			this.tfOpticalText.setText(Double.toString(schemeLink.getOpticalLength()));
+			this.tfPhysicalText.setText(Double.toString(schemeLink.getPhysicalLength()));
+			this.cmbTypeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
 			link = schemeLink.getAbstractLink();
 		} else {
-			this.nameText.setText(SchemeResourceKeys.EMPTY);
-			this.descrArea.setText(SchemeResourceKeys.EMPTY);
-			this.opticalText.setText(SchemeResourceKeys.EMPTY);
-			this.physicalText.setText(SchemeResourceKeys.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
+			this.tfOpticalText.setText(SchemeResourceKeys.EMPTY);
+			this.tfPhysicalText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (link != null) {
-			linkBox.setSelected(true);
-			invNumberText.setText(link.getInventoryNo());
-			supplierText.setText(link.getSupplier());
-			supplierCodeText.setText(link.getSupplierCode());
-			markText.setText(link.getMark());
+			cbLinkBox.setSelected(true);
+			setLinkEnabled(true);
+			tfInvNumberText.setText(link.getInventoryNo());
+			tfSupplierText.setText(link.getSupplier());
+			tfSupplierCodeText.setText(link.getSupplierCode());
+			tfMarkText.setText(link.getMark());
 			Color color = new Color(link.getColor());
-			if (!isConatainsColor(color))
-				colorCombo.addItem(color);
-			colorCombo.setSelectedItem(color);
+			cmbColorCombo.addItem(color);
 		} else {
-			linkBox.setSelected(false);
-			invNumberText.setText(SchemeResourceKeys.EMPTY);
-			supplierText.setText(SchemeResourceKeys.EMPTY);
-			supplierCodeText.setText(SchemeResourceKeys.EMPTY);
-			markText.setText(SchemeResourceKeys.EMPTY);
+			cbLinkBox.setSelected(false);
+			setLinkEnabled(false);
+			tfInvNumberText.setText(SchemeResourceKeys.EMPTY);
+			tfSupplierText.setText(SchemeResourceKeys.EMPTY);
+			tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
+			tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 
@@ -471,16 +465,16 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 
 	public void commitChanges() {
 		if (schemeLink != null) {
-			schemeLink.setName(this.nameText.getText());
-			schemeLink.setDescription(this.descrArea.getText());
-			schemeLink.setAbstractLinkType((AbstractLinkType)this.typeCombo.getSelectedItem());
+			schemeLink.setName(this.tfNameText.getText());
+			schemeLink.setDescription(this.taDescrArea.getText());
+			schemeLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
 			try {
-				schemeLink.setOpticalLength(Double.parseDouble(opticalText.getText()));
+				schemeLink.setOpticalLength(Double.parseDouble(tfOpticalText.getText()));
 			} catch (NumberFormatException e) {
 				schemeLink.setOpticalLength(0);
 			}
 			try {
-				schemeLink.setPhysicalLength(Double.parseDouble(physicalText.getText()));
+				schemeLink.setPhysicalLength(Double.parseDouble(tfPhysicalText.getText()));
 			} catch (NumberFormatException e1) {
 				schemeLink.setPhysicalLength(0);
 			}
@@ -495,32 +489,16 @@ public abstract class AbstractSchemeLinkGeneralPanel extends DefaultStorableObje
 
 				// TODO add link.setInventoryNo()
 				// link.setInventoryNo(invNumberText.getText());
-				link.setSupplier(supplierText.getText());
-				link.setSupplierCode(supplierCodeText.getText());
-				link.setMark(markText.getText());
-				link.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
+				link.setSupplier(tfSupplierText.getText());
+				link.setSupplierCode(tfSupplierCodeText.getText());
+				link.setMark(tfMarkText.getText());
+				link.setColor(((Color) cmbColorCombo.getSelectedItem()).getRGB());
 			}
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeLink, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
 	void setLinkEnabled(boolean b) {
-		invNumberLabel.setEnabled(b);
-		invNumberText.setEnabled(b);
-		supplierLabel.setEnabled(b);
-		supplierText.setEnabled(b);
-		supplierCodeLabel.setEnabled(b);
-		supplierCodeText.setEnabled(b);
-		markLabel.setEnabled(b);
-		markText.setEnabled(b);
-		colorLabel.setEnabled(b);
-		colorCombo.setEnabled(b);
-	}
-	
-	boolean isConatainsColor(Color color) {
-		for (int i = 0; i < colorCombo.getItemCount(); i++)
-			if (((Color)colorCombo.getItemAt(i)).equals(color))
-				return true;
-		return false;
+		pnLinkPanel.setVisible(b);
 	}
 }

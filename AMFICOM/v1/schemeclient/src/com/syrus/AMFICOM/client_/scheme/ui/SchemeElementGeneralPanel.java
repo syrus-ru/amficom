@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.8 2005/06/23 12:58:23 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.9 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,29 +8,58 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.KISWrapper;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/06/23 12:58:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -39,49 +68,53 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	protected SchemeElement schemeElement;
 	private Identifier imageId;
 	
-	JPanel panel0 = new JPanel();
-	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
-	JTextField nameText = new JTextField();
-	JButton commitButton = new JButton();
-	JLabel symbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
-	JTextField labelText = new JTextField();
-	JButton symbolBut = new JButton();
-	JCheckBox typeBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE));
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox typeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel manufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
-	JTextField manufacturerText = new JTextField();
-	JLabel manufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
-	JTextField manufacturerCodeText = new JTextField();
-	JCheckBox equipmentBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
-	JLabel supplierLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
-	JTextField supplierText = new JTextField();
-	JLabel supplierCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
-	JTextField supplierCodeText = new JTextField();
-	JLabel hwLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.HARDWARE));
-	JLabel hwsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
-	JTextField hwsnText = new JTextField();
-	JLabel hwvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
-	JTextField hwvText = new JTextField();
-	JLabel swLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SOFTWARE));
-	JLabel swsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
-	JTextField swsnText = new JTextField();
-	JLabel swvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
-	JTextField swvText = new JTextField();
-	JLabel longLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LONGITUDE));
-	JTextField longText = new JTextField();
-	JLabel latLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LATITUDE));
-	JTextField latText = new JTextField();
-	JCheckBox kisBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.KIS));
-	JLabel kisLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.KIS));
-	WrapperedComboBox kisCombo = new WrapperedComboBox(KISWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JLabel kisAddrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.ADDRESS));
-	JTextField kisAddrText = new JTextField();
-	JLabel kisPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PORT));
-	JTextField kisPortText = new JTextField();
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea descrArea = new JTextArea(2,10);
+	JPanel pnPanel0 = new JPanel();
+	JPanel pnPanel3n = new JPanel();
+	JPanel pnEquipmentPanel = new JPanel();
+	JPanel pnPanel6 = new JPanel();
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
+	JTextField tfNameText = new JTextField();
+	JButton btCommitBut = new JButton();
+	JLabel lbSymbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
+	JTextField tfSymbolText = new JTextField();
+	JTextField tfLabelText = new JTextField();
+	JButton btSymbolBut = new JButton();
+	JLabel lbCodenameLabel = new JLabel( "zzzz" );
+	JComboBox cmbCodenameCombo = new JComboBox( );
+	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
+	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(EquipmentTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	JLabel lbManufacturerLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER));
+	JTextField tfManufacturerText = new JTextField();
+	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
+	JTextField tfManufacturerCodeText = new JTextField();
+	JCheckBox cbInstanceBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
+	JLabel lbSupplierLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER));
+	JTextField tfSupplierText = new JTextField();
+	JLabel lbSupplierCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SUPPLIER_CODE));
+	JTextField tfSupplierCodeText = new JTextField();
+	JLabel lbHwLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.HARDWARE));
+	JLabel lbHwsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
+	JTextField tfHwsnText = new JTextField();
+	JLabel lbHwvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
+	JTextField tfHwvText = new JTextField();
+	JLabel lbSwLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SOFTWARE));
+	JLabel lbSwsnLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SERNUM));
+	JTextField tfSwsnText = new JTextField();
+	JLabel lbSwvLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.VERSION));
+	JTextField tfSwvText = new JTextField();
+	JLabel lbLongLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LONGITUDE));
+	JTextField tfLongText = new JTextField();
+	JLabel lbLatLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LATITUDE));
+	JTextField tfLatText = new JTextField();
+	JCheckBox cbKisBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.KIS));
+	JLabel lbKisLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.KIS));
+	WrapperedComboBox cmbKisCombo = new WrapperedComboBox(KISWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	JLabel lbKisAddrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.ADDRESS));
+	JTextField tfKisAddrText = new JTextField();
+	JLabel lbKisPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PORT));
+	JTextField tfKisPortText = new JTextField();
+	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
+	JTextArea taDescrArea = new JTextArea(2,10);
 	
 	protected SchemeElementGeneralPanel() {
 		super();
@@ -102,596 +135,600 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	private void jbInit() throws Exception {
-		GridBagLayout gbpanel0 = new GridBagLayout();
-		GridBagConstraints gbcpanel0 = new GridBagConstraints();
-		panel0.setLayout(gbpanel0);
+		GridBagLayout gbPanel0 = new GridBagLayout();
+		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		pnPanel0.setLayout( gbPanel0 );
 
-		GridBagLayout gbgeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcgeneralPanel = new GridBagConstraints();
-		generalPanel.setLayout(gbgeneralPanel);
+		lbDescrLabel.setFocusable( false );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 11;
+		gbcPanel0.gridwidth = 3;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
+		pnPanel0.add( lbDescrLabel );
 
-		nameLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(nameLabel, gbcgeneralPanel);
-		generalPanel.add(nameLabel);
+		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 12;
+		gbcPanel0.gridwidth = 12;
+		gbcPanel0.gridheight = 3;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
+		pnPanel0.add( scpDescrArea );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(nameText, gbcgeneralPanel);
-		generalPanel.add(nameText);
+		GridBagLayout gbPanel3n = new GridBagLayout();
+		GridBagConstraints gbcPanel3n = new GridBagConstraints();
+		pnPanel3n.setLayout( gbPanel3n );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 0;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbNameLabel, gbcPanel3n );
+		pnPanel3n.add( lbNameLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 0;
+		gbcPanel3n.gridwidth = 6;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( tfNameText, gbcPanel3n );
+		pnPanel3n.add( tfNameText );
+
+		gbcPanel3n.gridx = 8;
+		gbcPanel3n.gridy = 0;
+		gbcPanel3n.gridwidth = 1;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( btCommitBut, gbcPanel3n );
+		pnPanel3n.add( btCommitBut );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 1;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbSymbolLabel, gbcPanel3n );
+		pnPanel3n.add( lbSymbolLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 1;
+		gbcPanel3n.gridwidth = 6;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( tfSymbolText, gbcPanel3n );
+		pnPanel3n.add( tfSymbolText );
+
+		gbcPanel3n.gridx = 8;
+		gbcPanel3n.gridy = 1;
+		gbcPanel3n.gridwidth = 1;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( btSymbolBut, gbcPanel3n );
+		pnPanel3n.add( btSymbolBut );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 2;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbCodenameLabel, gbcPanel3n );
+		pnPanel3n.add( lbCodenameLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 2;
+		gbcPanel3n.gridwidth = 7;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( cmbCodenameCombo, gbcPanel3n );
+		pnPanel3n.add( cmbCodenameCombo );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 3;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbTypeLabel, gbcPanel3n );
+		pnPanel3n.add( lbTypeLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 3;
+		gbcPanel3n.gridwidth = 7;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( cmbTypeCombo, gbcPanel3n );
+		pnPanel3n.add( cmbTypeCombo );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 4;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbManufacturerLabel, gbcPanel3n );
+		pnPanel3n.add( lbManufacturerLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 4;
+		gbcPanel3n.gridwidth = 7;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( tfManufacturerText, gbcPanel3n );
+		pnPanel3n.add( tfManufacturerText );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 5;
+		gbcPanel3n.gridwidth = 2;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 0;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( lbManufacturerCodeLabel, gbcPanel3n );
+		pnPanel3n.add( lbManufacturerCodeLabel );
+
+		gbcPanel3n.gridx = 2;
+		gbcPanel3n.gridy = 5;
+		gbcPanel3n.gridwidth = 7;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( tfManufacturerCodeText, gbcPanel3n );
+		pnPanel3n.add( tfManufacturerCodeText );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 6;
+		gbcPanel3n.gridwidth = 9;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( cbInstanceBox, gbcPanel3n );
+		pnPanel3n.add( cbInstanceBox );
+
+		pnEquipmentPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbEquipmentPanel = new GridBagLayout();
+		GridBagConstraints gbcEquipmentPanel = new GridBagConstraints();
+		pnEquipmentPanel.setLayout( gbEquipmentPanel );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 0;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbSupplierLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbSupplierLabel );
+
+		gbcEquipmentPanel.gridx = 2;
+		gbcEquipmentPanel.gridy = 0;
+		gbcEquipmentPanel.gridwidth = 6;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfSupplierText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfSupplierText );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 1;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbSupplierCodeLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbSupplierCodeLabel );
+
+		gbcEquipmentPanel.gridx = 2;
+		gbcEquipmentPanel.gridy = 1;
+		gbcEquipmentPanel.gridwidth = 6;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfSupplierCodeText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfSupplierCodeText );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 3;
+		gbcEquipmentPanel.gridwidth = 8;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbHwLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbHwLabel );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 4;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbHwsnLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbHwsnLabel );
+
+		gbcEquipmentPanel.gridx = 2;
+		gbcEquipmentPanel.gridy = 4;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfHwsnText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfHwsnText );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 2;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbLongLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbLongLabel );
+
+		gbcEquipmentPanel.gridx = 2;
+		gbcEquipmentPanel.gridy = 2;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfLongText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfLongText );
+
+		gbcEquipmentPanel.gridx = 4;
+		gbcEquipmentPanel.gridy = 2;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbLatLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbLatLabel );
+
+		gbcEquipmentPanel.gridx = 6;
+		gbcEquipmentPanel.gridy = 2;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfLatText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfLatText );
+
+		gbcEquipmentPanel.gridx = 4;
+		gbcEquipmentPanel.gridy = 4;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbHwvLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbHwvLabel );
+
+		gbcEquipmentPanel.gridx = 6;
+		gbcEquipmentPanel.gridy = 4;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfHwvText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfHwvText );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 5;
+		gbcEquipmentPanel.gridwidth = 8;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbSwLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbSwLabel );
+
+		gbcEquipmentPanel.gridx = 0;
+		gbcEquipmentPanel.gridy = 6;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbSwsnLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbSwsnLabel );
+
+		gbcEquipmentPanel.gridx = 2;
+		gbcEquipmentPanel.gridy = 6;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfSwsnText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfSwsnText );
+
+		gbcEquipmentPanel.gridx = 4;
+		gbcEquipmentPanel.gridy = 6;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 0;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( lbSwvLabel, gbcEquipmentPanel );
+		pnEquipmentPanel.add( lbSwvLabel );
+
+		gbcEquipmentPanel.gridx = 6;
+		gbcEquipmentPanel.gridy = 6;
+		gbcEquipmentPanel.gridwidth = 2;
+		gbcEquipmentPanel.gridheight = 1;
+		gbcEquipmentPanel.fill = GridBagConstraints.BOTH;
+		gbcEquipmentPanel.weightx = 1;
+		gbcEquipmentPanel.weighty = 0;
+		gbcEquipmentPanel.anchor = GridBagConstraints.NORTH;
+		gbEquipmentPanel.setConstraints( tfSwvText, gbcEquipmentPanel );
+		pnEquipmentPanel.add( tfSwvText );
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 7;
+		gbcPanel3n.gridwidth = 9;
+		gbcPanel3n.gridheight = 8;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( pnEquipmentPanel, gbcPanel3n );
+		pnPanel3n.add( pnEquipmentPanel );
+
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 15;
+		gbcPanel3n.gridwidth = 9;
+		gbcPanel3n.gridheight = 1;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( cbKisBox, gbcPanel3n );
+		pnPanel3n.add( cbKisBox );
+
+		pnPanel6.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbPanel6 = new GridBagLayout();
+		GridBagConstraints gbcPanel6 = new GridBagConstraints();
+		pnPanel6.setLayout( gbPanel6 );
+
+		gbcPanel6.gridx = 0;
+		gbcPanel6.gridy = 0;
+		gbcPanel6.gridwidth = 2;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 0;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( lbKisLabel, gbcPanel6 );
+		pnPanel6.add( lbKisLabel );
+
+		gbcPanel6.gridx = 2;
+		gbcPanel6.gridy = 0;
+		gbcPanel6.gridwidth = 7;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 1;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( cmbKisCombo, gbcPanel6 );
+		pnPanel6.add( cmbKisCombo );
+
+		gbcPanel6.gridx = 0;
+		gbcPanel6.gridy = 1;
+		gbcPanel6.gridwidth = 2;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 0;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( lbKisAddrLabel, gbcPanel6 );
+		pnPanel6.add( lbKisAddrLabel );
+
+		gbcPanel6.gridx = 2;
+		gbcPanel6.gridy = 1;
+		gbcPanel6.gridwidth = 5;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 1;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( tfKisAddrText, gbcPanel6 );
+		pnPanel6.add( tfKisAddrText );
+
+		gbcPanel6.gridx = 7;
+		gbcPanel6.gridy = 1;
+		gbcPanel6.gridwidth = 1;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 0;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( lbKisPortLabel, gbcPanel6 );
+		pnPanel6.add( lbKisPortLabel );
+
+		gbcPanel6.gridx = 8;
+		gbcPanel6.gridy = 1;
+		gbcPanel6.gridwidth = 1;
+		gbcPanel6.gridheight = 1;
+		gbcPanel6.fill = GridBagConstraints.BOTH;
+		gbcPanel6.weightx = 0.2;
+		gbcPanel6.weighty = 0;
+		gbcPanel6.anchor = GridBagConstraints.NORTH;
+		gbPanel6.setConstraints( tfKisPortText, gbcPanel6 );
+		pnPanel6.add( tfKisPortText );
+		gbcPanel3n.gridx = 0;
+		gbcPanel3n.gridy = 16;
+		gbcPanel3n.gridwidth = 9;
+		gbcPanel3n.gridheight = 4;
+		gbcPanel3n.fill = GridBagConstraints.BOTH;
+		gbcPanel3n.weightx = 1;
+		gbcPanel3n.weighty = 0;
+		gbcPanel3n.anchor = GridBagConstraints.NORTH;
+		gbPanel3n.setConstraints( pnPanel6, gbcPanel3n );
+		pnPanel3n.add( pnPanel6 );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 12;
+		gbcPanel0.gridheight = 11;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( pnPanel3n, gbcPanel0 );
+		pnPanel0.add( pnPanel3n );
 		
-		gbcgeneralPanel.gridx = 6;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(commitButton, gbcgeneralPanel);
-		generalPanel.add(commitButton);
+		tfManufacturerText.setEnabled(false);
+		tfManufacturerCodeText.setEnabled(false);
 
-		symbolLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(symbolLabel, gbcgeneralPanel);
-		generalPanel.add(symbolLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(labelText, gbcgeneralPanel);
-		generalPanel.add(labelText);
-
-		gbcgeneralPanel.gridx = 6;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(symbolBut, gbcgeneralPanel);
-		generalPanel.add(symbolBut);
-
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(typeBox, gbcgeneralPanel);
-		generalPanel.add(typeBox);
-
-		typeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 3;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(typeLabel, gbcgeneralPanel);
-		generalPanel.add(typeLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 3;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(typeCombo, gbcgeneralPanel);
-		generalPanel.add(typeCombo);
-
-		manufacturerLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(manufacturerLabel, gbcgeneralPanel);
-		generalPanel.add(manufacturerLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(manufacturerText, gbcgeneralPanel);
-		generalPanel.add(manufacturerText);
-
-		manufacturerCodeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 5;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(manufacturerCodeLabel, gbcgeneralPanel);
-		generalPanel.add(manufacturerCodeLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 5;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(manufacturerCodeText, gbcgeneralPanel);
-		generalPanel.add(manufacturerCodeText);
-
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 6;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(equipmentBox, gbcgeneralPanel);
-		generalPanel.add(equipmentBox);
-
-		supplierLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 7;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(supplierLabel, gbcgeneralPanel);
-		generalPanel.add(supplierLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 7;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(supplierText, gbcgeneralPanel);
-		generalPanel.add(supplierText);
-
-		supplierCodeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 8;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(supplierCodeLabel, gbcgeneralPanel);
-		generalPanel.add(supplierCodeLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 8;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(supplierCodeText, gbcgeneralPanel);
-		generalPanel.add(supplierCodeText);
-
-		hwLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 10;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(hwLabel, gbcgeneralPanel);
-		generalPanel.add(hwLabel);
-
-		hwsnLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 11;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(hwsnLabel, gbcgeneralPanel);
-		generalPanel.add(hwsnLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 11;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(hwsnText, gbcgeneralPanel);
-		generalPanel.add(hwsnText);
-
-		hwvLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 4;
-		gbcgeneralPanel.gridy = 11;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(hwvLabel, gbcgeneralPanel);
-		generalPanel.add(hwvLabel);
-
-		gbcgeneralPanel.gridx = 6;
-		gbcgeneralPanel.gridy = 11;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(hwvText, gbcgeneralPanel);
-		generalPanel.add(hwvText);
-
-		swLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 12;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(swLabel, gbcgeneralPanel);
-		generalPanel.add(swLabel);
-
-		swsnLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 13;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(swsnLabel, gbcgeneralPanel);
-		generalPanel.add(swsnLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 13;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(swsnText, gbcgeneralPanel);
-		generalPanel.add(swsnText);
-
-		swvLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 4;
-		gbcgeneralPanel.gridy = 13;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(swvLabel, gbcgeneralPanel);
-		generalPanel.add(swvLabel);
-
-		gbcgeneralPanel.gridx = 6;
-		gbcgeneralPanel.gridy = 13;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(swvText, gbcgeneralPanel);
-		generalPanel.add(swvText);
-
-		longLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 9;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(longLabel, gbcgeneralPanel);
-		generalPanel.add(longLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 9;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(longText, gbcgeneralPanel);
-		generalPanel.add(longText);
-
-		latLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 3;
-		gbcgeneralPanel.gridy = 9;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(latLabel, gbcgeneralPanel);
-		generalPanel.add(latLabel);
-
-		gbcgeneralPanel.gridx = 5;
-		gbcgeneralPanel.gridy = 9;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(latText, gbcgeneralPanel);
-		generalPanel.add(latText);
-
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 14;
-		gbcgeneralPanel.gridwidth = 4;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisBox, gbcgeneralPanel);
-		generalPanel.add(kisBox);
-
-		kisLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 15;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisLabel, gbcgeneralPanel);
-		generalPanel.add(kisLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 15;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisCombo, gbcgeneralPanel);
-		generalPanel.add(kisCombo);
-
-		kisAddrLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 16;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisAddrLabel, gbcgeneralPanel);
-		generalPanel.add(kisAddrLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 16;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisAddrText, gbcgeneralPanel);
-		generalPanel.add(kisAddrText);
-
-		kisPortLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 4;
-		gbcgeneralPanel.gridy = 16;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisPortLabel, gbcgeneralPanel);
-		generalPanel.add(kisPortLabel);
-
-		gbcgeneralPanel.gridx = 6;
-		gbcgeneralPanel.gridy = 16;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(kisPortText, gbcgeneralPanel);
-		generalPanel.add(kisPortText);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 0;
-		gbcpanel0.gridwidth = 8;
-		gbcpanel0.gridheight = 7;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(generalPanel, gbcpanel0);
-		panel0.add(generalPanel);
-
-		descrLabel.setFocusable(false);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 7;
-		gbcpanel0.gridwidth = 3;
-		gbcpanel0.gridheight = 1;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 0;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(descrLabel, gbcpanel0);
-		panel0.add(descrLabel);
-
-		JScrollPane scpdescrArea = new JScrollPane(descrArea);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 8;
-		gbcpanel0.gridwidth = 8;
-		gbcpanel0.gridheight = 3;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 1;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
-		panel0.add(scpdescrArea);
-		
-		manufacturerText.setEnabled(false);
-		manufacturerCodeText.setEnabled(false);
-		typeBox.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				typeCombo.setEnabled(typeBox.isSelected());
-			}
-		});
-		typeCombo.addItemListener(new ItemListener(){
+		cmbTypeCombo.addItemListener(new ItemListener(){
 			public void itemStateChanged(ItemEvent e) {
-				EquipmentType eqt = (EquipmentType)typeCombo.getSelectedItem();
+				EquipmentType eqt = (EquipmentType)cmbTypeCombo.getSelectedItem();
 				if (eqt != null) {
-					manufacturerText.setText(eqt.getManufacturer());
-					manufacturerCodeText.setText(eqt.getManufacturerCode());
+					tfManufacturerText.setText(eqt.getManufacturer());
+					tfManufacturerCodeText.setText(eqt.getManufacturerCode());
 				} else {
-					manufacturerText.setText(SchemeResourceKeys.EMPTY);
-					manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
+					tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
+					tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 				}
 			}
 		});
-		equipmentBox.addChangeListener(new ChangeListener() {
+		cbInstanceBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				setEquipmentEnabled(equipmentBox.isSelected());
-				if (!equipmentBox.isSelected())
-					kisBox.setSelected(false);
+				instanceBox_stateChanged();
 			}
 		});
-		kisBox.addChangeListener(new ChangeListener() {
+		cbKisBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				setKISEnabled(kisBox.isSelected());
+				kisBox_stateChanged();
 			}
 		});
-		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		addToUndoableListener(nameText);
-		addToUndoableListener(labelText);
-		addToUndoableListener(symbolBut);
-		addToUndoableListener(typeBox);
-		addToUndoableListener(typeCombo);
-		addToUndoableListener(manufacturerText);
-		addToUndoableListener(manufacturerCodeText);
-		addToUndoableListener(equipmentBox);
-		addToUndoableListener(supplierText);
-		addToUndoableListener(supplierCodeText);
-		addToUndoableListener(hwsnText);
-		addToUndoableListener(hwvText);
-		addToUndoableListener(swsnText);
-		addToUndoableListener(swvText);
-		addToUndoableListener(longText);
-		addToUndoableListener(latText);
-		addToUndoableListener(kisBox);
-		addToUndoableListener(kisCombo);
-		addToUndoableListener(kisAddrText);
-		addToUndoableListener(kisPortText);
-		addToUndoableListener(descrArea);
+		addToUndoableListener(tfNameText);
+		addToUndoableListener(tfLabelText);
+		addToUndoableListener(btSymbolBut);
+		addToUndoableListener(cmbTypeCombo);
+		addToUndoableListener(tfManufacturerText);
+		addToUndoableListener(tfManufacturerCodeText);
+		addToUndoableListener(cbInstanceBox);
+		addToUndoableListener(tfSupplierText);
+		addToUndoableListener(tfSupplierCodeText);
+		addToUndoableListener(tfHwsnText);
+		addToUndoableListener(tfHwvText);
+		addToUndoableListener(tfSwsnText);
+		addToUndoableListener(tfSwvText);
+		addToUndoableListener(tfLongText);
+		addToUndoableListener(tfLatText);
+		addToUndoableListener(cbKisBox);
+		addToUndoableListener(cmbKisCombo);
+		addToUndoableListener(tfKisAddrText);
+		addToUndoableListener(tfKisPortText);
+		addToUndoableListener(taDescrArea);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
+		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.btCommitBut.setFocusPainted(false);
+		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.btCommitBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				commitChanges();
 			}
 		});
 	}
+
+	public void instanceBox_stateChanged() {
+		setEquipmentEnabled(cbInstanceBox.isSelected());
+		if (!cbInstanceBox.isSelected()) {
+			cbKisBox.setSelected(false);
+			kisBox_stateChanged();
+		}
+	}
+	
+	public void kisBox_stateChanged() {
+		setKISEnabled(cbKisBox.isSelected());
+	}
 	
 	void setEquipmentEnabled(boolean b) {
-		supplierLabel.setEnabled(b);
-		supplierText.setEnabled(b);
-		supplierCodeLabel.setEnabled(b);
-		supplierCodeText.setEnabled(b);
-		hwLabel.setEnabled(b);
-		hwsnLabel.setEnabled(b);
-		hwsnText.setEnabled(b);
-		hwvLabel.setEnabled(b);
-		hwvText.setEnabled(b);
-		swLabel.setEnabled(b);
-		swsnLabel.setEnabled(b);
-		swsnText.setEnabled(b);
-		swvLabel.setEnabled(b);
-		swvText.setEnabled(b);
-		longLabel.setEnabled(b);
-		longText.setEnabled(b);
-		latLabel.setEnabled(b);
-		latText.setEnabled(b);
-		kisBox.setEnabled(b);
-		kisLabel.setEnabled(b);
+		pnEquipmentPanel.setVisible(b);
+		cbKisBox.setVisible(b);
 	}
 	
 	void setKISEnabled(boolean b) {
-		kisLabel.setEnabled(b);
-		kisCombo.setEnabled(b);
-		kisAddrLabel.setEnabled(b);
-		kisAddrText.setEnabled(b);
-		kisPortLabel.setEnabled(b);
-		kisPortText.setEnabled(b);
+		pnPanel6.setVisible(b);
 	}
 
 	public JComponent getGUI() {
-		return panel0; 
+		return pnPanel0; 
 	}
 
 	public Object getObject() {
@@ -705,13 +742,13 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		KIS kis = null;
 		Icon symbol = null;
 		
-		typeCombo.removeAllItems();
-		kisCombo.removeAllItems();
+		cmbTypeCombo.removeAllItems();
+		cmbKisCombo.removeAllItems();
 
 		if (this.schemeElement != null) {
-			this.nameText.setText(schemeElement.getName());
-			this.descrArea.setText(schemeElement.getDescription());
-			this.labelText.setText(schemeElement.getLabel());
+			this.tfNameText.setText(schemeElement.getName());
+			this.taDescrArea.setText(schemeElement.getDescription());
+			this.tfLabelText.setText(schemeElement.getLabel());
 			if (schemeElement.getSymbol() != null)
 				symbol = new ImageIcon(schemeElement.getSymbol().getImage());
 			eqt = this.schemeElement.getEquipmentType();
@@ -720,73 +757,73 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 			try {
-				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			condition = new EquivalentCondition(ObjectEntities.KIS_CODE);
 			try {
-				kisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbKisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 		} 
 		else {
-			this.nameText.setText(SchemeResourceKeys.EMPTY);
-			this.descrArea.setText(SchemeResourceKeys.EMPTY);
-			this.labelText.setText(SchemeResourceKeys.EMPTY);
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
+			this.tfLabelText.setText(SchemeResourceKeys.EMPTY);
 		}
 		
 		if (eqt != null) {
-			this.typeBox.setSelected(true);
-			this.typeCombo.setSelectedItem(eqt);
-			this.manufacturerText.setText(eqt.getManufacturer());
-			this.manufacturerCodeText.setText(eqt.getManufacturerCode());
+			this.cmbTypeCombo.setSelectedItem(eqt);
+			this.tfManufacturerText.setText(eqt.getManufacturer());
+			this.tfManufacturerCodeText.setText(eqt.getManufacturerCode());
 		} else {
-			this.typeBox.setSelected(false);
-			this.manufacturerText.setText(SchemeResourceKeys.EMPTY);
-			this.manufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (kis != null) {
-			this.kisBox.setSelected(true);
-			this.kisCombo.setSelectedItem(kis);
-			this.kisAddrText.setText(kis.getHostName());
-			this.kisPortText.setText(Short.toString(kis.getTCPPort()));
+			this.cbKisBox.setSelected(true);
+			this.cmbKisCombo.setSelectedItem(kis);
+			this.tfKisAddrText.setText(kis.getHostName());
+			this.tfKisPortText.setText(Short.toString(kis.getTCPPort()));
 		} else {
-			this.kisBox.setSelected(false);
-			this.kisAddrText.setText(SchemeResourceKeys.EMPTY);
-			this.kisPortText.setText(SchemeResourceKeys.EMPTY);
+			this.cbKisBox.setSelected(false);
+			this.tfKisAddrText.setText(SchemeResourceKeys.EMPTY);
+			this.tfKisPortText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (eq != null) {
-			this.equipmentBox.setSelected(true);
-			this.supplierText.setText(eq.getSupplier());
-			this.supplierCodeText.setText(eq.getSupplierCode());
-			this.hwsnText.setText(eq.getHwSerial());
-			this.hwvText.setText(eq.getHwVersion());
-			this.swsnText.setText(eq.getSwSerial());
-			this.swvText.setText(eq.getSwVersion());
-			this.longText.setText(Float.toString(eq.getLongitude()));
-			this.latText.setText(Float.toString(eq.getLatitude()));
+			this.cbInstanceBox.setSelected(true);
+			this.tfSupplierText.setText(eq.getSupplier());
+			this.tfSupplierCodeText.setText(eq.getSupplierCode());
+			this.tfHwsnText.setText(eq.getHwSerial());
+			this.tfHwvText.setText(eq.getHwVersion());
+			this.tfSwsnText.setText(eq.getSwSerial());
+			this.tfSwvText.setText(eq.getSwVersion());
+			this.tfLongText.setText(Float.toString(eq.getLongitude()));
+			this.tfLatText.setText(Float.toString(eq.getLatitude()));
 		} else {
-			this.equipmentBox.setSelected(false);
-			this.supplierText.setText(SchemeResourceKeys.EMPTY);
-			this.supplierCodeText.setText(SchemeResourceKeys.EMPTY);
-			this.hwsnText.setText(SchemeResourceKeys.EMPTY);
-			this.hwvText.setText(SchemeResourceKeys.EMPTY);
-			this.swsnText.setText(SchemeResourceKeys.EMPTY);
-			this.swvText.setText(SchemeResourceKeys.EMPTY);
-			this.longText.setText(SchemeResourceKeys.EMPTY);
-			this.latText.setText(SchemeResourceKeys.EMPTY);
+			this.cbInstanceBox.setSelected(false);
+			this.tfSupplierText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.tfHwsnText.setText(SchemeResourceKeys.EMPTY);
+			this.tfHwvText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSwsnText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSwvText.setText(SchemeResourceKeys.EMPTY);
+			this.tfLongText.setText(SchemeResourceKeys.EMPTY);
+			this.tfLatText.setText(SchemeResourceKeys.EMPTY);
 		}
-		this.symbolBut.setIcon(symbol);
+		this.btSymbolBut.setIcon(symbol);
+		instanceBox_stateChanged();
+		kisBox_stateChanged();
 	}
 
 	public void commitChanges() {
-		if (schemeElement != null && MiscUtil.validName(this.nameText.getText())) {
-			schemeElement.setName(this.nameText.getText());
-			schemeElement.setDescription(this.descrArea.getText());
-			schemeElement.setLabel(this.labelText.getText());
-			if (this.symbolBut.getIcon() == null) {
+		if (schemeElement != null && MiscUtil.validName(this.tfNameText.getText())) {
+			schemeElement.setName(this.tfNameText.getText());
+			schemeElement.setDescription(this.taDescrArea.getText());
+			schemeElement.setLabel(this.tfLabelText.getText());
+			if (this.btSymbolBut.getIcon() == null) {
 				schemeElement.setSymbol(null);
 			} else {
 				try {
@@ -795,18 +832,14 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 					Log.errorException(e);
 				}
 			}
-			if (typeBox.isSelected()) {
-				EquipmentType eqt = (EquipmentType)typeCombo.getSelectedItem();
-				if (eqt != null) {
-					schemeElement.setEquipmentType(eqt);
-					eqt.setManufacturer(this.manufacturerText.getText());
-					eqt.setManufacturerCode(this.manufacturerCodeText.getText());
-				}
-			} else {
-				schemeElement.setEquipmentType(null);
+			EquipmentType eqt = (EquipmentType)cmbTypeCombo.getSelectedItem();
+			if (eqt != null) {
+				schemeElement.setEquipmentType(eqt);
+				eqt.setManufacturer(this.tfManufacturerText.getText());
+				eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			}
 			Equipment eq = schemeElement.getEquipment();
-			if (equipmentBox.isSelected()) {
+			if (cbInstanceBox.isSelected()) {
 				if (eq == null) {
 					try {
 						eq = SchemeObjectsFactory.createEquipment();
@@ -818,19 +851,19 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				if (eq != null) {
 					eq.setName(schemeElement.getName());
 					eq.setDescription(schemeElement.getDescription());
-					eq.setSupplier(this.supplierText.getText());
-					eq.setSupplierCode(this.supplierCodeText.getText());
-					eq.setHwSerial(this.hwsnText.getText());
-					eq.setHwVersion(this.hwvText.getText());
-					eq.setSwSerial(this.swsnText.getText());
-					eq.setSwVersion(this.swvText.getText());
+					eq.setSupplier(this.tfSupplierText.getText());
+					eq.setSupplierCode(this.tfSupplierCodeText.getText());
+					eq.setHwSerial(this.tfHwsnText.getText());
+					eq.setHwVersion(this.tfHwvText.getText());
+					eq.setSwSerial(this.tfSwsnText.getText());
+					eq.setSwVersion(this.tfSwvText.getText());
 					try {
-						eq.setLongitude(Float.parseFloat(this.longText.getText()));
+						eq.setLongitude(Float.parseFloat(this.tfLongText.getText()));
 					} catch (NumberFormatException e) {
 						eq.setLongitude(0);
 					}
 					try {
-						eq.setLatitude(Float.parseFloat(this.latText.getText()));
+						eq.setLatitude(Float.parseFloat(this.tfLatText.getText()));
 					} catch (NumberFormatException e1) {
 						eq.setLatitude(0);
 					}
@@ -840,14 +873,14 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				schemeElement.setEquipment(null);
 			}
 
-			if (kisBox.isSelected()) {
-				KIS kis = (KIS)kisCombo.getSelectedItem();
+			if (cbKisBox.isSelected()) {
+				KIS kis = (KIS)cmbKisCombo.getSelectedItem();
 				if (kis != null) {
 					schemeElement.setKis(kis);
 					kis.setName(schemeElement.getName());
 					kis.setDescription(schemeElement.getDescription());
-					kis.setHostName(this.kisAddrText.getText());
-					kis.setTCPPort(Short.parseShort(this.kisPortText.getText()));
+					kis.setHostName(this.tfKisAddrText.getText());
+					kis.setTCPPort(Short.parseShort(this.tfKisPortText.getText()));
 				}
 			} else {
 				schemeElement.setKis(null);

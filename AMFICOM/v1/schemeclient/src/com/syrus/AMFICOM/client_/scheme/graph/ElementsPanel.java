@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
+ * $Id: ElementsPanel.java,v 1.6 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,23 @@ import com.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class ElementsPanel extends UgoPanel {
+	SchemeResource schemeResource;
+	
 	protected ElementsPanel(ApplicationContext aContext) {
 		super(aContext);
 
@@ -31,6 +39,7 @@ public class ElementsPanel extends UgoPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		schemeResource = new SchemeResource(this.graph);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -56,6 +65,11 @@ public class ElementsPanel extends UgoPanel {
 		graph.setBendable(true);
 		graph.setEditable(true);
 		graph.setEnabled(true);
+		graph.make_notifications = true;
+	}
+	
+	public SchemeResource getSchemeResource() {
+		return schemeResource;
 	}
 
 	public void propertyChange(PropertyChangeEvent ae) {

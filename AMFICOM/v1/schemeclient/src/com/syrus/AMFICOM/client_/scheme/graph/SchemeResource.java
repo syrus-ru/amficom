@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.3 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeResource.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,37 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class SchemeResource {
-	public static int SCHEME = 0;
-	public static int SCHEME_ELEMENT = 1;
-	public static int SCHEME_PROTO_ELEMENT = 2;
+	public static final int NON_INITIALIZED = 0;
+	public static final int SCHEME = 1;
+	public static final int SCHEME_ELEMENT = 2;
+	public static final int SCHEME_PROTO_ELEMENT = 3;
 	
 	private SchemeGraph graph;
 	private SchemeCellContainer object;
@@ -47,6 +59,10 @@ public class SchemeResource {
 	
 	public int getCellContainerType() {
 		return this.objectType;
+	}
+	
+	public void setCellContainerType(int cellContainerType) {
+		this.objectType = cellContainerType;
 	}
 
 	public Scheme getScheme() {

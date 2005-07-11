@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.1 2005/06/22 10:24:40 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.2 2005/07/11 12:31:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/06/22 10:24:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:41 $
  * @module schemeclient_v1
  */
 
@@ -35,19 +35,19 @@ public interface SchemeResourceKeys extends ResourceKeys {
 //	public static final Dimension A4 = new Dimension (840, 1188);
 	
 	// in millimeters
-	public static final Integer[] WIDTHS = new Integer[] {
-		new Integer(210), // A4
-		new Integer(420), // A3
-		new Integer(420), // A2
-		new Integer(840), // A1
-		new Integer(840)  // A0 
+	public static final Long[] WIDTHS = new Long[] {
+		new Long(210), // A4
+		new Long(420), // A3
+		new Long(420), // A2
+		new Long(840), // A1
+		new Long(840)  // A0 
 	};
-	public static final Integer[] HEIGHTS = new Integer[] {
-		new Integer(297), // A4
-		new Integer(297), // A3
-		new Integer(594), // A2
-		new Integer(594), // A1
-		new Integer(1188) // A0 
+	public static final Long[] HEIGHTS = new Long[] {
+		new Long(297), // A4
+		new Long(297), // A3
+		new Long(594), // A2
+		new Long(594), // A1
+		new Long(1188) // A0 
 	};
 	public static final String[] SIZES = new String[] { "size_a4", "size_a3", //$NON-NLS-1$//$NON-NLS-2$
 			"size_a2", "size_a1", "size_a0", "size_custom" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
@@ -70,6 +70,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String LINK_TYPE = "link_type"; //$NON-NLS-1$
 	public static final String CABLE_LINK_TYPE = "cable_link_type"; //$NON-NLS-1$
 	public static final String PORT_TYPE = "port_type"; //$NON-NLS-1$
+	public static final String CABLE_PORT_TYPE = "cable_port_type"; //$NON-NLS-1$
 	public static final String EQUIPMENT_TYPE = "equipment_type"; //$NON-NLS-1$
 	public static final String MEASUREMENT_TYPE = "measurement_type"; //$NON-NLS-1$
 	public static final String MEASUREMENTPORT_TYPE = "measurement_port_type"; //$NON-NLS-1$
@@ -110,9 +111,12 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String ADDRESS = "address"; //$NON-NLS-1$
 	public static final String PORT = "port"; //$NON-NLS-1$
 	public static final String INVNUMBER = "invNumber"; //$NON-NLS-1$
+	public static final String MARK = "mark"; //$NON-NLS-1$
 	public static final String COLOR = "color"; //$NON-NLS-1$
 	public static final String SYNCHRONIZE = "synchronize"; //$NON-NLS-1$
-	
+	public static final String THREAD_NUMBER = "threadNumber"; //$NON-NLS-1$
+	public static final String THREAD = "thread"; //$NON-NLS-1$
+			
 	public static final String NEW_SCHEME = "new_scheme"; //$NON-NLS-1$
 		
 	public static final String EXISTING_TYPE = "existing_type"; //$NON-NLS-1$
@@ -122,6 +126,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String REMOVE_CHARACTERISTIC = "remove_characteristic"; //$NON-NLS-1$
 	public static final String PARAMETERS = "parameters"; //$NON-NLS-1$
 	public static final String MEASUREMENT_PORT_TYPES = "measurement_port_types"; //$NON-NLS-1$
+	public static final String MEASUREMENT_PORT = "measurement_port"; //$NON-NLS-1$
 	public static final String PORTS = "ports"; //$NON-NLS-1$
 	public static final String TYPE = "type"; //$NON-NLS-1$
 	public static final String MEASUREMENT_TYPES = "measurement_types"; //$NON-NLS-1$
@@ -133,6 +138,8 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String PORTTYPESORT_OPTICAL = "optical"; //$NON-NLS-1$
 	public static final String PORTTYPESORT_THERMAL = "thermal"; //$NON-NLS-1$
 	public static final String PORTTYPESORT_ELECTICAL = "electrical"; //$NON-NLS-1$
+	public static final String PORTTYPEKIND_CABLE = "cable_port"; //$NON-NLS-1$
+	public static final String PORTTYPEKIND_SIMPLE = "port"; //$NON-NLS-1$
 	public static final String OK = "ok"; //$NON-NLS-1$
 	public static final String CANCEL = "cancel"; //$NON-NLS-1$
 

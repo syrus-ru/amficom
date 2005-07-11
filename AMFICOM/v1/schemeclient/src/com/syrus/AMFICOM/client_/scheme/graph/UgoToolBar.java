@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.5 2005/06/22 10:16:06 stas Exp $
+ * $Id: UgoToolBar.java,v 1.6 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,24 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.LayoutManager;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.Icon;
+import javax.swing.JComponent;
+import javax.swing.JToolBar;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
@@ -20,7 +33,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -31,13 +44,15 @@ public class UgoToolBar extends JToolBar {
 	protected Map commands = new HashMap();
 	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
 	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
-	private static String[] buttons = new String[] { 
-		Constants.MARQUEE 
-	};
+	private static String[] buttons = new String[] { Constants.MARQUEE,
+			Constants.SEPARATOR, Constants.RECTANGLE, Constants.ELLIPSE,
+			Constants.LINE, Constants.TEXT, Constants.HORIZONTAL_GLUE };
 
 	protected UgoToolBar(UgoTabbedPane pane) {
 		this.pane = pane;
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		createToolBar();
+		setFloatable(false);
 	}
 	
 	public void setOrientation(int o) {
@@ -58,6 +73,8 @@ public class UgoToolBar extends JToolBar {
 		for (int i = 0; i < butt.length; i++) {
 			if (butt[i].equals(Constants.SEPARATOR))
 				insert(new JToolBar.Separator());
+			else if (butt[i].equals(Constants.HORIZONTAL_GLUE))
+				insert(Box.createHorizontalGlue());
 			else
 				insert((JComponent)commands.get(butt[i]));
 		}
@@ -72,6 +89,22 @@ public class UgoToolBar extends JToolBar {
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
 		bttns.put(Constants.MARQUEE, createToolButton(mh.s, btn_size, null,
 				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
+		bttns.put(Constants.RECTANGLE, createToolButton(mh.r, btn_size, null,
+				LangModelGraph.getString(Constants.RECTANGLE), Constants.ICON_RECTANGLE, null, true));
+		bttns.put(Constants.ELLIPSE, createToolButton(mh.c, btn_size, null,
+				LangModelGraph.getString(Constants.ELLIPSE), Constants.ICON_ELLIPSE, null, true));
+		bttns.put(Constants.TEXT, createToolButton(mh.t, btn_size, null,
+				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
+		bttns.put(Constants.ICON, createToolButton(mh.i, btn_size, null,
+				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
+		bttns.put(Constants.LINE, createToolButton(mh.l, btn_size, null,
+				LangModelGraph.getString(Constants.LINE), Constants.ICON_LINE, null, true));
+		
+		ButtonGroup group = new ButtonGroup();
+		for (Iterator it = bttns.values().iterator(); it.hasNext();) {
+			AbstractButton button = (AbstractButton) it.next();
+			group.add(button);
+		}
 		mh.s.doClick();
 		return bttns;
 	}

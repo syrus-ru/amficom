@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePanel.java,v 1.3 2005/06/09 10:53:52 stas Exp $
+ * $Id: SchemePanel.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.Point;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import com.jgraph.graph.DefaultGraphModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
@@ -17,11 +18,12 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/09 10:53:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class SchemePanel extends ElementsPanel {
+		
 	protected SchemePanel(ApplicationContext aContext) {
 		super(aContext);
 		try {

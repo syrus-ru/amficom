@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: DeviceGroup.java,v 1.2 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,32 +10,34 @@ package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
 import java.util.Map;
 
-import com.jgraph.graph.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphConstants;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class DeviceGroup extends DefaultGraphCell {
-	private Identifier protoElementId;
-	private Identifier schemeElementId;
+	public static final int PROTO_ELEMENT = 0;
+	public static final int SCHEME_ELEMENT = 1;
+	
+	private Identifier elementId;
+	private int type;
 
 	public static DeviceGroup createInstance(Object userObject,
-			Map viewMap, SchemeElement element) {
+			Map viewMap, Identifier elementId, int type) {
 		DeviceGroup cell = new DeviceGroup(userObject, viewMap);
-		cell.schemeElementId = element.getId();
-		return cell;
-	}
-
-	public static DeviceGroup createInstance(Object userObject,
-			Map viewMap, SchemeProtoElement proto) {
-		DeviceGroup cell = new DeviceGroup(userObject, viewMap);
-		cell.protoElementId = proto.getId();
+		cell.elementId = elementId;
+		cell.type = type;
 		return cell;
 	}
 
@@ -48,10 +50,14 @@ public class DeviceGroup extends DefaultGraphCell {
 		viewMap.put(this, m);
 	}
 
+	public int getType() {
+		return this.type;
+	}
+	
 	public SchemeProtoElement getProtoElement() {
-		if (protoElementId != null) {
+		if (this.type == PROTO_ELEMENT) {
 			try {
-				return (SchemeProtoElement) SchemeStorableObjectPool.getStorableObject(protoElementId, true);
+				return (SchemeProtoElement) StorableObjectPool.getStorableObject(elementId, true);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
@@ -59,18 +65,19 @@ public class DeviceGroup extends DefaultGraphCell {
 		return null;
 	}
 
-	public Identifier getProtoElementId() {
-		return protoElementId;
+	public Identifier getElementId() {
+		return elementId;
 	}
 
 	public void setProtoElementId(Identifier id) {
-		protoElementId = id;
+		this.elementId = id;
+		this.type = PROTO_ELEMENT;
 	}
 
 	public SchemeElement getSchemeElement() {
-		if (schemeElementId != null) {
+		if (this.type == SCHEME_ELEMENT) {
 			try {
-				return (SchemeElement) SchemeStorableObjectPool.getStorableObject(schemeElementId, true);
+				return (SchemeElement)StorableObjectPool.getStorableObject(elementId, true);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
@@ -85,11 +92,8 @@ public class DeviceGroup extends DefaultGraphCell {
 		return null;
 	}
 
-	public Identifier getSchemeElementId() {
-		return schemeElementId;
-	}
-
 	public void setSchemeElementId(Identifier id) {
-		schemeElementId = id;
+		this.elementId = id;
+		this.type = SCHEME_ELEMENT;
 	}
 }

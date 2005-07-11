@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.11 2005/07/11 12:16:34 bass Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.12 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/11 12:16:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -181,38 +181,38 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		});
 		
 		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
-					public void arrange() {
-						SchemeEditorMainFrame f = (SchemeEditorMainFrame) this.mainframe;
+			public void arrange() {
+				SchemeEditorMainFrame f = (SchemeEditorMainFrame) mainframe;
 
-						int w = f.desktopPane.getSize().width;
-						int h = f.desktopPane.getSize().height;
-						
-						JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
-						JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
-						JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
-						JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
-						JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
-						
-						normalize(editorFrame);
-						normalize(generalFrame);
-						normalize(characteristicsFrame);
-						normalize(additionalFrame);
-						normalize(treeFrame);
+				int w = f.desktopPane.getSize().width;
+				int h = f.desktopPane.getSize().height;
 
-						editorFrame.setSize(3 * w / 5, h);
-						additionalFrame.setSize(w / 5, 2 * h / 5);
-						generalFrame.setSize(w/5, 3 * h / 10);
-						characteristicsFrame.setSize(w/5, 3 * h / 10);
-						treeFrame.setSize(w / 5, 2 * h / 5);
+				JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
+				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
+				JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
+				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
+				
+				normalize(editorFrame);
+				normalize(generalFrame);
+				normalize(characteristicsFrame);
+				normalize(additionalFrame);
+				normalize(treeFrame);
 
-						editorFrame.setLocation(2 * w / 5, 0);
-						additionalFrame.setLocation(w / 5, 0);
-						generalFrame.setLocation(4*w/5, 0);
-						characteristicsFrame.setLocation(4*w/5, 3*h/10);
-						treeFrame.setLocation(0, 0);
-					}
-				});
+				editorFrame.setSize(3 * w / 5, h);
+				additionalFrame.setSize(w / 5, h / 4);
+				generalFrame.setSize(w/5, h/2);
+				characteristicsFrame.setSize(w/5, h / 4);
+				treeFrame.setSize(w / 5, h);
+
+				editorFrame.setLocation(w / 5, 0);
+				additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
+				generalFrame.setLocation(4*w/5, 0);
+				characteristicsFrame.setLocation(4*w/5, h/2);
+				treeFrame.setLocation(0, 0);
 			}
+		});
+	}
 	
 	
 	public SchemeEditorMainFrame() {
@@ -420,6 +420,17 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuReportCreate", true);
 
 		aModel.fireModelChanged();
+		
+		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
+		editorFrame.setVisible(true);
+		JInternalFrame addFrame = (JInternalFrame)this.frames.get(ADDITIONAL_PROPERIES_FRAME);
+		addFrame.setVisible(true);
+		JInternalFrame generalFrame = (JInternalFrame)this.frames.get(GENERAL_PROPERIES_FRAME);
+		generalFrame.setVisible(true);
+		JInternalFrame charFrame = (JInternalFrame)this.frames.get(CHARACTERISTIC_PROPERIES_FRAME);
+		charFrame.setVisible(true);
+		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
+		treeFrame.setVisible(true);
 	}
 
 	public void setSessionClosed() {

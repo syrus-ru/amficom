@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypePropertiesManager.java,v 1.6 2005/05/26 07:40:51 stas Exp $
+ * $Id: PortTypePropertiesManager.java,v 1.7 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.EmptyStorableObjectEditor;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -31,10 +32,11 @@ public class PortTypePropertiesManager implements VisualManager {
 		// empty
 	}
 	
-	public static PortTypePropertiesManager getInstance(ApplicationContext aContext) {
+	public static PortTypePropertiesManager getInstance(ApplicationContext aContext, PortTypeKind kind) {
 		if (instance == null) 
 			instance = new PortTypePropertiesManager();
 		instance.setContext(aContext);
+		instance.generalPanel.setPortKind(kind);
 		return instance;
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.4 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.5 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,52 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.BorderLayout;
 import java.awt.Point;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
 
-import javax.swing.*;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
-public class ElementsTabbedPane extends UgoTabbedPane {
+public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeListener {
 	
 	public ElementsTabbedPane(ApplicationContext aContext) {
 		super(aContext);
-		add(createToolBar(), BorderLayout.NORTH);
+	}
+	
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
+		}
+		if (aContext != null) {
+			this.aContext = aContext;
+			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
+			for (Iterator it = getAllPanels().iterator(); it.hasNext();)
+				((UgoPanel)it.next()).setContext(aContext);
+		}
 	}
 	
 	protected JComponent createPanel() {
@@ -44,31 +68,72 @@ public class ElementsTabbedPane extends UgoTabbedPane {
 	protected JComponent createToolBar() {
 		return new ElementsToolBar(this, aContext);
 	}
-
-	public void openScheme(Scheme sch) {
-		UgoPanel p = getCurrentPanel();
-		p.getSchemeResource().setScheme(sch);
-		p.getSchemeResource().setSchemeElement(null);
-		GraphActions.clearGraph(p.getGraph());
-//		if (sch.getSchemeCell() != null)
-//			p.insertCell(sch.getSchemeCell().getData(), new Point(0, 0), true);
+	
+	public void propertyChange(PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
+			SchemeEvent see = (SchemeEvent) ae;
+			if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
+				openSchemeCellContainer(proto);
+			}
+		}
 	}
-
-	public void openSchemeElement(SchemeElement se) {
+	
+	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
 		UgoPanel p = getCurrentPanel();
-		p.getSchemeResource().setScheme(null);
-		p.getSchemeResource().setSchemeElement(se);
+		SchemeGraph graph = p.getGraph();
+//		p.getSchemeResource().setSchemeProtoElement(proto);
 		GraphActions.clearGraph(p.getGraph());
-		if (se.getSchemeCell() != null)
-			p.insertCell(se.getSchemeCell().getData(), new Point(0, 0), true);
+		if (schemeCellContainer.getSchemeCell() != null) {
+			p.insertCell(schemeCellContainer.getSchemeCell().getData(), new Point(0, 0), true);
+			fixImages(graph);
+		}
+		graph.setGraphChanged(false);
 	}
-
+	
+	/**
+	 * @return selected ElementsPanel
+	 */
+	public ElementsPanel getCurrentPanel() {
+		return (ElementsPanel)panel;
+	}
+	
 	/*
 	public void removeScheme(Scheme sch) {
-		SchemeResource res = getCurrentPanel().getSchemeResource();
-		if (res.getSchemeElement() != null) {
-			if (SchemeUtils.isSchemeContainsElement(sch, res.getSchemeElement())) {
-				GraphActions.clearGraph(getCurrentPanel().getGraph());
+		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
+			UgoPanel p = (UgoPanel)it.next();
+			SchemeResource res = p.getSchemeResource();
+			if (sch.equals(res.getScheme())) {
+				res.setScheme(null);
+				SchemeGraph graph = p.getGraph();
+				GraphActions.clearGraph(graph);
+				graph.setGraphChanged(false);
+			}
+		}
+	}
+	
+	public void removeSchemeElement(SchemeElement se) {
+		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
+			UgoPanel p = (UgoPanel)it.next();
+			SchemeResource res = p.getSchemeResource();
+			if (se.equals(res.getSchemeElement())) {
+				res.setSchemeElement(null);
+				SchemeGraph graph = p.getGraph();
+				GraphActions.clearGraph(graph);
+				graph.setGraphChanged(false);
+			}
+		}
+	}
+	
+	public void removeSchemeProtoElement(SchemeProtoElement proto) {
+		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
+			UgoPanel p = (UgoPanel)it.next();
+			SchemeResource res = p.getSchemeResource();
+			if (proto.equals(res.getSchemeProtoElement())) {
+				res.setSchemeProtoElement(null);
+				SchemeGraph graph = p.getGraph();
+				GraphActions.clearGraph(graph);
+				graph.setGraphChanged(false);
 			}
 		}
 	}*/
@@ -81,7 +146,7 @@ public class ElementsTabbedPane extends UgoTabbedPane {
 			// Execute Remove Action on Delete Key Press
 			if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 				if (!graph.isSelectionEmpty())
-					new DeleteAction(pane, aContext).actionPerformed(new ActionEvent(this, 0, ""));
+					new DeleteAction(pane).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				GraphActions.alignToGrid(graph, graph.getSelectionCells());

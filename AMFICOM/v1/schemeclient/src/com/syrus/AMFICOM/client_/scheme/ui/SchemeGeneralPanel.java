@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.5 2005/06/24 14:13:36 bass Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.6 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,55 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
+import java.util.MissingResourceException;
+import java.util.logging.Level;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
 import javax.swing.text.NumberFormatter;
 
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.UI.tree.IconedNode;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/24 14:13:36 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -50,12 +74,12 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	JPanel pnGeneralPanel = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
-	JButton commitButton = new JButton();
+	JButton btCommitBut = new JButton();
 	JLabel lbSymbolLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
-	JTextField tfLabelText= new JTextField();
+	JTextField tfSymbolText= new JTextField();
 	JButton btSymbolBut = new JButton();
 	JLabel lbKindLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_KIND));
-	JComboBox cmbKindCombo = new JComboBox();
+	JComboBox cmbKindCombo = new AComboBox();
 	JLabel lbDimensionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_DIMENSION));
 	JLabel lbWidthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SHORT_WIDTH));
 	JFormattedTextField tfWidthText = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
@@ -65,7 +89,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	JComboBox cmbSizeCombo = new AComboBox();
 	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescrArea = new JTextArea(2,10);
-	private static final Integer ZERO = new Integer(0);
+	private static final Long ZERO = new Long(0);
 	
 	protected SchemeGeneralPanel() {
 		super();
@@ -90,6 +114,30 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
 
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 6;
+		gbcPanel0.gridwidth = 4;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
+		pnPanel0.add( lbDescrLabel );
+
+		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 7;
+		gbcPanel0.gridwidth = 11;
+		gbcPanel0.gridheight = 5;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
+		pnPanel0.add( scpDescrArea );
+
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		pnGeneralPanel.setLayout( gbGeneralPanel );
@@ -107,7 +155,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
-		gbcGeneralPanel.gridwidth = 5;
+		gbcGeneralPanel.gridwidth = 7;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
@@ -115,8 +163,8 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfNameText );
-		
-		gbcGeneralPanel.gridx = 7;
+
+		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
 		gbcGeneralPanel.gridheight = 1;
@@ -124,8 +172,8 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( commitButton, gbcGeneralPanel );
-		pnGeneralPanel.add( commitButton );
+		gbGeneralPanel.setConstraints( btCommitBut, gbcGeneralPanel );
+		pnGeneralPanel.add( btCommitBut );
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
@@ -140,18 +188,18 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 4;
+		gbcGeneralPanel.gridwidth = 7;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfLabelText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfLabelText );
+		gbGeneralPanel.setConstraints( tfSymbolText, gbcGeneralPanel );
+		pnGeneralPanel.add( tfSymbolText );
 
-		gbcGeneralPanel.gridx = 6;
+		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 1;
-		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridwidth = 1;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 0;
@@ -173,7 +221,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
-		gbcGeneralPanel.gridwidth = 6;
+		gbcGeneralPanel.gridwidth = 8;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
@@ -195,6 +243,17 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 3;
+		gbcGeneralPanel.gridwidth = 8;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( cmbSizeCombo, gbcGeneralPanel );
+		pnGeneralPanel.add( cmbSizeCombo );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 1;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
@@ -205,18 +264,18 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		pnGeneralPanel.add( lbWidthLabel );
 
 		gbcGeneralPanel.gridx = 3;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 3;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weightx = 0.5;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( tfWidthText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfWidthText );
 
-		gbcGeneralPanel.gridx = 4;
-		gbcGeneralPanel.gridy = 3;
+		gbcGeneralPanel.gridx = 6;
+		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 1;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
@@ -226,41 +285,19 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbGeneralPanel.setConstraints( lbHeightLabel, gbcGeneralPanel );
 		pnGeneralPanel.add( lbHeightLabel );
 
-		gbcGeneralPanel.gridx = 5;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridx = 7;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 2;
 		gbcGeneralPanel.gridheight = 1;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weightx = 0.5;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( tfHeightText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfHeightText );
-
-		gbcGeneralPanel.gridx = 6;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 0;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbSizeLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbSizeLabel );
-
-		gbcGeneralPanel.gridx = 7;
-		gbcGeneralPanel.gridy = 3;
-		gbcGeneralPanel.gridwidth = 1;
-		gbcGeneralPanel.gridheight = 1;
-		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcGeneralPanel.weightx = 1;
-		gbcGeneralPanel.weighty = 0;
-		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( cmbSizeCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbSizeCombo );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 8;
+		gbcPanel0.gridwidth = 12;
 		gbcPanel0.gridheight = 6;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
@@ -268,68 +305,58 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
-
-		gbcPanel0.gridx = 0;
-		gbcPanel0.gridy = 6;
-		gbcPanel0.gridwidth = 4;
-		gbcPanel0.gridheight = 1;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 0;
-		gbcPanel0.weighty = 0;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
-		pnPanel0.add( lbDescrLabel );
-
-		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
-		gbcPanel0.gridx = 1;
-		gbcPanel0.gridy = 7;
-		gbcPanel0.gridwidth = 7;
-		gbcPanel0.gridheight = 5;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
-		pnPanel0.add( scpDescrArea );
 		
 		for (int i = 0; i < SchemeResourceKeys.SIZES.length; i++) {
-			cmbSizeCombo.addItem(LangModelScheme.getString(SchemeResourceKeys.SIZES[i]));			
+			cmbSizeCombo.addItem(SchemeResourceKeys.SIZES[i]);			
 		}
+		cmbSizeCombo.setRenderer(new SchemeExternedObjectRenderer());
 		for (int i = 0; i < schemeKinds.length; i++) {
-			cmbSizeCombo.addItem(schemeKinds[i]);			
+			cmbKindCombo.addItem(schemeKinds[i]);			
 		}
 		pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		cmbSizeCombo.addItemListener(new java.awt.event.ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				cmbSizeCombo_itemStateChanged(e);
+				cmbSizeCombo_itemStateChanged(e.getItem());
 			}
 		});
 		
 		addToUndoableListener(tfNameText);
-		addToUndoableListener(tfLabelText);
+		addToUndoableListener(tfSymbolText);
 		addToUndoableListener(btSymbolBut);
 		addToUndoableListener(cmbKindCombo);
 		addToUndoableListener(cmbSizeCombo);
 		addToUndoableListener(tfHeightText);
 		addToUndoableListener(tfWidthText);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
+		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.btCommitBut.setFocusPainted(false);
+		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.btCommitBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				commitChanges();
 			}
 		});
 	}
 	
-	void cmbSizeCombo_itemStateChanged(ItemEvent e) {
-		Object selected = e.getItem();
+	private static class SchemeExternedObjectRenderer extends JLabel implements ListCellRenderer {
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			String key = (String)value;
+			try {
+				key = LangModelScheme.getString(key);
+				setText(key);
+			} catch (MissingResourceException e) {
+				Log.debugMessage(this.getClass().getSimpleName() + "| resource not found for key " + key, Level.FINER); //$NON-NLS-1$
+			}
+			return this;
+		}
+	}
+	
+	void cmbSizeCombo_itemStateChanged(Object selected) {
 		for (int i = 0; i < SchemeResourceKeys.SIZES.length - 1; i++) {
 			if (SchemeResourceKeys.SIZES[i].equals(selected)) {
 				tfWidthText.setValue(SchemeResourceKeys.WIDTHS[i]);
-				tfWidthText.setValue(SchemeResourceKeys.HEIGHTS[i]);
+				tfHeightText.setValue(SchemeResourceKeys.HEIGHTS[i]);
 				break;
 			}
 		}
@@ -339,19 +366,16 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		int w = scheme.getWidth() / 4; // in mm
 		int h = scheme.getHeight() / 4; // in mm
 		
-		boolean sizeSet = false;
 		for (int i = 0; i < SchemeResourceKeys.WIDTHS.length; i++) {
 			if (SchemeResourceKeys.WIDTHS[i].intValue() == w && SchemeResourceKeys.HEIGHTS[i].intValue() == h) {
 				cmbSizeCombo.setSelectedItem(SchemeResourceKeys.SIZES[i]);
-				sizeSet = true;
-				break;
+				cmbSizeCombo_itemStateChanged(SchemeResourceKeys.SIZES[i]);
+				return;
 			}
 		}
-		if (!sizeSet) {
-			this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
-			this.tfWidthText.setValue(new Integer(scheme.getWidth() / 4));
-			this.tfHeightText.setValue(new Integer(scheme.getHeight() / 4));
-		}
+		this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
+		this.tfWidthText.setValue(new Long(scheme.getWidth() / 4));
+		this.tfHeightText.setValue(new Long(scheme.getHeight() / 4));
 	}
 
 	public void setObject(Object or) {
@@ -361,7 +385,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		if (this.scheme != null) {
 			this.tfNameText.setText(scheme.getName());
 			this.taDescrArea.setText(scheme.getDescription());
-			this.tfLabelText.setText(scheme.getLabel());
+			this.tfSymbolText.setText(scheme.getLabel());
 			if (scheme.getSymbol() != null)
 				symbol = new ImageIcon(scheme.getSymbol().getImage());
 			initSizeFields();
@@ -375,7 +399,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
-			this.tfLabelText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSymbolText.setText(SchemeResourceKeys.EMPTY);
 			this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
 			this.tfWidthText.setValue(ZERO);
 			this.tfHeightText.setValue(ZERO);
@@ -393,10 +417,9 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void commitChanges() {
 		if (scheme != null && MiscUtil.validName(this.tfNameText.getText())) {
-			initSizeFields();
 			scheme.setName(this.tfNameText.getText());
 			scheme.setDescription(this.taDescrArea.getText());
-			scheme.setLabel(this.tfLabelText.getText());
+			scheme.setLabel(this.tfSymbolText.getText());
 			if (this.btSymbolBut.getIcon() == null) {
 				scheme.setSymbol(null);
 			} else {
@@ -408,8 +431,10 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 			}
 			Item item = (Item)cmbKindCombo.getSelectedItem();
 			scheme.setKind((Kind)item.getObject());
-			scheme.setWidth(((Integer)this.tfWidthText.getValue()).intValue());
-			scheme.setHeight(((Integer)this.tfHeightText.getValue()).intValue());
-		}	
+			scheme.setWidth(((Long)this.tfWidthText.getValue()).intValue() * 4);
+			scheme.setHeight(((Long)this.tfHeightText.getValue()).intValue() * 4);
+			
+			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.UPDATE_OBJECT));
+		}
 	}
 }

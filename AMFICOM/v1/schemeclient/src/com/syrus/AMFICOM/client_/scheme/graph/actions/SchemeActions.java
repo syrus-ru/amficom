@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.11 2005/06/24 14:13:36 bass Exp $
+ * $Id: SchemeActions.java,v 1.12 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,56 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.util.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
-import com.jgraph.graph.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.Port;
+import com.jgraph.graph.PortView;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/06/24 14:13:36 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +69,7 @@ public class SchemeActions {
 	public static DeviceGroup createTopLevelElement(SchemeGraph graph,
 			Object userObject, Rectangle bounds, SchemeElement element) {
 		Map viewMap = new HashMap();
-		DeviceGroup cell = DeviceGroup.createInstance(userObject, viewMap, element);
+		DeviceGroup cell = DeviceGroup.createInstance(userObject, viewMap, element.getId(), DeviceGroup.SCHEME_ELEMENT);
 
 		Object[] insert = new Object[] { cell };
 		graph.getGraphLayoutCache().insert(insert, viewMap, null, null, null);
@@ -146,7 +174,7 @@ public class SchemeActions {
 	}
 	
 	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
-			PortView port, Point p, Point p2) {
+			PortView port, Point p, Point p2, Identifier linkId) {
 		ConnectionSet cs = new ConnectionSet();
 		Map viewMap = new HashMap();
 		
@@ -158,14 +186,16 @@ public class SchemeActions {
 		String name = "cl" + String.valueOf(counter+1);
 		
 		DefaultCableLink cell = DefaultCableLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
+		cell.setSchemeCableLinkId(linkId);
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
 		return cell;
 	}
 
-	public static DeviceCell createDevice(SchemeGraph graph, Object userObject, Rectangle bounds) {
+	public static DeviceCell createDevice(SchemeGraph graph, Object userObject, Rectangle bounds, Identifier deviceId) {
 		Map viewMap = new HashMap();
 		DeviceCell cell = DeviceCell.createInstance(userObject, bounds, viewMap);
+		cell.setSchemeDeviceId(deviceId);
 		Object[] insert = new Object[] { cell };
 		graph.getGraphLayoutCache().insert(insert, viewMap, null, null, null);
 		graph.setSelectionCells(insert);
@@ -173,7 +203,7 @@ public class SchemeActions {
 	}
 	
 	public static DefaultLink createLink(SchemeGraph graph, PortView firstPort, 
-			PortView port, Point p, Point p2) {
+			PortView port, Point p, Point p2, Identifier linkId) {
 		ConnectionSet cs = new ConnectionSet();
 		Map viewMap = new HashMap();
 		
@@ -185,12 +215,23 @@ public class SchemeActions {
 		String name = "l" + String.valueOf(counter+1);
 		
 		DefaultLink cell = DefaultLink.createInstance(name, firstPort, port, p, p2, viewMap, cs);
+		cell.setSchemeLinkId(linkId);
 		graph.getModel().insert(new Object[] { cell }, viewMap, cs, null, null);
 		graph.setSelectionCell(cell);
 		return cell;
 	}
+
+	public static PortCell createPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, Color color, Identifier portId) {
+		DefaultGraphCell port = createAbstractPort(graph, deviceCell, p, name, direction, false, color, portId);
+		return (PortCell)port;
+	}
 	
-	public static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, boolean isCable) {
+	public static CablePortCell createCablePort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, Color color, Identifier portId) {
+		DefaultGraphCell port = createAbstractPort(graph, deviceCell, p, name, direction, true, color, portId);
+		return (CablePortCell)port;
+	}
+	
+	private static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, boolean isCable, Color color, Identifier portId) {
 		DefaultGraphCell visualPort;
 		DefaultPort ellipsePort;
 		Port devPort;
@@ -218,9 +259,11 @@ public class SchemeActions {
 		Map viewMap = new HashMap();
 	
 		if (!isCable) {
-			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction);
+			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction, color);
+			((PortCell)visualPort).setSchemePortId(portId);
 		} else { // cableport
-			visualPort = CablePortCell.createInstance("", portCellBounds, viewMap, direction);
+			visualPort = CablePortCell.createInstance("", portCellBounds, viewMap, direction, color);
+			((CablePortCell)visualPort).setSchemeCablePortId(portId);
 		}
 		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);
 		devPort = GraphActions.addPort (graph, "", deviceCell, devportPos); //$NON-NLS-1$
@@ -234,6 +277,43 @@ public class SchemeActions {
 		graph.addSelectionCell(visualPort);
 
 		return visualPort;
+	}
+	
+	public static final long SCHEME_EMPTY	=									0x00000001;
+	public static final long SCHEME_HAS_UNGROUPED_DEVICE	=	0x00000002;
+	public static final long SCHEME_HAS_LINK	=							0x00000004;
+	public static final long SCHEME_HAS_HIERARCHY_PORT	=		0x00000008;
+	public static final long SCHEME_HAS_DEVICE_GROUP	=		0x00000010;
+	
+	public static long getGraphState(SchemeGraph graph) {
+		long status = 0;
+		
+		Object[] cells = graph.getAll();
+
+		if (cells == null || cells.length == 0) {
+			status |= SCHEME_EMPTY;
+		} else {
+			for (int i = 0; i < cells.length; i++) {
+				if (cells[i] instanceof DefaultLink) {
+					status |= SCHEME_HAS_LINK;
+				} else if (cells[i] instanceof BlockPortCell) {
+					status |= SCHEME_HAS_HIERARCHY_PORT;
+				} else if (cells[i] instanceof DeviceCell && !GraphActions.hasGroupedParent(cells[i])) {
+					status |= SCHEME_HAS_UNGROUPED_DEVICE;
+				} else if (cells[i] instanceof DeviceGroup) {
+					status |= SCHEME_HAS_DEVICE_GROUP;
+				} 
+			}
+		}
+		return status;
+	}
+	
+	public static Color determinePortColor(AbstractSchemePort port) {
+		if (port.getAbstractSchemeLink() == null)
+			return Color.YELLOW;
+		if (port.getPortType().getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
+			return Color.BLACK;
+		return Color.WHITE;
 	}
 	
 	public static JPopupMenu createElementPopup(final ApplicationContext aContext,
@@ -260,7 +340,7 @@ public class SchemeActions {
 			pop.addSeparator();
 		}
 		
-		if (group.getSchemeElementId() != null) {
+		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			List v = se.getUgoCell().getData();
 			if (se.getSchemeElements().isEmpty()
 					|| (v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0)) {
@@ -301,8 +381,7 @@ public class SchemeActions {
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof DeviceGroup)
-				if (id.equals(((DeviceGroup)cells[i]).getSchemeElementId()) ||
-					id.equals(((DeviceGroup)cells[i]).getProtoElementId()))
+				if (id.equals(((DeviceGroup)cells[i]).getElementId()))
 					return (DeviceGroup) cells[i];
 		return null;
 	}
@@ -413,7 +492,7 @@ public class SchemeActions {
 	}
 
 	public static void disconnectSchemeLink(SchemeGraph graph, DefaultLink link,
-			boolean is_source) {
+			PortCell port, boolean is_source) {
 		SchemeLink sl = link.getSchemeLink();
 		if (sl == null) {
 			System.err.println("GraphActions.disconnectSchemeLink() link not found "
@@ -429,12 +508,12 @@ public class SchemeActions {
 			sp = sl.getTargetAbstractSchemePort();
 			sl.setTargetAbstractSchemePort(null);
 		}
-		if (sp != null) {
+		if (sp != null && port != null) {
 			PortType pt = sp.getPortType();
 			if (pt == null)
-				GraphActions.setObjectBackColor(graph, sp, Color.red);
+				GraphActions.setObjectBackColor(graph, port, Color.red);
 			else
-				GraphActions.setObjectBackColor(graph, sp, Color.yellow);
+				GraphActions.setObjectBackColor(graph, port, Color.yellow);
 		}
 	}
 
@@ -481,7 +560,7 @@ public class SchemeActions {
 	}
 
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
-			DefaultCableLink link, boolean is_source) {
+			DefaultCableLink link, CablePortCell port, boolean is_source) {
 		SchemeCableLink sl = link.getSchemeCableLink();
 		if (sl == null) {
 			System.err
@@ -499,9 +578,9 @@ public class SchemeActions {
 		}
 
 		PortType pt = sp.getPortType();
-		if (pt == null)
-			GraphActions.setObjectBackColor(graph, sp, Color.red);
+		if (pt == null && port != null)
+			GraphActions.setObjectBackColor(graph, port, Color.red);
 		else
-			GraphActions.setObjectBackColor(graph, sp, Color.yellow);
+			GraphActions.setObjectBackColor(graph, port, Color.yellow);
 	}
 }

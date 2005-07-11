@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.10 2005/07/11 12:16:34 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.11 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,26 +9,53 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
+import java.util.Set;
 import java.util.logging.Level;
-
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
+import javax.swing.JOptionPane;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.configuration.CableLink;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.BitmapImageResource;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/11 12:16:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class SchemeObjectsFactory {
-//	private static int counter = 0;
+	private static int counter = 1;
+	private static int schemeCounter = 1;
 	
 	public static EquipmentType createEquipmentType() throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
@@ -63,9 +90,9 @@ public class SchemeObjectsFactory {
 		return type;
 	}
 	
-	public static PortType createPortType(String codename) throws CreateObjectException {
+	public static PortType createPortType(String codename, PortTypeKind kind) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		PortType type = PortType.createInstance(userId, codename, "", "", PortTypeSort.PORTTYPESORT_OPTICAL);
+		PortType type = PortType.createInstance(userId, codename, "", "", PortTypeSort.PORTTYPESORT_OPTICAL, kind);
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
@@ -76,7 +103,7 @@ public class SchemeObjectsFactory {
 	
 	public static LinkType createLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		LinkType type = LinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
+		LinkType type = LinkType.createInstance(userId, codename, "", codename, LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", Identifier.VOID_IDENTIFIER);
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
@@ -87,7 +114,18 @@ public class SchemeObjectsFactory {
 	
 	public static CableLinkType createCableLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		CableLinkType type = CableLinkType.createInstance(userId, codename, "", "", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", null);
+		CableLinkType type = CableLinkType.createInstance(userId, codename, "", codename, LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "", "", Identifier.VOID_IDENTIFIER);
+		try {
+			StorableObjectPool.putStorableObject(type);
+		} catch (IllegalObjectEntityException e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+		return type;
+	}
+	
+	public static CableThreadType createCableThreadType(String codename, String name, LinkType linkType, CableLinkType cableLinkType) throws CreateObjectException {
+		Identifier userId = LoginManager.getUserId();
+		CableThreadType type = CableThreadType.createInstance(userId, codename, "", name, -1, linkType, cableLinkType);
 		try {
 			StorableObjectPool.putStorableObject(type);
 		} catch (IllegalObjectEntityException e) {
@@ -144,9 +182,9 @@ public class SchemeObjectsFactory {
 		return cableLink;
 	}
 
-	public static Port createPort(PortSort sort) throws CreateObjectException {
+	public static Port createPort(PortType type) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		Port port = Port.createInstance(userId, null, "", null, sort);
+		Port port = Port.createInstance(userId, type, "", null);
 		try {
 			StorableObjectPool.putStorableObject(port);
 		} catch (IllegalObjectEntityException e) {
@@ -238,21 +276,74 @@ public class SchemeObjectsFactory {
 		}
 		return schemeCablePort;
 	}*/
-	/*
-	public static SchemeProtoElement createProtoElement() throws CreateObjectException {
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
-				getAccessIdentifier().user_id);
-		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(userId, "Component" + counter++);
+
+	public static SchemeProtoElement createSchemeProtoElement() throws CreateObjectException {
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		EquipmentType eqt = null;
 		try {
-			SchemeStorableObjectPool.putStorableObject(protoElement);
+			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!eqTypes.isEmpty())
+				eqt = eqTypes.iterator().next();
+		} catch (ApplicationException e2) {
+			throw new CreateObjectException(e2);
+		}
+		if (eqt == null) {
+			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
+			Log.debugMessage(error, Level.WARNING); 
+			throw new CreateObjectException(error);
+		}
+		
+		SchemeProtoElement protoElement = SchemeProtoElement.createInstance(LoginManager.getUserId(), "Компонент (" + counter + ")" );
+		protoElement.setEquipmentType(eqt);
+		counter++;
+		try {
+			StorableObjectPool.putStorableObject(protoElement);
 		} 
-		catch (IllegalObjectEntityException e) {
-			Log.debugException(e, Log.SEVERE);
-		} catch (UnsupportedOperationException e) {
-			System.err.println("Unsupported operation: SchemeStorableObjectPool.putStorableObject()");
+		catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 		return protoElement;
-	}*/
+	}
+	
+	public static SchemeElement createSchemeElement(Scheme parentScheme) throws CreateObjectException {
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+		EquipmentType eqt = null;
+		try {
+			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!eqTypes.isEmpty())
+				eqt = eqTypes.iterator().next();
+		} catch (ApplicationException e2) {
+			throw new CreateObjectException(e2);
+		}
+		if (eqt == null) {
+			String error = "No equipment types found. Create one at least."; //$NON-NLS-1$
+			Log.debugMessage(error, Level.WARNING); 
+			throw new CreateObjectException(error);
+		}
+		
+		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), "Компонент (" + counter + ")", parentScheme);
+		schemeElement.setEquipmentType(eqt);
+		counter++;
+		try {
+			StorableObjectPool.putStorableObject(schemeElement);
+		} 
+		catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		return schemeElement;
+	}
+	
+	public static Scheme createScheme() throws CreateObjectException {
+		Scheme scheme = Scheme.createInstance(LoginManager.getUserId(), LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME)
+				+ (schemeCounter == 1 ? "" : "(" + schemeCounter + ")"), Kind.NETWORK, LoginManager.getDomainId()); 
+		try {
+			StorableObjectPool.putStorableObject(scheme);
+		} 
+		catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		return scheme;
+	}
 	/*
 	public static SchemeElement createElement() throws CreateObjectException {
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).

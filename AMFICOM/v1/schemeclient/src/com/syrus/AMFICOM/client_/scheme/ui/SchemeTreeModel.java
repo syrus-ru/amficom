@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.24 2005/06/24 14:13:36 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.25 2005/07/11 12:31:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,14 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/24 14:13:36 $
+ * @author $Author: stas $
+ * @version $Revision: 1.25 $, $Date: 2005/07/11 12:31:40 $
  * @module schemeclient_v1
  */
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.UIManager;
 
@@ -25,31 +24,17 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.configuration.ui.CableLinkTypePropertiesManager;
-import com.syrus.AMFICOM.client_.configuration.ui.EquipmentTypePropertiesManager;
-import com.syrus.AMFICOM.client_.configuration.ui.LinkTypePropertiesManager;
-import com.syrus.AMFICOM.client_.configuration.ui.MeasurementPortTypePropertiesManager;
-import com.syrus.AMFICOM.client_.configuration.ui.MeasurementTypePropertiesManager;
-import com.syrus.AMFICOM.client_.configuration.ui.PortTypePropertiesManager;
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.client_.configuration.ui.ConfigurationTreeModel;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
+	ConfigurationTreeModel configurationTreeModel;
+	ProtoGroupTreeModel protoTreeModel;
 
 	private static Kind[] schemeTypes = new Kind[] { Kind.NETWORK, Kind.BUILDING,
 			Kind.CABLE_SUBNETWORK };
@@ -83,35 +68,11 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			 * @todo write SchemeProtoGroupController return
 			 *       SchemeProtoGroupController.getInstance();
 			 */
-			if (s.equals(SchemeResourceKeys.LINK_TYPE))
-				return LinkTypePropertiesManager.getInstance(aContext);
-			if (s.equals(SchemeResourceKeys.CABLE_LINK_TYPE))
-				return CableLinkTypePropertiesManager.getInstance(aContext);
-			if (s.equals(SchemeResourceKeys.PORT_TYPE))
-				return PortTypePropertiesManager.getInstance(aContext);
-			if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE))
-				return EquipmentTypePropertiesManager.getInstance(aContext);
-			if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
-				return MeasurementPortTypePropertiesManager.getInstance(aContext);
-			if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES))
-				return MeasurementTypePropertiesManager.getInstance(aContext);
 			if (s.equals(SchemeResourceKeys.SCHEME_TYPE))
 				return null;
 			// for any other strings return null Manager
 			return null;
 		}
-		if (object instanceof EquipmentType)
-			return EquipmentTypePropertiesManager.getInstance(aContext);
-		if (object instanceof LinkType)
-			return LinkTypePropertiesManager.getInstance(aContext);
-		if (object instanceof CableLinkType)
-			return CableLinkTypePropertiesManager.getInstance(aContext);
-		if (object instanceof PortType)
-			return PortTypePropertiesManager.getInstance(aContext);
-		if (object instanceof MeasurementPortType)
-			return MeasurementPortTypePropertiesManager.getInstance(aContext);
-		if (object instanceof MeasurementType)
-			return MeasurementTypePropertiesManager.getInstance(aContext);
 		if (object instanceof Kind)
 				return null;
 //		if (object instanceof Kind)
@@ -144,15 +105,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		return childObjects;
 	}
 	
-	Collection getDifference(Collection minuend, Collection subtrahend) {
-		Collection difference = new LinkedList();
-		for (Iterator it = minuend.iterator(); it.hasNext();) {
-			Object obj = it.next();
-			if (!subtrahend.contains(obj))
-				difference.add(obj);
-		}
-		return difference;
-	}
+
 	
 
 	public void populate(Item node) {
@@ -161,187 +114,12 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
 			if (s.equals(SchemeResourceKeys.ROOT)) {
-				if (!contents.contains(SchemeResourceKeys.CONFIGURATION))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.CONFIGURATION, LangModelScheme.getString(SchemeResourceKeys.CONFIGURATION),
-							UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.SCHEME_TYPE))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.SCHEME_PROTO_GROUP))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PROTO_GROUP, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_GROUP), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-			} 
-			else if (s.equals(SchemeResourceKeys.CONFIGURATION)) {
-				if (!contents.contains(SchemeResourceKeys.NETWORK_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.NETWORK_DIRECTORY, LangModelScheme.getString(SchemeResourceKeys.NETWORK_DIRECTORY), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.MONITORING_DIRECTORY))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MONITORING_DIRECTORY, LangModelScheme.getString(SchemeResourceKeys.MONITORING_DIRECTORY), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-			} 
-			else if (s.equals(SchemeResourceKeys.NETWORK_DIRECTORY)) {
-				if (!contents.contains(SchemeResourceKeys.LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.LINK_TYPE, LangModelScheme.getString(SchemeResourceKeys.LINK_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.CABLE_LINK_TYPE))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.CABLE_LINK_TYPE, LangModelScheme.getString(SchemeResourceKeys.CABLE_LINK_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.PORT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.PORT_TYPE, LangModelScheme.getString(SchemeResourceKeys.PORT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.EQUIPMENT_TYPE))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.EQUIPMENT_TYPE, LangModelScheme.getString(SchemeResourceKeys.EQUIPMENT_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-			} 
-			else if (s.equals(SchemeResourceKeys.MONITORING_DIRECTORY)) {
-				if (!contents.contains(SchemeResourceKeys.MEASUREMENT_TYPES))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MEASUREMENT_TYPES, LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_TYPES), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				if (!contents.contains(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
-					node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.MEASUREMENT_PORT_TYPES, LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_PORT_TYPES), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				// vec.add(new PopulatableIconedNode(this, "TransmissionPathType",
-				// LangModelConfig.getString("menuJDirPathText"), true));
+				createRoot(node, contents);
 			} 
 			else if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
 				for (int i = 0; i < schemeTypes.length; i++) {
 					if (!contents.contains(schemeTypes[i]))
 						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				}
-			} 
-			else if (s.equals(SchemeResourceKeys.LINK_TYPE)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
-					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-					
-					Collection toAdd = getDifference(linkTypes, contents);
-					Collection toRemove = getDifference(contents, linkTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						LinkType type = (LinkType) it.next();
-						node.addChild(new PopulatableIconedNode(this, type, false));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-			} 
-			else if (s.equals(SchemeResourceKeys.CABLE_LINK_TYPE)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
-					Collection linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-					Collection toAdd = getDifference(linkTypes, contents);
-					Collection toRemove = getDifference(contents, linkTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						CableLinkType type = (CableLinkType) it.next();
-						node.addChild(new PopulatableIconedNode(this, type, false));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-			} 
-			else if (s.equals(SchemeResourceKeys.PORT_TYPE)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
-					Collection portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-					
-					Collection toAdd = getDifference(portTypes, contents);
-					Collection toRemove = getDifference(contents, portTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						PortType type = (PortType) it.next();
-						node.addChild(new PopulatableIconedNode(this, type, false));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-			} else if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-					Collection equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-					
-					Collection toAdd = getDifference(equipmentTypes, contents);
-					Collection toRemove = getDifference(contents, equipmentTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						EquipmentType type = (EquipmentType)it.next();
-						node.addChild(new PopulatableIconedNode(this, type, false));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-			}
-			// else if (s.equals("TransmissionPathType")) {
-			// try {
-			// EquivalentCondition condition = new
-			// EquivalentCondition(ObjectEntities.TRANSPATH_TYPE_CODE);
-			// Collection pathTypes =
-			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition,
-			// true);
-			//
-			// for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
-			// TransmissionPathType type = (TransmissionPathType)it.next();
-			// vec.add(new PopulatableIconedNode(this, type, false));
-			// }
-			// }
-			// catch (ApplicationException ex) {
-			// ex.printStackTrace();
-			// }
-			// }
-			else if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
-					Collection mpTypes = StorableObjectPool
-							.getStorableObjectsByCondition(condition, true);
-
-					Collection toAdd = getDifference(mpTypes, contents);
-					Collection toRemove = getDifference(contents, mpTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						MeasurementPortType type = (MeasurementPortType)it.next();
-						node.addChild(new PopulatableIconedNode(this, type, false));
-					}
-				} catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
-			} 
-			else if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES)) {
-				try {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENT_TYPE_CODE);
-					Collection measurementTypes = StorableObjectPool
-							.getStorableObjectsByCondition(condition, true);
-
-					Collection toAdd = getDifference(measurementTypes, contents);
-					Collection toRemove = getDifference(contents, measurementTypes);
-					for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
-						if (toRemove.contains(child.getObject()))
-							child.setParent(null);
-					}
-					for (Iterator it = toAdd.iterator(); it.hasNext();) {
-						MeasurementType type = (MeasurementType)it.next();
-						node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
 				}
 			} 
 			/*else if (s.equals(Constants.SCHEME_PROTO_GROUP)) {
@@ -556,6 +334,23 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					}
 				}
 			}*/
+		}
+	}
+	
+	private void createRoot(Item node, Collection contents) {
+		if (!contents.contains(SchemeResourceKeys.CONFIGURATION)) {
+			if (configurationTreeModel == null) {
+				configurationTreeModel = new ConfigurationTreeModel(aContext);
+			}
+			node.addChild(configurationTreeModel.getRoot());
+		}
+		if (!contents.contains(SchemeResourceKeys.SCHEME_TYPE))
+			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+		if (!contents.contains(SchemeResourceKeys.SCHEME_PROTO_GROUP)) {
+			if (protoTreeModel == null) {
+				protoTreeModel = new ProtoGroupTreeModel(aContext);
+			}
+			node.addChild(protoTreeModel.getRoot());
 		}
 	}
 }

@@ -2,7 +2,8 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import java.beans.PropertyVetoException;
 
-import javax.swing.*;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 

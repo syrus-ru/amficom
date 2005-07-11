@@ -36,7 +36,8 @@
 
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 public class LangModelConfig {
 

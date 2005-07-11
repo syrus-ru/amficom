@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ResourceUtil
 {

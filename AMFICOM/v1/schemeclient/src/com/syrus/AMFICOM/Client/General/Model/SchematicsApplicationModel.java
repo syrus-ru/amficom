@@ -3,11 +3,8 @@ package com.syrus.AMFICOM.Client.General.Model;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
-
-import sun.java2d.loops.ScaledBlit;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;

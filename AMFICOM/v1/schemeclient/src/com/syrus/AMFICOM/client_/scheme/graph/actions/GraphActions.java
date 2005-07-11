@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.3 2005/06/24 14:13:36 bass Exp $
+ * $Id: GraphActions.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,42 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import java.awt.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.CellView;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultGraphModel;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.Port;
 import com.jgraph.pad.ImageCell;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/24 14:13:36 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -38,7 +58,7 @@ public class GraphActions {
 				cell.getChildren().toArray(), true);
 		Map map = new HashMap();
 		for (int i = 0; i < cv.length; i++)
-			map.put(cv[i].getCell(), cv[0].getAllAttributes());
+			map.put(cv[i].getCell(), cv[i].getAllAttributes());
 
 		DefaultPort port = addPort(userObject, cell, p, map);
 		cell.changeAttributes(map);
@@ -126,6 +146,16 @@ public class GraphActions {
 		}
 		Map m = graph.getModel().getAttributes(group);
 		return GraphConstants.getBounds(m);		
+	}
+	
+	public static DeviceCell getMainCell(DeviceGroup group) {
+		for (Iterator it = group.getChildren().iterator(); it.hasNext(); ) {
+			Object child = it.next();
+			if (child instanceof DeviceCell) {
+				return (DeviceCell) child;
+			}
+		}
+		return null;
 	}
 
 	public static void setObjectsBackColor(SchemeGraph graph, Object[] objs,
@@ -387,6 +417,16 @@ public class GraphActions {
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof DeviceGroup && !hasGroupedParent(objs[i]))
+				v.add(objs[i]);
+		return (DeviceGroup[]) v.toArray(new DeviceGroup[v.size()]);
+	}
+	
+	public static DeviceGroup[] findAllGroups(SchemeGraph graph,
+			Object[] cells) {
+		ArrayList v = new ArrayList();
+		Object[] objs = graph.getDescendants(cells);
+		for (int i = 0; i < objs.length; i++)
+			if (objs[i] instanceof DeviceGroup)
 				v.add(objs[i]);
 		return (DeviceGroup[]) v.toArray(new DeviceGroup[v.size()]);
 	}

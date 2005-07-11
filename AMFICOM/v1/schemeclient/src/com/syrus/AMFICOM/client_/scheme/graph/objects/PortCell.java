@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.3 2005/06/24 14:13:36 bass Exp $
+ * $Id: PortCell.java,v 1.4 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,25 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Map;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/24 14:13:36 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -29,12 +34,13 @@ public class PortCell extends EllipseCell {
 	private Identifier schemePortId;
 
 	public static PortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, DirectionType direction) {
+			Rectangle bounds, Map viewMap, DirectionType direction, Color color) {
+
 		PortCell cell = new PortCell(userObject);
 		
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);
-		GraphConstants.setBackground(map, Color.RED);
+		GraphConstants.setBackground(map, color);
 		GraphConstants.setOpaque(map, true);
 		GraphConstants.setSizeable(map, false);
 		GraphConstants.setBorderColor(map, Constants.COLOR_BORDER);

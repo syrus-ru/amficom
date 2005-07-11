@@ -1,14 +1,23 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 public class SchemeSaveCommand extends AbstractCommand {
@@ -54,7 +63,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 			se.getSchemeCell().setData((List) graph.getArchiveableState());
 
 			for (Iterator it = schemeTab.getAllPanels().iterator(); it.hasNext();) {
-				UgoPanel p = (UgoPanel) it.next();
+				ElementsPanel p = (ElementsPanel) it.next();
 				Scheme s = p.getSchemeResource().getScheme();
 				if (s != null) {
 					if (SchemeUtils.isSchemeContainsElement(s, se)) {

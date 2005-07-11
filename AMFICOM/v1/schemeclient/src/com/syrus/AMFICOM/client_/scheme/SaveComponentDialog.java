@@ -1,5 +1,5 @@
 /*-
- * $Id: SaveComponentDialog.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: SaveComponentDialog.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,23 +8,15 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JDialog;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementGeneralPanel;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 

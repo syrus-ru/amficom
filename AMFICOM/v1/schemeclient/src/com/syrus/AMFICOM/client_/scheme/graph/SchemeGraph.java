@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: SchemeGraph.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,44 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.CellMapper;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultGraphModel;
+import com.jgraph.graph.Edge;
+import com.jgraph.graph.EdgeView;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphLayoutCache;
+import com.jgraph.graph.GraphModel;
+import com.jgraph.graph.VertexView;
 import com.jgraph.pad.GPGraph;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultPortView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -35,6 +57,9 @@ public class SchemeGraph extends GPGraph {
 	private boolean isBorderVisible = false;
 	private boolean graphChanged = false;	
 	private boolean topLevelSchemeMode = false;
+	
+	private boolean notify = false;
+	boolean make_notifications = false;
 	/**
 	 * trigger between path selection modes
 	 */
@@ -71,7 +96,13 @@ public class SchemeGraph extends GPGraph {
 	}
 
 	public void setActualSize(Dimension d) {
-		super.setPreferredSize(new Dimension((int)(getScale() * d.width), (int) (getScale() * d.height)));
+		int w = (int)(getScale() * d.width);
+		int h = (int) (getScale() * d.height);
+		Dimension d1 = getPreferredSize();
+		if (d1.width != w || d1.height != h) {
+			super.setPreferredSize(new Dimension(w, h));
+			this.updateUI();
+		}
 		actualSize = d;
 	}
 	
@@ -151,8 +182,51 @@ public class SchemeGraph extends GPGraph {
 	}
 
 	public void selectionNotify() {
-		((SchemeMarqueeHandler)getMarqueeHandler()).updateButtonsState(getSelectionCells());
+		if (!make_notifications)
+			return;
+		
+		SchemeMarqueeHandler marqee = (SchemeMarqueeHandler)getMarqueeHandler();
+		marqee.updateButtonsState(getSelectionCells());
+		
+		notify = true;
+		if (getSelectionCount() == 0) {
+			UgoPanel panel = marqee.pane.getCurrentPanel();
+			if (panel instanceof ElementsPanel) {
+				SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
+				if (res.getCellContainer() != null) {
+					Notifier.notify(this, aContext, res.getCellContainer());
+					notify = false;
+					return;
+				}
+			}
+		}
 		Notifier.notify(this, aContext, getSelectionCells());
+		notify = false;
+	}
+	
+	public void addSelectionCell(Object cell) {
+		if (!notify)
+			super.addSelectionCell(cell);
+	}
+
+	public void addSelectionCells(Object[] cells) {
+		if (!notify)
+			super.addSelectionCells(cells);
+	}
+
+	public void setSelectionCell(Object cell) {
+		if (!notify)
+			super.setSelectionCell(cell);
+	}
+	
+	public void setSelectionCells(Object[] cells) {
+		if (!notify)
+			super.setSelectionCells(cells);
+	}
+	
+	public void removeSelectionCell(Object cell) {
+		if (!notify)
+			super.removeSelectionCell(cell);
 	}
 	
 	// select cell notification

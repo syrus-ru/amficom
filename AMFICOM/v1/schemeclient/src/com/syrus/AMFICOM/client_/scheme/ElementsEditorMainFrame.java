@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.7 2005/07/11 12:16:34 bass Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.8 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -17,14 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
-import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -32,13 +24,11 @@ import javax.swing.WindowConstants;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentSaveCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
-import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -55,13 +45,11 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.filterclient.MeasurementConditionWrapper;
-import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/11 12:16:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -102,6 +90,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			}
 		});
 
+		elementsTab = new ElementsTabbedPane(aContext);
 		this.frames = new UIDefaults();
 		
 		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
@@ -196,15 +185,15 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				normalize(treeFrame);
 
 				editorFrame.setSize(3 * w / 5, h);
-				additionalFrame.setSize(w / 5, h / 3);
-				generalFrame.setSize(w/5, h / 3);
-				characteristicsFrame.setSize(w/5, h / 3);
+				additionalFrame.setSize(w / 5, h / 4);
+				generalFrame.setSize(w/5, h/2);
+				characteristicsFrame.setSize(w/5, h / 4);
 				treeFrame.setSize(w / 5, h);
 
 				editorFrame.setLocation(w / 5, 0);
-				additionalFrame.setLocation(4 * w / 5, 2 * h / 3);
+				additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
 				generalFrame.setLocation(4*w/5, 0);
-				characteristicsFrame.setLocation(4*w/5, h/3);
+				characteristicsFrame.setLocation(4*w/5, h/2);
 				treeFrame.setLocation(0, 0);
 			}
 		});
@@ -219,9 +208,9 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
 		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext,
-				elementsTab, null));
+				elementsTab));
 		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(aContext,
-				elementsTab, null));
+				elementsTab));
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
 		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
@@ -281,6 +270,9 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuWindowProps", true);
 		aModel.setEnabled("menuWindowList", true);
 
+		aModel.setEnabled("menuComponentNew", true);
+		aModel.setEnabled("menuComponentSave", true);
+		
 		aModel.fireModelChanged("");
 
 		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
@@ -293,6 +285,8 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		charFrame.setVisible(true);
 		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
 		treeFrame.setVisible(true);
+		
+		new ComponentNewCommand(aContext, elementsTab).execute();
 	}
 
 	public void setSessionClosed() {

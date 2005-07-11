@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 public class SchemeCloseCommand extends AbstractCommand
 {

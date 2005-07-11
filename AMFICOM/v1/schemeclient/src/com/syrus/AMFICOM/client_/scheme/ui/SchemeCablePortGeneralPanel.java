@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.11 2005/07/11 12:16:34 bass Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.12 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,32 +8,48 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/11 12:16:34 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -42,20 +58,21 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	protected SchemeCablePort schemePort;
 	protected SchemeElement parent;
 	
-	JPanel panel0 = new JPanel();
-	JPanel generalPanel = new JPanel();
-	JLabel nameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
-	JTextField nameText = new JTextField();
-	JButton commitButton = new JButton();
-	JLabel typeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox typeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
-	JCheckBox portBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
-	JLabel markLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
-	JTextField markText = new JTextField();
-	JLabel colorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
-	JComboBox colorCombo = new ColorChooserComboBox();
-	JLabel descrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea descrArea = new JTextArea(2,10);
+	JPanel pnPanel0 = new JPanel();
+	JPanel pnGeneralPanel = new JPanel();
+	JPanel pnPortPanel = new JPanel();
+	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
+	JTextField tfNameText = new JTextField();
+	JButton btCommitBut = new JButton();
+	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
+	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	JLabel lbPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
+	JLabel lbMarkLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
+	JTextField tfMarkText = new JTextField();
+	JLabel lbColorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
+	JComboBox cmbColorCombo = new ColorChooserComboBox();
+	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
+	JTextArea taDescrArea = new JTextArea(2,10);
 	
 	protected SchemeCablePortGeneralPanel(SchemeCablePort schemePort) {
 		this();
@@ -76,195 +93,191 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	private void jbInit() throws Exception {
-		GridBagLayout gbpanel0 = new GridBagLayout();
-		GridBagConstraints gbcpanel0 = new GridBagConstraints();
-		panel0.setLayout(gbpanel0);
+		GridBagLayout gbPanel0 = new GridBagLayout();
+		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		pnPanel0.setLayout( gbPanel0 );
 
-		GridBagLayout gbgeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcgeneralPanel = new GridBagConstraints();
-		generalPanel.setLayout(gbgeneralPanel);
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 8;
+		gbcPanel0.gridwidth = 3;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 0;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
+		pnPanel0.add( lbDescrLabel );
 
-		nameLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(nameLabel, gbcgeneralPanel);
-		generalPanel.add(nameLabel);
+		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		gbcPanel0.gridx = 1;
+		gbcPanel0.gridy = 9;
+		gbcPanel0.gridwidth = 9;
+		gbcPanel0.gridheight = 2;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
+		pnPanel0.add( scpDescrArea );
 
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(nameText, gbcgeneralPanel);
-		generalPanel.add(nameText);
+		GridBagLayout gbGeneralPanel = new GridBagLayout();
+		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		pnGeneralPanel.setLayout( gbGeneralPanel );
 
-		gbcgeneralPanel.gridx = 7;
-		gbcgeneralPanel.gridy = 0;
-		gbcgeneralPanel.gridwidth = 1;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(commitButton, gbcgeneralPanel);
-		generalPanel.add(commitButton);
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbNameLabel );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 7;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
+		pnGeneralPanel.add( tfNameText );
+
+		gbcGeneralPanel.gridx = 9;
+		gbcGeneralPanel.gridy = 0;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( btCommitBut, gbcGeneralPanel );
+		pnGeneralPanel.add( btCommitBut );
+
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 2;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( lbTypeLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbTypeLabel );
+
+		gbcGeneralPanel.gridx = 2;
+		gbcGeneralPanel.gridy = 1;
+		gbcGeneralPanel.gridwidth = 8;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( cmbTypeCombo, gbcGeneralPanel );
+		pnGeneralPanel.add( cmbTypeCombo );
+
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 2;
+		gbcGeneralPanel.gridwidth = 9;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( lbPortLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbPortLabel );
+
+		pnPortPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		GridBagLayout gbPortPanel = new GridBagLayout();
+		GridBagConstraints gbcPortPanel = new GridBagConstraints();
+		pnPortPanel.setLayout( gbPortPanel );
+
+		gbcPortPanel.gridx = 0;
+		gbcPortPanel.gridy = 0;
+		gbcPortPanel.gridwidth = 2;
+		gbcPortPanel.gridheight = 1;
+		gbcPortPanel.fill = GridBagConstraints.BOTH;
+		gbcPortPanel.weightx = 0;
+		gbcPortPanel.weighty = 0;
+		gbcPortPanel.anchor = GridBagConstraints.NORTH;
+		gbPortPanel.setConstraints( lbMarkLabel, gbcPortPanel );
+		pnPortPanel.add( lbMarkLabel );
+
+		gbcPortPanel.gridx = 2;
+		gbcPortPanel.gridy = 0;
+		gbcPortPanel.gridwidth = 8;
+		gbcPortPanel.gridheight = 1;
+		gbcPortPanel.fill = GridBagConstraints.BOTH;
+		gbcPortPanel.weightx = 1;
+		gbcPortPanel.weighty = 0;
+		gbcPortPanel.anchor = GridBagConstraints.NORTH;
+		gbPortPanel.setConstraints( tfMarkText, gbcPortPanel );
+		pnPortPanel.add( tfMarkText );
+
+		gbcPortPanel.gridx = 0;
+		gbcPortPanel.gridy = 1;
+		gbcPortPanel.gridwidth = 2;
+		gbcPortPanel.gridheight = 1;
+		gbcPortPanel.fill = GridBagConstraints.BOTH;
+		gbcPortPanel.weightx = 0;
+		gbcPortPanel.weighty = 0;
+		gbcPortPanel.anchor = GridBagConstraints.NORTH;
+		gbPortPanel.setConstraints( lbColorLabel, gbcPortPanel );
+		pnPortPanel.add( lbColorLabel );
+
+		gbcPortPanel.gridx = 2;
+		gbcPortPanel.gridy = 1;
+		gbcPortPanel.gridwidth = 8;
+		gbcPortPanel.gridheight = 1;
+		gbcPortPanel.fill = GridBagConstraints.BOTH;
+		gbcPortPanel.weightx = 1;
+		gbcPortPanel.weighty = 0;
+		gbcPortPanel.anchor = GridBagConstraints.NORTH;
+		gbPortPanel.setConstraints( cmbColorCombo, gbcPortPanel );
+		pnPortPanel.add( cmbColorCombo );
+
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 3;
+		gbcGeneralPanel.gridwidth = 10;
+		gbcGeneralPanel.gridheight = 5;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( pnPortPanel, gbcGeneralPanel );
+		pnGeneralPanel.add( pnPortPanel );
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 11;
+		gbcPanel0.gridheight = 8;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
+		pnPanel0.add( pnGeneralPanel );
 		
-		typeLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(typeLabel, gbcgeneralPanel);
-		generalPanel.add(typeLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 1;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(typeCombo, gbcgeneralPanel);
-		generalPanel.add(typeCombo);
-
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 2;
-		gbcgeneralPanel.gridwidth = 3;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbgeneralPanel.setConstraints(portBox, gbcgeneralPanel);
-		generalPanel.add(portBox);
-
-		markLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 3;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(markLabel, gbcgeneralPanel);
-		generalPanel.add(markLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 3;
-		gbcgeneralPanel.gridwidth = 6;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(markText, gbcgeneralPanel);
-		generalPanel.add(markText);
-
-		colorLabel.setFocusable(false);
-		gbcgeneralPanel.gridx = 0;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 2;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 0;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,0,0,1);
-		gbgeneralPanel.setConstraints(colorLabel, gbcgeneralPanel);
-		generalPanel.add(colorLabel);
-
-		gbcgeneralPanel.gridx = 2;
-		gbcgeneralPanel.gridy = 4;
-		gbcgeneralPanel.gridwidth = 5;
-		gbcgeneralPanel.gridheight = 1;
-		gbcgeneralPanel.fill = GridBagConstraints.BOTH;
-		gbcgeneralPanel.weightx = 1;
-		gbcgeneralPanel.weighty = 0;
-		gbcgeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcgeneralPanel.insets = new Insets(0,1,0,0);
-		gbgeneralPanel.setConstraints(colorCombo, gbcgeneralPanel);
-		generalPanel.add(colorCombo);
-
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 0;
-		gbcpanel0.gridwidth = 8;
-		gbcpanel0.gridheight = 8;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(generalPanel, gbcpanel0);
-		panel0.add(generalPanel);
-
-		descrLabel.setFocusable(false);
-		gbcpanel0.gridx = 0;
-		gbcpanel0.gridy = 8;
-		gbcpanel0.gridwidth = 3;
-		gbcpanel0.gridheight = 1;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 0;
-		gbcpanel0.weighty = 0;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(descrLabel, gbcpanel0);
-		panel0.add(descrLabel);
-
-		JScrollPane scpdescrArea = new JScrollPane(descrArea);
-		gbcpanel0.gridx = 1;
-		gbcpanel0.gridy = 9;
-		gbcpanel0.gridwidth = 7;
-		gbcpanel0.gridheight = 2;
-		gbcpanel0.fill = GridBagConstraints.BOTH;
-		gbcpanel0.weightx = 1;
-		gbcpanel0.weighty = 1;
-		gbcpanel0.anchor = GridBagConstraints.NORTH;
-		gbpanel0.setConstraints(scpdescrArea, gbcpanel0);
-		panel0.add(scpdescrArea);
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		colorCombo.setRenderer(ColorListCellRenderer.getInstance());
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		portBox.addChangeListener(new ChangeListener() {
-			public void stateChanged(ChangeEvent e) {
-				setPortEnabled(portBox.isSelected());
-			}
-		});
+		addToUndoableListener(tfNameText);
+		addToUndoableListener(cmbTypeCombo);
+		addToUndoableListener(lbPortLabel);
+		addToUndoableListener(tfMarkText);
+		addToUndoableListener(cmbColorCombo);
+		addToUndoableListener(taDescrArea);
 		
-		generalPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-		descrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		
-		addToUndoableListener(nameText);
-		addToUndoableListener(typeCombo);
-		addToUndoableListener(portBox);
-		addToUndoableListener(markText);
-		addToUndoableListener(colorCombo);
-		addToUndoableListener(descrArea);
-		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
-		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-		this.commitButton.setFocusPainted(false);
-		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-		this.commitButton.addActionListener(new ActionListener() {
+		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.btCommitBut.setFocusPainted(false);
+		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.btCommitBut.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				commitChanges();
 			}
@@ -272,20 +285,20 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	void setPortEnabled(boolean b) {
-		markLabel.setEnabled(b);
-		markText.setEnabled(b);
-		colorLabel.setEnabled(b);
-		colorCombo.setEnabled(b);
+		lbMarkLabel.setEnabled(b);
+		tfMarkText.setEnabled(b);
+		lbColorLabel.setEnabled(b);
+		cmbColorCombo.setEnabled(b);
 	}
 		
 	public JComponent getGUI() {
-		return panel0;
+		return pnPanel0;
 	}
 
 	public void setObject(Object or) {
 		this.schemePort = (SchemeCablePort)or;
 		Port port = null;
-		typeCombo.removeAllItems();
+		cmbTypeCombo.removeAllItems();
 		
 		if (schemePort != null) {
 			try {
@@ -295,19 +308,20 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				parent = null;
 			}
+			// FIXME change EquivalentCondition for TypicalCondition 
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			try {
-				typeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			
-			this.nameText.setText(schemePort.getName());
-			this.descrArea.setText(schemePort.getDescription());
-			this.typeCombo.setSelectedItem(schemePort.getPortType());
+			this.tfNameText.setText(schemePort.getName());
+			this.taDescrArea.setText(schemePort.getDescription());
+			this.cmbTypeCombo.setSelectedItem(schemePort.getPortType());
 		}
 		if (port != null) {
-			portBox.setSelected(true);
+			setPortEnabled(true);
 			// TODO add mark and color fields to Port
 //			markText.setText(port.getMark());
 //			Color color = new Color(port.getColor());
@@ -315,12 +329,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //				colorCombo.addItem(color);
 //			colorCombo.setSelectedItem(color);
 		} else {
-			portBox.setSelected(false);
 			setPortEnabled(false);
-			markText.setText(SchemeResourceKeys.EMPTY);
-			
-			if (parent == null || parent.getEquipment() == null)
-				portBox.setEnabled(false);
+			tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 
@@ -329,40 +339,19 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		if (schemePort != null && MiscUtil.validName(nameText.getText())) {
-			schemePort.setName(this.nameText.getText());
-			schemePort.setDescription(this.descrArea.getText());
-			schemePort.setPortType((PortType)this.typeCombo.getSelectedItem());
+		if (schemePort != null && MiscUtil.validName(tfNameText.getText())) {
+			schemePort.setName(this.tfNameText.getText());
+			schemePort.setDescription(this.taDescrArea.getText());
+			schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
 			
 			Port port = schemePort.getPort();
-			if (portBox.isSelected()) {
-				if (port == null) {
-					try {
-						port = SchemeObjectsFactory.createPort(PortSort.PORT_SORT_CABLE_PORT);
-						schemePort.setPort(port);
-					} catch (CreateObjectException e) {
-						Log.errorException(e);
-					}
-				}
-				if (port != null) {
-					port.setDescription(schemePort.getDescription());
+			if (port != null) {
+				port.setDescription(schemePort.getDescription());
 					// TODO add mark and color fields to Port
 //					port.setMark(markText.getText());
 //					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
-				}
-			} else if (port != null) {
-				StorableObjectPool.delete(port.getId());
-				schemePort.setPort(null);
 			}
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemePort, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
-	
-	boolean isConatainsColor(Color color) {
-		for (int i = 0; i < colorCombo.getItemCount(); i++)
-			if (((Color)colorCombo.getItemAt(i)).equals(color))
-				return true;
-		return false;
-	}
 }
-

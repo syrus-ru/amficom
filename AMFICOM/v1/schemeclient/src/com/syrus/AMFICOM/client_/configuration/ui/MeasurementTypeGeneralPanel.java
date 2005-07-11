@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.14 2005/06/23 12:58:11 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.15 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,32 +8,54 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.tree.*;
+import com.syrus.AMFICOM.client.UI.tree.CheckableNode;
+import com.syrus.AMFICOM.client.UI.tree.CheckableTreeUI;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/06/23 12:58:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 
@@ -207,7 +229,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(trPortTypesTree);
 		addToUndoableListener(trParametersTree);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -286,49 +308,55 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 			if (type == null) {
 				try {
 					type = SchemeObjectsFactory.createMeasurementType(tfNameText.getText());
+					apply();
 					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, type, MeasurementTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.MEASUREMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
+			} else {
+				apply();
 			}
-			
-			if (!type.getDescription().equals(tfNameText.getText()))
-				type.setDescription(tfNameText.getText());
-
-			Set inPTypeIds = new HashSet();
-			Set outPTypeIds = new HashSet();
-			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
-				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked())
-					inPTypeIds.add(((ParameterType)node.getObject()).getId());
-				}
-			if (!type.getInParameterTypeIds().equals(inPTypeIds))
-				type.setInParameterTypeIds(inPTypeIds);
-			for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
-				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked())
-					outPTypeIds.add(((ParameterType)node.getObject()).getId());
-			}
-			if (!type.getOutParameterTypeIds().equals(outPTypeIds))
-				type.setOutParameterTypeIds(outPTypeIds);
-
-			Set mPTypeIds = new HashSet();
-			for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
-				CheckableNode node = (CheckableNode) it.next();
-				if (node.isChecked())
-					mPTypeIds.add(((MeasurementPortType)node.getObject()).getId());
-			}
-			if (!type.getMeasurementPortTypeIds().equals(mPTypeIds))
-				type.setMeasurementPortTypeIds(mPTypeIds);
-			
-			try {
-				StorableObjectPool.flush(this.type.getId(), true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 		}
+	}
+	
+	private void apply() {
+		if (!type.getDescription().equals(tfNameText.getText()))
+			type.setDescription(tfNameText.getText());
+
+		Set inPTypeIds = new HashSet();
+		Set outPTypeIds = new HashSet();
+		for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
+			CheckableNode node = (CheckableNode) it.next();
+			if (node.isChecked())
+				inPTypeIds.add(((ParameterType)node.getObject()).getId());
+			}
+		if (!type.getInParameterTypeIds().equals(inPTypeIds))
+			type.setInParameterTypeIds(inPTypeIds);
+		for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
+			CheckableNode node = (CheckableNode) it.next();
+			if (node.isChecked())
+				outPTypeIds.add(((ParameterType)node.getObject()).getId());
+		}
+		if (!type.getOutParameterTypeIds().equals(outPTypeIds))
+			type.setOutParameterTypeIds(outPTypeIds);
+
+		Set mPTypeIds = new HashSet();
+		for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
+			CheckableNode node = (CheckableNode) it.next();
+			if (node.isChecked())
+				mPTypeIds.add(((MeasurementPortType)node.getObject()).getId());
+		}
+		if (!type.getMeasurementPortTypeIds().equals(mPTypeIds))
+			type.setMeasurementPortTypeIds(mPTypeIds);
+		
+		try {
+			StorableObjectPool.flush(this.type.getId(), true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 	}
 	
 	List getParameterTypeNodes(String way) {

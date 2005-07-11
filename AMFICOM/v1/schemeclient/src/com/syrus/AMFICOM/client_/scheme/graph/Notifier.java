@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.4 2005/07/11 12:16:35 bass Exp $
+ * $Id: Notifier.java,v 1.5 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,18 +10,37 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.ui.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeDevicePropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeLinkPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemePortPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeDevice;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:16:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -66,12 +85,11 @@ public class Notifier {
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeProtoElementPropertiesManager.getInstance(aContext),
 					ObjectSelectedEvent.SCHEME_PROTOELEMENT));
-		
-		//TODO write visual managers
-/*		
 		else if (object instanceof Scheme)
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
-					SchemePropertiesManager.getInstance(), ObjectSelectedEvent.SCHEME));
+					SchemePropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME));
+//		TODO write visual managers
+		/*
 		else if (object instanceof SchemePath)
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePathPropertiesManager.getInstance(),
@@ -95,27 +113,21 @@ public class Notifier {
 			
 			if (object instanceof DeviceGroup) {
 				DeviceGroup dev = (DeviceGroup)object;
-				if (dev.getScheme() != null) {
-					selectedObject = dev.getScheme();
-					selectedType = ObjectSelectedEvent.SCHEME;
-//					manager = SchemePropertiesManager.getInstance();
-				} 
-				else if (dev.getSchemeElementId() != null) {
-					selectedObject = dev.getSchemeElement();
-					selectedType = ObjectSelectedEvent.SCHEME_ELEMENT;
-					manager = SchemeElementPropertiesManager.getInstance(aContext);
-				} 
-				else if (dev.getProtoElementId() != null) {
+				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
 					selectedObject = dev.getProtoElement();
 					selectedType = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
 					manager = SchemeProtoElementPropertiesManager.getInstance(aContext);
-				}
-			} else if (object instanceof DeviceCell) {
-				DeviceCell dev = (DeviceCell)object;
-				if (dev.getSchemeDeviceId() != null) {
-					selectedObject = dev.getSchemeDevice();
-					selectedType = ObjectSelectedEvent.SCHEME_DEVICE;
-					manager = SchemeDevicePropertiesManager.getInstance(aContext);
+				} else if (dev.getType() == DeviceGroup.SCHEME_ELEMENT) {
+					SchemeElement el = dev.getSchemeElement();
+					if (el.getScheme() != null) {
+						selectedObject = dev.getScheme();
+						selectedType = ObjectSelectedEvent.SCHEME;
+						manager = SchemePropertiesManager.getInstance(aContext);	
+					} else {
+						selectedObject = dev.getSchemeElement();
+						selectedType = ObjectSelectedEvent.SCHEME_ELEMENT;
+						manager = SchemeElementPropertiesManager.getInstance(aContext);
+					}
 				}
 			} else if (object instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink)object;
@@ -145,9 +157,16 @@ public class Notifier {
 					selectedType = ObjectSelectedEvent.SCHEME_CABLEPORT;
 					manager = SchemeCablePortPropertiesManager.getInstance(aContext);
 				}
+			} else if (object instanceof DeviceCell) {
+				DeviceCell dev = (DeviceCell)object;
+				if (dev.getSchemeDeviceId() != null) {
+					selectedObject = dev.getSchemeDevice();
+					selectedType = ObjectSelectedEvent.SCHEME_DEVICE;
+					manager = SchemeDevicePropertiesManager.getInstance(aContext);
+				}
 			}
 			if (selectedType == 0) {
-				Log.debugMessage("unsupported object selection: " + object, Level.WARNING); //$NON-NLS-1$
+				Log.debugMessage(Notifier.class.getSimpleName() + "| unsupported object selection: " + object, Level.WARNING); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, null, null,
 						ObjectSelectedEvent.ALL_DESELECTED));
 			} else {

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkView.java,v 1.1 2005/04/05 14:07:54 stas Exp $
+ * $Id: LinkView.java,v 1.2 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,23 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Map;
 
 import com.jgraph.JGraph;
-import com.jgraph.graph.*;
+import com.jgraph.graph.CellHandle;
+import com.jgraph.graph.CellMapper;
+import com.jgraph.graph.EdgeView;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphContext;
+import com.jgraph.graph.Port;
+import com.jgraph.graph.PortView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/05 14:07:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 

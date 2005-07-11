@@ -1,5 +1,5 @@
 /*
- * $Id: UngroupAction.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: UngroupAction.java,v 1.3 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import java.util.ArrayList;
 import javax.swing.AbstractAction;
 
 import com.jgraph.graph.Port;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -45,10 +46,10 @@ public class UngroupAction extends AbstractAction {
 						if (!(child instanceof Port))
 							children.add(child);
 					}
-					if (cells[i] instanceof DeviceGroup) {
-						DeviceGroup group = (DeviceGroup) cells[i];
-						pane.getCurrentPanel().getSchemeResource().setSchemeElement(group.getSchemeElement());
-					}
+//					if (cells[i] instanceof DeviceGroup) {
+//						DeviceGroup group = (DeviceGroup) cells[i];
+//						pane.getCurrentPanel().getSchemeResource().setSchemeElement(group.getSchemeElement());
+//					}
 				}
 			}
 			graph.getModel().remove(groups.toArray());

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.3 2005/06/09 10:53:52 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import javax.swing.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/09 10:53:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 

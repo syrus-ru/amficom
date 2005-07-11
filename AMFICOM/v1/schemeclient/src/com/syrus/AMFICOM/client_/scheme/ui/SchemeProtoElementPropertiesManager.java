@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementPropertiesManager.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeProtoElementPropertiesManager.java,v 1.3 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,20 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.client.UI.*;
+import javax.swing.JComponent;
+
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoToolBar;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 
@@ -24,7 +29,7 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	private static SchemeProtoElementPropertiesManager instance;
 	private SchemeProtoElementGeneralPanel generalPanel;
 	private SchemeProtoElementCharacteristicsPanel charPanel;
-	private SchemeProtoElementUgoPanel ugoPanel;
+	private SchemeCellPanel ugoPanel;
 	
 	private SchemeProtoElementPropertiesManager() {
 		// empty
@@ -45,7 +50,7 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 			charPanel = new SchemeProtoElementCharacteristicsPanel();
 		charPanel.setContext(aContext);
 		if (ugoPanel == null)
-			ugoPanel = new SchemeProtoElementUgoPanel();
+			ugoPanel = new SchemeCellPanel();
 		ugoPanel.setContext(aContext);
 	}
 	

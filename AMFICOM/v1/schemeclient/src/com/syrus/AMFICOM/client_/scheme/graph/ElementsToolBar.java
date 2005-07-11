@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.6 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.7 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,15 +14,25 @@ import java.util.Map;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JToolBar;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateBlockPortAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.PortToolAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.UngroupAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -36,7 +46,7 @@ public class ElementsToolBar extends UgoToolBar {
 		Constants.CREATE_UGO, Constants.GROUP,
 		Constants.UNGROUP, Constants.SEPARATOR, Constants.DELETE,
 		Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
-		Constants.ZOOM_ACTUAL
+		Constants.ZOOM_ACTUAL, Constants.HORIZONTAL_GLUE
 	};
 	
 	protected String[] getButtons() {
@@ -49,25 +59,12 @@ public class ElementsToolBar extends UgoToolBar {
 	}
 
 	protected Map createGraphButtons() {
-		Map bttns = new HashMap();
+		Map bttns = super.createGraphButtons();
 
 		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
 
-		bttns.put(Constants.MARQUEE, createToolButton(mh.s, btn_size, null,
-				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
-		bttns.put("s_cell", mh.s_cell);
 		bttns.put(Constants.DEVICE, createToolButton(mh.dev, btn_size, null,
 				LangModelGraph.getString(Constants.DEVICE), Constants.ICON_DEVICE, null, true));
-		bttns.put(Constants.RECTANGLE, createToolButton(mh.r, btn_size, null,
-				LangModelGraph.getString(Constants.RECTANGLE), Constants.ICON_RECTANGLE, null, true));
-		bttns.put(Constants.ELLIPSE, createToolButton(mh.c, btn_size, null,
-				LangModelGraph.getString(Constants.ELLIPSE), Constants.ICON_ELLIPSE, null, true));
-		bttns.put(Constants.TEXT, createToolButton(mh.t, btn_size, null,
-				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
-		bttns.put(Constants.ICON, createToolButton(mh.i, btn_size, null,
-				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
-		bttns.put(Constants.LINE, createToolButton(mh.l, btn_size, null,
-				LangModelGraph.getString(Constants.LINE), Constants.ICON_LINE, null, true));
 		bttns.put(Constants.CABLE, createToolButton(mh.ce, btn_size, null,
 				LangModelGraph.getString(Constants.CABLE), Constants.ICON_CABLE, null, true));
 		bttns.put(Constants.LINK, createToolButton(mh.e, btn_size, null,
@@ -80,7 +77,7 @@ public class ElementsToolBar extends UgoToolBar {
 				LangModelGraph.getString(Constants.CABLE_PORT), Constants.ICON_CABLE_PORT,
 				new PortToolAction(), false));
 		bttns.put(Constants.GROUP, createToolButton(mh.gr, btn_size, null,
-				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane),
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane, DeviceGroup.PROTO_ELEMENT),
 				false));
 		bttns.put(Constants.UNGROUP, createToolButton(mh.ugr, btn_size, null,
 				LangModelGraph.getString(Constants.UNGROUP), Constants.ICON_UNGROUP,
@@ -99,15 +96,14 @@ public class ElementsToolBar extends UgoToolBar {
 				LangModelGraph.getString(Constants.ZOOM_ACTUAL), Constants.ICON_ZOOM_NORMAL,
 				new ZoomActualAction(pane), true));
 		bttns.put(Constants.DELETE, createToolButton(mh.del, btn_size, null,
-				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(pane,
-						aContext), false));
+				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(pane), false));
 		// bttns.put(Constants.hierarchyUpKey,
 		// createToolButton(mh.hup, btn_size, null, "вверх",
 		// new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hand.gif")),
 		// new HierarchyUpAction (getGraph()), true));
 		bttns.put(Constants.CREATE_UGO, createToolButton(mh.ugo,
 				btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane, aContext), false));
+				new CreateTopLevelSchemeAction(pane), false));
 		bttns.put(Constants.BLOCK_PORT, createToolButton(mh.bp, btn_size, null,
 				LangModelGraph.getString(Constants.BLOCK_PORT), Constants.ICON_HIERARCHY_PORT,
 				new CreateBlockPortAction(pane), false));

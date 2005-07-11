@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.5 2005/06/17 11:36:21 bass Exp $
+ * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.6 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 11:36:21 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 

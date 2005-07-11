@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.5 2005/06/22 10:16:06 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.6 2005/07/11 12:31:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,22 +26,23 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.Visualizable;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:40 $
  * @module schemeclient_v1
  */
 
@@ -98,7 +99,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 				Item node = findNode((Item)model.getRoot(), obj, false);
 				if (node != null) {
 					model.setObjectNameChanged(node, null, null);
-//					this.treeUI.getTree().updateUI();
+					this.treeUI.getTree().updateUI();
 				}
 			}
 		}
@@ -115,8 +116,12 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 		Object object = node.getObject();
 		
 		long type;
-		if (object instanceof PortType)
-			type = ObjectSelectedEvent.PORT_TYPE;
+		if (object instanceof PortType) {
+			if (((PortType)object).getKind().equals(PortTypeKind.PORT_KIND_SIMPLE))
+				type = ObjectSelectedEvent.PORT_TYPE;
+			else
+				type = ObjectSelectedEvent.CABLEPORT_TYPE;
+		}
 		else if (object instanceof MeasurementPortType)
 			type = ObjectSelectedEvent.MEASUREMENTPORT_TYPE;
 		else if (object instanceof MeasurementType)
@@ -127,7 +132,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 			type = ObjectSelectedEvent.CABLELINK_TYPE;
 		else if (object instanceof EquipmentType)
 			type = ObjectSelectedEvent.EQUIPMENT_TYPE;
-		else if (object instanceof String) {
+		else if (object instanceof String || object instanceof Kind) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
 				object = null; 

@@ -1,5 +1,5 @@
 /*
- * $Id: SetBackgroundSizeAction.java,v 1.3 2005/05/26 07:40:52 stas Exp $
+ * $Id: SetBackgroundSizeAction.java,v 1.4 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,38 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemePanel;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -36,17 +52,21 @@ public class SetBackgroundSizeAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
-		if (scheme != null) {
-			GraphSizeFrame f = new GraphSizeFrame();
-			if (f.init(scheme)) {
-				scheme.setWidth(f.newsize.width);
-				scheme.setHeight(f.newsize.height);
-				SchemeGraph graph = pane.getGraph();
-				pane.getContext().getDispatcher().firePropertyChange(
-						new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
-				graph.setActualSize(f.newsize);
-				graph.updateUI();
+		UgoPanel p1 = pane.getCurrentPanel();
+		if (p1 instanceof SchemePanel) {
+			SchemePanel p2 = (SchemePanel)p1; 
+			if (p2.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+				Scheme scheme = p2.getSchemeResource().getScheme();
+				GraphSizeFrame f = new GraphSizeFrame();
+				if (f.init(scheme)) {
+					scheme.setWidth(f.newsize.width);
+					scheme.setHeight(f.newsize.height);
+					SchemeGraph graph = pane.getGraph();
+					pane.getContext().getDispatcher().firePropertyChange(
+							new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
+					graph.setActualSize(f.newsize);
+					graph.updateUI();
+				}
 			}
 		}
 	}

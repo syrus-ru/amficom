@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.6 2005/06/22 10:16:06 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.7 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,30 +10,34 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Point;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/06/22 10:16:06 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
-public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
+public class UgoTabbedPane extends JPanel {
 	protected ApplicationContext aContext;
 	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
@@ -52,15 +56,8 @@ public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 	}
 
 	public void setContext(ApplicationContext aContext) {
-		if (this.aContext != null) {
-			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
-		}
-		if (aContext != null) {
-			this.aContext = aContext;
-			this.aContext.getDispatcher().addPropertyChangeListener(SchemeEvent.TYPE, this);
-			for (Iterator it = getAllPanels().iterator(); it.hasNext();)
-				((UgoPanel)it.next()).setContext(aContext);
-		}
+		this.aContext = aContext;
+		panel.getGraph().setContext(aContext);
 	}
 	
 	public ApplicationContext getContext() {
@@ -70,6 +67,7 @@ public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 		marqueeHandler =  new SchemeMarqueeHandler(this);
 		setLayout(new BorderLayout());
 		add(createPanel(), BorderLayout.CENTER);
+		add(createToolBar(), BorderLayout.NORTH);
 	}
 	
 	protected JComponent createToolBar() {
@@ -139,92 +137,53 @@ public class UgoTabbedPane extends JPanel implements PropertyChangeListener {
 		removePanel(panel);
 	}
 
-	public void propertyChange(PropertyChangeEvent ae) {
-		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
-			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
-				Scheme scheme = (Scheme) see.getObject();
-				openScheme(scheme);
-			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
-				SchemeElement schemeElement = (SchemeElement) see.getObject();
-				openSchemeElement(schemeElement);
-			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
-				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
-				openSchemeProtoElement(proto);
+	protected void fixImages(SchemeGraph graph) {
+		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
+		for (int i = 0; i < groups.length; i++) {
+			Identifier id = groups[i].getElementId();
+			try {
+				StorableObject object = StorableObjectPool.getStorableObject(id, false);
+				switch (groups[i].getType()) {
+				case DeviceGroup.SCHEME_ELEMENT:
+					SchemeElement se = (SchemeElement)object;
+					DeviceCell cell = GraphActions.getMainCell(groups[i]);
+					if (cell != null) {
+						GraphActions.setText(graph, cell, se.getLabel());
+						ImageIcon icon = null;
+						if (se.getSymbol() != null)
+							icon = new ImageIcon(se.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+					break;
+				case DeviceGroup.PROTO_ELEMENT:
+					SchemeProtoElement proto = (SchemeProtoElement)object;
+					cell = GraphActions.getMainCell(groups[i]);
+					if (cell != null) {
+						GraphActions.setText(graph, cell, proto.getLabel());
+						ImageIcon icon = null;
+						if (proto.getSymbol() != null)
+							icon = new ImageIcon(proto.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+					break;
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}
 
-	public void openScheme(Scheme sch) {
-		UgoPanel p = getCurrentPanel();
-		p.getSchemeResource().setScheme(sch);
-		p.getSchemeResource().setSchemeElement(null);
-		GraphActions.clearGraph(p.getGraph());
-//		if (sch.getUgoCell() != null)
-//			p.insertCell(sch.getUgoCell().getData(), new Point(0, 0), true);
-	}
-	
-	public void openSchemeElement(SchemeElement se) {
-		UgoPanel p = getCurrentPanel();
-		p.getSchemeResource().setScheme(null);
-		p.getSchemeResource().setSchemeElement(se);
-		GraphActions.clearGraph(p.getGraph());
-		if (se.getUgoCell() != null)
-			p.insertCell(se.getUgoCell().getData(), new Point(0, 0), true);
-	}
-
-	public void openSchemeProtoElement(SchemeProtoElement proto) {
-		UgoPanel p = getCurrentPanel();
-		p.getSchemeResource().setSchemeProtoElement(proto);
-		p.getSchemeResource().setSchemeElement(null);
-		GraphActions.clearGraph(p.getGraph());
-		if (proto.getUgoCell() != null)
-			p.insertCell(proto.getUgoCell().getData(), new Point(0, 0), true);
-	}
-	/*
-	public void removeScheme(Scheme sch) {
-		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel)it.next();
-			SchemeResource res = p.getSchemeResource();
-			if (sch.equals(res.getScheme())) {
-				res.setScheme(null);
-				SchemeGraph graph = p.getGraph();
-				GraphActions.clearGraph(graph);
-				graph.setGraphChanged(false);
-			}
+	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
+		SchemeGraph graph = getGraph();
+		GraphActions.clearGraph(graph);
+		if (schemeCellContainer.getUgoCell() != null) {
+			getCurrentPanel().insertCell(schemeCellContainer.getUgoCell().getData(), new Point(0, 0), true);
+			fixImages(graph);
 		}
+		graph.setGraphChanged(false);
 	}
-	
-	public void removeSchemeElement(SchemeElement se) {
-		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel)it.next();
-			SchemeResource res = p.getSchemeResource();
-			if (se.equals(res.getSchemeElement())) {
-				res.setSchemeElement(null);
-				SchemeGraph graph = p.getGraph();
-				GraphActions.clearGraph(graph);
-				graph.setGraphChanged(false);
-			}
-		}
-	}
-	
-	public void removeSchemeProtoElement(SchemeProtoElement proto) {
-		for (Iterator it = getAllPanels().iterator(); it.hasNext();) {
-			UgoPanel p = (UgoPanel)it.next();
-			SchemeResource res = p.getSchemeResource();
-			if (proto.equals(res.getSchemeProtoElement())) {
-				res.setSchemeProtoElement(null);
-				SchemeGraph graph = p.getGraph();
-				GraphActions.clearGraph(graph);
-				graph.setGraphChanged(false);
-			}
-		}
-	}*/
 	
 	public void setGraphChanged(boolean b) {
 		getGraph().setGraphChanged(b);
 	}
 }
-
-
-

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.16 2005/06/23 12:58:11 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.17 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,34 +8,55 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.UI.tree.CheckableNode;
+import com.syrus.AMFICOM.client.UI.tree.CheckableTreeUI;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
-import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.tree.*;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/06/23 12:58:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 
@@ -199,7 +220,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		addToUndoableListener(taDescriptionArea);
 		addToUndoableListener(trTestTypeTree);
 		
-		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_ADD_CHARACTERISTIC));
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
@@ -226,10 +247,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			this.taDescriptionArea.setText(type.getDescription());
 
 			try {
-				LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(),
-						ObjectEntities.MEASUREMENT_TYPE_CODE);
-				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(
-						condition, true);
+				LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(), ObjectEntities.MEASUREMENT_TYPE_CODE);
+				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				
 				for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
 					CheckableNode node = (CheckableNode)it.next();
@@ -237,8 +256,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 				}
 				trTestTypeTree.updateUI();
 			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Log.errorException(e);
 			}
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
@@ -260,44 +278,50 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			if (type == null) {
 				try {
 					type = SchemeObjectsFactory.createMeasurementPortType(tfNameText.getText());
+					apply();
 					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
+					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, type, MeasurementPortTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.MEASUREMENTPORT_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
+			} else {
+				apply();
 			}
+		}
+	}
+	
+	private void apply() {
+		this.type.setName(tfNameText.getText());
+		this.type.setDescription(this.taDescriptionArea.getText());
 
-			this.type.setName(tfNameText.getText());
-			this.type.setDescription(this.taDescriptionArea.getText());
-
-			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
-				CheckableNode node = (CheckableNode)it.next();
-				MeasurementType mtype = (MeasurementType) node.getObject();
-				if (node.isChecked()) {
-					Collection pTypes = mtype.getMeasurementPortTypeIds();
-					if (!pTypes.contains(type.getId())) {
-						Set newPTypes = new HashSet(pTypes);
-						newPTypes.add(type.getId());
-						mtype.setMeasurementPortTypeIds(newPTypes);
-					}
-				} else {
-					Collection pTypes = mtype.getMeasurementPortTypeIds();
-					// TODO add/remove MeasurementPortType to/from MeasurementType
-					if (pTypes.contains(type.getId())) {
-						Set newPTypes = new HashSet(pTypes);
-						newPTypes.remove(type.getId());
-						mtype.setMeasurementPortTypeIds(newPTypes);
-					}
+		for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+			CheckableNode node = (CheckableNode)it.next();
+			MeasurementType mtype = (MeasurementType) node.getObject();
+			if (node.isChecked()) {
+				Collection pTypes = mtype.getMeasurementPortTypeIds();
+				if (!pTypes.contains(type.getId())) {
+					Set newPTypes = new HashSet(pTypes);
+					newPTypes.add(type.getId());
+					mtype.setMeasurementPortTypeIds(newPTypes);
+				}
+			} else {
+				Collection pTypes = mtype.getMeasurementPortTypeIds();
+				// TODO add/remove MeasurementPortType to/from MeasurementType
+				if (pTypes.contains(type.getId())) {
+					Set newPTypes = new HashSet(pTypes);
+					newPTypes.remove(type.getId());
+					mtype.setMeasurementPortTypeIds(newPTypes);
 				}
 			}
-			try {
-				StorableObjectPool.flush(this.type.getId(), true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 		}
+		try {
+			StorableObjectPool.flush(this.type.getId(), true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
 	}
 	
 	Item createRoot() {

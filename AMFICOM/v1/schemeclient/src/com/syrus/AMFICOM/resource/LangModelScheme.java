@@ -1,5 +1,5 @@
 /*
- * $Id: LangModelScheme.java,v 1.1 2005/04/22 07:31:59 stas Exp $
+ * $Id: LangModelScheme.java,v 1.2 2005/07/11 12:31:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,12 @@
 
 package com.syrus.AMFICOM.resource;
 
-import java.util.*;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/04/22 07:31:59 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:41 $
  * @module schemeclient_v1
  */
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.3 2005/06/22 10:16:05 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.4 2005/07/11 12:31:37 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,41 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import java.awt.*;
-import java.beans.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.*;
 import javax.swing.JComponent;
+import javax.swing.JScrollPane;
 
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadTypeCell;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:37 $
  * @module schemeclient_v1
  */
 
@@ -71,7 +81,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 					|| type.getCodename().equals("okst16"))
 				nModules = 6;
 
-			Set ctts = type.getCableThreadTypes(true);
+			List ctts = getSortedThreadTypes();
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
 			if (tmp > radius)
@@ -93,6 +103,12 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
+	}
+	
+	private List<CableThreadType> getSortedThreadTypes() {
+		List<CableThreadType> threads = new LinkedList<CableThreadType>(this.type.getCableThreadTypes(false));
+		Collections.sort(threads, new WrapperComparator(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_CODENAME));
+		return threads;
 	}
 
 	private void createFibers(int nModules, final Collection fibers) {
@@ -176,15 +192,15 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 	private void addThreadCell(SchemeGraph graph, CableThreadType threadType,
 			Rectangle bounds, Color color) {
-		String name;
+		String name = threadType.getName();
 
-		try {
-			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(threadType.getName()));
-			name = String.valueOf(num);
-		} 
-		catch (Exception ex) {
-			name = threadType.getName();
-		}
+//		try {
+//			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(threadType.getName()));
+//			name = String.valueOf(num);
+//		} 
+//		catch (Exception ex) {
+//			name = threadType.getName();
+//		}
 
 		Map viewMap = new HashMap();
 		ThreadTypeCell cell = ThreadTypeCell.createInstance(name, bounds, color, viewMap, threadType);

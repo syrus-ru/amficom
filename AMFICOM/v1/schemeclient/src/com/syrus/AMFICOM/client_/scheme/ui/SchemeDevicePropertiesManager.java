@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevicePropertiesManager.java,v 1.4 2005/05/26 07:40:52 stas Exp $
+ * $Id: SchemeDevicePropertiesManager.java,v 1.5 2005/07/11 12:31:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeDeviceWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:39 $
  * @module schemeclient_v1
  */
 

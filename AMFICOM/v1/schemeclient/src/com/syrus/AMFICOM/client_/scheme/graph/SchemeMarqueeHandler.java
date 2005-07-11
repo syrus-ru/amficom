@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.12 2005/07/11 12:16:35 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.13 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,30 +8,71 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
+import java.util.Set;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.BasicMarqueeHandler;
+import com.jgraph.graph.CellView;
+import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphUndoManager;
+import com.jgraph.graph.PortView;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.IdlPortPackage.PortSort;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeDevice;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/11 12:16:35 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -305,10 +346,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			boolean isCable = !p1.isSelected();
 			
 			StorableObjectCondition condition = new TypicalCondition(
-					isCable ? PortSort._PORT_SORT_CABLE_PORT : PortSort._PORT_SORT_PORT,
+					isCable ? PortTypeKind._PORT_KIND_CABLE : PortTypeKind._PORT_KIND_SIMPLE,
 					0, OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_SORT);
-//			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
 			Set types = Collections.EMPTY_SET;
 			try {
 				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -320,22 +360,30 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				return;
 			}
 			PortType type = (PortType)types.iterator().next();
-			
+		
 			String name = String.valueOf(deviceCell.getChildCount());
-			DefaultGraphCell cell = SchemeActions.createAbstractPort(graph, deviceCell, 
-					graph.fromScreen(graph.snap(p)), name, directionType, isCable);
 			
 			try {
 				AbstractSchemePort schemePort;
 				if (!isCable) { //port
 					schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
-					((PortCell)cell).setSchemePortId(schemePort.getId());
 				} else {
 					schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
-					((CablePortCell)cell).setSchemeCablePortId(schemePort.getId());
 				}
 				schemePort.setPortType(type);
+				schemePort.setParentSchemeDevice(deviceCell.getSchemeDevice());
 				StorableObjectPool.putStorableObject(schemePort);
+				
+				Color color = SchemeActions.determinePortColor(schemePort);
+				
+
+				if (!isCable) { //port
+					PortCell cell = SchemeActions.createPort(graph, deviceCell, 
+							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
+				} else {
+					CablePortCell cell = SchemeActions.createCablePort(graph, deviceCell, 
+							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
+				}
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
 			}
@@ -360,7 +408,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					try {
 						SchemeDevice device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
 						StorableObjectPool.putStorableObject(device);
-						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds);  //$NON-NLS-1$
+						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
 						Log.errorException(e1);
@@ -373,17 +421,34 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					if (start == null || current == null) {
 						event.consume();
 					} else {
-						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
+						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
+						Set types = Collections.EMPTY_SET;
+						try {
+							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+						} catch (ApplicationException e1) {
+							Log.errorException(e1);
+						}
+						if (types.isEmpty()) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_CABLELINKTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						CableLinkType type = (CableLinkType)types.iterator().next();
+						
+						Scheme scheme = null;
+						UgoPanel panel = pane.getCurrentPanel();
+						if (panel instanceof SchemePanel)
+							scheme = ((SchemePanel)panel).getSchemeResource().getScheme();
 						if (scheme != null) {
 							Identifier userId = LoginManager.getUserId();
 							
-							DefaultCableLink cell = SchemeActions.createCableLink(graph,
-									firstPort, port, graph.fromScreen(new Point(start)), 
-									graph.fromScreen(new Point(current)));
 							try {
-								SchemeCableLink link = SchemeCableLink.createInstance(userId, (String)cell.getUserObject(), scheme);
+								SchemeCableLink link = SchemeCableLink.createInstance(userId, "cable" + System.currentTimeMillis(), scheme);
+								link.setAbstractLinkType(type);
 								StorableObjectPool.putStorableObject(link);
-								cell.setSchemeCableLinkId(link.getId());
+								DefaultCableLink cell = SchemeActions.createCableLink(graph,
+										firstPort, port, graph.fromScreen(new Point(start)), 
+										graph.fromScreen(new Point(current)), link.getId());
+								link.setName((String)cell.getUserObject());
 								Notifier.notify(graph, pane.aContext, link);
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -394,40 +459,44 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					if (start == null || current == null) {
 						event.consume();
 					} else {
-						Scheme scheme = pane.getCurrentPanel().getSchemeResource().getScheme();
-						if (scheme != null) {
-							Identifier userId = LoginManager.getUserId();
-							
+						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
+						Set types = Collections.EMPTY_SET;
+						try {
+							types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+						} catch (ApplicationException e1) {
+							Log.errorException(e1);
+						}
+						if (types.isEmpty()) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_LINKTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						LinkType type = (LinkType)types.iterator().next();
+						
+						SchemeLink link;
+						try {
+							link = SchemeLink.createInstance(LoginManager.getUserId(), "link" + System.currentTimeMillis());
+							link.setAbstractLinkType(type);
+							StorableObjectPool.putStorableObject(link);
 							DefaultLink cell = SchemeActions.createLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
-									graph.fromScreen(new Point(current)));
-							
-							try {
-								SchemeLink link = SchemeLink.createInstance(userId, (String)cell.getUserObject(), scheme);
-								StorableObjectPool.putStorableObject(link);
-								cell.setSchemeLinkId(link.getId());
-								Notifier.notify(graph, pane.aContext, link);
-							} catch (ApplicationException e1) {
-								Log.errorException(e1);
-							}
-						} else {
-							SchemeElement schemeElement = pane.getCurrentPanel().getSchemeResource().getSchemeElement();
-							if (schemeElement != null) {
-								Identifier userId = LoginManager.getUserId();
-								DefaultLink cell = SchemeActions.createLink(graph,
-										firstPort, port, graph.fromScreen(new Point(start)), 
-										graph.fromScreen(new Point(current)));
-
-								try {
-									SchemeLink link = SchemeLink.createInstance(userId, (String)cell.getUserObject(), schemeElement);
-									StorableObjectPool.putStorableObject(link);
-									cell.setSchemeLinkId(link.getId());
-									Notifier.notify(graph, pane.aContext, link);
-								} catch (ApplicationException e1) {
-									Log.errorException(e1);
-								}
-							} else {
-								Log.debugMessage("neither Scheme nor SchemeElement is opened", Level.SEVERE); //$NON-NLS-1$
+									graph.fromScreen(new Point(current)), link.getId());
+							link.setName((String)cell.getUserObject());
+							Notifier.notify(graph, pane.aContext, link);
+						} catch (ApplicationException e1) {
+							Log.errorException(e1);
+							return;
+						}
+						
+						UgoPanel panel = pane.getCurrentPanel();
+						if (panel instanceof ElementsPanel) {
+							SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
+							if (res.getCellContainerType() == SchemeResource.SCHEME) {
+								link.setParentScheme(res.getScheme());
+							} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+								link.setParentSchemeElement(res.getSchemeElement());
+							} else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
+								if (res.getSchemeProtoElement() != null)
+									link.setParentSchemeProtoElement(res.getSchemeProtoElement());
 							}
 						}
 					}

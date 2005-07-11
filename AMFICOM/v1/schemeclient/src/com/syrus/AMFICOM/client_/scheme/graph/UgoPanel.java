@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.7 2005/06/22 10:10:50 bass Exp $
+ * $Id: UgoPanel.java,v 1.8 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,37 +8,58 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
-import java.awt.print.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.event.UndoableEditEvent;
 
-import com.jgraph.graph.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.jgraph.graph.CellView;
+import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultGraphModel;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphUndoManager;
+import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.*;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
-import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.*;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/06/22 10:10:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
 public class UgoPanel implements Printable, PropertyChangeListener {
 	protected ApplicationContext aContext;
 	protected SchemeGraph graph;
-	protected SchemeResource schemeResource;
-	
+		
 	protected GraphUndoManager undoManager = new GraphUndoManager() {
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
@@ -54,7 +75,6 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		schemeResource = new SchemeResource(this.graph);
 		setContext(aContext);
 	}
 	
@@ -94,28 +114,36 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		return graph;
 	}
 	
-	public SchemeResource getSchemeResource() {
-		return schemeResource;
-	}
-	
 	public GraphUndoManager getGraphUndoManager() {
 		return undoManager;
 	}
 	
-	
-	void updateGroup(DeviceGroup group, String text, ImageIcon icon) {
+	void updateGroup(DeviceGroup group, String text) {
 		if (group.getChildCount() > 0) {
 			for (Enumeration en = group.children(); en.hasMoreElements();) {
 				Object child = en.nextElement();
 				if (child instanceof DeviceCell) {
 					GraphActions.setText(this.graph, child, text);
-					GraphActions.setImage(this.graph, ((DeviceCell) child), icon);
 					break;
 				}
 			}
 		} 
 		else {
 			GraphActions.setText(this.graph, group, text);
+		}
+	}
+	
+	void updateGroup(DeviceGroup group, ImageIcon icon) {
+		if (group.getChildCount() > 0) {
+			for (Enumeration en = group.children(); en.hasMoreElements();) {
+				Object child = en.nextElement();
+				if (child instanceof DeviceCell) {
+					GraphActions.setImage(this.graph, ((DeviceCell) child), icon);
+					break;
+				}
+			}
+		} 
+		else {
 			GraphActions.setImage(this.graph, group, icon);
 		}
 	}
@@ -128,13 +156,21 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 				if (obj instanceof SchemeElement) {
 					SchemeElement se = (SchemeElement)obj;
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
-					if (group != null)
-						updateGroup(group, se.getLabel(), new ImageIcon(se.getSymbol().getImage()));
+					if (group != null) {
+						if (se.getLabel() != null)
+							updateGroup(group, se.getLabel());
+						if (se.getSymbol() != null)
+							updateGroup(group, new ImageIcon(se.getSymbol().getImage()));
+					}
 				} else if (obj instanceof SchemeProtoElement) {
 					SchemeProtoElement proto = (SchemeProtoElement)obj;
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
-					if (group != null)
-						updateGroup(group, proto.getLabel(), new ImageIcon(proto.getSymbol().getImage()));
+					if (group != null) {
+						if (proto.getLabel() != null)
+							updateGroup(group, proto.getLabel());
+						if (proto.getSymbol() != null)
+							updateGroup(group, new ImageIcon(proto.getSymbol().getImage()));
+					}
 				} else if (obj instanceof SchemeCableLink) {
 					SchemeCableLink link = (SchemeCableLink)obj;
 					DefaultGraphCell cell = SchemeActions.findSchemeCableLinkById(this.graph, link.getId());
@@ -152,14 +188,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 					DefaultGraphCell cell = SchemeActions.findPortCellById(this.graph, port.getId());
 					if (cell != null) {
 						GraphActions.setText(this.graph, cell, port.getName());
-						
-						Color color = Color.WHITE;
-						if (port.getPortType().getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
-							color = Color.BLACK;
-						if (port.getAbstractSchemeLink() != null)
-							GraphActions.setObjectBackColor(this.graph, cell, color);
-						else
-							GraphActions.setObjectBackColor(this.graph, cell, Color.YELLOW);
+						GraphActions.setObjectBackColor(this.graph, cell, SchemeActions.determinePortColor(port));
 					}
 					cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
 					if (cell != null) {
@@ -201,29 +230,24 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		for (int i = 0; i < cells.length; i++) {
 			Object cloned_cell = cells[i];
 			if (cloned_cell instanceof DeviceGroup) {
-				Identifier or_id = ((DeviceGroup) cloned_cell).getProtoElementId();
-				Identifier new_id = (Identifier) Pool.get("clonedids", or_id
-						.getIdentifierString());
-				if (new_id != null)
-					((DeviceGroup) cloned_cell).setProtoElementId(new_id);
-
-				or_id = ((DeviceGroup) cloned_cell).getProtoElementId();
-				new_id = (Identifier) Pool.get("proto2schemeids", or_id
-						.getIdentifierString());
-				if (new_id != null)
-					((DeviceGroup) cloned_cell).setSchemeElementId(new_id);
-
-				or_id = ((DeviceGroup) cloned_cell).getSchemeElementId();
-				new_id = (Identifier) Pool
-						.get("clonedids", or_id.getIdentifierString());
-				if (new_id != null)
-					((DeviceGroup) cloned_cell).setSchemeElementId(new_id);
-
-/*				or_id = ((DeviceGroup) cloned_cell).getSchemeId();
-				new_id = (Identifier) Pool
-						.get("clonedids", or_id.getIdentifierString());
-				if (new_id != null)
-					((DeviceGroup) cloned_cell).setSchemeId(new_id);*/
+				DeviceGroup dev = (DeviceGroup)cloned_cell;
+				Identifier or_id = dev.getElementId();
+				
+				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
+					Identifier new_id = (Identifier) Pool.get("clonedids", or_id.getIdentifierString());
+					if (new_id != null) {
+						dev.setProtoElementId(new_id);
+					} else {
+						new_id = (Identifier) Pool.get("proto2schemeids", or_id.getIdentifierString());
+						if (new_id != null)
+							dev.setSchemeElementId(new_id);
+					}
+					
+				} else {
+					Identifier new_id = (Identifier) Pool.get("clonedids", or_id.getIdentifierString());
+					if (new_id != null)
+						dev.setSchemeElementId(new_id);
+				}
 			} else if (cloned_cell instanceof DeviceCell) {
 				Identifier c_id = (Identifier) Pool.get("clonedids",
 						((DeviceCell) cloned_cell).getSchemeDeviceId()

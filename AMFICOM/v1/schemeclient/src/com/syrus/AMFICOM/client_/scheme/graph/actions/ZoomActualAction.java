@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomActualAction.java,v 1.2 2005/05/26 07:40:52 stas Exp $
+ * $Id: ZoomActualAction.java,v 1.3 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
-import com.syrus.AMFICOM.client_.scheme.graph.*;
+import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:52 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 

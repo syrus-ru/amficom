@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.5 2005/06/17 12:44:17 bass Exp $
+ * $Id: SchemeGraphUI.java,v 1.6 2005/07/11 12:31:38 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/06/17 12:44:17 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
  * @module schemeclient_v1
  */
 
@@ -268,6 +268,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
+	// FIXME сильно тормозит прорисовка - оптимизировать
 	protected void paintGrid(int gs, Graphics g, Rectangle r) {
 		if (gs > 0) {
 			int w = graph.getPreferredSize().width;

@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client_.scheme.graph.*;
 
 public class PathAddLinkCommand extends AbstractCommand
 {

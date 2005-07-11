@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import javax.swing.JOptionPane;
-
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 
