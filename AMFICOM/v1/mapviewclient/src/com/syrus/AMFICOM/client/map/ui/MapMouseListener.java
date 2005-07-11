@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.40 2005/06/29 15:47:18 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.41 2005/07/11 08:57:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.40 $, $Date: 2005/06/29 15:47:18 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/11 08:57:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -279,6 +279,7 @@ public final class MapMouseListener implements MouseListener
 						frameLocation.x + newMousePosition.x,
 						frameLocation.y + newMousePosition.y);
 
+				this.netMapViewer.getLogicalNetLayer().getMapState().setOperationMode(MapState.NAVIGATE);
 				return false;
 			}
 
@@ -452,6 +453,9 @@ public final class MapMouseListener implements MouseListener
 					case MapState.MOVE_HAND:
 						finishMoveHand(me);
 						break;
+					case MapState.NAVIGATE:
+						this.netMapViewer.setCursor(Cursor.getDefaultCursor());
+						break;
 					case MapState.MOVE_FIXDIST:
 						// fall through
 					case MapState.NODELINK_SIZE_EDIT:
@@ -549,7 +553,7 @@ public final class MapMouseListener implements MouseListener
 				MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
 				false);
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
-		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 	}
 
 	/**
@@ -559,7 +563,7 @@ public final class MapMouseListener implements MouseListener
 	private void finishZoomToRect() throws MapConnectionException, MapDataException {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapCoordinatesConverter converter = logicalNetLayer.getConverter();
-		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_ZOOM_BOX, 
 				false);
@@ -589,7 +593,7 @@ public final class MapMouseListener implements MouseListener
 		DoublePoint pp = converter.convertScreenToMap(point);
 		this.netMapViewer.setCenter(pp);
 		this.netMapViewer.zoomIn();
-		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_ZOOM_TO_POINT, 
 				false);
@@ -609,7 +613,7 @@ public final class MapMouseListener implements MouseListener
 		DoublePoint sp = converter.convertScreenToMap(logicalNetLayer.getStartPoint());
 		DoublePoint ep = converter.convertScreenToMap(point);
 		double distance = converter.distance(sp, ep);
-		this.netMapViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 		logicalNetLayer.getContext().getApplicationModel().setSelected(
 				MapApplicationModel.OPERATION_MEASURE_DISTANCE, 
 				false);
