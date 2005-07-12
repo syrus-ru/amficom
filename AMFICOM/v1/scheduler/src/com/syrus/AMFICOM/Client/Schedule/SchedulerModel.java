@@ -391,6 +391,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
 				measurementTypeItem.setChildrenFactory(childrenFactory);
 				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
 				measurementTypeItem.setName(measurementType1.getName());
 				measurementTypeItem.setObject(measurementType1.getId());
 				measurementTypeItems.add(measurementTypeItem);
