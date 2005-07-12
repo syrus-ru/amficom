@@ -2,13 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/general_v1"/>
-	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/ojdbc14_g.jar"/>
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/orai18n.jar"/>
-	<classpathentry kind="src" path="/event_v1"/>
-	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/event"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
