@@ -1,5 +1,5 @@
 /*-
- * $Id: Etalon.java,v 1.2 2005/06/30 16:19:20 saa Exp $
+ * $Id: Etalon.java,v 1.3 2005/07/12 08:09:44 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
  * <li> EventAnchorer anc - Идентификаторов для привязки к схеме, может быть null
  * </ol>
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/06/30 16:19:20 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/12 08:09:44 $
  * @module
  */
 public class Etalon implements DataStreamable {
@@ -53,13 +53,6 @@ public class Etalon implements DataStreamable {
 	}
 
 	/**
-	 * @param minTraceLevel (negative value)
-	 */
-	public void setMinTraceLevel(double minTraceLevel) {
-		this.minTraceLevel = minTraceLevel;
-	}
-
-	/**
 	 * @return (negative value)
 	 */
 	public double getMinTraceLevel() {
@@ -67,24 +60,10 @@ public class Etalon implements DataStreamable {
 	}
 
 	/**
-	 * @param mtm (not null)
-	 */
-	public void setMTM(ModelTraceManager mtm) {
-		this.mtm = mtm;
-	}
-
-	/**
 	 * @return MTM, not null
 	 */
 	public ModelTraceManager getMTM() {
 		return mtm;
-	}
-
-	/**
-	 * @param anc may be null
-	 */
-	public void setAnc(EventAnchorer anc) {
-		this.anc = anc;
 	}
 
 	/**
