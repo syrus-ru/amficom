@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.7 2005/07/12 13:01:35 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.8 2005/07/12 13:31:29 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.io.ImageToByte;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.7 $, $Date: 2005/07/12 13:01:35 $
+ * @version $Revision: 1.1.2.8 $, $Date: 2005/07/12 13:31:29 $
  * @author $Author: peskovsky $
  * @module map_v1
  */
@@ -91,7 +91,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
 				+ (t4 - t3) + "creating image",
-				Level.FINE);
+				Level.INFO);
 
 		return bufferedImage;
 	}
@@ -127,7 +127,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 		}
 		Log.debugMessage("MapInfoCorbaImageLoader.findSpatialObjects | "
 				+ "searched for " + (t2 - t1) + " ms.",
-				Level.FINE);
+				Level.INFO);
 
 		if (	(objectsFound.length == 1)
 				&&(objectsFound[0].name.equals("")))

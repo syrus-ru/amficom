@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.8 2005/07/12 13:01:35 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.9 2005/07/12 13:31:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.8 $, $Date: 2005/07/12 13:01:35 $
+ * @version $Revision: 1.1.2.9 $, $Date: 2005/07/12 13:31:29 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer
@@ -138,10 +138,10 @@ public class MapJLocalRenderer
 
 		long time3 = System.currentTimeMillis();
 
-		Log.debugMessage("MapJLocalRenderer.renderToStream | finished\n "
-				+ (time2 - time1) + " (rendered image)\n"
-				+ (time3 - time2) + " created new BufferedImage.",
-				Level.FINE);
+		Log.debugMessage("MapJLocalRenderer.renderToStream | total " + (time3 - time1)
+				+ "\n		" + (time2 - time1) + " (rendered image)\n"
+				+ "\n		" + (time3 - time2) + " created new BufferedImage.",
+				Level.INFO);
 
 		return imageToReturn;
 	}
