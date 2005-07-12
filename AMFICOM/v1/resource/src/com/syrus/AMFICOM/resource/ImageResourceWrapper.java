@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.8 2005/06/24 09:40:48 bass Exp $
+ * $Id: ImageResourceWrapper.java,v 1.9 2005/07/12 13:06:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/24 09:40:48 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/12 13:06:31 $
  * @author $Author: bass $
  * @module resource_v1
  */
@@ -53,6 +53,7 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -77,6 +78,7 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof AbstractImageResource) {
@@ -115,10 +117,11 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_CODENAME)) {
 				switch (abstractImageResource.getSort().value()) {
 					case ImageResourceSort._BITMAP:
-						((BitmapImageResource) abstractImageResource).setCodename((String) value);
+						/*
+						 * Fall-through.
+						 */
 					case ImageResourceSort._FILE:
-						((FileImageResource) abstractImageResource).setCodename((String) value);
-					default:
+						((AbstractBitmapImageResource) abstractImageResource).setCodename((String) value);
 						break;
 				}
 			}
@@ -126,10 +129,10 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 				switch (abstractImageResource.getSort().value()) {
 					case ImageResourceSort._BITMAP:
 						((BitmapImageResource) abstractImageResource).setImage((byte[]) value);
-					case ImageResourceSort._FILE:
 						break;
 					case ImageResourceSort._SCHEME:
 						((SchemeImageResource) abstractImageResource).setImage((byte[]) value);
+						break;
 				}
 			}
 		}
