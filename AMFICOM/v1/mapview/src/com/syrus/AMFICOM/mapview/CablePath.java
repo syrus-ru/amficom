@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.20 2005/06/17 12:38:52 bass Exp $
+ * $Id: CablePath.java,v 1.21 2005/07/12 13:55:31 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -34,10 +35,10 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/12 13:55:31 $
  * @module mapviewclient_v1
  */
-public class CablePath implements MapElement
+public final class CablePath implements MapElement
 {
 	/**
 	 * Флаг выделения.
@@ -815,8 +816,8 @@ public class CablePath implements MapElement
 	 * {@inheritDoc}
 	 * Suppress since this class is transient
 	 */
-	public java.util.Map getExportMap()
-	{
+	@SuppressWarnings("deprecation")
+	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 

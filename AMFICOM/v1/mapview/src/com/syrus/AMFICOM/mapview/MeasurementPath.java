@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.30 2005/07/12 13:16:28 bass Exp $
+ * $Id: MeasurementPath.java,v 1.31 2005/07/12 13:55:31 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,10 +40,10 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/07/12 13:16:28 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/12 13:55:31 $
  * @module mapviewclient_v1
  */
-public class MeasurementPath implements MapElement
+public final class MeasurementPath implements MapElement
 {
 	/**
 	 * Флаг выделения.

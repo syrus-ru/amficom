@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.13 2005/05/26 15:31:15 bass Exp $
+ * $Id: Selection.java,v 1.14 2005/07/12 13:55:30 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * Набор выбранных элементов.
  *
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/05/26 15:31:15 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/12 13:55:30 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -340,7 +341,8 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public java.util.Map getExportMap() {
+	@SuppressWarnings("deprecation")
+	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 

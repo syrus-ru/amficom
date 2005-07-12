@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.25 2005/07/03 19:16:17 bass Exp $
+ * $Id: Marker.java,v 1.26 2005/07/12 13:55:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:17 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/12 13:55:31 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -447,8 +448,8 @@ public class Marker extends AbstractNode
 	 * {@inheritDoc}
 	 * Suppress since this class is transient
 	 */
-	public java.util.Map getExportMap()
-	{
+	@SuppressWarnings("deprecation")
+	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 
