@@ -2,13 +2,13 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/config_v1"/>
-	<classpathentry kind="src" path="/general_v1"/>
 	<classpathentry kind="src" path="/util"/>
-	<classpathentry kind="src" path="/admin_v1"/>
-	<classpathentry kind="src" path="/resource_v1"/>
 	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
 	<classpathentry kind="lib" path="generalxml.jar"/>
 	<classpathentry kind="lib" path="mapxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
