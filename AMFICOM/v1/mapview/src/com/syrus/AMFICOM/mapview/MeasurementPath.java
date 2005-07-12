@@ -1,5 +1,5 @@
-/**
- * $Id: MeasurementPath.java,v 1.29 2005/06/24 14:13:39 bass Exp $
+/*-
+ * $Id: MeasurementPath.java,v 1.30 2005/07/12 13:16:28 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
  * Элемент пути.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/06/24 14:13:39 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/12 13:16:28 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -141,7 +142,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public Set getCharacteristics()
+	public Set<Characteristic> getCharacteristics()
 	{
 		return this.schemePath.getCharacteristics();
 	}
@@ -336,6 +337,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * @deprecated
 	 */
+	@Deprecated
 	public boolean isSelectionVisible()
 	{
 		return isSelected();
@@ -555,8 +557,8 @@ public class MeasurementPath implements MapElement
 	 * {@inheritDoc}
 	 * Suppress since this class is transient
 	 */
-	public java.util.Map getExportMap()
-	{
+	@SuppressWarnings("deprecation")
+	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -564,7 +566,7 @@ public class MeasurementPath implements MapElement
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.schemePath.setCharacteristics(characteristics);
 	}
 
@@ -572,7 +574,7 @@ public class MeasurementPath implements MapElement
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.schemePath.setCharacteristics0(characteristics);
 	}
 }

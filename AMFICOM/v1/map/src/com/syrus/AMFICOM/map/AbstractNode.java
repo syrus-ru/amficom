@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.27 2005/07/03 19:16:28 bass Exp $
+ * $Id: AbstractNode.java,v 1.28 2005/07/12 13:12:23 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/03 19:16:28 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/12 13:12:23 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -76,7 +76,7 @@ public abstract class AbstractNode
 
 	protected AbstractNode(Identifier id) {
 		super(id);
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	AbstractNode(final Identifier id,
@@ -92,7 +92,7 @@ public abstract class AbstractNode
 		this.name = name;
 		this.description = desription;
 		this.location.setLocation(location.getX(), location.getY());
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	AbstractNode(final IdlStorableObject transferable) throws CreateObjectException {
@@ -118,7 +118,7 @@ public abstract class AbstractNode
 		super.markAsChanged();
 	}
 	
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
@@ -137,6 +137,7 @@ public abstract class AbstractNode
 	/**
 	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
 	 */
+	@Deprecated
 	public double getLatitude() {
 		return this.location.getY();
 	}
@@ -144,6 +145,7 @@ public abstract class AbstractNode
 	/**
 	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
 	 */
+	@Deprecated
 	public double getLongitude() {
 		return this.location.getX();
 	}
@@ -183,13 +185,13 @@ public abstract class AbstractNode
 		super.markAsChanged();
 	}
 
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 	
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
