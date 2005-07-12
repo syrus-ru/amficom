@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/07/12 08:40:55 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/07/12 11:07:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.codeToString;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -33,6 +31,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/12 11:07:57 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -55,8 +54,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private boolean checkDomain(final DomainMember domainMember) {
 		try {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
-			for (final Iterator linkedIdIterator = this.linkedIds.iterator(); linkedIdIterator.hasNext();) {
-				final Identifier id = (Identifier) linkedIdIterator.next();
+			for (final Identifier id : this.linkedIds) {
 				if (id.getMajor() == DOMAIN_CODE
 						&& dmDomain.isChild((Domain) StorableObjectPool.getStorableObject(id, true))) {
 					return true;
@@ -222,7 +220,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	private IllegalObjectEntityException newIllegalObjectEntityException() {
 		return new IllegalObjectEntityException(
 				ENTITY_CODE_NOT_REGISTERED + super.entityCode
-				+ ", " + codeToString(super.entityCode),
+				+ ", " + ObjectEntities.codeToString(super.entityCode),
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 }

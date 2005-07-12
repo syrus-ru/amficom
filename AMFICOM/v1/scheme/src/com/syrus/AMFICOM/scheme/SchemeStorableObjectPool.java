@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.29 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.30 2005/07/12 11:07:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.codeToString;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.SCHEME_GROUP_CODE;
 
 import java.util.Collections;
@@ -35,6 +34,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/12 11:07:57 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -260,7 +260,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				return schemeObjectLoader.loadPathElements(ids);
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: '"
-						+ codeToString(entityCode) + "'/" + entityCode);
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.emptySet();
 		}
 	}
@@ -311,7 +311,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				return schemeObjectLoader.loadPathElementsButIds(storableObjectCondition, ids);
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
-						+ codeToString(entityCode) + "'/" + entityCode);
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				return Collections.emptySet();
 		}
 	}
@@ -382,7 +382,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 				break;
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.saveStorableObjects | Unknown entity: '"
-						+ codeToString(entityCode) + "'/" + entityCode);
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 		}
 	}
 
