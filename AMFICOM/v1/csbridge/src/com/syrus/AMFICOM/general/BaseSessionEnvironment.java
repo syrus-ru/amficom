@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.11 2005/06/09 10:45:10 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.12 2005/07/12 15:10:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/09 10:45:10 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/12 15:10:39 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -25,6 +25,7 @@ public abstract class BaseSessionEnvironment {
 
 	protected class LogoutShutdownHook extends Thread {
 
+		@Override
 		public void run() {
 			try {
 				BaseSessionEnvironment.this.logout0();
