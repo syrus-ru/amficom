@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.5 2005/07/04 14:38:01 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.6 2005/07/12 10:22:06 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.mapinfo.dp.Feature;
 import com.mapinfo.dp.FeatureSet;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.5 $, $Date: 2005/07/04 14:38:01 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.6 $, $Date: 2005/07/12 10:22:06 $
  * @module mapinfo_v1
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader
@@ -134,7 +135,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader
 						continue;
 
 					Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
-							+ "Got feature name: " + featureName, Log.FINEST);
+							+ "Got feature name: " + featureName, Level.FINEST);
 
 					com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry()
 							.getBounds().center();
@@ -148,7 +149,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader
 			{
 				Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
 						+ "ERROR!!! - Failed searching at layer \"" + currLayer.getName()
-						+ "\" with message \"" + exc.getMessage() + "\".", Log.FINEST);
+						+ "\" with message \"" + exc.getMessage() + "\".", Level.FINEST);
 			}
 		}
 		

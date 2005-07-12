@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.5 2005/07/04 14:36:32 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.6 2005/07/12 10:22:06 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -29,8 +30,8 @@ import com.syrus.io.ImageToByte;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.5 $, $Date: 2005/07/04 14:36:32 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.1.2.6 $, $Date: 2005/07/12 10:22:06 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 
@@ -90,7 +91,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
 				+ (t4 - t3) + "creating image",
-				Log.FINEST);
+				Level.FINEST);
 
 		return bufferedImage;
 	}
@@ -126,7 +127,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 		}
 		Log.debugMessage("MapInfoCorbaImageLoader.findSpatialObjects | "
 				+ "searched for " + (t2 - t1) + " ms.",
-				Log.FINEST);
+				Level.FINEST);
 
 		if (	(objectsFound.length == 1)
 				&&(objectsFound[0].name.equals("")))

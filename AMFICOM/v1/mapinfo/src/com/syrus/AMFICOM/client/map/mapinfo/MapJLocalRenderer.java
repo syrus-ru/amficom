@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.6 2005/07/08 14:36:35 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.7 2005/07/12 10:22:06 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.logging.Level;
 
 import com.mapinfo.graphics.LocalRenderer;
 import com.mapinfo.mapj.FeatureLayer;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.1.2.6 $, $Date: 2005/07/08 14:36:35 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.7 $, $Date: 2005/07/12 10:22:06 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer
@@ -140,7 +141,7 @@ public class MapJLocalRenderer
 		Log.debugMessage("MapJLocalRenderer.renderToStream | finished\n "
 				+ (time2 - time1) + " (rendered image)\n"
 				+ (time3 - time2) + " created new BufferedImage.",
-				Log.INFO);
+				Level.INFO);
 
 		return imageToReturn;
 	}

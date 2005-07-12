@@ -6,10 +6,11 @@ TARGET=$(LIB)\mapinfo.jar
 TARGET_SRC=$(LIBSRC)\mapinfosource.zip
 TARGET_DOC=$(LIBDOC)\mapinfodoc.zip
 
-SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\commonclient.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar;$(LIB)\mapperservlet.jar;$(LIB)\admin.jar;$(LIB)\csbridge.jar
+SERVERCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\event.jar;$(LIB)\admin.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\measurement.jar;$(LIB)\resource.jar;$(LIB)\scheme.jar;$(LIB)\map.jar;$(LIB)\mapview.jar
+CLIENTSERVERCP=$(LIB)\leserver_interface.jar;$(LIB)\cmserver_interface.jar;$(LIB)\mscharserver_interface.jar;$(LIB)\csbridge.jar
+CLIENTCP=$(LIB)\filterclient.jar;$(LIB)\commonclient.jar;$(LIB)\generalclient.jar;$(LIB)\dadara.jar;$(LIB)\schemeclient.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\mapperservlet.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(MAPINFOCP);$(SERVLETCP)
+CLASSPATH=$(SERVERCP);$(CLIENTSERVERCP);$(CLIENTCP);$(LAYOUTCP);$(MAPINFOCP);$(SERVLETCP)
 
 .PHONY:	$(TARGET)
 
@@ -25,8 +26,8 @@ impl:
 		-d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		$(SRC)\com\syrus\AMFICOM\Client\map\*.java \
-		$(SRC)\com\syrus\AMFICOM\Client\map\mapinfo\*.java
+		$(SRC)\com\syrus\AMFICOM\client\map\*.java \
+		$(SRC)\com\syrus\AMFICOM\client\map\mapinfo\*.java
 
 javadoc:
 	$(JAVADOCGENERATOR) com

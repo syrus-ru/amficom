@@ -6,6 +6,7 @@ import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.Rectangle2D.Double;
+import java.util.logging.Level;
 
 import javax.swing.JComponent;
 
@@ -136,7 +137,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		
 		Log.debugMessage("MapInfoNetMapViewer.repaint | finished\n"
 				+ (t2 - t1) + "(image loaded)\n"
-				+ (t3 - t2) + "(visual component repainted).", Log.FINEST);		
+				+ (t3 - t2) + "(visual component repainted).", Level.FINEST);		
 	}
 
 	/*

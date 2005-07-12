@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
@@ -14,7 +15,6 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
@@ -37,7 +37,7 @@ public abstract class MapInfoConnection extends MapConnection
 	public boolean connect() throws MapConnectionException
 	{
 		Log.debugMessage(getClass()
-				.getName() + "::" + "connect()" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "connect()" + " | " + "method call", Level.FINER);
 		
 		// Инициализируем объект MapJ для локальных преобразований координат
 		this.localMapJ = new MapJ(); // this MapJ object
@@ -67,7 +67,7 @@ public abstract class MapInfoConnection extends MapConnection
 	public boolean release() throws MapConnectionException
 	{
 		Log.debugMessage(getClass()
-				.getName() + "::" + "release()" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "release()" + " | " + "method call", Level.FINER);
 
 		return true;
 	}
@@ -75,7 +75,7 @@ public abstract class MapInfoConnection extends MapConnection
 	public void setPath(String path)
 	{
 		Log.debugMessage(getClass()
-				.getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Level.FINER);
 
 		this.dataBasePath = path;
 	}
@@ -83,7 +83,7 @@ public abstract class MapInfoConnection extends MapConnection
 	public void setView(String name)
 	{
 		Log.debugMessage(getClass()
-				.getName() + "::" + "setView(" + name + ")" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINER);
 
 		this.dataBaseView = name;
 	}
@@ -101,7 +101,7 @@ public abstract class MapInfoConnection extends MapConnection
 	public void setURL(String mapperURL)
 	{
 		Log.debugMessage(getClass()
-				.getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Log.FINER);
+				.getName() + "::" + "setURL(" + mapperURL + ")" + " | " + "method call", Level.FINER);
 		
 		this.mapperServletURL = mapperURL;
 	}

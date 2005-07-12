@@ -7,6 +7,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
 
 import javax.swing.JPanel;
 
@@ -117,7 +118,7 @@ public class MapImagePanel extends JPanel
 		Log.debugMessage("MapImagePanel.paintComponent | " + "times (ms)\n"
 				+	(t2 - t1) + " (super paint)\n"
 				+ (t3 - t2) + " (map image paint)\n"
-				+ (t4 - t3) + " (LogicalNetLayer paint)", Log.FINEST);		
+				+ (t4 - t3) + " (LogicalNetLayer paint)", Level.FINEST);		
 	}
 
 	public void forceLNLRepaint()
