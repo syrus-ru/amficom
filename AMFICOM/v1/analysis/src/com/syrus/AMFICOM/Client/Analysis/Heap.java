@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.78 2005/07/12 08:07:25 saa Exp $
+ * $Id: Heap.java,v 1.79 2005/07/12 16:58:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,8 +82,12 @@ import com.syrus.util.Log;
  * нужен, а на refAnalysisPrimary - в случаях, когда refAnalysisPrimary нужен.
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
+ * Замечания:
+ * 1. перед установкой эталона (setEtalon, setMTMEtalon)
+ * должен устанавливаться setBSEtalonTrace
+ * 
  * @author $Author: saa $
- * @version $Revision: 1.78 $, $Date: 2005/07/12 08:07:25 $
+ * @version $Revision: 1.79 $, $Date: 2005/07/12 16:58:03 $
  * @module
  */
 public class Heap
@@ -724,7 +728,10 @@ public class Heap
     }
 
     /**
-     * 
+     * Если устанавливается ненулевой MTM, к этому моменту уже должна
+     * быть установлена рефлектограмма эталона, иначе возможны проблемы
+     * в окне анализа, которое пока что полагается на то, что у отображенного
+     * эталона непременно будет BS.
      * @param mtm may be null
      */
     public static void setMTMEtalon(ModelTraceManager mtm) {
@@ -732,6 +739,7 @@ public class Heap
         fixEventList();
         setMTMBackupEtalon(mtm);
         if (mtm == null) {
+            backupEtalonMTM = null;
             notifyEtalonMTMRemoved();
         } else {
     		ClientAnalysisManager.setDefaultMinTraceLevel(); 
@@ -962,9 +970,15 @@ public class Heap
 		}
 	}
 
-	// обеспечивает все *предусмотренные* уведомления
-	// (фактически, это только уведомление по MTM)
-	public static void setEtalon(Etalon etalonObj) {
+	public static void unSetEtalonPair() {
+		setBSEtalonTrace(null);
+		Heap.setAnchorer(null);
+		Heap.setMTMEtalon(null);
+	}
+
+	public static void setEtalonPair(BellcoreStructure bs,
+			Etalon etalonObj) {
+		setBSEtalonTrace(bs);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());

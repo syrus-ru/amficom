@@ -10,8 +10,9 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.io.BellcoreStructure;
 
 /**
  * Команда создания эталона.
@@ -47,14 +48,16 @@ public class CreateEtalonCommand extends AbstractCommand
 		// проводим анализ для всего набора р/г
 
 		ModelTraceManager mtm;
+		BellcoreStructure bs;
 		try {
 			mtm = CoreAnalysisManager.makeEtalon(bsColl, ap);
+			bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			Heap.setBSEtalonTrace(bs);
+			Heap.setMTMEtalon(mtm);
 		} catch (IncompatibleTracesException e){
 			GUIUtil.showErrorMessage("incompatibleTraces");
 			return;
 		}
-
-		Heap.setMTMEtalon(mtm);
 
 		Environment.getActiveWindow().setCursor(
 			Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));

@@ -133,29 +133,36 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		traces = new HashMap();
 	}
 
-	private void addEtalon()
-	{
-		removeEtalon();
+//	private void addEtalon()
+//	{
+//		removeEtalon();
+//
+//		SimpleGraphPanel p;
+//
+//		ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
+//		p = new SimpleGraphPanel(mtae.getModelTrace().getYArray(), mtae.getDeltaX());
+//		p.setColorModel(Heap.ETALON_TRACE_KEY);
+//		((AnalysisLayeredPanel)panel).addGraphPanel(p);
+//		((AnalysisLayeredPanel)panel).updPaintingMode();
+//		panel.updScale2fit();
+//
+//		traces.put(Heap.ETALON_TRACE_KEY, p);
+//
+//		setVisible(true);
+//	}
+//
+//	private void removeEtalon()
+//	{
+//		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
+//		if (epPanel != null)
+//			panel.removeGraphPanel(epPanel);
+//	}
 
-		SimpleGraphPanel p;
-
-		ModelTraceAndEvents mtae = Heap.getMTMEtalon().getMTAE();
-		p = new SimpleGraphPanel(mtae.getModelTrace().getYArray(), mtae.getDeltaX());
-		p.setColorModel(Heap.ETALON_TRACE_KEY);
-		((AnalysisLayeredPanel)panel).addGraphPanel(p);
-		((AnalysisLayeredPanel)panel).updPaintingMode();
-		panel.updScale2fit();
-
-		traces.put(Heap.ETALON_TRACE_KEY, p);
-
-		setVisible(true);
+	private void addEtalon() {
+		addTrace(Heap.ETALON_TRACE_KEY);
 	}
-
-	private void removeEtalon()
-	{
-		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(Heap.ETALON_TRACE_KEY);
-		if (epPanel != null)
-			panel.removeGraphPanel(epPanel);
+	private void removeEtalon() {
+		removeOneTrace(Heap.ETALON_TRACE_KEY);
 	}
 
 	public void bsHashAdded(String key, BellcoreStructure bs)

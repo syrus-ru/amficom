@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.6 2005/05/25 15:15:08 stas Exp $
+ * $Id: GUIUtil.java,v 1.7 2005/07/12 16:58:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/05/25 15:15:08 $
+ * @author $Author: saa $
+ * @version $Revision: 1.7 $, $Date: 2005/07/12 16:58:03 $
  * @module
  */
 public class GUIUtil
@@ -31,6 +31,8 @@ public class GUIUtil
 
     private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
     private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
+
+    public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
 
     private GUIUtil () {
 		// non-instantiable

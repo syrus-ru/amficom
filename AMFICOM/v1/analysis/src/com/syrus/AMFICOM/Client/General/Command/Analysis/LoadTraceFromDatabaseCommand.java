@@ -103,8 +103,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
     				AnalysisUtil.load_Etalon(ms);
     			else
     			{
-    				Heap.setBSEtalonTrace(null);
-    				Heap.setMTMEtalon(null);
+    				Heap.unSetEtalonPair();
     			}
     			Heap.makePrimaryAnalysis();
             } catch (DataFormatException e) {

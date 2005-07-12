@@ -125,7 +125,8 @@ public class AnalysisUtil
 		ParameterSet etalonSet = ms.getEtalon();
 		ParameterSet metas = ms.getParameterSet();
 
-		BellcoreStructure bsEt = null;
+		BellcoreStructure etalonBS = null;
+		Etalon etalonObj = null;
 
 		Parameter[] params = etalonSet.getParameters();
 		for (int i = 0; i < params.length; i++)
@@ -133,19 +134,25 @@ public class AnalysisUtil
 			ParameterType type = (ParameterType)params[i].getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON))
 			{
-				Etalon etalonObj = (Etalon) DataStreamableUtil.
+				etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
 							Etalon.getDSReader());
-				Heap.setEtalon(etalonObj);
-				Heap.setEtalonEtalonMetas(metas);
 			}
             else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON))
             {
-                bsEt = new BellcoreReader().getData(params[i].getValue());
-                Heap.setBSEtalonTrace(bsEt);
-                bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
+                etalonBS = new BellcoreReader().getData(params[i].getValue());
+                etalonBS.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // XXX: externalized string
             }
 		}
+		if (etalonObj == null || etalonBS == null) {
+			System.err.println("Malformed etalon: "
+					+ (etalonObj == null ? "no etalonObj" : "")
+					+ (etalonBS == null ? "no etalonBS" : ""));
+			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_MALFORMED_ETALON);
+			return;
+		}
+		Heap.setEtalonPair(etalonBS, etalonObj);
+		Heap.setEtalonEtalonMetas(metas);
 	}
 
 	public static ParameterSet createCriteriaSet(Identifier userId, java.util.Set meIds)
@@ -186,7 +193,7 @@ public class AnalysisUtil
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
-		BellcoreStructure bs = Heap.getBSPrimaryTrace(); // @todo: getBSEtalonTrace
+		BellcoreStructure bs = Heap.getBSEtalonTrace();
 
 		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
 		params[1] = Parameter.createInstance(ptype,
