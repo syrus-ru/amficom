@@ -2,10 +2,10 @@
 
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
-#TEST_CLASS=TestMeasurementType
-#TEST_PACKAGE=com.syrus.AMFICOM.measurement
-TEST_CLASS=TestCMServer
-TEST_PACKAGE=com.syrus.AMFICOM.cmserver
+TEST_CLASS=TestCharacteristicQP1640A
+TEST_PACKAGE=com.syrus.AMFICOM.general
+#TEST_CLASS=TestCMServer
+#TEST_PACKAGE=com.syrus.AMFICOM.cmserver
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class
@@ -13,7 +13,7 @@ CLASS_SUFFIX = .class
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar:$(LIBDIR)/mserver_interface.jar:$(LIBDIR)/cmserver_interface.jar:$(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 JUNITCLASSPATH=$(ECLIPSE_HOME)/plugins/org.junit_3.8.1/junit.jar
 

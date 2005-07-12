@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.3 2005/06/20 17:38:10 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.4 2005/07/12 15:54:12 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -55,10 +55,29 @@ import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
+import com.syrus.AMFICOM.scheme.DatabaseSchemeObjectLoader;
+import com.syrus.AMFICOM.scheme.PathElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCablePortDatabase;
+import com.syrus.AMFICOM.scheme.SchemeCableThreadDatabase;
+import com.syrus.AMFICOM.scheme.SchemeDatabase;
+import com.syrus.AMFICOM.scheme.SchemeDeviceDatabase;
+import com.syrus.AMFICOM.scheme.SchemeElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeLinkDatabase;
+import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoRtuDatabase;
+import com.syrus.AMFICOM.scheme.SchemeOptimizeInfoSwitchDatabase;
+import com.syrus.AMFICOM.scheme.SchemePathDatabase;
+import com.syrus.AMFICOM.scheme.SchemePortDatabase;
+import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 17:38:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/12 15:54:12 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -70,12 +89,14 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		return sysUser;
 	}
 
+	@Override
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		initDatabaseContext();
 		initStorableObjectPools();
 	}
 
+	@Override
 	void oneTimeTearDown() {
 		super.oneTimeTearDown();
 	}
@@ -127,6 +148,24 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new EventSourceDatabase());
 		DatabaseContext.registerDatabase(new EventDatabase());
 
+		DatabaseContext.registerDatabase(new SchemeProtoGroupDatabase());
+		DatabaseContext.registerDatabase(new SchemeProtoElementDatabase());
+		DatabaseContext.registerDatabase(new SchemeDatabase());
+		DatabaseContext.registerDatabase(new SchemeElementDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoSwitchDatabase());
+		DatabaseContext.registerDatabase(new SchemeOptimizeInfoRtuDatabase());
+		DatabaseContext.registerDatabase(new SchemeMonitoringSolutionDatabase());
+		DatabaseContext.registerDatabase(new SchemeDeviceDatabase());
+		DatabaseContext.registerDatabase(new SchemePortDatabase());
+		DatabaseContext.registerDatabase(new SchemeCablePortDatabase());
+		DatabaseContext.registerDatabase(new SchemeLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableLinkDatabase());
+		DatabaseContext.registerDatabase(new SchemeCableThreadDatabase());
+		DatabaseContext.registerDatabase(new CableChannelingItemDatabase());
+		DatabaseContext.registerDatabase(new SchemePathDatabase());
+		DatabaseContext.registerDatabase(new PathElementDatabase());
+
 		//More database drivers...
 	}
 
@@ -145,6 +184,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
 		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), StorableObjectResizableLRUMap.class);
 		EventStorableObjectPool.init(new DatabaseEventObjectLoader(), StorableObjectResizableLRUMap.class);
+		SchemeStorableObjectPool.init(new DatabaseSchemeObjectLoader(), StorableObjectResizableLRUMap.class);
 		//More pools...
 	}
 
