@@ -2,6 +2,8 @@ bak
 classes
 classes_test
 docs
+.project
+.classpath
 .mach
 .corba
 *.deploy
