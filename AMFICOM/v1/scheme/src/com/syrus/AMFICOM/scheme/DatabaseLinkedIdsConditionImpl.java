@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.17 2005/07/11 12:12:57 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.18 2005/07/12 08:32:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -29,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/11 12:12:57 $
+ * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2005/07/12 08:32:24 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -139,6 +140,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 			case SCHEMEPROTOGROUP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEPROTOGROUP_CODE:
+					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				case UPDIKE_CODE:
 					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 				default:
 					throw newIllegalObjectEntityException();

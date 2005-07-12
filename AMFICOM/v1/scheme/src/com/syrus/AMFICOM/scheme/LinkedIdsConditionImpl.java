@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/07/11 12:12:57 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/07/12 08:32:24 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.codeToString;
 
 import java.util.Iterator;
@@ -38,8 +39,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/11 12:12:57 $
+ * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2005/07/12 08:32:24 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -177,6 +178,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SchemeProtoGroup protoGroup = (SchemeProtoGroup) storableObject;
 				switch (super.linkedEntityCode) {
 				case SCHEMEPROTOGROUP_CODE:
+					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
+				case UPDIKE_CODE:
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				default:
 					throw newIllegalObjectEntityException();
