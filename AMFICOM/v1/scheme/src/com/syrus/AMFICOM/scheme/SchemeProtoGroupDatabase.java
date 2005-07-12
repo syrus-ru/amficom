@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupDatabase.java,v 1.9 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeProtoGroupDatabase.java,v 1.10 2005/07/12 10:16:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/12 10:16:51 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
@@ -136,8 +136,8 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 		SchemeProtoGroup spg = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(spg.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 		+ APOSTOPHE + DatabaseString.toQuerySubString(spg.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-		+ DatabaseIdentifier.toSQLString(spg.getSymbol().getId()) + COMMA
-		+ DatabaseIdentifier.toSQLString(spg.getParentSchemeProtoGroup().getId());
+		+ DatabaseIdentifier.toSQLString(spg.getSymbolId()) + COMMA
+		+ DatabaseIdentifier.toSQLString(spg.getParentSchemeProtoGroupId());
 		return sql;
 	}
 
@@ -155,8 +155,8 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 		SchemeProtoGroup spg = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spg.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spg.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getSymbol().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getParentSchemeProtoGroup().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spg.getParentSchemeProtoGroupId());
 		return startParameterNumber;
 	}
 
