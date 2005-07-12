@@ -86,7 +86,8 @@ public class MapImagePanel extends JPanel
 
 	public void setMapImage(Image newImage)
 	{
-		this.mapImage = newImage;
+		if (newImage != null)
+			this.mapImage = newImage;
 	}
 
 	public void paintComponent(Graphics g)
