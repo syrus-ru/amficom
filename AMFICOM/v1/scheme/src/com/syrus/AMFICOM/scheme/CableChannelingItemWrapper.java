@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.6 2005/07/12 08:40:55 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.7 2005/07/12 11:49:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/12 11:49:38 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -28,7 +28,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 	public static final String COLUMN_START_SITE_NODE_ID = "start_site_node_id";
 	public static final String COLUMN_END_SITE_NODE_ID = "end_site_node_id";
-	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_sable_link_id";
+	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_cable_link_id";
 
 	private static CableChannelingItemWrapper instance;
 
