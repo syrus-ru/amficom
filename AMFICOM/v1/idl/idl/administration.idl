@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.13 2005/07/10 13:49:37 bass Exp $
+ * $Id: administration.idl,v 1.14 2005/07/12 09:13:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ module AMFICOM {
 
 module administration {
 	module corba {
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlDomainMember: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -40,15 +41,15 @@ module administration {
 					in general::corba::Identifier domainId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlDomainMember DomainMember;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<DomainMember> DomainMemberSeq;
 
 //////////////////////////////////// User /////////////////////////////////
-#ifdef NO_ALIASES
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSystemUser: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlSystemUser: general::corba::StorableObject {
-#endif // NO_ALIASES
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum SystemUserSort {
 				USER_SORT_SYSADMIN,
 				USER_SORT_REGULAR,
@@ -79,10 +80,13 @@ module administration {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSystemUser SystemUser;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SystemUser> SystemUserSeq;
 
 /////////////////////////////////// Domain ////////////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlDomain: IdlDomainMember {
 #else // NO_ALIASES
@@ -108,10 +112,13 @@ module administration {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlDomain Domain;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<Domain> DomainSeq;
 
 /////////////////////////////////// Server ////////////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlServer: IdlDomainMember {
 #else // NO_ALIASES
@@ -139,10 +146,13 @@ module administration {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlServer Server;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<Server> ServerSeq;
 
 //////////////////////////////// ServerProcess ////////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlServerProcess: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -168,10 +178,13 @@ module administration {
 					in general::corba::WString256 description);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlServerProcess ServerProcess;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<ServerProcess> ServerProcessSeq;
 
 //////////////////////////////////// MCM //////////////////////////////////
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlMCM: IdlDomainMember {
 #else // NO_ALIASES
@@ -202,7 +215,9 @@ module administration {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 		
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlMCM MCM;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<MCM> MCMSeq;
 	};
 };
