@@ -27,8 +27,6 @@ public class MapImagePanel extends JPanel
 
 	private final MapInfoNetMapViewer viewer;
 	
-	private boolean forceLNLRepaint = false;
-
 	public MapImagePanel(MapInfoNetMapViewer viewer)
 	{
 		this.viewer = viewer;
@@ -98,40 +96,15 @@ public class MapImagePanel extends JPanel
 		long t2 = System.currentTimeMillis();
 
 		if (this.mapImage != null && g != null)
-			g.drawImage(this.mapImage, 0, 0,this.getWidth(),this.getHeight(), this);
+			g.drawImage(this.resultImage, 0, 0,this.getWidth(),this.getHeight(), this);
 
 		long t3 = System.currentTimeMillis();
-		
-		if (this.forceLNLRepaint)
-		{
-			try
-			{
-				this.viewer.getLogicalNetLayer().paint(g, this.viewer.getVisibleBounds());
-			} catch (MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			this.forceLNLRepaint = false;			
-		}
-		
-		long t4 = System.currentTimeMillis();
-		
-		Log.debugMessage("MapImagePanel.paintComponent | total " + (t4 - t1) + " (ms)\n"
-				+ "		" + (t2 - t1) + " (super paint)\n"
-				+ "		" + (t3 - t2) + " (map image paint)\n"
-				+ "		" + (t4 - t3) + " (LogicalNetLayer paint)", Level.INFO);		
+
+		Log.debugMessage("MapImagePanel.paintComponent | total " + (t3 - t1) + " (ms)\n"
+				+ "		" + (t2 - t1) + " ms (super paint)\n"
+				+ "		" + (t3 - t2) + " ms (result image paint)\n", Level.INFO);		
 	}
 
-	public void forceLNLRepaint()
-	{
-		this.forceLNLRepaint = true;
-	}
-	
 	public void refreshLayerImage() throws MapConnectionException, MapDataException
 	{
 		if (this.resultImage == null)
@@ -155,8 +128,8 @@ public class MapImagePanel extends JPanel
 				this.viewer.getVisibleBounds());
 
 		long t3 = System.currentTimeMillis();		
-		Log.debugMessage("MapImagePanel.refreshLayerImage | "
-				+ (t2 - t1) + "(painted mapImage to resultImage) "
-				+	(t3 - t2) + "(painted LogicalNetLayer), ms.", Level.FINE);		
+		Log.debugMessage("MapImagePanel.refreshLayerImage | total " + (t3 - t1)
+				+ "\n		" + (t2 - t1) + " ms (painted mapImage to resultImage) "
+				+	"\n		" + (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.INFO);		
 	}	
 }
