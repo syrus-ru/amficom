@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.42 2005/07/12 08:40:55 bass Exp $
+ * $Id: PathElement.java,v 1.43 2005/07/12 12:29:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/12 12:29:22 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -626,10 +626,13 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		switch (this.kind.value()) {
 			case Kind._SCHEME_CABLE_LINK:
 				setSchemeCableLink((SchemeCableLink) abstractSchemeElement);
+				break;
 			case Kind._SCHEME_ELEMENT:
 				setSchemeElement((SchemeElement) abstractSchemeElement);
+				break;
 			case Kind._SCHEME_LINK:
 				setSchemeLink((SchemeLink) abstractSchemeElement);
+				break;
 			default:
 				throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		}
