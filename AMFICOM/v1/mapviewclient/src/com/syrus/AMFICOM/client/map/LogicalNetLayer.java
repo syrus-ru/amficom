@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.88 2005/07/11 13:18:04 bass Exp $
+ * $Id: LogicalNetLayer.java,v 1.89 2005/07/12 13:37:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.89 $, $Date: 2005/07/12 13:37:34 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -395,7 +395,9 @@ public class LogicalNetLayer
 		long f;
 		long d;
 
-		System.out.println("------------------ paint called ----------------------");
+		Log.debugMessage("\n\n------------------ LogicalNetLayer.paint() called ----------------------", 
+				Level.INFO);
+//		System.out.println("------------------ paint called ----------------------");
 		try {
 			throw new Exception("stacktrace");
 		}
@@ -403,25 +405,16 @@ public class LogicalNetLayer
 //			Log.debugException(e, Log.FINE);
 //			e.printStackTrace();
 		}
-		System.out.println("--------------------------------------");
+//		System.out.println("--------------------------------------");
 		f = System.currentTimeMillis();
 		drawLines(p, visibleBounds);
-		d = System.currentTimeMillis();
-//		detailedDateFormat.format(new Date(System.currentTimeMillis()))
-		System.out.println("draw lines in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
 		drawNodes(p, visibleBounds);
-		d = System.currentTimeMillis();
-		System.out.println("draw nodes in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
 		drawSelection(p, visibleBounds);
-		d = System.currentTimeMillis();
-		System.out.println("draw selection in " + String.valueOf(d - f) + " ms");
-		f = System.currentTimeMillis();
 		drawTempLines(p, visibleBounds);
 		d = System.currentTimeMillis();
-		System.out.println("draw temp lines in " + String.valueOf(d - f) + " ms");
-		System.out.println("--------------------------------------");
+		Log.debugMessage("\n--------------------- LogicalNetLayer.paint() finished in " + String.valueOf(d - f) + " ms -----------------\n", 
+				Level.INFO);
+//		System.out.println("--------------------------------------");
 
 		// revert graphics to previous settings
 		p.setColor(color);
@@ -437,8 +430,16 @@ public class LogicalNetLayer
 	public void drawLines(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
-		this.elementsToDisplay.clear();
+		long f = System.currentTimeMillis();
 
+		MapViewController.nullTime1();
+		MapViewController.nullTime2();
+		MapViewController.nullTime3();
+		MapViewController.nullTime4();
+		MapViewController.nullTime5();
+
+		this.elementsToDisplay.clear();
+		
 		//Если режим показа nodeLink не разрешён, то включам режим показа physicalLink
 		if (! this.aContext.getApplicationModel().isEnabled(MapApplicationModel.MODE_NODE_LINK))
 		{
@@ -509,9 +510,6 @@ public class LogicalNetLayer
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
-			MapViewController.nullTime1();
-			MapViewController.nullTime2();
-			MapViewController.nullTime3();
 			Iterator iterator = getMapView().getMap().getAllNodeLinks().iterator();
 			while (iterator.hasNext())
 			{
@@ -519,14 +517,15 @@ public class LogicalNetLayer
 //				if(getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds))
 					getMapViewController().getController(nodeLink).paint(nodeLink, g, visibleBounds);
 			}
-			Log.debugMessage("LogicalNetLayer.drawLines | \n" + 
-					String.valueOf(MapViewController.getTime1()) + " (isElementVisible)"
-					+ String.valueOf(MapViewController.getTime2()) + " (getStroke)"
-					+ String.valueOf(MapViewController.getTime3()) + " (getColor)"
-					+ String.valueOf(MapViewController.getTime4()) + " (paint)"
-					+ String.valueOf(MapViewController.getTime5()) + " (painting labels)",
-					Level.INFO);
 		}
+		long d = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.drawLines | " + String.valueOf(d - f) + " ms\n" 
+				+ "		" + String.valueOf(MapViewController.getTime1()) + " ms (isElementVisible)\n"
+				+ "		" + String.valueOf(MapViewController.getTime2()) + " ms (getStroke)\n"
+				+ "		" + String.valueOf(MapViewController.getTime3()) + " ms (getColor)\n"
+				+ "		" + String.valueOf(MapViewController.getTime4()) + " ms (paint)\n"
+				+ "		" + String.valueOf(MapViewController.getTime5()) + " ms (painting labels)",
+				Level.INFO);
 	}
 
 	/**
@@ -536,6 +535,7 @@ public class LogicalNetLayer
 	public void drawNodes(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
+		long f = System.currentTimeMillis();
 		boolean showNodes = MapPropertiesManager.isShowPhysicalNodes();
 		Iterator e = getMapView().getMap().getNodes().iterator();
 		while (e.hasNext())
@@ -565,6 +565,9 @@ public class LogicalNetLayer
 			marker.paint(pg, visibleBounds);
 		}
 */
+		long d = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.drawNodes | " + String.valueOf(d - f) + " ms", 
+				Level.INFO);
 	}
 
 	/**
@@ -576,6 +579,7 @@ public class LogicalNetLayer
 	 */
 	public void drawTempLines(Graphics g, Rectangle2D.Double visibleBounds)
 	{
+		long f = System.currentTimeMillis();
 		Graphics2D p = ( Graphics2D )g;
 		int startX = getStartPoint().x;
 		int startY = getStartPoint().y;
@@ -618,6 +622,9 @@ public class LogicalNetLayer
 			p.setColor(Color.GREEN);
 			p.drawLine(startX, startY, endX, endY);
 		}
+		long d = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.drawTempLines | " + String.valueOf(d - f) + " ms", 
+				Level.INFO);
 	}
 
 	/**
@@ -627,12 +634,16 @@ public class LogicalNetLayer
 	public void drawSelection(Graphics g, Rectangle2D.Double visibleBounds)
 		throws MapConnectionException, MapDataException
 	{
+		long f = System.currentTimeMillis();
 		Iterator e = getMapView().getMap().getSelectedElements().iterator();
 		while (e.hasNext())
 		{
 			MapElement el = (MapElement)e.next();
 			getMapViewController().getController(el).paint(el, g, visibleBounds);
 		}
+		long d = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.drawSelection | " + String.valueOf(d - f) + " ms", 
+				Level.INFO);
 	}
 
 	/**
@@ -1125,8 +1136,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.88 $, $Date: 2005/07/11 13:18:04 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.89 $, $Date: 2005/07/12 13:37:34 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
