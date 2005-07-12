@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.25 2005/06/17 12:38:52 bass Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.26 2005/07/12 08:40:58 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -13,6 +13,8 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,7 +24,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 12:38:52 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/12 08:40:58 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -101,11 +103,13 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	}
 
 
-	protected java.util.Set refreshStorableObjects(final java.util.Set storableObjects) throws ApplicationException {
+	@Override
+	protected Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		return mvObjectLoader.refresh(storableObjects);
 	}
 
-	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.MAPVIEW_CODE:
@@ -144,7 +148,8 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(final Set identifiables) {
+	@Override
+	protected void deleteStorableObjects(final Set<? extends Identifiable> identifiables) {
 		mvObjectLoader.delete(identifiables);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElement.java,v 1.28 2005/07/11 12:12:57 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.29 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -67,7 +67,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	AbstractSchemeElement(final Identifier id) {
 		super(id);
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -91,7 +91,7 @@ public abstract class AbstractSchemeElement extends
 		this.description = description;
 		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 
-		this.characteristics = new HashSet();
+		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -179,7 +179,7 @@ public abstract class AbstractSchemeElement extends
 	 * @param characteristics
 	 * @see Characterizable#setCharacteristics(Set)
 	 */
-	public final void setCharacteristics(final Set characteristics) {
+	public final void setCharacteristics(final Set<Characteristic> characteristics) {
 		setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -188,10 +188,10 @@ public abstract class AbstractSchemeElement extends
 	 * @param characteristics
 	 * @see Characterizable#setCharacteristics0(Set)
 	 */
-	public final void setCharacteristics0(final Set characteristics) {
+	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
 		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
-			this.characteristics = new HashSet(characteristics.size());
+			this.characteristics = new HashSet<Characteristic>(characteristics.size());
 		else
 			this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
@@ -254,7 +254,8 @@ public abstract class AbstractSchemeElement extends
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true));
+			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true);
+			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

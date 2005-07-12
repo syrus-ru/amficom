@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.46 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.47 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -76,8 +76,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	Identifier parentSchemeCableLinkId;
 
-	private SchemeCableThreadDatabase schemeCableThreadDatabase;
-
 	private Set<Characteristic> characteristics;
 
 	/**
@@ -88,10 +86,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	SchemeCableThread(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new HashSet();
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(SCHEMECABLETHREAD_CODE);
+		this.characteristics = new HashSet<Characteristic>();
 		try {
-			this.schemeCableThreadDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMECABLETHREAD_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -135,7 +132,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @throws CreateObjectException
 	 */
 	public SchemeCableThread(final IdlSchemeCableThread transferable) throws CreateObjectException {
-		this.schemeCableThreadDatabase = (SchemeCableThreadDatabase) DatabaseContext.getDatabase(SCHEMECABLETHREAD_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -230,7 +226,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		return Collections.unmodifiableSet(this.characteristics);
 	}
 
@@ -434,7 +430,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
 	 */
-	public void setCharacteristics(final Set characteristics) {
+	public void setCharacteristics(final Set<Characteristic> characteristics) {
 		setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
@@ -443,10 +439,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
 	 */
-	public void setCharacteristics0(final Set characteristics) {
+	public void setCharacteristics0(final Set<Characteristic> characteristics) {
 		assert characteristics != null: NON_NULL_EXPECTED;
 		if (this.characteristics == null)
-			this.characteristics = new HashSet(characteristics.size());
+			this.characteristics = new HashSet<Characteristic>(characteristics.size());
 		else
 			this.characteristics.clear();
 		this.characteristics.addAll(characteristics);
@@ -540,7 +536,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
 		try {
 			super.fromTransferable(schemeCableThread);
-			this.setCharacteristics0(StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeCableThread.characteristicIds), true));
+			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeCableThread.characteristicIds), true);
+			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

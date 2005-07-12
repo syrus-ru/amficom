@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.39 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.40 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -91,8 +91,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	private Identifier parentSchemeId;
 
-	private SchemeOptimizeInfoDatabase schemeOptimizeInfoDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -101,9 +99,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	SchemeOptimizeInfo(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFO_CODE);
 		try {
-			this.schemeOptimizeInfoDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFO_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -166,7 +163,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 */
 	public SchemeOptimizeInfo(final IdlSchemeOptimizeInfo transferable) {
-		this.schemeOptimizeInfoDatabase = (SchemeOptimizeInfoDatabase) DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFO_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -350,36 +346,39 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeMonitoringSolutions() {
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true));
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true);
+			return Collections.unmodifiableSet(schemeMonitoringSolutions);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeOptimizeInfoRtus() {
+	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true));
+			final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true);
+			return Collections.unmodifiableSet(schemeOptimizeInfoRtus);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeOptimizeInfoSwitches() {
+	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true));
+			final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true);
+			return Collections.unmodifiableSet(schemeOptimizeInfoSwitches);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -600,7 +599,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	public void setSchemeMonitoringSolutions(final Set schemeMonitoringSolutions) {
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeMonitoringSolutionIterator = getSchemeMonitoringSolutions().iterator(); oldSchemeMonitoringSolutionIterator.hasNext();) {
 			final SchemeMonitoringSolution oldSchemeMonitoringSolution = (SchemeMonitoringSolution) oldSchemeMonitoringSolutionIterator.next();
@@ -615,7 +614,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			addSchemeMonitoringSolution((SchemeMonitoringSolution) schemeMonitoringSolutionIterator.next());
 	}
 
-	public void setSchemeOptimizeInfoRtus(final Set schemeOptimizeInfoRtus) {
+	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoRtuIterator = getSchemeOptimizeInfoRtus().iterator(); oldSchemeOptimizeInfoRtuIterator.hasNext();) {
 			final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu = (SchemeOptimizeInfoRtu) oldSchemeOptimizeInfoRtuIterator.next();
@@ -630,7 +629,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			addSchemeOptimizeInfoRtu((SchemeOptimizeInfoRtu) schemeOptimizeInfoRtuIterator.next());
 	}
 
-	public void setSchemeOptimizeInfoSwitches(final Set schemeOptimizeInfoSwitches) {
+	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoSwitchIterator = getSchemeOptimizeInfoSwitches().iterator(); oldSchemeOptimizeInfoSwitchIterator.hasNext();) {
 			final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch = (SchemeOptimizeInfoSwitch) oldSchemeOptimizeInfoSwitchIterator.next();
@@ -663,6 +662,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @param transferable
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
+	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 		try {

@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.4 2005/07/03 13:56:51 krupenn Exp $
+ * $Id: METS.java,v 1.5 2005/07/12 08:40:58 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/03 13:56:51 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/07/12 08:40:58 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class METS {
@@ -90,7 +90,8 @@ public class METS {
 		}
 		for(Iterator iter = scheme.getSchemeCableLinks().iterator(); iter.hasNext();) {
 			SchemeCableLink element = (SchemeCableLink )iter.next();
-			element.setCableChannelingItems((Set<CableChannelingItem> )Collections.emptySet());
+			final Set<CableChannelingItem> cableChannelingItems = Collections.emptySet();
+			element.setCableChannelingItems(cableChannelingItems);
 		}
 	}
 

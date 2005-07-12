@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.8 2005/07/11 12:12:57 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -49,7 +49,8 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
 	 */
-	public void insert(Set storableObjects)
+	@Override
+	public void insert(Set<? extends StorableObject> storableObjects)
 			throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
@@ -59,6 +60,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
 	 */
+	@Override
 	public void insert(StorableObject storableObject)
 			throws IllegalDataException, CreateObjectException {
 		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
@@ -71,6 +73,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
 	 */
+	@Override
 	public void retrieve(StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
@@ -84,6 +87,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @param arg
 	 * @throws IllegalDataException
 	 */
+	@Override
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException {
@@ -96,6 +100,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = CableChannelingItemWrapper.COLUMN_START_SPARE + COMMA
@@ -111,10 +116,12 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected short getEntityCode() {
 		return CABLECHANNELINGITEM_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -134,6 +141,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @param storableObject
 	 * @throws IllegalDataException
 	 */
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
@@ -155,6 +163,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
@@ -179,6 +188,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {

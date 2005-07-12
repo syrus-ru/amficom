@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.28 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.29 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,7 +43,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/12 08:40:54 $
  * @module scheme_v1
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
@@ -208,7 +210,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param storableObjects
 	 * @throws ApplicationException
 	 */
-	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException {
+	@Override
+	protected Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		return schemeObjectLoader.refresh(storableObjects);
 	}
 
@@ -217,7 +220,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws ApplicationException
 	 * @see StorableObjectPool#loadStorableObjects(Set)
 	 */
-	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+	@Override
+	protected Set<? extends StorableObject> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case SCHEMEPROTOGROUP_CODE:
@@ -257,7 +261,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjects | Unknown entity: '"
 						+ codeToString(entityCode) + "'/" + entityCode);
-				return Collections.EMPTY_SET;
+				return Collections.emptySet();
 		}
 	}
 
@@ -266,7 +270,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param ids
 	 * @throws ApplicationException
 	 */
-	protected Set loadStorableObjectsButIds(final StorableObjectCondition storableObjectCondition, final Set ids)
+	@Override
+	protected Set<? extends StorableObject> loadStorableObjectsButIds(final StorableObjectCondition storableObjectCondition, final Set<Identifier> ids)
 			throws ApplicationException {
 		final short entityCode = storableObjectCondition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -307,7 +312,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 			default:
 				Log.errorMessage("SchemeStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '"
 						+ codeToString(entityCode) + "'/" + entityCode);
-				return Collections.EMPTY_SET;
+				return Collections.emptySet();
 		}
 	}
 
@@ -317,6 +322,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws ApplicationException
 	 * @see StorableObjectPool#saveStorableObjects(Set, boolean)
 	 */
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
@@ -384,7 +390,8 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @param identifiables
 	 * @see StorableObjectPool#deleteStorableObjects(Set)
 	 */
-	protected void deleteStorableObjects(final Set identifiables) {
+	@Override
+	protected void deleteStorableObjects(final Set<? extends Identifiable> identifiables) {
 		schemeObjectLoader.delete(identifiables);
 	}
 }

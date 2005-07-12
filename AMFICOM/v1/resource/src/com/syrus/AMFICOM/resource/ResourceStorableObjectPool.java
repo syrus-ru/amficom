@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.32 2005/06/17 12:38:54 bass Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.33 2005/07/12 08:40:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -23,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/06/17 12:38:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/12 08:40:57 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -100,11 +102,13 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	}
 
 
-	protected Set refreshStorableObjects(final Set storableObjects) throws ApplicationException{
+	@Override
+	protected Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException{
 		return rObjectLoader.refresh(storableObjects);
 	}
-	
-	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+
+	@Override
+	protected Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.IMAGERESOURCE_CODE:
@@ -144,7 +148,8 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(final Set identifiables) {
+	@Override
+	protected void deleteStorableObjects(final Set<? extends Identifiable> identifiables) {
 		rObjectLoader.delete(identifiables);
 	}
 

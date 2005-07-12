@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.42 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.43 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,13 +47,11 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/12 08:40:54 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
 	private static final long serialVersionUID = 4050767078690534455L;
-
-	private SchemeCablePortDatabase schemeCablePortDatabase;
 
 	/**
 	 * @param id
@@ -63,9 +61,8 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	SchemeCablePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(SCHEMECABLEPORT_CODE);
 		try {
-			this.schemeCablePortDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMECABLEPORT_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -99,8 +96,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				measurementPort, parentSchemeDevice);
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE;
-
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(SCHEMECABLEPORT_CODE);
 	}
 
 	/**
@@ -108,7 +103,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	public SchemeCablePort(final IdlSchemeCablePort transferable) throws CreateObjectException {
-		this.schemeCablePortDatabase = (SchemeCablePortDatabase) DatabaseContext.getDatabase(SCHEMECABLEPORT_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.44 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.45 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -70,8 +70,6 @@ public final class SchemeMonitoringSolution extends
 	 */
 	private Identifier parentSchemeOptimizeInfoId;
 
-	private SchemeMonitoringSolutionDatabase schemeMonitoringSolutionDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -80,9 +78,8 @@ public final class SchemeMonitoringSolution extends
 	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE);
 		try {
-			this.schemeMonitoringSolutionDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -119,7 +116,6 @@ public final class SchemeMonitoringSolution extends
 	 * @param transferable
 	 */
 	public SchemeMonitoringSolution(final IdlSchemeMonitoringSolution transferable) {
-		this.schemeMonitoringSolutionDatabase = (SchemeMonitoringSolutionDatabase) DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -246,12 +242,13 @@ public final class SchemeMonitoringSolution extends
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemePaths() {
+	public Set<SchemePath> getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true));
+			final Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true);
+			return Collections.unmodifiableSet(schemePaths);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -358,7 +355,7 @@ public final class SchemeMonitoringSolution extends
 		super.markAsChanged();
 	}
 
-	public void setSchemePaths(final Set schemePaths) {
+	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePathIterator = getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
 			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();

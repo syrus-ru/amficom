@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/07/12 08:32:24 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.19 $, $Date: 2005/07/12 08:32:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -51,6 +51,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.entityCode = entityCode;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean checkDomain(final DomainMember domainMember) {
 		try {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);

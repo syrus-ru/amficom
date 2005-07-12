@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.33 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.34 2005/07/12 08:40:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,7 +24,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/17 11:01:03 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/12 08:40:58 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -111,11 +113,13 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	}
 
 
-	protected java.util.Set refreshStorableObjects(final java.util.Set storableObjects) throws ApplicationException {
+	@Override
+	protected Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		return eObjectLoader.refresh(storableObjects);
 	}
 
-	protected Set loadStorableObjects(final Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.EVENT_TYPE_CODE:
@@ -168,7 +172,8 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(final Set identifiables) {
+	@Override
+	protected void deleteStorableObjects(final Set<? extends Identifiable> identifiables) {
 		eObjectLoader.delete(identifiables);
 	}
 

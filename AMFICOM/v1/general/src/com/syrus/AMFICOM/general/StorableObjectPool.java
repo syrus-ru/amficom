@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.123 2005/07/11 08:18:56 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.124 2005/07/12 08:40:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/07/11 08:18:56 $
+ * @version $Revision: 1.124 $, $Date: 2005/07/12 08:40:57 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -207,7 +207,7 @@ public abstract class StorableObjectPool {
 	 * @return Set of StorableObject matching condition 
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
+	public static <T> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
 		return getStorableObjectsByCondition(condition, useLoader, true);
 	}
 
@@ -294,9 +294,9 @@ public abstract class StorableObjectPool {
 		if (objectPool != null) {
 			StorableObject storableObject = (StorableObject) objectPool.get(objectId);
 			if (storableObject == null && useLoader) {
-				final Set storableObjects = this.loadStorableObjects(Collections.singleton(objectId));
+				final Set<? extends StorableObject> storableObjects = this.loadStorableObjects(Collections.singleton(objectId));
 				if (!storableObjects.isEmpty())
-					storableObject = (StorableObject) storableObjects.iterator().next();
+					storableObject = storableObjects.iterator().next();
 				if (storableObject != null)
 					try {
 						this.putStorableObjectImpl(storableObject);
@@ -379,11 +379,10 @@ public abstract class StorableObjectPool {
 		if (objectQueueMap != null) {
 			for (final TShortObjectIterator entityCodeIterator = objectQueueMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
-				final Set objectQueue = (Set) entityCodeIterator.value();
+				final Set<Identifier> objectQueue = (Set<Identifier>) entityCodeIterator.value();
 
 				try {
-					for (final Iterator storableObjectIterator = this.loadStorableObjects(objectQueue).iterator(); storableObjectIterator.hasNext();) {
-						StorableObject storableObject = (StorableObject) storableObjectIterator.next();
+					for (final StorableObject storableObject : this.loadStorableObjects(objectQueue)) {
 						this.putStorableObjectImpl(storableObject);
 						storableObjects.add(storableObject);
 					}
@@ -450,7 +449,7 @@ public abstract class StorableObjectPool {
 				+ storableObjects.size() + " (of total " + objectPool.size() + ") objects: " + stringBuffer1, Log.DEBUGLEVEL10);
 		/*	^Just debug output -- nothing more^*/
 
-		Set loadedObjects = null;
+		Set<? extends StorableObject> loadedObjects = null;
 
 		if (useLoader && condition.isNeedMore(storableObjects)) {
 			final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, storableObjects);
@@ -468,7 +467,7 @@ public abstract class StorableObjectPool {
 				if (breakOnLoadError)
 					throw ae;
 				Log.errorException(ae);
-				loadedObjects = Collections.EMPTY_SET;
+				loadedObjects = Collections.emptySet();
 			}
 			
 			/*	Just debug output -- nothing more*/
@@ -504,9 +503,9 @@ public abstract class StorableObjectPool {
 	}
 
 	/*	Group-specific load-methods */
-	protected abstract Set loadStorableObjects(final Set ids) throws ApplicationException;
+	protected abstract Set<? extends StorableObject> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException;
 
-	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids)
+	protected abstract Set<? extends StorableObject> loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException;
 
 
@@ -706,7 +705,7 @@ public abstract class StorableObjectPool {
 	}
 
 	/*	Group-specific method */
-	protected abstract void deleteStorableObjects(final Set identifiables);
+	protected abstract void deleteStorableObjects(final Set<? extends Identifiable> identifiables);
 
 
 	/*	Flush */
@@ -1129,7 +1128,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.123 $, $Date: 2005/07/11 08:18:56 $
+	 * @version $Revision: 1.124 $, $Date: 2005/07/12 08:40:57 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1184,17 +1183,18 @@ public abstract class StorableObjectPool {
 			if (returnedStorableObjectsIds.isEmpty())
 				continue;
 
-			for (final Iterator storableObjectIterator = this.loadStorableObjects(returnedStorableObjectsIds).iterator(); storableObjectIterator.hasNext();)
+			for (final StorableObject storableObject : this.loadStorableObjects(returnedStorableObjectsIds)) {
 				try {
-					this.putStorableObjectImpl((StorableObject) storableObjectIterator.next());
+					this.putStorableObjectImpl(storableObject);
 				} catch (final IllegalObjectEntityException ioee) {
 					Log.errorException(ioee);
 				}
+			}
 		}
 	}
 
 	/*	Group specific method */
-	protected abstract Set<Identifier> refreshStorableObjects(final Set storableObjects) throws ApplicationException;
+	protected abstract Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
 
 	/*	Serialization */

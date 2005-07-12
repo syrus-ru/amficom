@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCellContainer.java,v 1.2 2005/03/21 16:46:50 bass Exp $
+ * $Id: SchemeCellContainer.java,v 1.3 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.resource.*;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/21 16:46:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public interface SchemeCellContainer extends SchemeSymbolContainer {

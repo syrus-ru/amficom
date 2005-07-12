@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeDeviceWrapper.java,v 1.3 2005/06/07 16:32:59 bass Exp $
+ * $Id: SchemeDeviceWrapper.java,v 1.4 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/07 16:32:59 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/12 08:40:54 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -28,7 +29,7 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper {
 
 	private static SchemeDeviceWrapper instance;
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
 	}
 
@@ -36,6 +37,7 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
 	}
@@ -48,6 +50,7 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
 	}

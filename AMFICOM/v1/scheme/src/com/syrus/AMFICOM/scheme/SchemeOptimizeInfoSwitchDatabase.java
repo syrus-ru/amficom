@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchDatabase.java,v 1.5 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchDatabase.java,v 1.6 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,14 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDatabase {
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
+	@Override
 	protected short getEntityCode() {
 		return SCHEMEOPTIMIZEINFOSWITCH_CODE;
 	}
@@ -39,6 +40,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getColumnsTmpl()
 	 */
+	@Override
 	protected String getColumnsTmpl() {
 		throw new UnsupportedOperationException();
 	}
@@ -46,6 +48,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateMultipleSQLValuesTmpl()
 	 */
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		throw new UnsupportedOperationException();
 	}
@@ -55,6 +58,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws IllegalDataException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getUpdateSingleSQLValuesTmpl(com.syrus.AMFICOM.general.StorableObject)
 	 */
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
@@ -69,6 +73,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws SQLException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatementTmpl(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement, int)
 	 */
+	@Override
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
@@ -85,6 +90,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws SQLException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
+	@Override
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
@@ -99,6 +105,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws RetrieveObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieve(com.syrus.AMFICOM.general.StorableObject)
 	 */
+	@Override
 	public void retrieve(StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
@@ -114,6 +121,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws RetrieveObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
 	 */
+	@Override
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException,
@@ -127,6 +135,7 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#insert(com.syrus.AMFICOM.general.StorableObject)
 	 */
+	@Override
 	public void insert(StorableObject storableObject)
 			throws IllegalDataException, CreateObjectException {
 		throw new UnsupportedOperationException();
@@ -138,7 +147,8 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 	 * @throws CreateObjectException
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#insert(java.util.Set)
 	 */
-	public void insert(Set storableObjects) throws IllegalDataException,
+	@Override
+	public void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		throw new UnsupportedOperationException();
 	}

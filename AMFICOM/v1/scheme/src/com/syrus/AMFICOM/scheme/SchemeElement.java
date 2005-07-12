@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.47 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeElement.java,v 1.48 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -94,8 +94,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	private Identifier ugoCellId;
 
-	private SchemeElementDatabase schemeElementDatabase;
-
 	private boolean equipmentTypeSet = false;
 
 	/**
@@ -106,9 +104,8 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	SchemeElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(SCHEMEELEMENT_CODE);
 		try {
-			this.schemeElementDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMEELEMENT_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -161,8 +158,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 		assert parentScheme == null || parentSchemeElement == null: EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
-
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(SCHEMEELEMENT_CODE);
 	}
 
 	/**
@@ -170,7 +165,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	public SchemeElement(final IdlSchemeElement transferable) throws CreateObjectException {
-		this.schemeElementDatabase = (SchemeElementDatabase) DatabaseContext.getDatabase(SCHEMEELEMENT_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -421,6 +415,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	/**
 	 * @see AbstractSchemeElement#getParentScheme()
 	 */
+	@Override
 	public Scheme getParentScheme() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -482,12 +477,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeDevices() {
+	public Set<SchemeDevice> getSchemeDevices() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true));
+			final Set<SchemeDevice> schemeDevices = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
+			return Collections.unmodifiableSet(schemeDevices);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -495,12 +491,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeElements() {
+	public Set<SchemeElement> getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true));
+			final Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(schemeElements);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -508,12 +505,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemeLinks() {
+	public Set<SchemeLink> getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true));
+			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
+			return Collections.unmodifiableSet(schemeLinks);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -521,12 +519,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
-	public Set getSchemes() {
+	public Set<Scheme> getSchemes() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true, true));
+			final Set<Scheme> schemes = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true, true);
+			return Collections.unmodifiableSet(schemes);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -780,6 +779,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentScheme
 	 * @see AbstractSchemeElement#setParentScheme(Scheme)
 	 */
+	@Override
 	public void setParentScheme(final Scheme parentScheme) {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
@@ -836,9 +836,13 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	public void setScheme(final Scheme scheme) {
-		setSchemes(scheme == null
-				? Collections.EMPTY_SET
-				: Collections.singleton(scheme));
+		Set<Scheme> schemes;
+		if (scheme == null) {
+			schemes = Collections.emptySet();
+		} else {
+			schemes = Collections.singleton(scheme);
+		}
+		setSchemes(schemes);
 	}
 
 	/**
@@ -853,7 +857,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		super.markAsChanged();
 	}
 
-	public void setSchemeDevices(final Set schemeDevices) {
+	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();) {
 			final SchemeDevice oldSchemeDevice = (SchemeDevice) oldSchemeDeviceIterator.next();
@@ -868,7 +872,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			addSchemeDevice((SchemeDevice) schemeDeviceIterator.next());
 	}
 
-	public void setSchemeElements(final Set schemeElements) {
+	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
 			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
@@ -883,7 +887,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			addSchemeElement((SchemeElement) schemeElementIterator.next());
 	}
 
-	public void setSchemeLinks(final Set schemeLinks) {
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
 			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
@@ -903,7 +907,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @see Scheme#setSchemeElements(Set)
 	 * @todo Check for circular depsendencies.
 	 */
-	public void setSchemes(final Set schemes) {
+	public void setSchemes(final Set<Scheme> schemes) {
 		assert schemes != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeIterator = getSchemes().iterator(); oldSchemeIterator.hasNext();)
 			removeScheme((Scheme) oldSchemeIterator.next());
@@ -993,15 +997,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
 	}
 
-	public Set getSchemeCablePorts() {
-		final Set schemeCablePorts = new HashSet();
+	public Set<SchemeCablePort> getSchemeCablePorts() {
+		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
 		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
 			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
-	public Set getSchemePorts() {
-		final Set schemePorts = new HashSet();
+	public Set<SchemePort> getSchemePorts() {
+		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
 		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
 			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
 		return Collections.unmodifiableSet(schemePorts);
@@ -1015,11 +1019,11 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		throw new UnsupportedOperationException("Method not implemented");
 	}
 
-	public void setAlarmedPath(final SchemePath alarmedPath) {
+	public void setAlarmedPath(@SuppressWarnings("unused") final SchemePath alarmedPath) {
 		throw new UnsupportedOperationException("Method not implemented");
 	}
 
-	public void setAlarmedPathElement(final PathElement alarmedPathElement) {
+	public void setAlarmedPathElement(@SuppressWarnings("unused") final PathElement alarmedPathElement) {
 		throw new UnsupportedOperationException("Method not implemented");
 	}
 }

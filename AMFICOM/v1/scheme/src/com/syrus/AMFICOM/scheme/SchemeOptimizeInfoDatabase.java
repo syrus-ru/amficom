@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.6 2005/06/17 11:01:17 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.7 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,30 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.Set;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
-import java.sql.*;
-import java.util.Date;
-import java.util.Set;
-
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/12 08:40:54 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -39,7 +50,8 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
 	 */
-	public void insert(final Set storableObjects)
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects)
 			throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
@@ -49,6 +61,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws CreateObjectException
 	 */
+	@Override
 	public void insert(StorableObject storableObject)
 			throws IllegalDataException, CreateObjectException {
 		SchemeOptimizeInfo schemeOptimizeInfo = fromStorableObject(storableObject);
@@ -61,6 +74,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws ObjectNotFoundException
 	 * @throws RetrieveObjectException
 	 */
+	@Override
 	public void retrieve(StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
@@ -74,6 +88,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @param arg
 	 * @throws IllegalDataException
 	 */
+	@Override
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException {
@@ -86,6 +101,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -108,10 +124,12 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+		return SCHEMEOPTIMIZEINFO_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -137,6 +155,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @param storableObject
 	 * @throws IllegalDataException
 	 */
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
@@ -166,6 +185,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
@@ -196,6 +216,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {

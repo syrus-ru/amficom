@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.37 2005/07/11 12:12:57 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.38 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/12 08:40:54 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -74,8 +74,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 
 	private Identifier parentSchemeCableLinkId;
 
-	private CableChannelingItemDatabase cableChannelingItemDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -84,9 +82,8 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	CableChannelingItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 	
-		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(CABLECHANNELINGITEM_CODE);
 		try {
-			this.cableChannelingItemDatabase.retrieve(this);
+			DatabaseContext.getDatabase(CABLECHANNELINGITEM_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -136,7 +133,6 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 	 * @param transferable
 	 */
 	public CableChannelingItem(final IdlCableChannelingItem transferable) {
-		this.cableChannelingItemDatabase = (CableChannelingItemDatabase) DatabaseContext.getDatabase(CABLECHANNELINGITEM_CODE);
 		fromTransferable(transferable);
 	}
 

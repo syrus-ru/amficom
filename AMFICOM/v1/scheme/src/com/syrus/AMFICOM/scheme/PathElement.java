@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.41 2005/07/11 12:12:57 bass Exp $
+ * $Id: PathElement.java,v 1.42 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -95,8 +95,6 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 */
 	private Identifier schemeLinkId;
 
-	private PathElementDatabase pathElementDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -105,9 +103,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	PathElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(PATHELEMENT_CODE);
 		try {
-			this.pathElementDatabase.retrieve(this);
+			DatabaseContext.getDatabase(PATHELEMENT_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -272,15 +269,12 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.endAbstractSchemePortId = Identifier.possiblyVoid(endAbstractSchemePort);
 		this.schemeCableThreadId = Identifier.possiblyVoid(schemeCableThread);
 		this.schemeLinkId = Identifier.possiblyVoid(schemeLink);
-
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(PATHELEMENT_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	public PathElement(final IdlPathElement transferable) {
-		this.pathElementDatabase = (PathElementDatabase) DatabaseContext.getDatabase(PATHELEMENT_CODE);
 		fromTransferable(transferable);
 	}
 

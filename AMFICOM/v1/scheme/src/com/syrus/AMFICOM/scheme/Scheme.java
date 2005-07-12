@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.48 2005/07/11 12:12:57 bass Exp $
+ * $Id: Scheme.java,v 1.49 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -92,8 +92,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	Identifier parentSchemeElementId;
 
-	private SchemeDatabase schemeDatabase;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -102,9 +100,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	Scheme(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 		try {
-			this.schemeDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEME_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -152,15 +149,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
-
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 	}
 
 	/**
 	 * @param transferable
 	 */
 	public Scheme(final IdlScheme transferable) {
-		this.schemeDatabase = (SchemeDatabase) DatabaseContext.getDatabase(SCHEME_CODE);
 		fromTransferable(transferable);
 	}
 
@@ -352,12 +346,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeCableLinks() {
+	public Set<SchemeCableLink> getSchemeCableLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true));
+			final Set<SchemeCableLink> schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true);
+			return Collections.unmodifiableSet(schemeCableLinks);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -378,12 +373,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeElements() {
+	public Set<SchemeElement> getSchemeElements() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true));
+			final Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(schemeElements);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -395,24 +391,26 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeLinks() {
+	public Set<SchemeLink> getSchemeLinks() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true));
+			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
+			return Collections.unmodifiableSet(schemeLinks);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
 	/**
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
-	public Set getSchemeOptimizeInfos() {
+	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true));
+			final Set<SchemeOptimizeInfo> schemeOptimizeInfos = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true);
+			return Collections.unmodifiableSet(schemeOptimizeInfos);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
@@ -576,7 +574,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
-	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
+	public void setCurrentSchemeMonitoringSolution(@SuppressWarnings("unused") final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -640,7 +638,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeCableLinks(final Set schemeCableLinks) {
+	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) {
 		assert schemeCableLinks != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeCableLinkIterator = getSchemeCableLinks().iterator(); oldSchemeCableLinkIterator.hasNext();) {
 			final SchemeCableLink oldSchemeCableLink = (SchemeCableLink) oldSchemeCableLinkIterator.next();
@@ -667,7 +665,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeElements(final Set schemeElements) {
+	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
 			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
@@ -694,7 +692,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeLinks(final Set schemeLinks) {
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
 			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
@@ -709,7 +707,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			addSchemeLink((SchemeLink) schemeLinkIterator.next());
 	}
 
-	public void setSchemeOptimizeInfos(final Set schemeOptimizeInfos) {
+	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) {
 		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
 		for (final Iterator oldSchemeOptimizeInfoIterator = getSchemeOptimizeInfos().iterator(); oldSchemeOptimizeInfoIterator.hasNext();) {
 			final SchemeOptimizeInfo oldSchemeOptimizeInfo = (SchemeOptimizeInfo) oldSchemeOptimizeInfoIterator.next();
@@ -787,16 +785,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		schemePath.setParentScheme(null);
 	}
 
-	public Set getSchemePaths() {
+	public Set<SchemePath> getSchemePaths() {
 		try {
-			return Collections.unmodifiableSet(StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true));
+			final Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
+			return Collections.unmodifiableSet(schemePaths);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 
-	public void setSchemePaths(final Set schemePaths) {
+	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null : NON_NULL_EXPECTED;
 		for (final Iterator oldSchemePathIterator = this.getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
 			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();

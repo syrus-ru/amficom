@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.8 2005/06/24 14:13:38 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,27 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
-import java.sql.*;
-import java.util.Date;
-
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/24 14:13:38 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemePortDatabase extends CharacterizableDatabase {
@@ -40,6 +48,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @param arg
 	 * @throws IllegalDataException
 	 */
+	@Override
 	public Object retrieveObject(StorableObject storableObject,
 			int retrieveKind, Object arg)
 			throws IllegalDataException {
@@ -52,6 +61,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 		}
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -65,10 +75,12 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected short getEntityCode() {
-		return ObjectEntities.SCHEMEPORT_CODE;
+		return SCHEMEPORT_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -87,6 +99,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @param storableObject
 	 * @throws IllegalDataException
 	 */
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
 			StorableObject storableObject)
 			throws IllegalDataException {
@@ -107,6 +120,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected int setEntityForPreparedStatementTmpl(
 			StorableObject storableObject,
 			PreparedStatement preparedStatement,
@@ -129,6 +143,7 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 	 * @throws IllegalDataException
 	 * @throws SQLException
 	 */
+	@Override
 	protected StorableObject updateEntityFromResultSet(
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {

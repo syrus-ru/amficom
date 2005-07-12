@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.2 2005/06/07 16:32:58 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.3 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/07 16:32:58 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper {
@@ -24,7 +24,7 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper {
 	/**
 	 * @see com.syrus.util.Wrapper#getKeys()
 	 */
-	public List getKeys() {
+	public List<String> getKeys() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -40,6 +40,7 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper {
 	 * @param key
 	 * @see com.syrus.util.Wrapper#getPropertyClass(java.lang.String)
 	 */
+	@Override
 	public Class getPropertyClass(String key) {
 		throw new UnsupportedOperationException();
 	}

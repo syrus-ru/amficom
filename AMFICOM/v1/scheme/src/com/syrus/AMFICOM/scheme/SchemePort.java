@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.42 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemePort.java,v 1.43 2005/07/12 08:40:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,13 +48,11 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/12 08:40:54 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
 	private static final long serialVersionUID = 3256436993469658930L;
-
-	private SchemePortDatabase schemePortDatabase;
 
 	/**
 	 * @param id
@@ -64,9 +62,8 @@ public final class SchemePort extends AbstractSchemePort {
 	SchemePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 		try {
-			this.schemePortDatabase.retrieve(this);
+			DatabaseContext.getDatabase(SCHEMEPORT_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -101,8 +98,6 @@ public final class SchemePort extends AbstractSchemePort {
 				parentSchemeDevice);
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
-
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 	}
 
 	/**
@@ -110,7 +105,6 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	public SchemePort(final IdlSchemePort transferable) throws CreateObjectException {
-		this.schemePortDatabase = (SchemePortDatabase) DatabaseContext.getDatabase(SCHEMEPORT_CODE);
 		fromTransferable(transferable);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.4 2005/06/15 12:20:41 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.5 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/15 12:20:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/12 08:40:55 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -47,7 +47,7 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 
 	private static SchemeWrapper instance;
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		throw new UnsupportedOperationException("SchemeWrapper | not implemented yet");
 	}
 
@@ -55,6 +55,7 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeWrapper | not implemented yet");
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		throw new UnsupportedOperationException("SchemeWrapper | not implemented yet");
 	}
@@ -67,6 +68,7 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeWrapper | not implemented yet");
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		throw new UnsupportedOperationException("SchemeWrapper | not implemented yet");
 	}

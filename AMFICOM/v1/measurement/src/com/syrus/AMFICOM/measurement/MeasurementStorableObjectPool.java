@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.102 2005/06/17 12:38:56 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.103 2005/07/12 08:40:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,12 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -21,7 +24,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/06/17 12:38:56 $
+ * @version $Revision: 1.103 $, $Date: 2005/07/12 08:40:59 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -160,11 +163,13 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 	}
 
 
-	protected java.util.Set refreshStorableObjects(final java.util.Set storableObjects) throws ApplicationException {
+	@Override
+	protected Set<Identifier> refreshStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
 		return mObjectLoader.refresh(storableObjects);
 	}
 
-	protected java.util.Set loadStorableObjects(final java.util.Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENT_TYPE_CODE:
@@ -304,7 +309,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(final java.util.Set identifiables) {
+	@Override
+	protected void deleteStorableObjects(final Set<? extends Identifiable> identifiables) {
 		mObjectLoader.delete(identifiables);
 	}
 

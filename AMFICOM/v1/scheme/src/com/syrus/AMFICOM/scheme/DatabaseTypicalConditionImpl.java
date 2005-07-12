@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.5 2005/06/27 10:14:41 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.6 2005/07/12 08:40:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/06/27 10:14:41 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/12 08:40:55 $
  * @module scheme_v1
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -26,6 +26,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 	/**
 	 * @see AbstractDatabaseTypicalCondition#getColumnName()
 	 */
+	@Override
 	protected String getColumnName() {
 		throw new UnsupportedOperationException();
 	}
