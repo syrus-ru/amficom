@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.28 2005/07/10 13:49:38 bass Exp $
+ * $Id: scheme.idl,v 1.29 2005/07/12 09:30:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ module AMFICOM {
 
 module scheme {
 	module corba {
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeProtoGroup: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -47,9 +48,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeProtoGroupId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeProtoGroup SchemeProtoGroup;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeProtoElement: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -89,14 +93,14 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeProtoElement SchemeProtoElement;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeProtoElement> SchemeProtoElementSeq;
 
-#ifdef NO_ALIASES
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlScheme: administration::corba::IdlDomainMember {
-#else // NO_ALIASES
-		valuetype IdlScheme: administration::corba::DomainMember {
-#endif // NO_ALIASES
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum Kind {
 				BUILDING,
 				CABLE_SUBNETWORK,
@@ -148,9 +152,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeElementId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlScheme Scheme;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<Scheme> SchemeSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlAbstractSchemeElement: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -178,9 +185,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlAbstractSchemeElement AbstractSchemeElement;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<AbstractSchemeElement> AbstractSchemeElementSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeElement: IdlAbstractSchemeElement {
 #else // NO_ALIASES
@@ -221,9 +231,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeElement SchemeElement;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeElement> SchemeElementSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeOptimizeInfo: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -272,9 +285,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeOptimizeInfo SchemeOptimizeInfo;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeOptimizeInfoSwitch: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -300,9 +316,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeOptimizeInfoId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeOptimizeInfoSwitch SchemeOptimizeInfoSwitch;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeOptimizeInfoSwitch> SchemeOptimizeInfoSwitchSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeOptimizeInfoRtu: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -328,9 +347,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeOptimizeInfoId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeOptimizeInfoRtu SchemeOptimizeInfoRtu;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeOptimizeInfoRtu> SchemeOptimizeInfoRtuSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeMonitoringSolution: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -359,9 +381,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeOptimizeInfoId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeMonitoringSolution SchemeMonitoringSolution;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeDevice: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -391,14 +416,14 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeDevice SchemeDevice;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeDevice> SchemeDeviceSeq;					
 
-#ifdef NO_ALIASES
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlAbstractSchemePort: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlAbstractSchemePort: general::corba::StorableObject {
-#endif // NO_ALIASES
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum DirectionType {
 				_IN,
 				_OUT
@@ -434,9 +459,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlAbstractSchemePort AbstractSchemePort;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<AbstractSchemePort> AbstractSchemePortSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemePort: IdlAbstractSchemePort {
 #else // NO_ALIASES
@@ -464,9 +492,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemePort SchemePort;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemePort> SchemePortSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeCablePort: IdlAbstractSchemePort {
 #else // NO_ALIASES
@@ -494,9 +525,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeCablePort SchemeCablePort;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeCablePort> SchemeCablePortSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlAbstractSchemeLink: IdlAbstractSchemeElement {
 #else // NO_ALIASES
@@ -522,9 +556,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlAbstractSchemeLink AbstractSchemeLink;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<AbstractSchemeLink> AbstractSchemeLinkSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeLink: IdlAbstractSchemeLink {
 #else // NO_ALIASES
@@ -562,9 +599,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeLink SchemeLink;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeLink> SchemeLinkSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeCableLink: IdlAbstractSchemeLink {
 #else // NO_ALIASES
@@ -596,9 +636,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeCableLink SchemeCableLink;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemeCableThread: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -634,9 +677,12 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemeCableThread SchemeCableThread;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlCableChannelingItem: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -673,9 +719,12 @@ module scheme {
 					in general::corba::Identifier parentSchemeCableLinkId);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlCableChannelingItem CableChannelingItem;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<CableChannelingItem> CableChannelingItemSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlSchemePath: general::corba::IdlStorableObject {
 #else // NO_ALIASES
@@ -707,15 +756,20 @@ module scheme {
 					in general::corba::IdentifierSeq characteristicIds);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlSchemePath SchemePath;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<SchemePath> SchemePathSeq;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 #ifdef NO_ALIASES
 		valuetype IdlPathElement: general::corba::IdlStorableObject {
 #else // NO_ALIASES
 		valuetype IdlPathElement: general::corba::StorableObject {
 #endif // NO_ALIASES
-			union Data switch (enum Kind{
+			union Data switch (
+				/*\u002a\u002f@SuppressWarnings("all")/**/
+				enum Kind{
 					SCHEME_ELEMENT,
 					SCHEME_CABLE_LINK,
 					SCHEME_LINK}) {
@@ -756,7 +810,9 @@ module scheme {
 					in Data data);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef IdlPathElement PathElement;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<PathElement> PathElementSeq;
 	};
 };
