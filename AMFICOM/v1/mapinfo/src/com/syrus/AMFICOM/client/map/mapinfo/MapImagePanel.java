@@ -95,7 +95,7 @@ public class MapImagePanel extends JPanel
 		super.paintComponent(g);
 		long t2 = System.currentTimeMillis();
 
-		if (this.mapImage != null && g != null)
+		if (this.resultImage != null && g != null)
 			g.drawImage(this.resultImage, 0, 0,this.getWidth(),this.getHeight(), this);
 
 		long t3 = System.currentTimeMillis();
@@ -113,7 +113,7 @@ public class MapImagePanel extends JPanel
 		Graphics riGraphics = this.resultImage.getGraphics();
 		long t1 = System.currentTimeMillis();
 
-		this.resultImage.getGraphics().drawImage(
+		riGraphics.drawImage(
 				this.mapImage,
 				0,
 				0,
@@ -130,6 +130,6 @@ public class MapImagePanel extends JPanel
 		long t3 = System.currentTimeMillis();		
 		Log.debugMessage("MapImagePanel.refreshLayerImage | total " + (t3 - t1)
 				+ "\n		" + (t2 - t1) + " ms (painted mapImage to resultImage) "
-				+	"\n		" + (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.INFO);		
+				+ "\n		" + (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.INFO);		
 	}	
 }
