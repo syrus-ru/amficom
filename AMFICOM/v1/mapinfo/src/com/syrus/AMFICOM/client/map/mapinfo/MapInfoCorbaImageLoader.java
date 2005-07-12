@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.6 2005/07/12 10:22:06 krupenn Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.1.2.7 2005/07/12 13:01:35 peskovsky Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.io.ImageToByte;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1.2.6 $, $Date: 2005/07/12 10:22:06 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.1.2.7 $, $Date: 2005/07/12 13:01:35 $
+ * @author $Author: peskovsky $
  * @module map_v1
  */
 
@@ -80,7 +80,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 		}
 		byte[] image = rit.image;
 		if(image.length == 1) {			
-			Log.debugMessage("TopologicalImageLoader.loadTopologicalImage | loading has been cancelled", Log.DEBUGLEVEL03);
+			Log.debugMessage("TopologicalImageLoader.loadTopologicalImage | loading has been cancelled", Level.FINEST);
 			return null;
 		}
 
@@ -91,7 +91,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
 				+ (t4 - t3) + "creating image",
-				Level.FINEST);
+				Level.FINE);
 
 		return bufferedImage;
 	}
@@ -127,7 +127,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader
 		}
 		Log.debugMessage("MapInfoCorbaImageLoader.findSpatialObjects | "
 				+ "searched for " + (t2 - t1) + " ms.",
-				Level.FINEST);
+				Level.FINE);
 
 		if (	(objectsFound.length == 1)
 				&&(objectsFound[0].name.equals("")))

@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.6 2005/07/12 10:22:06 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.1.2.7 2005/07/12 13:01:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.1.2.6 $, $Date: 2005/07/12 10:22:06 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1.2.7 $, $Date: 2005/07/12 13:01:35 $
  * @module mapinfo_v1
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader
@@ -147,9 +147,9 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader
 				}
 			} catch (Exception exc)
 			{
-				Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
+				Log.errorMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
 						+ "ERROR!!! - Failed searching at layer \"" + currLayer.getName()
-						+ "\" with message \"" + exc.getMessage() + "\".", Level.FINEST);
+						+ "\" with message \"" + exc.getMessage() + "\".");
 			}
 		}
 		

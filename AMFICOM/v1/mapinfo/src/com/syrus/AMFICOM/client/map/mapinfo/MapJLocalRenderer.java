@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.1.2.7 2005/07/12 10:22:06 krupenn Exp $
+ * $Id: MapJLocalRenderer.java,v 1.1.2.8 2005/07/12 13:01:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.1.2.7 $, $Date: 2005/07/12 10:22:06 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.1.2.8 $, $Date: 2005/07/12 13:01:35 $
  * @module mapinfo_v1
  */
 public class MapJLocalRenderer
@@ -55,7 +55,7 @@ public class MapJLocalRenderer
 	public MapJLocalRenderer(String fileToLoad) throws IOException
 	{
 		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.",
-				Log.DEBUGLEVEL10);
+				Level.FINEST);
 		this.mapJObject = MapJLocalRenderer.createMapJ(fileToLoad);
 	}
 
@@ -68,21 +68,21 @@ public class MapJLocalRenderer
 	public static MapJ createMapJ(String fileToLoad) throws IOException
 	{
 		Log.debugMessage("RunningThread - Initializing MapJ instance...",
-				Log.DEBUGLEVEL10);
+				Level.FINEST);
 		// instantiate a MapJ and set the bounds
 		MapJ returnValue = new MapJ(); // this MapJ object
 
 		// Query for image locations and load the geoset
 		try
 		{
-			Log.debugMessage("RunningThread - Loading geoset...", Log.DEBUGLEVEL10);
+			Log.debugMessage("RunningThread - Loading geoset...", Level.FINEST);
 			returnValue.loadMapDefinition(fileToLoad);
 			Log.debugMessage("RunningThread - Map definition " + fileToLoad
-					+ " has been loaded.", Log.DEBUGLEVEL10);
+					+ " has been loaded.", Level.FINEST);
 		} catch (IOException e)
 		{
 			Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: "
-					+ fileToLoad, Log.DEBUGLEVEL10);
+					+ fileToLoad, Level.SEVERE);
 			throw e;
 		}
 
@@ -105,11 +105,11 @@ public class MapJLocalRenderer
 					BufferedImage.TYPE_USHORT_565_RGB);
 			Log.debugMessage(
 					"RunningThread - Constructor - Creating MapXtreme renderer.",
-					Log.DEBUGLEVEL10);
+					Level.FINEST);
 			this.renderer = new LocalRenderer(this.imageBuffer);
 			Log.debugMessage(
 					"RunningThread - Constructor - MapXtreme renderer created.",
-					Log.DEBUGLEVEL10);
+					Level.FINEST);
 		}
 
 		this.setSize(miWidth, miHeight);
@@ -141,7 +141,7 @@ public class MapJLocalRenderer
 		Log.debugMessage("MapJLocalRenderer.renderToStream | finished\n "
 				+ (time2 - time1) + " (rendered image)\n"
 				+ (time3 - time2) + " created new BufferedImage.",
-				Level.INFO);
+				Level.FINE);
 
 		return imageToReturn;
 	}
@@ -151,11 +151,11 @@ public class MapJLocalRenderer
 		this.stopRendering = true;
 		Log.debugMessage(
 				"MapJRenderer - cancelRendering - Stopping the rendering of map.",
-				Log.DEBUGLEVEL10);
+				Level.FINEST);
 		if (this.renderer != null)
 			this.renderer.interrupt();
 		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.",
-				Log.DEBUGLEVEL10);
+				Level.FINEST);
 	}
 
 	//---------------------------------------Функции, работающие с MapJ --------------------------
@@ -168,7 +168,7 @@ public class MapJLocalRenderer
 	{
 		synchronized (this.mapJObject)
 		{
-			Log.debugMessage("RunningThread - Setting size", Log.DEBUGLEVEL10);
+			Log.debugMessage("RunningThread - Setting size", Level.FINEST);
 			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 		}
 	}
@@ -181,7 +181,7 @@ public class MapJLocalRenderer
 	{
 		synchronized (this.mapJObject)
 		{
-			Log.debugMessage("RunningThread - Setting center", Log.DEBUGLEVEL10);
+			Log.debugMessage("RunningThread - Setting center", Level.FINEST);
 			try
 			{
 				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x,
@@ -189,7 +189,7 @@ public class MapJLocalRenderer
 			} catch (Exception e)
 			{
 				Log.debugMessage("RunningThread - ERROR!!! - Failed setting center.",
-						Log.DEBUGLEVEL10);
+						Level.SEVERE);
 			}
 		}
 	}
@@ -202,7 +202,7 @@ public class MapJLocalRenderer
 	{
 		synchronized (this.mapJObject)
 		{
-			Log.debugMessage("RunningThread - Setting scale", Log.DEBUGLEVEL10);
+			Log.debugMessage("RunningThread - Setting scale", Level.FINEST);
 			try
 			{
 				if (scale != 0.0D)
@@ -210,7 +210,7 @@ public class MapJLocalRenderer
 			} catch (Exception e)
 			{
 				Log.debugMessage("RunningThread - ERROR!!! - Failed setting scale.",
-						Log.DEBUGLEVEL10);
+						Level.SEVERE);
 			}
 		}
 	}
@@ -233,7 +233,7 @@ public class MapJLocalRenderer
 						layerIndex, LayerType.FEATURE);
 
 				Log.debugMessage("RunningThread - Setting visibility for layer "
-						+ layer.getName(), Log.DEBUGLEVEL10);
+						+ layer.getName(), Level.FINEST);
 
 				layer.setEnabled(layerVisible);
 				layer.setAutoLabel(layerLabelsVisible);
@@ -241,7 +241,7 @@ public class MapJLocalRenderer
 			{
 				Log.debugMessage(
 						"RunningThread - ERROR!!! - Failed setting layer visibility.",
-						Log.DEBUGLEVEL10);
+						Level.SEVERE);
 			}
 		}
 	}
