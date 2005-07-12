@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -14,7 +13,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
  * Интерактивная панель с рефлектограммой - может отслеживать и изменять
  * уровень шума
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/12 08:07:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/12 16:56:30 $
  * @module
  */
 public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
