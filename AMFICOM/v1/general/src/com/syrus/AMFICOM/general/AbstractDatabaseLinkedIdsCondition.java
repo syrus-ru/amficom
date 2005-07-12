@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.19 2005/06/27 10:17:14 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.20 2005/07/12 14:32:44 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/27 10:17:14 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/12 14:32:44 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -62,10 +62,10 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 	}
 
 	protected IllegalObjectEntityException newIllegalObjectEntityException() {
-		final short entityCode = getEntityCode().shortValue();
-		return new IllegalObjectEntityException(
-				"Unsupported entity type -- " + entityCode
-				+ ", " + ObjectEntities.codeToString(entityCode),
+		final short entityCode = this.getEntityCode().shortValue();
+		final short linkedEntityCode = this.condition.getLinkedEntityCode();
+		return new IllegalObjectEntityException("Unsupported entity -- '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode
+				+ ", linked entity: '" + ObjectEntities.codeToString(linkedEntityCode) + "'/" + linkedEntityCode,
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
