@@ -80,7 +80,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		{
 			if ((type & ETALON) != 0)
 			{
-				if (Heap.getMTMEtalon() == null)
+				if (! Heap.hasEtalon())
 				{
 					// @todo: в этом случае (а тж в сл. ApplicationException) надо бы удалить созданный бесхозный criteriaSet)
 					GUIUtil.showErrorMessage("noEtalonError");

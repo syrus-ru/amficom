@@ -1,5 +1,5 @@
 /*-
- * $Id: EnhancedReflectogramPanel.java,v 1.2 2005/07/08 12:36:08 saa Exp $
+ * $Id: EnhancedReflectogramPanel.java,v 1.3 2005/07/12 08:07:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 /**
  * Отрисовывает рефлектограмму и кучу всяких сопутствующих вещей
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/08 12:36:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/12 08:07:25 $
  * @module
  */
 public class EnhancedReflectogramPanel extends ReflectogramPanel {
@@ -89,12 +89,17 @@ public class EnhancedReflectogramPanel extends ReflectogramPanel {
 		}
 	}
 
+    protected boolean hasMinTraceLevel() {
+    	return Heap.hasMinTraceLevel();
+    }
     protected int getMinTraceLevelCoord() {
     	return value2coord(Heap.getMinTraceLevel());
     }
 
 	protected void paint_min_trace_level(Graphics g)
 	{
+		if (! hasMinTraceLevel())
+			return;
 		int jw = getWidth();
 		((Graphics2D) g).setStroke(SELECTION_STROKE);
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_MIN_TRACE_LEVEL));

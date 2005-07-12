@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
  * Интерактивная панель с рефлектограммой - может отслеживать и изменять
  * уровень шума
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/08 12:36:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/12 08:07:25 $
  * @module
  */
 public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
@@ -42,10 +42,6 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
 			if (ev != null)
 				noise_level = ev.overallStatsNoiseLevel98Pct();
 		}
-
-		// FIXME: способ выбора minTraceLevel (оба не годятся -- saa)
-		//updateMinTraceLevel(noise_level - 3); // по +3 дБ от ур. шума?
-		ClientAnalysisManager.setDefaultMinTraceLevel(); // между мин. фит. кр. и абс. мин. р/г? 
 	}
 
 	protected void this_mousePressed(MouseEvent e)
@@ -53,7 +49,7 @@ public class ActiveReflectogramPanel extends EnhancedReflectogramPanel
 		startpos = e.getPoint();
 		currpos = e.getPoint();
 
-		if (draw_min_trace_level)
+		if (draw_min_trace_level && hasMinTraceLevel())
 		{
 			if (coord2index(currpos.x) > y.length)
 				return;

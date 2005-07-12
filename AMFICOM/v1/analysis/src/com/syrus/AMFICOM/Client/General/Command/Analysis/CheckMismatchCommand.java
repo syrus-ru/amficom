@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckMismatchCommand.java,v 1.2 2005/07/06 10:33:20 saa Exp $
+ * $Id: CheckMismatchCommand.java,v 1.3 2005/07/12 08:07:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.List;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
-import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
@@ -21,12 +20,10 @@ public class CheckMismatchCommand extends AbstractCommand {
 	public void execute() {
 	    if (Heap.getBSPrimaryTrace() != null
 	    		&& Heap.getMinuitAnalysisParams() != null
-	    		&& Heap.getMTMEtalon() != null) {
+	    		&& Heap.hasEtalon()) {
 	    	List alarms = CoreAnalysisManager.compareAndMakeAlarms(
 	    			Heap.getRefAnalysisPrimary().getAR(),
-	    			new Etalon(Heap.getMTMEtalon(),
-	    					Heap.getMinTraceLevel(),
-	    					Heap.getAnchorer()));
+	    			Heap.getEtalon());
 	    	// FIXME: debug-time console alarm listing
 	    	if (alarms.size() == 0)
 	    		System.out.println("No alarms");

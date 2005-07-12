@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.77 2005/07/11 08:24:11 bass Exp $
+ * $Id: Heap.java,v 1.78 2005/07/12 08:07:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.TraceAndMTAE;
@@ -57,8 +58,9 @@ import com.syrus.util.Log;
  * eventAnchorer;
  * rLDialog{};
  * backupEtalonMTM;
- * newMSName
- * setMarkerObject() / hasMarkerPosition() / getMarkerPosition()
+ * newMSName;
+ * setMarkerObject() / hasMarkerPosition() / getMarkerPosition();
+ * etalon - уведомления косвенные, по составляющей etalonMTM
  * 
  * Свойства, по которым уведомления предусмотрены, но не систематизированы
  * (и не гарантированы):
@@ -80,8 +82,8 @@ import com.syrus.util.Log;
  * нужен, а на refAnalysisPrimary - в случаях, когда refAnalysisPrimary нужен.
  * Фактически, primaryMTAE - это часть refAnalysisPrimary.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/07/11 08:24:11 $
+ * @author $Author: saa $
+ * @version $Revision: 1.78 $, $Date: 2005/07/12 08:07:25 $
  * @module
  */
 public class Heap
@@ -356,6 +358,10 @@ public class Heap
     	return coll;
     }
 
+    public static boolean hasMinTraceLevel() {
+        return hasEtalon();
+    }
+
     public static double getMinTraceLevel() {
         return minTraceLevel;
     }
@@ -364,6 +370,17 @@ public class Heap
     	minTraceLevel = Math.round(minTraceLevel);
         Heap.minTraceLevel = minTraceLevel;
     }
+
+	public static boolean hasEtalon() {
+		return Heap.getMTMEtalon() != null;
+	}
+
+	public static Etalon getEtalon() {
+		return new Etalon(
+				Heap.getMTMEtalon(),
+				Heap.getMinTraceLevel(),
+				Heap.getAnchorer());
+	}
 
     public static EventAnchorer getAnchorer() {
 		return anchorer;
@@ -714,10 +731,12 @@ public class Heap
         etalonMTM = mtm;
         fixEventList();
         setMTMBackupEtalon(mtm);
-        if (mtm == null)
+        if (mtm == null) {
             notifyEtalonMTMRemoved();
-        else
+        } else {
+    		ClientAnalysisManager.setDefaultMinTraceLevel(); 
             notifyEtalonMTMCUpdated();
+        }
     }
 
     public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {

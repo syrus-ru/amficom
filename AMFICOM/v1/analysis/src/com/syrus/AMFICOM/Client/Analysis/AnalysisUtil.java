@@ -183,12 +183,10 @@ public class AnalysisUtil
 
 		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON, DataType.DATA_TYPE_RAW);
 		params[0] = Parameter.createInstance(ptype,
-				DataStreamableUtil.writeDataStreamableToBA(new Etalon(
-						Heap.getMTMEtalon(),
-						Heap.getMinTraceLevel(),
-						Heap.getAnchorer())));
+				DataStreamableUtil.writeDataStreamableToBA(
+						Heap.getEtalon()));
 
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+		BellcoreStructure bs = Heap.getBSPrimaryTrace(); // @todo: getBSEtalonTrace
 
 		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
 		params[1] = Parameter.createInstance(ptype,
