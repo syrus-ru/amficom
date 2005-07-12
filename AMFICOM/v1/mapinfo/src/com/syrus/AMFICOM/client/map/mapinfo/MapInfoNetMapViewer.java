@@ -123,21 +123,23 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		if (fullRepaint)
 		{
 			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",
-					Log.DEBUGLEVEL10);
+					Level.FINEST);
 
-			this.visualComponent.setImage(this.renderer.getImage());
+			this.visualComponent.setMapImage(this.renderer.getImage());
 			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint",
-					Log.DEBUGLEVEL10);
-
+					Level.FINEST);
 		}
-		this.visualComponent.forceLNLRepaint();
+
 		long t2 = System.currentTimeMillis();		
+		this.visualComponent.refreshLayerImage();
+		long t3 = System.currentTimeMillis();		
 		this.visualComponent.repaint();
-		long t3 = System.currentTimeMillis();
-		
+		long t4 = System.currentTimeMillis();
+
 		Log.debugMessage("MapInfoNetMapViewer.repaint | finished\n"
 				+ (t2 - t1) + "(image loaded)\n"
-				+ (t3 - t2) + "(visual component repainted).", Level.FINEST);		
+				+ (t3 - t2) + "(LogicalNetLayer image painted to the buffer)\n"				
+				+ (t4 - t3) + "(visual component repainted).", Level.FINE);
 	}
 
 	/*

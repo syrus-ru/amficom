@@ -1,10 +1,12 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
@@ -18,6 +20,9 @@ import com.syrus.util.Log;
 
 public class MapImagePanel extends JPanel
 {
+ 	private static final Color BACKGROUND_COLOR = Color.WHITE;
+ 	
+ 	private Image resultImage = null;
 	private Image mapImage = null;
 
 	private final MapInfoNetMapViewer viewer;
@@ -56,7 +61,15 @@ public class MapImagePanel extends JPanel
 	{
 		try
 		{
-			this.viewer.setMapImageSize(this.getSize());
+ 			this.viewer.setMapImageSize(this.getSize());
+ 			int width = this.getWidth();
+ 			int height = this.getHeight();
+ 			if ((width > 0) && (height > 0))
+ 				this.resultImage = new BufferedImage(
+ 						width,
+ 						height,
+ 						BufferedImage.TYPE_USHORT_565_RGB);
+
 		} catch (MapConnectionException e)
 		{
 			// TODO Auto-generated catch block
@@ -70,19 +83,12 @@ public class MapImagePanel extends JPanel
 
 	public Image getImage()
 	{
-		return this.mapImage;
+		return this.resultImage;
 	}
 
-	public void setImage(Image newImage)
+	public void setMapImage(Image newImage)
 	{
-		if (newImage != null)
-		{
-//			if (	(newImage.getWidth(this) != this.mapImage.getWidth(this))
-//					||(newImage.getHeight(this) != this.mapImage.getHeight(this)))
-//				this.mapImage = new BufferedImage()
-			
-			this.mapImage = newImage;
-		}
+		this.mapImage = newImage;
 	}
 
 	public void paintComponent(Graphics g)
@@ -118,11 +124,39 @@ public class MapImagePanel extends JPanel
 		Log.debugMessage("MapImagePanel.paintComponent | " + "times (ms)\n"
 				+	(t2 - t1) + " (super paint)\n"
 				+ (t3 - t2) + " (map image paint)\n"
-				+ (t4 - t3) + " (LogicalNetLayer paint)", Level.FINEST);		
+				+ (t4 - t3) + " (LogicalNetLayer paint)", Level.FINE);		
 	}
 
 	public void forceLNLRepaint()
 	{
 		this.forceLNLRepaint = true;
 	}
+	
+	public void refreshLayerImage() throws MapConnectionException, MapDataException
+	{
+		if (this.resultImage == null)
+			return;
+
+		Graphics riGraphics = this.resultImage.getGraphics();
+		long t1 = System.currentTimeMillis();
+
+		this.resultImage.getGraphics().drawImage(
+				this.mapImage,
+				0,
+				0,
+				this.getWidth(),
+				this.getHeight(),
+				this);
+
+		long t2 = System.currentTimeMillis();
+
+		this.viewer.getLogicalNetLayer().paint(
+				riGraphics,
+				this.viewer.getVisibleBounds());
+
+		long t3 = System.currentTimeMillis();		
+		Log.debugMessage("MapImagePanel.refreshLayerImage | "
+				+ (t2 - t1) + "(painted mapImage to resultImage) "
+				+	(t3 - t2) + "(painted LogicalNetLayer), ms.", Level.FINE);		
+	}	
 }
