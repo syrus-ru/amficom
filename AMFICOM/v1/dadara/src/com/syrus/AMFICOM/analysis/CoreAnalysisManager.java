@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.93 2005/07/06 10:33:05 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.94 2005/07/12 16:41:28 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.93 $, $Date: 2005/07/06 10:33:05 $
+ * @version $Revision: 1.94 $, $Date: 2005/07/12 16:41:28 $
  * @module
  */
 
@@ -594,6 +594,32 @@ public class CoreAnalysisManager
      * Находит в коллекции рефлектограмму, ближайшую к усредненному по
      * коллекции значению. Входные р/г должны быть совместны, т.е.
      * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
+     * @param bsColl непустая входная коллекция рефлектограмм
+     * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
+     * @return самую среднюю рефлектограмму среди входных
+     */
+    public static BellcoreStructure getMostTypicalTrace(Collection bsColl,
+    		TracesAverages av) {
+        BellcoreStructure nearest = null;
+        double bestDistance = 0;
+        for (Iterator it = bsColl.iterator(); it.hasNext();) {
+            BellcoreStructure bs = (BellcoreStructure)it.next();
+            double[] yBS = bs.getTraceData();
+            double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
+                    yBS,
+                    av.av.traceLength);
+            if (nearest == null || distance < bestDistance) {
+                nearest = bs;
+                bestDistance = distance;
+            }
+        }
+        return nearest;
+    }
+
+    /**
+     * Находит в коллекции рефлектограмму, ближайшую к усредненному по
+     * коллекции значению. Входные р/г должны быть совместны, т.е.
+     * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
      * @param bsColl входная коллекция рефлектограмм
      * @return самую среднюю рефлектограмму среди входных
      * @throws IncompatibleTracesException Если входные рефлектограммы
@@ -601,30 +627,12 @@ public class CoreAnalysisManager
      * @throws IllegalArgumentException Если входная совокупность р/г пуста
      */
     public static BellcoreStructure getMostTypicalTrace(Collection bsColl)
-    throws IncompatibleTracesException
-    {
-        TracesAverages av = findTracesAverages(bsColl, false, false, null);
-
+    throws IncompatibleTracesException {
         // если входная коллекция пуста, то к этому моменту уже будет
         // выброшено исключение IllegalArgumentException,
         // т.ч. return null не произойдет.
-
-        BellcoreStructure nearest = null;
-        double bestDistance = 0;
-        for (Iterator it = bsColl.iterator(); it.hasNext();)
-        {
-            BellcoreStructure bs = (BellcoreStructure)it.next();
-            double[] yBS = bs.getTraceData();
-            double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
-                    yBS,
-                    av.av.traceLength);
-            if (nearest == null || distance < bestDistance)
-            {
-                nearest = bs;
-                bestDistance = distance;
-            }
-        }
-        return nearest;
+        TracesAverages av = findTracesAverages(bsColl, false, false, null);
+        return getMostTypicalTrace(bsColl, av);
     }
 
 	public static double getMedian(double[] y, int pos)
