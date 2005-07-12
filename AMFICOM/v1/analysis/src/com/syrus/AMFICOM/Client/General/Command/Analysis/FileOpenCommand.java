@@ -136,6 +136,7 @@ public class FileOpenCommand extends AbstractCommand
 			Heap.setActiveContextActivePathIDToEmptyString();
 			Heap.makePrimaryAnalysis();
 
+			// FIXME: debug-only code
             if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
                 Heap.setMTMEtalon(Heap.getMTMEtalon());
 
