@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisToolBar.java,v 1.2 2005/07/08 11:58:08 saa Exp $
+ * $Id: AnalysisToolBar.java,v 1.3 2005/07/12 06:48:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -148,6 +148,8 @@ class AnalysisToolBar extends TraceEventsToolBar
 		group.add(noAnalysisTButton);
 
 		noAnalysisTButton.doClick();
+		if (! traceTButton.isSelected())
+			traceTButton.doClick();
 		return buttons2;
 	}
 
