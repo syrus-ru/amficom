@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.11 2005/06/23 14:45:11 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.12 2005/07/13 16:08:34 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,19 +35,19 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/06/23 14:45:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/07/13 16:08:34 $
  * @module commonclient_v1
  */
 
@@ -187,7 +187,7 @@ public class CharacteristicAddDialog {
 		dialog.setTitle(LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTIC));
 		
 		dialog.setModal(true);
-		dialog.show();
+		dialog.setVisible(true);
 		dialog.dispose();
 
 		final Object selectedValue = optionPane.getValue();
@@ -206,7 +206,7 @@ public class CharacteristicAddDialog {
 						Identifier userId = LoginManager.getUserId();
 						// TODO maybe create separated fields for codename, name and description ?
 						this.selectedType = CharacteristicType.createInstance(userId, this.nameField.getText(),
-							this.nameField.getText(), this.nameField.getText(), DataType.DATA_TYPE_STRING, this.sort);
+							this.nameField.getText(), this.nameField.getText(), DataType.STRING, this.sort);
 					} catch (CreateObjectException ex) {
 						ex.printStackTrace();
 					}
