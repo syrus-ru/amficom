@@ -69,8 +69,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/11 08:19:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/07/13 06:57:00 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -491,55 +491,68 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 
 		try {
-			TypicalCondition waveLengthCondition = new TypicalCondition(ParameterTypeCodename.TRACE_WAVELENGTH.name(),
-																		OperationSort.OPERATION_EQUALS,
-																		ObjectEntities.PARAMETER_TYPE_CODE,
-																		StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition waveLengthCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_WAVELENGTH.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition traceLengthCondition = new TypicalCondition(ParameterTypeCodename.TRACE_LENGTH.toString(),
-																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETER_TYPE_CODE,
-																			StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition traceLengthCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_LENGTH.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition resolutionCondition = new TypicalCondition(ParameterTypeCodename.TRACE_RESOLUTION.toString(),
-																		OperationSort.OPERATION_EQUALS,
-																		ObjectEntities.PARAMETER_TYPE_CODE,
-																		StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition resolutionCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_RESOLUTION.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition pulseWidthHiResCondition = new TypicalCondition(
-																				ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.toString(),
-																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETER_TYPE_CODE,
-																				StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition pulseWidthHiResCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition pulseWidthLowResCondition = new TypicalCondition(
-																				ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.toString(),
-																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETER_TYPE_CODE,
-																				StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition pulseWidthLowResCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition indexOfRefractionCondition = new TypicalCondition(
-																				ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString(),
-																				OperationSort.OPERATION_EQUALS,
-																				ObjectEntities.PARAMETER_TYPE_CODE,
-																				StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition indexOfRefractionCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition averageCountCondition = new TypicalCondition(ParameterTypeCodename.TRACE_AVERAGE_COUNT.toString(),
-																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETER_TYPE_CODE,
-																			StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition averageCountCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_AVERAGE_COUNT.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition gainSpliceFlagCondition = new TypicalCondition(
-																			ParameterTypeCodename.TRACE_FLAG_GAIN_SPLICE_ON.toString(),
-																			OperationSort.OPERATION_EQUALS,
-																			ObjectEntities.PARAMETER_TYPE_CODE,
-																			StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition gainSpliceFlagCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_FLAG_GAIN_SPLICE_ON.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
-			TypicalCondition liveFiberDetectFlagCondition = new TypicalCondition(
-																					ParameterTypeCodename.TRACE_FLAG_LIVE_FIBER_DETECT.toString(),
-																					OperationSort.OPERATION_EQUALS,
-																					ObjectEntities.PARAMETER_TYPE_CODE,
-																					StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition liveFiberDetectFlagCondition = 
+				new TypicalCondition(
+					ParameterTypeCodename.TRACE_FLAG_LIVE_FIBER_DETECT.stringValue(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PARAMETER_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
 
 			Set<TypicalCondition> conditions = new HashSet<TypicalCondition>(9);
 			conditions.add(waveLengthCondition);
@@ -555,7 +568,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			// CompoundCondition compoundCondition = new
 			// CompoundCondition(conditions, CompoundConditionSort.OR);
 
-			Collection parameterTypes = new ArrayList(6);
+			Collection<ParameterType> parameterTypes = new ArrayList<ParameterType>(6);
 			for (Iterator iterator = conditions.iterator(); iterator.hasNext();) {
 				StorableObjectCondition condition = (StorableObjectCondition) iterator.next();
 
@@ -563,14 +576,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				if (storableObjectsByCondition.isEmpty())
 					throw new IllegalArgumentException(
 														LangModelSchedule.getString("Error.CannotFindParameterTypes") + " "); //$NON-NLS-1$ //$NON-NLS-2$
-				parameterTypes.add(storableObjectsByCondition.iterator().next());
+				parameterTypes.add((ParameterType) storableObjectsByCondition.iterator().next());
 
 			}
 			// GeneralStorableObjectPool.getStorableObjectsByCondition(compoundCondition,
 			// true);
 
-			for (Iterator iter = parameterTypes.iterator(); iter.hasNext();) {
-				ParameterType parameterType = (ParameterType) iter.next();
+			for (ParameterType parameterType: parameterTypes) {
 				String codeName = parameterType.getCodename();
 				if (codeName.equals(waveLengthCondition.getValue())) {
 					this.wvlenParameterType = parameterType;
@@ -747,21 +759,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
 						+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
 
-				// Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId
-				// |
-				// characteristics.size() "
-				// + characteristics.size(), Log.FINEST);
+				 Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() "
+				 + characteristics.size(), Level.FINEST);
 
 				for (Iterator it = characteristics.iterator(); it.hasNext();) {
 					// System.out.println();
 					Characteristic characteristic = (Characteristic) it.next();
 					StorableObjectType type = characteristic.getType();
-					// System.out.println("characteristicType is " +
-					// type.getId());
+					 System.out.println("characteristicType is " +
+					 type.getId());
 					String codename = type.getCodename();
 					String value = characteristic.getValue();
-					// System.out.println("codename is '" + codename + "', value
-					// isO " + value);
+					 System.out.println("codename is '" + codename + "', valueis: " + value);
 
 					if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 						String[] values = value.split("\\s+"); //$NON-NLS-1$
