@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.8 2005/07/03 19:16:30 bass Exp $
+ * $Id: Parameter.java,v 1.9 2005/07/13 16:06:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/03 19:16:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/13 16:06:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -83,6 +83,7 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@SuppressWarnings("unused")
 	public IdlParameter getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
@@ -152,8 +153,8 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 		String string = null;
 		ByteArray byteArray = new ByteArray(this.value);
 		DataType dataType = this.type.getDataType();
-		switch (dataType.value()) {
-			case DataType._DATA_TYPE_INTEGER:
+		switch (dataType) {
+			case INTEGER:
 				try {
 					string = Integer.toString(byteArray.toInt());
 				} catch (IOException ioe) {
@@ -161,7 +162,7 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 					Log.errorException(ioe);
 				}
 				break;
-			case DataType._DATA_TYPE_DOUBLE:
+			case DOUBLE:
 				try {
 					string = Double.toString(byteArray.toDouble());
 				} catch (IOException ioe) {
@@ -169,7 +170,7 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 					Log.errorException(ioe);
 				}
 				break;
-			case DataType._DATA_TYPE_STRING:
+			case STRING:
 				try {
 					string = byteArray.toUTFString();
 				} catch (IOException ioe) {
@@ -177,7 +178,15 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 					Log.errorException(ioe);
 				}
 				break;
-			case DataType._DATA_TYPE_LONG:
+			case DATE:
+				try {
+					string = byteArray.toUTFString();
+				} catch (IOException ioe) {
+					// Never
+					Log.errorException(ioe);
+				}
+				break;
+			case LONG:
 				try {
 					string = Long.toString(byteArray.toLong());
 				} catch (IOException ioe) {
@@ -185,7 +194,10 @@ public final class Parameter implements TransferableObject, TypedObject, Identif
 					Log.errorException(ioe);
 				}
 				break;
-			case DataType._DATA_TYPE_BOOLEAN:
+			case RAW:
+				string = "Array of " + byteArray.getLength() + " elements";
+				break;
+			case BOOLEAN:
 				try {
 					string = LangModelMeasurement.getString(byteArray.toBoolean() ? "on" : "off");
 				} catch (IOException ioe) {
