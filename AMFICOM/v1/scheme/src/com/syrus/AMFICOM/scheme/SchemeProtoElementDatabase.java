@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.9 2005/07/13 11:32:28 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.10 2005/07/13 12:19:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/13 11:32:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/13 12:19:05 $
  * @module scheme_v1
  */
 public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
@@ -108,11 +108,11 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getEquipmentTypeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getSymbol().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getUgoCell().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getSchemeCell().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getParentSchemeProtoGroup().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getParentSchemeProtoElement().getId());
+				+ DatabaseIdentifier.toSQLString(spe.getSymbolId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(spe.getUgoCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(spe.getSchemeCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(spe.getParentSchemeProtoGroupId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(spe.getParentSchemeProtoElementId());
 		return sql;
 	}
 
@@ -132,11 +132,11 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spe.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getEquipmentTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSymbol().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getUgoCell().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSchemeCell().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getParentSchemeProtoGroup().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getParentSchemeProtoElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getUgoCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSchemeCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getParentSchemeProtoGroupId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getParentSchemeProtoElementId());
 		return startParameterNumber;
 	}
 

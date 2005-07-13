@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.51 2005/07/13 11:32:28 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.52 2005/07/13 12:19:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,12 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_
 import static com.syrus.AMFICOM.general.ErrorMessages.OUT_OF_LIBRARY_HIERARCHY;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -71,7 +74,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/13 11:32:28 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/13 12:19:05 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -489,6 +492,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * A wrapper around {@link #getEquipmentTypeId()}.
+	 *
 	 * @return <code>equipmentType</code> associated with this
 	 *         <code>schemeProtoElement</code>, or <code>null</code> if
 	 *         none.
@@ -553,48 +558,66 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return parentSchemeProtoGroup;
 	}
 
-	public SchemeProtoElement getParentSchemeProtoElement() {
+	Identifier getParentSchemeProtoElementId() {
 		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-
-		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
+		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+		if (parentSchemeProtoElementIdVoid) {
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoElementId() | Parent SchemeProtoElement was requested, while parent is a SchemeProtoGroup; returning null.",
 					FINE);
-			return null;
 		}
-
-		try {
-			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
-	}
-
-	public SchemeProtoGroup getParentSchemeProtoGroup() {
-		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		
-		if (this.parentSchemeProtoGroupId.isVoid()) {
-			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroup() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
-					FINE);
-			return null;
-		}
-
-		try {
-			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.parentSchemeProtoGroupId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
+		return this.parentSchemeProtoElementId;
 	}
 
 	/**
+	 * A wrapper around {@link #getParentSchemeProtoElementId()}.
+	 */
+	public SchemeProtoElement getParentSchemeProtoElement() {
+		try {
+			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+
+	Identifier getParentSchemeProtoGroupId() {
+		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		final boolean parentSchemeProtoGroupIdVoid = this.parentSchemeProtoGroupId.isVoid();
+		assert parentSchemeProtoGroupIdVoid || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		if (parentSchemeProtoGroupIdVoid) {
+			Log.debugMessage("SchemeProtoElement.getParentSchemeProtoGroupId() | Parent SchemeProtoGroup was requested, while parent is a SchemeProtoElement; returnning null",
+					FINE);
+		}
+		return this.parentSchemeProtoGroupId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeProtoGroupId()}.
+	 */
+	public SchemeProtoGroup getParentSchemeProtoGroup() {
+		try {
+			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+
+	Identifier getSchemeCellId() {
+		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId.isVoid() || this.schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.schemeCellId;
+	}
+
+	/**
+	 * A wrapper around {@link #getSchemeCellId()}.
+	 *
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.schemeCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -643,14 +666,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
+	Identifier getSymbolId() {
+		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
+		assert this.symbolId.isVoid() || this.symbolId.getMajor() == IMAGERESOURCE_CODE;
+		return this.symbolId;
+	}
+
 	/**
+	 * A wrapper around {@link #getSymbolId()}.
+	 *
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) StorableObjectPool
-					.getStorableObject(this.symbolId, true);
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -682,14 +711,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				Identifier.createTransferables(this.characteristics));
 	}
 
+	Identifier getUgoCellId() {
+		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.ugoCellId;
+	}
+
 	/**
+	 * A wrapper around {@link #getUgoCellId()}.
+	 *
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.ugoCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
