@@ -902,9 +902,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				try {
 					if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 						test = Test.createInstance(LoginManager.getUserId(), startTime, endTime,
-							temporalPattern == null ? null : temporalPattern.getId(), temporalType,
-							this.measurementType.getId(), this.analysisTypeId == null ? null : this.analysisTypeId,
-							this.evaluationTypeId == null ? null : this.evaluationTypeId, null, this.monitoredElement,
+							temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(), temporalType,
+							this.measurementType.getId(), this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
+							this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId, Identifier.VOID_IDENTIFIER, this.monitoredElement,
 							this.returnType, this.name != null && this.name.trim().length() > 0 ? this.name : sdf
 									.format(startTime), measurementSetupIds);
 
@@ -914,7 +914,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							}
 							Identifier meId = this.monitoredElement.getId();
 							Identifier testGroupId = (Identifier) this.meTestGroup.get(meId);
-							if (testGroupId == null) {
+							if (testGroupId == null || testGroupId.isVoid()) {
 								testGroupId = test.getId();
 								this.meTestGroup.put(meId, testGroupId);
 							}
@@ -1072,7 +1072,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				Test testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
 				if (this.aloneGroupTest) {
 					if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
-						Test test = Test.createInstance(LoginManager.getUserId(), this.startGroupDate, null, null,
+						Test test = Test.createInstance(LoginManager.getUserId(), this.startGroupDate, null, Identifier.VOID_IDENTIFIER,
 							TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, testGroup.getMeasurementTypeId(), testGroup
 									.getAnalysisTypeId(), testGroup.getEvaluationTypeId(), testGroupId, testGroup
 									.getMonitoredElement(), testGroup.getReturnType(), testGroup.getDescription(),
@@ -1169,7 +1169,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								selectedTest.getReturnType(), selectedTest.getDescription(), selectedTest
 										.getMeasurementSetupIds());
 							Identifier testId = test.getId();
-							if (testGroupId == null) {
+							if (testGroupId == null || testGroupId.isVoid()) {
 								testGroupId = testId;
 								test.setGroupTestId(testGroupId);
 							}
