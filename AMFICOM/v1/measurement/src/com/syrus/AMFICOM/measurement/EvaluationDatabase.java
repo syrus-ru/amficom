@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.57 2005/06/27 10:37:36 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.58 2005/07/13 09:27:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/27 10:37:36 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/13 09:27:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -84,7 +84,7 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		Measurement measurement = evaluation.getMeasurement();
 		String values = DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getMonitoredElementId()) + COMMA
-			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
+			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getThresholdSet().getId());
 		return values;
 	}
@@ -97,7 +97,7 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		Measurement measurement = evaluation.getMeasurement();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getThresholdSet().getId());
 		return startParameterNumber;
 	}

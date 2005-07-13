@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.95 2005/06/27 10:57:49 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.96 2005/07/13 09:27:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/06/27 10:57:49 $
+ * @version $Revision: 1.96 $, $Date: 2005/07/13 09:27:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -87,9 +87,9 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		final ParameterSet thresholdSet = measurementSetup.getThresholdSet();
 		final ParameterSet etalon = measurementSetup.getEtalon();
 		final String values = DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : null) + COMMA
-			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : null) + COMMA
-			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : null) + COMMA
+			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
+			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
+			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ Long.toString(measurementSetup.getMeasurementDuration());
 		return values;
@@ -103,10 +103,18 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		final ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
 		final ParameterSet thresholdSet = measurementSetup.getThresholdSet();
 		final ParameterSet etalon = measurementSetup.getEtalon();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurementSetup.getParameterSet().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (criteriaSet != null) ? criteriaSet.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (thresholdSet != null) ? thresholdSet.getId() : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (etalon != null) ? etalon.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement,
+				++startParameterNumber,
+				measurementSetup.getParameterSet().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement,
+				++startParameterNumber,
+				(criteriaSet != null) ? criteriaSet.getId() : Identifier.VOID_IDENTIFIER);
+		DatabaseIdentifier.setIdentifier(preparedStatement,
+				++startParameterNumber,
+				(thresholdSet != null) ? thresholdSet.getId() : Identifier.VOID_IDENTIFIER);
+		DatabaseIdentifier.setIdentifier(preparedStatement,
+				++startParameterNumber,
+				(etalon != null) ? etalon.getId() : Identifier.VOID_IDENTIFIER);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setLong(++startParameterNumber, measurementSetup.getMeasurementDuration());
 		return startParameterNumber;

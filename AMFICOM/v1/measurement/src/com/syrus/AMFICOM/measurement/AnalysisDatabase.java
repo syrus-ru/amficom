@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.62 2005/06/27 10:37:36 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.63 2005/07/13 09:27:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/06/27 10:37:36 $
+ * @version $Revision: 1.63 $, $Date: 2005/07/13 09:27:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -88,7 +88,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 		Measurement measurement = analysis.getMeasurement();
 		String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
-			+ ((measurement != null) ? (DatabaseIdentifier.toSQLString(measurement.getId())) : "") + COMMA
+			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(analysis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
 		return values;
@@ -101,7 +101,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 		final Measurement measurement = analysis.getMeasurement();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, analysis.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, analysis.getCriteriaSet().getId());
 		return startParameterNumber;

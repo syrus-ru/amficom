@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.93 2005/06/23 18:45:08 bass Exp $
+ * $Id: ResultDatabase.java,v 1.94 2005/07/13 09:27:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -39,20 +40,22 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.94 $, $Date: 2005/07/13 09:27:58 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class ResultDatabase extends StorableObjectDatabase {
 
-	private static String			columns;
-	private static String			updateMultipleSQLValues;
+	private static String columns;
+	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.RESULT_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = ResultWrapper.COLUMN_MEASUREMENT_ID + COMMA
@@ -64,6 +67,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			StringBuffer buffer = new StringBuffer(QUESTION);
@@ -80,47 +84,48 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Result result = this.fromStorableObject(storableObject);
-		StringBuffer buffer = new StringBuffer();
-		int resultSort = result.getSort().value();
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Result result = this.fromStorableObject(storableObject);
+		final StringBuffer buffer = new StringBuffer();
+		final int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
@@ -132,33 +137,35 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		Result result = this.fromStorableObject(storableObject);
-		int resultSort = result.getSort().value();
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Result result = this.fromStorableObject(storableObject);
+		final int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:					
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);					
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);					
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
 				break;
 			default:
@@ -169,23 +176,25 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		return startParameterNumber;
 	}
 
-	private Result fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Result fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Result)
 			return (Result) storableObject;
 		throw new IllegalDataException("ResultDatabase.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject)
+	@Override
+	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
 		this.retrieveResultParametersByOneQuery(Collections.singleton(result));
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Result result = (storableObject == null)
+		final Result result = (storableObject == null)
 				? new Result(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 									null,
 									0L,
@@ -193,7 +202,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 									0,
 									null)
 				: this.fromStorableObject(storableObject);
-		int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
+		final int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
 		Action action = null;
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
@@ -242,68 +251,15 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		return result;
 	}
 
-//	private void retrieveResultParameters(Result result) throws RetrieveObjectException {
-//		List parameters = new LinkedList();
-//
-//		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
-//		String sql = SQL_SELECT + COLUMN_ID + COMMA + LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE
-//				+ SQL_FROM + ObjectEntities.RESULTPARAMETER + SQL_WHERE + LINK_COLUMN_RESULT_ID
-//				+ EQUALS + resultIdStr;
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//		try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("ResultDatabase.retrieveResultParameters | Trying: " + sql, Log.DEBUGLEVEL09);
-//			resultSet = statement.executeQuery(sql);
-//			Parameter parameter;
-//			ParameterType parameterType;
-//			while (resultSet.next()) {
-//				try {
-//					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-//				}
-//				catch (ApplicationException ae) {
-//					throw new RetrieveObjectException(ae);
-//				}
-//				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-//											 parameterType,
-//											 ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
-//				parameters.add(parameter);
-//			}
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result '"
-//					+ resultIdStr + "' -- " + sqle.getMessage();
-//			throw new RetrieveObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				if (resultSet != null)
-//					resultSet.close();
-//				statement = null;
-//				resultSet = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//		result.setParameters((Parameter[]) parameters.toArray(new Parameter[parameters.size()]));
-//	}
-
 	/**	
 	 * @param results
 	 * @throws RetrieveObjectException
 	 */
-	private void retrieveResultParametersByOneQuery(java.util.Set results) throws RetrieveObjectException {
+	private void retrieveResultParametersByOneQuery(final Set<Result> results) throws RetrieveObjectException {
 		if ((results == null) || (results.isEmpty()))
 			return;		
 		
-		StringBuffer sql = new StringBuffer(SQL_SELECT
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
@@ -312,34 +268,31 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
 
-		Map resultParametersMap = new HashMap();
-		Identifier resultId;
-		java.util.Set resultParameters;
+		final Map<Identifier, Set<Parameter>> resultParametersMap = new HashMap<Identifier, Set<Parameter>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResultParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 
-			ParameterType parameterType;
-			Parameter parameter;
 			while (resultSet.next()) {
+				ParameterType parameterType = null;
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 														parameterType,
 														ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
-				resultParameters = (java.util.Set) resultParametersMap.get(resultId);
+				final Identifier resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
+				Set<Parameter> resultParameters = resultParametersMap.get(resultId);
 				if (resultParameters == null) {
-					resultParameters = new HashSet();
+					resultParameters = new HashSet<Parameter>();
 					resultParametersMap.put(resultId, resultParameters);
 				}
 				resultParameters.add(parameter);
@@ -362,23 +315,22 @@ public final class ResultDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		Result result;
-		for (Iterator it = results.iterator(); it.hasNext();) {
-			result = (Result) it.next();
-			resultId = result.getId();
-			resultParameters = (java.util.Set) resultParametersMap.get(resultId);
+		for (final Result result : results) {
+			final Identifier resultId = result.getId();
+			final Set<Parameter> resultParameters = resultParametersMap.get(resultId);
 
 			if (resultParameters != null)
-				result.setParameters0((Parameter[]) resultParameters.toArray(new Parameter[resultParameters.size()]));
+				result.setParameters0(resultParameters.toArray(new Parameter[resultParameters.size()]));
 			else
 				result.setParameters0(new Parameter[0]);
 		}
 
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		Result result = this.fromStorableObject(storableObject);
+		final Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  result.getId() + "'; argument: " + arg);
@@ -386,8 +338,9 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Result result = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		final Result result = this.fromStorableObject(storableObject);
 		try {
 			super.insertEntity(result);
 			this.insertResultParameters(result);
@@ -397,7 +350,8 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
@@ -407,10 +361,10 @@ public final class ResultDatabase extends StorableObjectDatabase {
 
 	}
 
-	private void insertResultParameters(Result result) throws CreateObjectException {
-		Identifier resultId = result.getId();
-		Parameter[] setParameters = result.getParameters();
-		String sql = SQL_INSERT_INTO
+	private void insertResultParameters(final Result result) throws CreateObjectException {
+		final Identifier resultId = result.getId();
+		final Parameter[] setParameters = result.getParameters();
+		final String sql = SQL_INSERT_INTO
 				+ ObjectEntities.RESULTPARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -424,7 +378,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (int i = 0; i < setParameters.length; i++) {
@@ -445,7 +399,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString()
+			final String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
@@ -461,13 +415,14 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		assert (id.getMajor() != ObjectEntities.RESULT_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
-		String resultIdStr = DatabaseIdentifier.toSQLString(id);
+		final String resultIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER
@@ -490,11 +445,11 @@ public final class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected java.util.Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-//		Log.debugMessage("ResultDatabase.retrieveByCondition | conditionQuery : " + conditionQuery , Log.FINEST);
-		java.util.Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveResultParametersByOneQuery(collection);
-		return collection;
+	@Override
+	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveResultParametersByOneQuery(objects);
+		return objects;
 	}
 
 }
