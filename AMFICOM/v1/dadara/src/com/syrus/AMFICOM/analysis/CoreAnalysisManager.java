@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.94 2005/07/12 16:41:28 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.95 2005/07/13 06:21:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.94 $, $Date: 2005/07/12 16:41:28 $
+ * @version $Revision: 1.95 $, $Date: 2005/07/13 06:21:01 $
  * @module
  */
 
@@ -139,9 +139,9 @@ public class CoreAnalysisManager
 	 * @param y Входная кривая рефлектограммы в дБ.
 	 * @param length Длина волокна, > 0
 	 * @return относительная величина шума (дБ) по уровню 3 сигма в каждой
-     *  точке, длина массива length  
+	 *  точке, длина массива length  
 	 */
-	public static double[] calcNoiseArray(double[] y, int length)
+	protected static double[] calcNoiseArray(double[] y, int length)
 	{
 		double[] ret = nCalcNoiseArray(y, length);
 		for (int i = 0; i < ret.length; i++)
@@ -149,6 +149,11 @@ public class CoreAnalysisManager
 		return ret;
 	}
 
+	/**
+	 * Загружает native-библиотеку dadara.
+	 * Поскольку эта библиотека используется и в некоторых
+	 * других классах модуля dadara, этот метод сделан public. 
+	 */
 	public static void loadDLL() {
 		try {
 			System.loadLibrary("dadara");
@@ -200,10 +205,6 @@ public class CoreAnalysisManager
 		return gauss;
 	}
 
-    public static double[] calcGaussian(double[] y, int maxIndex) {
-        return calcGaussian(y, maxIndex, null);
-    }
-
 	public static double[] calcThresholdCurve(double[] y, int max_index) {
 		double[] threshold = new double[y.length];
 		double max = 0;
@@ -224,7 +225,7 @@ public class CoreAnalysisManager
 		return threshold;
 	}
 
-	public static ReliabilitySimpleReflectogramEventImpl[] createSimpleEvents(
+	protected static ReliabilitySimpleReflectogramEventImpl[] createSimpleEvents(
 			double[] y,
 			double deltaX,
 			double minLevel,
@@ -252,7 +253,7 @@ public class CoreAnalysisManager
      *   используемый для более точной расстановки позиций узлов при фитировке
 	 * @return mf фитированной кривой
 	 */
-	public static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
+	protected static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
 	{
 		return ModelFunction.createFitedAsBreakL(y, 0, traceLength, noiseArray, sre);
 	}
@@ -288,7 +289,7 @@ public class CoreAnalysisManager
      * @return результаты, приемлемые для анализа
      *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
      */
-    public static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
+    protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
             boolean needNoise) {
         TracePreAnalysis res = new TracePreAnalysis();
         // данные рефлектограммы
@@ -315,11 +316,11 @@ public class CoreAnalysisManager
      * @param ap набор параметров для IA
      * @return результат анализа в виде mtae
      */
-    public static ModelTraceAndEventsImpl makeAnalysis(
+    protected static ModelTraceAndEventsImpl makeAnalysis(
             TracePreAnalysis tpa,
             AnalysisParameters ap)
     {
-        long t0 = System.currentTimeMillis();
+//        long t0 = System.currentTimeMillis();
 
         // определяем reflSize и nReflSize
         // FIXME: привести reflSize и nReflSize в порядок
@@ -335,7 +336,7 @@ public class CoreAnalysisManager
         if (reflSize < nReflSize * 10)
             reflSize = nReflSize * 10; // FIXME!
 
-        long t1 = System.currentTimeMillis();
+//        long t1 = System.currentTimeMillis();
 
         // формирование событий по усредненной кривой
 
@@ -361,20 +362,20 @@ public class CoreAnalysisManager
             ? rse[rse.length - 1].getEnd() + 1
             : 0;
 
-        long t2 = System.currentTimeMillis();
+//        long t2 = System.currentTimeMillis();
 
         // фитируем
 
         ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
 
-        long t3 = System.currentTimeMillis();
+//        long t3 = System.currentTimeMillis();
 
         double[] yTypical = tpa.y; // FIXME: надо брать одну, самую типовую р/г, а не усредненную, т.к. потом по этим данным будет считаться rms
 
         ModelTraceAndEventsImpl mtae =
             new ModelTraceAndEventsImpl(rse, mf, yTypical, tpa.deltaX);
 
-        long t4 = System.currentTimeMillis();
+//        long t4 = System.currentTimeMillis();
 
         // FIXME: debug output of analysis timing
 //      System.out.println("makeAnalysis: "
@@ -406,7 +407,7 @@ public class CoreAnalysisManager
      *   параметры входных bs, необходимые для проведения анализа, различаются
 	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
-	public static TracesAverages findTracesAverages(Collection bsColl,
+	protected static TracesAverages findTracesAverages(Collection bsColl,
 			boolean needNoiseInfo,
 			boolean needMFInfo,
             AnalysisParameters ap)
@@ -506,26 +507,6 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Делает анализ. Скрывает сложности, связанные с правильным
-	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
-	 * @todo declare to throw "invalid parameters exception"
-	 * @deprecated use {@link #performAnalysis(BellcoreStructure,
-	 *     AnalysisParameters)}
-	 *   .{@link AnalysisResult#getMTAE()}
-	 * @param bs рефлектограмма
-	 * @param ap параметры анализа
-	 * @return массив событий
-	 */
-	@Deprecated
-	public static ModelTraceAndEventsImpl makeAnalysis(
-			BellcoreStructure bs,
-			AnalysisParameters ap)
-	{
-        TracePreAnalysis tpa = makePreAnalysis(bs, true);
-        return makeAnalysis(tpa, ap);
-	}
-
-	/**
 	 * Выполняет анализ одной рефлектограммы
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
@@ -598,7 +579,7 @@ public class CoreAnalysisManager
      * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
      * @return самую среднюю рефлектограмму среди входных
      */
-    public static BellcoreStructure getMostTypicalTrace(Collection bsColl,
+    protected static BellcoreStructure getMostTypicalTrace(Collection bsColl,
     		TracesAverages av) {
         BellcoreStructure nearest = null;
         double bestDistance = 0;
@@ -659,6 +640,7 @@ public class CoreAnalysisManager
 	 * Уточняет параметры коннектора. Такое уточнение призвано защитить алгоритмы
 	 * L-масштабирования от шумов, а также дать необх. инф. о положении максимума
 	 * коннектора, чтобы можно было отличить фронт от спада.
+	 * @todo перенести в к-л иной класс, например, ReflectogramMath или MTM
 	 * @param mf Модельная кривая
 	 * @param evBegin Начальное начало события
 	 * @param evEnd Начальный конец события
@@ -677,6 +659,8 @@ public class CoreAnalysisManager
 	
 	/**
 	 * See specification of {@link #nCalcTraceLength(double[])}
+	 * @todo скрыть этот метод, а его вызовы переделать на использование
+	 * {@link #makePreAnalysis(BellcoreStructure, boolean)}
 	 * @param y Рефлектограмма
 	 * @return длина до конца волокна
 	 */
@@ -686,6 +670,7 @@ public class CoreAnalysisManager
 	}
 
 	/**
+	 * Используется в MTM для создания порогов.
 	 * See specification of {@link #nExtendThreshToCoverCurve(double[], double[], ThreshDX[], ThreshDY[], int, int, double)}
 	 */
 	public static void extendThreshToCoverCurve(
