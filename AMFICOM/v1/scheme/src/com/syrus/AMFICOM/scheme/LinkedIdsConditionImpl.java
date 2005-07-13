@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/07/12 11:07:57 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/07/13 11:24:27 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/07/12 11:07:57 $
+ * @author $Author: max $
+ * @version $Revision: 1.22 $, $Date: 2005/07/13 11:24:27 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -108,6 +108,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						final boolean precondition2 = super.conditionTest(schemeLink.targetAbstractSchemePortId);
 						assert !(precondition1 && precondition2);
 						return precondition1 ^ precondition2;
+					case SCHEMEPROTOELEMENT_CODE:
+						return super.conditionTest(schemeLink.parentSchemeProtoElementId);
 					default:
 						throw newIllegalObjectEntityException();
 				}
