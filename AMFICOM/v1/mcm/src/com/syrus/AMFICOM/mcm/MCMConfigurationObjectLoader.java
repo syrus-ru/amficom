@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.51 2005/07/03 19:16:32 bass Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.52 2005/07/13 10:52:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/07/03 19:16:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/07/13 10:52:36 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -152,7 +152,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
 					IdlIdentifier[] idsT,
 					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitKISs(idsT, sessionKey);
+				return ((MServer) server).transmitMonitoredElements(idsT, sessionKey);
 			}
 		});
 	}
