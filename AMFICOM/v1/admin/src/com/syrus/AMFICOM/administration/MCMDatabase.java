@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.29 2005/06/25 17:50:50 bass Exp $
+ * $Id: MCMDatabase.java,v 1.30 2005/07/13 15:05:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/07/13 15:05:41 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -38,7 +38,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private MCM fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
 			return (MCM) storableObject;
 		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -76,9 +76,9 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		MCM mcm = this.fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final MCM mcm = this.fromStorableObject(storableObject);
+		final String sql = DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
@@ -88,9 +88,9 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		MCM mcm = this.fromStorableObject(storableObject);
+		final MCM mcm = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcm.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mcm.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -101,7 +101,7 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		MCM mcm = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (mcm == null) {
@@ -129,58 +129,11 @@ public final class MCMDatabase extends CharacterizableDatabase {
 
 		return mcm;
 	}
-//
-//	/**
-//	 * @deprecated
-//	 * @param mcm
-//	 * @return
-//	 * @throws RetrieveObjectException
-//	 */
-//	public Collection retrieveKISIds(MCM mcm) throws RetrieveObjectException {
-//		Collection kisIds = new HashSet();
-//		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
-//		String sql = SQL_SELECT
-//			+ StorableObjectWrapper.COLUMN_ID
-//			+ SQL_FROM + ObjectEntities.KIS
-//			+ SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID + EQUALS + mcmIdStr;
-//		Statement statement = null;
-//		ResultSet resultSet = null;
-//		Connection connection = DatabaseConnection.getConnection();
-//    try {
-//			statement = connection.createStatement();
-//			Log.debugMessage("MCMDatabase.retrieveKISIds | Trying: " + sql, Log.DEBUGLEVEL09);
-//			resultSet = statement.executeQuery(sql);
-//			while (resultSet.next())
-//				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "MCMDatabase.retrieveKISIds | Cannot retrieve kis ids for mcm " + mcmIdStr;
-//			throw new RetrieveObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (statement != null)
-//					statement.close();
-//				if (resultSet != null)
-//					resultSet.close();
-//				statement = null;
-//				resultSet = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//			finally {
-//				DatabaseConnection.releaseConnection(connection);
-//			}
-//		}
-//
-//		return kisIds;
-//	}
 
   @Override
-public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		MCM mcm = this.fromStorableObject(storableObject);
+  	final MCM mcm = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mcm.getId() + "'; argument: " + arg);
@@ -188,7 +141,7 @@ public Object retrieveObject(StorableObject storableObject, int retrieveKind, Ob
 		}
 	}
 
-  public Set retrieveForServer(Identifier serverId) throws RetrieveObjectException, IllegalDataException {
+  public Set<MCM> retrieveForServer(final Identifier serverId) throws RetrieveObjectException, IllegalDataException {
   	String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
 		String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
