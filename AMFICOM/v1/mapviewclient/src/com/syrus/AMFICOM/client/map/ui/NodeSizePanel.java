@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.10 2005/06/06 12:57:03 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.11 2005/07/13 09:49:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,12 +22,14 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.10 $, $Date: 2005/06/06 12:57:03 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/13 09:49:45 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -107,7 +109,15 @@ public final class NodeSizePanel extends JPanel
 	{
 		if(this.logicalNetLayer == null)
 			return;
-		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() * COEF);
+		try {
+			this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() * COEF);
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 	}
 
@@ -115,7 +125,15 @@ public final class NodeSizePanel extends JPanel
 	{
 		if(this.logicalNetLayer == null)
 			return;
-		this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() / COEF);
+		try {
+			this.logicalNetLayer.setDefaultScale(this.logicalNetLayer.getDefaultScale() / COEF);
+		} catch(MapDataException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(MapConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.NEED_REPAINT));
 	}
 
