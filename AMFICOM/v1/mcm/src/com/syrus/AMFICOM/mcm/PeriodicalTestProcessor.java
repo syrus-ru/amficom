@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.40 2005/06/22 13:59:17 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.41 2005/07/13 19:23:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/06/22 13:59:17 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/13 19:23:59 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -41,7 +41,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 	private List<Date> timeStampsList;
 	private Date currentTimeStamp;
 
-	public PeriodicalTestProcessor(Test test) {
+	public PeriodicalTestProcessor(final Test test) {
 		super(test);
 
 		this.endTime = test.getEndTime().getTime();
@@ -66,7 +66,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			else {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
-					Set times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+					final Set<Date> times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
 //--------
 					Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + (new Date(start))
 							+ " to " + (new Date(Math.min(start + FRAME, this.endTime))), Log.DEBUGLEVEL09);
@@ -84,6 +84,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		return timeStamp;
 	}
 
+	@Override
 	public void run() {
 		while (super.running) {
 			if (! super.lastMeasurementAcquisition) {
@@ -124,12 +125,14 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		}
 	}
 
+	@Override
 	protected void cleanup() {
 		super.cleanup();
 		if (this.timeStampsList != null)
 			this.timeStampsList.clear();
 	}
 
+	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:

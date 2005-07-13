@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.45 2005/07/13 18:42:58 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.46 2005/07/13 19:23:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/13 18:42:58 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/13 19:23:59 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -81,7 +81,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public IdlMeasurement[] transmitMeasurements(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		final Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set<Identifier> ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {
@@ -103,7 +103,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public IdlAnalysis[] transmitAnalyses(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		final Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set<Identifier> ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {
@@ -125,7 +125,7 @@ public class MCMImplementation extends MCMPOA {
 
   public IdlEvaluation[] transmitEvaluations(final IdlIdentifier[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		final Set ids = Identifier.fromTransferables(identifier_Transferables);
+		final Set<Identifier> ids = Identifier.fromTransferables(identifier_Transferables);
 
 		Set objects = null;
 		try {

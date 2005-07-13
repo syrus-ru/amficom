@@ -104,6 +104,7 @@ public class Transceiver extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	public void run() {
 		while (this.running) {
 
@@ -233,6 +234,7 @@ public class Transceiver extends SleepButWorkThread {
 		}// while
 	}
 
+	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
