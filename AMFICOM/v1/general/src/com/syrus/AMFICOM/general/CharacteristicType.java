@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.40 2005/07/03 19:16:24 bass Exp $
+ * $Id: CharacteristicType.java,v 1.41 2005/07/13 16:05:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:24 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/07/13 16:05:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -31,7 +31,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
-	private int dataType;
+	private DataType dataType;
 	private int sort;
 
 	/**
@@ -64,7 +64,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			final String codename,
 			final String description,
 			final String name,
-			final int dataType,
+			final DataType dataType,
 			final int sort) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -92,7 +92,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			Log.errorException(ae);
 		}
 		this.name = ctt.name;
-		this.dataType = ctt.dataType.value();
+		this.dataType = DataType.fromTransferable(ctt.dataType);
 		this.sort = ctt.sort.value();
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -121,7 +121,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 					codename,
 					description,
 					name,
-					dataType.value(),
+					dataType,
 					sort.value());
 
 			assert characteristicType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -150,19 +150,19 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
-				DataType.from_int(this.dataType),
+				(IdlDataType) this.dataType.getTransferable(orb),
 				CharacteristicTypeSort.from_int(this.sort));
 	}
 
 	public DataType getDataType() {
-		return DataType.from_int(this.dataType);
+		return this.dataType;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setDataType0(final DataType dataType) {
-		this.dataType = dataType.value();
+		this.dataType = dataType;
 	}
 
 	public String getName() {
@@ -201,7 +201,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			final String codename,
 			final String description,
 			final String name,
-			final int dataType,
+			final DataType dataType,
 			final int sort) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;

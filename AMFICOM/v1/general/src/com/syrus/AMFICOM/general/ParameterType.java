@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.41 2005/07/04 13:00:51 bass Exp $
+ * $Id: ParameterType.java,v 1.42 2005/07/13 16:05:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/04 13:00:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/07/13 16:05:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -32,7 +32,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	private static final long serialVersionUID = 4050767108738528569L;
 
 	private String name;
-	private int dataType;
+	private DataType dataType;
 	
 	private Set<Characteristic> characteristics;
 
@@ -74,7 +74,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			final String codename,
 			final String description,
 			final String name,
-			final int dataType) {
+			final DataType dataType) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -110,7 +110,7 @@ public final class ParameterType extends StorableObjectType implements Character
 					codename,
 					description,
 					name,
-					dataType.value());
+					dataType);
 
 			assert parameterType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -146,7 +146,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			Log.errorException(ae);
 		}
 		this.name = ptt.name;
-		this.dataType = ptt.dataType.value();
+		this.dataType = DataType.fromTransferable(ptt.dataType);
 		
 		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
 		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
@@ -175,7 +175,7 @@ public final class ParameterType extends StorableObjectType implements Character
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
-				DataType.from_int(this.dataType),
+				(IdlDataType) this.dataType.getTransferable(orb),
 				charIds);
 	}
 
@@ -200,14 +200,14 @@ public final class ParameterType extends StorableObjectType implements Character
 	}
 
 	public DataType getDataType() {
-		return DataType.from_int(this.dataType);
+		return this.dataType;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected void setDataType0(final DataType dataType) {
-		this.dataType = dataType.value();
+		this.dataType = dataType;
 	}
 
 	public void setDataType(final DataType dataType) {
@@ -226,7 +226,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			final String codename,
 			final String description,
 			final String name,
-			final int dataType) {
+			final DataType dataType) {
 		super.setAttributes(created,
 			modified,
 			creatorId,

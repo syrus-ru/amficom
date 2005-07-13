@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.12 2005/06/25 17:07:46 bass Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.13 2005/07/13 16:05:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,17 +12,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/13 16:05:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
-	public static final String COLUMN_DATA_TYPE = "data_type";
+	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 	public static final String COLUMN_SORT = "sort";
 
 	protected static CharacteristicTypeWrapper	instance;
@@ -31,7 +30,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 
 	private CharacteristicTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_DATA_TYPE, COLUMN_SORT};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_DATA_TYPE_CODE, COLUMN_SORT};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -66,7 +65,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_NAME) 
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(COLUMN_DATA_TYPE)
+		} else if (key.equals(COLUMN_DATA_TYPE_CODE)
 				|| key.equals(COLUMN_SORT)) {
 			return Integer.class;	
 		}
@@ -93,8 +92,8 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 				return characteristicType.getDescription();
 			else if (key.equals(COLUMN_NAME))
 				return characteristicType.getName();
-			else if (key.equals(COLUMN_DATA_TYPE))
-				return new Integer(characteristicType.getDataType().value());
+			else if (key.equals(COLUMN_DATA_TYPE_CODE))
+				return characteristicType.getDataType();
 			else if (key.equals(COLUMN_SORT))
 				return new Integer(characteristicType.getSort().value());
 		}
@@ -116,8 +115,8 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 				characteristicType.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
 				characteristicType.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
-			else if (key.equals(COLUMN_DATA_TYPE))
-				characteristicType.setDataType0(DataType.from_int(((Integer) value).intValue()));
+			else if (key.equals(COLUMN_DATA_TYPE_CODE))
+				characteristicType.setDataType0((DataType) value);
 		}
 	}
 

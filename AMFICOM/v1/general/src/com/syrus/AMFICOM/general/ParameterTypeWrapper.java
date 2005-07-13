@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.10 2005/06/25 17:07:46 bass Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.11 2005/07/13 16:05:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.corba.DataType;
-
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/13 16:05:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class ParameterTypeWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_DATA_TYPE	= "data_type";
+	public static final String				COLUMN_DATA_TYPE_CODE	= "data_type_code";
 
 	protected static ParameterTypeWrapper	instance;
 
@@ -33,7 +31,7 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 				StorableObjectWrapper.COLUMN_CODENAME,
 				StorableObjectWrapper.COLUMN_DESCRIPTION, 
 				StorableObjectWrapper.COLUMN_NAME, 
-				COLUMN_DATA_TYPE};
+				COLUMN_DATA_TYPE_CODE};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -83,8 +81,8 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 				return parameterType.getDescription();
 			else if (key.equals(StorableObjectWrapper.COLUMN_NAME))
 				return parameterType.getName();
-			else if (key.equals(COLUMN_DATA_TYPE))
-				return new Integer(parameterType.getDataType().value());
+			else if (key.equals(COLUMN_DATA_TYPE_CODE))
+				return parameterType.getDataType();
 		}
 		return null;
 	}
@@ -102,8 +100,8 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 				parameterType.setDescription((String) value);
 			else if (key.equals(StorableObjectWrapper.COLUMN_NAME))
 				parameterType.setName((String) value);
-			else if (key.equals(COLUMN_DATA_TYPE))
-				parameterType.setDataType(DataType.from_int(((Integer) value).intValue()));
+			else if (key.equals(COLUMN_DATA_TYPE_CODE))
+				parameterType.setDataType((DataType) value);
 		}
 	}
 
