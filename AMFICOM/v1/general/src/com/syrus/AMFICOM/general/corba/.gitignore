@@ -5,7 +5,7 @@
 _*Stub.java
 AMFICOMRemoteException.java
 CommonServer.java
-DataType.java
+IdlDataType.java
 IdentifierGeneratorServer.java
 IdlCharacteristic.java
 IdlCharacteristicType.java
