@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.4 2005/06/15 15:52:48 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.5 2005/07/13 19:27:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/15 15:52:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/13 19:27:08 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -35,6 +35,7 @@ final class LEServerPoolContext extends PoolContext {
 	public static final int ADMINISTRATION_POOL_SIZE = 1000;
 	public static final int EVENT_POOL_SIZE = 1000;
 
+	@Override
 	public void init() {
 		final GeneralObjectLoader generalObjectLoader = new DatabaseGeneralObjectLoader();
 		final AdministrationObjectLoader administrationObjectLoader = new DatabaseAdministrationObjectLoader();

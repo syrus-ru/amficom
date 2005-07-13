@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerImplementation.java,v 1.65 2005/06/29 14:25:31 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.66 2005/07/13 19:29:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/06/29 14:25:31 $
+ * @version $Revision: 1.66 $, $Date: 2005/07/13 19:29:27 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -36,6 +36,7 @@ public class MServerImplementation extends MServerMeasurementTransmit {
 		super(MServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
 	}
 
+	@Override
 	protected void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userId,
 			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {

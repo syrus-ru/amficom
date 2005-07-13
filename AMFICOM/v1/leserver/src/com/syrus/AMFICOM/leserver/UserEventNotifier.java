@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.5 2005/07/03 19:16:18 bass Exp $
+ * $Id: UserEventNotifier.java,v 1.6 2005/07/13 19:27:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/03 19:16:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/13 19:27:08 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class UserEventNotifier extends SleepButWorkThread {
@@ -48,6 +48,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 			this.eventQueue.add(event);
 	}
 
+	@Override
 	public void run() {
 		synchronized (this.eventQueue) {
 			for (final Iterator<Event> it1 = this.eventQueue.iterator(); it1.hasNext();) {
@@ -79,6 +80,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:

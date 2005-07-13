@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.4 2005/06/15 15:55:37 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.5 2005/07/13 19:29:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/15 15:55:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/13 19:29:27 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -39,6 +39,7 @@ final class MServerPoolContext extends PoolContext {
 	public static final int CONFIGURATION_POOL_SIZE = 1000;
 	public static final int MEASUREMENT_POOL_SIZE = 1000;
 
+	@Override
 	public void init() {
 		final GeneralObjectLoader generalObjectLoader = new DatabaseGeneralObjectLoader();
 		final AdministrationObjectLoader administrationObjectLoader = new DatabaseAdministrationObjectLoader();

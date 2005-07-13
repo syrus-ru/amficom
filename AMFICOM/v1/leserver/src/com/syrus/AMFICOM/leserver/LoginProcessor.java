@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.10 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.11 2005/07/13 19:27:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/20 15:28:02 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/13 19:27:08 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -55,6 +55,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		printUserLogins();
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				LoginProcessor.this.shutdown();
 			}
@@ -74,6 +75,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	public void run() {
 		while (this.running) {
 
@@ -100,6 +102,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		}
 	}
 
+	@Override
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
