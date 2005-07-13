@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.135 2005/07/03 19:16:31 bass Exp $
+ * $Id: Test.java,v 1.136 2005/07/13 10:09:45 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/07/03 19:16:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.136 $, $Date: 2005/07/13 10:09:45 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -282,9 +282,12 @@ public final class Test extends StorableObject {
 				&& this.timeStamps != null
 				&& this.timeStamps.isValid()
 				&& this.measurementTypeId != null
+				&& this.analysisTypeId != null
+				&& this.evaluationTypeId != null
 				&& this.monitoredElement != null
 				&& this.description != null
 				&& this.measurementSetupIds != null
+				&& this.groupTestId != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
 			;
 	}
