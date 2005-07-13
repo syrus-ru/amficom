@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -58,7 +59,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Parameter;
@@ -69,8 +69,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/07/13 06:57:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2005/07/13 16:11:01 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -672,26 +672,31 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 		ByteArray byteArray = null;
 		DataType dataType = parameterType.getDataType();
-		switch (dataType.value()) {
-			case DataType._DATA_TYPE_INTEGER:
+		switch (dataType) {
+			case INTEGER:
 				byteArray = new ByteArray(Integer.parseInt(value));
 				break;
-			case DataType._DATA_TYPE_DOUBLE:
+			case DOUBLE:
 				byteArray = new ByteArray(Double.parseDouble(value));
 				break;
-			case DataType._DATA_TYPE_STRING:
+			case STRING:
 				byteArray = new ByteArray(value);
 				break;
-			case DataType._DATA_TYPE_LONG:
+			case LONG:
 				byteArray = new ByteArray(Long.parseLong(value));
 				break;
-			case DataType._DATA_TYPE_BOOLEAN:
+			case BOOLEAN:
 				byteArray = new ByteArray(Boolean.valueOf(value).booleanValue());
 				break;
+			default:
+				Log.errorMessage("Illegal data type '" + dataType.getCodename() + "'/" + dataType.getCode()
+						+ " for parameter type '" + parameterType.getId() + "'");
 		}
 		return byteArray;
+		
 	}
 
+	@Override
 	public void setMonitoredElement(MonitoredElement me) {
 		this.skip = true;
 		this.meId = me.getId();
