@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.40 2005/07/03 19:16:17 bass Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.41 2005/07/13 18:50:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.mserver;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/03 19:16:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/07/13 18:50:58 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -43,7 +43,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadMeasurements(final Set ids) throws ApplicationException {
+	@Override
+	public Set loadMeasurements(final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
@@ -58,7 +59,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadAnalyses(final Set ids) throws ApplicationException {
+	@Override
+	public Set loadAnalyses(final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
@@ -73,7 +75,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadEvaluations(final Set ids) throws ApplicationException {
+	@Override
+	public Set loadEvaluations(final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				new CORBAMServerObjectLoader.TransmitProcedure() {
@@ -90,7 +93,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	@Override
+	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				condition,
@@ -107,7 +111,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	@Override
+	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				condition,
@@ -124,7 +129,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 	/**
 	 * @todo make access validation on MCM
 	 */
-	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	@Override
+	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_CODE,
 				ids,
 				condition,
@@ -140,25 +146,26 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 
 
 
-	public void delete(final Set identifiables) {
+	@Override
+	public void delete(final Set<? extends Identifiable> identifiables) {
 
 		if (identifiables == null || identifiables.isEmpty()) {
 			return;
 		}
 
-		Set nonTestIdentifiers = null;
-		Set testIdentifiers = null;
-		for (Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
+		Set<Identifier> nonTestIdentifiers = null;
+		Set<Identifier> testIdentifiers = null;
+		for (final Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
+			final Identifier id = (Identifier) it.next();
 			if (id.getMajor() == ObjectEntities.TEST_CODE) {
 				if (testIdentifiers == null) {
-					testIdentifiers = new HashSet();
+					testIdentifiers = new HashSet<Identifier>();
 				}
 				testIdentifiers.add(id);
 			}
 			else {
 				if (nonTestIdentifiers == null) {
-					nonTestIdentifiers = new HashSet();
+					nonTestIdentifiers = new HashSet<Identifier>();
 				}
 				nonTestIdentifiers.add(id);
 			}
@@ -169,10 +176,9 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 		}
 
 		if (testIdentifiers != null) {
-			Set nonProcessingIdentifiers = null;
-			Map mcmIdTestIdsMap = new HashMap();
-			for (Iterator iterator = testIdentifiers.iterator(); iterator.hasNext();) {
-				Identifier testId = (Identifier) iterator.next();
+			Set<Identifier> nonProcessingIdentifiers = null;
+			final Map<Identifier, Set<Identifier>> mcmIdTestIdsMap = new HashMap<Identifier, Set<Identifier>>();
+			for (final Identifier testId : testIdentifiers) {
 				try {
 					final Test test = (Test) StorableObjectPool.getStorableObject(testId, true);
 					final TestStatus status = test.getStatus();
@@ -180,7 +186,7 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 						case TestStatus._TEST_STATUS_NEW:
 						case TestStatus._TEST_STATUS_SCHEDULED:
 							if (nonProcessingIdentifiers == null) {
-								nonProcessingIdentifiers = new HashSet();
+								nonProcessingIdentifiers = new HashSet<Identifier>();
 							}
 							nonProcessingIdentifiers.add(testId);
 							super.delete(Collections.singleton(testId));
@@ -191,9 +197,9 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 					}
 
 					final Identifier mcmId = test.getMCMId();
-					java.util.Set mcmIdTestIds = (java.util.Set) mcmIdTestIdsMap.get(mcmId);
+					Set<Identifier> mcmIdTestIds = mcmIdTestIdsMap.get(mcmId);
 					if (mcmIdTestIds == null) {
-						mcmIdTestIds = new HashSet();
+						mcmIdTestIds = new HashSet<Identifier>();
 						mcmIdTestIdsMap.put(mcmId, mcmIdTestIds);
 					}
 					mcmIdTestIds.add(testId);
@@ -207,10 +213,9 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 				super.delete(nonProcessingIdentifiers);
 			}
 
-			MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
-			for (final Iterator it = mcmIdTestIdsMap.keySet().iterator(); it.hasNext();) {
-				final Identifier mcmId = (Identifier) it.next();
-				final IdlIdentifier[] idsT = Identifier.createTransferables((Collection) mcmIdTestIdsMap.get(mcmId));
+			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
+			for (final Identifier mcmId : mcmIdTestIdsMap.keySet()) {
+				final IdlIdentifier[] idsT = Identifier.createTransferables(mcmIdTestIdsMap.get(mcmId));
 				final MCM mcmRef;
 				try {
 					mcmRef = sessionEnvironment.getMServerServantManager().getVerifiedMCMReference(mcmId);
