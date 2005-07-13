@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.25 2005/07/11 13:18:04 bass Exp $
+ * $Id: MapPropertiesManager.java,v 1.26 2005/07/13 13:50:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/07/13 13:50:19 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -82,6 +82,7 @@ public final class MapPropertiesManager
 	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
 	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation";
  	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";	
+ 	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";	
 
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -96,6 +97,7 @@ public final class MapPropertiesManager
 	protected static String lastDirectory = ".";
 	protected static String descreteNavigation = "false";
 	protected static String useTopologicalImageCache = "false";
+	protected static String optimizeLinks = "false";
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
 	protected static String rendererClass = "";
@@ -390,6 +392,10 @@ public final class MapPropertiesManager
 		return Boolean.valueOf(useTopologicalImageCache).booleanValue();
 	}
 
+	public static boolean isOptimizeLinks() {
+		return Boolean.valueOf(optimizeLinks).booleanValue();
+	}
+	
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
@@ -417,7 +423,9 @@ public final class MapPropertiesManager
 		
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
 		descreteNavigation = properties.getProperty(KEY_DESCRETE_NAVIGATION);
-		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);		
+		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);
+		optimizeLinks = properties.getProperty(KEY_OPTIMIZE_LINKS);
+		
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
@@ -435,6 +443,7 @@ public final class MapPropertiesManager
 		lastDirectory = ".";
 		descreteNavigation = "false";
 		useTopologicalImageCache = "false";
+		optimizeLinks = "false";
 		viewerClass = "";
 		connectionClass = "";		
 		rendererClass = "";
