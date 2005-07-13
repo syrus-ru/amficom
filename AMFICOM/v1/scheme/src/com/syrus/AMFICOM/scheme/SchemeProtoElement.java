@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.50 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.51 2005/07/13 11:32:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_
 import static com.syrus.AMFICOM.general.ErrorMessages.OUT_OF_LIBRARY_HIERARCHY;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static java.util.logging.Level.FINE;
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/13 11:32:28 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -482,16 +482,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return this.description;
 	}
 
+	Identifier getEquipmentTypeId() {
+		assert this.equipmentTypeId != null: OBJECT_NOT_INITIALIZED;
+		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+		return this.equipmentTypeId;
+	}
+
 	/**
 	 * @return <code>equipmentType</code> associated with this
 	 *         <code>schemeProtoElement</code>, or <code>null</code> if
 	 *         none.
 	 */
 	public EquipmentType getEquipmentType() {
-		assert this.equipmentTypeId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (EquipmentType) StorableObjectPool
-					.getStorableObject(this.equipmentTypeId, true);
+			return (EquipmentType) StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

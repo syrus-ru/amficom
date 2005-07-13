@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.8 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.9 2005/07/13 11:32:28 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/13 11:32:28 $
  * @module scheme_v1
  */
 public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
@@ -107,7 +107,7 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(spe.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(spe.getEquipmentType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(spe.getEquipmentTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getSymbol().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getUgoCell().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getSchemeCell().getId()) + COMMA
@@ -131,7 +131,7 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spe.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spe.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getEquipmentType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getEquipmentTypeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSymbol().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getUgoCell().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, spe.getSchemeCell().getId());
