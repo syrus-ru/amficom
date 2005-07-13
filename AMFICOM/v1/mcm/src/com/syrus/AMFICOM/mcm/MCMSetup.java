@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.3 2005/07/03 19:16:32 bass Exp $
+ * $Id: MCMSetup.java,v 1.4 2005/07/13 16:12:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import static com.syrus.AMFICOM.mcm.MeasurementControlModule.MCM_ID;
 
 import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -46,6 +48,9 @@ public final class MCMSetup {
 		MeasurementControlModule.establishDatabaseConnection();
 
 		try {
+			/*Create locally hardcoded data*/
+			createDataTypes();
+
 			/*-Setup all base information about this MCM*/
 			bootstrap();
 
@@ -119,5 +124,9 @@ public final class MCMSetup {
 		if (idlmcms.length < 1)
 			throw new IllegalDataException("Cannot find MCM '" + ID + "'");
 		return idlmcms[0];
+	}
+
+	private static void createDataTypes() throws CreateObjectException {
+		DataTypeDatabase.insertDataTypes();
 	}
 }
