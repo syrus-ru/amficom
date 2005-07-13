@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.5 2005/06/09 11:30:46 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.6 2005/07/13 14:56:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
+import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
@@ -141,6 +142,12 @@ public class LayersDialog extends JDialog {
 		this.cableLabelTable.setTableHeader(null);
 
 		this.siteTableModel = new DefaultTableModel() {
+		    public Class<?> getColumnClass(int columnIndex) {
+				if(columnIndex == 0 || columnIndex == 2)
+					return LayerVisibility.class;
+				return Object.class;
+			    }
+
 			public void setValueAt(Object aValue, int row, int column) {
 				Boolean bool = (Boolean )aValue;
 				boolean visible = bool.booleanValue();
@@ -191,10 +198,16 @@ public class LayersDialog extends JDialog {
 					LangModelMap.getString("all") } );
 		this.siteTable.setModel(this.siteTableModel);
 		this.siteTable.setTableHeader(null);
-		this.siteTable.setDefaultRenderer(Object.class, LayersTableCellRenderer.getInstance());
-		this.siteTable.setDefaultEditor(Object.class, LayersTableCellEditor.getInstance());
+		this.siteTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
+		this.siteTable.setDefaultEditor(LayerVisibility.class, LayersTableCellEditor.getInstance());
 
 		this.linkTableModel = new DefaultTableModel() {
+		    public Class<?> getColumnClass(int columnIndex) {
+				if(columnIndex == 0 || columnIndex == 2)
+					return LayerVisibility.class;
+				return Object.class;
+			    }
+
 			public void setValueAt(Object aValue, int row, int column) {
 				Boolean bool = (Boolean )aValue;
 				boolean visible = bool.booleanValue();
@@ -245,10 +258,16 @@ public class LayersDialog extends JDialog {
 					LangModelMap.getString("all") } );
 		this.linkTable.setModel(this.linkTableModel);
 		this.linkTable.setTableHeader(null);
-		this.linkTable.setDefaultRenderer(Object.class, LayersTableCellRenderer.getInstance());
-		this.linkTable.setDefaultEditor(Object.class, LayersTableCellEditor.getInstance());
+		this.linkTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
+		this.linkTable.setDefaultEditor(LayerVisibility.class, LayersTableCellEditor.getInstance());
 
 		this.cableTableModel = new DefaultTableModel() {
+		    public Class<?> getColumnClass(int columnIndex) {
+			if(columnIndex == 0 || columnIndex == 2)
+				return Boolean.class;
+			return Object.class;
+		    }
+
 			public boolean isCellEditable(int row, int column) {
 				return column == 0 || column == 2;
 			}
@@ -267,7 +286,7 @@ public class LayersDialog extends JDialog {
 		this.cableTable.setModel(this.cableTableModel);
 		this.cableTable.setTableHeader(null);
 		this.cableTable.setDefaultRenderer(Boolean.class, LayersTableCellRenderer.getInstance());
-		this.cableTable.setDefaultEditor(Object.class, LayersTableCellEditor.getInstance());
+		this.cableTable.setDefaultEditor(Boolean.class, LayersTableCellEditor.getInstance());
 
 		LayersTableCellEditor.getInstance().addCellEditorListener( new CellEditorListener() {
 		
