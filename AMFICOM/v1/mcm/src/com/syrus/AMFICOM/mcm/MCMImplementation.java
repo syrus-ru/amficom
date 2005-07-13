@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.44 2005/06/29 14:33:17 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.45 2005/07/13 18:42:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/06/29 14:33:17 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/13 18:42:58 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -203,7 +203,7 @@ public class MCMImplementation extends MCMPOA {
 
 			Set objects = null;
 			try {
-				final Set ids = Identifier.fromTransferables(identifier_Transferables);
+				final Set<Identifier> ids = Identifier.fromTransferables(identifier_Transferables);
 
 				/**
 				 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
