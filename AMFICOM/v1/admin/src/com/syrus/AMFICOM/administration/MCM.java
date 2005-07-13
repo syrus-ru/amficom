@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.39 2005/07/04 13:00:54 bass Exp $
+ * $Id: MCM.java,v 1.40 2005/07/13 17:36:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/07/04 13:00:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/07/13 17:36:16 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -295,7 +295,7 @@ public final class MCM extends DomainMember implements Characterizable {
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.userId);
 		dependencies.add(this.serverId);
 		return dependencies;
