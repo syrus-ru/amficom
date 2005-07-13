@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.16 2005/07/03 19:16:31 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.17 2005/07/13 14:52:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/03 19:16:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/13 14:52:35 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -595,10 +595,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			return timeValue;
 		}
 
+		@Override
 		public String toString() {
 			return this.getDescription();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			boolean equals = (obj == this);
 			if ((!equals) && (obj instanceof TimeLine)) {
@@ -611,6 +613,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			return equals;
 		}
 
+		@Override
 		public int hashCode() {
 			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 			hashCodeGenerator.addObject(this.template);
@@ -672,6 +675,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			return all;
 		}
 
+		@Override
 		public String toString() {
 			StringBuffer sbuf = new StringBuffer();
 			if (this.divisor != null) {
@@ -728,6 +732,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			return sbuf.toString();
 		}
 
+		@Override
 		public boolean equals(Object obj) {
 			boolean equals = (obj == this);
 			if ((!equals) && (obj instanceof TimeValue)) {
@@ -742,6 +747,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			return equals;
 		}
 
+		@Override
 		public int hashCode() {
 			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 			hashCodeGenerator.addIntArray(this.starts);
@@ -981,6 +987,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	 * fill times in ms that describes by temporal patterns and between start
 	 * and end
 	 */
+	@Override
 	protected void fillTimes() {
 		final Set<TimeLine> list = this.templates;
 		for (final Iterator<TimeLine> it = list.iterator(); it.hasNext();) {

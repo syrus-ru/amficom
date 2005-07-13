@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.28 2005/07/11 08:20:01 bass Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.29 2005/07/13 14:52:35 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/11 08:20:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/13 14:52:35 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
@@ -155,6 +155,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 		return super.isValid() && this.intervalsAbstractTemporalPatternMap != null;
 	}
 
+	@Override
 	protected void fillTimes() {
 		AbstractTemporalPattern previousTemporalPattern = null;
 
