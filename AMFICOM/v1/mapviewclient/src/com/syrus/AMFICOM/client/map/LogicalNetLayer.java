@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.90 2005/07/13 07:40:01 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.91 2005/07/13 08:17:53 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.90 $, $Date: 2005/07/13 07:40:01 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.91 $, $Date: 2005/07/13 08:17:53 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1136,8 +1136,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.90 $, $Date: 2005/07/13 07:40:01 $
+	 * @author $Author: peskovsky $
+	 * @version $Revision: 1.91 $, $Date: 2005/07/13 08:17:53 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1250,7 +1250,8 @@ public class LogicalNetLayer
 		//Получаем список всех входящих/исходящих линий для данного узла
 		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks(nodeProcessed);
 		//Исключаем из списка линк, по которому мы пришли в данный узел
-		allLinksForNodeProcessed.remove(incomingLink);
+		if (incomingLink != null)		
+			allLinksForNodeProcessed.remove(incomingLink);
 
 		//Отмечаем в таблице, что узел обработан. 
 		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
@@ -1262,12 +1263,14 @@ public class LogicalNetLayer
 		Point currEndVENodeScr = this.converter
 				.convertMapToScreen(nodeProcessed.getLocation());
 
-		double distance = Math.pow(Math.pow(currEndVENodeScr.x
-				- startVENodeScr.x, 2)
-				+ Math.pow(currEndVENodeScr.y - startVENodeScr.y, 2), 0.5);
+		double distance = Math.sqrt(
+				(currEndVENodeScr.x - startVENodeScr.x) * (currEndVENodeScr.x - startVENodeScr.x)
+			+	(currEndVENodeScr.y - startVENodeScr.y) * (currEndVENodeScr.y - startVENodeScr.y));
 
-		if (distance >= MINIMUM_SCREEN_LENGTH) {
-			//Создаём элемент отображения и дальше тянем новый(е) элемент отображения,
+		if (	(distance >= MINIMUM_SCREEN_LENGTH)
+			||	(allLinksForNodeProcessed.size() > 1)){
+			//Получили достаточно длинный сегмент или наткнулись на узел с развилкой -
+			//создаём элемент отображения и дальше тянем новый(е) элемент отображения,
 			//начиная от рассматриваемого элемента.
 			if (lastNode == nodeToPullFrom)
 				//Если последний "натягиваемый" отображаемый элемент состоит из одного
