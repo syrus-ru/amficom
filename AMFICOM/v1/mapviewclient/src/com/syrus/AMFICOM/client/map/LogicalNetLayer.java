@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.89 2005/07/12 13:37:34 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.90 2005/07/13 07:40:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.89 $, $Date: 2005/07/12 13:37:34 $
+ * @version $Revision: 1.90 $, $Date: 2005/07/13 07:40:01 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1137,7 +1137,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.89 $, $Date: 2005/07/12 13:37:34 $
+	 * @version $Revision: 1.90 $, $Date: 2005/07/13 07:40:01 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1155,7 +1155,7 @@ public class LogicalNetLayer
 	/**
 	 * Список VisualMapElement'ов, которые будут отображаться при текущем масштабе
 	 */
-	private List<VisualMapElement> visualElements = new ArrayList<VisualMapElement>();
+	private List<Object> visualElements = new ArrayList<Object>();
 
 	/**
 	 * Линки с экранной длиной меньшей, этого параметра сливаются с соседними
@@ -1166,34 +1166,34 @@ public class LogicalNetLayer
 	/**
 	 * Обновляет список элементов которые должны отображаться при текущем массштабе.
 	 */
-	public void calculateVisualLinks()
-	{
+	public void calculateVisualLinks() throws MapDataException,
+			MapConnectionException {
 		long startTime = System.currentTimeMillis();
-		
+
 		this.visualElements.clear();
-		
+
 		Map map = this.getMapView().getMap();
-		
+
 		//Таблица, в которой содержится информация о том, обрабатывался ли
 		//уже узел или нет
-		java.util.Map nodesCalculated = new HashMap(map.getNodes().size());
-		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();)
-		{
-			AbstractNode node = (AbstractNode)nodesIt.next();
-			nodesCalculated.put(node,Boolean.FALSE);
+		java.util.Map<AbstractNode, Boolean> nodesCalculated = 
+			new HashMap<AbstractNode, Boolean>(map.getNodes().size());
+		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();) {
+			AbstractNode node = (AbstractNode) nodesIt.next();
+			nodesCalculated.put(node, Boolean.FALSE);
 		}
-		
+
 		//Запускаем рекурсию. 
 		//Если очередной затравочный узел уже обработан - рекурсию с него не запускаем.
 		//Если карта - это связный граф, то рекурсия будет запущена один раз.
-		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();)
-		{
+		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();) {
 			AbstractNode startRecursionNode = (AbstractNode) nodesIt.next();
-			if (nodesCalculated.get(startRecursionNode).equals(Boolean.FALSE))
-				pullVisualLinksFromNode (
+			if (! nodesCalculated.get(startRecursionNode).booleanValue())
+				pullVisualLinksFromNode(
+						startRecursionNode, 
 						startRecursionNode,
-						null,
-						nodesCalculated,
+						null, 
+						nodesCalculated, 
 						map);
 		}
 		long endTime = System.currentTimeMillis();
@@ -1201,38 +1201,49 @@ public class LogicalNetLayer
 				+ "optimized map for " + (endTime - startTime) + "ms.",
 				Level.FINEST);
 	}
+
 	/**
 	 * Рекурсивная процедура обхода сегмента схемы карты, которому принадлежит
 	 * "затравочный" узел.
-	 * @param nodeToPullFrom Затравочный узел, число входящих/исходящих линков = 1.
+	 * @param nodeToPullFrom Узел, от которого тянется текущий VisualMapElement.
+	 * @param lastNode Предыдущий узел - от него мы пришли к данному узлу
 	 * @param incomingLink Линк, по которому мы пришли в данный узел. Для первого
 	 * уровня рекурсии = null.
 	 * @param nodesCalculated Таблица содержащая информацию о том, обработан ли тот или 
 	 * иной узел.
 	 * @param map Объект "карта"
 	 */
-	private void pullVisualLinksFromNode (
+	private void pullVisualLinksFromNode(
 			AbstractNode nodeToPullFrom,
+			AbstractNode lastNode, 
 			NodeLink incomingLink,
-			java.util.Map nodesCalculated,
-			Map map)
-	{
+			java.util.Map<AbstractNode, Boolean> nodesCalculated, 
+			Map map) 
+			throws MapDataException, MapConnectionException {
 		//Рассматриваемый узел
 		AbstractNode nodeProcessed = null;
-		
-		if (incomingLink.getStartNode() == nodeToPullFrom)
+
+		if (incomingLink == null)
+			nodeProcessed = lastNode;
+		else if (incomingLink.getStartNode().equals(lastNode))
 			nodeProcessed = incomingLink.getEndNode();
-		else if (incomingLink.getEndNode() == nodeToPullFrom)
+		else if (incomingLink.getEndNode().equals(lastNode))
 			nodeProcessed = incomingLink.getStartNode();
-		
+
 		if (nodeProcessed == null)
-			throw new AssertionError("LogicalNetLayer | pullVisualLinksFromNode | The nodeProcessed can't be null");
-		
-		if (nodesCalculated.get(nodeProcessed).equals(Boolean.TRUE))
-		{
+			throw new AssertionError(
+					"LogicalNetLayer | pullVisualLinksFromNode | The nodeProcessed can't be null");
+
+		if (nodesCalculated.get(nodeProcessed).booleanValue()) {
 			//Условие останова - данный узел уже рассматривался.
 			//Создаём элемент отображения и выходим.
-			this.visualElements.add(new VisualMapElement(nodeToPullFrom,nodeProcessed));
+			if (lastNode == nodeToPullFrom)
+				//Если последний "натягиваемый" отображаемый элемент состоит из одного
+				//линка - его и отображаем
+				this.visualElements.add(incomingLink);
+			else
+				this.visualElements.add(
+						new VisualMapElement(nodeToPullFrom, nodeProcessed));
 			return;
 		}
 
@@ -1240,43 +1251,56 @@ public class LogicalNetLayer
 		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks(nodeProcessed);
 		//Исключаем из списка линк, по которому мы пришли в данный узел
 		allLinksForNodeProcessed.remove(incomingLink);
-		
+
 		//Отмечаем в таблице, что узел обработан. 
-		nodesCalculated.put(nodeProcessed,Boolean.TRUE);
-		
-		//TODO Здесь длина - топологическая. А нужна физическая!
-		if (incomingLink.getLengthLt() >= MINIMUM_SCREEN_LENGTH)
-		{
+		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
+
+		//Экранные координаты узла, от которого мы тянем визуальный элемент 
+		Point startVENodeScr = this.converter.convertMapToScreen(
+				nodeToPullFrom.getLocation());
+		//Экранные координаты текущего узла		
+		Point currEndVENodeScr = this.converter
+				.convertMapToScreen(nodeProcessed.getLocation());
+
+		double distance = Math.pow(Math.pow(currEndVENodeScr.x
+				- startVENodeScr.x, 2)
+				+ Math.pow(currEndVENodeScr.y - startVENodeScr.y, 2), 0.5);
+
+		if (distance >= MINIMUM_SCREEN_LENGTH) {
 			//Создаём элемент отображения и дальше тянем новый(е) элемент отображения,
 			//начиная от рассматриваемого элемента.
-			this.visualElements.add(new VisualMapElement(nodeToPullFrom,nodeProcessed));
-			
-			for (NodeLink outgoingLink: allLinksForNodeProcessed)
-			{
-				pullVisualLinksFromNode (
+			if (lastNode == nodeToPullFrom)
+				//Если последний "натягиваемый" отображаемый элемент состоит из одного
+				//линка - его и отображаем
+				this.visualElements.add(incomingLink);
+			else
+				this.visualElements.add(
+						new VisualMapElement(nodeToPullFrom, nodeProcessed));
+
+			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+				pullVisualLinksFromNode(
+						nodeProcessed, 
 						nodeProcessed,
-						outgoingLink,
-						nodesCalculated,
+						outgoingLink, 
+						nodesCalculated, 
 						map);
 			}
-		}
-		else
-		{
+		} else {
 			//Тянем элемент отображения дальше. В случае ветвления - на более поздних
 			//этапах для каждой ветви будет создан отдельный элемент отображения (довольно
 			//длинный), начинающийся в том узле из которого мы пришли на этот уровень
 			//рекурсии
-			for (NodeLink outgoingLink: allLinksForNodeProcessed)
-			{
-				pullVisualLinksFromNode (
-						nodeToPullFrom,
-						outgoingLink,
-						nodesCalculated,
+			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+				pullVisualLinksFromNode(
+						nodeToPullFrom, 
+						nodeProcessed,
+						outgoingLink, 
+						nodesCalculated, 
 						map);
 			}
 		}
 	}
-	
+
 	/**
 	 * Отрисовывает элементы отображения, расположенные в заданных границах
 	 * @param g
@@ -1285,22 +1309,42 @@ public class LogicalNetLayer
 	 * @throws MapDataException
 	 */
 	private void drawVisualLinks(Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException,MapDataException
-	{
-		for (VisualMapElement vmElement: this.visualElements)
-		{
+			throws MapConnectionException, MapDataException {
+		for (Iterator veIterator = this.visualElements.iterator(); veIterator
+				.hasNext();) {
+			AbstractNode startNode = null;
+			AbstractNode endNode = null;
+
+			Object veElement = veIterator.next();
+			if (veElement instanceof VisualMapElement) {
+				VisualMapElement vme = (VisualMapElement) veElement;
+				startNode = vme.startNode;
+				endNode = vme.endNode;
+			} else if (veElement instanceof NodeLink) {
+				NodeLink nl = (NodeLink) veElement;
+				startNode = nl.getStartNode();
+				endNode = nl.getEndNode();
+			}
+
+			if ((startNode == null) && (endNode == null))
+				throw new AssertionError(
+						"LogicalnetLayer | drawVisualLinks | startNode and endNode can't be null!");
+
 			if (visibleBounds.intersectsLine(
-					vmElement.startNode.getLocation().getX(),
-					vmElement.startNode.getLocation().getY(),
-					vmElement.endNode.getLocation().getX(),
-					vmElement.endNode.getLocation().getY()))
-			{
+					startNode.getLocation().getX(),
+					startNode.getLocation().getY(), 
+					endNode.getLocation().getX(), 
+					endNode.getLocation().getY())) {
 				Point from = this.converter.convertMapToScreen(
-						vmElement.startNode.getLocation());
+						startNode.getLocation());
 				Point to = this.converter.convertMapToScreen(
-						vmElement.endNode.getLocation());
-				
-				g.drawLine(from.x,from.y,to.x,to.y);
+						endNode.getLocation());
+
+				if (veElement instanceof VisualMapElement)
+					g.drawLine(from.x, from.y, to.x, to.y);
+				else if (veElement instanceof NodeLink)
+					//TODO здесь должен правильно отрисовываться NodeLink
+					g.drawLine(from.x, from.y, to.x, to.y);
 			}
 		}
 	}
