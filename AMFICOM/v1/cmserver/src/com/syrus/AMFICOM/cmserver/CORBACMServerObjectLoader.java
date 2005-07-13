@@ -1,5 +1,5 @@
 /*
- * $Id: CORBACMServerObjectLoader.java,v 1.4 2005/06/20 08:57:21 bass Exp $
+ * $Id: CORBACMServerObjectLoader.java,v 1.5 2005/07/13 19:10:01 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/20 08:57:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/13 19:10:01 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CORBACMServerObjectLoader extends CORBAObjectLoader {
@@ -29,11 +29,12 @@ final class CORBACMServerObjectLoader extends CORBAObjectLoader {
 		super(cmServerServantManager);
 	}
 
-	protected final Set loadStorableObjects(final short entityCode, final Set ids, final TransmitProcedure transmitProcedure)
+	@Override
+	protected final Set loadStorableObjects(final short entityCode, final Set<Identifier> ids, final TransmitProcedure transmitProcedure)
 			throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjects(ids);
 
-		final Set loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
+		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
 		if (loadIds.isEmpty())
 			return objects;
 
@@ -59,13 +60,14 @@ final class CORBACMServerObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
+	@Override
 	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
-			final Set ids,
+			final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 
-		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
 
 		Set loadedObjects = null;
 		try {

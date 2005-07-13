@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.54 2005/07/03 19:16:26 bass Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.55 2005/07/13 19:10:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,6 +18,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,17 +34,18 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.mserver.corba.MServer;
+import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/03 19:16:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/13 19:10:01 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	
-	private Map  lastRefesh;
+	private Map<Short, Date>  lastRefesh;
 	
 	/**
 	 * refresh timeout
@@ -55,7 +56,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 	
 	public CMServerMeasurementObjectLoader(long refreshTimeout, final CMServerServantManager cmServerServantManager) {
 		this.refreshTimeout = refreshTimeout;
-		this.lastRefesh = new HashMap();
+		this.lastRefesh = new HashMap<Short, Date>();
 
 		this.corbaCMServerObjectLoader = new CORBACMServerObjectLoader(cmServerServantManager);
 	}
@@ -64,7 +65,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 	/* Load multiple objects*/
 
-	public final Set loadMeasurements(final Set ids) throws ApplicationException {
+	@Override
+	public final Set loadMeasurements(final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.MEASUREMENT_CODE, ids, new TransmitProcedure() {
 			public final IdlStorableObject[] transmitStorableObjects(final CommonServer commonServer,
 					final IdlIdentifier[] idsT,
@@ -74,7 +76,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		});
 	}
 
-	public Set loadAnalyses(Set ids) throws ApplicationException {
+	@Override
+	public Set loadAnalyses(final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.ANALYSIS_CODE, ids, new TransmitProcedure() {
 			public final IdlStorableObject[] transmitStorableObjects(final CommonServer commonServer,
 					final IdlIdentifier[] idsT,
@@ -84,7 +87,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		});
 	}
 
-	public Set loadEvaluations(Set ids) throws ApplicationException {
+	@Override
+	public Set loadEvaluations(final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.EVALUATION_CODE, ids, new TransmitProcedure() {
 			public final IdlStorableObject[] transmitStorableObjects(final CommonServer commonServer,
 					final IdlIdentifier[] idsT,
@@ -98,7 +102,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 
 
-	public Set loadMeasurementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	@Override
+	public Set loadMeasurementsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.MEASUREMENT_CODE,
 				ids,
 				condition,
@@ -112,7 +117,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				});
 	}
 
-	public Set loadAnalysesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	@Override
+	public Set loadAnalysesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.ANALYSIS_CODE,
 				ids,
 				condition,
@@ -126,7 +132,8 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 				});
 	}
 
-	public Set loadEvaluationsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	@Override
+	public Set loadEvaluationsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.EVALUATION_CODE,
 				ids,
 				condition,
@@ -144,16 +151,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 	/*	Refresh*/
 
-	public Set refresh(Set storableObjects) throws DatabaseException {
+	@Override
+	public Set refresh(final Set<? extends StorableObject> storableObjects) throws DatabaseException {
 		/* refresh no often than one in refreshTimeout ms */
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
-		StorableObject firstStorableObject = (StorableObject) storableObjects.iterator().next();
-		Short entityCode = new Short(firstStorableObject.getId().getMajor());
-		
-		Date lastRefreshDate = (Date) this.lastRefesh.get(entityCode);
-		
+		final StorableObject firstStorableObject = storableObjects.iterator().next();
+		final Short entityCode = new Short(firstStorableObject.getId().getMajor());
+
+		final Date lastRefreshDate = this.lastRefesh.get(entityCode);
+
 		if (lastRefreshDate != null && System.currentTimeMillis() - lastRefreshDate.getTime() < this.refreshTimeout)
 			return Collections.EMPTY_SET;
 
@@ -161,11 +169,11 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		this.lastRefesh.put(entityCode, new Date());
 
 		try {
-			StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode.shortValue());
+			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode.shortValue());
 			if (database != null)
 				return database.refresh(storableObjects);
 
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 		catch (DatabaseException e) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.refresh | DatabaseException: " + e.getMessage());
@@ -174,24 +182,25 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 	}
 
-	public void delete(Set identifiables) {
+	@Override
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		if (identifiables == null || identifiables.isEmpty()) {
 			return;
 		}
 
-		Set nonTestIdentifiers = null;
-		Set testIdentifiers = null;
-		for (final Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
+		Set<Identifier> nonTestIdentifiers = null;
+		Set<Identifier> testIdentifiers = null;
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
 			if (id.getMajor() == ObjectEntities.TEST_CODE) {
 				if (testIdentifiers == null) {
-					testIdentifiers = new HashSet();
+					testIdentifiers = new HashSet<Identifier>();
 				}
 				testIdentifiers.add(id);
 			}
 			else {
 				if (nonTestIdentifiers == null) {
-					nonTestIdentifiers = new HashSet();
+					nonTestIdentifiers = new HashSet<Identifier>();
 				}
 				nonTestIdentifiers.add(id);
 			}
@@ -203,7 +212,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 
 		if (testIdentifiers != null) {
 			try {
-				MServer mServerRef = CMServerSessionEnvironment.getInstance().getCMServerServantManager().getMServerReference();
+				final MServer mServerRef = MServerHelper.narrow(CMServerSessionEnvironment.getInstance().getCMServerServantManager().getServerReference());
 				mServerRef.deleteTests(Identifier.createTransferables(testIdentifiers), LoginManager.getSessionKeyTransferable());
 			}
 			catch (CommunicationException ce) {

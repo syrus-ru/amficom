@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.41 2005/07/13 18:50:58 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.42 2005/07/13 19:08:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mserver;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/13 18:50:58 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/13 19:08:04 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -155,8 +154,8 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 
 		Set<Identifier> nonTestIdentifiers = null;
 		Set<Identifier> testIdentifiers = null;
-		for (final Iterator it = nonTestIdentifiers.iterator(); it.hasNext();) {
-			final Identifier id = (Identifier) it.next();
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
 			if (id.getMajor() == ObjectEntities.TEST_CODE) {
 				if (testIdentifiers == null) {
 					testIdentifiers = new HashSet<Identifier>();

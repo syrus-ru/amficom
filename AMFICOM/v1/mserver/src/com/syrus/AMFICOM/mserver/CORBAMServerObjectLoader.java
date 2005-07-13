@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAMServerObjectLoader.java,v 1.12 2005/07/11 08:18:57 bass Exp $
+ * $Id: CORBAMServerObjectLoader.java,v 1.13 2005/07/13 19:08:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/13 19:08:04 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 final class CORBAMServerObjectLoader {
@@ -53,8 +53,8 @@ final class CORBAMServerObjectLoader {
 
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.13 $, $Date: 2005/07/13 19:08:04 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjects(short, Set, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitProcedure)
 	 * @module mserver_v1
 	 */
@@ -65,8 +65,8 @@ final class CORBAMServerObjectLoader {
 	}
 
 	/**
-	 * @author $Author: bass $
-	 * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.13 $, $Date: 2005/07/13 19:08:04 $
 	 * @see CORBAMServerObjectLoader#loadStorableObjectsButIdsByCondition(short, Set, StorableObjectCondition, com.syrus.AMFICOM.mserver.CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure)
 	 * @module mserver_v1
 	 */
@@ -160,7 +160,7 @@ final class CORBAMServerObjectLoader {
 	private static final void loadStorableObjectsFromMCM(final Identifier mcmId,
 			final short entityCode,
 			final TransmitProcedure transmitProcedure,
-			final Set loadIds,
+			final Set<Identifier> loadIds,
 			final Set loadedObjects)
 			throws ApplicationException {
 		MCM mcmRef = null;
@@ -191,7 +191,7 @@ final class CORBAMServerObjectLoader {
 				loadedObjects.addAll(mcmLoadedObjects);
 
 				/*	Just debug output -- nothing more*/
-				StringBuffer stringBuffer = new StringBuffer();
+				final StringBuffer stringBuffer = new StringBuffer();
 				for (final Iterator it = mcmLoadedObjects.iterator(); it.hasNext();) {
 					final StorableObject storableObject = (StorableObject) it.next();
 					if (stringBuffer.length() != 0)
@@ -234,16 +234,15 @@ final class CORBAMServerObjectLoader {
 	 * @throws ApplicationException
 	 */
 	protected static final Set loadStorableObjectsButIdsByCondition(final short entityCode,
-			final Set ids,
+			final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final TransmitButIdsByConditionProcedure transmitButIdsByConditionProcedure) throws ApplicationException {
 		final Set objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
 
-		final Set loadButIds = Identifier.createSumIdentifiers(ids, objects);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
 		final Set loadedObjects = new HashSet();
-		final Set mcmIds = MeasurementServer.getMCMIds();
-		for (final Iterator it = mcmIds.iterator(); it.hasNext();) {
-			final Identifier mcmId = (Identifier) it.next();
+		final Set<Identifier> mcmIds = MeasurementServer.getMCMIds();
+		for (final Identifier mcmId : mcmIds) {
 			try {
 				loadStorableObjectsButIdsByConditionFromMCM(mcmId,
 						entityCode,
@@ -292,7 +291,7 @@ final class CORBAMServerObjectLoader {
 			final short entityCode,
 			final TransmitButIdsByConditionProcedure transmitButIdsByConditionProcedure,
 			final StorableObjectCondition condition,
-			final Set loadButIds,
+			final Set<Identifier> loadButIds,
 			final Set loadedObjects)
 			throws ApplicationException {
 		MCM mcmRef = null;
@@ -329,7 +328,7 @@ final class CORBAMServerObjectLoader {
 				loadedObjects.addAll(mcmLoadedObjects);
 
 				/*	Just debug output -- nothing more*/
-				StringBuffer stringBuffer = new StringBuffer();
+				final StringBuffer stringBuffer = new StringBuffer();
 				for (final Iterator it = mcmLoadedObjects.iterator(); it.hasNext();) {
 					final StorableObject storableObject = (StorableObject) it.next();
 					if (stringBuffer.length() != 0)
