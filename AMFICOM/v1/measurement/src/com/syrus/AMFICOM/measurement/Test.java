@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.136 2005/07/13 10:09:45 arseniy Exp $
+ * $Id: Test.java,v 1.137 2005/07/13 10:36:31 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/07/13 10:09:45 $
+ * @version $Revision: 1.137 $, $Date: 2005/07/13 10:36:31 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -253,6 +253,7 @@ public final class Test extends StorableObject {
 		this.evaluationTypeId = new Identifier(tt.evaluationTypeId);
 
 		this.status = tt.status.value();
+		this.groupTestId = new Identifier(tt.groupTestId);
 
 		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
 
@@ -683,6 +684,7 @@ public final class Test extends StorableObject {
 		 * @param orb
 		 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 		 */
+		@SuppressWarnings("unused")
 		public IdlTestTimeStamps getTransferable(final ORB orb) {
 			assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			final IdlTestTimeStamps ttst = new IdlTestTimeStamps();
@@ -692,12 +694,11 @@ public final class Test extends StorableObject {
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
-						this.endTime.getTime(),
-						this.temporalPatternId.getTransferable()));
+							this.endTime.getTime(),
+							this.temporalPatternId.getTransferable()));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
-						this.endTime.getTime()));
+					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(), this.endTime.getTime()));
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
