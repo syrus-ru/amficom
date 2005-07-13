@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.87 2005/07/06 16:26:15 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.88 2005/07/13 06:50:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.87 $, $Date: 2005/07/06 16:26:15 $
+ * @version $Revision: 1.88 $, $Date: 2005/07/13 06:50:05 $
  * @module
  */
 public class ModelTraceManager
@@ -170,7 +170,7 @@ implements DataStreamable, Cloneable
 			case SimpleReflectogramEvent.ENDOFTRACE:
 				// fall through
 			case SimpleReflectogramEvent.CONNECTOR:
-				int[] pos = CoreAnalysisManager.getConnectorMinMaxMin(getMF(), evBegin, evEnd);
+				int[] pos = getConnectorMinMaxMin(getMF(), evBegin, evEnd);
 				evBegin = pos[0];
 				int evCenter = pos[1];
 				evEnd = pos[2];
@@ -1171,5 +1171,25 @@ implements DataStreamable, Cloneable
 		if (dsReader == null)
 			dsReader = new DSReader();
 		return dsReader;
+	}
+
+	/**
+	 * Уточняет параметры коннектора. Такое уточнение призвано защитить алгоритмы
+	 * L-масштабирования от шумов, а также дать необх. инф. о положении максимума
+	 * коннектора, чтобы можно было отличить фронт от спада.
+	 * @param mf Модельная кривая
+	 * @param evBegin Начальное начало события
+	 * @param evEnd Начальный конец события
+	 * @return int[3] { первый минимум (уточненное начала), максимум, последний минимум (уточненный конец) } 
+	 */
+	private static int[] getConnectorMinMaxMin(ModelFunction mf, int evBegin, int evEnd)
+	{
+		final int X0 = evBegin;
+		final int N = evEnd - evBegin + 1;
+		double[] arr = mf.funFillArray(X0, 1.0, N);
+		int iMax = ReflectogramMath.getArrayMaxIndex(arr, 0, N - 1);
+		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
+		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);
+		return new int[] {evBegin + iLMin, evBegin + iMax, evBegin + iRMin};
 	}
 }

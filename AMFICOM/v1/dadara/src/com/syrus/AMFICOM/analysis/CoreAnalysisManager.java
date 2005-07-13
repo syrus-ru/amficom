@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.95 2005/07/13 06:21:01 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.96 2005/07/13 06:50:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.95 $, $Date: 2005/07/13 06:21:01 $
+ * @version $Revision: 1.96 $, $Date: 2005/07/13 06:50:05 $
  * @module
  */
 
@@ -636,27 +636,6 @@ public class CoreAnalysisManager
 		return nMedian(y, y.length / 2);
 	}
 
-	/**
-	 * Уточняет параметры коннектора. Такое уточнение призвано защитить алгоритмы
-	 * L-масштабирования от шумов, а также дать необх. инф. о положении максимума
-	 * коннектора, чтобы можно было отличить фронт от спада.
-	 * @todo перенести в к-л иной класс, например, ReflectogramMath или MTM
-	 * @param mf Модельная кривая
-	 * @param evBegin Начальное начало события
-	 * @param evEnd Начальный конец события
-	 * @return int[3] { первый минимум (уточненное начала), максимум, последний минимум (уточненный конец) } 
-	 */
-	public static int[] getConnectorMinMaxMin(ModelFunction mf, int evBegin, int evEnd)
-	{
-		final int X0 = evBegin;
-		final int N = evEnd - evBegin + 1;
-		double[] arr = mf.funFillArray(X0, 1.0, N);
-		int iMax = ReflectogramMath.getArrayMaxIndex(arr, 0, N - 1);
-		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
-		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);
-		return new int[] {evBegin + iLMin, evBegin + iMax, evBegin + iRMin};
-	}
-	
 	/**
 	 * See specification of {@link #nCalcTraceLength(double[])}
 	 * @todo скрыть этот метод, а его вызовы переделать на использование
