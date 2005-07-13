@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.43 2005/07/12 12:29:22 bass Exp $
+ * $Id: PathElement.java,v 1.44 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -56,7 +55,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/12 12:29:22 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -759,8 +758,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 		final boolean parentSchemePathIsNull = parentSchemePath == null;
 		int newSequentialNumber = parentSchemePathIsNull ? -1 : parentSchemePath.getPathElements().size();
-		for (final Iterator<PathElement> pathElementIterator = getParentSchemePath().getPathElements().tailSet(this).iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = pathElementIterator.next();
+		for (final PathElement pathElement : getParentSchemePath().getPathElements().tailSet(this)) {
 			pathElement.parentSchemePathId = newParentSchemePathId;
 			super.markAsChanged();
 			pathElement.sequentialNumber = parentSchemePathIsNull ? -1 : newSequentialNumber++;

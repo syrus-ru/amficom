@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.48 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeElement.java,v 1.49 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -453,10 +453,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 *         none.
 	 */
 	public Scheme getScheme() {
-		final Iterator schemeIterator = getSchemes().iterator();
-		if (schemeIterator.hasNext())
-			return (Scheme) schemeIterator.next();
-		return null;
+//		for (final Scheme scheme : this.getSchemes()) {
+//			return scheme;
+//		}
+//		return null;
+		final Iterator<Scheme> schemeIterator = this.getSchemes().iterator();
+		return schemeIterator.hasNext() ? schemeIterator.next() : null;
 	}
 
 	/**
@@ -859,8 +861,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeDeviceIterator = getSchemeDevices().iterator(); oldSchemeDeviceIterator.hasNext();) {
-			final SchemeDevice oldSchemeDevice = (SchemeDevice) oldSchemeDeviceIterator.next();
+		for (final SchemeDevice oldSchemeDevice : getSchemeDevices()) {
 			/*
 			 * Check is made to prevent SchemeDevices from
 			 * permanently losing their parents.
@@ -868,14 +869,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			assert !schemeDevices.contains(oldSchemeDevice);
 			removeSchemeDevice(oldSchemeDevice);
 		}
-		for (final Iterator schemeDeviceIterator = schemeDevices.iterator(); schemeDeviceIterator.hasNext();)
-			addSchemeDevice((SchemeDevice) schemeDeviceIterator.next());
+		for (final SchemeDevice schemeDevice : schemeDevices) {
+			this.addSchemeDevice(schemeDevice);
+		}
 	}
 
 	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
-			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
+		for (final SchemeElement oldSchemeElement : getSchemeElements()) {
 			/*
 			 * Check is made to prevent SchemeElements from
 			 * permanently losing their parents.
@@ -883,14 +884,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			assert !schemeElements.contains(oldSchemeElement);
 			removeSchemeElement(oldSchemeElement);
 		}
-		for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
-			addSchemeElement((SchemeElement) schemeElementIterator.next());
+		for (final SchemeElement schemeElement : schemeElements) {
+			this.addSchemeElement(schemeElement);
+		}
 	}
 
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
-			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
+		for (final SchemeLink oldSchemeLink : getSchemeLinks()) {
 			/*
 			 * Check is made to prevent SchemeLinks from
 			 * permanently losing their parents.
@@ -898,8 +899,9 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			assert !schemeLinks.contains(oldSchemeLink);
 			removeSchemeLink(oldSchemeLink);
 		}
-		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
-			addSchemeLink((SchemeLink) schemeLinkIterator.next());
+		for (final SchemeLink schemeLink : schemeLinks) {
+			this.addSchemeLink(schemeLink);
+		}
 	}
 
 	/**
@@ -909,10 +911,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void setSchemes(final Set<Scheme> schemes) {
 		assert schemes != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeIterator = getSchemes().iterator(); oldSchemeIterator.hasNext();)
-			removeScheme((Scheme) oldSchemeIterator.next());
-		for (final Iterator schemeIterator = schemes.iterator(); schemeIterator.hasNext();)
-			addScheme((Scheme) schemeIterator.next());
+		for (final Scheme oldScheme : getSchemes()) {
+			this.removeScheme(oldScheme);
+		}
+		for (final Scheme scheme : schemes) {
+			this.addScheme(scheme);
+		}
 	}
 
 	public void setSiteNode(final SiteNode siteNode) {
@@ -999,15 +1003,17 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public Set<SchemeCablePort> getSchemeCablePorts() {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
-		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
-			schemeCablePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemeCablePorts());
+		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
+			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts());
+		}
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
 	public Set<SchemePort> getSchemePorts() {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
-		for (final Iterator schemeDeviceIterator = getSchemeDevices().iterator(); schemeDeviceIterator.hasNext();)
-			schemePorts.addAll(((SchemeDevice) schemeDeviceIterator.next()).getSchemePorts());
+		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
+			schemePorts.addAll(schemeDevice.getSchemePorts());
+		}
 		return Collections.unmodifiableSet(schemePorts);
 	}
 

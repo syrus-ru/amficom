@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.46 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeDevice.java,v 1.47 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -59,7 +58,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -621,8 +620,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) {
 		assert schemeCablePorts != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeCablePortIterator = getSchemeCablePorts().iterator(); oldSchemeCablePortIterator.hasNext();) {
-			final SchemeCablePort oldSchemeCablePort = (SchemeCablePort) oldSchemeCablePortIterator.next();
+		for (final SchemeCablePort oldSchemeCablePort : getSchemeCablePorts()) {
 			/*
 			 * Check is made to prevent SchemeCablePorts from
 			 * permanently losing their parents.
@@ -630,14 +628,14 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			assert !schemeCablePorts.contains(oldSchemeCablePort);
 			removeSchemeCablePort(oldSchemeCablePort);
 		}
-		for (final Iterator schemeCablePortIterator = schemeCablePorts.iterator(); schemeCablePortIterator.hasNext();)
-			addSchemeCablePort((SchemeCablePort) schemeCablePortIterator.next());
+		for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
+			addSchemeCablePort(schemeCablePort);
+		}
 	}
 
 	public void setSchemePorts(final Set<SchemePort> schemePorts) {
 		assert schemePorts != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemePortIterator = getSchemePorts().iterator(); oldSchemePortIterator.hasNext();) {
-			final SchemePort oldSchemePort = (SchemePort) oldSchemePortIterator.next();
+		for (final SchemePort oldSchemePort : getSchemePorts()) {
 			/*
 			 * Check is made to prevent SchemePorts from
 			 * permanently losing their parents.
@@ -645,8 +643,9 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			assert !schemePorts.contains(oldSchemePort);
 			removeSchemePort(oldSchemePort);
 		}
-		for (final Iterator schemePortIterator = schemePorts.iterator(); schemePortIterator.hasNext();)
-			addSchemePort((SchemePort) schemePortIterator.next());
+		for (final SchemePort schemePort : schemePorts) {
+			addSchemePort(schemePort);
+		}
 	}
 
 	/**

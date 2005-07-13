@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.45 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.46 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -49,7 +48,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -357,17 +356,17 @@ public final class SchemeMonitoringSolution extends
 
 	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemePathIterator = getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
-			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
+		for (final SchemePath oldSchemePath : getSchemePaths()) {
 			/*
 			 * Check is made to prevent SchemePaths from
 			 * permanently losing their parents.
 			 */
 			assert !schemePaths.contains(oldSchemePath);
-			removeSchemePath(oldSchemePath);
+			this.removeSchemePath(oldSchemePath);
 		}
-		for (final Iterator schemePathIterator = schemePaths.iterator(); schemePathIterator.hasNext();)
-			addSchemePath((SchemePath) schemePathIterator.next());
+		for (final SchemePath schemePath : schemePaths) {
+			this.addSchemePath(schemePath);
+		}
 	}
 
 	/**

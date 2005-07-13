@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.40 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.41 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -54,7 +53,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.41 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -601,8 +600,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeMonitoringSolutionIterator = getSchemeMonitoringSolutions().iterator(); oldSchemeMonitoringSolutionIterator.hasNext();) {
-			final SchemeMonitoringSolution oldSchemeMonitoringSolution = (SchemeMonitoringSolution) oldSchemeMonitoringSolutionIterator.next();
+		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : getSchemeMonitoringSolutions()) {
 			/*
 			 * Check is made to prevent SchemeMonitoringSolutions from
 			 * permanently losing their parents.
@@ -610,14 +608,14 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			assert !schemeMonitoringSolutions.contains(oldSchemeMonitoringSolution);
 			removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
 		}
-		for (final Iterator schemeMonitoringSolutionIterator = schemeMonitoringSolutions.iterator(); schemeMonitoringSolutionIterator.hasNext();)
-			addSchemeMonitoringSolution((SchemeMonitoringSolution) schemeMonitoringSolutionIterator.next());
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+			addSchemeMonitoringSolution(schemeMonitoringSolution);
+		}
 	}
 
 	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeOptimizeInfoRtuIterator = getSchemeOptimizeInfoRtus().iterator(); oldSchemeOptimizeInfoRtuIterator.hasNext();) {
-			final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu = (SchemeOptimizeInfoRtu) oldSchemeOptimizeInfoRtuIterator.next();
+		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : getSchemeOptimizeInfoRtus()) {
 			/*
 			 * Check is made to prevent SchemeOptimizeInfoRtus from
 			 * permanently losing their parents.
@@ -625,14 +623,14 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			assert !schemeOptimizeInfoRtus.contains(oldSchemeOptimizeInfoRtu);
 			removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
 		}
-		for (final Iterator schemeOptimizeInfoRtuIterator = schemeOptimizeInfoRtus.iterator(); schemeOptimizeInfoRtuIterator.hasNext();)
-			addSchemeOptimizeInfoRtu((SchemeOptimizeInfoRtu) schemeOptimizeInfoRtuIterator.next());
+		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : schemeOptimizeInfoRtus) {
+			addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
+		}
 	}
 
 	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeOptimizeInfoSwitchIterator = getSchemeOptimizeInfoSwitches().iterator(); oldSchemeOptimizeInfoSwitchIterator.hasNext();) {
-			final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch = (SchemeOptimizeInfoSwitch) oldSchemeOptimizeInfoSwitchIterator.next();
+		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : getSchemeOptimizeInfoSwitches()) {
 			/*
 			 * Check is made to prevent SchemeOptimizeInfoSwitches from
 			 * permanently losing their parents.
@@ -640,8 +638,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 			assert !schemeOptimizeInfoSwitches.contains(oldSchemeOptimizeInfoSwitch);
 			removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
 		}
-		for (final Iterator schemeOptimizeInfoSwitchIterator = schemeOptimizeInfoSwitches.iterator(); schemeOptimizeInfoSwitchIterator.hasNext();)
-			addSchemeOptimizeInfoSwitch((SchemeOptimizeInfoSwitch) schemeOptimizeInfoSwitchIterator.next());
+		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : schemeOptimizeInfoSwitches) {
+			addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
+		}
 	}
 
 	public void setSurvivorRate(final double survivorRate) {

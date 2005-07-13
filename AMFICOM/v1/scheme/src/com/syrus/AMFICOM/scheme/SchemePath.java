@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.47 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemePath.java,v 1.48 2005/07/13 11:08:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/13 11:08:00 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -544,10 +544,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public PathElement getNextNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		for (final Iterator pathElementIterator = getPathElements().tailSet(pathElement) .iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+		for (final PathElement pathElement1 : getPathElements().tailSet(pathElement)) {
+			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				return pathElement1;
+			}
 		}
 		return null;
 	}
@@ -561,9 +561,9 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		final SortedSet<PathElement> pathElements  = getPathElements().tailSet(pathElement);
 		if (pathElements.size() == 1)
 			return null;
-		final Iterator pathElementIterator = pathElements.iterator();
+		final Iterator<PathElement> pathElementIterator = pathElements.iterator();
 		pathElementIterator.next();
-		return (PathElement) pathElementIterator.next();
+		return pathElementIterator.next();
 	}
 
 	/**
@@ -572,8 +572,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public double getOpticalDistance(final double physicalDistance) {
 		double opticalDistance = .0;
 		double d = .0;
-		for (final Iterator pathElementIterator = getPathElements().iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final PathElement pathElement : getPathElements()) {
 			final double physicalLength = SchemeUtils.getPhysicalLength(pathElement);
 			if (d + physicalLength < physicalDistance) {
 				d += physicalLength;
@@ -595,10 +594,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 		double opticalDistanceFromStart = 0;
 		final SortedSet<PathElement> pathElements = getPathElements();
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1 == pathElement)
+		for (final PathElement pathElement1 : pathElements) {
+//			if (pathElement1 == pathElement) {}
+			if (pathElement1.getId().equals(pathElement.getId())) {
 				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + SchemeUtils.getOpticalLength(pathElement1)};
+			}
 			opticalDistanceFromStart += SchemeUtils.getOpticalLength(pathElement1);
 		}
 		/*
@@ -616,11 +616,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return null;
 
 		double opticalLength = 0;
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final PathElement pathElement : pathElements) {
 			opticalLength += SchemeUtils.getOpticalLength(pathElement);
-			if (opticalLength >= opticalDistance)
+			if (opticalLength >= opticalDistance) {
 				return pathElement;
+			}
 		}
 		return pathElements.last();
 	}
@@ -636,11 +636,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return null;
 
 		double physicalLength = 0;
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final PathElement pathElement : pathElements) {
 			physicalLength += SchemeUtils.getPhysicalLength(pathElement);
-			if (physicalLength >= physicalDistance)
+			if (physicalLength >= physicalDistance) {
 				return pathElement;
+			}
 		}
 		return pathElements.last();
 	}
@@ -651,8 +651,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public double getPhysicalDistance(final double opticalDistance) {
 		double physicalDistance = .0;
 		double d = .0;
-		for (final Iterator pathElementIterator = getPathElements().iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final PathElement pathElement : getPathElements()) {
 			final double opticalLength = SchemeUtils.getOpticalLength(pathElement);
 			if (d + opticalLength < opticalDistance) {
 				d += opticalLength;
@@ -675,10 +674,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 		double physicalDistanceFromStart = 0;
 		final SortedSet<PathElement> pathElements = getPathElements();
-		for (final Iterator pathElementIterator = pathElements.iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1 == pathElement)
+		for (final PathElement pathElement1 : pathElements) {
+//			if (pathElement1 == pathElement) {}
+			if (pathElement1.getId().equals(pathElement.getId())) {
 				return new double[]{physicalDistanceFromStart, physicalDistanceFromStart + SchemeUtils.getPhysicalLength(pathElement1)};
+			}
 			physicalDistanceFromStart += SchemeUtils.getPhysicalLength(pathElement1);
 		}
 		/*
@@ -699,10 +699,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return pathElement;
 
 		PathElement previousNode = null;
-		for (final Iterator pathElementIterator = getPathElements().headSet(pathElement).iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement1 = (PathElement) pathElementIterator.next();
-			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort())
+		for (final PathElement pathElement1 : getPathElements().headSet(pathElement)) {
+			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				previousNode = pathElement1;
+			}
 		}
 		return previousNode;
 	}
@@ -773,8 +773,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert assertContains(endPathElement): CHILDREN_ALIEN;
 
 		double oldOpticalLength = 0;
-		for (final Iterator<PathElement> pathElementIterator = pathElements.tailSet(startPathElement).iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = pathElementIterator.next();
+		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			oldOpticalLength += SchemeUtils.getOpticalLength(pathElement);
 			if (pathElement == endPathElement)
 				break;
@@ -785,11 +784,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		final double k = opticalLength / oldOpticalLength;
 		if (Math.abs(k - 1) < .001)
 			return;
-		for (final Iterator pathElementIterator = pathElements.tailSet(startPathElement).iterator(); pathElementIterator.hasNext();) {
-			final PathElement pathElement = (PathElement) pathElementIterator.next();
+		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * k);
-			if (pathElement == endPathElement)
+//			if (pathElement == endPathElement) {}
+			if (pathElement.getId().equals(endPathElement.getId())) {
 				break;
+			}
 		}
 	}
 }

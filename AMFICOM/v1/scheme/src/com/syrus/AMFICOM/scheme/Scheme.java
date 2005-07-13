@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.49 2005/07/12 08:40:55 bass Exp $
+ * $Id: Scheme.java,v 1.50 2005/07/13 11:08:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/13 11:08:01 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -640,8 +639,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) {
 		assert schemeCableLinks != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeCableLinkIterator = getSchemeCableLinks().iterator(); oldSchemeCableLinkIterator.hasNext();) {
-			final SchemeCableLink oldSchemeCableLink = (SchemeCableLink) oldSchemeCableLinkIterator.next();
+		for (final SchemeCableLink oldSchemeCableLink : getSchemeCableLinks()) {
 			/*
 			 * Check is made to prevent SchemeCableLinks from
 			 * permanently losing their parents.
@@ -649,8 +647,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			assert !schemeCableLinks.contains(oldSchemeCableLink);
 			removeSchemeCableLink(oldSchemeCableLink);
 		}
-		for (final Iterator schemeCableLinkIterator = schemeCableLinks.iterator(); schemeCableLinkIterator.hasNext();)
-			addSchemeCableLink((SchemeCableLink) schemeCableLinkIterator.next());
+		for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
+			addSchemeCableLink(schemeCableLink);
+		}
 	}
 
 	/**
@@ -667,8 +666,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeElementIterator = getSchemeElements().iterator(); oldSchemeElementIterator.hasNext();) {
-			final SchemeElement oldSchemeElement = (SchemeElement) oldSchemeElementIterator.next();
+		for (final SchemeElement oldSchemeElement : getSchemeElements()) {
 			/*
 			 * Check is made to prevent SchemeElements from
 			 * permanently losing their parents.
@@ -676,8 +674,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			assert !schemeElements.contains(oldSchemeElement);
 			removeSchemeElement(oldSchemeElement);
 		}
-		for (final Iterator schemeElementIterator = schemeElements.iterator(); schemeElementIterator.hasNext();)
-			addSchemeElement((SchemeElement) schemeElementIterator.next());
+		for (final SchemeElement schemeElement : schemeElements) {
+			this.addSchemeElement(schemeElement);
+		}
 	}
 
 	/**
@@ -694,8 +693,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeLinkIterator = getSchemeLinks().iterator(); oldSchemeLinkIterator.hasNext();) {
-			final SchemeLink oldSchemeLink = (SchemeLink) oldSchemeLinkIterator.next();
+		for (final SchemeLink oldSchemeLink : getSchemeLinks()) {
 			/*
 			 * Check is made to prevent SchemeLinks from
 			 * permanently losing their parents.
@@ -703,14 +701,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			assert !schemeLinks.contains(oldSchemeLink);
 			removeSchemeLink(oldSchemeLink);
 		}
-		for (final Iterator schemeLinkIterator = schemeLinks.iterator(); schemeLinkIterator.hasNext();)
-			addSchemeLink((SchemeLink) schemeLinkIterator.next());
+		for (final SchemeLink schemeLink : schemeLinks) {
+			this.addSchemeLink(schemeLink);
+		}
 	}
 
 	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) {
 		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
-		for (final Iterator oldSchemeOptimizeInfoIterator = getSchemeOptimizeInfos().iterator(); oldSchemeOptimizeInfoIterator.hasNext();) {
-			final SchemeOptimizeInfo oldSchemeOptimizeInfo = (SchemeOptimizeInfo) oldSchemeOptimizeInfoIterator.next();
+		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : getSchemeOptimizeInfos()) {
 			/*
 			 * Check is made to prevent SchemeOptimizeInfos from
 			 * permanently losing their parents.
@@ -718,8 +716,9 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			assert !schemeOptimizeInfos.contains(oldSchemeOptimizeInfo);
 			removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
 		}
-		for (final Iterator schemeOptimizeInfoIterator = schemeOptimizeInfos.iterator(); schemeOptimizeInfoIterator.hasNext();)
-			addSchemeOptimizeInfo((SchemeOptimizeInfo) schemeOptimizeInfoIterator.next());
+		for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
+			this.addSchemeOptimizeInfo(schemeOptimizeInfo);
+		}
 	}
 
 	/**
@@ -797,8 +796,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null : NON_NULL_EXPECTED;
-		for (final Iterator oldSchemePathIterator = this.getSchemePaths().iterator(); oldSchemePathIterator.hasNext();) {
-			final SchemePath oldSchemePath = (SchemePath) oldSchemePathIterator.next();
+		for (final SchemePath oldSchemePath : this.getSchemePaths()) {
 			/*
 			 * Check is made to prevent SchemePaths from
 			 * permanently losing their parents.
@@ -806,7 +804,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			assert !schemePaths.contains(oldSchemePath);
 			this.removeSchemePath(oldSchemePath);
 		}
-		for (final Iterator schemePathIterator = schemePaths.iterator(); schemePathIterator.hasNext();)
-			this.addSchemePath((SchemePath) schemePathIterator.next());
+		for (final SchemePath schemePath : schemePaths) {
+			this.addSchemePath(schemePath);
+		}
 	}
 }

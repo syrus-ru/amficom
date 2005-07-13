@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.46 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.47 2005/07/13 11:08:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -53,7 +52,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/13 11:08:00 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -341,8 +340,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	public void setCableChannelingItems(final Set<CableChannelingItem> cableChannelingItems) {
 		assert cableChannelingItems != null: NON_NULL_EXPECTED;
-		for (final Iterator<CableChannelingItem> oldCableChannelingItemIterator = getCableChannelingItems().iterator(); oldCableChannelingItemIterator.hasNext();) {
-			final CableChannelingItem oldCableChannelingItem = oldCableChannelingItemIterator.next();
+		for (final CableChannelingItem oldCableChannelingItem : getCableChannelingItems()) {
 			/*
 			 * Check is made to prevent CableChannelingItems from
 			 * permanently losing their parents.
@@ -350,8 +348,9 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			assert !cableChannelingItems.contains(oldCableChannelingItem);
 			removeCableChannelingItem(oldCableChannelingItem);
 		}
-		for (final Iterator<CableChannelingItem> cableChannelingItemIterator = cableChannelingItems.iterator(); cableChannelingItemIterator.hasNext();)
-			addCableChannelingItem(cableChannelingItemIterator.next());
+		for (final CableChannelingItem cableChannelingItem : cableChannelingItems) {
+			this.addCableChannelingItem(cableChannelingItem);
+		}
 	}
 
 	/**
@@ -402,8 +401,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) {
 		assert schemeCableThreads != null: NON_NULL_EXPECTED;
-		for (final Iterator<SchemeCableThread> oldSchemeCableThreadIterator = getSchemeCableThreads().iterator(); oldSchemeCableThreadIterator.hasNext();) {
-			final SchemeCableThread oldSchemeCableThread = oldSchemeCableThreadIterator.next();
+		for (final SchemeCableThread oldSchemeCableThread : getSchemeCableThreads()) {
 			/*
 			 * Check is made to prevent SchemeCableThreads from
 			 * permanently losing their parents.
@@ -411,8 +409,9 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 			assert !schemeCableThreads.contains(oldSchemeCableThread);
 			removeSchemeCableThread(oldSchemeCableThread);
 		}
-		for (final Iterator<SchemeCableThread> schemeCableThreadIterator = schemeCableThreads.iterator(); schemeCableThreadIterator.hasNext();)
-			addSchemeCableThread(schemeCableThreadIterator.next());
+		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
+			this.addSchemeCableThread(schemeCableThread);
+		}
 	}
 
 	/**
