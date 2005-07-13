@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.24 2005/07/11 08:18:59 bass Exp $
+ * $Id: ServerCore.java,v 1.25 2005/07/13 08:01:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/07/11 08:18:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/07/13 08:01:52 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -218,7 +218,7 @@ public abstract class ServerCore implements CommonServer {
 			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
 			this.validateAccess(sessionKeyT, userIdH, domainIdH);
 
-			final Set storableObjects = new HashSet(transferables.length);
+			final Set<StorableObject> storableObjects = new HashSet<StorableObject>(transferables.length);
 			for (int i = 0; i < transferables.length; i++) {
 				try {
 					storableObjects.add(StorableObjectPool.fromTransferable(entityCode, transferables[i]));
@@ -271,7 +271,7 @@ public abstract class ServerCore implements CommonServer {
 		try {
 			StorableObjectPool.refresh();
 
-			final Set storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
+			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
 			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
 				final IdlStorableObject header = headerMap.get(storableObject.getId());
