@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.91 2005/07/13 08:17:53 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.92 2005/07/13 09:48:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.91 $, $Date: 2005/07/13 08:17:53 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.92 $, $Date: 2005/07/13 09:48:57 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -178,8 +178,10 @@ public class LogicalNetLayer
 	/**
 	 * При изменении масштаба отображения карты необходимо обновить
 	 * масштаб отображения всех объектов на карте.
+	 * @throws MapConnectionException 
+	 * @throws MapDataException 
 	 */
-	public void updateZoom()
+	public void updateZoom() throws MapDataException, MapConnectionException
 	{
 		Log.debugMessage(getClass().getName() + "::" + "updateZoom()" + " | " + "method call", Level.FINER);
 		
@@ -195,6 +197,7 @@ public class LogicalNetLayer
 				((AbstractNodeController)getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
 			}
 		}
+		calculateVisualLinks();
 	}
 
 	/**
@@ -276,8 +279,10 @@ public class LogicalNetLayer
 	/**
 	 * Установить масштаб элементов по умолчанию.
 	 * @param defaultScale масштаб элементов по умолчанию
+	 * @throws MapConnectionException 
+	 * @throws MapDataException 
 	 */
-	public void setDefaultScale(double defaultScale)
+	public void setDefaultScale(double defaultScale) throws MapDataException, MapConnectionException
 	{
 		Log.debugMessage(getClass().getName() + "::" + "setDefaultScale(" + defaultScale + ")" + " | " + "method call", Level.FINER);
 		
@@ -1136,8 +1141,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.91 $, $Date: 2005/07/13 08:17:53 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.92 $, $Date: 2005/07/13 09:48:57 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1199,7 +1204,7 @@ public class LogicalNetLayer
 		long endTime = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
 				+ "optimized map for " + (endTime - startTime) + "ms.",
-				Level.FINEST);
+				Level.INFO);
 	}
 
 	/**
@@ -1313,6 +1318,8 @@ public class LogicalNetLayer
 	 */
 	private void drawVisualLinks(Graphics g, Rectangle2D.Double visibleBounds)
 			throws MapConnectionException, MapDataException {
+		long t1 = System.currentTimeMillis();
+
 		for (Iterator veIterator = this.visualElements.iterator(); veIterator
 				.hasNext();) {
 			AbstractNode startNode = null;
@@ -1350,5 +1357,8 @@ public class LogicalNetLayer
 					g.drawLine(from.x, from.y, to.x, to.y);
 			}
 		}
+		long t2 = System.currentTimeMillis();
+		Log.debugMessage("LogicalNetLayer.drawVisualLinks | " + String.valueOf(t1 - t2) + " ms\n", 
+				Level.INFO);
 	}
 }
