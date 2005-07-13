@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.161 2005/06/30 16:10:26 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.162 2005/07/13 08:18:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -30,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.161 $, $Date: 2005/06/30 16:10:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.162 $, $Date: 2005/07/13 08:18:34 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -69,6 +71,7 @@ public abstract class StorableObjectDatabase {
 	public static final String SQL_VALUES = " VALUES ";
 	public static final String SQL_WHERE = " WHERE ";
 	public static final String SQL_FUNCTION_EMPTY_BLOB = " EMPTY_BLOB() ";
+	public static final String SQL_IS = " IS ";
 
 	protected enum UpdateKind {UPDATE_TOTAL, UPDATE_FORCE, UPDATE_CHECK}
 
@@ -1340,17 +1343,38 @@ public abstract class StorableObjectDatabase {
 	 * @param inList
 	 * @return String for "WHERE" subclause of SQL query
 	 */
-	protected static StringBuffer idsEnumerationString(final Set< ? extends Identifiable> identifiables,
+	protected static StringBuffer idsEnumerationString(final Set<? extends Identifiable> identifiables,
 			final String idColumn,
 			final boolean inList) {
-		if (identifiables == null || identifiables.isEmpty())
-			return new StringBuffer(inList ? DatabaseStorableObjectCondition.FALSE_CONDITION
+		assert identifiables != null : NON_NULL_EXPECTED;
+
+		final Set<Identifier> nonVoidIdentifiers = new HashSet<Identifier>(identifiables.size());
+		boolean containsVoidIdentifier = false;
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
+			if (id.isVoid()) {
+				containsVoidIdentifier = true;
+			} else {
+				nonVoidIdentifiers.add(id);
+			}
+		}
+
+		final StringBuffer voidSql = new StringBuffer(OPEN_BRACKET
+				+ idColumn + SQL_IS +  (inList ? "" : NOT)
+				+ SQL_NULL + CLOSE_BRACKET);
+		if (nonVoidIdentifiers.isEmpty()) {
+			if (containsVoidIdentifier) {
+				return voidSql;
+			}
+			return new StringBuffer(inList
+					? DatabaseStorableObjectCondition.FALSE_CONDITION
 					: DatabaseStorableObjectCondition.TRUE_CONDITION);
+		}
 
 		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
 
 		int i = 0;
-		for (final Iterator< ? extends Identifiable> it = identifiables.iterator(); it.hasNext(); i++) {
+		for (final Iterator<Identifier> it = nonVoidIdentifiers.iterator(); it.hasNext(); i++) {
 			final Identifiable identifiable = it.next();
 			final Identifier id = identifiable.getId();
 			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
@@ -1368,6 +1392,10 @@ public abstract class StorableObjectDatabase {
 		}
 		stringBuffer.append(CLOSE_BRACKET);
 		stringBuffer.append(CLOSE_BRACKET);
+
+		if (containsVoidIdentifier) {
+			stringBuffer.append((inList ? SQL_OR : SQL_AND) + voidSql);
+		}
 
 		return stringBuffer;
 	}
