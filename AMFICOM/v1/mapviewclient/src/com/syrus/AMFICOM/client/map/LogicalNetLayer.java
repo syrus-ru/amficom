@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.93 2005/07/13 10:51:19 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.94 2005/07/13 13:51:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.93 $, $Date: 2005/07/13 10:51:19 $
+ * @version $Revision: 1.94 $, $Date: 2005/07/13 13:51:49 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -197,7 +197,8 @@ public class LogicalNetLayer
 				((AbstractNodeController)getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
 			}
 		}
-		calculateVisualLinks();
+		if(MapPropertiesManager.isOptimizeLinks())
+			calculateVisualLinks();
 	}
 
 	/**
@@ -412,7 +413,10 @@ public class LogicalNetLayer
 		}
 //		System.out.println("--------------------------------------");
 		f = System.currentTimeMillis();
-		drawLines(p, visibleBounds);
+		if(MapPropertiesManager.isOptimizeLinks())
+			drawVisualLinks(p, visibleBounds);
+		else
+			drawLines(p, visibleBounds);
 		drawNodes(p, visibleBounds);
 		drawSelection(p, visibleBounds);
 		drawTempLines(p, visibleBounds);
@@ -1142,7 +1146,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.93 $, $Date: 2005/07/13 10:51:19 $
+	 * @version $Revision: 1.94 $, $Date: 2005/07/13 13:51:49 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1190,6 +1194,13 @@ public class LogicalNetLayer
 			nodesCalculated.put(node, Boolean.FALSE);
 		}
 
+		java.util.Map<NodeLink, Boolean> nodeLinksCalculated = 
+			new HashMap<NodeLink, Boolean>(map.getNodeLinks().size());
+		for (Iterator nodesIt = map.getNodeLinks().iterator(); nodesIt.hasNext();) {
+			NodeLink nodeLink = (NodeLink) nodesIt.next();
+			nodeLinksCalculated.put(nodeLink, Boolean.FALSE);
+		}
+
 		long t2 = System.currentTimeMillis();
 
 		MapViewController.nullTime1();
@@ -1201,19 +1212,44 @@ public class LogicalNetLayer
 		//Запускаем рекурсию. 
 		//Если очередной затравочный узел уже обработан - рекурсию с него не запускаем.
 		//Если карта - это связный граф, то рекурсия будет запущена один раз.
+		Collection<AbstractNode> frontedge = new LinkedList<AbstractNode>();
 		for (Iterator nodesIt = map.getNodes().iterator(); nodesIt.hasNext();) {
 			AbstractNode startRecursionNode = (AbstractNode) nodesIt.next();
-			if (! nodesCalculated.get(startRecursionNode).booleanValue())
-				pullVisualLinksFromNode(
-						startRecursionNode, 
-						startRecursionNode,
-						null, 
-						nodesCalculated, 
-						map);
+
+			while(startRecursionNode != null) {
+				if (! nodesCalculated.get(startRecursionNode).booleanValue()) {
+					long t3 = System.currentTimeMillis();
+					Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks();
+					long t4 = System.currentTimeMillis();
+					MapViewController.addTime3(t4 - t3);
+					for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+						if ( (outgoingLink.getEndNode().equals(startRecursionNode))
+								|| (outgoingLink.getStartNode().equals(startRecursionNode)))
+						if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+							nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
+							pullVisualLinksFromNode(
+									startRecursionNode, 
+									startRecursionNode,
+									outgoingLink, 
+									nodesCalculated,
+									nodeLinksCalculated,
+									frontedge,
+									map);
+						}
+					}
+				}
+				Iterator<AbstractNode> it = frontedge.iterator();
+				if(it.hasNext()) {
+					startRecursionNode = it.next();
+					it.remove();
+				}
+				else
+					startRecursionNode = null;
+			}
 		}
 		long endTime = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
-				+ "optimized map for " + (endTime - startTime) + "ms.\n"
+				+ "optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n"
 				+ "		" + (t1 - startTime) + " ms (visualElements.clear())\n"
 				+ "		" + (t2 - t1) + " ms (fill nodesCalculated)\n"
 				+ "		" + (endTime - t2) + " ms (recursing)\n"
@@ -1221,7 +1257,7 @@ public class LogicalNetLayer
 				+ "		" + MapViewController.getTime2() + " ms (create new VisualMapElements)\n"
 				+ "		" + MapViewController.getTime3() + " ms (get links for node Processed)\n"
 				+ "		" + MapViewController.getTime4() + " ms (calculate distance)\n"
-				+ "		" + MapViewController.getTime5() + " ms (total calls to pullVisualLinksFromNode)\n",
+				+ "		" + MapViewController.getTime5() + " (total calls to pullVisualLinksFromNode)\n",
 				Level.INFO);
 	}
 
@@ -1234,6 +1270,8 @@ public class LogicalNetLayer
 	 * уровня рекурсии = null.
 	 * @param nodesCalculated Таблица содержащая информацию о том, обработан ли тот или 
 	 * иной узел.
+	 * @param nodeLinksCalculated 
+	 * @param frontedge 
 	 * @param map Объект "карта"
 	 */
 	private void pullVisualLinksFromNode(
@@ -1241,6 +1279,8 @@ public class LogicalNetLayer
 			AbstractNode lastNode, 
 			NodeLink incomingLink,
 			java.util.Map<AbstractNode, Boolean> nodesCalculated, 
+			java.util.Map<NodeLink, Boolean> nodeLinksCalculated, 
+			Collection<AbstractNode> frontedge, 
 			Map map) 
 			throws MapDataException, MapConnectionException {
 		MapViewController.addTime5(1);
@@ -1282,18 +1322,11 @@ public class LogicalNetLayer
 
 		long t3 = System.currentTimeMillis();
 		//Получаем список всех входящих/исходящих линий для данного узла
-		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks(nodeProcessed);
-		//Исключаем из списка линк, по которому мы пришли в данный узел
-		if (incomingLink != null)		
-			allLinksForNodeProcessed.remove(incomingLink);
-
+		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks();
 		long t4 = System.currentTimeMillis();
 		MapViewController.addTime3(t4 - t3);
 
 		long t5 = System.currentTimeMillis();
-		//Отмечаем в таблице, что узел обработан. 
-		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
-
 		//Экранные координаты узла, от которого мы тянем визуальный элемент 
 		Point startVENodeScr = this.converter.convertMapToScreen(
 				nodeToPullFrom.getLocation());
@@ -1308,7 +1341,7 @@ public class LogicalNetLayer
 		long t6 = System.currentTimeMillis();
 		MapViewController.addTime4(t6 - t5);
 		if (	(distance >= MINIMUM_SCREEN_LENGTH)
-			||	(allLinksForNodeProcessed.size() > 1)) {
+			||	(map.getNodeLinksCount(nodeProcessed) > 2)) {
 			//Получили достаточно длинный сегмент или наткнулись на узел с развилкой -
 			//создаём элемент отображения и дальше тянем новый(е) элемент отображения,
 			//начиная от рассматриваемого элемента.
@@ -1324,27 +1357,39 @@ public class LogicalNetLayer
 				MapViewController.addTime2(f - d);
 			}
 
-			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
-				pullVisualLinksFromNode(
-						nodeProcessed, 
-						nodeProcessed,
-						outgoingLink, 
-						nodesCalculated, 
-						map);
-			}
+			frontedge.add(nodeProcessed);
+//			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+//				pullVisualLinksFromNode(
+//						nodeProcessed, 
+//						nodeProcessed,
+//						outgoingLink, 
+//						nodesCalculated, 
+//						map);
+//			}
 		} else {
 			//Тянем элемент отображения дальше. В случае ветвления - на более поздних
 			//этапах для каждой ветви будет создан отдельный элемент отображения (довольно
 			//длинный), начинающийся в том узле из которого мы пришли на этот уровень
 			//рекурсии
 			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
-				pullVisualLinksFromNode(
-						nodeToPullFrom, 
-						nodeProcessed,
-						outgoingLink, 
-						nodesCalculated, 
-						map);
+				//Исключаем из списка линк, по которому мы пришли в данный узел
+				if (!outgoingLink.equals(incomingLink))		
+					if ( (outgoingLink.getEndNode().equals(nodeProcessed))
+							|| (outgoingLink.getStartNode().equals(nodeProcessed)))
+				if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+					nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
+					pullVisualLinksFromNode(
+							nodeToPullFrom, 
+							nodeProcessed,
+							outgoingLink, 
+							nodesCalculated, 
+							nodeLinksCalculated,
+							frontedge,
+							map);
+				}
 			}
+			//Отмечаем в таблице, что узел обработан. 
+			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
 		}
 	}
 
@@ -1359,6 +1404,9 @@ public class LogicalNetLayer
 			throws MapConnectionException, MapDataException {
 		long t1 = System.currentTimeMillis();
 
+		g.setColor(Color.BLUE);
+		((Graphics2D )g).setStroke(new BasicStroke(4));
+		
 		for (Iterator veIterator = this.visualElements.iterator(); veIterator
 				.hasNext();) {
 			AbstractNode startNode = null;
@@ -1397,7 +1445,7 @@ public class LogicalNetLayer
 			}
 		}
 		long t2 = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawVisualLinks | " + String.valueOf(t1 - t2) + " ms\n", 
+		Log.debugMessage("LogicalNetLayer.drawVisualLinks | " + String.valueOf(t2 - t1) + " ms\n", 
 				Level.INFO);
 	}
 }
