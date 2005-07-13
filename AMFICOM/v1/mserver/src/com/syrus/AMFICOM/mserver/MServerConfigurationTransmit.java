@@ -1,5 +1,5 @@
 /*
- * $Id: MServerConfigurationTransmit.java,v 1.11 2005/06/30 16:11:25 arseniy Exp $
+ * $Id: MServerConfigurationTransmit.java,v 1.12 2005/07/13 11:36:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/30 16:11:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/13 11:36:43 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -118,7 +118,7 @@ abstract class MServerConfigurationTransmit extends MServerAdministrationTransmi
 			throws AMFICOMRemoteException {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
-		IdlKIS[] ret = new IdlKIS[length];
+		final IdlKIS[] ret = new IdlKIS[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
