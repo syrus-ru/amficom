@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.97 2005/07/13 06:58:05 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.98 2005/07/13 07:12:37 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.97 $, $Date: 2005/07/13 06:58:05 $
+ * @version $Revision: 1.98 $, $Date: 2005/07/13 07:12:37 $
  * @module
  */
 
@@ -240,7 +240,7 @@ public class CoreAnalysisManager
 	{
 		return analyse6(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, noiseFactor,
-			nReflSize, 0.5, (int)(nReflSize * 1.5), reflSize, 
+			nReflSize, 0.5, (int)(nReflSize * 1.5), reflSize, // FIXME: rSACrit, rSASmall
 			traceLength, noiseArray);
 	}
 
