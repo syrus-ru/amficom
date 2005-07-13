@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.96 2005/07/13 06:50:05 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.97 2005/07/13 06:58:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.96 $, $Date: 2005/07/13 06:50:05 $
+ * @version $Revision: 1.97 $, $Date: 2005/07/13 06:58:05 $
  * @module
  */
 
@@ -643,7 +643,7 @@ public class CoreAnalysisManager
 	 * @param y Рефлектограмма
 	 * @return длина до конца волокна
 	 */
-	public static int calcTraceLength(double[] y)
+	protected static int calcTraceLength(double[] y)
 	{
 		return nCalcTraceLength(y);
 	}
