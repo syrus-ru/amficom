@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.162 2005/07/13 08:18:34 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.163 2005/07/13 10:08:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.162 $, $Date: 2005/07/13 08:18:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.163 $, $Date: 2005/07/13 10:08:05 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -1371,7 +1371,7 @@ public abstract class StorableObjectDatabase {
 					: DatabaseStorableObjectCondition.TRUE_CONDITION);
 		}
 
-		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		final StringBuffer stringBuffer = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : "") + OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
 
 		int i = 0;
 		for (final Iterator<Identifier> it = nonVoidIdentifiers.iterator(); it.hasNext(); i++) {
@@ -1394,7 +1394,7 @@ public abstract class StorableObjectDatabase {
 		stringBuffer.append(CLOSE_BRACKET);
 
 		if (containsVoidIdentifier) {
-			stringBuffer.append((inList ? SQL_OR : SQL_AND) + voidSql);
+			stringBuffer.append((inList ? SQL_OR : SQL_AND) + voidSql + CLOSE_BRACKET);
 		}
 
 		return stringBuffer;
