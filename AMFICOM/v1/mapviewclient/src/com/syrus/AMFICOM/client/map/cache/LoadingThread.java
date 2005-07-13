@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.10 2005/07/12 13:33:41 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.11 2005/07/13 11:12:18 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -151,11 +151,12 @@ public class LoadingThread extends Thread {
                 }
                 t5 = System.currentTimeMillis();                
                 Log.debugMessage(" LoadingThread | run | image loaded for request ("
-                                + this.requestCurrentlyProcessed + ")\n"
-                                + (t2 - t1) + "(setting layer visibilities)\n"
-                                + (t3 - t2) + "(requesting for rendering)\n"
-                                + (t4 - t3) + "(after synchronized)\n"
-                                + (t5 - t4) + "(setting image) ms.",Level.INFO);
+                		+ this.requestCurrentlyProcessed + ")\n"
+                		+ "total: " + (t5 - t1) + " ms\n"
+                        + "		" + (t2 - t1) + " ms (setting layer visibilities)\n"
+                        + "		" + (t3 - t2) + " ms (requesting for rendering)\n"
+                        + "		" + (t4 - t3) + " ms (after synchronized)\n"
+                        + "		" + (t5 - t4) + " ms (setting image) ms.",Level.INFO);
 
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;
