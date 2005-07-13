@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.75 2005/07/03 19:16:25 bass Exp $
+ * $Id: StorableObject.java,v 1.76 2005/07/13 09:14:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -30,7 +32,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/07/03 19:16:25 $
+ * @version $Revision: 1.76 $, $Date: 2005/07/13 09:14:34 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -381,14 +383,29 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 */
 		assert identifiables != null;
 
-		if (identifiables.isEmpty())
+		if (identifiables.isEmpty()) {
 			return true;
+		}
 
+		short entityCode = VOID_IDENTIFIER.getMajor();
 		final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
-		final short entityCode = identifiableIterator.next().getId().getMajor();
-		while (identifiableIterator.hasNext())
-			if (entityCode != identifiableIterator.next().getId().getMajor())
+		while (identifiableIterator.hasNext()) {
+			final Identifier id = identifiableIterator.next().getId();
+			if (id.isVoid()) {
+				continue;
+			}
+			entityCode = id.getMajor();
+			break;
+		}
+		while (identifiableIterator.hasNext()) {
+			final Identifier id = identifiableIterator.next().getId();
+			if (id.isVoid()) {
+				continue;
+			}
+			if (entityCode != id.getMajor()) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -399,13 +416,29 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		assert ids != null;
 
 		final int length = ids.length;
-		if (length == 0)
+		if (length == 0) {
 			return true;
+		}
 
-		final short entityCode = (new Identifier(ids[0])).getMajor();
-		for (int i = 1; i < length; i++)
-			if (entityCode != (new Identifier(ids[i])).getMajor())
+		short entityCode = VOID_IDENTIFIER.getMajor();
+		int i = 0;
+		for (; i < length; i++) {
+			final Identifier id = new Identifier(ids[i]);
+			if (id.isVoid()) {
+				continue;
+			}
+			entityCode = id.getMajor();
+			break;
+		}
+		for (; i < length; i++) {
+			final Identifier id = new Identifier(ids[i]);
+			if (id.isVoid()) {
+				continue;
+			}
+			if (entityCode != id.getMajor()) {
 				return false;
+			}
+		}
 		return true;
 	}
 
@@ -451,7 +484,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		assert identifiables != null && !identifiables.isEmpty();
 		assert hasSingleTypeEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		return identifiables.iterator().next().getId().getMajor();
+		for (final Identifiable identifiable : identifiables) {
+			final Identifier id = identifiable.getId();
+			if (id.isVoid()) {
+				continue;
+			}
+			return id.getMajor();
+		}
+		return VOID_IDENTIFIER.getMajor();
 	}
 
 	/**
@@ -459,9 +499,16 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public static final short getEntityCodeOfIdentifiables(final IdlIdentifier ids[]) {
 		assert ids != null && ids.length != 0;
-		assert hasSingleTypeEntities(ids);
+		assert hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		return new Identifier(ids[0]).getMajor();
+		for (final IdlIdentifier idlIdentifier : ids) {
+			final Identifier id = new Identifier(idlIdentifier);
+			if (id.isVoid()) {
+				continue;
+			}
+			return id.getMajor();
+		}
+		return VOID_IDENTIFIER.getMajor();
 	}
 
 	/**
