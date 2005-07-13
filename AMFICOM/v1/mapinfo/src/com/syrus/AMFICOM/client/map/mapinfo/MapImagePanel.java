@@ -59,7 +59,6 @@ public class MapImagePanel extends JPanel
 	{
 		try
 		{
- 			this.viewer.setMapImageSize(this.getSize());
  			int width = this.getWidth();
  			int height = this.getHeight();
  			if ((width > 0) && (height > 0))
@@ -68,6 +67,7 @@ public class MapImagePanel extends JPanel
  						height,
  						BufferedImage.TYPE_USHORT_565_RGB);
 
+			this.viewer.setMapImageSize(this.getSize());
 		} catch (MapConnectionException e)
 		{
 			// TODO Auto-generated catch block
@@ -111,6 +111,9 @@ public class MapImagePanel extends JPanel
 		if (this.resultImage == null)
 			return;
 
+		if (this.mapImage == null)
+			return;
+		
 		Graphics riGraphics = this.resultImage.getGraphics();
 		long t1 = System.currentTimeMillis();
 
