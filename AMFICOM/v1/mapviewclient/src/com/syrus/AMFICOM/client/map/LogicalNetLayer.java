@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.92 2005/07/13 09:48:57 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.93 2005/07/13 10:51:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.92 $, $Date: 2005/07/13 09:48:57 $
+ * @version $Revision: 1.93 $, $Date: 2005/07/13 10:51:19 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1142,7 +1142,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.92 $, $Date: 2005/07/13 09:48:57 $
+	 * @version $Revision: 1.93 $, $Date: 2005/07/13 10:51:19 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1177,6 +1177,8 @@ public class LogicalNetLayer
 
 		this.visualElements.clear();
 
+		long t1 = System.currentTimeMillis();
+
 		Map map = this.getMapView().getMap();
 
 		//Таблица, в которой содержится информация о том, обрабатывался ли
@@ -1187,6 +1189,14 @@ public class LogicalNetLayer
 			AbstractNode node = (AbstractNode) nodesIt.next();
 			nodesCalculated.put(node, Boolean.FALSE);
 		}
+
+		long t2 = System.currentTimeMillis();
+
+		MapViewController.nullTime1();
+		MapViewController.nullTime2();
+		MapViewController.nullTime3();
+		MapViewController.nullTime4();
+		MapViewController.nullTime5();
 
 		//Запускаем рекурсию. 
 		//Если очередной затравочный узел уже обработан - рекурсию с него не запускаем.
@@ -1203,7 +1213,15 @@ public class LogicalNetLayer
 		}
 		long endTime = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
-				+ "optimized map for " + (endTime - startTime) + "ms.",
+				+ "optimized map for " + (endTime - startTime) + "ms.\n"
+				+ "		" + (t1 - startTime) + " ms (visualElements.clear())\n"
+				+ "		" + (t2 - t1) + " ms (fill nodesCalculated)\n"
+				+ "		" + (endTime - t2) + " ms (recursing)\n"
+				+ "		" + MapViewController.getTime1() + " ms (check nodesCalculated.get(nodeProcessed))\n"
+				+ "		" + MapViewController.getTime2() + " ms (create new VisualMapElements)\n"
+				+ "		" + MapViewController.getTime3() + " ms (get links for node Processed)\n"
+				+ "		" + MapViewController.getTime4() + " ms (calculate distance)\n"
+				+ "		" + MapViewController.getTime5() + " ms (total calls to pullVisualLinksFromNode)\n",
 				Level.INFO);
 	}
 
@@ -1225,6 +1243,7 @@ public class LogicalNetLayer
 			java.util.Map<AbstractNode, Boolean> nodesCalculated, 
 			Map map) 
 			throws MapDataException, MapConnectionException {
+		MapViewController.addTime5(1);
 		//Рассматриваемый узел
 		AbstractNode nodeProcessed = null;
 
@@ -1239,25 +1258,39 @@ public class LogicalNetLayer
 			throw new AssertionError(
 					"LogicalNetLayer | pullVisualLinksFromNode | The nodeProcessed can't be null");
 
+		long t1 = System.currentTimeMillis();
 		if (nodesCalculated.get(nodeProcessed).booleanValue()) {
+			long t2 = System.currentTimeMillis();
+			MapViewController.addTime1(t2 - t1);
 			//Условие останова - данный узел уже рассматривался.
 			//Создаём элемент отображения и выходим.
 			if (lastNode == nodeToPullFrom)
 				//Если последний "натягиваемый" отображаемый элемент состоит из одного
 				//линка - его и отображаем
 				this.visualElements.add(incomingLink);
-			else
+			else {
+				long d = System.currentTimeMillis();
 				this.visualElements.add(
 						new VisualMapElement(nodeToPullFrom, nodeProcessed));
+				long f = System.currentTimeMillis();
+				MapViewController.addTime2(f - d);
+			}
 			return;
 		}
+		long t2 = System.currentTimeMillis();
+		MapViewController.addTime1(t2 - t1);
 
+		long t3 = System.currentTimeMillis();
 		//Получаем список всех входящих/исходящих линий для данного узла
 		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks(nodeProcessed);
 		//Исключаем из списка линк, по которому мы пришли в данный узел
 		if (incomingLink != null)		
 			allLinksForNodeProcessed.remove(incomingLink);
 
+		long t4 = System.currentTimeMillis();
+		MapViewController.addTime3(t4 - t3);
+
+		long t5 = System.currentTimeMillis();
 		//Отмечаем в таблице, что узел обработан. 
 		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
 
@@ -1272,8 +1305,10 @@ public class LogicalNetLayer
 				(currEndVENodeScr.x - startVENodeScr.x) * (currEndVENodeScr.x - startVENodeScr.x)
 			+	(currEndVENodeScr.y - startVENodeScr.y) * (currEndVENodeScr.y - startVENodeScr.y));
 
+		long t6 = System.currentTimeMillis();
+		MapViewController.addTime4(t6 - t5);
 		if (	(distance >= MINIMUM_SCREEN_LENGTH)
-			||	(allLinksForNodeProcessed.size() > 1)){
+			||	(allLinksForNodeProcessed.size() > 1)) {
 			//Получили достаточно длинный сегмент или наткнулись на узел с развилкой -
 			//создаём элемент отображения и дальше тянем новый(е) элемент отображения,
 			//начиная от рассматриваемого элемента.
@@ -1281,9 +1316,13 @@ public class LogicalNetLayer
 				//Если последний "натягиваемый" отображаемый элемент состоит из одного
 				//линка - его и отображаем
 				this.visualElements.add(incomingLink);
-			else
+			else {
+				long d = System.currentTimeMillis();
 				this.visualElements.add(
 						new VisualMapElement(nodeToPullFrom, nodeProcessed));
+				long f = System.currentTimeMillis();
+				MapViewController.addTime2(f - d);
+			}
 
 			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
 				pullVisualLinksFromNode(
