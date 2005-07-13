@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.7 2005/06/15 15:53:05 arseniy Exp $
+ * $Id: CMServerPoolContext.java,v 1.8 2005/07/13 19:35:43 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/15 15:53:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/13 19:35:43 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -53,6 +53,7 @@ final class CMServerPoolContext extends PoolContext {
 		this.cmServerServantManager = cmServerServantManager;
 	}
 
+	@Override
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
 				DATABASE_LOADER_ONLY)).booleanValue();

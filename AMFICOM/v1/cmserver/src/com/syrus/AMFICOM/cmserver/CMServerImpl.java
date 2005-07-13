@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.113 2005/06/29 14:23:54 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.114 2005/07/13 19:35:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/06/29 14:23:54 $
+ * @version $Revision: 1.114 $, $Date: 2005/07/13 19:35:43 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -37,6 +37,7 @@ public final class CMServerImpl extends CMMeasurementTransmit {
 	 * @throws AMFICOMRemoteException
 	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(IdlSessionKey, IdlIdentifierHolder, IdlIdentifierHolder)
 	 */
+	@Override
 	protected void validateAccess(final IdlSessionKey sessionKey,
 			final IdlIdentifierHolder userId,
 			final IdlIdentifierHolder domainId) throws AMFICOMRemoteException {

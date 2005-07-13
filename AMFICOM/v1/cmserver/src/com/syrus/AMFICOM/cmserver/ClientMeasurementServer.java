@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.52 2005/06/29 14:23:54 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.53 2005/07/13 19:35:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/06/29 14:23:54 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/13 19:35:43 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -87,6 +87,7 @@ public class ClientMeasurementServer {
 		 * Add shutdown hook.
 		 */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				shutdown();
 			}

@@ -1,5 +1,5 @@
 /*
-* $Id: CMServerConfigurationObjectLoader.java,v 1.7 2005/05/27 11:13:49 bass Exp $
+* $Id: CMServerConfigurationObjectLoader.java,v 1.8 2005/07/13 19:35:43 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,18 +12,21 @@ import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
+import com.syrus.AMFICOM.general.StorableObject;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/27 11:13:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/13 19:35:43 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class CMServerConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
-	public Set refresh(Set storableObjects) {
+	@Override
+	@SuppressWarnings("unused")
+	public Set refresh(final Set<? extends StorableObject> storableObjects) {
 		/**
 		 * there is no reason to refresh because configuration entities couldn't change out of cmserver
 		 */
-		return Collections.EMPTY_SET;
+		return Collections.emptySet();
 	}
 }
