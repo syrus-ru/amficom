@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.73 2005/06/24 09:51:09 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.74 2005/07/13 17:17:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/06/24 09:51:09 $
+ * @version $Revision: 1.74 $, $Date: 2005/07/13 17:17:12 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -54,7 +54,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	private static final int	SIZE_LOCAL_ADDRESS_COLUMN	= 64;
 
-	private MonitoredElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private MonitoredElement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
 			return (MonitoredElement) storableObject;
 		throw new IllegalDataException("MonitoredElementDatabase.fromStorableObject | Illegal Storable Object: "
@@ -90,9 +90,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		final String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
@@ -101,10 +101,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
-												PreparedStatement preparedStatement,
-												int startParameterNumber) throws IllegalDataException, SQLException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, monitoredElement.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getMeasurementPortId());
@@ -115,7 +115,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		super.retrieveEntity(monitoredElement);
@@ -123,31 +123,30 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		MonitoredElement monitoredElement = (storableObject == null) ? null : this.fromStorableObject(storableObject);
 		if (monitoredElement == null) {
 			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0, null, null);
 		}
-		monitoredElement.setAttributes(
-			DatabaseDate.fromQuerySubString(resultSet,StorableObjectWrapper.COLUMN_CREATED),
-			DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-			DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-			resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-			DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-			DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-			DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
-			resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
-			DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
+		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
+				resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
+				DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
 
-	private void retrieveMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws RetrieveObjectException {
-		Set<Identifier> mdmIds = new HashSet<Identifier>();
-		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
-		int meSort = monitoredElement.getSort().value();
+	private void retrieveMonitoredDomainMemberIds(final MonitoredElement monitoredElement) throws RetrieveObjectException {
+		final Set<Identifier> mdmIds = new HashSet<Identifier>();
+		final String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
+		final int meSort = monitoredElement.getSort().value();
 		String column;
 		String sql;
 		{
@@ -186,7 +185,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql,
@@ -196,7 +195,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, column));
 			}
 		} catch (SQLException sqle) {
-			String mesg = "MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Cannot retrieve monitored domain members for monitored element "
+			final String mesg = "MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Cannot retrieve monitored domain members for monitored element "
 					+ meIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
@@ -218,9 +217,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	private void retrieveMonitoredDomainMemberIdsByOneQuery(final Set<MonitoredElement> monitoredElements)
 			throws RetrieveObjectException {
-		final Map<Integer, Set<MonitoredElement>> sortedMonitoredElements = new HashMap();
-		//Set monitoredElementsOneSort;
-		//Integer meSort;
+		final Map<Integer, Set<MonitoredElement>> sortedMonitoredElements = new HashMap<Integer, Set<MonitoredElement>>();
 
 		for (final MonitoredElement monitoredElement : monitoredElements) {
 			final Integer meSort = new Integer(monitoredElement.getSort().value());
@@ -272,9 +269,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  monitoredElement.getId() + "'; argument: " + arg);
@@ -283,8 +280,8 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		try {
 			super.insertEntity(monitoredElement);
 			this.insertMonitoredDomainMemberIds(monitoredElement);
@@ -295,15 +292,15 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-			MonitoredElement monitoredElement = (MonitoredElement) iter.next();
+		for (final Iterator iter = storableObjects.iterator(); iter.hasNext();) {
+			final MonitoredElement monitoredElement = (MonitoredElement) iter.next();
 			this.insertMonitoredDomainMemberIds(monitoredElement);
 		}
 	}
 
-	private void insertMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws CreateObjectException {
+	private void insertMonitoredDomainMemberIds(final MonitoredElement monitoredElement) throws CreateObjectException {
 		final Set<Identifier> mdmIds = monitoredElement.getMonitoredDomainMemberIds();
 		final Identifier meId = monitoredElement.getId();
 		final int meSort = monitoredElement.getSort().value();
@@ -346,10 +343,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		PreparedStatement preparedStatement = null;
 		Identifier mdmId = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(buffer.toString());
-			for (Iterator<Identifier> it = mdmIds.iterator(); it.hasNext();) {
+			for (final Iterator<Identifier> it = mdmIds.iterator(); it.hasNext();) {
 				mdmId = it.next();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, mdmId);
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
@@ -362,7 +359,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
+			final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
 					+ meId.getIdentifierString()
 					+ "' and monitored domain member '"
 					+ mdmId.getIdentifierString()
@@ -406,7 +403,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 //		Integer meSort;
 
 //		MonitoredElement monitoredElement;
-		for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
+		for (final Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			final MonitoredElement monitoredElement = (MonitoredElement) it.next();
 			final Integer meSort = new Integer(monitoredElement.getSort().value());
 			Set<MonitoredElement> monitoredElementsOneSort = sortedMonitoredElements.get(meSort);
@@ -513,9 +510,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveMonitoredDomainMemberIdsByOneQuery(collection);
-		return collection;
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveMonitoredDomainMemberIdsByOneQuery(objects);
+		return objects;
 	}
 
 }
