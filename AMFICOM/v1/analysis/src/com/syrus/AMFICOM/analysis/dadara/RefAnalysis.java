@@ -88,13 +88,7 @@ public class RefAnalysis
 			? de[de.length - 1].getEnd()
 			: 0;
 
-        // XXX: we need to find trace length again 'cause mtae have forgotten it
-        int noiseStart = CoreAnalysisManager.calcTraceLength(y);
-
-//		for (int i = 0; i < re.length; i++)
-//		{
-//            events[i] = decodeEvent(y, mtae, i, top, re, mt);
-//		}
+        int noiseStart = ar.getTraceLength();
 
 		double maxNoise = 0.;
 		boolean b = false;
