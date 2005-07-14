@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.14 2005/07/08 14:34:31 peskovsky Exp $
+ * $Id: NodeLinkController.java,v 1.15 2005/07/14 15:37:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * Контроллер фрагмента линии.
- * @author $Author: peskovsky $
- * @version $Revision: 1.14 $, $Date: 2005/07/08 14:34:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/07/14 15:37:04 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -159,22 +159,18 @@ public final class NodeLinkController extends AbstractLinkController {
 		long f;
 		long d;
 		f = System.currentTimeMillis();
-
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
-
 		d = System.currentTimeMillis();
 		MapViewController.addTime1(d - f);
 		
-		PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
-
 		f = System.currentTimeMillis();		
-		Stroke stroke = plc.getStroke(nodeLink.getPhysicalLink());
+		Stroke stroke = getStroke(nodeLink);
 		d = System.currentTimeMillis();
 		MapViewController.addTime2(d - f);
 		
 		f = System.currentTimeMillis();		
-		Color color = plc.getColor(nodeLink.getPhysicalLink());
+		Color color = getColor(nodeLink);
 		d = System.currentTimeMillis();
 		MapViewController.addTime3(d - f);
 	
@@ -233,6 +229,22 @@ public final class NodeLinkController extends AbstractLinkController {
 		}
 		d = System.currentTimeMillis();
 		MapViewController.addTime5(d - f);
+	}
+
+	public Color getColor(MapElement mapElement) {
+		if(!(mapElement instanceof NodeLink))
+			return MapPropertiesManager.getColor();
+		NodeLink nodeLink = (NodeLink )mapElement;
+		PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
+		return plc.getColor(nodeLink.getPhysicalLink());
+	}
+
+	public Stroke getStroke(MapElement mapElement) {
+		if(!(mapElement instanceof NodeLink))
+			return MapPropertiesManager.getStroke();
+		NodeLink nodeLink = (NodeLink )mapElement;
+		PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
+		return plc.getStroke(nodeLink.getPhysicalLink());
 	}
 
 	/**
