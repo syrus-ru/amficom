@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.94 2005/07/13 09:27:58 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.95 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/07/13 09:27:58 $
+ * @version $Revision: 1.95 $, $Date: 2005/07/14 19:02:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -186,7 +186,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	@Override
 	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Result result = this.fromStorableObject(storableObject);
+		final Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
 		this.retrieveResultParametersByOneQuery(Collections.singleton(result));
 	}
@@ -241,12 +241,12 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getIdentifierString());
 		}
 		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							 action,
-							 resultSort);
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				action,
+				resultSort);
 
 		return result;
 	}
@@ -298,7 +298,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				resultParameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			final String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -354,8 +354,8 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Result result = this.fromStorableObject((StorableObject) it.next());
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+			final Result result = this.fromStorableObject((StorableObject) it.next());
 			this.insertResultParameters(result);
 		}
 
@@ -446,7 +446,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveResultParametersByOneQuery(objects);
 		return objects;

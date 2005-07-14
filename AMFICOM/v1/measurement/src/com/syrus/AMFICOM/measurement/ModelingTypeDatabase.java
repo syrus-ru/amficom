@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.44 2005/07/14 16:08:07 bass Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.45 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -96,7 +96,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final ModelingType modelingType = this.fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(modelingType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(modelingType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;		
 		return values;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.6 2005/07/14 16:08:07 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.7 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -79,8 +79,8 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		ParameterSet set = this.fromStorableObject(storableObject);
-		String values = Integer.toString(set.getSort().value()) + COMMA
+		final ParameterSet set = this.fromStorableObject(storableObject);
+		final String values = Integer.toString(set.getSort().value()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
@@ -252,8 +252,8 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		Log.debugMessage("ParameterSetDatabase.insert | many ", Log.DEBUGLEVEL01);
 		super.insertEntities(storableObjects);
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			ParameterSet set = this.fromStorableObject((StorableObject) it.next());
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+			final ParameterSet set = this.fromStorableObject((StorableObject) it.next());
 			this.insertSetParameters(set);
 		}
 		try {
@@ -268,7 +268,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		final Identifier setId = set.getId();		
 		final Parameter[] setParameters = set.getParameters();
 		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
-		String sql = SQL_INSERT_INTO
+		final String sql = SQL_INSERT_INTO
 			+ ObjectEntities.PARAMETER
 			+ OPEN_BRACKET
 			+ StorableObjectWrapper.COLUMN_ID  + COMMA
@@ -393,10 +393,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveSetParametersByOneQuery(collection);
-		this.retrieveSetMELinksByOneQuery(collection);
-		return collection;
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveSetParametersByOneQuery(objects);
+		this.retrieveSetMELinksByOneQuery(objects);
+		return objects;
 	}
 
 }

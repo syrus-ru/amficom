@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.10 2005/07/14 16:08:07 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.11 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
@@ -186,7 +186,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
 		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -196,7 +196,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
@@ -226,18 +226,18 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 	
 	private void remove(final Identifier id) {
-		String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
+		final String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 		+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
 		+ EQUALS + DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.prepareStatement(sql);
 			Log.debugMessage("IntervalsTemporalPatternDatabase.remove | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql);
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEntityName()
+			final String mesg = "IntervalsTemporalPatternDatabase.remove | Cannot remove " + this.getEntityName()
 					+ " '" + id + "' -- " + sqle.getMessage();
 			Log.errorMessage(mesg);
 		} finally {
@@ -258,10 +258,6 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		super.delete(identifiables);
 		for (final Identifiable identifiable : identifiables) {
 			this.delete(identifiable.getId());
-		}
-		for (Iterator it = identifiables.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			this.delete(id);
 		}
 	}
 	
@@ -308,8 +304,8 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				insertMap.put(offset, row);
 			}
 		}
-		updateDB(intervalsTemporalPatternId, updateMap, ExecuteMode.MODE_UPDATE);
-		updateDB(intervalsTemporalPatternId, insertMap, ExecuteMode.MODE_INSERT);
+		this.updateDB(intervalsTemporalPatternId, updateMap, ExecuteMode.MODE_UPDATE);
+		this.updateDB(intervalsTemporalPatternId, insertMap, ExecuteMode.MODE_INSERT);
 	}
 
 	private void updateDB(final Identifier intervalsTemporalPatternId, final Map<Long, List<Object>> updateMap, final ExecuteMode updateMode)
@@ -366,7 +362,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = "IntervalsTemporalPatternDatabase.updateDB | Cannot update " + this.getEntityName()
+			final String mesg = "IntervalsTemporalPatternDatabase.updateDB | Cannot update " + this.getEntityName()
 					+ " '" + intervalsTemporalPatternId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
@@ -422,14 +418,14 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			throws IllegalDataException, CreateObjectException {
 		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
 		super.insertEntity(intervalsTemporalPattern);
-		insertInLinkedTable(intervalsTemporalPattern);
+		this.insertInLinkedTable(intervalsTemporalPattern);
 	}
 
 	@Override
 	public void insert(final Set storableObjects) throws CreateObjectException {
 		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-			IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
-			insertInLinkedTable(intervalsTemporalPattern);			
+			final IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
+			this.insertInLinkedTable(intervalsTemporalPattern);			
 		}
 	}
 
@@ -445,7 +441,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		}
 
 		try {
-			updateDB(intervalsTemporalPattern.getId(), mapTable, ExecuteMode.MODE_INSERT);
+			this.updateDB(intervalsTemporalPattern.getId(), mapTable, ExecuteMode.MODE_INSERT);
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}

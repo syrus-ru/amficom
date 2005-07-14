@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.58 2005/07/13 09:27:58 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.59 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/07/13 09:27:58 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/14 19:02:39 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -80,9 +80,9 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
-		Measurement measurement = evaluation.getMeasurement();
-		String values = DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
+		final Evaluation evaluation = this.fromStorableObject(storableObject);
+		final Measurement measurement = evaluation.getMeasurement();
+		final String values = DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ DatabaseIdentifier.toSQLString(evaluation.getThresholdSet().getId());
@@ -93,8 +93,8 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
-		Measurement measurement = evaluation.getMeasurement();
+		final Evaluation evaluation = this.fromStorableObject(storableObject);
+		final Measurement measurement = evaluation.getMeasurement();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER);

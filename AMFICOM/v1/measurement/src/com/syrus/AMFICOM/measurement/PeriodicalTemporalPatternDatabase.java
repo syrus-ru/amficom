@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.6 2005/06/17 11:01:00 bass Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.7 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -26,8 +27,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/17 11:01:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -37,21 +38,24 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 
 	private static String updateMultipleSQLValues;
 
-	private PeriodicalTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private PeriodicalTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PeriodicalTemporalPattern)
 			return (PeriodicalTemporalPattern) storableObject;
 		throw new IllegalDataException("PeriodicalTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		this.retrieveEntity(periodicalTemporalPattern);
 	}	
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.PERIODICALTEMPORALPATTERN_CODE;
 	}	
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
@@ -59,6 +63,7 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION;
@@ -66,38 +71,43 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		String values = "" + periodicalTemporalPattern.getPeriod();
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+		final String values = "" + periodicalTemporalPattern.getPeriod();
 		return values;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {		
-		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {		
+		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		preparedStatement.setLong(++startParameterNumber, periodicalTemporalPattern.getPeriod());
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = (storableObject == null) ?
+		final PeriodicalTemporalPattern periodicalTemporalPattern = (storableObject == null) ?
 				new PeriodicalTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
 								0) :
 					this.fromStorableObject(storableObject);
 		periodicalTemporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   resultSet.getLong(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				resultSet.getLong(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD));
 		return periodicalTemporalPattern;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
@@ -105,12 +115,14 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
 		super.insertEntity(periodicalTemporalPattern);
 	}
 
-	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 

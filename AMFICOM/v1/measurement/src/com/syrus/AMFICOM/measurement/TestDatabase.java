@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.104 2005/07/14 16:08:07 bass Exp $
+ * $Id: TestDatabase.java,v 1.105 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.105 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -262,8 +262,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 	private Set<Measurement> retrieveMeasurementsOrderByStartTime(final Test test, final MeasurementStatus measurementStatus)
 			throws RetrieveObjectException {
-		//@todo final Set<Measurement> measurements = new HashSet<Measurement>();
-		final Set measurements = new HashSet();
+		final Set<Measurement> measurements = new HashSet<Measurement>();
 
 		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		final String sql = SQL_SELECT
@@ -281,8 +280,9 @@ public final class TestDatabase extends StorableObjectDatabase {
 			Log.debugMessage("TestDatabase.retrieveMeasurementsOrderByStartTime | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				measurements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-						StorableObjectWrapper.COLUMN_ID), true));
+				final Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
+				final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
+				measurements.add(measurement);
 			}
 		} catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr + "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
@@ -399,7 +399,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 	@Override
 	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Test test = this.fromStorableObject(storableObject);
+		final Test test = this.fromStorableObject(storableObject);
 		super.insertEntity(test);
 		try {
 			this.updateMeasurementSetupIds(Collections.singleton(test));
@@ -459,9 +459,9 @@ public final class TestDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveMeasurementSetupTestLinksByOneQuery(collection);
-		return collection;
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveMeasurementSetupTestLinksByOneQuery(objects);
+		return objects;
 	}
 
 }

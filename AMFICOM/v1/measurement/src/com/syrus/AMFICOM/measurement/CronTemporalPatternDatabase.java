@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.8 2005/07/14 16:08:07 bass Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.9 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,15 +33,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
-	private CronTemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private CronTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CronTemporalPattern)
 			return (CronTemporalPattern)storableObject;
 		throw new IllegalDataException("CronTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());

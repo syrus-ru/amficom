@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.97 2005/07/14 16:08:07 bass Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.98 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.98 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -308,10 +308,10 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set set = super.retrieveByCondition(conditionQuery);
-		this.retrieveMeasurementSetupMELinksByOneQuery(set);
-		this.retrieveMeasurementTypeIdsByOneQuery(set);
-		return set;
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveMeasurementSetupMELinksByOneQuery(objects);
+		this.retrieveMeasurementTypeIdsByOneQuery(objects);
+		return objects;
 	}
 
 }

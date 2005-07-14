@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.64 2005/07/14 16:08:07 bass Exp $
+ * $Id: AnalysisDatabase.java,v 1.65 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -84,9 +84,9 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		Analysis analysis = this.fromStorableObject(storableObject);
-		Measurement measurement = analysis.getMeasurement();
-		String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
+		final Analysis analysis = this.fromStorableObject(storableObject);
+		final Measurement measurement = analysis.getMeasurement();
+		final String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(analysis.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
@@ -157,7 +157,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 
 	@Override
 	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		Analysis analysis = this.fromStorableObject(storableObject);
+		final Analysis analysis = this.fromStorableObject(storableObject);
 		super.insertEntity(analysis);
 	}
 

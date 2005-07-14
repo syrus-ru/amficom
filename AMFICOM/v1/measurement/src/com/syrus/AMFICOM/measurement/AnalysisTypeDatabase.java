@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.95 2005/07/14 16:08:07 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.96 2005/07/14 19:02:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/07/14 16:08:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2005/07/14 19:02:39 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -218,13 +218,13 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void delete(Identifier id) {
+	public void delete(final Identifier id) {
 		assert (id.getMajor() != ObjectEntities.ANALYSIS_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
-		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(id);
+		final String analysisTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
@@ -250,8 +250,8 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set objects = super.retrieveByCondition(conditionQuery);
 		super.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;
