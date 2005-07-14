@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.26 2005/07/08 14:34:31 peskovsky Exp $
+ * $Id: AbstractLinkController.java,v 1.27 2005/07/14 15:35:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,10 +9,13 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Stroke;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -37,12 +40,21 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: peskovsky $
- * @version $Revision: 1.26 $, $Date: 2005/07/08 14:34:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/07/14 15:35:31 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
 {
+	/**
+	 * Карта объектов Color - локальный кэш (инициализируется при первом использовании)
+	 */
+	Map colors = new HashMap();
+	/**
+	 * Карта объектов Stroke - локальный кэш (инициализируется при первом использовании)
+	 */
+	Map strokes = new HashMap();	
+
 	/** Кодовое имя атрибута "Толщина линии". */
 	public static final String ATTRIBUTE_THICKNESS = "thickness";
 	/** Кодовое имя атрибута "Цвет". */
@@ -165,15 +177,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param size толщина линии
 	 */
 	public void setLineSize(MapElement mapElement, int size) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_THICKNESS);
-		Characteristic attribute = getCharacteristic(mapElement, cType);
+		Characteristic attribute = getCharacteristic(mapElement, this.thicknessCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
-						cType,
+						this.thicknessCharType,
 						"name",
 						"1",
 						String.valueOf(size),
@@ -206,10 +215,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return толщина линии
 	 */
 	public int getLineSize(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_THICKNESS);
-		Characteristic ea = getCharacteristic(mapElement, cType);
+		Characteristic ea = getCharacteristic(mapElement, this.thicknessCharType);
 		if(ea == null) {
 			return MapPropertiesManager.getThickness();
 		}
@@ -224,15 +230,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param style стиль
 	 */
 	public void setStyle(MapElement mapElement, String style) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic attribute = getCharacteristic(mapElement, cType);
+		Characteristic attribute = getCharacteristic(mapElement, this.styleCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
-						cType,
+						this.styleCharType,
 						"name",
 						"1",
 						style,
@@ -265,10 +268,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return стиль
 	 */
 	public String getStyle(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic ea = getCharacteristic(mapElement, cType);
+		Characteristic ea = getCharacteristic(mapElement, this.styleCharType);
 		if(ea == null) {
 			return MapPropertiesManager.getStyle();
 		}
@@ -284,14 +284,27 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return стиль
 	 */
 	public Stroke getStroke(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_STYLE);
-		Characteristic ea = getCharacteristic(mapElement, cType);
-		if(ea == null) {
-			return MapPropertiesManager.getStroke();
+		int thickness = getLineSize(mapElement);
+		String style = getStyle(mapElement);
+		String key = style + " " + thickness;
+		BasicStroke strokeForLink = (BasicStroke)this.strokes.get(key);
+		if(strokeForLink == null) {
+			strokeForLink = LineComboBox.getStrokeByType(style); 
+			int defaultThickness = (int)strokeForLink.getLineWidth();	
+	
+			if (thickness != defaultThickness)
+				strokeForLink = new BasicStroke(
+						thickness,
+						strokeForLink.getEndCap(),
+						strokeForLink.getLineJoin(),
+						strokeForLink.getMiterLimit(),
+						strokeForLink.getDashArray(),
+						strokeForLink.getDashPhase());
+
+			this.strokes.put(key, strokeForLink);
 		}
-		return LineComboBox.getStrokeByType(ea.getValue());
+
+		return strokeForLink;
 	}
 
 	/**
@@ -302,15 +315,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param color цвет
 	 */
 	public void setColor(MapElement mapElement, Color color) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_COLOR);
-		Characteristic attribute = getCharacteristic(mapElement, cType);
+		Characteristic attribute = getCharacteristic(mapElement, this.colorCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
-						cType,
+						this.colorCharType,
 						"name",
 						"1",
 						String.valueOf(color.getRGB()),
@@ -343,14 +353,18 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return цвет
 	 */
 	public Color getColor(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_COLOR);
-		Characteristic ea = getCharacteristic(mapElement, cType);
+		Characteristic ea = getCharacteristic(mapElement, this.colorCharType);
 		if(ea == null) {
 			return MapPropertiesManager.getColor();
 		}
-		return new Color(Integer.parseInt(ea.getValue()));
+			
+		Color color = (Color)this.colors.get(ea.getValue());
+		if (color == null)
+		{
+			color = new Color(Integer.parseInt(ea.getValue()));
+			this.colors.put(ea.getValue(),color);
+		}
+		return color;
 	}
 
 	/**
@@ -361,15 +375,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param color цвет
 	 */
 	public void setAlarmedColor(MapElement mapElement, Color color) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
-		Characteristic attribute = getCharacteristic(mapElement, cType);
+		Characteristic attribute = getCharacteristic(mapElement, this.alarmedColorCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
-						cType,
+						this.alarmedColorCharType,
 						"name",
 						"1",
 						String.valueOf(color.getRGB()),
@@ -402,14 +413,17 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return цвет
 	 */
 	public Color getAlarmedColor(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(), 
-				AbstractLinkController.ATTRIBUTE_ALARMED_COLOR);
-		Characteristic ea = getCharacteristic(mapElement, cType);
+		Characteristic ea = getCharacteristic(mapElement, this.alarmedColorCharType);
 		if(ea == null) {
 			return MapPropertiesManager.getAlarmedColor();
 		}
-		return new Color(Integer.parseInt(ea.getValue()));
+		Color color = (Color)this.colors.get(ea.getValue());
+		if (color == null)
+		{
+			color = new Color(Integer.parseInt(ea.getValue()));
+			this.colors.put(ea.getValue(),color);
+		}
+		return color;
 	}
 
 	/**
@@ -420,15 +434,12 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @param size толщина линии
 	 */
 	public void setAlarmedLineSize(MapElement mapElement, int size) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(),
-				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic attribute = getCharacteristic(mapElement, cType);
+		Characteristic attribute = getCharacteristic(mapElement, this.alarmedThicknessCharType);
 		if(attribute == null) {
 			try {
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
-						cType,
+						this.alarmedThicknessCharType,
 						"name",
 						"1",
 						String.valueOf(size),
@@ -461,10 +472,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	 * @return толщина линии
 	 */
 	public int getAlarmedLineSize(MapElement mapElement) {
-		CharacteristicType cType = getCharacteristicType(
-				LoginManager.getUserId(),
-				AbstractLinkController.ATTRIBUTE_ALARMED_THICKNESS);
-		Characteristic ea = getCharacteristic(mapElement, cType);
+		Characteristic ea = getCharacteristic(mapElement, this.alarmedThicknessCharType);
 		if(ea == null) {
 			return MapPropertiesManager.getAlarmedThickness();
 		}
