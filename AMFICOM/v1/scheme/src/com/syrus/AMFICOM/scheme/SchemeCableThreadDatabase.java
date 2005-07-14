@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.7 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.8 2005/07/14 15:55:55 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 15:55:55 $
  * @module scheme_v1
  */
 public final class SchemeCableThreadDatabase extends CharacterizableDatabase {
@@ -104,11 +104,11 @@ public final class SchemeCableThreadDatabase extends CharacterizableDatabase {
 		SchemeCableThread schemeCableThread = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCableThread.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableThread.getCableThreadType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableThread.getLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableThread.getParentSchemeCableLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableThread.getSourceSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableThread.getTargetSchemePort().getId());
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getCableThreadTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getParentSchemeCableLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getSourceSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableThread.getTargetSchemePortId());
 		return sql;
 	}
 
@@ -128,11 +128,11 @@ public final class SchemeCableThreadDatabase extends CharacterizableDatabase {
 		SchemeCableThread schemeCableThread = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableThread.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getCableThreadType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getParentSchemeCableLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getSourceSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getTargetSchemePort().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getCableThreadTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getParentSchemeCableLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getSourceSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableThread.getTargetSchemePortId());
 		return startParameterNumber;
 	}
 

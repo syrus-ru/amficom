@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.47 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.48 2005/07/14 15:55:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -55,7 +59,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/14 15:55:55 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -212,11 +216,18 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		return schemeCableThread;
 	}
 
-	public CableThreadType getCableThreadType() {
+	Identifier getCableThreadTypeId() {
 		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): OBJECT_BADLY_INITIALIZED;
-
+		assert this.cableThreadTypeId.getMajor() == CABLETHREAD_TYPE_CODE;
+		return this.cableThreadTypeId;
+	}
+	
+	/**
+	 * A wrapper around {@link #getCableThreadTypeId()}.
+	 */
+	public CableThreadType getCableThreadType() {
 		try {
-			return (CableThreadType) StorableObjectPool.getStorableObject(this.cableThreadTypeId, true);
+			return (CableThreadType) StorableObjectPool.getStorableObject(this.getCableThreadTypeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -258,10 +269,18 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		return this.description;
 	}
 
-	public Link getLink() {
+	Identifier getLinkId() {
 		assert this.linkId != null: OBJECT_NOT_INITIALIZED;
+		assert this.linkId.isVoid() || this.linkId.getMajor() == LINK_CODE;
+		return this.linkId;
+	}
+
+	/**
+	 * A wrapper around {@link #getLinkId()}.
+	 */
+	public Link getLink() {
 		try {
-			return (Link) StorableObjectPool.getStorableObject(this.linkId, true);
+			return (Link) StorableObjectPool.getStorableObject(this.getLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -276,12 +295,19 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		return this.name;
 	}
 
-	public SchemeCableLink getParentSchemeCableLink() {
+	Identifier getParentSchemeCableLinkId() {
 		assert this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): OBJECT_BADLY_INITIALIZED;
+		assert this.parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
+		return this.parentSchemeCableLinkId;
+	}
 
+	/**
+	 * A wrapper around {@link #getParentSchemeCableLinkId()}.
+	 */
+	public SchemeCableLink getParentSchemeCableLink() {
 		try {
-			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
+			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -309,28 +335,42 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					"This scheme cable thread is in no way connected to the scheme device specified.");
 	}
 
-	public SchemePort getSourceSchemePort() {
+	Identifier getSourceSchemePortId() {
 		assert this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceSchemePortId.isVoid()
 				|| !this.sourceSchemePortId.equals(this.targetSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		assert this.sourceSchemePortId.isVoid() || this.sourceSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		return this.sourceSchemePortId;
+	}
 
+	/**
+	 * A wrapper around {@link #getSourceSchemePortId()}.
+	 */
+	public SchemePort getSourceSchemePort() {
 		try {
-			return (SchemePort) StorableObjectPool.getStorableObject(this.sourceSchemePortId, true);
+			return (SchemePort) StorableObjectPool.getStorableObject(this.getSourceSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public SchemePort getTargetSchemePort() {
+	Identifier getTargetSchemePortId() {
 		assert this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetSchemePortId.isVoid()
 				|| !this.targetSchemePortId.equals(this.sourceSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		assert this.targetSchemePortId.isVoid() || this.targetSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		return this.targetSchemePortId;
+	}
 
+	/**
+	 * A wrapper around {@link #getTargetSchemePortId()}.
+	 */
+	public SchemePort getTargetSchemePort() {
 		try {
-			return (SchemePort) StorableObjectPool.getStorableObject(this.targetSchemePortId, true);
+			return (SchemePort) StorableObjectPool.getStorableObject(this.getTargetSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
