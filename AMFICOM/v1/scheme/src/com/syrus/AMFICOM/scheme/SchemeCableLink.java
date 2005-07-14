@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.47 2005/07/13 11:08:00 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.48 2005/07/14 13:08:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -52,7 +55,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/13 11:08:00 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/14 13:08:50 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -204,6 +207,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getAbstractLinkId()
+	 */
+	@Override
+	Identifier getAbstractLinkId() {
+		final Identifier cableLinkId = super.getAbstractLinkId();
+		assert cableLinkId.isVoid() || cableLinkId.getMajor() == CABLELINK_CODE;
+		return cableLinkId;
+	}
+
+	/**
 	 * @see AbstractSchemeLink#getAbstractLink()
 	 */
 	@Override
@@ -214,24 +227,33 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getAbstractLinkTypeId()
+	 */
+	@Override
+	Identifier getAbstractLinkTypeId() {
+		final Identifier cableLinkTypeId = super.getAbstractLinkTypeId();
+		assert cableLinkTypeId.isVoid() || cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
+		return cableLinkTypeId;
+	}
+
+	/**
 	 * @see AbstractSchemeLink#getAbstractLinkType()
 	 */
 	@Override
 	public CableLinkType getAbstractLinkType() {
 		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
-		assert abstractLinkType instanceof CableLinkType;
+		assert abstractLinkType instanceof CableLinkType: OBJECT_BADLY_INITIALIZED;
 		return (CableLinkType) abstractLinkType;
 	}
 
 	/**
-	 * @see AbstractSchemeElement#getParentScheme()
+	 * @see AbstractSchemeElement#getParentSchemeId()
 	 */
 	@Override
-	public Scheme getParentScheme() {
-		assert super.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
-		assert !super.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-
-		return super.getParentScheme();
+	Identifier getParentSchemeId() {
+		final Identifier parentSchemeId1 = super.getParentSchemeId();
+		assert !parentSchemeId1.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+		return parentSchemeId1;
 	}
 
 	/**
@@ -249,6 +271,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getSourceAbstractSchemePortId()
+	 */
+	@Override
+	Identifier getSourceAbstractSchemePortId() {
+		final Identifier sourceSchemeCablePortId = super.getSourceAbstractSchemePortId();
+		assert sourceSchemeCablePortId.isVoid() || sourceSchemeCablePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		return sourceSchemeCablePortId;
+	}
+
+	/**
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePort()
 	 */
 	@Override
@@ -256,6 +288,16 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemeCablePort: OBJECT_BADLY_INITIALIZED;
 		return (SchemeCablePort) sourceAbstractSchemePort;
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getTargetAbstractSchemePortId()
+	 */
+	@Override
+	Identifier getTargetAbstractSchemePortId() {
+		final Identifier targetSchemeCablePortId = super.getTargetAbstractSchemePortId();
+		assert targetSchemeCablePortId.isVoid() || targetSchemeCablePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		return targetSchemeCablePortId;
 	}
 
 	/**
@@ -284,11 +326,11 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
-				super.abstractLinkTypeId.getTransferable(),
-				super.linkId.getTransferable(),
-				super.sourceAbstractSchemePortId.getTransferable(),
-				super.targetAbstractSchemePortId.getTransferable(),
-				super.parentSchemeId.getTransferable(),
+				this.getAbstractLinkTypeId().getTransferable(),
+				this.getAbstractLinkId().getTransferable(),
+				this.getSourceAbstractSchemePortId().getTransferable(),
+				this.getTargetAbstractSchemePortId().getTransferable(),
+				this.getParentSchemeId().getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

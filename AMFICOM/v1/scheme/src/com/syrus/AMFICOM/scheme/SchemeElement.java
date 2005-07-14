@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.49 2005/07/13 11:08:01 bass Exp $
+ * $Id: SchemeElement.java,v 1.50 2005/07/14 13:08:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,15 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -31,7 +36,6 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -63,7 +67,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/13 11:08:01 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/14 13:08:51 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -368,35 +372,56 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return Collections.unmodifiableSet(dependencies);
 	}
 
+	Identifier getEquipmentId() {
+		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
+		return this.equipmentId;
+	}
+	
+	/**
+	 * A wrapper around {@link #getEquipmentId()}.
+	 */
 	public Equipment getEquipment() {
-		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-
 		try {
-			return (Equipment) StorableObjectPool.getStorableObject(this.equipmentId, true);
+			return (Equipment) StorableObjectPool.getStorableObject(this.getEquipmentId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
+	Identifier getEquipmentTypeId() {
+		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+		return this.equipmentTypeId;
+	}
+
+	/**
+	 * A wrapper around {@link #getEquipmentTypeId()}. 
+	 */
 	public EquipmentType getEquipmentType() {
-		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-
-		if (!this.equipmentId.isVoid())
-			return (EquipmentType) getEquipment().getType();
-
 		try {
-			return (EquipmentType) StorableObjectPool.getStorableObject(this.equipmentTypeId, true);
+			return this.getEquipmentId().isVoid()
+					? (EquipmentType) StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true)
+					: this.getEquipment().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public KIS getKis() {
+	Identifier getKisId() {
 		assert this.kisId != null: OBJECT_NOT_INITIALIZED;
+		assert this.kisId.isVoid() || this.kisId.getMajor() == KIS_CODE;
+		return this.kisId;
+	}
+	
+	/**
+	 * A wrapper around {@link #getKisId()}.
+	 */
+	public KIS getKis() {
 		try {
-			return (KIS) StorableObjectPool.getStorableObject(this.kisId, true);
+			return (KIS) StorableObjectPool.getStorableObject(this.getKisId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -412,35 +437,37 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return this.label;
 	}
 
-	/**
-	 * @see AbstractSchemeElement#getParentScheme()
-	 */
 	@Override
-	public Scheme getParentScheme() {
-		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
-		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-
-		if (super.parentSchemeId.isVoid()) {
-			Log.debugMessage("SchemeElement.getParentScheme() | Parent Scheme was requested, while parent is a SchemeElement; returning null",
+	Identifier getParentSchemeId() {
+		final Identifier parentSchemeId1 = super.getParentSchemeId();
+		assert this.parentSchemeElementId != null : OBJECT_NOT_INITIALIZED;
+		final boolean parentSchemeIdVoid = parentSchemeId1.isVoid();
+		assert parentSchemeIdVoid ^ this.parentSchemeElementId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentSchemeIdVoid) {
+			Log.debugMessage("SchemeElement.getParentSchemeId() | Parent Scheme was requested, while parent is a SchemeElement; returning null",
 					FINE);
-			return null;
 		}
-
-		return super.getParentScheme();
+		return parentSchemeId1;
 	}
 
-	public SchemeElement getParentSchemeElement() {
+	Identifier getParentSchemeElementId() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-
-		if (this.parentSchemeElementId.isVoid()) {
-			Log.debugMessage("SchemeElement.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a Scheme; returnung null",
+		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid(); 
+		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		if (parentSchemeElementIdVoid) {
+			Log.debugMessage("SchemeElement.getParentSchemeElementId() | Parent SchemeElement was requested, while parent is a Scheme; returnung null",
 					FINE);
-			return null;
 		}
-		
+		return this.parentSchemeElementId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeElementId()}.
+	 */
+	public SchemeElement getParentSchemeElement() {
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -453,22 +480,26 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 *         none.
 	 */
 	public Scheme getScheme() {
-//		for (final Scheme scheme : this.getSchemes()) {
-//			return scheme;
-//		}
-//		return null;
-		final Iterator<Scheme> schemeIterator = this.getSchemes().iterator();
-		return schemeIterator.hasNext() ? schemeIterator.next() : null;
+		for (final Scheme scheme : this.getSchemes()) {
+			return scheme;
+		}
+		return null;
+	}
+
+	Identifier getSchemeCellId() {
+		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId.isVoid() || this.schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.schemeCellId;
 	}
 
 	/**
+	 * A wrapper around {@link #getSchemeCellId()}.
+	 *
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.schemeCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -531,24 +562,38 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		}
 	}
 
-	public SiteNode getSiteNode() {
+	Identifier getSiteNodeId() {
 		assert this.siteNodeId != null: OBJECT_NOT_INITIALIZED;
+		assert this.siteNodeId.isVoid() || this.siteNodeId.getMajor() == SITENODE_CODE;
+		return this.siteNodeId;
+	}
+	
+	/**
+	 * A wrapper around {@link #getSiteNodeId()}.
+	 */
+	public SiteNode getSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.siteNodeId, true);
+			return (SiteNode) StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
+	Identifier getSymbolId() {
+		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
+		assert this.symbolId.isVoid() || this.symbolId.getMajor() == IMAGERESOURCE_CODE;
+		return this.symbolId;
+	}
+
 	/**
+	 * A wrapper around {@link #getSymbolId()}.
+	 *
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) StorableObjectPool
-					.getStorableObject(this.symbolId, true);
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -571,26 +616,32 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				super.getName(),
 				super.getDescription(),
 				this.label,
-				this.equipmentTypeId.getTransferable(),
-				this.equipmentId.getTransferable(),
-				this.kisId.getTransferable(),
-				this.siteNodeId.getTransferable(),
-				this.symbolId.getTransferable(),
-				this.ugoCellId.getTransferable(),
-				this.schemeCellId.getTransferable(),
-				super.parentSchemeId.getTransferable(),
-				this.parentSchemeElementId.getTransferable(),
+				this.getEquipmentTypeId().getTransferable(),
+				this.getEquipmentId().getTransferable(),
+				this.getKisId().getTransferable(),
+				this.getSiteNodeId().getTransferable(),
+				this.getSymbolId().getTransferable(),
+				this.getUgoCellId().getTransferable(),
+				this.getSchemeCellId().getTransferable(),
+				this.getParentSchemeId().getTransferable(),
+				this.getParentSchemeElementId().getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 
+	Identifier getUgoCellId() {
+		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.ugoCellId;
+	}
+
 	/**
+	 * A wrapper around {@link #getUgoCellId()}.
+	 *
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.ugoCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

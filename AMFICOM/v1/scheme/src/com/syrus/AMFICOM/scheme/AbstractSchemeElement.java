@@ -1,5 +1,5 @@
-/*
- * $Id: AbstractSchemeElement.java,v 1.29 2005/07/12 08:40:55 bass Exp $
+/*-
+ * $Id: AbstractSchemeElement.java,v 1.30 2005/07/14 13:08:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/14 13:08:51 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -148,16 +149,23 @@ public abstract class AbstractSchemeElement extends
 		return this.name;
 	}
 
+	Identifier getParentSchemeId() {
+		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId.isVoid() || this.parentSchemeId.getMajor() == SCHEME_CODE;
+		return this.parentSchemeId;
+	}
+
 	/**
-	 * Returns <code>Scheme</code> parent to this <code>SchemeLink</code>
-	 * or <code>SchemeCableLlink</code> or <code>SchemeElement</code>.
-	 * Descendants almost always need to override this.
+	 * <p>A wrapper around {@link #getParentSchemeId()}.</p>
 	 *
-	 * @see #parentSchemeId
+	 * <p>Returns <code>Scheme</code> parent to this <code>SchemeLink</code>
+	 * or <code>SchemeCableLlink</code> or <code>SchemeElement</code>.
+	 * Descendants almost always need to override
+	 * {@link #getParentSchemeId()}.</p>
 	 */
-	public Scheme getParentScheme() {
+	public final Scheme getParentScheme() {
 		try {
-			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
+			return (Scheme) StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

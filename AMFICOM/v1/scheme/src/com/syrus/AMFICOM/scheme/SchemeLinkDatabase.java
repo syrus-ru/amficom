@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.8 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.9 2005/07/14 13:08:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 13:08:50 $
  * @module scheme_v1
  */
 public final class SchemeLinkDatabase extends CharacterizableDatabase {
@@ -116,14 +116,14 @@ public final class SchemeLinkDatabase extends CharacterizableDatabase {
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeLink.getPhysicalLength() + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeLink.getOpticalLength() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNode().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getSourceAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getTargetAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getParentScheme().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeElement().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeProtoElement().getId());
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getSourceAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getTargetAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeElementId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeLink.getParentSchemeProtoElementId());
 		return sql;
 	}
 
@@ -145,14 +145,14 @@ public final class SchemeLinkDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, schemeLink.getPhysicalLength());
 		preparedStatement.setDouble(++startParameterNumber, schemeLink.getOpticalLength());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSiteNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSourceAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getTargetAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentScheme().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeElement().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeProtoElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getAbstractLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getSourceAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getTargetAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeLink.getParentSchemeProtoElementId());
 		return startParameterNumber;
 	}
 

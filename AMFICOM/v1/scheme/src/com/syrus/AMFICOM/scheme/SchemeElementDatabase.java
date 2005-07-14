@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.7 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeElementDatabase.java,v 1.8 2005/07/14 13:08:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 13:08:50 $
  * @module scheme_v1
  */
 public final class SchemeElementDatabase extends CharacterizableDatabase {
@@ -115,15 +115,15 @@ public final class SchemeElementDatabase extends CharacterizableDatabase {
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeElement.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeElement.getLabel(), SchemeElementWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getEquipmentType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getEquipment().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getKis().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getSiteNode().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getSymbol().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getUgoCell().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getSchemeCell().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getParentScheme().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeElement.getParentSchemeElement().getId());
+				+ DatabaseIdentifier.toSQLString(schemeElement.getEquipmentTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getEquipmentId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getKisId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSymbolId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getUgoCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getSchemeCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeElement.getParentSchemeElementId());
 		return sql;
 	}
 
@@ -144,15 +144,15 @@ public final class SchemeElementDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeElement.getLabel(), SchemeElementWrapper.SIZE_LABEL_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getEquipmentType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getEquipment().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getKis().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSiteNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSymbol().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getUgoCell().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSchemeCell().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentScheme().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentSchemeElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getEquipmentTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getEquipmentId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getKisId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getUgoCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getSchemeCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeElement.getParentSchemeElementId());
 		return startParameterNumber;
 	}
 

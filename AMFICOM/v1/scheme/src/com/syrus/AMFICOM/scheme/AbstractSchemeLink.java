@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.23 2005/07/11 12:12:57 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.24 2005/07/14 13:08:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
-import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/14 13:08:51 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -65,13 +64,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * {@link com.syrus.AMFICOM.configuration.LinkType} or
 	 * {@link com.syrus.AMFICOM.configuration.CableLinkType}.
 	 */
-	Identifier abstractLinkTypeId;
+	private Identifier abstractLinkTypeId;
 
 	/**
-	 * Depending on implementation, may reference either {@link Link link}
-	 * or {@link Link cable link}.
+	 * Depending on implementation, may reference either
+	 * {@link com.syrus.AMFICOM.configuration.Link} or
+	 * {@link com.syrus.AMFICOM.configuration.CableLink}.
 	 */
-	Identifier linkId;
+	private Identifier abstractLinkId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
@@ -106,7 +106,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param physicalLength
 	 * @param opticalLength
 	 * @param abstractLinkType
-	 * @param link
+	 * @param abstractLink
 	 * @param sourceAbstractSchemePort
 	 * @param targetAbstractSchemePort
 	 * @param parentScheme
@@ -118,7 +118,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final double physicalLength,
 			final double opticalLength,
 			final AbstractLinkType abstractLinkType,
-			final Link link,
+			final AbstractLink abstractLink,
 			final AbstractSchemePort sourceAbstractSchemePort,
 			final AbstractSchemePort targetAbstractSchemePort,
 			final Scheme parentScheme) {
@@ -127,9 +127,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.physicalLength = physicalLength;
 		this.opticalLength = opticalLength;
 
-		assert abstractLinkType == null || link == null;
+		assert abstractLinkType == null || abstractLink == null;
 		this.abstractLinkTypeId = Identifier.possiblyVoid(abstractLinkType);
-		this.linkId = Identifier.possiblyVoid(link);
+		this.abstractLinkId = Identifier.possiblyVoid(abstractLink);
 
 		this.sourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
 		this.targetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
@@ -142,32 +142,41 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	AbstractSchemeLink() {
 		// super();
 	}
-	
+
+	Identifier getAbstractLinkId() {
+		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		return this.abstractLinkId;
+	}
+
 	/**
+	 * A wrapper around {@link #getAbstractLinkId()}.
+	 *
 	 * Overridden by descendants to add extra checks.
 	 */
 	public AbstractLink getAbstractLink() {
-		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-
 		try {
-			return (AbstractLink) StorableObjectPool.getStorableObject(this.linkId, true);
+			return (AbstractLink) StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
+	Identifier getAbstractLinkTypeId() {
+		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		return this.abstractLinkTypeId;
+	}
+
 	/**
+	 * A wrapper around {@link #getAbstractLinkTypeId()}.
+	 *
 	 * Overridden by descendants to add extra checks.
 	 */
 	public AbstractLinkType getAbstractLinkType() {
-		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-
-		if (!this.linkId.isVoid())
-			return getAbstractLink().getType();
-
 		try {
-			return (AbstractLinkType) StorableObjectPool.getStorableObject(this.abstractLinkTypeId, true);
+			return this.getAbstractLinkId().isVoid()
+					? (AbstractLinkType) StorableObjectPool.getStorableObject(this.getAbstractLinkTypeId(), true)
+					: this.getAbstractLink().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -192,34 +201,44 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		return this.physicalLength;
 	}
 
-	/**
-	 * Overridden by descendants to add extra checks.
-	 */
-	public AbstractSchemePort getSourceAbstractSchemePort() {
+	Identifier getSourceAbstractSchemePortId() {
 		assert this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceAbstractSchemePortId.isVoid()
 				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		return this.sourceAbstractSchemePortId;
+	}
 
+	/**
+	 * A wrapper around {@link #getSourceAbstractSchemePortId()}.
+	 *
+	 * Overridden by descendants to add extra checks.
+	 */
+	public AbstractSchemePort getSourceAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.sourceAbstractSchemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	/**
-	 * Overridden by descendants to add extra checks.
-	 */
-	public AbstractSchemePort getTargetAbstractSchemePort() {
+	Identifier getTargetAbstractSchemePortId() {
 		assert this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetAbstractSchemePortId.isVoid()
 				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		return this.targetAbstractSchemePortId;
+	}
 
+	/**
+	 * A wrapper around {@link #getTargetAbstractSchemePortId()}.
+	 *
+	 * Overridden by descendants to add extra checks.
+	 */
+	public AbstractSchemePort getTargetAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.targetAbstractSchemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -235,12 +254,12 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 
 		final Identifier newLinkId = Identifier.possiblyVoid(abstractLink);
-		if (this.linkId.equals(newLinkId)) {
+		if (this.abstractLinkId.equals(newLinkId)) {
 			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
-		if (this.linkId.isVoid())
+		if (this.abstractLinkId.isVoid())
 			/*
 			 * Erasing old object-type value, setting new object
 			 * value.
@@ -254,7 +273,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 * there already is object-type value to preserve).
 			 */
 			this.abstractLinkTypeId = this.getAbstractLink().getType().getId();
-		this.linkId = newLinkId;
+		this.abstractLinkId = newLinkId;
 		super.markAsChanged();
 	}
 
@@ -267,7 +286,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 		assert abstractLinkType != null: NON_NULL_EXPECTED;
 
-		if (!this.linkId.isVoid())
+		if (!this.abstractLinkId.isVoid())
 			this.getAbstractLink().setType(abstractLinkType);
 		else {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
@@ -345,15 +364,15 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final double physicalLength,
 			final double opticalLength,
 			final Identifier abstractLinkTypeId,
-			final Identifier linkId,
+			final Identifier abstractLinkId,
 			final Identifier sourceAbstractSchemePortId,
 			final Identifier targetAbstractSchemePortId,			
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
 
 		assert abstractLinkTypeId != null: NON_NULL_EXPECTED;
-		assert linkId != null: NON_NULL_EXPECTED;
-		assert abstractLinkTypeId.isVoid() ^ linkId.isVoid();
+		assert abstractLinkId != null: NON_NULL_EXPECTED;
+		assert abstractLinkTypeId.isVoid() ^ abstractLinkId.isVoid();
 
 		assert sourceAbstractSchemePortId != null: NON_NULL_EXPECTED;
 		assert targetAbstractSchemePortId != null: NON_NULL_EXPECTED;
@@ -361,7 +380,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.physicalLength = physicalLength;
 		this.opticalLength = opticalLength;
 		this.abstractLinkTypeId = abstractLinkTypeId;
-		this.linkId = linkId;
+		this.abstractLinkId = abstractLinkId;
 		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
 	}
@@ -371,13 +390,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.abstractLinkTypeId != null && this.linkId != null
+		assert this.abstractLinkTypeId != null && this.abstractLinkId != null
 				&& this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(super.getDependencies());
 		dependencies.add(this.abstractLinkTypeId);
-		dependencies.add(this.linkId);
+		dependencies.add(this.abstractLinkId);
 		dependencies.add(this.sourceAbstractSchemePortId);
 		dependencies.add(this.targetAbstractSchemePortId);
 		dependencies.remove(null);
@@ -392,7 +411,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param physicalLength1
 	 * @param opticalLength1
 	 * @param abstractLinkTypeId1
-	 * @param linkId1
+	 * @param abstractLinkId1
 	 * @param sourceAbstractSchemePortId1
 	 * @param targetAbstractSchemePortId1
 	 * @param parentSchemeId1
@@ -403,7 +422,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final String name, final String description,
 			final double physicalLength1, final double opticalLength1,
 			final IdlIdentifier abstractLinkTypeId1,
-			final IdlIdentifier linkId1,
+			final IdlIdentifier abstractLinkId1,
 			final IdlIdentifier sourceAbstractSchemePortId1,
 			final IdlIdentifier targetAbstractSchemePortId1,
 			final IdlIdentifier parentSchemeId1,
@@ -413,7 +432,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.physicalLength = physicalLength1;
 		this.opticalLength = opticalLength1;
 		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);
-		this.linkId = new Identifier(linkId1);
+		this.abstractLinkId = new Identifier(abstractLinkId1);
 		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);
 		this.targetAbstractSchemePortId = new Identifier(targetAbstractSchemePortId1);
 	}
@@ -429,9 +448,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		if (this.abstractLinkTypeSet)
 			return this.assertAbstractLinkTypeSetStrict();
 		this.abstractLinkTypeSet = true;
-		return this.linkId != null
+		return this.abstractLinkId != null
 				&& this.abstractLinkTypeId != null
-				&& this.linkId.isVoid()
+				&& this.abstractLinkId.isVoid()
 				&& this.abstractLinkTypeId.isVoid();
 	}
 
@@ -440,8 +459,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * initialized).
 	 */
 	private boolean assertAbstractLinkTypeSetStrict() {
-		return this.linkId != null
+		return this.abstractLinkId != null
 				&& this.abstractLinkTypeId != null
-				&& (this.linkId.isVoid() ^ this.abstractLinkTypeId.isVoid());
+				&& (this.abstractLinkId.isVoid() ^ this.abstractLinkTypeId.isVoid());
 	}
 }

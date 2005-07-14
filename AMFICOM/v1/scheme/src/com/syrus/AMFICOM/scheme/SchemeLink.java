@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.44 2005/07/13 11:23:12 max Exp $
+ * $Id: SchemeLink.java,v 1.45 2005/07/14 13:08:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,13 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -55,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.44 $, $Date: 2005/07/13 11:23:12 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/14 13:08:50 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -424,6 +430,16 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getAbstractLinkId()
+	 */
+	@Override
+	Identifier getAbstractLinkId() {
+		final Identifier linkId = super.getAbstractLinkId();
+		assert linkId.isVoid() || linkId.getMajor() == LINK_CODE;
+		return linkId;
+	}
+
+	/**
 	 * @see AbstractSchemeLink#getAbstractLink()
 	 */
 	@Override
@@ -434,79 +450,127 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @see AbstractSchemeLink#getAbstractLinkTypeId()
+	 */
+	@Override
+	Identifier getAbstractLinkTypeId() {
+		final Identifier linkTypeId = super.getAbstractLinkTypeId();
+		assert linkTypeId.isVoid() || linkTypeId.getMajor() == LINK_TYPE_CODE;
+		return linkTypeId;
+	}
+
+	/**
 	 * @see AbstractSchemeLink#getAbstractLinkType()
 	 */
 	@Override
 	public LinkType getAbstractLinkType() {
 		final AbstractLinkType abstractLinkType = super.getAbstractLinkType();
-		assert abstractLinkType instanceof LinkType;
+		assert abstractLinkType instanceof LinkType : OBJECT_BADLY_INITIALIZED;
 		return (LinkType) abstractLinkType;
 	}
 
 	/**
-	 * @see AbstractSchemeElement#getParentScheme()
+	 * @see AbstractSchemeElement#getParentSchemeId()
 	 */
 	@Override
-	public Scheme getParentScheme() {
-		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
-
-		if (super.parentSchemeId.isVoid()) {
-			assert !this.parentSchemeElementId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentScheme() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
+	Identifier getParentSchemeId() {
+		final Identifier parentSchemeId1 = super.getParentSchemeId();
+		assert this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
+		final boolean parentSchemeIdVoid = parentSchemeId1.isVoid();
+		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert (parentSchemeIdVoid ? 1 : 0)
+				+ (parentSchemeElementIdVoid ? 1 : 0)
+				+ (parentSchemeProtoElementIdVoid ? 1 : 0) == 2 : EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentSchemeIdVoid) {
+			Log.debugMessage("SchemeLink.getParentSchemeId() | Parent Scheme was requested, while parent is either a SchemeElement or a SchemeProtoElement; returning null",
 					FINE);
-			return null;
 		}
-
-		assert this.parentSchemeElementId.isVoid() && this.parentSchemeProtoElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		return super.getParentScheme();
+		return parentSchemeId1;
 	}
 
+	Identifier getParentSchemeElementId() {
+		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
+		final boolean parentSchemeIdVoid = this.parentSchemeId.isVoid();
+		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		assert (parentSchemeIdVoid ? 1 : 0)
+				+ (parentSchemeElementIdVoid ? 1 : 0)
+				+ (parentSchemeProtoElementIdVoid ? 1 : 0) == 2 : EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentSchemeElementIdVoid) {
+			Log.debugMessage("SchemeLink.getParentSchemeElementId() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
+					FINE);
+		}
+		return this.parentSchemeElementId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeElementId()}.
+	 */
 	public SchemeElement getParentSchemeElement() {
-		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
-
-		if (this.parentSchemeElementId.isVoid()) {
-			assert !super.parentSchemeId.isVoid() || !this.parentSchemeProtoElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentSchemeElement() | Parent SchemeElement was requested, while parent is either a Scheme or a SchemeProtoElement; returning null",
-					FINE);
-			return null;
-		}
-
 		try {
-			assert super.parentSchemeId.isVoid() && this.parentSchemeProtoElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public SchemeProtoElement getParentSchemeProtoElement() {
+	Identifier getParentSchemeProtoElementId() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null && this.parentSchemeProtoElementId != null: OBJECT_NOT_INITIALIZED;
-
+		final boolean parentSchemeIdVoid = this.parentSchemeId.isVoid();
+		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+		assert (parentSchemeIdVoid ? 1 : 0)
+				+ (parentSchemeElementIdVoid ? 1 : 0)
+				+ (parentSchemeProtoElementIdVoid ? 1 : 0) == 2 : EXACTLY_ONE_PARENT_REQUIRED;
 		if (this.parentSchemeProtoElementId.isVoid()) {
-			assert !super.parentSchemeId.isVoid() || !this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-			Log.debugMessage("SchemeLink.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
+			Log.debugMessage("SchemeLink.getParentSchemeProtoElementId() | Parent SchemeProtoElement was requested, while parent is either a Scheme or a SchemeElement; returning null",
 					FINE);
-			return null;
 		}
+		return this.parentSchemeProtoElementId;
+	}
 
+	/**
+	 * A wrapper around {@link #getParentSchemeProtoElementId()}.
+	 */
+	public SchemeProtoElement getParentSchemeProtoElement() {
 		try {
-			assert super.parentSchemeId.isVoid() && this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public SiteNode getSiteNode() {
+	Identifier getSiteNodeId() {
 		assert this.siteNodeId != null: OBJECT_NOT_INITIALIZED;
+		assert this.siteNodeId.isVoid() || this.siteNodeId.getMajor() == SITENODE_CODE;
+		return this.siteNodeId;
+	}
+
+	/**
+	 * A wrapper around {@link #getSiteNodeId()}.
+	 */
+	public SiteNode getSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.siteNodeId, true);
+			return (SiteNode) StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getSourceAbstractSchemePortId()
+	 */
+	@Override
+	Identifier getSourceAbstractSchemePortId() {
+		final Identifier sourceSchemePortId = super.getSourceAbstractSchemePortId();
+		assert sourceSchemePortId.isVoid() || sourceSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		return sourceSchemePortId;
 	}
 
 	/**
@@ -517,6 +581,16 @@ public final class SchemeLink extends AbstractSchemeLink {
 		final AbstractSchemePort sourceAbstractSchemePort = super.getSourceAbstractSchemePort();
 		assert sourceAbstractSchemePort == null || sourceAbstractSchemePort instanceof SchemePort: OBJECT_BADLY_INITIALIZED;
 		return (SchemePort) sourceAbstractSchemePort;
+	}
+
+	/**
+	 * @see AbstractSchemeLink#getTargetAbstractSchemePortId()
+	 */
+	@Override
+	Identifier getTargetAbstractSchemePortId() {
+		final Identifier targetSchemePortId = super.getTargetAbstractSchemePortId();
+		assert targetSchemePortId.isVoid() || targetSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		return targetSchemePortId;
 	}
 
 	/**
@@ -545,14 +619,14 @@ public final class SchemeLink extends AbstractSchemeLink {
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
-				super.abstractLinkTypeId.getTransferable(),
-				super.linkId.getTransferable(),
-				this.siteNodeId.getTransferable(),
-				super.sourceAbstractSchemePortId.getTransferable(),
-				super.targetAbstractSchemePortId.getTransferable(),
-				super.parentSchemeId.getTransferable(),
-				this.parentSchemeElementId.getTransferable(),
-				this.parentSchemeProtoElementId.getTransferable(),
+				this.getAbstractLinkTypeId().getTransferable(),
+				this.getAbstractLinkId().getTransferable(),
+				this.getSiteNodeId().getTransferable(),
+				this.getSourceAbstractSchemePortId().getTransferable(),
+				this.getTargetAbstractSchemePortId().getTransferable(),
+				this.getParentSchemeId().getTransferable(),
+				this.getParentSchemeElementId().getTransferable(),
+				this.getParentSchemeProtoElementId().getTransferable(),
 				Identifier.createTransferables(super.getCharacteristics()));
 	}
 

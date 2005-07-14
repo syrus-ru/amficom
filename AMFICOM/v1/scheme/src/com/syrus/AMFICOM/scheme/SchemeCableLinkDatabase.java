@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.8 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.9 2005/07/14 13:08:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 13:08:51 $
  * @module scheme_v1
  */
 public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
@@ -110,11 +110,11 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeCableLink.getPhysicalLength() + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeCableLink.getOpticalLength() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableLink.getTargetAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCableLink.getParentScheme().getId());
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getTargetAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCableLink.getParentSchemeId());
 		return sql;
 	}
 
@@ -136,11 +136,11 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getPhysicalLength());
 		preparedStatement.setDouble(++startParameterNumber, schemeCableLink.getOpticalLength());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLinkType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getSourceAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getTargetAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getParentScheme().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLinkTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getAbstractLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getSourceAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getTargetAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCableLink.getParentSchemeId());
 		return startParameterNumber;
 	}
 

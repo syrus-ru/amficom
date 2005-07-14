@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.6 2005/07/10 15:06:07 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.7 2005/07/14 13:08:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/10 15:06:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/14 13:08:51 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -117,17 +117,17 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 			} else if (key.equals(COLUMN_LABEL)) {
 				return schemeProtoElement.getLabel();
 			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
-				return schemeProtoElement.equipmentTypeId;
+				return schemeProtoElement.getEquipmentTypeId();
 			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-				return schemeProtoElement.symbolId;
+				return schemeProtoElement.getSymbolId();
 			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
-				return schemeProtoElement.ugoCellId;
+				return schemeProtoElement.getUgoCellId();
 			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
-				return schemeProtoElement.schemeCellId;
+				return schemeProtoElement.getSchemeCellId();
 			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)) {
-				return schemeProtoElement.parentSchemeProtoGroupId;
+				return schemeProtoElement.getParentSchemeProtoGroupId();
 			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
-				return schemeProtoElement.parentSchemeProtoElementId;
+				return schemeProtoElement.getParentSchemeProtoElementId();
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				return schemeProtoElement.getCharacteristics();
 			}
