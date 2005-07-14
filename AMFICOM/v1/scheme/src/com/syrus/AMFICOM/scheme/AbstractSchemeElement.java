@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.30 2005/07/14 13:08:51 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.31 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/07/14 13:08:51 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -178,7 +178,7 @@ public abstract class AbstractSchemeElement extends
 	 */
 	public final void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.46 2005/07/11 12:12:57 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.47 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -457,7 +457,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		assert getSchemeProtoElements().contains(schemeProtoElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoElement.getParentSchemeProtoGroupId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoGroup(null);
 	}
 
@@ -471,7 +471,7 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
 		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
-		assert getSchemeProtoGroups().contains(schemeProtoGroup): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoGroup.getParentSchemeProtoGroupId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoGroup.setParentSchemeProtoGroup(null);
 	}
 

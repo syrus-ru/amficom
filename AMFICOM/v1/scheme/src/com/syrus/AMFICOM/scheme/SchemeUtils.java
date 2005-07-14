@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.27 2005/07/13 11:08:00 bass Exp $
+ * $Id: SchemeUtils.java,v 1.28 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/13 11:08:00 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public class SchemeUtils {
@@ -60,18 +60,19 @@ public class SchemeUtils {
 
 	public static SchemeElement getSchemeElementByDevice(final Scheme scheme, final SchemeDevice schemeDevice) {
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			if (schemeElement.getSchemeDevices().contains(schemeDevice))
+			if (schemeDevice.getParentSchemeElementId().equals(schemeElement.getId())) {
 				return schemeElement;
+			}
 		}
 		return null;
 	}
 
 	public static SchemeElement getSchemeElementByDevice(final SchemeElement schemeElement, final SchemeDevice schemeDevice) {
-		if (schemeElement.getSchemeDevices().contains(schemeDevice)) {
+		if (schemeDevice.getParentSchemeElementId().equals(schemeElement.getId())) {
 			return schemeElement;
 		}
 		for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements()) {
-			if (schemeElement1.getSchemeDevices().contains(schemeDevice)) {
+			if (schemeDevice.getParentSchemeElementId().equals(schemeElement1.getId())) {
 				return schemeElement1;
 			}
 		}
@@ -140,7 +141,7 @@ public class SchemeUtils {
 	}
 
 	public static SchemeElement getTopologicalElement(final Scheme scheme, final SchemeElement schemeElement) {
-		if (scheme.getSchemeElements().contains(schemeElement)) {
+		if (schemeElement.getParentSchemeId().equals(scheme.getId())) {
 			return schemeElement;
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
@@ -204,7 +205,7 @@ public class SchemeUtils {
 	}
 
 	public static boolean isSchemeContainsElement(final Scheme scheme, final SchemeElement schemeElement) {
-		if (scheme.getSchemeElements().contains(schemeElement)) {
+		if (schemeElement.getParentSchemeId().equals(scheme.getId())) {
 			return true;
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
@@ -232,8 +233,7 @@ public class SchemeUtils {
 
 	public static boolean isSchemeElementContainsPort(final SchemeElement schemeElement, final AbstractSchemePort abstractSchemePort) {
 		for (final SchemeDevice schemeDevice : schemeElement.getSchemeDevices()) {
-			if (schemeDevice.getSchemePorts().contains(abstractSchemePort)
-					|| schemeDevice.getSchemeCablePorts().contains(abstractSchemePort)) {
+			if (abstractSchemePort.getParentSchemeDeviceId().equals(schemeDevice.getId())) {
 				return true;
 			}
 		}
@@ -248,7 +248,7 @@ public class SchemeUtils {
 	}
 
 	public static boolean isSchemeElementContainsElement(final SchemeElement schemeElement1, final SchemeElement schemeElement2) {
-		if (schemeElement1.getSchemeElements().contains(schemeElement2)) {
+		if (schemeElement2.getParentSchemeElementId().equals(schemeElement1.getId())) {
 			return true;
 		}
 		for (final Scheme scheme : schemeElement1.getSchemes()) {

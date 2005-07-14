@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.48 2005/07/14 15:55:55 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.49 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/14 15:55:55 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -405,7 +405,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}

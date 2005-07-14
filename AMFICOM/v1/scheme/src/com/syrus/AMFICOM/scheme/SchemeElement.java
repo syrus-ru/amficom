@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.50 2005/07/14 13:08:51 bass Exp $
+ * $Id: SchemeElement.java,v 1.51 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/14 13:08:51 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -656,7 +656,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void removeScheme(final Scheme scheme) {
 		assert scheme != null: NON_NULL_EXPECTED;
-		assert getSchemes().contains(scheme): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert scheme.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		scheme.setParentSchemeElement(null);
 	}
 
@@ -668,7 +668,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null: NON_NULL_EXPECTED;
-		assert getSchemeDevices().contains(schemeDevice): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeDevice.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeElement(null);
 	}
 
@@ -680,7 +680,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void removeSchemeElement(final SchemeElement schemeElement) {
 		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert getSchemeElements().contains(schemeElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeElement.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeElement.setParentSchemeElement(null);
 	}
 
@@ -692,7 +692,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
 		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert getSchemeLinks().contains(schemeLink): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentSchemeElement(null);
 	}
 

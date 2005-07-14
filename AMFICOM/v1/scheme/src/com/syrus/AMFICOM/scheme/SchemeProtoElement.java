@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.52 2005/07/13 12:19:05 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.53 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/13 12:19:05 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -753,7 +753,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -766,7 +766,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null: NON_NULL_EXPECTED;
-		assert getSchemeDevices().contains(schemeDevice): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeDevice.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeProtoElement(null);
 	}
 
@@ -778,7 +778,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
 		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert getSchemeLinks().contains(schemeLink): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentSchemeProtoElement(null);
 	}
 
@@ -790,7 +790,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		assert getSchemeProtoElements().contains(schemeProtoElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoElement.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoElement(null);
 	}
 

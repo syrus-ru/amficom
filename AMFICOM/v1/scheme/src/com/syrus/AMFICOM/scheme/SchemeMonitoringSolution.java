@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.47 2005/07/14 13:35:51 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.48 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/14 13:35:51 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -277,7 +277,7 @@ public final class SchemeMonitoringSolution extends
 
 	public void removeSchemePath(final SchemePath schemePath) {
 		assert schemePath != null: NON_NULL_EXPECTED;
-		assert getSchemePaths().contains(schemePath): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemePath.getParentSchemeMonitoringSolutionId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePath.setParentSchemeMonitoringSolution(null);
 	}
 

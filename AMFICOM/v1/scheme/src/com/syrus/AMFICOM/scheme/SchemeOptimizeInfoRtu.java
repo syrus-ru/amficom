@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.8 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.9 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtu extends AbstractCloneableStorableObject {
@@ -28,6 +29,10 @@ public final class SchemeOptimizeInfoRtu extends AbstractCloneableStorableObject
 
 	@SuppressWarnings("unused")
 	public SchemeOptimizeInfoRtu(final IdlSchemeOptimizeInfoRtu transferable) throws CreateObjectException {
+		throw new UnsupportedOperationException();
+	}
+
+	Identifier getParentSchemeOptimizeInfoId() {
 		throw new UnsupportedOperationException();
 	}
 

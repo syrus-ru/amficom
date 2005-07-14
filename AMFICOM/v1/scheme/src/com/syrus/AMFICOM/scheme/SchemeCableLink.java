@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.48 2005/07/14 13:08:50 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.49 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/14 13:08:50 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -336,13 +336,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		assert getCableChannelingItems().contains(cableChannelingItem): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert cableChannelingItem.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		cableChannelingItem.setParentSchemeCableLink(null);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		assert getSchemeCableThreads().contains(schemeCableThread): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCableThread.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCableThread.setParentSchemeCableLink(null);
 	}
 

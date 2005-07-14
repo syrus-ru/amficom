@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.48 2005/07/14 13:49:37 bass Exp $
+ * $Id: SchemeDevice.java,v 1.49 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/14 13:49:37 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -465,7 +465,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -478,7 +478,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeCablePort(final SchemeCablePort schemeCablePort) {
 		assert schemeCablePort != null: NON_NULL_EXPECTED;
-		assert getSchemeCablePorts().contains(schemeCablePort): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCablePort.getParentSchemeDeviceId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCablePort.setParentSchemeDevice(null);
 	}
 
@@ -490,7 +490,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemePort(final SchemePort schemePort) {
 		assert schemePort != null: NON_NULL_EXPECTED;
-		assert getSchemePorts().contains(schemePort): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemePort.getParentSchemeDeviceId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemePort.setParentSchemeDevice(null);
 	}
 

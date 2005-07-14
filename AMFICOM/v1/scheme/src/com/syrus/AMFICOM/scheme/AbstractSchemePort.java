@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.35 2005/07/14 14:24:06 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.36 2005/07/14 19:25:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/07/14 14:24:06 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/14 19:25:47 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -270,7 +270,7 @@ public abstract class AbstractSchemePort extends
 
 	public final void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
