@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceRangeImplMF.java,v 1.2 2005/05/01 12:55:32 saa Exp $
+ * $Id: ModelTraceRangeImplMF.java,v 1.3 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * Может быть полезен для описания участка модельной кривой
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/05/01 12:55:32 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ModelTraceRangeImplMF extends ModelTraceRange {
@@ -27,19 +27,23 @@ public class ModelTraceRangeImplMF extends ModelTraceRange {
         this.mf = mf;
     }
 
-    public int getBegin() {
+    @Override
+	public int getBegin() {
         return begin;
     }
 
-    public int getEnd() {
+    @Override
+	public int getEnd() {
         return end;
     }
 
-    public double getY(int x) {
+    @Override
+	public double getY(int x) {
         return mf.fun(x);
     }
 
-    public double[] getYArray(int x0, int N) {
+    @Override
+	public double[] getYArray(int x0, int N) {
         if (cache == null) {
             cache = mf.funFillArray(begin, 1.0, end - begin + 1); 
         }

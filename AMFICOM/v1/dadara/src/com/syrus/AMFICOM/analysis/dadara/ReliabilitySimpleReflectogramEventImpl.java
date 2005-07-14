@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.7 2005/06/28 14:38:23 saa Exp $
+ * $Id: ReliabilitySimpleReflectogramEventImpl.java,v 1.8 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright c 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/06/28 14:38:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ReliabilitySimpleReflectogramEventImpl
@@ -99,7 +99,8 @@ implements ReliabilitySimpleReflectogramEvent {
         return nSigma >= 0;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
         return "RSE("
             + "T=" + getEventType()
             + ",B=" + getBegin() + ",E=" + getEnd()

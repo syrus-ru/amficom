@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/06 10:33:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
  * @module dadara
  */
 public class ReflectogramMismatch {
@@ -355,7 +355,8 @@ public class ReflectogramMismatch {
         }
     }
     
-    public String toString()
+    @Override
+	public String toString()
     {
         return "ReflectogramMismatch(level=" + severity
         + ",type=" + getAlarmType()

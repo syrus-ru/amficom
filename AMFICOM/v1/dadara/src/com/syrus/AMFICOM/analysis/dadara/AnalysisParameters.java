@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.7 2005/06/30 10:56:59 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.8 2005/07/14 14:28:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/06/30 10:56:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 14:28:38 $
  * @module
  */
 public class AnalysisParameters
@@ -65,7 +65,7 @@ implements DataStreamable, Cloneable
      * @return список рекомендуемых значений noiseFactor
      */
     public static double[] getRecommendedNoiseFactors() {
-        return (double[])RECOMMENDED_NOISE_FACTORS.clone();
+        return RECOMMENDED_NOISE_FACTORS.clone();
     }
 
 	public AnalysisParameters(double minThreshold,
@@ -113,7 +113,7 @@ implements DataStreamable, Cloneable
      * @param defaults default values
      */
 	public AnalysisParameters(String val, AnalysisParameters defaults) {
-		param = (double[])defaults.param.clone();
+		param = defaults.param.clone();
         setParamsFromString(val);
 	}
 
@@ -129,6 +129,7 @@ implements DataStreamable, Cloneable
                     "couldn't parse analysis parameters string");
     }
 
+	@Override
 	public String toString() {
 		String str = "";
 		for (int i = 0; i < param.length; i++)
@@ -136,10 +137,11 @@ implements DataStreamable, Cloneable
 		return str;
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			AnalysisParameters ret = (AnalysisParameters)super.clone();
-			ret.param = (double[])this.param.clone();
+			ret.param = this.param.clone();
 			return ret;
 		} catch (CloneNotSupportedException e) {
 			throw new InternalError("Unexpected exception: " + e.getMessage());

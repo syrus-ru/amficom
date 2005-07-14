@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.18 2005/07/06 08:23:07 saa Exp $
+ * $Id: ThreshDY.java,v 1.19 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/07/06 08:23:07 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -74,19 +74,22 @@ public class ThreshDY extends Thresh
 		return ret;
 	}
 
-    public Object clone() throws CloneNotSupportedException
+    @Override
+	public Object clone() throws CloneNotSupportedException
     {
         ThreshDY ret = (ThreshDY)super.clone();
-        ret.values = (double[])this.values.clone();
+        ret.values = this.values.clone();
         return ret;
     }
 
+	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
 		values = new double[4];
 		for (int k = 0; k < 4; k++)
 			values[k] = dis.readDouble();
 	}
+	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
 	{
 		for (int k = 0; k < 4; k++)
@@ -120,6 +123,7 @@ public class ThreshDY extends Thresh
 		snapAndLimit(key);
 		interLimit(key);
 	}
+	@Override
 	protected void arrangeLimits(int key)
 	{
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
@@ -136,6 +140,7 @@ public class ThreshDY extends Thresh
 		for (int key = 0; key < 4; key++)
 			interLimit(key);
 	}
+	@Override
 	protected void roundUp(int key)
 	{
 		int sign = IS_KEY_UPPER[key] ? 1 : -1;

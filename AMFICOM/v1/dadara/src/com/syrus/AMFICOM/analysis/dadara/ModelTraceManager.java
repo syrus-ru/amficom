@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.88 2005/07/13 06:50:05 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.89 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.88 $, $Date: 2005/07/13 06:50:05 $
+ * @version $Revision: 1.89 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ModelTraceManager
@@ -52,14 +52,15 @@ implements DataStreamable, Cloneable
 
 	private static DataStreamable.Reader dsReader;
 
-    public Object clone()
+    @Override
+	public Object clone()
     throws CloneNotSupportedException
     {
         ModelTraceManager ret = (ModelTraceManager)super.clone();
         // remove cache data
         ret.thMTCache = null;
         // copy thresholds
-        Thresh[] tLout = (Thresh[]) this.tL.clone(); // clone the holder
+        Thresh[] tLout = this.tL.clone(); // clone the holder
         for (int i = 0; i < tLout.length; i++)
             tLout[i] = (Thresh)tLout[i].clone(); // clone each threshold in array
         ret.setTL(tLout);
@@ -108,7 +109,7 @@ implements DataStreamable, Cloneable
 	// создать пороги
 	private Thresh[] createTH()
 	{
-		LinkedList thresholds = new LinkedList();
+		List<Thresh> thresholds = new ArrayList<Thresh>();
 		Thresh last = null; // далее будет всегда указывать на текущий порог A-типа, либо null, если разрыв (в нач. р/г либо после н/ид соб)
 		for (int i = 0; i < getSE().length; i++)
 		{
@@ -184,7 +185,7 @@ implements DataStreamable, Cloneable
 				break;
 			}
 		}
-		return (Thresh[] )thresholds.toArray(new Thresh[thresholds.size()]);
+		return thresholds.toArray(new Thresh[thresholds.size()]);
 	}
 
 	protected ModelFunction getMF()
@@ -205,21 +206,21 @@ implements DataStreamable, Cloneable
 	{
 		tL = tl;
 		// формируем отдельно списки tDX и tDY
-		LinkedList thresholds = new LinkedList();
+		List<Thresh> thresholds = new ArrayList<Thresh>();
 		for (int i = 0; i < tL.length; i++)
 		{
 			if (tL[i] instanceof ThreshDX)
 				thresholds.add(tL[i]);
 		}
-		tDX = (ThreshDX[] )thresholds.toArray(new ThreshDX[thresholds.size()]);
+		tDX = thresholds.toArray(new ThreshDX[thresholds.size()]);
 
-		thresholds = new LinkedList();
+		thresholds = new ArrayList<Thresh>();
 		for (int i = 0; i < tL.length; i++)
 		{
 			if (tL[i] instanceof ThreshDY)
 				thresholds.add(tL[i]);
 		}
-		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
+		tDY = thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
 	/**
@@ -354,7 +355,7 @@ implements DataStreamable, Cloneable
 		//return re[nEvents].getThreshold();
 
 		Thresh[] tlist = getAllThreshByNEvent(nEvent);
-		ArrayList ret = new ArrayList();
+		ArrayList<ThreshEditorWithDefaultMark> ret = new ArrayList<ThreshEditorWithDefaultMark>();
         Thresh defaultTh = getDefaultThreshByNEvent(nEvent);
 
 		for (int i = 0; i < tlist.length; i++)
@@ -379,8 +380,7 @@ implements DataStreamable, Cloneable
                     th == defaultTh)); // mark if thesh object is same
 			}
 		}
-        return (ThreshEditorWithDefaultMark[])ret.toArray(
-                new ThreshEditorWithDefaultMark[ret.size()]);
+        return ret.toArray(new ThreshEditorWithDefaultMark[ret.size()]);
 	}
 
     // may return -1
@@ -536,7 +536,7 @@ implements DataStreamable, Cloneable
 
         // make a copy of resulting array for client
         //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
-        return (ModelTraceRange[])thSingleMTRCache.clone();
+        return thSingleMTRCache.clone();
     }
 
 	/**
@@ -714,13 +714,13 @@ implements DataStreamable, Cloneable
 
     private Thresh[] getAllThreshByNEvent(int nEvent)
     {
-        ArrayList al = new ArrayList();
+        ArrayList<Thresh> al = new ArrayList<Thresh>();
         for (int i = 0; i < this.tL.length; i++)
         {
             if (this.tL[i].isRelevantToNEvent(nEvent))
                 al.add(this.tL[i]);
         }
-        return (Thresh[] )al.toArray(new Thresh[al.size()]);
+        return al.toArray(new Thresh[al.size()]);
     }
     // определяет 'порог по умолчанию' для данного события
     // may return null

@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.18 2005/06/30 06:30:06 saa Exp $
+ * $Id: ThreshDX.java,v 1.19 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/06/30 06:30:06 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -55,10 +55,11 @@ public class ThreshDX extends Thresh
 		return ret;
 	}
 
-    public Object clone() throws CloneNotSupportedException
+    @Override
+	public Object clone() throws CloneNotSupportedException
     {
         ThreshDX ret = (ThreshDX)super.clone();
-        ret.dX = (int[])this.dX.clone();
+        ret.dX = this.dX.clone();
         return ret;
     }
 
@@ -75,12 +76,14 @@ public class ThreshDX extends Thresh
 		this.dX = new int[] { dx, 2 * dx, -dx, -2 * dx };
 	}
 
+	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
         this.dX = new int[4];
 		for (int k = 0; k < 4; k++)
 			this.dX[k] = dis.readInt();
 	}
+	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException
 	{
 		for (int k = 0; k < 4; k++)
@@ -112,6 +115,7 @@ public class ThreshDX extends Thresh
 		limit(key);
 	}
 
+	@Override
 	protected void arrangeLimits(int key)
 	{
 		correctDX(key);
@@ -130,6 +134,7 @@ public class ThreshDX extends Thresh
 		for (int key = 0; key < 4; key++)
 			limit(key);
 	}
+	@Override
 	protected void roundUp(int key)
 	{ // empty: we do not anything
 	}

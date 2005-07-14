@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchor.java,v 1.3 2005/06/30 15:42:36 saa Exp $
+ * $Id: SOAnchor.java,v 1.4 2005/07/14 14:28:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/06/30 15:42:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/14 14:28:38 $
  * @module
  */
 public class SOAnchor implements DataStreamable {
@@ -56,6 +56,7 @@ public class SOAnchor implements DataStreamable {
 		}
 		return reader;
 	}
+	@Override
 	public String toString() {
 		return "[" + value + "]";
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.16 2005/06/28 15:13:27 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.17 2005/07/14 14:28:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/06/28 15:13:27 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/14 14:28:38 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -314,7 +314,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	{
         // Copy an array and all its references to protect se array.
         // Array elements are unmodifiable, so no need to clone them.
-        return (ReliabilitySimpleReflectogramEvent[] )getRSE().clone();
+        return getRSE().clone();
 	}
 
 //	public ComplexReflectogramEvent[] getComplexEvents()

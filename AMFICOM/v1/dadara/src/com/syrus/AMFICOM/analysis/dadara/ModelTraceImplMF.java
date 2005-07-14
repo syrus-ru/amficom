@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceImplMF.java,v 1.3 2005/03/09 11:21:43 saa Exp $
+ * $Id: ModelTraceImplMF.java,v 1.4 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/03/09 11:21:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class ModelTraceImplMF extends ModelTrace
@@ -18,11 +18,13 @@ public class ModelTraceImplMF extends ModelTrace
 	private ModelFunction mf;
 	private double[] cachedTrace = null;
 
+	@Override
 	public int getLength()
 	{
 		return length;
 	}
 
+	@Override
 	public double[] getYArray(int x0, int N)
 	{
 		//return mf.funFillArray(x0, 1.0, N);
@@ -38,6 +40,7 @@ public class ModelTraceImplMF extends ModelTrace
 		}
 	}
 
+	@Override
 	public double getY(int x)
 	{
 		return mf.fun(x);

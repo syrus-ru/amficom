@@ -1,5 +1,5 @@
 /*-
- * $Id: EndOfTraceDetailedEvent.java,v 1.1 2005/05/05 11:45:28 saa Exp $
+ * $Id: EndOfTraceDetailedEvent.java,v 1.2 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 11:45:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 public class EndOfTraceDetailedEvent extends DetailedEvent {
@@ -50,13 +50,15 @@ public class EndOfTraceDetailedEvent extends DetailedEvent {
     public double getY2() {
         return y2;
     }
-    protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
+    @Override
+	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
         dos.writeDouble(y0);
         dos.writeDouble(y2);
 //        dos.writeDouble(refl);
     }
 
-    protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
+    @Override
+	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
         y0 = dis.readDouble();
         y2 = dis.readDouble();
 //        refl = dis.readDouble();

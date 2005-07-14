@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.17 2005/06/30 06:29:10 saa Exp $
+ * $Id: Thresh.java,v 1.18 2005/07/14 14:28:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/06/30 06:29:10 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/14 14:28:39 $
  * @module
  */
 
@@ -57,7 +57,8 @@ implements Cloneable
 		this.xMax = xMax;
 	}
 
-    public Object clone() throws CloneNotSupportedException
+    @Override
+	public Object clone() throws CloneNotSupportedException
     {
         return super.clone();
     }

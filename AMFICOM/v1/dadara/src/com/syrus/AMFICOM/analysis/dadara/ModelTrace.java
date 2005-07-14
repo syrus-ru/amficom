@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTrace.java,v 1.10 2005/06/07 14:03:50 saa Exp $
+ * $Id: ModelTrace.java,v 1.11 2005/07/14 14:28:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.10 $, $Date: 2005/06/07 14:03:50 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 14:28:38 $
  * @module
  */
 public abstract class ModelTrace extends ModelTraceRange
@@ -24,11 +24,13 @@ public abstract class ModelTrace extends ModelTraceRange
 	 */
 	public abstract int getLength();
 
-    final public int getBegin() {
+    @Override
+	final public int getBegin() {
         return 0;
     }
 
-    final public int getEnd() {
+    @Override
+	final public int getEnd() {
         return getLength() - 1;
     }
 
@@ -36,6 +38,7 @@ public abstract class ModelTrace extends ModelTraceRange
 	 * Возвращает значения игреков на всей длине рефлектограммы 
 	 * @return представление кривой в виде массива
 	 */
+	@Override
 	public double[] getYArray()
 	{
 		return getYArray(0, getLength());
