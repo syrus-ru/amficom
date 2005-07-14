@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.11 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.12 2005/07/14 07:55:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/14 07:55:35 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -159,13 +159,13 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 				+ APOSTOPHE + DatabaseString.toQuerySubString(scheme.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + scheme.getWidth() + COMMA
 				+ APOSTOPHE + scheme.getHeight() + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getDomainId().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getMap().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getSymbol().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getUgoCell().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getSchemeCell().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(scheme.getDomainId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(scheme.getMapId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(scheme.getSymbolId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(scheme.getUgoCellId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(scheme.getSchemeCellId()) + COMMA
 				+ APOSTOPHE + scheme.getKind().value() + COMMA
-				+ DatabaseIdentifier.toSQLString(scheme.getParentSchemeElement().getId());
+				+ DatabaseIdentifier.toSQLString(scheme.getParentSchemeElementId());
 		return sql;
 	}
 
@@ -188,13 +188,13 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, scheme.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, scheme.getWidth());
 		preparedStatement.setInt(++startParameterNumber, scheme.getHeight());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getDomainId().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getMap().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getSymbol().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getUgoCell().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getSchemeCell().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getMapId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getSymbolId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getUgoCellId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getSchemeCellId());
 		preparedStatement.setInt(++startParameterNumber, scheme.getKind().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getParentSchemeElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, scheme.getParentSchemeElementId());
 		return startParameterNumber;
 	}
 
