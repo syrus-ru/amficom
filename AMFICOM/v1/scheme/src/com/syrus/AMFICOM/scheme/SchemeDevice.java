@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.47 2005/07/13 11:08:01 bass Exp $
+ * $Id: SchemeDevice.java,v 1.48 2005/07/14 13:49:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHI
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -58,7 +60,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/13 11:08:01 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/14 13:49:37 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -351,19 +353,28 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @throws IllegalStateException
 	 */
-	public SchemeElement getParentSchemeElement() {
+	Identifier getParentSchemeElementId() {
 //		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict())
+		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-
-		if (this.parentSchemeElementId.isVoid()) {
-			Log.debugMessage("SchemeDevice.getParentSchemeElement() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
-					FINE);
-			return null;
 		}
+		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid();
+		assert parentSchemeElementIdVoid || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		if (parentSchemeElementIdVoid) {
+			Log.debugMessage("SchemeDevice.getParentSchemeElementId() | Parent SchemeElement was requested, while parent is a SchemeProtoElement; returning null.",
+					FINE);
+		}
+		return this.parentSchemeElementId;
+	}
 
+	/**
+	 * A wrapper around {@link #getParentSchemeElementId()}.
+	 *
+	 * @throws IllegalStateException
+	 */
+	public SchemeElement getParentSchemeElement() {
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -373,18 +384,28 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	/**
 	 * @throws IllegalStateException
 	 */
-	public SchemeProtoElement getParentSchemeProtoElement() {
+	Identifier getParentSchemeProtoElementId() {
 //		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertParentSetStrict())
+		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
-
-		if (this.parentSchemeProtoElementId.isVoid()) {
-			Log.debugMessage("SchemeDevice.getParentSchemeProtoElement() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
+		}
+		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
+		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+		if (parentSchemeProtoElementIdVoid) {
+			Log.debugMessage("SchemeDevice.getParentSchemeProtoElementId() | Parent SchemeProtoElement was requested, while parent is a SchemeElement; returning null.",
 					FINE);
 		}
+		return this.parentSchemeProtoElementId;
+	}
 
+	/**
+	 * A wrapper around {@link #getParentSchemeProtoElementId()}.
+	 *
+	 * @throws IllegalStateException
+	 */
+	public SchemeProtoElement getParentSchemeProtoElement() {
 		try {
-			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.parentSchemeProtoElementId, true);
+			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

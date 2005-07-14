@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.7 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.8 2005/07/14 13:49:37 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 13:49:37 $
  * @module scheme_v1
  */
 public final class SchemeDeviceDatabase extends CharacterizableDatabase {
@@ -98,8 +98,8 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 		SchemeDevice schemeDevice = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeDevice.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeProtoElement().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeElement().getId());
+				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeProtoElementId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeElementId());
 		return sql;
 	}
 
@@ -119,8 +119,8 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 		SchemeDevice schemeDevice = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeDevice.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeProtoElement().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeElement().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeProtoElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeDevice.getParentSchemeElementId());
 		return startParameterNumber;
 	}
 
