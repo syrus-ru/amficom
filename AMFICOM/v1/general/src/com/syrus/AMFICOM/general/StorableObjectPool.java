@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.125 2005/07/14 17:41:33 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.126 2005/07/14 18:47:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/07/14 17:41:33 $
+ * @version $Revision: 1.126 $, $Date: 2005/07/14 18:47:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -307,9 +307,9 @@ public abstract class StorableObjectPool {
 		if (objectPool != null) {
 			StorableObject storableObject = (StorableObject) objectPool.get(objectId);
 			if (storableObject == null && useLoader) {
-				final Set<? extends StorableObject> storableObjects = this.loadStorableObjects(Collections.singleton(objectId));
+				final Set storableObjects = this.loadStorableObjects(Collections.singleton(objectId));
 				if (!storableObjects.isEmpty())
-					storableObject = storableObjects.iterator().next();
+					storableObject = (StorableObject) storableObjects.iterator().next();
 				if (storableObject != null)
 					try {
 						this.putStorableObjectImpl(storableObject);
@@ -391,7 +391,8 @@ public abstract class StorableObjectPool {
 				final Set<Identifier> objectQueue = (Set) entityCodeIterator.value();
 
 				try {
-					for (final StorableObject storableObject : this.loadStorableObjects(objectQueue)) {
+					for (final Iterator it = this.loadStorableObjects(objectQueue).iterator(); it.hasNext();) {
+						final StorableObject storableObject = (StorableObject) it.next();
 						this.putStorableObjectImpl(storableObject);
 						storableObjects.add(storableObject);
 					}
@@ -504,9 +505,9 @@ public abstract class StorableObjectPool {
 	}
 
 	/*	Group-specific load-methods */
-	protected abstract Set<? extends StorableObject> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException;
+	protected abstract Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException;
 
-	protected abstract Set<? extends StorableObject> loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
+	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids)
 			throws ApplicationException;
 
 
@@ -904,7 +905,7 @@ public abstract class StorableObjectPool {
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	protected abstract void saveStorableObjects(final Set storableObjects,
+	protected abstract void saveStorableObjects(final Set<? extends StorableObject> storableObjects,
 			final boolean force)
 			throws ApplicationException;
 
@@ -1020,7 +1021,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.125 $, $Date: 2005/07/14 17:41:33 $
+	 * @version $Revision: 1.126 $, $Date: 2005/07/14 18:47:10 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
@@ -1078,7 +1079,8 @@ public abstract class StorableObjectPool {
 			if (returnedStorableObjectsIds.isEmpty())
 				continue;
 
-			for (final StorableObject storableObject : this.loadStorableObjects(returnedStorableObjectsIds)) {
+			for (final Iterator it = this.loadStorableObjects(returnedStorableObjectsIds).iterator(); it.hasNext();) {
+				final StorableObject storableObject = (StorableObject) it.next();
 				try {
 					this.putStorableObjectImpl(storableObject);
 				} catch (final IllegalObjectEntityException ioee) {

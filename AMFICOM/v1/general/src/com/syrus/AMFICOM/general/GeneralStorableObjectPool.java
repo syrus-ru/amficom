@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralStorableObjectPool.java,v 1.37 2005/07/12 08:40:57 bass Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.38 2005/07/14 18:47:10 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/12 08:40:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/07/14 18:47:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -128,7 +128,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 	@Override
-	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETER_TYPE_CODE:

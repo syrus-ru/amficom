@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.16 2005/06/22 20:11:25 arseniy Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.17 2005/07/14 18:46:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/22 20:11:25 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/14 18:46:55 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -66,6 +66,7 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof CableLinkType) {
@@ -125,6 +126,7 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

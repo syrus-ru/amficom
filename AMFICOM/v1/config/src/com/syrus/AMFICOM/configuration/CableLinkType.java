@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.54 2005/07/06 15:49:25 bass Exp $
+ * $Id: CableLinkType.java,v 1.55 2005/07/14 18:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/14 18:46:55 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -211,6 +211,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			this.imageId = imageId;
 	}
 
+	@Override
 	public Identifier getImageId() {
 		return this.imageId;
 	}
@@ -221,24 +222,29 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	}
 
 	
+	@Override
 	public String getManufacturer() {
 		return this.manufacturer;
 	}
 
+	@Override
 	public void setManufacturer(final String manufacturer) {
 		this.manufacturer = manufacturer;
 		super.markAsChanged();
 	}
 
+	@Override
 	public String getManufacturerCode() {
 		return this.manufacturerCode;
 	}
 
+	@Override
 	public void setManufacturerCode(final String manufacturerCode) {
 		this.manufacturerCode = manufacturerCode;
 		super.markAsChanged();
 	}
 
+	@Override
 	public LinkTypeSort getSort() {
 		return LinkTypeSort.from_int(this.sort);
 	}
@@ -248,10 +254,12 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		super.markAsChanged();
 	}
 
+	@Override
 	public String getName() {
 		return this.name;
 	}
 
+	@Override
 	public void setName(final String name) {
 		this.name = name;
 		super.markAsChanged();

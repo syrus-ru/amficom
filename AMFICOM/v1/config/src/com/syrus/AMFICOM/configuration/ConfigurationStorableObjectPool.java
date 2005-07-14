@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.96 2005/07/12 08:40:58 bass Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.97 2005/07/14 18:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/07/12 08:40:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/07/14 18:46:55 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -214,7 +214,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected Set loadStorableObjectsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.EQUIPMENT_TYPE_CODE:
@@ -255,6 +256,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;

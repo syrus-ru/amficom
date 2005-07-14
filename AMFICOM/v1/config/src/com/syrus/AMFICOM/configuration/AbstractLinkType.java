@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.15 2005/06/22 10:05:17 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.16 2005/07/14 18:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectType;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/22 10:05:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/14 18:46:55 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable {
@@ -40,23 +40,6 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 			final String codename,
 			final String description) {
 		super(id, created, modified, creatorId, modifierId, version, codename, description);		
-	}
-
-	public String getCodename() {
-		return super.codename;
-	}
-
-	public String getDescription() {
-		return super.description;
-	}
-	
-	public void setDescription(final String description) {
-		setDescription0(description);
-		super.markAsChanged();
-	}	
-
-	protected void setDescription0(final String description) {
-		this.description = description;
 	}
 
 	public abstract Identifier getImageId();

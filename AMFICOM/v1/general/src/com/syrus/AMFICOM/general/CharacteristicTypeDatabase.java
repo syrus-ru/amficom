@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.29 2005/07/14 16:08:04 bass Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.30 2005/07/14 18:47:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/14 16:08:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/07/14 18:47:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -73,7 +73,7 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
+		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getName(), SIZE_NAME_COLUMN);
