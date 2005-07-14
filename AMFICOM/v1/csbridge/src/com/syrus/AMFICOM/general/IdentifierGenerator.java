@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.5 2005/06/22 19:39:20 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.6 2005/07/14 11:29:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/22 19:39:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/14 11:29:53 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -48,7 +48,7 @@ public class IdentifierGenerator {
 	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
 		if (ObjectEntities.isEntityCodeValid(entityCode))
 			return entityCode;
-		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		throw new IllegalObjectEntityException(ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	private static long generateMinor(short entityCode) throws IdentifierGenerationException {

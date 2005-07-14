@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.25 2005/07/13 08:01:52 arseniy Exp $
+ * $Id: ServerCore.java,v 1.26 2005/07/14 11:29:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/07/13 08:01:52 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/14 11:29:53 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -177,7 +177,7 @@ public abstract class ServerCore implements CommonServer {
 
 			assert StorableObject.hasSingleTypeEntities(idsT);
 			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
-			assert ObjectEntities.isEntityCodeValid(entityCode);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();

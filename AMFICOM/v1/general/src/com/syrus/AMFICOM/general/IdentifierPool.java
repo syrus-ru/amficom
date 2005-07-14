@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.24 2005/07/06 19:18:01 bass Exp $
+ * $Id: IdentifierPool.java,v 1.25 2005/07/14 11:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import gnu.trove.TShortObjectHashMap;
 import gnu.trove.TShortObjectIterator;
 
-import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
@@ -20,8 +19,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/07/06 19:18:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/07/14 11:29:21 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class IdentifierPool {
@@ -51,7 +50,7 @@ public class IdentifierPool {
 	}
 
 	public static Identifier getGeneratedIdentifier(final short entityCode) throws IdentifierGenerationException {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : "Illegal or unknown entity code supplied: " + entityCode;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		Fifo fifo = (Fifo) idPoolMap.get(entityCode);
 
