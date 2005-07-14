@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.43 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemePort.java,v 1.44 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/14 14:24:06 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -183,8 +183,17 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
 	@Override
-	public AbstractSchemeLink getAbstractSchemeLink() {
-		return getSchemeLink();
+	public SchemeLink getAbstractSchemeLink() {
+		try {
+			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMELINK_CODE), true, true);
+			assert schemeLinks != null && schemeLinks.size() <= 1;
+			return schemeLinks.isEmpty()
+					? null
+					: schemeLinks.iterator().next();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -207,22 +216,6 @@ public final class SchemePort extends AbstractSchemePort {
 			return schemeCableThreads.isEmpty()
 					? null
 					: schemeCableThreads.iterator().next();
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
-	}
-
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
-	public SchemeLink getSchemeLink() {
-		try {
-			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMELINK_CODE), true, true);
-			assert schemeLinks != null && schemeLinks.size() <= 1;
-			return schemeLinks.isEmpty()
-					? null
-					: schemeLinks.iterator().next();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

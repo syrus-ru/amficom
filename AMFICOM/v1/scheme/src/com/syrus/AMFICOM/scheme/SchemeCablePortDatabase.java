@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.10 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 14:24:06 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends CharacterizableDatabase {
@@ -108,10 +108,10 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCablePort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCablePort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeCablePort.getDirectionType().value() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeCablePort.getParentSchemeDevice().getId());
+				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeCablePort.getParentSchemeDeviceId());
 		return sql;
 	}
 
@@ -132,10 +132,10 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCablePort.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeCablePort.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, schemeCablePort.getDirectionType().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPortType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getMeasurementPort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getParentSchemeDevice().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPortTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getMeasurementPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeCablePort.getParentSchemeDeviceId());
 		return startParameterNumber;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.34 2005/07/11 12:12:57 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.35 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -46,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/07/11 12:12:57 $
+ * @version $Revision: 1.35 $, $Date: 2005/07/14 14:24:06 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -179,10 +183,18 @@ public abstract class AbstractSchemePort extends
 		return this.description;
 	}
 
-	public final MeasurementPort getMeasurementPort() {
+	final Identifier getMeasurementPortId() {
 		assert this.measurementPortId != null: OBJECT_NOT_INITIALIZED;
+		assert this.measurementPortId.isVoid() || this.measurementPortId.getMajor() == MEASUREMENTPORT_CODE;
+		return this.measurementPortId;
+	}
+
+	/**
+	 * A wrapper around {@link #getMeasurementPortId()}.
+	 */
+	public final MeasurementPort getMeasurementPort() {
 		try {
-			return (MeasurementPort) StorableObjectPool.getStorableObject(this.measurementPortId, true);
+			return (MeasurementPort) StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -197,40 +209,59 @@ public abstract class AbstractSchemePort extends
 		return this.name;
 	}
 
-	public final SchemeDevice getParentSchemeDevice() {
+	final Identifier getParentSchemeDeviceId() {
 		assert this.parentSchemeDeviceId != null: OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeDeviceId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		
-		try {
-			return (SchemeDevice) StorableObjectPool.getStorableObject(this.parentSchemeDeviceId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
+		assert this.parentSchemeDeviceId.getMajor() == SCHEMEDEVICE_CODE;
+		return this.parentSchemeDeviceId;
 	}
 
 	/**
-	 * Overridden by descendants to add extra checks.
+	 * A wrapper around {@link #getParentSchemeDeviceId()}.
 	 */
-	public Port getPort() {
-		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-
+	public final SchemeDevice getParentSchemeDevice() {
 		try {
-			return (Port) StorableObjectPool.getStorableObject(this.portId, true);
+			return (SchemeDevice) StorableObjectPool.getStorableObject(this.getParentSchemeDeviceId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public final PortType getPortType() {
-		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+	final Identifier getPortId() {
+		assert this.assertPortTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+		assert this.portId.isVoid() || this.portId.getMajor() == PORT_CODE;
+		return this.portId;
+	}
 
-		if (!this.portId.isVoid())
-			return getPort().getType();
-
+	/**
+	 * <p>A wrapper around {@link #getPortId()}.</p>
+	 *
+	 * <p>Overridden by descendants to add extra checks.</p>
+	 */
+	public Port getPort() {
 		try {
-			return (PortType) StorableObjectPool.getStorableObject(this.portTypeId, true);
+			return (Port) StorableObjectPool.getStorableObject(this.getPortId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+
+	final Identifier getPortTypeId() {
+		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert this.portTypeId.isVoid() || this.portTypeId.getMajor() == PORT_TYPE_CODE;
+		return this.portTypeId;
+	}
+
+	/**
+	 * A wrapper around {@link #getPortTypeId()}.
+	 */
+	public final PortType getPortType() {
+		try {
+			return this.getPortId().isVoid()
+					? (PortType) StorableObjectPool.getStorableObject(this.getPortTypeId(), true)
+					: this.getPort().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

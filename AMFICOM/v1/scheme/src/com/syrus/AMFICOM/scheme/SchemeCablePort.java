@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.43 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.44 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/14 14:24:06 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -182,24 +182,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see AbstractSchemePort#getAbstractSchemeLink()
 	 */
 	@Override
-	public AbstractSchemeLink getAbstractSchemeLink() {
-		return getSchemeCableLink();
-	}
-
-	/**
-	 * @see AbstractSchemePort#getPort()
-	 */
-	@Override
-	public Port getPort() {
-		final Port port = super.getPort();
-		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE : OBJECT_BADLY_INITIALIZED;
-		return port;
-	}
-
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
-	public SchemeCableLink getSchemeCableLink() {
+	public SchemeCableLink getAbstractSchemeLink() {
 		try {
 			final Set<SchemeCableLink> schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLELINK_CODE), true, true);
 			assert schemeCableLinks != null && schemeCableLinks.size() <= 1;
@@ -210,6 +193,16 @@ public final class SchemeCablePort extends AbstractSchemePort {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * @see AbstractSchemePort#getPort()
+	 */
+	@Override
+	public Port getPort() {
+		final Port port = super.getPort();
+		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE : OBJECT_BADLY_INITIALIZED;
+		return port;
 	}
 
 	/**

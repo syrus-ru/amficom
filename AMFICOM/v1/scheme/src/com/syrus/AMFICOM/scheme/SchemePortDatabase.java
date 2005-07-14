@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.10 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 14:24:06 $
  * @module scheme_v1
  */
 public final class SchemePortDatabase extends CharacterizableDatabase {
@@ -106,10 +106,10 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 		SchemePort schemePort = fromStorableObject(storableObject);
 		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemePort.getDirectionType().value() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePort.getPortType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePort.getPort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePort.getParentSchemeDevice().getId());
+				+ DatabaseIdentifier.toSQLString(schemePort.getPortTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePort.getParentSchemeDeviceId());
 		return sql;
 	}
 
@@ -130,10 +130,10 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePort.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, schemePort.getDirectionType().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getMeasurementPort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getParentSchemeDevice().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getMeasurementPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePort.getParentSchemeDeviceId());
 		return startParameterNumber;
 	}
 

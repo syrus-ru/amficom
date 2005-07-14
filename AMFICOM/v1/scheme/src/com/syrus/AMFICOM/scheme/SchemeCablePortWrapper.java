@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.5 2005/07/10 15:06:07 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.6 2005/07/14 14:24:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/10 15:06:07 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/14 14:24:06 $
  * @author $Author: bass $
  * @module scheme_v1
  */
@@ -111,13 +110,13 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
 				return new Integer(schemeCablePort.getDirectionType().value());
 			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
-				return schemeCablePort.portTypeId;
+				return schemeCablePort.getPortTypeId();
 			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
-				return schemeCablePort.portId;
+				return schemeCablePort.getPortId();
 			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
-				return schemeCablePort.measurementPortId;
+				return schemeCablePort.getMeasurementPortId();
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-				return schemeCablePort.parentSchemeDeviceId;
+				return schemeCablePort.getParentSchemeDeviceId();
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				return schemeCablePort.getCharacteristics();
 			}
@@ -139,6 +138,9 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
 				schemeCablePort.setDirectionType(DirectionType.from_int(((Integer) value).intValue()));
 			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
+				/**
+				 * @bug changed status is not updated.
+				 */
 				schemeCablePort.portTypeId = (Identifier) value;
 			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
 				schemeCablePort.portId = (Identifier) value;
@@ -147,7 +149,7 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
 				schemeCablePort.parentSchemeDeviceId = (Identifier) value;
 			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				schemeCablePort.setCharacteristics((Set<Characteristic>) value);
+				schemeCablePort.setCharacteristics((Set) value);
 			}
 		}
 	}
