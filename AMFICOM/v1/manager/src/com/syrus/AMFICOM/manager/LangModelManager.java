@@ -1,10 +1,10 @@
-/*
- * $Id: LangModelManager.java,v 1.1 2005/07/14 13:16:18 bob Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
+/*-
+* $Id: LangModelManager.java,v 1.2 2005/07/14 13:43:11 bob Exp $
+*
+* Copyright © 2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.manager;
 
@@ -12,9 +12,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $ $, $Date: 2005/07/14 13:16:18 $
+ * @version $ $, $Date: 2005/07/14 13:43:11 $
  * @author $Author: bob $
- * @module measurement_v1
+ * @module manager
  */
 
 public class LangModelManager {
