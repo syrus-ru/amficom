@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.76 2005/07/13 09:14:34 bass Exp $
+ * $Id: StorableObject.java,v 1.77 2005/07/14 13:29:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/07/13 09:14:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2005/07/14 13:29:40 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -526,6 +526,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 */
 	public static final short getGroupCodeOfIdentifiables(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null && !identifiables.isEmpty();
+		assert hasSingleGroupEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_GROUP;
 
 		return ObjectGroupEntities.getGroupCode(identifiables.iterator().next().getId().getMajor());
 	}
