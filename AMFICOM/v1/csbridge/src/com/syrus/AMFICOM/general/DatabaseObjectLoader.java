@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.18 2005/06/24 13:56:38 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.19 2005/07/14 11:31:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,13 @@
 
 package com.syrus.AMFICOM.general;
 
-import gnu.trove.TShortObjectHashMap;
-import gnu.trove.TShortObjectIterator;
-
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectDatabase.UpdateKind;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/24 13:56:38 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/14 11:31:00 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -110,33 +105,16 @@ public abstract class DatabaseObjectLoader {
 	 * Would be <code>final</code> unless overridden in
 	 * <code>MServerMeasurementObjectLoader</code>.
 	 *
-	 * @param identifiables
+	 * @param identifiables of the same entity
 	 */
-	public void delete(final java.util.Set<? extends Identifiable> identifiables) {
+	public void delete(final Set<? extends Identifiable> identifiables) {
 		if (identifiables == null || identifiables.isEmpty())
 			return;
 
-		final TShortObjectHashMap entityMap = new TShortObjectHashMap();
-
-		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
-			final short entityCode = identifiable.getId().getMajor();
-			Set<Identifiable> entityObjects = (Set<Identifiable>) entityMap.get(entityCode);
-			if (entityObjects == null) {
-				entityObjects = new HashSet<Identifiable>();
-				entityMap.put(entityCode, entityObjects);
-			}
-			entityObjects.add(identifiable);
-		}
-
-		for (final TShortObjectIterator it = entityMap.iterator(); it.hasNext();) {
-			it.advance();
-			final short entityCode = it.key();
-			final Set<Identifiable> entityObjects = (Set<Identifiable>) it.value();
-			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-			database.delete(entityObjects);
-		}
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(identifiables);
+		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+		database.delete(identifiables);
 	}
 
 }
