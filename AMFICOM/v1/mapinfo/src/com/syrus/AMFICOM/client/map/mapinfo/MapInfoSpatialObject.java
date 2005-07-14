@@ -1,7 +1,7 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
+import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
 public class MapInfoSpatialObject implements SpatialObject
 {

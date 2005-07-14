@@ -1,17 +1,18 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
-
+package com.syrus.AMFICOM.client.map;
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/03/03 17:38:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 09:58:18 $
  * @module mapper-servlet
  */
 public class ServletCommandNames
 {
 	//Parameters for rendering image
 	public static final String COMMAND_NAME = "command";
+	public static final String USER_ID = "user_id";
 
 	//Values for parameter 	
-	public static final String CN_RENDER_IMAGE = "render";
+	public static final String CN_START_RENDER_IMAGE = "start_render";
+	public static final String CN_CANCEL_RENDERING = "stop_render";
 	public static final String CN_SEARCH_NAME = "search";	
 	
 	//Parameters for rendering image
@@ -27,4 +28,14 @@ public class ServletCommandNames
 	
 	//Parameters for searching name
 	public static final String PAR_NAME_TO_SEARCH = "name";
+	
+	//Statuses
+	public static final String STATUS_FIELD_NAME = "status";
+	
+	public static final String STATUS_SUCCESS = "success";
+	public static final String ERROR_INVALID_PARAMETERS = "invalid_params";
+	public static final String ERROR_NO_PARAMETERS = "no_params";
+	public static final String ERROR_MAP_EXCEPTION = "map_exception";
+	public static final String ERROR_WRONG_REQUEST = "wrong_request";
+	public static final String ERROR_WRONG_STATE = "wrong_state";
 }

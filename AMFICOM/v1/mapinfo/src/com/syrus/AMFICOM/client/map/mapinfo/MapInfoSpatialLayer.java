@@ -1,10 +1,10 @@
-package com.syrus.AMFICOM.Client.Map.Mapinfo;
+package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Component;
 
 import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.unit.Distance;
-import com.syrus.AMFICOM.Client.Map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
 
 public class MapInfoSpatialLayer implements SpatialLayer
 {
@@ -12,14 +12,10 @@ public class MapInfoSpatialLayer implements SpatialLayer
 	
 	private FeatureLayer mapLayer = null;
 
-	private MapInfoLogicalNetLayer layerToRepaint = null;
-
 	public MapInfoSpatialLayer(
-			FeatureLayer mapLayer,
-			MapInfoLogicalNetLayer layerToRepaint)
+			FeatureLayer mapLayer)
 	{
 		this.mapLayer = mapLayer;
-		this.layerToRepaint = layerToRepaint;
 	}
 
 	public MapInfoSpatialLayer()
@@ -74,19 +70,9 @@ public class MapInfoSpatialLayer implements SpatialLayer
 		return returnValue;
 	}
 
-	public boolean isVisibleAtCurrentScale()
-	{
-		return isVisibleAtScale(this.layerToRepaint.getScale());
-	}
-	
 	public void setVisible(boolean visible)
 	{
 		this.visible = visible;
-		this.layerToRepaint.refreshLayers();		
-		if (this.isVisibleAtScale(this.layerToRepaint.getScale()))
-		{
-			this.layerToRepaint.repaint(true);			
-		}
 	}
 
 	public void setLabelVisible(boolean visible)
