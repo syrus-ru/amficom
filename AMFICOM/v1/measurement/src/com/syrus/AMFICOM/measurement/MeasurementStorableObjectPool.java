@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.103 2005/07/12 08:40:59 bass Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.104 2005/07/14 18:52:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/07/12 08:40:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.104 $, $Date: 2005/07/14 18:52:38 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -54,7 +54,7 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static MeasurementStorableObjectPool instance;
 
 
-	private MeasurementStorableObjectPool(Class cacheMapClass) {
+	private MeasurementStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
 
 		registerFactory(ObjectEntities.MEASUREMENT_TYPE_CODE, new MeasurementTypeFactory());
@@ -210,7 +210,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected java.util.Set loadStorableObjectsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENT_TYPE_CODE:
@@ -251,7 +252,8 @@ public final class MeasurementStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void saveStorableObjects(final java.util.Set storableObjects, final boolean force) throws ApplicationException {
+	@Override
+	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;
 
