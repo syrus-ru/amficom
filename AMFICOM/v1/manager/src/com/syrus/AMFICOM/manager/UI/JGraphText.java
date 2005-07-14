@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.2 2005/07/14 12:06:26 bob Exp $
+ * $Id: JGraphText.java,v 1.3 2005/07/14 13:16:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 12:06:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module Miscs
+ * @module manager
  */
 import java.awt.Color;
 import java.awt.Cursor;
@@ -78,6 +78,7 @@ import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
+import com.syrus.AMFICOM.manager.Validator;
 
 public class JGraphText {	
 	
@@ -562,22 +563,41 @@ public class JGraphText {
 	}
 	
 	private DefaultEdge createEdge(DefaultGraphCell source, DefaultGraphCell target, boolean addToGraph) {
-		DefaultEdge edge = new DefaultEdge("edge" + (++this.edgeCount));
 		
-		edge.setSource(source.getChildAt(0));
-		edge.setTarget(target.getChildAt(0));
+		DefaultPort sourcePort = (DefaultPort) source.getChildAt(0);
+		DefaultPort targetPort = (DefaultPort) target.getChildAt(0);
+		if (sourcePort != targetPort) {
+			Object sourceObject = sourcePort.getUserObject();
+			Object targetObject = targetPort.getUserObject();
+			boolean canConnect = true;
+			if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
+				AbstractBean sourceBean = (AbstractBean) sourceObject;
+				AbstractBean targetBean = (AbstractBean) targetObject;
+				Validator validator = sourceBean.getValidator();
+				// TODO development bypass
+				canConnect = validator == null || validator.isValid(sourceBean, targetBean);
+			}
+			
+			if (canConnect) {
+				DefaultEdge edge = new DefaultEdge("edge" + (++this.edgeCount));
+				
+				edge.setSource(sourcePort);
+				edge.setTarget(targetPort);
+//				 Set Arrow Style for edge
+				this.createEdgeAttributes(edge);
+				
+				GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+				System.out.println("JGraphText.createChild() | insert " + edge + "\n\t"+source+" -> " + target);
+				graphLayoutCache.insert(edge);		
+				graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
+				
+				this.graph.getSelectionModel().clearSelection();
+				
+				return edge;
+			}
+		}
 
-//		 Set Arrow Style for edge
-		this.createEdgeAttributes(edge);
-		
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		System.out.println("JGraphText.createChild() | insert " + edge + "\n\t"+source+" -> " + target);
-		graphLayoutCache.insert(edge);		
-		graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
-		
-		this.graph.getSelectionModel().clearSelection();
-		
-		return edge;
+		return null;
 	}
 	
 	
@@ -867,13 +887,15 @@ public class JGraphText {
 				DefaultPort sourcePort = (DefaultPort) this.firstPort.getCell();
 				DefaultPort targetPort = (DefaultPort) this.port.getCell();
 				DefaultEdge edge = JGraphText.this.createEdge((DefaultGraphCell)sourcePort.getParent(), (DefaultGraphCell)targetPort.getParent());
-				Object userObject = sourcePort.getUserObject();
-				if (userObject instanceof AbstractBean) {
-					System.out.println("MyMarqueeHandler.mouseReleased()");
-					AbstractBean bean = (AbstractBean)userObject;
-					bean.updateEdgeAttributes(edge, targetPort);
-					GraphLayoutCache graphLayoutCache = JGraphText.this.graph.getGraphLayoutCache();
-					graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
+				if (edge != null) {
+					Object userObject = sourcePort.getUserObject();
+					if (userObject instanceof AbstractBean) {
+						System.out.println("MyMarqueeHandler.mouseReleased()");
+						AbstractBean bean = (AbstractBean)userObject;
+						bean.updateEdgeAttributes(edge, targetPort);
+						GraphLayoutCache graphLayoutCache = JGraphText.this.graph.getGraphLayoutCache();
+						graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
+					}
 				}
 				e.consume();
 				// Else Repaint the Graph

@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.2 2005/07/14 12:06:26 bob Exp $
+* $Id: GraphTreeModel.java,v 1.3 2005/07/14 13:16:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 12:06:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -163,9 +163,9 @@ public class GraphTreeModel implements TreeModel {
 		final DefaultPort port = (DefaultPort) cell.getChildAt(0);
 
 		DefaultPort rootPort = (DefaultPort) this.root.getChildAt(0);
-		System.out.println();
-		System.out.println("GraphTreeModel.getChildCount() | parent:" +
-		parent);
+//		System.out.println();
+//		System.out.println("GraphTreeModel.getChildCount() | parent:" +
+//		parent);
 
 		this.cacheTreePath(cell);
 
@@ -178,7 +178,7 @@ public class GraphTreeModel implements TreeModel {
 				continue;
 			}
 
-			System.out.println("GraphTreeModel.getChildCount() | target:" + target);
+//			System.out.println("GraphTreeModel.getChildCount() | target:" + target);
 			int targetEdgeSourceCount = 0;
 			boolean sourceRootFound = false;
 			for (Object oEdge : target.getEdges()) {
@@ -229,7 +229,7 @@ public class GraphTreeModel implements TreeModel {
 			// //
 			// count += (sourceCount == 1 + (foundNotRootPort ? 1 : 0)) ? 1 : 0;
 		}
-		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
+//		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
 		return count;
 	}
 

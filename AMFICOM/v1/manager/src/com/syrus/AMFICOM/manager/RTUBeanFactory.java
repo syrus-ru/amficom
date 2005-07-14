@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -23,8 +23,8 @@ public class RTUBeanFactory extends AbstractBeanFactory {
 	private static RTUBeanFactory instance;
 	
 	private RTUBeanFactory() {
-		super("RTU", 
-			"RTU", 
+		super("Entity.RemoteTestUnit", 
+			"Entity.RemoteTestUnit.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
 			"com/syrus/AMFICOM/manager/resources/rtu.png");
 	}

@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+* $Id: UserBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import org.jgraph.graph.GraphConstants;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -27,11 +27,11 @@ public class UserBeanFactory extends AbstractBeanFactory {
 
 	private static UserBeanFactory instance;
 	
-	static int count = 0;
+	private static int count = 0;
 	
 	private UserBeanFactory() {
-		super("User", 
-			"User", 
+		super("Entity.User", 
+			"Entity.User", 
 			"com/syrus/AMFICOM/manager/resources/icons/user.gif", 
 			"com/syrus/AMFICOM/manager/resources/user.gif");
 	}
@@ -51,18 +51,27 @@ public class UserBeanFactory extends AbstractBeanFactory {
 	@Override
 	public AbstractBean createBean() {
 		final String name1 = "User" + (++count);
-		// TODO Auto-generated method stub
-		return new AbstractBean(null, null, null) {
-			@Override
-			public String toString() {
-				return name1;
-			}
+
+		Validator validator = new Validator() {
 			
+			public boolean isValid(	AbstractBean sourceBean,
+									AbstractBean targetBean) {
+				System.out.println("UserBeanFactory.Validator$1.isValid() | " 
+					+ sourceBean.getStorableObject() 
+					+ " -> " 
+					+ targetBean.getStorableObject());
+				return sourceBean != null && 
+					targetBean != null && 
+					sourceBean.getStorableObject().startsWith("User") &&
+					targetBean.getStorableObject().startsWith("ARM");
+			}
+		};
+		
+		return new AbstractBean(name1, validator, null) {
+
 			@Override
 			public void updateEdgeAttributes(	DefaultEdge edge,
 												DefaultPort port) {
-//				// TODO Auto-generated method stub
-				System.out.println(".updateEdgeAttributes()");
 				AttributeMap attributes = edge.getAttributes();
 				GraphConstants.setLineWidth(attributes, 10.0f);
 				GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_TECHNICAL);

@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBean.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+* $Id: AbstractBean.java,v 1.2 2005/07/14 13:16:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,22 +13,20 @@ import javax.swing.JPanel;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultPort;
 
-import com.syrus.AMFICOM.general.StorableObject;
-
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
  */
 public abstract class AbstractBean {
 
-	protected StorableObject storableObject;
+	protected String storableObject;
 	protected Validator validator;
 	protected JPanel propertyPanel;
 	
-	protected AbstractBean(final StorableObject storableObject,
+	protected AbstractBean(final String storableObject,
 	                       final Validator validator,
 	                       final JPanel propertyPanel) {
 		this.storableObject = storableObject;
@@ -36,7 +34,7 @@ public abstract class AbstractBean {
 		this.propertyPanel = propertyPanel;
 	}
 	
-	public final StorableObject getStorableObject() {
+	public final String getStorableObject() {
 		return this.storableObject;
 	}
 	

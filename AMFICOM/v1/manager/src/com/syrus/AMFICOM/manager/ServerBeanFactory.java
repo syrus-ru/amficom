@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -23,8 +23,8 @@ public class ServerBeanFactory extends AbstractBeanFactory {
 	private static ServerBeanFactory instance;
 	
 	private ServerBeanFactory() {
-		super("Server", 
-			"Server", 
+		super("Entity.Server", 
+			"Entity.Server", 
 			"com/syrus/AMFICOM/manager/resources/icons/server.gif", 
 			"com/syrus/AMFICOM/manager/resources/server.png");
 	}

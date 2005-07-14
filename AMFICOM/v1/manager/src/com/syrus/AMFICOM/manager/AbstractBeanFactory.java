@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,11 +13,9 @@ import java.net.URL;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import org.jgraph.graph.DefaultEdge;
-
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -61,13 +59,11 @@ public abstract class AbstractBeanFactory {
 	}
 	
 	public String getName() {
-		// TODO use i18n
-		return this.nameKey;
+		return LangModelManager.getString(this.nameKey);
 	}
 	
 	public String getShortName() {
-		// TODO use i18n
-		return this.shortNameKey;
+		return LangModelManager.getString(this.shortNameKey);
 	}
 }
 

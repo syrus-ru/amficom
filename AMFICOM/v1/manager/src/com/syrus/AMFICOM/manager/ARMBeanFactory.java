@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -22,9 +22,11 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	private static ARMBeanFactory instance;
 	
+	private static int count = 0;
+	
 	private ARMBeanFactory() {
-		super("AWP", 
-			"AWP", 
+		super("Entity.AutomatedWorkplace", 
+			"Entity.AutomatedWorkplace.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
 			"com/syrus/AMFICOM/manager/resources/arm.gif");
 	}
@@ -42,7 +44,24 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		return new AbstractBean(null, null, null) {
+		final String name1 = "ARM" + (++count);
+		// TODO Auto-generated method stub
+		
+		Validator validator = new Validator() {
+			
+			public boolean isValid(	AbstractBean sourceBean,
+									AbstractBean targetBean) {
+				System.out.println("ARMBeanFactory.Validator$1.isValid() | " 
+					+ sourceBean.getStorableObject() 
+					+ " -> " 
+					+ targetBean.getStorableObject());
+				return sourceBean != null && 
+					targetBean != null && 
+					sourceBean.getStorableObject().startsWith("ARM") &&
+					targetBean.getStorableObject().startsWith("Net");
+			}
+		};
+		return new AbstractBean(name1, validator, null) {
 
 			@Override
 			public void updateEdgeAttributes(	DefaultEdge edge,
