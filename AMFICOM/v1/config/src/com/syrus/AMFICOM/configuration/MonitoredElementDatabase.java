@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.76 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.77 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.77 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -53,14 +53,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	private static String		updateMultipleSQLValues;
 
 	private static final int	SIZE_LOCAL_ADDRESS_COLUMN	= 64;
-
-	public MonitoredElementDatabase() {
-		super();
-	}
-
-	public MonitoredElementDatabase(final boolean checkDependenciesOnInsert) {
-		super(checkDependenciesOnInsert);
-	}
 
 	private MonitoredElement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -101,10 +93,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE;
+				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

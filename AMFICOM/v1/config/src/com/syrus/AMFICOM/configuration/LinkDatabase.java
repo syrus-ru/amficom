@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.44 2005/07/14 16:08:05 bass Exp $
+ * $Id: LinkDatabase.java,v 1.45 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/14 18:32:31 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -44,9 +44,9 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private Link fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Link fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Link)
-			return (Link)storableObject;
+			return (Link) storableObject;
 		throw new IllegalDataException("LinkDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
@@ -88,13 +88,13 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Link link = this.fromStorableObject(storableObject);
-		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
-		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
-		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
-		String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Link link = this.fromStorableObject(storableObject);
+		final String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
+		final String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		final String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+		final String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
+		final String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
@@ -107,9 +107,10 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	}
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		Link link = this.fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Link link = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getType().getId());
 		preparedStatement.setString( ++startParameterNumber, link.getName());
@@ -123,7 +124,7 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Link link = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (link == null) {
@@ -140,11 +141,11 @@ public final class LinkDatabase extends CharacterizableDatabase {
 					0,
 					null);
 		}
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
-		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));
-		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER));
-		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
+		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));
+		final String supplier = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER));
+		final String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
 		LinkType linkType;
 		try {
 			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
@@ -171,8 +172,8 @@ public final class LinkDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Link link = this.fromStorableObject(storableObject);
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final Link link = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  link.getId() + "'; argument: " + arg);

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.37 2005/07/14 16:08:04 bass Exp $
+ * $Id: LinkTypeDatabase.java,v 1.38 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/14 16:08:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/07/14 18:32:31 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -36,10 +36,12 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.LINK_TYPE_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -53,6 +55,7 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -66,9 +69,10 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		LinkType linkType = this.fromStorableObject(storableObject);
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final LinkType linkType = this.fromStorableObject(storableObject);
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(linkType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ linkType.getSort().value() + COMMA
@@ -78,16 +82,17 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	private LinkType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private LinkType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof LinkType)
 			return (LinkType)storableObject;
 		throw new IllegalDataException("LinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
-			PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		LinkType linkType = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final LinkType linkType = this.fromStorableObject(storableObject);
 		preparedStatement.setString( ++startParameterNumber, linkType.getCodename());
 		preparedStatement.setString( ++startParameterNumber, linkType.getDescription());
 		preparedStatement.setString( ++startParameterNumber, linkType.getName());
@@ -98,7 +103,8 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		LinkType linkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (linkType == null) {
@@ -114,23 +120,24 @@ public final class LinkTypeDatabase extends CharacterizableDatabase {
 												null);			
 		}
 		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-									resultSet.getInt(LinkTypeWrapper.COLUMN_KIND),
-									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER)),
-									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),									
-									DatabaseIdentifier.getIdentifier(resultSet, LinkTypeWrapper.COLUMN_IMAGE_ID));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				resultSet.getInt(LinkTypeWrapper.COLUMN_KIND),
+				DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER)),
+				DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),
+				DatabaseIdentifier.getIdentifier(resultSet, LinkTypeWrapper.COLUMN_IMAGE_ID));
 
 		return linkType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		LinkType linkType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final LinkType linkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  linkType.getId() + "'; argument: " + arg);

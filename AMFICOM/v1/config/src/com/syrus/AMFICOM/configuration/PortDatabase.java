@@ -1,5 +1,5 @@
 /*-
- * $Id: PortDatabase.java,v 1.65 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.66 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.66 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -36,14 +36,6 @@ public final class PortDatabase extends CharacterizableDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	public PortDatabase() {
-		super();
-	}
-
-	public PortDatabase(final boolean checkDependenciesOnInsert) {
-		super(checkDependenciesOnInsert);
-	}
 
 	private Port fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Port)
@@ -83,7 +75,7 @@ public final class PortDatabase extends CharacterizableDatabase {
 		final Identifier typeId = port.getType().getId();
 		final Identifier equipmentId = port.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId);
 	}
 

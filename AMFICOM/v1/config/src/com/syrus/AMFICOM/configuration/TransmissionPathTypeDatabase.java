@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.38 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.39 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -30,14 +30,6 @@ import com.syrus.util.database.DatabaseString;
 public final class TransmissionPathTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	public TransmissionPathTypeDatabase() {
-		super();
-	}
-
-	public TransmissionPathTypeDatabase(final boolean checkDependenciesOnInsert) {
-		super(checkDependenciesOnInsert);
-	}
 
 	private TransmissionPathType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPathType)
@@ -73,9 +65,9 @@ public final class TransmissionPathTypeDatabase extends CharacterizableDatabase 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE;
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(transmissionPathType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPathType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPathType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

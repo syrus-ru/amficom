@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.46 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.47 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -32,14 +32,6 @@ public final class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	public MeasurementPortTypeDatabase() {
-		super();
-	}
-
-	public MeasurementPortTypeDatabase(final boolean checkDependenciesOnInsert) {
-		super(checkDependenciesOnInsert);
-	}
 
 	private MeasurementPortType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementPortType)
@@ -75,9 +67,9 @@ public final class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		final String sql = APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE;
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPortType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

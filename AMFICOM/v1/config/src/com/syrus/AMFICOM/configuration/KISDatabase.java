@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.78 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.79 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
@@ -29,23 +20,19 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.79 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class KISDatabase extends CharacterizableDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-
-	protected static final int RETRIEVE_MONITORED_ELEMENTS = 1;
 
 	private static final int SIZE_HOSTNAME_COLUMN = 256;
 	private static String columns;
@@ -158,147 +145,9 @@ public final class KISDatabase extends CharacterizableDatabase {
 			throws IllegalDataException, RetrieveObjectException {
 		final KIS kis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
-			case RETRIEVE_MONITORED_ELEMENTS:
-				return this.retrieveMonitoredElements(kis);
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  kis.getId() + "'; argument: " + arg);
 				return null;
-		}
-	}
-
-	/**
-	 * @deprecated
-	 * @param kis
-	 * @return
-	 * @throws RetrieveObjectException
-	 */
-	private List retrieveMonitoredElements(final KIS kis) throws RetrieveObjectException {
-		final List monitoredElements = new ArrayList();
-
-		final String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
-		final String sql = SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MONITOREDELEMENT
-			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID
-				+ SQL_FROM + ObjectEntities.MEASUREMENTPORT
-				+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + EQUALS + kisIdStr
-			+ CLOSE_BRACKET;
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				try {
-					monitoredElements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							StorableObjectWrapper.COLUMN_ID), true));
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-			}
-		} catch (SQLException sqle) {
-			String mesg = "KISDatabase.retrieveMonitoredElements | Cannot retrieve monitored elements for kis " + kisIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-		return monitoredElements;
-	}
-
-	/**
-	 * @deprecated
-	 * @param kiss
-	 * @return
-	 * @throws RetrieveObjectException
-	 */
-  public Map retrieveMonitoredElementsByOneQuery(List kiss) throws RetrieveObjectException {
-		if ((kiss == null) || (kiss.isEmpty()))
-			return null;
-
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-		+ ObjectEntities.MONITOREDELEMENT + DOT + StorableObjectWrapper.COLUMN_ID + COMMA
-		+ ObjectEntities.MEASUREMENTPORT + DOT + MeasurementPortWrapper.COLUMN_KIS_ID
-		+ SQL_FROM + ObjectEntities.MONITOREDELEMENT + COMMA + ObjectEntities.MEASUREMENTPORT
-		+ SQL_WHERE + ObjectEntities.MONITOREDELEMENT + DOT + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN
-		+ OPEN_BRACKET
-			+ SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT
-			+ SQL_WHERE + MeasurementPortWrapper.COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET);
-
-		int i = 1;
-		for (Iterator it = kiss.iterator(); it.hasNext();i++) {
-			KIS kis = (KIS)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(kis.getId()));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(MeasurementPortWrapper.COLUMN_KIS_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
-		}
-		sql.append(CLOSE_BRACKET);
-		sql.append(CLOSE_BRACKET);
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("KISDatabase.retrieveKISMonitoredElementsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-
-			Map meIdMap = new HashMap();
-			Identifier kisId;
-			List meIds;
-			while (resultSet.next()) {
-				kisId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_KIS_ID);
-				meIds = (List) meIdMap.get(kisId);
-				if (meIds == null) {
-					meIds = new LinkedList();
-					meIdMap.put(kisId, meIds);
-				}
-				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-			}
-
-			return meIdMap;
-		} catch (SQLException sqle) {
-			String mesg = "KISDatabase.retrieveKISMonitoredElementsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
 		}
 	}
 

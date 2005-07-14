@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.65 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.66 2005/07/14 18:32:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.66 $, $Date: 2005/07/14 18:32:31 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -42,14 +42,6 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 
 	private static String		columns;
 	private static String		updateMultipleSQLValues;
-
-	public TransmissionPathDatabase() {
-		super();
-	}
-
-	public TransmissionPathDatabase(final boolean checkDependenciesOnInsert) {
-		super(checkDependenciesOnInsert);
-	}
 
 	private TransmissionPath fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
@@ -94,8 +86,8 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}
