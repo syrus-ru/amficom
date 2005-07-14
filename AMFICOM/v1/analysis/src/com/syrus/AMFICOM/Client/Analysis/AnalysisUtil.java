@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.Etalon;
@@ -12,6 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -21,12 +21,11 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
@@ -57,12 +56,12 @@ public class AnalysisUtil
 				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-			java.util.Set parameterTypeSet = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			java.util.Set<ParameterType> parameterTypeSet = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			if (parameterTypeSet.isEmpty())
 				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
 			//return (ParameterType) parameterTypeSet.iterator().next();
-			ParameterType ret = (ParameterType) parameterTypeSet.iterator().next();
+			ParameterType ret = parameterTypeSet.iterator().next();
 			if (ret.getDataType() != dataType)
 				throw new ApplicationException("unexpected dataType");
 			return ret;
@@ -77,10 +76,9 @@ public class AnalysisUtil
 				ObjectEntities.ANALYSIS_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);			
 
-		Collection aTypes = StorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
-		for (Iterator it = aTypes.iterator(); it.hasNext();)
+		Collection<AnalysisType> aTypes = StorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+		for (AnalysisType type: aTypes)
 		{
-			AnalysisType type = (AnalysisType)it.next();
 			if (type.getCodename().equals(codename))
 				return type;
 		}
@@ -159,7 +157,8 @@ public class AnalysisUtil
 		Heap.setEtalonEtalonMetas(metas);
 	}
 
-	public static ParameterSet createCriteriaSet(Identifier userId, java.util.Set meIds)
+	public static ParameterSet createCriteriaSet(Identifier userId,
+			java.util.Set<Identifier> meIds)
     throws ApplicationException
 	{
 		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
@@ -187,7 +186,8 @@ public class AnalysisUtil
 		}
 	}
 
-	public static ParameterSet createEtalon(Identifier userId, java.util.Set meIds)
+	public static ParameterSet createEtalon(Identifier userId,
+			java.util.Set<Identifier> meIds)
 	throws ApplicationException
 	{
 		Parameter[] params = new Parameter[2];
