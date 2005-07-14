@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.27 2005/07/14 11:05:47 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.28 2005/07/14 13:01:42 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.27 $, $Date: 2005/07/14 11:05:47 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/14 13:01:42 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -84,6 +84,7 @@ public final class MapPropertiesManager
  	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";
  	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";
  	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
+ 	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating"; 	
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -100,6 +101,7 @@ public final class MapPropertiesManager
 	protected static String useTopologicalImageCache = "false";
 	protected static String optimizeLinks = "false";
 	protected static String topoImageMaxTimeWait = "30000";
+	protected static String moveMouseNavigating = "true";	
 	
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
@@ -429,6 +431,7 @@ public final class MapPropertiesManager
 		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);
 		topoImageMaxTimeWait = properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT);		
 		optimizeLinks = properties.getProperty(KEY_OPTIMIZE_LINKS);
+		moveMouseNavigating = properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING);		
 		
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
@@ -448,6 +451,7 @@ public final class MapPropertiesManager
 		descreteNavigation = "false";
 		useTopologicalImageCache = "false";
 		optimizeLinks = "false";
+		moveMouseNavigating = "true";		
 		topoImageMaxTimeWait = "30000";
 		viewerClass = "";
 		connectionClass = "";		
@@ -1053,5 +1057,8 @@ public final class MapPropertiesManager
 	
 	public static int getTopoImageMaxTimeWait() {
 		return Integer.parseInt(topoImageMaxTimeWait);
+	}
+	public static boolean isMoveMouseNavigating() {
+		return Boolean.parseBoolean(moveMouseNavigating);
 	}
 }

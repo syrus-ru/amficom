@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.10 2005/07/14 11:05:47 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.11 2005/07/14 13:01:42 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 11:05:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 13:01:42 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -168,6 +168,7 @@ public class TopologicalImageCache implements MapImageRenderer
 	private final MapContext mapContext;
 	
 	private int maximumTimeWait = MapPropertiesManager.getTopoImageMaxTimeWait();
+	private boolean mouseMovedWhileNavigating = MapPropertiesManager.isMoveMouseNavigating();
 	
 	public TopologicalImageCache(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
@@ -302,9 +303,8 @@ public class TopologicalImageCache implements MapImageRenderer
 			this.lastActiveArea.setSize(0,0);
 			this.nonActiveZoneLastSector.setSize(0,0);				
 			
-			//TODO эти строки должны быть закоментарены, если в MapMouseListener'е
-			//курсор сдвигается после изменения центра
-//			reactMouseLocation();
+			if (!this.mouseMovedWhileNavigating)
+				reactMouseLocation();
 		}
 	}
 

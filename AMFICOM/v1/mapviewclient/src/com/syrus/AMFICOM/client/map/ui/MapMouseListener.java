@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.43 2005/07/12 13:37:17 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.44 2005/07/14 13:01:42 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.43 $, $Date: 2005/07/12 13:37:17 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/07/14 13:01:42 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -74,6 +74,9 @@ public final class MapMouseListener implements MouseListener
 	private static final double ACTIVE_AREA_SIZE = 0.25;
 
 	private NetMapViewer netMapViewer;
+	
+	private boolean mouseMovedWhileNavigating =
+		MapPropertiesManager.isMoveMouseNavigating();
 
 	public MapMouseListener(NetMapViewer netMapViewer)
 		throws MapDataException
@@ -269,17 +272,19 @@ public final class MapMouseListener implements MouseListener
 				
 				this.netMapViewer.setCenter(newCenter);
 				
-				//Курсор ставим в ту же (в топографических координатах) точку - 
-				//центр уже сменен
-				Point newMousePosition = 
-					converter.convertMapToScreen(mousePositionSph);
+				if (this.mouseMovedWhileNavigating){
+					//Курсор ставим в ту же (в топографических координатах) точку - 
+					//центр уже сменен
+					Point newMousePosition = 
+						converter.convertMapToScreen(mousePositionSph);
+					
+					Point frameLocation = this.netMapViewer.getVisualComponent().getLocationOnScreen();
+					
+					this.robot.mouseMove(
+							frameLocation.x + newMousePosition.x,
+							frameLocation.y + newMousePosition.y);
+				}
 				
-				Point frameLocation = this.netMapViewer.getVisualComponent().getLocationOnScreen();
-				
-				this.robot.mouseMove(
-						frameLocation.x + newMousePosition.x,
-						frameLocation.y + newMousePosition.y);
-
 				this.netMapViewer.getLogicalNetLayer().getMapState().setOperationMode(MapState.NAVIGATE);
 				return false;
 			}
@@ -455,7 +460,8 @@ public final class MapMouseListener implements MouseListener
 						finishMoveHand(me);
 						break;
 					case MapState.NAVIGATE:
-						this.netMapViewer.setCursor(Cursor.getDefaultCursor());
+						if (this.mouseMovedWhileNavigating) 
+							this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 						break;
 					case MapState.MOVE_FIXDIST:
 						// fall through
