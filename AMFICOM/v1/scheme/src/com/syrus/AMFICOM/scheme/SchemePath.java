@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.49 2005/07/14 16:46:12 bass Exp $
+ * $Id: SchemePath.java,v 1.50 2005/07/14 19:27:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/14 16:46:12 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/14 19:27:31 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -358,7 +358,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public void removeCharacteristic(final Characteristic characteristic) {
 		assert characteristic != null: NON_NULL_EXPECTED;
-		assert getCharacteristics().contains(characteristic): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		this.characteristics.remove(characteristic);
 		super.markAsChanged();
 	}
@@ -373,7 +373,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public void removePathElement(final PathElement pathElement) {
 		assert pathElement != null: NON_NULL_EXPECTED;
-		assert getPathElements().contains(pathElement): REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert pathElement.getParentSchemePathId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		pathElement.setParentSchemePath(null);
 	}
 
@@ -776,8 +776,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	boolean assertContains(final PathElement pathElement) {
 		final SortedSet<PathElement> pathElements = getPathElements();
-		return pathElements.contains(pathElement)
-				&& pathElements.headSet(pathElement).size() == pathElement.getSequentialNumber();
+		return pathElement.getParentSchemePathId().equals(super.id)
+				&& pathElements.headSet(pathElement).size() == pathElement.sequentialNumber;
 	}
 
 	/**

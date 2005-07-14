@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.45 2005/07/14 18:40:45 bass Exp $
+ * $Id: PathElement.java,v 1.46 2005/07/14 19:27:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/14 18:40:45 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/14 19:27:31 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -78,7 +78,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	Identifier parentSchemePathId;
 
-	private int sequentialNumber;
+	int sequentialNumber;
 
 	private Kind kind;
 
