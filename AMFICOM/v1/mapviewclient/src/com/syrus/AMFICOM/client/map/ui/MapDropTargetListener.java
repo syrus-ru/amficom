@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.26 2005/07/01 16:20:39 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.27 2005/07/14 17:12:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2005/07/01 16:20:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/14 17:12:29 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -133,6 +133,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		logicalNetLayer.getCommandList().add(cmd);
 		logicalNetLayer.getCommandList().execute();
+		logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
