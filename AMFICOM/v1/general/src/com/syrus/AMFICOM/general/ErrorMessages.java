@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.20 2005/07/14 11:29:21 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.21 2005/07/14 13:29:53 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/07/14 11:29:21 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/14 13:29:53 $
  * @module general_v1
  */
 public interface ErrorMessages {
@@ -37,7 +37,10 @@ public interface ErrorMessages {
 	String TIMEOUT_TOO_SHORT = "Timeout too short, should be at least 10 min";
 	String METHOD_NOT_NEEDED = "Method not needed";
 	String OBJECTS_NOT_OF_THE_SAME_ENTITY = "Objects not of the same entity";
+	String OBJECTS_NOT_OF_THE_SAME_GROUP = "Objects not of the same group";
 	String ILLEGAL_ENTITY_CODE = "Illegal entity code";
 	String ILLEGAL_GROUP_CODE = "Illegal group code";
+	String GROUP_POOL_NOT_REGISTERED = "Group pool not registered";
+	String ENTITY_POOL_NOT_REGISTERED = "Entity pool not registered";
 	String ËıÏÈ_ıÛÙÔÍ = "Ë’Ã… –’”‘œ -‘œ, ¡?";
 }
