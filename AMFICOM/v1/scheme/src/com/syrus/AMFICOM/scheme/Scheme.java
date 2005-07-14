@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.50 2005/07/13 11:08:01 bass Exp $
+ * $Id: Scheme.java,v 1.51 2005/07/14 07:43:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
@@ -56,7 +58,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/13 11:08:01 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/14 07:43:05 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -86,8 +88,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	private Identifier ugoCellId;
 
 	private Identifier schemeCellId;
-
-	private Identifier currentSchemeMonitoringSolutionId;
 
 	Identifier parentSchemeElementId;
 
@@ -280,7 +280,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 				&& this.symbolId != null
 				&& this.ugoCellId != null
 				&& this.schemeCellId != null
-				&& this.currentSchemeMonitoringSolutionId != null
 				&& this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.mapId);
@@ -314,10 +313,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.label;
 	}
 
-	public Map getMap() {
+	Identifier getMapId() {
 		assert this.mapId != null: OBJECT_NOT_INITIALIZED;
+		assert this.mapId.isVoid() || this.mapId.getMajor() == MAP_CODE;
+		return this.mapId;
+	}
+
+	/**
+	 * A wrapper around {@link #getMapId()}.
+	 */
+	public Map getMap() {
 		try {
-			return (Map) StorableObjectPool.getStorableObject(this.mapId, true);
+			return (Map) StorableObjectPool.getStorableObject(this.getMapId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -332,10 +339,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.name;
 	}
 
+	Identifier getParentSchemeElementId() {
+		assert this.parentSchemeElementId != null : OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeElementId.isVoid() || this.parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		return this.parentSchemeElementId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeElementId()}.
+	 */
 	public SchemeElement getParentSchemeElement() {
-		assert this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.parentSchemeElementId, true);
+			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -355,14 +370,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
+	Identifier getSchemeCellId() {
+		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.schemeCellId.isVoid() || this.schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.schemeCellId;
+	}
+
 	/**
+	 * A wrapper around {@link #getSchemeCellId()}.
+	 *
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
-		assert this.schemeCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.schemeCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -413,14 +434,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
+	Identifier getSymbolId() {
+		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
+		assert this.symbolId.isVoid() || this.symbolId.getMajor() == IMAGERESOURCE_CODE;
+		return this.symbolId;
+	}
+
 	/**
+	 * A wrapper around {@link #getSymbolId()}.
+	 *
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
-		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (BitmapImageResource) StorableObjectPool
-					.getStorableObject(this.symbolId, true);
+			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -453,14 +480,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 				this.parentSchemeElementId.getTransferable());
 	}
 
+	Identifier getUgoCellId() {
+		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
+		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		return this.ugoCellId;
+	}
+
 	/**
+	 * A wrapper around {@link #getUgoCellId()}.
+	 *
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
-		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		try {
-			return (SchemeImageResource) StorableObjectPool
-					.getStorableObject(this.ugoCellId, true);
+			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
