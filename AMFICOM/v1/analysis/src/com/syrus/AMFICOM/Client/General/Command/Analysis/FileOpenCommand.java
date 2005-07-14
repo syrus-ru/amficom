@@ -82,6 +82,34 @@ public class FileOpenCommand extends AbstractCommand
         return bs;
     }
 
+    private static BellcoreStructure loadBS(File selectedFile) {
+		System.out.println("DEBUG: the user is opening file " + selectedFile.getAbsolutePath()); // FIXME: debugging purpose only
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		BellcoreStructure bs = readTraceFromFile(selectedFile);
+		if (bs != null) {
+			bs.title = selectedFile.getName();
+		}
+		return bs;
+    }
+
+    private void processBS(BellcoreStructure bs) {
+		boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
+		if (!Heap.hasEmptyAllBSMap())
+		{
+			if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
+				new FileCloseCommand(aContext).execute();
+		}
+
+		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		Heap.setBSPrimaryTrace(bs);
+		Heap.setActiveContextActivePathIDToEmptyString();
+		Heap.makePrimaryAnalysis();
+
+		// FIXME: debug-only code
+        if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
+            Heap.setMTMEtalon(Heap.getMTMEtalon());
+    }
+
 	public void execute()
 	{
 		Properties properties = new Properties();
@@ -109,40 +137,23 @@ public class FileOpenCommand extends AbstractCommand
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			System.out.println("DEBUG: the user is opening file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
-			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			BellcoreStructure bs = readTraceFromFile(chooser.getSelectedFile());
-			if (bs == null)
-			{
+			File selectedFile = chooser.getSelectedFile();
+			BellcoreStructure bs = loadBS(selectedFile);
+
+			if (bs == null) {
 				JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-						LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
+						LangModelAnalyse.getString("messageReadError") + ":\n" + selectedFile.getAbsolutePath(),
 						LangModelAnalyse.getString("messageError"),
 						JOptionPane.OK_OPTION);
 				Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 				return;
 			}
-            boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
-			if (!Heap.hasEmptyAllBSMap())
-			{
-				if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
-					new FileCloseCommand(aContext).execute();
-			}
 
-			String activeRefId = chooser.getSelectedFile().getName();
-			bs.title = activeRefId;
-
-			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-			Heap.setBSPrimaryTrace(bs);
-			Heap.setActiveContextActivePathIDToEmptyString();
-			Heap.makePrimaryAnalysis();
-
-			// FIXME: debug-only code
-            if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
-                Heap.setMTMEtalon(Heap.getMTMEtalon());
+			processBS(bs);
 
 			try
 			{
-				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.setProperty("lastdir", selectedFile.getParent().toLowerCase());
 				properties.store(new FileOutputStream(propertiesFileName), null);
 			} catch (IOException ex)
 			{
