@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.33 2005/07/03 19:16:27 bass Exp $
+ * $Id: Event.java,v 1.34 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/03 19:16:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -196,11 +196,11 @@ public final class Event extends StorableObject implements TypedObject {
 		return this.description;
 	}
 
-	public Set getParameters() {
+	public Set<EventParameter> getParameters() {
 		return Collections.unmodifiableSet(this.eventParameters);
 	}
 
-	public Set getEventSourceIds() {
+	public Set<Identifier> getEventSourceIds() {
 		return Collections.unmodifiableSet(this.eventSourceIds);
 	}
 

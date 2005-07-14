@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.33 2005/07/14 16:08:03 bass Exp $
+ * $Id: EventDatabase.java,v 1.34 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -52,23 +52,26 @@ public final class EventDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private Event fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Event fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Event)
 			return (Event) storableObject;
 		throw new IllegalDataException("EventDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Event event = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Event event = this.fromStorableObject(storableObject);
 		this.retrieveEntity(event);
 		this.retrieveEventParametersByOneQuery(Collections.singleton(event));
 		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(event));
 	}	
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EVENT_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -77,6 +80,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -85,24 +89,28 @@ public final class EventDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		Event event = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Event event = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, event.getType().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, event.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Event event = this.fromStorableObject(storableObject);
-		String values = DatabaseIdentifier.toSQLString(event.getType().getId()) + COMMA
+		final Event event = this.fromStorableObject(storableObject);
+		final String values = DatabaseIdentifier.toSQLString(event.getType().getId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(event.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+		final Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 				null,
 				0L,
 				null,
@@ -118,20 +126,20 @@ public final class EventDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-								DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							  resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-								eventType,
-								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				eventType,
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return event;
 	}
 
-	private void retrieveEventParametersByOneQuery(Set events) throws RetrieveObjectException {
+	private void retrieveEventParametersByOneQuery(final Set<Event> events) throws RetrieveObjectException {
     if ((events == null) || (events.isEmpty()))
 			return;
 
-    StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
+    final StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE
@@ -140,21 +148,18 @@ public final class EventDatabase extends StorableObjectDatabase {
 				+ SQL_WHERE);
     stringBuffer.append(idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
 
-    Map eventParametersMap = new HashMap();
-    Identifier eventId;
-    Set eventParameters;
+    final Map<Identifier, Set<EventParameter>> eventParametersMap = new HashMap<Identifier, Set<EventParameter>>();
 
     Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("EventDatabase.retrieveEventParametersByOneQuery | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
-			ParameterType parameterType;
-			EventParameter eventParameter;
 			while (resultSet.next()) {
+				ParameterType parameterType;
 				try {
 					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_TYPE_ID), true);
@@ -162,20 +167,20 @@ public final class EventDatabase extends StorableObjectDatabase {
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
-				eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				final EventParameter eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.LINK_COLUMN_PARAMETER_VALUE)));
-				eventId = DatabaseIdentifier.getIdentifier(resultSet, EventWrapper.LINK_COLUMN_EVENT_ID);
-				eventParameters = (Set) eventParametersMap.get(eventId);
+				final Identifier eventId = DatabaseIdentifier.getIdentifier(resultSet, EventWrapper.LINK_COLUMN_EVENT_ID);
+				Set<EventParameter> eventParameters = eventParametersMap.get(eventId);
 				if (eventParameters == null) {
-					eventParameters = new HashSet();
+					eventParameters = new HashSet<EventParameter>();
 					eventParametersMap.put(eventId, eventParameters);
 				}
 				eventParameters.add(eventParameter);
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EventDatabase.retrieveEventParametersByOneQuery | Cannot retrieve parameters for event -- " + sqle.getMessage();
+			final String mesg = "EventDatabase.retrieveEventParametersByOneQuery | Cannot retrieve parameters for event -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -195,37 +200,34 @@ public final class EventDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		Event event;
-		for (Iterator it = events.iterator(); it.hasNext();) {
-			event = (Event) it.next();
-			eventId = event.getId();
-			eventParameters = (Set) eventParametersMap.get(eventId);
+		for (final Event event : events) {
+			final Identifier eventId = event.getId();
+			final Set<EventParameter> eventParameters = eventParametersMap.get(eventId);
 
 			event.setEventParameters0(eventParameters);
 		}
 	}
 
-	private void retrieveEventSourceIdsByOneQuery(Set events) throws RetrieveObjectException {
+	private void retrieveEventSourceIdsByOneQuery(final Set<Event> events) throws RetrieveObjectException {
 		if ((events == null) || (events.isEmpty()))
 			return;
 
-		Map eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
+		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
 				ObjectEntities.EVENTSOURCELINK,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 
-		Event event;
-		Set eventSourceIds;
-		for (Iterator it = events.iterator(); it.hasNext();) {
-			event = (Event) it.next();
-			eventSourceIds = (Set) eventSourceIdsMap.get(event.getId());
+		for (final Event event : events) {
+			final Identifier eventId = event.getId();
+			final Set<Identifier> eventSourceIds = eventSourceIdsMap.get(eventId);
 
 			event.setEventSourceIds0(eventSourceIds);
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Event event = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final Event event = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
@@ -234,8 +236,9 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		Event event = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+		final Event event = this.fromStorableObject(storableObject);
 		try {
 			super.insertEntity(event);
 			this.insertEventParameters(event);
@@ -250,11 +253,12 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Event event = this.fromStorableObject((StorableObject) it.next());
+			final Event event = this.fromStorableObject((StorableObject) it.next());
 			this.insertEventParameters(event);
 		}
 
@@ -266,10 +270,10 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertEventParameters(Event event) throws CreateObjectException {
-		Identifier eventId = event.getId();
-		Set eventParameters = event.getParameters();
-		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER
+	private void insertEventParameters(final Event event) throws CreateObjectException {
+		final Identifier eventId = event.getId();
+		final Set<EventParameter> eventParameters = event.getParameters();
+		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER
 				+ OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -283,14 +287,13 @@ public final class EventDatabase extends StorableObjectDatabase {
 				+ CLOSE_BRACKET;
 
 		PreparedStatement preparedStatement = null;
-		EventParameter eventParameter;
+		
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator it = eventParameters.iterator(); it.hasNext();) {
-				eventParameter = (EventParameter) it.next();
+			for (final EventParameter eventParameter : eventParameters) {
 				parameterId = eventParameter.getId();
 				parameterTypeId = eventParameter.getType().getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
@@ -304,7 +307,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "EventDatabase.insertEventParameters | Cannot insert parameter '" + parameterId.toString()
+			final String mesg = "EventDatabase.insertEventParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for event '" + eventId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
@@ -323,18 +326,21 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
-			this.updateEventSources(Collections.singleton(storableObject));
+			final Event event = this.fromStorableObject(storableObject);
+			this.updateEventSources(Collections.singleton(event));
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -345,14 +351,13 @@ public final class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateEventSources(Set events) throws IllegalDataException, UpdateObjectException {
+	private void updateEventSources(final Set<Event> events) throws IllegalDataException, UpdateObjectException {
 		if (events == null || events.isEmpty())
 			return;
 
-		Map eventSourceIdsMap = new HashMap();
-		for (Iterator it = events.iterator(); it.hasNext();) {
-			Event event = this.fromStorableObject((StorableObject) it.next());
-			Set eventSourceIds = event.getEventSourceIds();
+		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Event event : events) {
+			final Set<Identifier> eventSourceIds = event.getEventSourceIds();
 			eventSourceIdsMap.put(event.getId(), eventSourceIds);
 		}
 
@@ -362,21 +367,23 @@ public final class EventDatabase extends StorableObjectDatabase {
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 	}
 
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
-		this.retrieveEventParametersByOneQuery(collection);
-		this.retrieveEventSourceIdsByOneQuery(collection);
-		return collection;
+	@Override
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set objects = super.retrieveByCondition(conditionQuery);
+		this.retrieveEventParametersByOneQuery(objects);
+		this.retrieveEventSourceIdsByOneQuery(objects);
+		return objects;
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		//Event event = this.fromStorableObject(storableObject);
 		assert (id.getMajor() == ObjectEntities.EVENT_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
-		String eventIdStr = DatabaseIdentifier.toSQLString(id);
+		final String eventIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM

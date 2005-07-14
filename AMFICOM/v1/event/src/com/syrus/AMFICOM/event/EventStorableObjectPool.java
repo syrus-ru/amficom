@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.34 2005/07/12 08:40:58 bass Exp $
+ * $Id: EventStorableObjectPool.java,v 1.35 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/12 08:40:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -40,7 +40,7 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 	private static EventStorableObjectPool instance;
 
 
-	private EventStorableObjectPool(Class cacheMapClass) {
+	private EventStorableObjectPool(final Class cacheMapClass) {
 		super(OBJECT_POOL_MAP_SIZE, ObjectGroupEntities.EVENT_GROUP_CODE, cacheMapClass);
 
 		registerFactory(ObjectEntities.EVENT_TYPE_CODE, new EventTypeFactory());
@@ -135,7 +135,8 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids) throws ApplicationException {
+	@Override
+	protected Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
 		final short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.EVENT_TYPE_CODE:
@@ -151,6 +152,7 @@ public final class EventStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.18 2005/06/17 11:01:03 bass Exp $
+ * $Id: EventSourceDatabase.java,v 1.19 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/17 11:01:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public final class EventSourceDatabase extends StorableObjectDatabase {
@@ -36,10 +36,12 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EVENTSOURCE_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE + COMMA
@@ -52,6 +54,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -64,145 +67,143 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	private EventSource fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private EventSource fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof EventSource)
 			return (EventSource) storableObject;
 		throw new IllegalDataException("EventSourceDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		EventSource eventSource = this.fromStorableObject(storableObject);
-		Identifier sourceEntityId = eventSource.getSourceEntityId();
-		short sourceEntityCode = sourceEntityId.getMajor();
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final EventSource eventSource = this.fromStorableObject(storableObject);
+		final Identifier sourceEntityId = eventSource.getSourceEntityId();
+		final short sourceEntityCode = sourceEntityId.getMajor();
 		preparedStatement.setShort(++startParameterNumber, sourceEntityCode);
 		switch (sourceEntityCode) {
 			case ObjectEntities.MCM_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ObjectEntities.PORT_CODE:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ObjectEntities.EQUIPMENT_CODE:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ObjectEntities.TRANSPATH_CODE:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
 			case ObjectEntities.LINK_CODE:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, sourceEntityId);
 				break;
 			default:
-				throw new IllegalDataException("Event source for entity code "
-						+ sourceEntityCode
-						+ ", entity '"
-						+ ObjectEntities.codeToString(sourceEntityCode)
-						+ "' not implemented");
+				throw new IllegalDataException("Event source for entity code " + sourceEntityCode
+						+ ", entity '" + ObjectEntities.codeToString(sourceEntityCode) + "' not implemented");
 		}
 		return startParameterNumber;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		EventSource eventSource = this.fromStorableObject(storableObject);
-		Identifier sourceEntityId = eventSource.getSourceEntityId();
-		short sourceEntityCode = sourceEntityId.getMajor();
-		StringBuffer buffer = new StringBuffer(Short.toString(sourceEntityCode));
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final EventSource eventSource = this.fromStorableObject(storableObject);
+		final Identifier sourceEntityId = eventSource.getSourceEntityId();
+		final short sourceEntityCode = sourceEntityId.getMajor();
+		final StringBuffer buffer = new StringBuffer(Short.toString(sourceEntityCode));
 		buffer.append(COMMA);
 		switch (sourceEntityCode) {
 			case ObjectEntities.MCM_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				break;
 			case ObjectEntities.PORT_CODE:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				break;
 			case ObjectEntities.EQUIPMENT_CODE:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				break;
 			case ObjectEntities.TRANSPATH_CODE:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				break;
 			case ObjectEntities.LINK_CODE:
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString((Identifier) null));
+				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(sourceEntityId));
 				break;
 			default:
-				throw new IllegalDataException("Event source for entity code "
-						+ sourceEntityCode
-						+ ", entity '"
-						+ ObjectEntities.codeToString(sourceEntityCode)
-						+ "' not implemented");
+				throw new IllegalDataException("Event source for entity code " + sourceEntityCode
+						+ ", entity '" + ObjectEntities.codeToString(sourceEntityCode) + "' not implemented");
 		}
 		return buffer.toString();
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
-		EventSource eventSource = (storableObject == null) ? new EventSource(DatabaseIdentifier.getIdentifier(resultSet,
+		final EventSource eventSource = (storableObject == null) ? new EventSource(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
 				null,
 				0L,
 				null) : this.fromStorableObject(storableObject);
-		short sourceEntityCode = resultSet.getShort(EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE);
+		final short sourceEntityCode = resultSet.getShort(EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE);
 		Identifier sourceEntityId = null;
 		switch (sourceEntityCode) {
 			case ObjectEntities.MCM_CODE:
@@ -221,11 +222,8 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_LINK_ID);
 				break;
 			default:
-				throw new IllegalDataException("Event source for entity code "
-						+ sourceEntityCode
-						+ ", entity '"
-						+ ObjectEntities.codeToString(sourceEntityCode)
-						+ "' not implemented");
+				throw new IllegalDataException("Event source for entity code " + sourceEntityCode
+						+ ", entity '" + ObjectEntities.codeToString(sourceEntityCode) + "' not implemented");
 		}
 		eventSource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -237,14 +235,16 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		return eventSource;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		EventSource eventSource = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final EventSource eventSource = this.fromStorableObject(storableObject);
 		this.retrieveEntity(eventSource);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		EventSource eventSource = this.fromStorableObject(storableObject);
+		final EventSource eventSource = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventSource.getId() + "'; argument: " + arg);
@@ -252,12 +252,14 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		EventSource eventSource = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		final EventSource eventSource = this.fromStorableObject(storableObject);
 		super.insertEntity(eventSource);
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 

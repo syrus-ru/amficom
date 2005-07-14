@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.36 2005/07/05 16:10:22 bass Exp $
+ * $Id: EventType.java,v 1.37 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/05 16:10:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -57,8 +56,8 @@ public final class EventType extends StorableObjectType {
 	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypeIds = new HashSet();
-		this.userAlertKindsMap = new HashMap();
+		this.parameterTypeIds = new HashSet<Identifier>();
+		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 
 		final EventTypeDatabase database = (EventTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVENT_TYPE_CODE);
 		try {
@@ -85,8 +84,8 @@ public final class EventType extends StorableObjectType {
 			final long version,
 			final String codename,
 			final String description,
-			final Set parameterTypeIds,
-			final Map userAlertKindsMap) {
+			final Set<Identifier> parameterTypeIds,
+			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -96,10 +95,10 @@ public final class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypeIds = new HashSet();
+		this.parameterTypeIds = new HashSet<Identifier>();
 		this.setParameterTypeIds0(parameterTypeIds);
 
-		this.userAlertKindsMap = new HashMap();
+		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 		this.setUserAlertKindsMap0(userAlertKindsMap);
 	}
 
@@ -116,8 +115,8 @@ public final class EventType extends StorableObjectType {
 	public static EventType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set parameterTypeIds,
-			final Map userAlertKindsMap) throws CreateObjectException {
+			final Set<Identifier> parameterTypeIds,
+			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
 
@@ -143,17 +142,17 @@ public final class EventType extends StorableObjectType {
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlEventType ett = (IdlEventType) transferable;
+		final IdlEventType ett = (IdlEventType) transferable;
 
 		super.fromTransferable(ett, ett.codename, ett.description);
 
 		this.parameterTypeIds = Identifier.fromTransferables(ett.parameterTypeIds);
 
-		this.userAlertKindsMap = new HashMap(ett.userAlertKinds.length);
+		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>(ett.userAlertKinds.length);
 		for (int i = 0; i < ett.userAlertKinds.length; i++) {
 			final UserAlertKinds userAlertKindsT = ett.userAlertKinds[i];
 			final Identifier userId = new Identifier(userAlertKindsT.userId);
-			final Set userAlertKinds = new HashSet(userAlertKindsT.alertKinds.length);
+			final Set<AlertKind> userAlertKinds = new HashSet<AlertKind>(userAlertKindsT.alertKinds.length);
 			for (int j = 0; j < userAlertKindsT.alertKinds.length; j++) {
 				userAlertKinds.add(userAlertKindsT.alertKinds[j]);
 			}
@@ -176,13 +175,12 @@ public final class EventType extends StorableObjectType {
 		final UserAlertKinds[] userAlertKindsT = new UserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
 		i = 0;
-		for (final Iterator<Identifier> it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext(); i++) {
-			final Identifier userId = it1.next();
+		for (final Identifier userId : this.userAlertKindsMap.keySet()) {
 			final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
 			final AlertKind[] alertKindsT = new AlertKind[userAlertKinds.size()];
 			j = 0;
-			for (final Iterator<AlertKind> it2 = userAlertKinds.iterator(); it2.hasNext(); j++) {
-				alertKindsT[j] = it2.next();
+			for (final AlertKind alertKind : userAlertKinds) {
+				alertKindsT[j] = alertKind;
 			}
 			userAlertKindsT[i] = new UserAlertKinds(userId.getTransferable(), alertKindsT);
 		}
@@ -203,12 +201,14 @@ public final class EventType extends StorableObjectType {
   /**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
+	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.parameterTypeIds != null && this.parameterTypeIds != Collections.EMPTY_SET
 				&& this.userAlertKindsMap != null && this.userAlertKindsMap != Collections.EMPTY_MAP;
 	}
 
+	@Override
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -219,11 +219,11 @@ public final class EventType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-  public Set getParameterTypeIds() {
+  public Set<Identifier> getParameterTypeIds() {
 		return Collections.unmodifiableSet(this.parameterTypeIds);
 	}
 
-	protected void setParameterTypeIds0(final Set parameterTypeIds) {
+	protected void setParameterTypeIds0(final Set<Identifier> parameterTypeIds) {
 		this.parameterTypeIds.clear();
 		if (parameterTypeIds != null)
 	     	this.parameterTypeIds.addAll(parameterTypeIds);
@@ -235,25 +235,28 @@ public final class EventType extends StorableObjectType {
 	 * @param parameterTypeIds
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setParameterTypeIds(final Set parameterTypeIds) {
+	public void setParameterTypeIds(final Set<Identifier> parameterTypeIds) {
 		this.setParameterTypeIds0(parameterTypeIds);
 		this.markAsChanged();
 	}
 
-	public Set getAlertedUserIds() {
+	public Set<Identifier> getAlertedUserIds() {
 		return this.userAlertKindsMap.keySet();
 	}
 
-	public Set getUserAlertKinds(final Identifier userId) {
-		final Set userAlertKinds = this.userAlertKindsMap.get(userId);
-		return (userAlertKinds != null) ? Collections.unmodifiableSet(userAlertKinds) : Collections.EMPTY_SET;
+	public Set<AlertKind> getUserAlertKinds(final Identifier userId) {
+		final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
+		if (userAlertKinds != null) {
+			return userAlertKinds;
+		}
+		return Collections.emptySet();
 	}
 
-	protected Map getUserAlertKindsMap() {
+	protected Map<Identifier, Set<AlertKind>> getUserAlertKindsMap() {
 		return Collections.unmodifiableMap(this.userAlertKindsMap);
 	}
 
-	protected void setUserAlertKindsMap0(final Map userAlertKindsMap) {
+	protected void setUserAlertKindsMap0(final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
 		this.userAlertKindsMap.clear();
 		if (userAlertKindsMap != null)
 			this.userAlertKindsMap.putAll(userAlertKindsMap);
@@ -263,9 +266,9 @@ public final class EventType extends StorableObjectType {
 		assert (userId != null) : "User id is NULL";
 		assert (alertKind != null) : "Alert kind is NULL";
 		
-		Set userAlertKinds = this.userAlertKindsMap.get(userId);
+		Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
 		if (userAlertKinds == null) {
-			userAlertKinds = new HashSet();
+			userAlertKinds = new HashSet<AlertKind>();
 			this.userAlertKindsMap.put(userId, userAlertKinds);
 		}
 		userAlertKinds.add(alertKind);
@@ -276,7 +279,7 @@ public final class EventType extends StorableObjectType {
 		assert (userId != null) : "User id is NULL";
 		assert (alertKind != null) : "Alert kind is NULL";
 		
-		final Set userAlertKinds = this.userAlertKindsMap.get(userId);
+		final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
 		if (userAlertKinds != null) {
 			userAlertKinds.remove(alertKind);
 			if (userAlertKinds.isEmpty())
@@ -294,31 +297,30 @@ public final class EventType extends StorableObjectType {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.parameterTypeIds);
 		dependencies.addAll(this.userAlertKindsMap.keySet());
 		return dependencies;
 	}
 
+	@Override
 	public String toString() {
-		String str = getClass().getName() + EOSL
-					 + ID + this.id + EOSL
-					 + ID_CREATED + this.created.toString() + EOSL		
-					 + ID_CREATOR_ID + this.creatorId.toString() + EOSL
-					 + ID_MODIFIED + this.modified.toString() + EOSL
-					 + ID_MODIFIER_ID + this.modifierId.toString() + EOSL
-					 + TypedObject.ID_CODENAME + this.codename+ EOSL
-					 + TypedObject.ID_DESCRIPTION + this.description + EOSL;
+		final String str = getClass().getName() + EOSL
+		+ ID + this.id + EOSL
+		+ ID_CREATED + this.created.toString() + EOSL
+		+ ID_CREATOR_ID + this.creatorId.toString() + EOSL
+		+ ID_MODIFIED + this.modified.toString() + EOSL
+		+ ID_MODIFIER_ID + this.modifierId.toString() + EOSL
+		+ TypedObject.ID_CODENAME + this.codename+ EOSL
+		+ TypedObject.ID_DESCRIPTION + this.description + EOSL;
 		return str;
 	}
 
 	protected void printUserAlertKinds() {
-		for (final Iterator it1 = this.userAlertKindsMap.keySet().iterator(); it1.hasNext();) {
-			final Identifier userId = (Identifier) it1.next();
+		for (final Identifier userId : this.userAlertKindsMap.keySet()) {
 			System.out.println("User '" + userId + "'");
-			final Set userAlertKinds = this.userAlertKindsMap.get(userId);
-			for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext();) {
-				final AlertKind alertKind = (AlertKind) it2.next();
+			final Set<AlertKind> userAlertKinds = this.userAlertKindsMap.get(userId);
+			for (final AlertKind alertKind : userAlertKinds) {
 				System.out.println("	alert kind: " + alertKind.value());
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.11 2005/06/22 10:24:10 bob Exp $
+ * $Id: EventTypeWrapper.java,v 1.12 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/22 10:24:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventTypeWrapper extends StorableObjectWrapper {
@@ -52,6 +52,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof EventType) {
@@ -97,6 +98,7 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

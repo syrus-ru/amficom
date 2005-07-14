@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.31 2005/07/14 16:08:02 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.32 2005/07/14 20:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,6 +23,7 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.DatabaseStorableObjectCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/14 16:08:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/07/14 20:11:24 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -50,16 +50,18 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private EventType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private EventType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof EventType)
 			return (EventType) storableObject;
 		throw new IllegalDataException("EventTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EVENT_TYPE_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -68,14 +70,17 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
 		final EventType eventType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -84,15 +89,17 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final EventType eventType = this.fromStorableObject(storableObject);		
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws IllegalDataException, SQLException{
-		EventType eventType = storableObject == null ?
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet) throws IllegalDataException, SQLException{
+		final EventType eventType = storableObject == null ?
 				new EventType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 											null,
 											0L,
@@ -111,48 +118,47 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		return eventType;
 	}
 
+	@Override
 	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		EventType eventType = this.fromStorableObject(storableObject);
+		final EventType eventType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(eventType);
 		this.retrieveParameterTypeIdsByOneQuery(Collections.singleton(eventType));
 		this.retrieveUserAlertKindsByOneQuery(Collections.singleton(eventType));
 	}
 
-	private void retrieveParameterTypeIdsByOneQuery(final Set eventTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypeIdsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		final Map eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
+		final Map<Identifier, Set<Identifier>> eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
 				ObjectEntities.EVENTTYPPARTYPLINK,
 				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
 				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 
-		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
-			final EventType eventType = (EventType) it.next();
+		for (final EventType eventType : eventTypes) {
 			final Identifier eventTypeId = eventType.getId();
-			final Set paramaterTypeIds = (Set) eventParamaterTypeIdsMap.get(eventTypeId);
+			final Set<Identifier> paramaterTypeIds = eventParamaterTypeIdsMap.get(eventTypeId);
 
 			eventType.setParameterTypeIds0(paramaterTypeIds);
 		}
 	}
 
-	private void retrieveUserAlertKindsByOneQuery(final Set eventTypes) throws RetrieveObjectException {
+	private void retrieveUserAlertKindsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		final Map dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
+		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
 
-		for (final Iterator it = eventTypes.iterator(); it.hasNext();) {
-			final EventType eventType = (EventType) it.next();
+		for (final EventType eventType : eventTypes) {
 			final Identifier eventTypeId = eventType.getId();
-			final Map userAlertKindsMap = (Map) dbEventTypeUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 
 			eventType.setUserAlertKindsMap0(userAlertKindsMap);
 		}
 	}
 
-	private Map retrieveDBUserAlertKindsMap(final Set eventTypes) throws RetrieveObjectException {
+	private Map<Identifier, Map<Identifier, Set<AlertKind>>> retrieveDBUserAlertKindsMap(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
@@ -161,14 +167,11 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 
-		final Map dbEventTypeUserAlertKindsMap = new HashMap();
-
-		Map userAlertKindsMap;
-		Set userAlertKinds;
+		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveDBUserAlertKindsMap | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -178,14 +181,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 				final AlertKind alertKind = AlertKind.from_int(resultSet.getInt(EventTypeWrapper.LINK_COLUMN_ALERT_KIND));
 				final Identifier eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID);
 
-				userAlertKindsMap = (Map) dbEventTypeUserAlertKindsMap.get(eventTypeId);
+				Map<Identifier, Set<AlertKind>> userAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 				if (userAlertKindsMap == null) {
-					userAlertKindsMap = new HashMap();
+					userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 					dbEventTypeUserAlertKindsMap.put(eventTypeId, userAlertKindsMap);
 				}
-				userAlertKinds = (Set) userAlertKindsMap.get(userId);
+				Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
 				if (userAlertKinds == null) {
-					userAlertKinds = new HashSet();
+					userAlertKinds = new HashSet<AlertKind>();
 					userAlertKindsMap.put(userId, userAlertKinds);
 				}
 				userAlertKinds.add(alertKind);
@@ -215,8 +218,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		EventType eventType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final EventType eventType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventType.getId() + "'; argument: " + arg);
@@ -224,8 +228,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		EventType eventType = this.fromStorableObject(storableObject);
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException, IllegalDataException {
+		final EventType eventType = this.fromStorableObject(storableObject);
 		super.insertEntity(eventType);
 		try {
 			this.updateParameterTypeIds(Collections.singleton(eventType));
@@ -236,7 +241,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	@Override
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateParameterTypeIds(storableObjects);
@@ -251,23 +257,26 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	 * NOTE: Updates event type itself and identifiers of users, attached to it
 	 * Do not updates parameter types.
 	 */
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		try {
-			this.updateParameterTypeIds(Collections.singleton(storableObject));
+			final EventType eventType = this.fromStorableObject(storableObject);
+			this.updateParameterTypeIds(Collections.singleton(eventType));
+			this.updateUserAlertKinds(Collections.singleton(eventType));
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
 		}
-		this.updateUserAlertKinds(Collections.singleton(storableObject));
 	}
 
 	/**
 	 * NOTE: Updates event type itself and identifiers of users, attached to it
 	 * Do not updates parameter types.
 	 */
-	public void update(java.util.Set storableObjects, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		try {
@@ -279,14 +288,13 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		this.updateUserAlertKinds(storableObjects);
 	}
 
-	private void updateParameterTypeIds(final Set eventTypes) throws UpdateObjectException, IllegalDataException {
+	private void updateParameterTypeIds(final Set<EventType> eventTypes) throws UpdateObjectException, IllegalDataException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		Map parameterTypeIdsMap = new HashMap();
-		for (final Iterator it = eventTypes.iterator(); it.hasNext();) {
-			final EventType eventType = this.fromStorableObject((StorableObject) it.next());
-			final Set parameterTypeIds = eventType.getParameterTypeIds();
+		final Map<Identifier, Set<Identifier>> parameterTypeIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final EventType eventType : eventTypes) {
+			final Set<Identifier> parameterTypeIds = eventType.getParameterTypeIds();
 			parameterTypeIdsMap.put(eventType.getId(), parameterTypeIds);
 		}
 
@@ -296,11 +304,11 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 	}
 
-	private void updateUserAlertKinds(final Set eventTypes) throws UpdateObjectException {
+	private void updateUserAlertKinds(final Set<EventType> eventTypes) throws UpdateObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		Map dbEventTypeUserAlertKindsMap = null;
+		Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = null;
 		try {
 			dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
 		}
@@ -308,60 +316,55 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 			throw new UpdateObjectException(roe);
 		}
 
-		final Map eventTypeUserAlertKindsMap = new HashMap(eventTypes.size());
-		for (final Iterator it = eventTypes.iterator(); it.hasNext();) {
-			final EventType eventType = (EventType) it.next();
+		final Map<Identifier, Map<Identifier, Set<AlertKind>>> eventTypeUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>(eventTypes.size());
+		for (final EventType eventType : eventTypes) {
 			eventTypeUserAlertKindsMap.put(eventType.getId(), eventType.getUserAlertKindsMap());
 		}
 
 		this.updateUserAlertKinds(eventTypeUserAlertKindsMap, dbEventTypeUserAlertKindsMap);
 	}
 
-	private void updateUserAlertKinds(final Map eventTypeUserAlertKindsMap, final Map dbEventTypeUserAlertKindsMap)
-			throws UpdateObjectException {
-		final Map insertUserAlertKindsMap = new HashMap();
-		final Map deleteUserAlertKindsMap = new HashMap();
-		Map altUserAlertKindsMap;
-		Set altUserAlertKinds;
-		for (final Iterator it1 = eventTypeUserAlertKindsMap.keySet().iterator(); it1.hasNext();) {
-			final Identifier eventTypeId = (Identifier) it1.next();
-			final Map userAlertKindsMap = (Map) eventTypeUserAlertKindsMap.get(eventTypeId);
-			final Map dbUserAlertKindsMap = (Map) dbEventTypeUserAlertKindsMap.get(eventTypeId);
+	private void updateUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> eventTypeUserAlertKindsMap,
+			final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap) throws UpdateObjectException {
+		final Map<Identifier, Map<Identifier, Set<AlertKind>>> insertUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
+		final Map<Identifier, Map<Identifier, Set<AlertKind>>> deleteUserAlertKindsMap = new HashMap<Identifier, Map<Identifier, Set<AlertKind>>>();
+		Map<Identifier, Set<AlertKind>> altUserAlertKindsMap;
+		Set<AlertKind> altUserAlertKinds;
+		for (final Identifier eventTypeId : eventTypeUserAlertKindsMap.keySet()) {
+			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = eventTypeUserAlertKindsMap.get(eventTypeId);
+			final Map<Identifier, Set<AlertKind>> dbUserAlertKindsMap = dbEventTypeUserAlertKindsMap.get(eventTypeId);
 			if (dbUserAlertKindsMap != null) {
-				for (final Iterator it2 = userAlertKindsMap.keySet().iterator(); it2.hasNext();) {
-					final Identifier userId = (Identifier) it2.next();
-					final Set userAlertKinds = (Set) userAlertKindsMap.get(userId);
-					final Set dbUserAlertKinds = (Set) dbUserAlertKindsMap.get(userId);
+				for (final Identifier userId : userAlertKindsMap.keySet()) {
+					final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
+					final Set<AlertKind> dbUserAlertKinds = dbUserAlertKindsMap.get(userId);
 					if (dbUserAlertKinds != null) {
-						for (final Iterator it3 = userAlertKinds.iterator(); it3.hasNext();) {
-							final AlertKind alertKind = (AlertKind) it3.next();
+						for (final AlertKind alertKind : userAlertKinds) {
 							if (!dbUserAlertKinds.contains(alertKind)) {
 								//Insert alert kind
-								altUserAlertKindsMap = (Map) insertUserAlertKindsMap.get(eventTypeId);
+								altUserAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
 								if (altUserAlertKindsMap == null) {
-									altUserAlertKindsMap = new HashMap();
+									altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 									insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 								}
-								altUserAlertKinds = (Set) altUserAlertKindsMap.get(userId);
+								altUserAlertKinds = altUserAlertKindsMap.get(userId);
 								if (altUserAlertKinds == null) {
-									altUserAlertKinds = new HashSet();
+									altUserAlertKinds = new HashSet<AlertKind>();
 									altUserAlertKindsMap.put(userId, altUserAlertKinds);
 								}
 								altUserAlertKinds.add(alertKind);
 							}
 						}
-						for (final Iterator it3 = dbUserAlertKinds.iterator(); it3.hasNext();) {
-							final AlertKind alertKind = (AlertKind) it3.next();
+						for (final AlertKind alertKind : dbUserAlertKinds) {
 							if (!userAlertKinds.contains(alertKind)) {
 								//Delete alert kind
-								altUserAlertKindsMap = (Map) deleteUserAlertKindsMap.get(eventTypeId);
+								altUserAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
 								if (altUserAlertKindsMap == null) {
-									altUserAlertKindsMap = new HashMap();
+									altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 									deleteUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 								}
-								altUserAlertKinds = (Set) altUserAlertKindsMap.get(userId);
+								altUserAlertKinds = altUserAlertKindsMap.get(userId);
 								if (altUserAlertKinds == null) {
-									altUserAlertKinds = new HashSet();
+									altUserAlertKinds = new HashSet<AlertKind>();
 									altUserAlertKindsMap.put(userId, altUserAlertKinds);
 								}
 								altUserAlertKinds.add(alertKind);
@@ -370,21 +373,20 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 					}
 					else {
 						//Insert all userAlertingKinds for this userId and this eventTypeId
-						altUserAlertKindsMap = (Map) insertUserAlertKindsMap.get(eventTypeId);
+						altUserAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
 						if (altUserAlertKindsMap == null) {
-							altUserAlertKindsMap = new HashMap();
+							altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 							insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 						}
 						altUserAlertKindsMap.put(userId, userAlertKinds);
 					}
 				}
-				for (final Iterator it2 = dbUserAlertKindsMap.keySet().iterator(); it2.hasNext();) {
-					final Identifier userId = (Identifier) it2.next();
+				for (final Identifier userId : dbUserAlertKindsMap.keySet()) {
 					if (!userAlertKindsMap.containsKey(userId)) {
 						//Delete all userAlertingKinds for this userId and this eventTypeId
-						altUserAlertKindsMap = (Map) deleteUserAlertKindsMap.get(eventTypeId);
+						altUserAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
 						if (altUserAlertKindsMap == null) {
-							altUserAlertKindsMap = new HashMap();
+							altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 							deleteUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 						}
 						altUserAlertKindsMap.put(userId, dbUserAlertKindsMap.get(userId));
@@ -393,7 +395,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 			}
 			else {
 				//Insert all userAlertingKinds for all userId for this eventTypeId
-				altUserAlertKindsMap = new HashMap();
+				altUserAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 				altUserAlertKindsMap.putAll(userAlertKindsMap);
 				insertUserAlertKindsMap.put(eventTypeId, altUserAlertKindsMap);
 			}
@@ -409,11 +411,11 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	}
 
-	private void insertUserAlertKinds(final Map insertUserAlertKindsMap) throws CreateObjectException {
+	private void insertUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> insertUserAlertKindsMap) throws CreateObjectException {
 		if (insertUserAlertKindsMap == null || insertUserAlertKindsMap.isEmpty())
 			return;
 
-		String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT + OPEN_BRACKET
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_ALERT_KIND + COMMA
 				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
@@ -423,19 +425,16 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 				+ QUESTION
 				+ CLOSE_BRACKET;
 
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 
-			for (final Iterator it1 = insertUserAlertKindsMap.keySet().iterator(); it1.hasNext();) {
-				final Identifier eventTypeId = (Identifier) it1.next();
-				final Map userAlertKindsMap = (Map) insertUserAlertKindsMap.get(eventTypeId);
-				for (final Iterator it2 = userAlertKindsMap.keySet().iterator(); it2.hasNext();) {
-					final Identifier userId = (Identifier) it2.next();
-					final Set userAlertKinds = (Set) userAlertKindsMap.get(userId);
-					for (final Iterator it3 = userAlertKinds.iterator(); it3.hasNext();) {
-						final AlertKind alertKind = (AlertKind) it3.next();
+			for (final Identifier eventTypeId : insertUserAlertKindsMap.keySet()) {
+				final Map<Identifier, Set<AlertKind>> userAlertKindsMap = insertUserAlertKindsMap.get(eventTypeId);
+				for (final Identifier userId : userAlertKindsMap.keySet()) {
+					final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
+					for (final AlertKind alertKind : userAlertKinds) {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, userId);
 						preparedStatement.setInt(2, alertKind.value());
 						DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventTypeId);
@@ -467,22 +466,18 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	}
 
-	private void deleteUserAlertKinds(final Map deleteUserAlertKindsMap) {
+	private void deleteUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> deleteUserAlertKindsMap) {
 		if (deleteUserAlertKindsMap == null || deleteUserAlertKindsMap.isEmpty())
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
-		for (final Iterator it1 = deleteUserAlertKindsMap.keySet().iterator(); it1.hasNext();) {
-			final Identifier eventTypeId = (Identifier) it1.next();
-			final Map userAlertKindsMap = (Map) deleteUserAlertKindsMap.get(eventTypeId);
-			for (final Iterator it2 = userAlertKindsMap.keySet().iterator(); it2.hasNext();) {
-				final Identifier userId = (Identifier) it2.next();
-				final Set userAlertKinds = (Set) userAlertKindsMap.get(userId);
-				for (final Iterator it3 = userAlertKinds.iterator(); it3.hasNext();) {
-					final AlertKind alertKind = (AlertKind) it3.next();
-
+		for (final Identifier eventTypeId : deleteUserAlertKindsMap.keySet()) {
+			final Map<Identifier, Set<AlertKind>> userAlertKindsMap = deleteUserAlertKindsMap.get(eventTypeId);
+			for (final Identifier userId : userAlertKindsMap.keySet()) {
+				final Set<AlertKind> userAlertKinds = userAlertKindsMap.get(userId);
+				for (final AlertKind alertKind : userAlertKinds) {
 					sql.append(SQL_OR + OPEN_BRACKET
 							+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(eventTypeId) + SQL_AND
 							+ EventTypeWrapper.LINK_COLUMN_USER_ID + EQUALS + DatabaseIdentifier.toSQLString(userId) + SQL_AND
@@ -493,7 +488,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.deleteUserAlertKinds | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -518,12 +513,13 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		assert (id.getMajor() == ObjectEntities.EVENT_TYPE_CODE) : "Illegal entity code: "
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
@@ -553,29 +549,27 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Set objects) {
-		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
+	@Override
+	public void delete(final Set<? extends Identifiable> objects) {
+		final StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPPARTYPLINK
 				+ SQL_WHERE);
-		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
+		final StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENT_TYPE
 				+ SQL_WHERE);
 		sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 		sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		String sql;
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 
-			sql = sql1.toString();
-			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
+			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql1.toString());
 
-			sql = sql2.toString();
-			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
+			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql2.toString());
 		}
 		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
@@ -595,8 +589,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set objects = super.retrieveByCondition(conditionQuery);
+	@Override
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveUserAlertKindsByOneQuery(objects);
 		return objects;
