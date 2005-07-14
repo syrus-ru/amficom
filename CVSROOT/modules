@@ -105,7 +105,9 @@ AMFICOM_v1	&tools\
 		&scripts \
 		&importUCM \
 		&test \
-		&mapper-servlet
+		&mapper-servlet \
+		&manager \
+		&манагер
 
 #M	idl		Client-side AMFICOM CORBA object & interface
 idl			AMFICOM/v1/idl
@@ -278,6 +280,10 @@ test_v1			AMFICOM/v1/test
 #M	mapper-servlet
 mapper-servlet		AMFICOM/v1/mapper-servlet
 mapper-servlet_v1	AMFICOM/v1/mapper-servlet
+#M	manager
+manager			AMFICOM/v1/manager
+#M	манагер
+манагер			AMFICOM/v1/манагер
 
 akp		hw/akp
 trc		hw/trc
