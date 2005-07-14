@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.95 2005/07/14 08:05:51 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.96 2005/07/14 09:47:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -72,8 +72,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.95 $, $Date: 2005/07/14 08:05:51 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.96 $, $Date: 2005/07/14 09:47:59 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -159,9 +159,6 @@ public class LogicalNetLayer
 	
 	private MapViewController mapViewController;
 	
-	private java.util.Map<AbstractNode,Set<NodeLink>> linksForNodes =
-		new HashMap<AbstractNode,Set<NodeLink>>();
-
 	public LogicalNetLayer(ApplicationContext aContext, MapCoordinatesConverter converter, MapContext mapContext) throws ApplicationException {
 		this.aContext = aContext;
 		this.converter = converter;
@@ -249,6 +246,7 @@ public class LogicalNetLayer
 		}
 
 		this.mapView = mapView;
+		this.linksForNodes.clear();
 
 		if(mapView == null)
 		{
@@ -416,11 +414,13 @@ public class LogicalNetLayer
 		}
 //		System.out.println("--------------------------------------");
 		f = System.currentTimeMillis();
-		if(MapPropertiesManager.isOptimizeLinks())
+		if(MapPropertiesManager.isOptimizeLinks()) {
 			drawVisualLinks(p, visibleBounds);
-		else
+		}
+		else {
 			drawLines(p, visibleBounds);
-		drawNodes(p, visibleBounds);
+			drawNodes(p, visibleBounds);
+		}
 		drawSelection(p, visibleBounds);
 		drawTempLines(p, visibleBounds);
 		d = System.currentTimeMillis();
@@ -1148,8 +1148,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.95 $, $Date: 2005/07/14 08:05:51 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.96 $, $Date: 2005/07/14 09:47:59 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1167,7 +1167,7 @@ public class LogicalNetLayer
 	/**
 	 * Список VisualMapElement'ов, которые будут отображаться при текущем масштабе
 	 */
-	private List<Object> visualElements = new ArrayList<Object>();
+	private Set<Object> visualElements = new HashSet<Object>();
 
 	/**
 	 * Линки с экранной длиной меньшей, этого параметра сливаются с соседними
@@ -1175,6 +1175,9 @@ public class LogicalNetLayer
 	 */
 	private static final int MINIMUM_SCREEN_LENGTH = 20;
 	
+	private java.util.Map<AbstractNode,Set<NodeLink>> linksForNodes =
+		new HashMap<AbstractNode,Set<NodeLink>>();
+
 	/**
 	 * Обновляет список элементов которые должны отображаться при текущем массштабе.
 	 */
@@ -1325,6 +1328,8 @@ public class LogicalNetLayer
 				long f = System.currentTimeMillis();
 				MapViewController.addTime2(f - d);
 			}
+			this.visualElements.add(nodeToPullFrom);
+			this.visualElements.add(nodeProcessed);
 			return;
 		}
 		long t2 = System.currentTimeMillis();
@@ -1366,6 +1371,8 @@ public class LogicalNetLayer
 				long f = System.currentTimeMillis();
 				MapViewController.addTime2(f - d);
 			}
+			this.visualElements.add(nodeToPullFrom);
+			this.visualElements.add(nodeProcessed);
 
 			frontedge.add(nodeProcessed);
 //			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
@@ -1447,9 +1454,39 @@ public class LogicalNetLayer
 
 				if (veElement instanceof VisualMapElement)
 					g.drawLine(from.x, from.y, to.x, to.y);
-				else if (veElement instanceof NodeLink)
+				else if (veElement instanceof NodeLink) {
 					//TODO здесь должен правильно отрисовываться NodeLink
-					g.drawLine(from.x, from.y, to.x, to.y);
+//					g.drawLine(from.x, from.y, to.x, to.y);
+					NodeLink nodeLink = (NodeLink)veElement;
+					if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH) {
+						for(Iterator iter = this.mapView.getMeasurementPaths(nodeLink).iterator(); iter.hasNext();) {
+							MeasurementPath measurementPath = (MeasurementPath )iter.next();
+							getMapViewController().getController(measurementPath).paint(measurementPath, g, visibleBounds);
+						}
+					}
+					else
+					if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH) {
+						for(Iterator iter = this.mapView.getCablePaths(nodeLink).iterator(); iter.hasNext();) {
+							CablePath cablePath = (CablePath )iter.next();
+							getMapViewController().getController(cablePath).paint(cablePath, g, visibleBounds);
+						}
+					}
+					else
+					if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK) {
+						PhysicalLink physicalLink = nodeLink.getPhysicalLink();
+						getMapViewController().getController(physicalLink).paint(physicalLink, g, visibleBounds);
+					}
+					else
+					if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK) {
+						getMapViewController().getController(nodeLink).paint(nodeLink, g, visibleBounds);
+					}
+				}
+			}
+		}
+		for (Iterator veIterator = this.visualElements.iterator(); veIterator.hasNext();) {
+			Object veElement = veIterator.next();
+			if (veElement instanceof SiteNode) {
+				getMapViewController().getController((SiteNode)veElement).paint((SiteNode)veElement, g, visibleBounds);
 			}
 		}
 		long t2 = System.currentTimeMillis();
@@ -1463,18 +1500,18 @@ public class LogicalNetLayer
 
 		//Cleaning the map
 		//TODO Здесь аррэй листы должны старые чиститься и дальше использоваться		
-		this.linksForNodes.clear();		
+//		this.linksForNodes.clear();
 
 		/////////////////////////
 //		java.util.Map<AbstractNode,Set<NodeLink>> newlfnMap =
 //			new HashMap<AbstractNode,Set<NodeLink>>();
-//		
-//		Collection <Set<NodeLink>> emptySets = this.linksForNodes.values();
-//		for (Iterator emptySetsIt = emptySets.iterator(); emptySetsIt.hasNext();)
-//		{
-//			Set set = (Set)emptySetsIt.next();
-//			set.clear();
-//		}
+		
+		Collection <Set<NodeLink>> emptySets = this.linksForNodes.values();
+		for (Iterator emptySetsIt = emptySets.iterator(); emptySetsIt.hasNext();)
+		{
+			Set set = (Set)emptySetsIt.next();
+			set.clear();
+		}
 		/////////////////////////		
 		
 		for (Iterator nodesLinksIt = this.mapView.getMap().getNodeLinks().iterator();
@@ -1502,7 +1539,7 @@ public class LogicalNetLayer
 		}
 		
 		long t2 = System.currentTimeMillis();		
-		Log.debugMessage("LogicalNetLayer.searchLinksForNodes | total time"
+		Log.debugMessage("LogicalNetLayer.searchLinksForNodes | total time "
 				+ (t2 - t1) + " ms.", Level.INFO);		
 	}
 }
