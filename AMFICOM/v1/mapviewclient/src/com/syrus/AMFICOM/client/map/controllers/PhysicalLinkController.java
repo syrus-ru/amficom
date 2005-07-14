@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.20 2005/07/08 14:34:31 peskovsky Exp $
+ * $Id: PhysicalLinkController.java,v 1.21 2005/07/14 15:38:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,22 +9,18 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.client.map.ui.LineComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -36,19 +32,11 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: peskovsky $
- * @version $Revision: 1.20 $, $Date: 2005/07/08 14:34:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/07/14 15:38:36 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
-	/**
-	 * Карта объектов Color - локальный кэш (инициализируется при первом использовании)
-	 */
-	Map colors = new HashMap();
-	/**
-	 * Карта объектов Stroke - локальный кэш (инициализируется при первом использовании)
-	 */
-	Map strokes = new HashMap();	
 	
 	/**
 	 * Private constructor.
@@ -303,54 +291,6 @@ public class PhysicalLinkController extends AbstractLinkController {
 
 		LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
 		return ltc.getStyle((PhysicalLinkType )plink.getType());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Stroke getStroke(MapElement mapElement) {
-		if(!(mapElement instanceof PhysicalLink))
-			return MapPropertiesManager.getStroke();
-
-		PhysicalLink plink = (PhysicalLink )mapElement;
-		int linkThicknessValue = getLineSize(plink);
-		String style;
-		String key;
-		BasicStroke strokeForLink = null;
-		
-		Characteristic ea = getCharacteristic(mapElement, this.styleCharType);
-
-		if(ea != null) {
-			style = ea.getValue();
-		}
-		else {
-			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-			style = ltc.getStyle((PhysicalLinkType )plink.getType());
-		}
-		key = style + " " + linkThicknessValue;
-
-		strokeForLink = (BasicStroke)this.strokes.get(key);
-		
-		if(strokeForLink == null) {
-//			LinkTypeController ltc = (LinkTypeController)LinkTypeController.getInstance();
-//			int controllerThicknessValue = ltc.getLineSize((PhysicalLinkType )plink.getType());	
-//			Stroke pltStroke = ltc.getStroke((PhysicalLinkType )plink.getType());
-			
-			strokeForLink = LineComboBox.getStrokeByType(style); 
-			int controllerThicknessValue = (int)strokeForLink.getLineWidth();	
-	
-			if (linkThicknessValue != controllerThicknessValue)
-				strokeForLink = new BasicStroke(
-						linkThicknessValue,
-						strokeForLink.getEndCap(),
-						strokeForLink.getLineJoin(),
-						strokeForLink.getMiterLimit(),
-						strokeForLink.getDashArray(),
-						strokeForLink.getDashPhase());
-
-			this.strokes.put(key, strokeForLink);
-		}
-		return strokeForLink;
 	}
 
 	/**
