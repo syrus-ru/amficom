@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.8 2005/07/14 16:08:05 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.9 2005/07/14 18:04:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 18:04:11 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -36,7 +36,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	private static String updateMultipleSQLValues;
 	static final int SIZE_LOGIN_COLUMN = 32;
 
-	private SystemUser fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private SystemUser fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof SystemUser)
 			return (SystemUser) storableObject;
 		throw new IllegalDataException("SystemUserDatabase.fromStorableObject | Illegal Storable Object: "
@@ -71,7 +71,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		SystemUser user = this.fromStorableObject(storableObject);
 		return APOSTROPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
@@ -80,25 +80,24 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		SystemUser user = (storableObject == null)?
-				new SystemUser(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, 0, null, null) :
-					this.fromStorableObject(storableObject);
+		final SystemUser user = (storableObject == null) ? new SystemUser(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, 0, null, null) : this.fromStorableObject(storableObject);
 		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							DatabaseString.fromQuerySubString(resultSet.getString(SystemUserWrapper.COLUMN_LOGIN)),
-							resultSet.getInt(SystemUserWrapper.COLUMN_SORT),				
-							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(SystemUserWrapper.COLUMN_LOGIN)),
+				resultSet.getInt(SystemUserWrapper.COLUMN_SORT),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return user;
 	}
 
-	public SystemUser retrieveForLogin(String login) throws RetrieveObjectException, ObjectNotFoundException {
-		String condition = SystemUserWrapper.COLUMN_LOGIN
+	public SystemUser retrieveForLogin(final String login) throws RetrieveObjectException, ObjectNotFoundException {
+		final String condition = SystemUserWrapper.COLUMN_LOGIN
 				+ EQUALS
 				+ APOSTROPHE + DatabaseString.toQuerySubString(login, SIZE_LOGIN_COLUMN) + APOSTROPHE;
 		try {
@@ -113,9 +112,9 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		SystemUser user = this.fromStorableObject(storableObject);
+		final SystemUser user = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  user.getId() + "'; argument: " + arg);
@@ -124,9 +123,10 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		SystemUser user = this.fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final SystemUser user = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getLogin(), SIZE_LOGIN_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, user.getSort().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getName(), SIZE_NAME_COLUMN);

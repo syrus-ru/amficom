@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.31 2005/07/14 16:08:06 bass Exp $
+ * $Id: MCMDatabase.java,v 1.32 2005/07/14 18:04:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/14 16:08:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/07/14 18:04:11 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -142,8 +142,8 @@ public Object retrieveObject(final StorableObject storableObject, final int retr
 	}
 
   public Set<MCM> retrieveForServer(final Identifier serverId) throws RetrieveObjectException, IllegalDataException {
-  	String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
-		String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+  	final String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
+  	final String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
 		return this.retrieveByCondition(condition);
   }

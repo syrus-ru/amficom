@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.28 2005/07/14 16:08:06 bass Exp $
+ * $Id: DomainDatabase.java,v 1.29 2005/07/14 18:04:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,26 +25,26 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/14 18:04:11 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class DomainDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	
-	private Domain fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+
+	private Domain fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Domain)
 			return (Domain) storableObject;
 		throw new IllegalDataException("DomainDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-	
+
 	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.DOMAIN_CODE;
 	}
-	
+
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -54,7 +54,7 @@ public final class DomainDatabase extends CharacterizableDatabase {
 		}
 		return columns;
 	}
-	
+
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
@@ -64,19 +64,19 @@ public final class DomainDatabase extends CharacterizableDatabase {
 		}
 		return updateMultipleSQLValues;
 	}
-	
+
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Domain domain = this.fromStorableObject(storableObject);
-		Identifier domainId = domain.getDomainId();
-		String sql = DatabaseIdentifier.toSQLString(domainId) + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Domain domain = this.fromStorableObject(storableObject);
+		final Identifier domainId = domain.getDomainId();
+		final String sql = DatabaseIdentifier.toSQLString(domainId) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(domain.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(domain.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		Domain domain = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (domain == null) {
@@ -87,33 +87,33 @@ public final class DomainDatabase extends CharacterizableDatabase {
 					null,
 					null);			
 		}
-		Identifier domainId = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
+		final Identifier domainId = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
 		domain.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							 domainId,
-							 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				domainId,
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return domain;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
-			PreparedStatement preparedStatement, int startParameterNumber) throws IllegalDataException, SQLException {
-		Domain domain = this.fromStorableObject(storableObject);
-		Identifier domainId = domain.getDomainId();
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Domain domain = this.fromStorableObject(storableObject);
+		final Identifier domainId = domain.getDomainId();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, domainId);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, domain.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, domain.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
-		
-	
+
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Domain domain = this.fromStorableObject(storableObject);
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final Domain domain = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  domain.getId() + "'; argument: " + arg);

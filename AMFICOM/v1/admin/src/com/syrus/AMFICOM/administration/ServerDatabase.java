@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.28 2005/07/14 16:08:06 bass Exp $
+ * $Id: ServerDatabase.java,v 1.29 2005/07/14 18:04:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/14 18:04:11 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -35,7 +35,7 @@ public final class ServerDatabase extends CharacterizableDatabase {
   private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private Server fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Server fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Server)
 			return (Server) storableObject;
 		throw new IllegalDataException("ServerDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -48,18 +48,18 @@ public final class ServerDatabase extends CharacterizableDatabase {
 
 	@Override
 	protected String getColumnsTmpl() {		
-		if (columns == null){
+		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ ServerWrapper.COLUMN_HOSTNAME;		
+					+ StorableObjectWrapper.COLUMN_NAME + COMMA
+					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+					+ ServerWrapper.COLUMN_HOSTNAME;
 		}
 		return columns;
 	}	
 	
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -69,8 +69,8 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Server server = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Server server = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
@@ -78,9 +78,9 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Server server = (storableObject==null)?
+		final Server server = (storableObject == null) ?
 				new Server(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 								null,
 								0L,
@@ -102,9 +102,10 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-		throws IllegalDataException, SQLException {
-		Server server = this.fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Server server = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, server.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -113,9 +114,9 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		Server server = this.fromStorableObject(storableObject);
+		final Server server = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  server.getId() + "'; argument: " + arg);

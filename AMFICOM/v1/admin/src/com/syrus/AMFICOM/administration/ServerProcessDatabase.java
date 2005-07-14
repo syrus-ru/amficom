@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.9 2005/07/14 16:08:05 bass Exp $
+ * $Id: ServerProcessDatabase.java,v 1.10 2005/07/14 18:04:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 18:04:11 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public final class ServerProcessDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private ServerProcess fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private ServerProcess fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ServerProcess)
 			return (ServerProcess) storableObject;
 		throw new IllegalDataException("ServerProcessDatabase.fromStorableObject | Illegal Storable Object: "
@@ -70,8 +70,8 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		ServerProcess serverProcess = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		return APOSTROPHE + DatabaseString.toQuerySubString(serverProcess.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(serverProcess.getServerId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(serverProcess.getUserId()) + COMMA
@@ -79,33 +79,32 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ServerProcess serverProcess = this.fromStorableObject(storableObject);
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		this.retrieveEntity(serverProcess);	
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		ServerProcess user = (storableObject == null)?
-				new ServerProcess(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) :
-					this.fromStorableObject(storableObject);
+		final ServerProcess user = (storableObject == null) ? new ServerProcess(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null) : this.fromStorableObject(storableObject);
 		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-							DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_SERVER_ID),
-							DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_USER_ID),
-							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+				DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_SERVER_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, ServerProcessWrapper.COLUMN_USER_ID),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return user;
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		ServerProcess serverProcess = this.fromStorableObject(storableObject);
+		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  serverProcess.getId() + "'; argument: " + arg);
@@ -113,22 +112,23 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public ServerProcess retrieveForServerAndCodename(Identifier serverId, String codename)
+	public ServerProcess retrieveForServerAndCodename(final Identifier serverId, final String codename)
 			throws RetrieveObjectException, IllegalDataException, ObjectNotFoundException {
-		String condition = ServerProcessWrapper.COLUMN_SERVER_ID + EQUALS + DatabaseIdentifier.toSQLString(serverId)
+		final String condition = ServerProcessWrapper.COLUMN_SERVER_ID + EQUALS + DatabaseIdentifier.toSQLString(serverId)
 				+ SQL_AND
 				+ StorableObjectWrapper.COLUMN_CODENAME + EQUALS
 					+ APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTROPHE;
-		Set objects = this.retrieveByCondition(condition);
+		final Set objects = this.retrieveByCondition(condition);
 		if (!objects.isEmpty())
 			return (ServerProcess) objects.iterator().next();
 		throw new ObjectNotFoundException("Cannot find server process '" + codename + "'");
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		ServerProcess serverProcess = this.fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getServerId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getUserId());
@@ -137,13 +137,13 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		ServerProcess serverProcess = this.fromStorableObject(storableObject);
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
 		super.insertEntity(serverProcess);
 	}
 
 	@Override
-	public void insert(Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 
