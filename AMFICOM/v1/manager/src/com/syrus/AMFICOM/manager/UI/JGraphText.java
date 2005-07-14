@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.4 2005/07/14 13:43:18 bob Exp $
+ * $Id: JGraphText.java,v 1.5 2005/07/14 14:03:46 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/14 13:43:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/14 14:03:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -75,6 +75,7 @@ import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
 import com.syrus.AMFICOM.manager.LangModelManager;
+import com.syrus.AMFICOM.manager.MCMBeanFactory;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
@@ -547,9 +548,12 @@ public class JGraphText {
 		JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
 		toolBar.setFloatable(false);
 		toolBar.add(this.createAction(UserBeanFactory.getInstance()));
-		toolBar.add(this.createAction(RTUBeanFactory.getInstance()));
 		toolBar.add(this.createAction(ARMBeanFactory.getInstance()));
+		toolBar.addSeparator();
+		toolBar.add(this.createAction(RTUBeanFactory.getInstance()));
 		toolBar.add(this.createAction(ServerBeanFactory.getInstance()));
+		toolBar.add(this.createAction(MCMBeanFactory.getInstance()));
+		toolBar.addSeparator();
 		toolBar.add(this.createAction(NetBeanFactory.getInstance()));
 		return toolBar;
 	}
@@ -569,7 +573,7 @@ public class JGraphText {
 				Integer i = this.entityIndices.get(name);
 				int index = (i != null ? i : 0) + 1;
 				this.entityIndices.put(name, index);
-				JGraphText.this.createChild(JGraphText.this.rootItem, name + "-" + index, bean, 20, 20, 0, 0, factory.getImage());
+				JGraphText.this.createChild(JGraphText.this.rootItem, factory.getShortName() + "-" + index, bean, 20, 20, 0, 0, factory.getImage());
 				
 				
 			}
