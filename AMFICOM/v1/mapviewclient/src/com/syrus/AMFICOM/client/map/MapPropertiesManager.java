@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.26 2005/07/13 13:50:19 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.27 2005/07/14 11:05:47 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/13 13:50:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.27 $, $Date: 2005/07/14 11:05:47 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -81,9 +81,10 @@ public final class MapPropertiesManager
 	protected static final String KEY_LAST_VIEW = "lastView";
 	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
 	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation";
- 	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";	
- 	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";	
-
+ 	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";
+ 	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";
+ 	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
+ 	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
 	/* values read from inifile. */
@@ -98,6 +99,8 @@ public final class MapPropertiesManager
 	protected static String descreteNavigation = "false";
 	protected static String useTopologicalImageCache = "false";
 	protected static String optimizeLinks = "false";
+	protected static String topoImageMaxTimeWait = "30000";
+	
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
 	protected static String rendererClass = "";
@@ -211,11 +214,11 @@ public final class MapPropertiesManager
 	private static DecimalFormat distanceFormat;
 	private static DecimalFormat coordinatesFormat;
 	
-	private static Map layerVisibilityMap = new HashMap();
-	private static Map layerLabelVisibilityMap = new HashMap();
+	private static Map<Object,Boolean> layerVisibilityMap = new HashMap<Object,Boolean>();
+	private static Map<Object,Boolean> layerLabelVisibilityMap = new HashMap<Object,Boolean>();
 	
 	public static boolean isLayerVisible(Object layer) {
-		Boolean value = (Boolean )layerVisibilityMap.get(layer);
+		Boolean value = layerVisibilityMap.get(layer);
 		if(value == null) {
 			value = new Boolean(true);
 			layerVisibilityMap.put(layer, value);
@@ -229,7 +232,7 @@ public final class MapPropertiesManager
 	}
 	
 	public static boolean isLayerLabelVisible(Object layer) {
-		Boolean value = (Boolean )layerLabelVisibilityMap.get(layer);
+		Boolean value = layerLabelVisibilityMap.get(layer);
 		if(value == null) {
 			value = new Boolean(false);
 			layerLabelVisibilityMap.put(layer, value);
@@ -424,6 +427,7 @@ public final class MapPropertiesManager
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
 		descreteNavigation = properties.getProperty(KEY_DESCRETE_NAVIGATION);
 		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);
+		topoImageMaxTimeWait = properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT);		
 		optimizeLinks = properties.getProperty(KEY_OPTIMIZE_LINKS);
 		
 //		selectionColor = iniFile.getValue("selectionColor");
@@ -444,6 +448,7 @@ public final class MapPropertiesManager
 		descreteNavigation = "false";
 		useTopologicalImageCache = "false";
 		optimizeLinks = "false";
+		topoImageMaxTimeWait = "30000";
 		viewerClass = "";
 		connectionClass = "";		
 		rendererClass = "";
@@ -484,13 +489,13 @@ public final class MapPropertiesManager
 	 * разделяют один объект рисунка. Оригинал немасштабированного рисунка
 	 * хранится для последующего его масштабирования
 	 */
-	private static Map originalImages = new HashMap();
+	private static Map<Identifier,Image> originalImages = new HashMap<Identifier,Image>();
 	
 	/**
 	 * Кэш масштабированных изображений элементов карты. Для того, чтобы
 	 * не плодились масштабированные изображения, они также хранятся в кэше
 	 */
-	private static Map scaledImages = new HashMap();
+	private static Map<Identifier,Image> scaledImages = new HashMap<Identifier,Image>();
 
 	public static void setOriginalImage(Identifier imageId, Image image)
 	{
@@ -515,7 +520,7 @@ public final class MapPropertiesManager
 
 	public static Image getImage(Identifier imageId)
 	{
-		Image img = (Image )originalImages.get(imageId);
+		Image img = originalImages.get(imageId);
 		if(img == null)
 		{
 			try
@@ -542,7 +547,7 @@ public final class MapPropertiesManager
 
 	public static Image getScaledImage(Identifier imageId)
 	{
-		Image img = (Image )scaledImages.get(imageId);
+		Image img = scaledImages.get(imageId);
 		if(img == null)
 		{
 			img = MapPropertiesManager.getImage(imageId);
@@ -1044,5 +1049,9 @@ public final class MapPropertiesManager
 	public static NumberFormat getScaleFormat()
 	{
 		return scaleFormat;
+	}
+	
+	public static int getTopoImageMaxTimeWait() {
+		return Integer.parseInt(topoImageMaxTimeWait);
 	}
 }

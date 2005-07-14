@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.9 2005/07/12 12:58:38 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.10 2005/07/14 11:05:47 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,14 @@ import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 12:58:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 11:05:47 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -165,6 +166,8 @@ public class TopologicalImageCache implements MapImageRenderer
 	private final MapCoordinatesConverter coordsConverter;
 
 	private final MapContext mapContext;
+	
+	private int maximumTimeWait = MapPropertiesManager.getTopoImageMaxTimeWait();
 	
 	public TopologicalImageCache(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
@@ -667,11 +670,12 @@ public class TopologicalImageCache implements MapImageRenderer
 		this.createMovingRequests();
 	}
 
-	public Image getImage()
+	public Image getImage() throws MapConnectionException, MapDataException
 	{
 		if (this.requestToPaint == null)
 			return null;
 
+		long startTime = System.currentTimeMillis();
 		while (this.requestToPaint.getPriority() != TopologicalImageQuery.PRIORITY_ALREADY_LOADED)
 		{
 			// Изображение по запросу ещё не подгружено
@@ -681,6 +685,14 @@ public class TopologicalImageCache implements MapImageRenderer
 				//Остановливаем работу потока подгрузки
 				this.loadingThread.cancel();
 				return null;
+			}
+			
+			long currentTime = System.currentTimeMillis();
+			if ((currentTime - startTime) > this.maximumTimeWait)
+			{
+				//Остановливаем работу потока подгрузки
+				this.loadingThread.cancel();
+				throw new MapConnectionException ("Time for waiting topological image is out.");
 			}
 			
 			try
