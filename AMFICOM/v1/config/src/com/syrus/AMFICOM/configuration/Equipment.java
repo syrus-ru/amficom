@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.105 2005/07/11 08:18:58 bass Exp $
+ * $Id: Equipment.java,v 1.106 2005/07/14 08:08:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/07/11 08:18:58 $
+ * @version $Revision: 1.106 $, $Date: 2005/07/14 08:08:25 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -258,7 +258,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				charIds);
 	}
 
-	public StorableObjectType getType() {
+	public EquipmentType getType() {
 		return this.type;
 	}
 
