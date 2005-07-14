@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.96 2005/07/14 09:47:59 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.97 2005/07/14 10:59:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.96 $, $Date: 2005/07/14 09:47:59 $
+ * @version $Revision: 1.97 $, $Date: 2005/07/14 10:59:18 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1149,7 +1149,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.96 $, $Date: 2005/07/14 09:47:59 $
+	 * @version $Revision: 1.97 $, $Date: 2005/07/14 10:59:18 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1419,9 +1419,6 @@ public class LogicalNetLayer
 			throws MapConnectionException, MapDataException {
 		long t1 = System.currentTimeMillis();
 
-		g.setColor(Color.BLUE);
-		((Graphics2D )g).setStroke(new BasicStroke(4));
-		
 		for (Iterator veIterator = this.visualElements.iterator(); veIterator
 				.hasNext();) {
 			AbstractNode startNode = null;
@@ -1437,6 +1434,8 @@ public class LogicalNetLayer
 				startNode = nl.getStartNode();
 				endNode = nl.getEndNode();
 			}
+			else
+				continue;
 
 			if ((startNode == null) && (endNode == null))
 				throw new AssertionError(
@@ -1452,8 +1451,11 @@ public class LogicalNetLayer
 				Point to = this.converter.convertMapToScreen(
 						endNode.getLocation());
 
-				if (veElement instanceof VisualMapElement)
+				if (veElement instanceof VisualMapElement) {
+					g.setColor(MapPropertiesManager.getColor());
+					((Graphics2D )g).setStroke(MapPropertiesManager.getStroke());
 					g.drawLine(from.x, from.y, to.x, to.y);
+				}
 				else if (veElement instanceof NodeLink) {
 					//TODO здесь должен правильно отрисовываться NodeLink
 //					g.drawLine(from.x, from.y, to.x, to.y);
