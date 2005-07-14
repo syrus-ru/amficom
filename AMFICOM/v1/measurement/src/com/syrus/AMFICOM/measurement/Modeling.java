@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.54 2005/07/06 19:10:54 bass Exp $
+ * $Id: Modeling.java,v 1.55 2005/07/14 19:07:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/06 19:10:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/14 19:07:11 $
+ * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
  */
@@ -205,6 +205,7 @@ public final class Modeling extends Action {
 		}
 	}
 
+	@Override
 	public Result createResult(final Identifier resultCreatorId, final Parameter[] resultParameters)
 			throws CreateObjectException {
 		return Result.createInstance(resultCreatorId, this, ResultSort.RESULT_SORT_MODELING, resultParameters);

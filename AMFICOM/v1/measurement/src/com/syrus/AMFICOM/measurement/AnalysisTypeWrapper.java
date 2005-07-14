@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.12 2005/06/22 10:22:59 bob Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.13 2005/07/14 19:07:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/07/14 19:07:11 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper extends StorableObjectWrapper {
@@ -54,6 +54,7 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof AnalysisType) {
@@ -106,6 +107,7 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

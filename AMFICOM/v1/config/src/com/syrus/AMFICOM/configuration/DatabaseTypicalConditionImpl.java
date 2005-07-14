@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/07/06 13:16:35 max Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.12 2005/07/14 19:07:37 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,12 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/06 13:16:35 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/07/14 19:07:37 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -26,6 +27,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 		super(typicalCondition);
 	}
 	
+	@Override
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/*check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
@@ -34,8 +36,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				return PortTypeWrapper.COLUMN_SORT;
 			}
 		case ObjectEntities.EQUIPMENT_TYPE_CODE:
-			if (this.condition.getKey().equals(EquipmentTypeWrapper.COLUMN_CODENAME)) {
-				return EquipmentTypeWrapper.COLUMN_CODENAME;
+			if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+				return StorableObjectWrapper.COLUMN_CODENAME;
 			}
 		default:
 		throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
