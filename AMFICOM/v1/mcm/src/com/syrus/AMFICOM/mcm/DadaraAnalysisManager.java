@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.53 2005/07/06 10:33:35 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.54 2005/07/14 13:06:53 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/07/06 10:33:35 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/14 13:06:53 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -52,13 +52,13 @@ import com.syrus.util.Log;
 
 public class DadaraAnalysisManager implements AnalysisManager {
 	// input SetParameters codenames
-	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodenames.REFLECTOGRAMMA;
-	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodenames.DADARA_ETALON;
-	public static final String CODENAME_DADARA_CRITERIA = ParameterTypeCodenames.DADARA_CRITERIA;
+	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodename.REFLECTOGRAMMA.stringValue();
+	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodename.DADARA_ETALON.stringValue();
+	public static final String CODENAME_DADARA_CRITERIA = ParameterTypeCodename.DADARA_CRITERIA.stringValue();
 
 	// output SetParameters codenames
-	public static final String CODENAME_ALARMS = ParameterTypeCodenames.DADARA_ALARMS;
-	public static final String CODENAME_ANALYSIS_RESULT = ParameterTypeCodenames.DADARA_ANALYSIS_RESULT;
+	public static final String CODENAME_ALARMS = ParameterTypeCodename.DADARA_ALARMS.stringValue();
+	public static final String CODENAME_ANALYSIS_RESULT = ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue();
 
 	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
