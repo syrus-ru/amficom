@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.2 2005/07/07 13:05:57 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.3 2005/07/14 16:15:46 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +32,7 @@ import junit.framework.TestCase;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/07 13:05:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/14 16:15:46 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -166,12 +167,16 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
     	AnalysisParameters ap = new AnalysisParameters(
                 A_PARAMS,
                 ClientAnalysisManager.getDefaultAPClone());
-    	double res = evaluateAnalysisDB(ap, true);
+    	double res = evaluateAnalysisDB(ap, true, null);
     	System.out.println("evaluateAnalysisDB = " + res);
     }
 
+    // @todo supply a javadoc
+    // @todo?  actually, this is not just a testcase - move?
+    // cache may be null
     public static final double evaluateAnalysisDB(AnalysisParameters ap,
-    		boolean verbose)
+    		boolean verbose,
+    		HashMap<String, BellcoreStructure> cache)
     throws IOException {
         File file = new File("test/testAnalysisDB.dat"); // FIXME
         FileReader fr = new FileReader(file);
@@ -239,6 +244,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
                 }
                 // test trace
                 int rc = performTraceTest(fName,
+                		cache,
                         etalons,
                         fails,
                         ap,
@@ -418,14 +424,23 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
             ret.toArray(new ToleranceSimpleReflectogramEvent[ret.size()]);
     }
 
+    // cache may be null
     private static int performTraceTest(String fName,
+    		HashMap<String, BellcoreStructure> cache,
             ToleranceSimpleReflectogramEvent[][] ets,
             FailCounter fails, AnalysisParameters ap, boolean verbose) {
         String fPrefix = "test/ref/";
         boolean compareBeginEnd = true;
 
-        BellcoreStructure bs = FileOpenCommand.readTraceFromFile(
+        BellcoreStructure bs;
+        if (cache != null && cache.containsKey(fName))
+        	bs = cache.get(fName);
+        else {
+        	bs = FileOpenCommand.readTraceFromFile(
                 new File(fPrefix + fName));
+        	if (cache != null && bs != null)
+        		cache.put(fName, bs);
+        }
         double dxkm = bs.getResolution() / 1000;
         long t0 = System.currentTimeMillis();
         ReliabilitySimpleReflectogramEvent re[] =
