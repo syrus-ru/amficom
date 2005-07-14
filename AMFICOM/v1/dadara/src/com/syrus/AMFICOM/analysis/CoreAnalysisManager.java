@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.98 2005/07/13 07:12:37 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.99 2005/07/14 14:05:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.98 $, $Date: 2005/07/13 07:12:37 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/14 14:05:10 $
  * @module
  */
 
@@ -39,6 +39,19 @@ import com.syrus.io.BellcoreStructure;
 
 public class CoreAnalysisManager
 {
+	/**
+	 * Постоянная компонета запаса (дБ) генерируемых DY-порогов
+	 */
+	private static final double MTM_DY_MARGIN = 0.03;
+	/**
+	 * Фактор запаса (разы) DY-порогов, генерируемых по набору (2 и более) м.ф.
+	 */
+	private static final double MTM_DY_FACTOR_MF_BASED = 1.2;
+	/**
+	 * Фактор запаса (разы) DY-порогов, генерируемых на основе одной р/г и ее м.ф.
+	 */
+	private static final double MTM_DY_FACTOR_BS_BASED = 3.0;
+
 	protected CoreAnalysisManager()
 	{ // empty
 	}
@@ -407,7 +420,8 @@ public class CoreAnalysisManager
      *   параметры входных bs, необходимые для проведения анализа, различаются
 	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
-	protected static TracesAverages findTracesAverages(Collection bsColl,
+	protected static TracesAverages findTracesAverages(
+			Collection<BellcoreStructure> bsColl,
 			boolean needNoiseInfo,
 			boolean needMFInfo,
             AnalysisParameters ap)
@@ -429,13 +443,13 @@ public class CoreAnalysisManager
 
         double[] noiseAcc = null; // needs no initialization
 
-		for (Iterator it = bsColl.iterator(); it.hasNext(); isFirst = false)
+		for (Iterator<BellcoreStructure> it = bsColl.iterator(); it.hasNext(); isFirst = false)
 		{
             TracePreAnalysis tpa =
-                makePreAnalysis((BellcoreStructure)it.next(), needNoiseInfo);
+                makePreAnalysis(it.next(), needNoiseInfo);
 
 		    if (isFirst) {
-                double[] y = (double[])tpa.y.clone(); // double[] array copying
+                double[] y = tpa.y.clone(); // double[] array copying
                 res.av = new TracePreAnalysis(tpa, y);
 		    }
 		    else {
@@ -459,7 +473,7 @@ public class CoreAnalysisManager
 		    	if (isFirst) {
 		    		// need to make one more copy, so cloning once only
 		    		res.minYMF = yMF;
-		    		res.maxYMF = (double[])yMF.clone();
+		    		res.maxYMF = yMF.clone();
 		    	}
 		    	else {
                     // элементы массивов res.(min|max)YMF, выходящие за пределы
@@ -521,19 +535,6 @@ public class CoreAnalysisManager
 	}
 
 	/**
-	 * Постоянная компонета запаса (дБ) генерируемых DY-порогов
-	 */
-	private static final double MTM_DY_MARGIN = 0.03;
-	/**
-	 * Фактор запаса (разы) DY-порогов, генерируемых по набору (2 и более) м.ф.
-	 */
-	private static final double MTM_DY_FACTOR_MF_BASED = 1.2;
-	/**
-	 * Фактор запаса (разы) DY-порогов, генерируемых на основе одной р/г и ее м.ф.
-	 */
-	private static final double MTM_DY_FACTOR_BS_BASED = 3.0;
-
-	/**
 	 * Создает эталонный MTM по непустому набору рефлектограмм и параметрам
 	 * анализа.
 	 * <ul>
@@ -553,7 +554,8 @@ public class CoreAnalysisManager
 	 *   с разными длинами, разрешением, длительностью импульса или
 	 *   показателем преломления ({@link #findTracesAverages})
 	 */
-	public static ModelTraceManager makeEtalon(Collection bsColl,
+	public static ModelTraceManager makeEtalon(
+			Collection<BellcoreStructure> bsColl,
 			AnalysisParameters ap)
 	throws IncompatibleTracesException
 	{
@@ -579,12 +581,12 @@ public class CoreAnalysisManager
      * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
      * @return самую среднюю рефлектограмму среди входных
      */
-    protected static BellcoreStructure getMostTypicalTrace(Collection bsColl,
+    protected static BellcoreStructure getMostTypicalTrace(
+    		Collection<BellcoreStructure> bsColl,
     		TracesAverages av) {
         BellcoreStructure nearest = null;
         double bestDistance = 0;
-        for (Iterator it = bsColl.iterator(); it.hasNext();) {
-            BellcoreStructure bs = (BellcoreStructure)it.next();
+        for (BellcoreStructure bs: bsColl) {
             double[] yBS = bs.getTraceData();
             double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
                     yBS,
@@ -607,7 +609,8 @@ public class CoreAnalysisManager
      * несовместны
      * @throws IllegalArgumentException Если входная совокупность р/г пуста
      */
-    public static BellcoreStructure getMostTypicalTrace(Collection bsColl)
+    public static BellcoreStructure getMostTypicalTrace(
+    		Collection<BellcoreStructure> bsColl)
     throws IncompatibleTracesException {
         // если входная коллекция пуста, то к этому моменту уже будет
         // выброшено исключение IllegalArgumentException,
@@ -701,10 +704,10 @@ public class CoreAnalysisManager
      * @param ar Результаты анализа
      * @param etalon параметры эталона
      */
-    public static List compareAndMakeAlarms(AnalysisResult ar,
+    public static List<ReflectogramMismatch> compareAndMakeAlarms(AnalysisResult ar,
             Etalon etalon) {
         // формируем выходной список
-        List alarmList = new ArrayList();
+        List<ReflectogramMismatch> alarmList = new ArrayList<ReflectogramMismatch>();
 
         // получаем параметры эталона
         ModelTraceManager etMTM = etalon.getMTM();
