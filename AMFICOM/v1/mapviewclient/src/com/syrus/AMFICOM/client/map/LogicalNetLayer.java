@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.94 2005/07/13 13:51:49 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.95 2005/07/14 08:05:51 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -71,8 +72,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.94 $, $Date: 2005/07/13 13:51:49 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.95 $, $Date: 2005/07/14 08:05:51 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -157,6 +158,9 @@ public class LogicalNetLayer
 	private final MapContext mapContext;
 	
 	private MapViewController mapViewController;
+	
+	private java.util.Map<AbstractNode,Set<NodeLink>> linksForNodes =
+		new HashMap<AbstractNode,Set<NodeLink>>();
 
 	public LogicalNetLayer(ApplicationContext aContext, MapCoordinatesConverter converter, MapContext mapContext) throws ApplicationException {
 		this.aContext = aContext;
@@ -403,7 +407,6 @@ public class LogicalNetLayer
 
 		Log.debugMessage("\n\n------------------ LogicalNetLayer.paint() called ----------------------", 
 				Level.INFO);
-//		System.out.println("------------------ paint called ----------------------");
 		try {
 			throw new Exception("stacktrace");
 		}
@@ -1145,8 +1148,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: krupenn $
-	 * @version $Revision: 1.94 $, $Date: 2005/07/13 13:51:49 $
+	 * @author $Author: peskovsky $
+	 * @version $Revision: 1.95 $, $Date: 2005/07/14 08:05:51 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1180,8 +1183,11 @@ public class LogicalNetLayer
 		long startTime = System.currentTimeMillis();
 
 		this.visualElements.clear();
-
 		long t1 = System.currentTimeMillis();
+		
+		this.searchLinksForNodes();
+		long t15 = System.currentTimeMillis();
+
 
 		Map map = this.getMapView().getMap();
 
@@ -1219,22 +1225,25 @@ public class LogicalNetLayer
 			while(startRecursionNode != null) {
 				if (! nodesCalculated.get(startRecursionNode).booleanValue()) {
 					long t3 = System.currentTimeMillis();
-					Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks();
+					Set<NodeLink> allLinksForStartRecursionNode =
+						this.linksForNodes.get(startRecursionNode);
 					long t4 = System.currentTimeMillis();
 					MapViewController.addTime3(t4 - t3);
-					for (NodeLink outgoingLink : allLinksForNodeProcessed) {
-						if ( (outgoingLink.getEndNode().equals(startRecursionNode))
-								|| (outgoingLink.getStartNode().equals(startRecursionNode)))
-						if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-							nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
-							pullVisualLinksFromNode(
-									startRecursionNode, 
-									startRecursionNode,
-									outgoingLink, 
-									nodesCalculated,
-									nodeLinksCalculated,
-									frontedge,
-									map);
+					
+					if (allLinksForStartRecursionNode != null){
+						//Если к узлу не было проложено ни одного NodeLinka, то для него Set == null
+						for (NodeLink outgoingLink : allLinksForStartRecursionNode) {
+							if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+								nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
+								pullVisualLinksFromNode(
+										startRecursionNode, 
+										startRecursionNode,
+										outgoingLink, 
+										nodesCalculated,
+										nodeLinksCalculated,
+										frontedge,
+										map);
+							}
 						}
 					}
 				}
@@ -1251,7 +1260,8 @@ public class LogicalNetLayer
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
 				+ "optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n"
 				+ "		" + (t1 - startTime) + " ms (visualElements.clear())\n"
-				+ "		" + (t2 - t1) + " ms (fill nodesCalculated)\n"
+				+ "		" + (t15 - t1) + " ms (searching links for nodes)\n"				
+				+ "		" + (t2 - t15) + " ms (fill nodesCalculated)\n"
 				+ "		" + (endTime - t2) + " ms (recursing)\n"
 				+ "		" + MapViewController.getTime1() + " ms (check nodesCalculated.get(nodeProcessed))\n"
 				+ "		" + MapViewController.getTime2() + " ms (create new VisualMapElements)\n"
@@ -1322,7 +1332,7 @@ public class LogicalNetLayer
 
 		long t3 = System.currentTimeMillis();
 		//Получаем список всех входящих/исходящих линий для данного узла
-		Set<NodeLink> allLinksForNodeProcessed = map.getNodeLinks();
+		Set<NodeLink> allLinksForNodeProcessed = this.linksForNodes.get(nodeProcessed);
 		long t4 = System.currentTimeMillis();
 		MapViewController.addTime3(t4 - t3);
 
@@ -1341,7 +1351,7 @@ public class LogicalNetLayer
 		long t6 = System.currentTimeMillis();
 		MapViewController.addTime4(t6 - t5);
 		if (	(distance >= MINIMUM_SCREEN_LENGTH)
-			||	(map.getNodeLinksCount(nodeProcessed) > 2)) {
+			||	(allLinksForNodeProcessed.size() > 2)) {
 			//Получили достаточно длинный сегмент или наткнулись на узел с развилкой -
 			//создаём элемент отображения и дальше тянем новый(е) элемент отображения,
 			//начиная от рассматриваемого элемента.
@@ -1374,18 +1384,16 @@ public class LogicalNetLayer
 			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
 				//Исключаем из списка линк, по которому мы пришли в данный узел
 				if (!outgoingLink.equals(incomingLink))		
-					if ( (outgoingLink.getEndNode().equals(nodeProcessed))
-							|| (outgoingLink.getStartNode().equals(nodeProcessed)))
-				if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-					nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
-					pullVisualLinksFromNode(
-							nodeToPullFrom, 
-							nodeProcessed,
-							outgoingLink, 
-							nodesCalculated, 
-							nodeLinksCalculated,
-							frontedge,
-							map);
+					if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+						nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
+						pullVisualLinksFromNode(
+								nodeToPullFrom, 
+								nodeProcessed,
+								outgoingLink, 
+								nodesCalculated, 
+								nodeLinksCalculated,
+								frontedge,
+								map);
 				}
 			}
 			//Отмечаем в таблице, что узел обработан. 
@@ -1447,5 +1455,54 @@ public class LogicalNetLayer
 		long t2 = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.drawVisualLinks | " + String.valueOf(t2 - t1) + " ms\n", 
 				Level.INFO);
+	}
+	
+	private void searchLinksForNodes()
+	{
+		long t1 = System.currentTimeMillis();
+
+		//Cleaning the map
+		//TODO Здесь аррэй листы должны старые чиститься и дальше использоваться		
+		this.linksForNodes.clear();		
+
+		/////////////////////////
+//		java.util.Map<AbstractNode,Set<NodeLink>> newlfnMap =
+//			new HashMap<AbstractNode,Set<NodeLink>>();
+//		
+//		Collection <Set<NodeLink>> emptySets = this.linksForNodes.values();
+//		for (Iterator emptySetsIt = emptySets.iterator(); emptySetsIt.hasNext();)
+//		{
+//			Set set = (Set)emptySetsIt.next();
+//			set.clear();
+//		}
+		/////////////////////////		
+		
+		for (Iterator nodesLinksIt = this.mapView.getMap().getNodeLinks().iterator();
+				nodesLinksIt.hasNext();)
+		{
+			NodeLink link = (NodeLink)nodesLinksIt.next();
+			
+			AbstractNode startNode = link.getStartNode();
+			Set<NodeLink> startNodeLinksSet = this.linksForNodes.get(startNode);
+			if (startNodeLinksSet == null)
+			{
+				startNodeLinksSet = new HashSet<NodeLink>();
+				this.linksForNodes.put(startNode,startNodeLinksSet);
+			}
+			startNodeLinksSet.add(link);
+
+			AbstractNode endNode = link.getEndNode();
+			Set<NodeLink> endNodeLinksSet = this.linksForNodes.get(endNode);
+			if (endNodeLinksSet == null)
+			{
+				endNodeLinksSet = new HashSet<NodeLink>();
+				this.linksForNodes.put(endNode,endNodeLinksSet);
+			}
+			endNodeLinksSet.add(link);
+		}
+		
+		long t2 = System.currentTimeMillis();		
+		Log.debugMessage("LogicalNetLayer.searchLinksForNodes | total time"
+				+ (t2 - t1) + " ms.", Level.INFO);		
 	}
 }
