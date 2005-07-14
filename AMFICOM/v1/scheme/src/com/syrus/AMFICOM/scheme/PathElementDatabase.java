@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.10 2005/07/14 18:40:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 18:40:45 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -143,13 +143,13 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		PathElement pe = fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(pe.getParentSchemePath().getId()) + COMMA
+		String sql = DatabaseIdentifier.toSQLString(pe.getParentSchemePathId()) + COMMA
 				+ APOSTROPHE + pe.getSequentialNumber() + APOSTROPHE + COMMA
 				+ APOSTROPHE + pe.getKind().value() + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getStartAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getEndAbstractSchemePort().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getSchemeCableLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getSchemeLink().getId());
+				+ DatabaseIdentifier.toSQLString(pe.getStartAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pe.getEndAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pe.getSchemeCableThreadId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(pe.getSchemeLinkId());
 		return sql;
 	}
 
@@ -167,13 +167,13 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
 		PathElement pe = fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getParentSchemePath().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getParentSchemePathId());
 		preparedStatement.setInt(++startParameterNumber, pe.getSequentialNumber());
 		preparedStatement.setInt(++startParameterNumber, pe.getKind().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getStartAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getEndAbstractSchemePort().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeCableLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeLink().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getStartAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getEndAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeCableThreadId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeLinkId());
 		return startParameterNumber;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.44 2005/07/13 11:08:01 bass Exp $
+ * $Id: PathElement.java,v 1.45 2005/07/14 18:40:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort.PORTTYPESORT_OPTICAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
@@ -16,6 +17,17 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_CABLE_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_ELEMENT;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_CABLE_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_ELEMENT;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_LINK;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -25,7 +37,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -55,7 +66,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/13 11:08:01 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/14 18:40:45 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -161,7 +172,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.sequentialNumber = parentSchemePath == null
 				? -1
 				: parentSchemePath.getPathElements().size();
-		this.kind = Kind.SCHEME_ELEMENT;
+		this.kind = SCHEME_ELEMENT;
 		this.startAbstractSchemePortId = Identifier.possiblyVoid(startAbstractSchemePort);
 		this.endAbstractSchemePortId = Identifier.possiblyVoid(endSbstractSchemePort);
 		this.schemeCableThreadId = VOID_IDENTIFIER;
@@ -194,7 +205,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.sequentialNumber = parentSchemePath == null
 				? -1
 				: parentSchemePath.getPathElements().size();
-		this.kind = Kind.SCHEME_CABLE_LINK;
+		this.kind = SCHEME_CABLE_LINK;
 		this.startAbstractSchemePortId = VOID_IDENTIFIER;
 		this.endAbstractSchemePortId = VOID_IDENTIFIER;
 		this.schemeCableThreadId = Identifier.possiblyVoid(schemeCableThread);
@@ -227,7 +238,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this.sequentialNumber = parentSchemePath == null
 				? -1
 				: parentSchemePath.getPathElements().size();
-		this.kind = Kind.SCHEME_LINK;
+		this.kind = SCHEME_LINK;
 		this.startAbstractSchemePortId = VOID_IDENTIFIER;
 		this.endAbstractSchemePortId = VOID_IDENTIFIER;
 		this.schemeCableThreadId = VOID_IDENTIFIER;
@@ -405,11 +416,11 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	public AbstractSchemeElement getAbstractSchemeElement() {
 		switch (this.kind.value()) {
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				return this.getSchemeCableLink();
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				return this.getSchemeElement();
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				return this.getSchemeLink();
 			default:
 				throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
@@ -429,19 +440,19 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 				&& this.schemeCableThreadId != null
 				&& this.schemeLinkId != null : OBJECT_NOT_INITIALIZED;
 		switch (this.kind.value()) {
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				assert (isFirst() || !this.startAbstractSchemePortId.isVoid())
 						&& (isLast() || !this.endAbstractSchemePortId.isVoid())
 						&& this.schemeCableThreadId.isVoid()
 						&& this.schemeLinkId.isVoid(): OBJECT_BADLY_INITIALIZED;
 				break;
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				assert this.startAbstractSchemePortId.isVoid()
 						&& this.endAbstractSchemePortId.isVoid()
 						&& !this.schemeCableThreadId.isVoid()
 						&& this.schemeLinkId.isVoid(): OBJECT_BADLY_INITIALIZED;
 				break;
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				assert this.startAbstractSchemePortId.isVoid()
 						&& this.endAbstractSchemePortId.isVoid()
 						&& this.schemeCableThreadId.isVoid()
@@ -468,20 +479,33 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return getAbstractSchemeElement().getDescription();
 	}
 
-	public AbstractSchemePort getEndAbstractSchemePort() {
-		if (this.kind.value() != Kind._SCHEME_ELEMENT)
-			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+	Identifier getEndAbstractSchemePortId() {
 		assert this.endAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
-		if (isLast())
-			return null;
-		assert !this.endAbstractSchemePortId.isVoid(): OBJECT_BADLY_INITIALIZED;
+
+		final boolean endAbstractSchemePortIdVoid = this.endAbstractSchemePortId.isVoid();
+		final short endAbstractSchemePortIdMajor = this.endAbstractSchemePortId.getMajor();
+
+		assert endAbstractSchemePortIdVoid
+				|| endAbstractSchemePortIdMajor == SCHEMEPORT_CODE
+				|| endAbstractSchemePortIdMajor == SCHEMECABLEPORT_CODE;
+		if (this.kind == SCHEME_ELEMENT) {
+			assert isLast() || !endAbstractSchemePortIdVoid : OBJECT_BADLY_INITIALIZED;
+		} else {
+			assert endAbstractSchemePortIdVoid;
+		}
+		return this.endAbstractSchemePortId;
+	}
+
+	/**
+	 * A wrapper around {@link #getEndAbstractSchemePortId()}.
+	 */
+	public AbstractSchemePort getEndAbstractSchemePort() {
+		if (this.kind != SCHEME_ELEMENT)
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.endAbstractSchemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getEndAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false: ae.getMessage();
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
@@ -498,10 +522,18 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return getAbstractSchemeElement().getParentScheme();
 	}
 
-	public SchemePath getParentSchemePath() {
+	Identifier getParentSchemePathId() {
 		assert this.parentSchemePathId != null && !this.parentSchemePathId.isVoid(): OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
+		return this.parentSchemePathId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemePathId()}.
+	 */
+	public SchemePath getParentSchemePath() {
 		try {
-			return (SchemePath) StorableObjectPool.getStorableObject(this.parentSchemePathId, true);
+			return (SchemePath) StorableObjectPool.getStorableObject(this.getParentSchemePathId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -517,18 +549,23 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return getSchemeCableThread().getParentSchemeCableLink();
 	}
 
-	public SchemeCableThread getSchemeCableThread() {
-		if (this.kind.value() != Kind._SCHEME_CABLE_LINK)
-			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+	Identifier getSchemeCableThreadId() {
 		assert this.schemeCableThreadId != null: OBJECT_NOT_INITIALIZED;
-		assert !this.schemeCableThreadId.isVoid(): OBJECT_BADLY_INITIALIZED;
+		assert this.schemeCableThreadId.isVoid() ^ this.kind == SCHEME_CABLE_LINK;
+		assert this.schemeCableThreadId.isVoid() ^ this.schemeCableThreadId.getMajor() == SCHEMECABLETHREAD_CODE;
+		return this.schemeCableThreadId;
+	}
+
+	/**
+	 * A wrapper around {@link #getSchemeCableThreadId()}.
+	 */
+	public SchemeCableThread getSchemeCableThread() {
+		if (this.kind != SCHEME_CABLE_LINK)
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+
 		try {
-			return (SchemeCableThread) StorableObjectPool.getStorableObject(this.schemeCableThreadId, true);
+			return (SchemeCableThread) StorableObjectPool.getStorableObject(this.getSchemeCableThreadId(), true);
 		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false: ae.getMessage();
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
@@ -540,18 +577,23 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return parentSchemeDevice.getParentSchemeElement();
 	}
 
+	Identifier getSchemeLinkId() {
+		assert this.schemeLinkId != null : OBJECT_NOT_INITIALIZED;
+		assert this.schemeLinkId.isVoid() ^ this.kind == SCHEME_LINK;
+		assert this.schemeLinkId.isVoid() ^ this.schemeLinkId.getMajor() == SCHEMELINK_CODE;
+		return this.schemeLinkId;
+	}
+
+	/**
+	 * A wrapper around {@link #getSchemeLinkId()}.
+	 */
 	public SchemeLink getSchemeLink() {
-		if (this.kind.value() != Kind._SCHEME_LINK)
+		if (this.kind != SCHEME_LINK)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		assert this.schemeLinkId != null: OBJECT_NOT_INITIALIZED;
-		assert !this.schemeLinkId.isVoid(): OBJECT_BADLY_INITIALIZED;
+
 		try {
-			return (SchemeLink) StorableObjectPool.getStorableObject(this.schemeLinkId, true);
+			return (SchemeLink) StorableObjectPool.getStorableObject(this.getSchemeLinkId(), true);
 		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false: ae.getMessage();
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
@@ -569,20 +611,41 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return this.sequentialNumber;
 	}
 
+	Identifier getStartAbstractSchemePortId() {
+		assert this.startAbstractSchemePortId != null : OBJECT_NOT_INITIALIZED;
+		
+		final boolean startAbstractSchemePortIdVoid = this.startAbstractSchemePortId.isVoid();
+		final short startAbstractSchemePortIdMajor = this.startAbstractSchemePortId.getMajor();
+
+		assert startAbstractSchemePortIdVoid
+				|| startAbstractSchemePortIdMajor == SCHEMEPORT_CODE
+				|| startAbstractSchemePortIdMajor == SCHEMECABLEPORT_CODE;
+		/*
+		 * If this is a "SCHEME_ELEMENT" PathElement, then do a full
+		 * check (starting AbstractSchemePort is permitted to (but not
+		 * necessarilly should) be null only if this PathElement is a
+		 * first one in the SchemePath that contains it.
+		 * 
+		 * Otherwise, require the unused field to be null.
+		 */
+		if (this.kind == SCHEME_ELEMENT) {
+			assert isFirst() || !startAbstractSchemePortIdVoid : OBJECT_BADLY_INITIALIZED;
+		} else {
+			assert startAbstractSchemePortIdVoid;
+		}
+		return this.startAbstractSchemePortId;
+	}
+
+	/**
+	 * A wrapper around {@link #getStartAbstractSchemePortId()}.
+	 */
 	public AbstractSchemePort getStartAbstractSchemePort() {
-		if (this.kind.value() != Kind._SCHEME_ELEMENT)
+		if (this.kind != SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		assert this.startAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
-		if (isFirst())
-			return null;
-		assert !this.startAbstractSchemePortId.isVoid(): OBJECT_BADLY_INITIALIZED;
+
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.startAbstractSchemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getStartAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false: ae.getMessage();
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
@@ -596,15 +659,15 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	public IdlPathElement getTransferable(final ORB orb) {
 		final Data data = new Data();
 		switch (this.kind.value()) {
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				data.schemeElementData(this.kind, new SchemeElementData(
 						this.startAbstractSchemePortId.getTransferable(),
 						this.endAbstractSchemePortId.getTransferable()));
 				break;
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				data.schemeCableThreadId(this.kind, this.schemeCableThreadId.getTransferable());
 				break;
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				data.schemeLinkId(this.kind, this.schemeLinkId.getTransferable());
 				break;
 			default:
@@ -623,13 +686,13 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	public void setAbstractSchemeElement(final AbstractSchemeElement abstractSchemeElement) {
 		switch (this.kind.value()) {
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				setSchemeCableLink((SchemeCableLink) abstractSchemeElement);
 				break;
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				setSchemeElement((SchemeElement) abstractSchemeElement);
 				break;
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				setSchemeLink((SchemeLink) abstractSchemeElement);
 				break;
 			default:
@@ -669,18 +732,18 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 				&& schemeCableThreadId != null
 				&& schemeLinkId != null : NON_NULL_EXPECTED;
 		switch (kind.value()) {
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				assert (sequentialNumber == 0 || !startAbstractSchemePortId.isVoid())
 						&& schemeCableThreadId.isVoid()
 						&& schemeLinkId.isVoid();
 				break;
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				assert startAbstractSchemePortId.isVoid()
 						&& endAbstractSchemePortId.isVoid()
 						&& !schemeCableThreadId.isVoid()
 						&& schemeLinkId.isVoid();
 				break;
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				assert startAbstractSchemePortId.isVoid()
 						&& endAbstractSchemePortId.isVoid()
 						&& schemeCableThreadId.isVoid()
@@ -707,7 +770,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
-		if (this.kind.value() != Kind._SCHEME_ELEMENT)
+		if (this.kind != SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		assert endAbstractSchemePort != null: NON_NULL_EXPECTED;
 		/*
@@ -718,7 +781,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert isFirst()
+		assert (isFirst() && this.startAbstractSchemePortId.isVoid())
 				|| getStartAbstractSchemePort().getParentSchemeDevice()
 				== endAbstractSchemePort.getParentSchemeDevice(): NO_COMMON_PARENT;
 		final Identifier newEndAbstractSchemePortId = endAbstractSchemePort.getId();
@@ -772,7 +835,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		if (this.kind.value() != Kind._SCHEME_CABLE_LINK)
+		if (this.kind != SCHEME_CABLE_LINK)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		assert schemeCableThread != null: NON_NULL_EXPECTED;
 		final Identifier newSchemeCableThreadId = schemeCableThread.getId();
@@ -789,7 +852,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setSchemeLink(final SchemeLink schemeLink) {
-		if (this.kind.value() != Kind._SCHEME_LINK)
+		if (this.kind != SCHEME_LINK)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		assert schemeLink != null: NON_NULL_EXPECTED;
 		final Identifier newSchemeLinkId = schemeLink.getId();
@@ -800,7 +863,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
-		if (this.kind.value() != Kind._SCHEME_ELEMENT)
+		if (this.kind != SCHEME_ELEMENT)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 		assert startAbstractSchemePort != null: NON_NULL_EXPECTED;
 		/*
@@ -811,7 +874,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * (scheme ports and scheme cable ports will have NO parent
 		 * device).
 		 */
-		assert isLast()
+		assert (isLast() && this.endAbstractSchemePortId.isVoid())
 				|| getEndAbstractSchemePort().getParentSchemeDevice()
 				== startAbstractSchemePort.getParentSchemeDevice(): NO_COMMON_PARENT;
 		final Identifier newStartAbstractSchemePortId = startAbstractSchemePort.getId();
@@ -842,20 +905,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		final Data data = pathElement.data;
 		this.kind = data.discriminator();
 		switch (this.kind.value()) {
-			case Kind._SCHEME_ELEMENT:
+			case _SCHEME_ELEMENT:
 				final SchemeElementData schemeElementData = data.schemeElementData();
 				this.startAbstractSchemePortId = new Identifier(schemeElementData.startAbstractSchemePortId);
 				this.endAbstractSchemePortId = new Identifier(schemeElementData.endAbstractSchemePortId);
 				this.schemeCableThreadId = VOID_IDENTIFIER;
 				this.schemeLinkId = VOID_IDENTIFIER;
 				break;
-			case Kind._SCHEME_CABLE_LINK:
+			case _SCHEME_CABLE_LINK:
 				this.startAbstractSchemePortId = VOID_IDENTIFIER;
 				this.endAbstractSchemePortId = VOID_IDENTIFIER;
 				this.schemeCableThreadId = new Identifier(data.schemeCableThreadId());
 				this.schemeLinkId = VOID_IDENTIFIER;
 				break;
-			case Kind._SCHEME_LINK:
+			case _SCHEME_LINK:
 				this.startAbstractSchemePortId = VOID_IDENTIFIER;
 				this.endAbstractSchemePortId = VOID_IDENTIFIER;
 				this.schemeCableThreadId = VOID_IDENTIFIER;
@@ -870,35 +933,23 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * Non-model members.                                                 *
 	 **********************************************************************/
 
-	/**
-	 * May return <code>false</code> if this <code>PathElement</code> is a
-	 * true first one, but its starting <code>AbstractSchemePort</code> is
-	 * non-empty.
-	 */
 	private boolean isFirst() {
-		return this.sequentialNumber == 0
-				&& this.startAbstractSchemePortId.isVoid();
+		return this.sequentialNumber == 0;
 	}
 
-	/**
-	 * May return <code>false</code> if this <code>PathElement</code> is a
-	 * true last one, but its ending <code>AbstractSchemePort</code> is
-	 * non-empty.
-	 */
 	private boolean isLast() {
-		return this.sequentialNumber + 1 == getParentSchemePath().getPathElements().size()
-				&& this.endAbstractSchemePortId.isVoid();
+		return this.sequentialNumber + 1 == getParentSchemePath().getPathElements().size();
 	}
 
 	boolean hasOpticalPort() {
 		final AbstractSchemePort startAbstractSchemePort = getStartAbstractSchemePort();
 		if (startAbstractSchemePort instanceof SchemePort
-				&& startAbstractSchemePort.getPortType().getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL)
+				&& startAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL)
 			return true;
 		
 		final AbstractSchemePort endAbstractSchemePort = getEndAbstractSchemePort();
 		if (endAbstractSchemePort instanceof SchemePort
-				&& endAbstractSchemePort.getPortType().getSort().value() == PortTypeSort._PORTTYPESORT_OPTICAL)
+				&& endAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL)
 			return true;
 		return false;
 	}
