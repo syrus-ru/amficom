@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.43 2005/07/14 13:32:15 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.44 2005/07/14 13:57:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/14 13:32:15 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/14 13:57:07 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -321,8 +321,7 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	Identifier getParentSchemeId() {
 		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
-		final boolean parentSchemeIdVoid = this.parentSchemeId.isVoid();
-		assert !parentSchemeIdVoid : EXACTLY_ONE_PARENT_REQUIRED;
+		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		assert this.parentSchemeId.getMajor() == SCHEME_CODE;
 		return this.parentSchemeId;
 	}
