@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.11 2005/07/14 16:46:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:46:12 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -101,9 +101,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		SchemePath schemePath = fromStorableObject(storableObject);
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPath().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolution().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getParentScheme().getId());
+				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPathId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolutionId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeId());
 		return sql;
 	}
 
@@ -123,9 +123,9 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 		SchemePath schemePath = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPath().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolution().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentScheme().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPathId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolutionId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeId());
 		return startParameterNumber;
 	}
 

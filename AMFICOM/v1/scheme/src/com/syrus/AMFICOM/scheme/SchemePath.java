@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.48 2005/07/13 11:08:00 bass Exp $
+ * $Id: SchemePath.java,v 1.49 2005/07/14 16:46:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -60,7 +63,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/13 11:08:00 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/14 16:46:12 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -257,21 +260,37 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		return this.name;
 	}
 
-	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
+	Identifier getParentSchemeMonitoringSolutionId() {
 		assert this.parentSchemeMonitoringSolutionId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeMonitoringSolutionId.isVoid() || this.parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+		return this.parentSchemeMonitoringSolutionId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeMonitoringSolutionId()}.
+	 */
+	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
 		try {
-			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.parentSchemeMonitoringSolutionId, true);
+			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.getParentSchemeMonitoringSolutionId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public Scheme getParentScheme() {
+	Identifier getParentSchemeId() {
 		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId.getMajor() == SCHEME_CODE;
+		return this.parentSchemeId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeId()}.
+	 */
+	public Scheme getParentScheme() {
 		try {
-			return (Scheme) StorableObjectPool.getStorableObject(this.parentSchemeId, true);
+			return (Scheme) StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -315,10 +334,18 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 				Identifier.createTransferables(this.characteristics));
 	}
 
-	public TransmissionPath getTransmissionPath() {
+	Identifier getTransmissionPathId() {
 		assert this.transmissionPathId != null: OBJECT_NOT_INITIALIZED;
+		assert this.transmissionPathId.isVoid() || this.transmissionPathId.getMajor() == TRANSPATH_CODE;
+		return this.transmissionPathId;
+	}
+
+	/**
+	 * A wrapper around {@link #getTransmissionPathId()}.
+	 */
+	public TransmissionPath getTransmissionPath() {
 		try {
-			return (TransmissionPath) StorableObjectPool.getStorableObject(this.transmissionPathId, true);
+			return (TransmissionPath) StorableObjectPool.getStorableObject(this.getTransmissionPathId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
