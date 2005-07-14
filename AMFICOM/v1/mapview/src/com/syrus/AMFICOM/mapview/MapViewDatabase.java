@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.28 2005/06/24 14:19:36 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.29 2005/07/14 16:08:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/06/24 14:19:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/07/14 16:08:06 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends CharacterizableDatabase {
@@ -153,8 +153,8 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MapView mapView = fromStorableObject(storableObject);
 		String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ mapView.getLongitude() + COMMA
 			+ mapView.getLatitude() + COMMA
 			+ mapView.getScale() + COMMA

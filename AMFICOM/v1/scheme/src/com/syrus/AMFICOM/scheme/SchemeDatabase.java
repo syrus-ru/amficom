@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.12 2005/07/14 07:55:35 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.13 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/14 07:55:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -154,17 +154,17 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		Scheme scheme = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(scheme.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(scheme.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(scheme.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + scheme.getWidth() + COMMA
-				+ APOSTOPHE + scheme.getHeight() + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(scheme.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(scheme.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(scheme.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + scheme.getWidth() + COMMA
+				+ APOSTROPHE + scheme.getHeight() + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getDomainId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getMapId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getSymbolId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getUgoCellId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getSchemeCellId()) + COMMA
-				+ APOSTOPHE + scheme.getKind().value() + COMMA
+				+ APOSTROPHE + scheme.getKind().value() + COMMA
 				+ DatabaseIdentifier.toSQLString(scheme.getParentSchemeElementId());
 		return sql;
 	}

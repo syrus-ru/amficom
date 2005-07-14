@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.7 2005/06/27 10:17:14 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.8 2005/07/14 16:08:04 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/27 10:17:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
@@ -183,17 +183,17 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(StorableObjectDatabase.EQUALS);
-						buffer.append(StorableObjectDatabase.APOSTOPHE);
+						buffer.append(StorableObjectDatabase.APOSTROPHE);
 						buffer.append(DatabaseString.toQuerySubString(v));
-						buffer.append(StorableObjectDatabase.APOSTOPHE);
+						buffer.append(StorableObjectDatabase.APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
 						buffer.append(" LIKE ");
-						buffer.append(StorableObjectDatabase.APOSTOPHE);
+						buffer.append(StorableObjectDatabase.APOSTROPHE);
 						buffer.append("%");
 						buffer.append(DatabaseString.toQuerySubString(v));
 						buffer.append("%");
-						buffer.append(StorableObjectDatabase.APOSTOPHE);
+						buffer.append(StorableObjectDatabase.APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_REGEXP:
 						/* TODO isn't implement */

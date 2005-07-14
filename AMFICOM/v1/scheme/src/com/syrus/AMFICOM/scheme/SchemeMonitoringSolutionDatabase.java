@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.9 2005/07/14 13:35:51 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 13:35:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
@@ -139,8 +139,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeMonitoringSolution schemeMonitoringSolution = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ schemeMonitoringSolution.getPrice() + COMMA
 				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfoId());

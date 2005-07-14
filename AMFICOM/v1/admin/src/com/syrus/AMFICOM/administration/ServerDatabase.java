@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.27 2005/06/25 17:50:50 bass Exp $
+ * $Id: ServerDatabase.java,v 1.28 2005/07/14 16:08:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/25 17:50:50 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -72,9 +72,9 @@ public final class ServerDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Server server = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(server.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(server.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(server.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE;
 	}
 
 	@Override

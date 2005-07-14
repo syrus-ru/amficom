@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.27 2005/06/17 11:01:12 bass Exp $
+ * $Id: SiteNodeDatabase.java,v 1.28 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:03 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -100,8 +100,8 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 	
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SiteNode siteNode = fromStorableObject(storableObject);
-		String values = APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ siteNode.getLocation().getX() + COMMA
 			+ siteNode.getLocation().getY() + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNode.getImageId()) + COMMA

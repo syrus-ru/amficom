@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.27 2005/06/25 17:50:50 bass Exp $
+ * $Id: DomainDatabase.java,v 1.28 2005/07/14 16:08:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/06/25 17:50:50 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:06 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -70,8 +70,8 @@ public final class DomainDatabase extends CharacterizableDatabase {
 		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		String sql = DatabaseIdentifier.toSQLString(domainId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(domain.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(domain.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

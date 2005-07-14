@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.30 2005/07/13 15:05:41 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.31 2005/07/14 16:08:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/13 15:05:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/07/14 16:08:06 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -79,9 +79,9 @@ public final class MCMDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final MCM mcm = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(mcm.getServerId());
 		return sql;

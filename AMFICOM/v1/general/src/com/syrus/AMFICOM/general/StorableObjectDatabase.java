@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.163 2005/07/13 10:08:05 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.164 2005/07/14 16:08:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,14 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.163 $, $Date: 2005/07/13 10:08:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.164 $, $Date: 2005/07/14 16:08:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
 public abstract class StorableObjectDatabase {
 
-	public static final String APOSTOPHE = "'";
+	public static final String APOSTROPHE = "'";
 	public static final String CLOSE_BRACKET = " ) ";
 
 	public static final String DOT = " . ";

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemePathDatabase extends CharacterizableDatabase {
@@ -99,8 +99,8 @@ public final class SchemePathDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemePath schemePath = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPath().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolution().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePath.getParentScheme().getId());

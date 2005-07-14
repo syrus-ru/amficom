@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.7 2005/06/25 17:50:50 bass Exp $
+ * $Id: SystemUserDatabase.java,v 1.8 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/25 17:50:50 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module administration_v1
  */
@@ -73,10 +73,10 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SystemUser user = this.fromStorableObject(storableObject);
-		return APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(user.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 	public SystemUser retrieveForLogin(String login) throws RetrieveObjectException, ObjectNotFoundException {
 		String condition = SystemUserWrapper.COLUMN_LOGIN
 				+ EQUALS
-				+ APOSTOPHE + DatabaseString.toQuerySubString(login, SIZE_LOGIN_COLUMN) + APOSTOPHE;
+				+ APOSTROPHE + DatabaseString.toQuerySubString(login, SIZE_LOGIN_COLUMN) + APOSTROPHE;
 		try {
 			final Set set = this.retrieveByCondition(condition);
 			if (!set.isEmpty())

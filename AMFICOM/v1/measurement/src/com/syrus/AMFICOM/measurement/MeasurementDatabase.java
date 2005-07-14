@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.82 2005/06/27 10:37:36 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.83 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/06/27 10:37:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -96,12 +96,12 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		final Measurement measurement = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getSetup().getId()) + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
 			+ Long.toString(measurement.getDuration()) + COMMA
 			+ Integer.toString(measurement.getStatus().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getTestId());
 		return sql;
 	}

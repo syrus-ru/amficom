@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.24 2005/06/17 11:01:12 bass Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.25 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/14 16:08:03 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -85,9 +85,9 @@ public final class SiteNodeTypeDatabase extends CharacterizableDatabase {
 	
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SiteNodeType siteNodeType = fromStorableObject(storableObject);
-		String values = APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNodeType.getImageId()) + COMMA
 			+ (siteNodeType.isTopological() ? 1 : 0);
 		return values;

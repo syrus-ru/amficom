@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.8 2005/07/14 15:55:55 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/14 15:55:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeCableThreadDatabase extends CharacterizableDatabase {
@@ -102,8 +102,8 @@ public final class SchemeCableThreadDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeCableThread schemeCableThread = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCableThread.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeCableThread.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCableThread.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableThread.getCableThreadTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableThread.getLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableThread.getParentSchemeCableLinkId()) + COMMA

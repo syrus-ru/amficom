@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.8 2005/07/14 13:20:34 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/14 13:20:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -160,20 +160,20 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeOptimizeInfo schemeOptimizeInfo = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getOptimizationMode() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getIterations() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getPrice() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getWaveLength() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getLenMargin() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getMutationRate() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getMutationDegree() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getRtuDeleteProb() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getRtuCreateProb() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getNodesSpliceProb() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getNodesCutProb() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeOptimizeInfo.getSurvivorRate() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeOptimizeInfo.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getOptimizationMode() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getIterations() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getPrice() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getWaveLength() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getLenMargin() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getMutationRate() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getMutationDegree() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getRtuDeleteProb() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getRtuCreateProb() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getNodesSpliceProb() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getNodesCutProb() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeOptimizeInfo.getSurvivorRate() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeOptimizeInfo.getParentSchemeId());
 		return sql;
 	}

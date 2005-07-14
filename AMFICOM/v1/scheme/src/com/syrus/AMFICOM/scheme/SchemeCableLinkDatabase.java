@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.9 2005/07/14 13:08:51 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 13:08:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
@@ -106,10 +106,10 @@ public final class SchemeCableLinkDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeCableLink schemeCableLink = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCableLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeCableLink.getPhysicalLength() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeCableLink.getOpticalLength() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeCableLink.getPhysicalLength() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeCableLink.getOpticalLength() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceAbstractSchemePortId()) + COMMA

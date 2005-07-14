@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.10 2005/07/14 14:24:06 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.11 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 14:24:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends CharacterizableDatabase {
@@ -105,9 +105,9 @@ public final class SchemeCablePortDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeCablePort schemeCablePort = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeCablePort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeCablePort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeCablePort.getDirectionType().value() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeCablePort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCablePort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeCablePort.getDirectionType().value() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPortId()) + COMMA

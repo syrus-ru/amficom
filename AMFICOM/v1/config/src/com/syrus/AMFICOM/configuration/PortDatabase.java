@@ -1,5 +1,5 @@
 /*-
- * $Id: PortDatabase.java,v 1.63 2005/07/04 11:33:30 bass Exp $
+ * $Id: PortDatabase.java,v 1.64 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/07/04 11:33:30 $
+ * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -75,7 +75,7 @@ public final class PortDatabase extends CharacterizableDatabase {
 		final Identifier typeId = port.getType().getId();
 		final Identifier equipmentId = port.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupDatabase.java,v 1.10 2005/07/12 10:16:51 bass Exp $
+ * $Id: SchemeProtoGroupDatabase.java,v 1.11 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/12 10:16:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
@@ -134,8 +134,8 @@ public final class SchemeProtoGroupDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeProtoGroup spg = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(spg.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-		+ APOSTOPHE + DatabaseString.toQuerySubString(spg.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(spg.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		+ APOSTROPHE + DatabaseString.toQuerySubString(spg.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 		+ DatabaseIdentifier.toSQLString(spg.getSymbolId()) + COMMA
 		+ DatabaseIdentifier.toSQLString(spg.getParentSchemeProtoGroupId());
 		return sql;

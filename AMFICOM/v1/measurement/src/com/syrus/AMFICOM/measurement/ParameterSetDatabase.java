@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.5 2005/06/27 10:57:49 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.6 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/27 10:57:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -81,7 +81,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		ParameterSet set = this.fromStorableObject(storableObject);
 		String values = Integer.toString(set.getSort().value()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 

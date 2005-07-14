@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.8 2005/07/12 08:40:54 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -144,8 +144,8 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException {
 		PathElement pe = fromStorableObject(storableObject);
 		String sql = DatabaseIdentifier.toSQLString(pe.getParentSchemePath().getId()) + COMMA
-				+ APOSTOPHE + pe.getSequentialNumber() + APOSTOPHE + COMMA
-				+ APOSTOPHE + pe.getKind().value() + APOSTOPHE + COMMA
+				+ APOSTROPHE + pe.getSequentialNumber() + APOSTROPHE + COMMA
+				+ APOSTROPHE + pe.getKind().value() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(pe.getStartAbstractSchemePort().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(pe.getEndAbstractSchemePort().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(pe.getSchemeCableLink().getId()) + COMMA

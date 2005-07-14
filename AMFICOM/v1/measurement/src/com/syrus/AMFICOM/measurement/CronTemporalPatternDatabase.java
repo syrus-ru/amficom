@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.7 2005/06/27 10:26:49 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.8 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/27 10:26:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -77,9 +77,9 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 		final String[] cronStrings = temporalPattern.getCronStrings();
 		final StringBuffer stringBuffer = new StringBuffer(CRONSTRINGARRAY_TYPE_NAME + OPEN_BRACKET);
 		for (int i = 0; i < cronStrings.length; i++) {
-			stringBuffer.append(APOSTOPHE);
+			stringBuffer.append(APOSTROPHE);
 			stringBuffer.append(cronStrings[i]);
-			stringBuffer.append(APOSTOPHE);
+			stringBuffer.append(APOSTROPHE);
 			if (i != cronStrings.length -1)
 				stringBuffer.append(COMMA);
 		}
@@ -91,7 +91,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		final String sql = APOSTOPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ this.getUpdateCronStringArray(temporalPattern);
 		return sql;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.34 2005/06/24 14:20:29 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.35 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/24 14:20:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/07/14 16:08:03 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class CollectorDatabase extends CharacterizableDatabase {
@@ -112,8 +112,8 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Collector collector = fromStorableObject(storableObject);
-		String values = APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+		String values = APOSTROPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 

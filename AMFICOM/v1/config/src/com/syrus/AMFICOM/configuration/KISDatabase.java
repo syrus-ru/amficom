@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.76 2005/06/17 12:32:20 bass Exp $
+ * $Id: KISDatabase.java,v 1.77 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.77 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -90,9 +90,9 @@ public final class KISDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		KIS kis = this.fromStorableObject(storableObject);
 		String sql = DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
 			+ kis.getTCPPort() + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getEquipmentId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(kis.getMCMId());

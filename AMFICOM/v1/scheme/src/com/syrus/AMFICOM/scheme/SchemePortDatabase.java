@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.10 2005/07/14 14:24:06 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.11 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 14:24:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemePortDatabase extends CharacterizableDatabase {
@@ -104,8 +104,8 @@ public final class SchemePortDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemePort schemePort = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemePort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemePort.getDirectionType().value() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemePort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemePort.getDirectionType().value() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePort.getPortTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePort.getPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePort.getMeasurementPortId()) + COMMA

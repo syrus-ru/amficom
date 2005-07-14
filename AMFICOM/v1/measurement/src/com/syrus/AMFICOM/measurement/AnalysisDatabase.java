@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.63 2005/07/13 09:27:58 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.64 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/07/13 09:27:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -89,7 +89,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 		String values = DatabaseIdentifier.toSQLString(analysis.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(analysis.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(analysis.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(analysis.getCriteriaSet().getId());
 		return values;
 	}

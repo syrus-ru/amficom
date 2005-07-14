@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.25 2005/06/17 11:01:12 bass Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.26 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/06/17 11:01:12 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/14 16:08:03 $
  * @author $Author: bass $
  * @module map_v1
  */
@@ -85,9 +85,9 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
-		String values = APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ physicalLinkType.getBindingDimension().getWidth() + COMMA
 			+ physicalLinkType.getBindingDimension().getHeight();
 		return values;

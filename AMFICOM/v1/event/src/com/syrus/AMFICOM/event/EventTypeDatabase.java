@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.30 2005/07/03 19:16:27 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.31 2005/07/14 16:08:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/03 19:16:27 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/14 16:08:02 $
  * @author $Author: bass $
  * @module event_v1
  */
@@ -86,8 +86,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		final EventType eventType = this.fromStorableObject(storableObject);		
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

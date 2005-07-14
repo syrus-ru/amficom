@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.8 2005/06/25 17:50:50 bass Exp $
+ * $Id: ServerProcessDatabase.java,v 1.9 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:50:50 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module admin_v1
  */
@@ -72,10 +72,10 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		return APOSTOPHE + DatabaseString.toQuerySubString(serverProcess.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(serverProcess.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(serverProcess.getServerId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(serverProcess.getUserId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 		String condition = ServerProcessWrapper.COLUMN_SERVER_ID + EQUALS + DatabaseIdentifier.toSQLString(serverId)
 				+ SQL_AND
 				+ StorableObjectWrapper.COLUMN_CODENAME + EQUALS
-					+ APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE;
+					+ APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTROPHE;
 		Set objects = this.retrieveByCondition(condition);
 		if (!objects.isEmpty())
 			return (ServerProcess) objects.iterator().next();

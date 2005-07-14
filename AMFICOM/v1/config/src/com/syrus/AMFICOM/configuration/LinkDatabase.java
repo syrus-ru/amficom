@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.43 2005/06/22 15:05:18 bass Exp $
+ * $Id: LinkDatabase.java,v 1.44 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/06/22 15:05:18 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -96,13 +96,13 @@ public final class LinkDatabase extends CharacterizableDatabase {
 		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
 		String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
-			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
-			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
-			+ APOSTOPHE + link.getColor() + APOSTOPHE + COMMA
-			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
+			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + (inventoryNo != null ? inventoryNo : "") + APOSTROPHE + COMMA
+			+ APOSTROPHE + (supplier != null ? supplier : "") + APOSTROPHE + COMMA
+			+ APOSTROPHE + (supplierCode != null ? supplierCode : "") + APOSTROPHE + COMMA
+			+ APOSTROPHE + link.getColor() + APOSTROPHE + COMMA
+			+ APOSTROPHE + (mark != null ? mark : "") + APOSTROPHE;
 		return sql;
 	}
 	

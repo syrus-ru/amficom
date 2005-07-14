@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.53 2005/06/17 12:32:20 bass Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.54 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -72,8 +72,8 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
 		String sql = DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE	+ COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE	+ COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
 			+ DatabaseIdentifier.toSQLString(portId);
 		return sql;

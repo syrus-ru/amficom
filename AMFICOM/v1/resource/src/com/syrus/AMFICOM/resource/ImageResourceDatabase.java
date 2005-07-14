@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.26 2005/06/24 14:13:09 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.27 2005/07/14 16:08:06 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/06/24 14:13:09 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/14 16:08:06 $
  * @module resource_v1
  */
 
@@ -160,8 +160,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			throw new IllegalDataException("ImageResourceDatabase.getUpdateSingleSQLValues | Illegal AbstractImageResource : " + abstractImageResource.getClass().getName());
 		}
 
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTOPHE + COMMA
-			+ APOSTOPHE + sort.value() + APOSTOPHE;
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTROPHE + COMMA
+			+ APOSTROPHE + sort.value() + APOSTROPHE;
 		return sql;
 	}
 

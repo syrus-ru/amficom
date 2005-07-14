@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.8 2005/07/14 13:49:37 bass Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/14 13:49:37 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeDeviceDatabase extends CharacterizableDatabase {
@@ -96,8 +96,8 @@ public final class SchemeDeviceDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeDevice schemeDevice = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeDevice.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeDevice.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeDevice.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeProtoElementId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeDevice.getParentSchemeElementId());
 		return sql;

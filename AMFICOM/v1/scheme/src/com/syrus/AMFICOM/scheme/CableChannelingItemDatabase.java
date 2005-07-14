@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.9 2005/07/12 08:40:55 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -146,9 +146,9 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + cableChannelingItem.getRowX() + APOSTOPHE + COMMA
-				+ APOSTOPHE + cableChannelingItem.getPlaceY() + APOSTOPHE + COMMA
-				+ APOSTOPHE + cableChannelingItem.getSequentialNumber() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + cableChannelingItem.getRowX() + APOSTROPHE + COMMA
+				+ APOSTROPHE + cableChannelingItem.getPlaceY() + APOSTROPHE + COMMA
+				+ APOSTROPHE + cableChannelingItem.getSequentialNumber() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getPhysicalLink().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getStartSiteNode().getId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getEndSiteNode().getId()) + COMMA

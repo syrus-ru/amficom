@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.33 2005/06/24 14:20:29 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.34 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/06/24 14:20:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/07/14 16:08:03 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapDatabase extends CharacterizableDatabase {
@@ -252,8 +252,8 @@ public final class MapDatabase extends CharacterizableDatabase {
 	
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Map map = fromStorableObject(storableObject);
-		String values = APOSTOPHE + DatabaseString.toQuerySubString(map.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(map.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+		String values = APOSTROPHE + DatabaseString.toQuerySubString(map.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(map.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(map.getDomainId());
 		return values;
 	}

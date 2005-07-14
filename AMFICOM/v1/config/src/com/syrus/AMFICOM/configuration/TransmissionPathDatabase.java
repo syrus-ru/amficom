@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.63 2005/06/17 12:32:20 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.64 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/06/17 12:32:20 $
+ * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:05 $
  * @author $Author: bass $
  * @module config_v1
  */
@@ -82,8 +82,8 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}

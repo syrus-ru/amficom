@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.96 2005/07/13 09:27:58 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.97 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/07/13 09:27:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.97 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -90,7 +90,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
 			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ Long.toString(measurementSetup.getMeasurementDuration());
 		return values;
 	}

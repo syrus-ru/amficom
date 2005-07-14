@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.39 2005/06/21 14:24:51 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.40 2005/07/14 16:08:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/06/21 14:24:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/07/14 16:08:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -66,9 +66,9 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final Characteristic characteristic = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE  + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE  + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTROPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizableId());

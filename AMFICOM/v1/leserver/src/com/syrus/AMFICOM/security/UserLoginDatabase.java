@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.4 2005/06/20 15:28:02 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.5 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/20 15:28:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/14 16:08:03 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class UserLoginDatabase {
@@ -41,9 +41,9 @@ public final class UserLoginDatabase {
 
 	private StringBuffer singleWhereClause(final SessionKey sessionKey) {
 		return new StringBuffer(COLUMN_SESSION_KEY + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTOPHE
+				+ StorableObjectDatabase.APOSTROPHE
 				+ DatabaseString.toQuerySubString(sessionKey.toString(), SIZE_COLUMN_SESSION_KEY)
-				+ StorableObjectDatabase.APOSTOPHE);
+				+ StorableObjectDatabase.APOSTROPHE);
 	}
 
 	private StringBuffer retrieveQuery(final StringBuffer condition) {
@@ -132,7 +132,7 @@ public final class UserLoginDatabase {
 				+ COLUMN_LOGIN_DATE + StorableObjectDatabase.COMMA
 				+ COLUMN_LAST_ACTIVITY_DATE
 				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + StorableObjectDatabase.APOSTOPHE + StorableObjectDatabase.COMMA
+				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(userLogin.getSessionKey().toString(), SIZE_COLUMN_SESSION_KEY) + StorableObjectDatabase.APOSTROPHE + StorableObjectDatabase.COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getUserId()) + StorableObjectDatabase.COMMA
 				+ DatabaseIdentifier.toSQLString(userLogin.getDomainId()) + StorableObjectDatabase.COMMA
 				+ DatabaseDate.toUpdateSubString(userLogin.getLoginDate()) + StorableObjectDatabase.COMMA

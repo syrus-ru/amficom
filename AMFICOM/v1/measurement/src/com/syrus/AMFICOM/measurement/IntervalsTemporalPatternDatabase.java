@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.9 2005/06/27 10:26:49 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.10 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/27 10:26:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
@@ -91,7 +91,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		final String sql = APOSTOPHE + intervalsTemporalPattern.getName() + APOSTOPHE;
+		final String sql = APOSTROPHE + intervalsTemporalPattern.getName() + APOSTROPHE;
 		return sql;
 	}
 

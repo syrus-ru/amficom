@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.10 2005/07/13 12:19:05 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.11 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/13 12:19:05 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
@@ -104,9 +104,9 @@ public final class SchemeProtoElementDatabase extends CharacterizableDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeProtoElement spe = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(spe.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN) + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(spe.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(spe.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(spe.getLabel(), SchemeProtoElementWrapper.SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getEquipmentTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getSymbolId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(spe.getUgoCellId()) + COMMA

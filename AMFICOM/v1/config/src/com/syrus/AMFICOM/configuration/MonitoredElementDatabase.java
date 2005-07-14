@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.74 2005/07/13 17:17:12 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.75 2005/07/14 16:08:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/07/13 17:17:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/07/14 16:08:05 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -93,10 +93,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE;
+				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 

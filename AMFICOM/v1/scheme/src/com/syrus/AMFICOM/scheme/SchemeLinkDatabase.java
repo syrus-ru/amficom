@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.9 2005/07/14 13:08:50 bass Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 13:08:50 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
  * @module scheme_v1
  */
 public final class SchemeLinkDatabase extends CharacterizableDatabase {
@@ -112,10 +112,10 @@ public final class SchemeLinkDatabase extends CharacterizableDatabase {
 			StorableObject storableObject)
 			throws IllegalDataException {
 		SchemeLink schemeLink = fromStorableObject(storableObject);
-		String sql = APOSTOPHE + DatabaseString.toQuerySubString(schemeLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeLink.getPhysicalLength() + APOSTOPHE + COMMA
-				+ APOSTOPHE + schemeLink.getOpticalLength() + APOSTOPHE + COMMA
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeLink.getPhysicalLength() + APOSTROPHE + COMMA
+				+ APOSTROPHE + schemeLink.getOpticalLength() + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNodeId()) + COMMA

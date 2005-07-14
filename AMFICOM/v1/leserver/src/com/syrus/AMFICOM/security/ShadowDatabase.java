@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.3 2005/06/17 20:14:58 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.4 2005/07/14 16:08:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 20:14:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/07/14 16:08:03 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class ShadowDatabase {
@@ -141,14 +141,14 @@ public final class ShadowDatabase {
 				+ COLUMN_PASSWORD
 				+ StorableObjectDatabase.CLOSE_BRACKET + StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
 				+ DatabaseIdentifier.toSQLString(userId) + StorableObjectDatabase.COMMA
-				+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(password, SIZE_COLUMN_PASSWORD) + StorableObjectDatabase.APOSTOPHE
+				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(password, SIZE_COLUMN_PASSWORD) + StorableObjectDatabase.APOSTROPHE
 				+ StorableObjectDatabase.CLOSE_BRACKET);
 	}
 
 	private StringBuffer updateQuery(Identifier userId, String password) {
 		return new StringBuffer(StorableObjectDatabase.SQL_UPDATE + TABLE_NAME_SHADOW + StorableObjectDatabase.SQL_SET
 				+ COLUMN_PASSWORD + StorableObjectDatabase.EQUALS
-					+ StorableObjectDatabase.APOSTOPHE + DatabaseString.toQuerySubString(password, SIZE_COLUMN_PASSWORD) + StorableObjectDatabase.APOSTOPHE
+					+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(password, SIZE_COLUMN_PASSWORD) + StorableObjectDatabase.APOSTROPHE
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userId));
 	}
 }

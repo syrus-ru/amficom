@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.103 2005/06/27 10:57:49 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.104 2005/07/14 16:08:07 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/06/27 10:57:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.104 $, $Date: 2005/07/14 16:08:07 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -122,7 +122,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ test.getReturnType().value() + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ test.getNumberOfMeasurements();
 	}
 
