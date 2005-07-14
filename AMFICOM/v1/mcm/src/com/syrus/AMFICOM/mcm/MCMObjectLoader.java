@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.13 2005/07/13 19:23:59 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.14 2005/07/14 20:16:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/13 19:23:59 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/14 20:16:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -30,6 +30,10 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 	public MCMObjectLoader(final MCMServantManager mcmServantManager) {
 		super(mcmServantManager);
 	}
+
+	
+
+
 
 	@Override
 	protected final Set loadStorableObjects(final short entityCode,
