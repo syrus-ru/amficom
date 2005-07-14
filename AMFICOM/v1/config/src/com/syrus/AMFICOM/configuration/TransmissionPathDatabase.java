@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.64 2005/07/14 16:08:05 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.65 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -43,17 +43,27 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 	private static String		columns;
 	private static String		updateMultipleSQLValues;
 
-	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	public TransmissionPathDatabase() {
+		super();
+	}
+
+	public TransmissionPathDatabase(final boolean checkDependenciesOnInsert) {
+		super(checkDependenciesOnInsert);
+	}
+
+	private TransmissionPath fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
 			return (TransmissionPath) storableObject;
 		throw new IllegalDataException("TransmissionPathDatabase.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.TRANSPATH_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
@@ -66,6 +76,7 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -78,20 +89,22 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		return DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
-												PreparedStatement preparedStatement,
-												int startParameterNumber) throws IllegalDataException, SQLException {
-		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getType().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, transmissionPath.getName(), SIZE_NAME_COLUMN);
@@ -101,13 +114,14 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		TransmissionPath transmissionPath = (storableObject == null) ? new TransmissionPath(DatabaseIdentifier
+		final TransmissionPath transmissionPath = (storableObject == null) ? new TransmissionPath(DatabaseIdentifier
 				.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null)
 				: this.fromStorableObject(storableObject);
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 
 		TransmissionPathType type;
 		try {
@@ -131,9 +145,10 @@ public final class TransmissionPathDatabase extends CharacterizableDatabase {
 		return transmissionPath;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
-		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+		final TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  transmissionPath.getId() + "'; argument: " + arg);

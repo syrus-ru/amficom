@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.50 2005/07/14 16:08:05 bass Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.51 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -38,10 +38,12 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EQUIPMENT_TYPE_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -53,8 +55,9 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -64,9 +67,10 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		EquipmentType equipmentType = this.fromStorableObject(storableObject);
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(equipmentType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final EquipmentType equipmentType = this.fromStorableObject(storableObject);
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(equipmentType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(equipmentType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(equipmentType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
@@ -74,15 +78,17 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	private EquipmentType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private EquipmentType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof EquipmentType)
 			return (EquipmentType)storableObject;
 		throw new IllegalDataException("EquipmentTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		EquipmentType equipmentType = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipmentType.getCodename(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipmentType.getName(), SIZE_NAME_COLUMN);
@@ -91,7 +97,8 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		EquipmentType equipmentType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (equipmentType == null) {
@@ -118,8 +125,9 @@ public final class EquipmentTypeDatabase extends CharacterizableDatabase {
 		return equipmentType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		EquipmentType equipmentType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  equipmentType.getId() + "'; argument: " + arg);

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.88 2005/07/14 16:08:05 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.89 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.89 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -59,16 +59,18 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private Equipment fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private Equipment fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Equipment)
 			return (Equipment)storableObject;
 		throw new IllegalDataException("EquipmentDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.EQUIPMENT_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
@@ -89,6 +91,7 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -109,9 +112,10 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Equipment equipment = this.fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final Equipment equipment = this.fromStorableObject(storableObject);
+		final String sql = DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
@@ -128,9 +132,11 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		Equipment equipment = this.fromStorableObject(storableObject);
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final Equipment equipment = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getType().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getName(), SIZE_NAME_COLUMN);
@@ -148,7 +154,8 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -172,8 +179,8 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 					null,
 					null);
 		}
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		EquipmentType equipmentType;
 		try {
 			equipmentType = (EquipmentType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
@@ -205,8 +212,9 @@ public final class EquipmentDatabase extends CharacterizableDatabase {
 		return equipment;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		Equipment equipment = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  equipment.getId() + "'; argument: " + arg);

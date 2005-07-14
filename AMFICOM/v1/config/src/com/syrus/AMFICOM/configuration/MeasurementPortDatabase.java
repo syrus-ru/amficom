@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.54 2005/07/14 16:08:05 bass Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.55 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class MeasurementPortDatabase extends CharacterizableDatabase {
@@ -40,10 +40,20 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	public MeasurementPortDatabase() {
+		super();
+	}
+
+	public MeasurementPortDatabase(final boolean checkDependenciesOnInsert) {
+		super(checkDependenciesOnInsert);
+	}
+
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MEASUREMENTPORT_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
@@ -55,6 +65,7 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -66,25 +77,28 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
 		String sql = DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE	+ COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTOPHE	+ COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
 			+ DatabaseIdentifier.toSQLString(portId);
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
-		Identifier typeId = measurementPort.getType().getId();
-		Identifier kisId = measurementPort.getKISId();
-		Identifier portId = measurementPort.getPortId();
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final MeasurementPort measurementPort = this.fromStorableObject(storableObject);
+		final Identifier typeId = measurementPort.getType().getId();
+		final Identifier kisId = measurementPort.getKISId();
+		final Identifier portId = measurementPort.getPortId();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -93,13 +107,14 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-  private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+  private MeasurementPort fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementPort)
 			return (MeasurementPort)storableObject;
 		throw new IllegalDataException("MeasurementPortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementPort measurementPort = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (measurementPort == null) {
@@ -114,16 +129,16 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		}
 		MeasurementPortType measurementPortType;
 		try {
-			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
+			final Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
 			measurementPortType = (measurementPortTypeId != null)
 					? (MeasurementPortType) StorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -137,8 +152,9 @@ public final class MeasurementPortDatabase extends CharacterizableDatabase {
 		return measurementPort;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementPort.getId() + "'; argument: " + arg);

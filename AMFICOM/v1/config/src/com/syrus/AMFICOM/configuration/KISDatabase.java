@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.77 2005/07/14 16:08:05 bass Exp $
+ * $Id: KISDatabase.java,v 1.78 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -51,16 +51,18 @@ public final class KISDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
-	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private KIS fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
 			return (KIS) storableObject;
 		throw new IllegalDataException("KISDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.KIS_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = DomainMember.COLUMN_DOMAIN_ID + COMMA
@@ -74,6 +76,7 @@ public final class KISDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -87,9 +90,10 @@ public final class KISDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		KIS kis = this.fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final KIS kis = this.fromStorableObject(storableObject);
+		final String sql = DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(kis.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
@@ -99,11 +103,13 @@ public final class KISDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		KIS kis = this.fromStorableObject(storableObject);
-		Identifier equipmentId = kis.getEquipmentId();
-		Identifier mcmId = kis.getMCMId();
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final KIS kis = this.fromStorableObject(storableObject);
+		final Identifier equipmentId = kis.getEquipmentId();
+		final Identifier mcmId = kis.getMCMId();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, kis.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, kis.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -114,7 +120,8 @@ public final class KISDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		KIS kis = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (kis == null) {
@@ -146,8 +153,10 @@ public final class KISDatabase extends CharacterizableDatabase {
 		return kis;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, RetrieveObjectException {
-		KIS kis = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException, RetrieveObjectException {
+		final KIS kis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			case RETRIEVE_MONITORED_ELEMENTS:
 				return this.retrieveMonitoredElements(kis);
@@ -157,11 +166,17 @@ public final class KISDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	private List retrieveMonitoredElements(KIS kis) throws RetrieveObjectException {
-		List monitoredElements = new ArrayList();
+	/**
+	 * @deprecated
+	 * @param kis
+	 * @return
+	 * @throws RetrieveObjectException
+	 */
+	private List retrieveMonitoredElements(final KIS kis) throws RetrieveObjectException {
+		final List monitoredElements = new ArrayList();
 
-		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
-		String sql = SQL_SELECT
+		final String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
+		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MONITOREDELEMENT
 			+ SQL_WHERE + MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + SQL_IN + OPEN_BRACKET
@@ -173,14 +188,15 @@ public final class KISDatabase extends CharacterizableDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-        try {
+		final Connection connection = DatabaseConnection.getConnection();
+		try {
 			statement = connection.createStatement();
 			Log.debugMessage("KISDatabase.retrieveMonitoredElements | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				try {
-					monitoredElements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true));
+					monitoredElements.add(StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+							StorableObjectWrapper.COLUMN_ID), true));
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
@@ -199,12 +215,18 @@ public final class KISDatabase extends CharacterizableDatabase {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-                DatabaseConnection.releaseConnection(connection);
-            }
+				DatabaseConnection.releaseConnection(connection);
+			}
 		}
 		return monitoredElements;
 	}
 
+	/**
+	 * @deprecated
+	 * @param kiss
+	 * @return
+	 * @throws RetrieveObjectException
+	 */
   public Map retrieveMonitoredElementsByOneQuery(List kiss) throws RetrieveObjectException {
 		if ((kiss == null) || (kiss.isEmpty()))
 			return null;

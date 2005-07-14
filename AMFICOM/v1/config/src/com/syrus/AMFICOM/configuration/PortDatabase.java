@@ -1,5 +1,5 @@
 /*-
- * $Id: PortDatabase.java,v 1.64 2005/07/14 16:08:05 bass Exp $
+ * $Id: PortDatabase.java,v 1.65 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class PortDatabase extends CharacterizableDatabase {
@@ -36,6 +36,14 @@ public final class PortDatabase extends CharacterizableDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
+
+	public PortDatabase() {
+		super();
+	}
+
+	public PortDatabase(final boolean checkDependenciesOnInsert) {
+		super(checkDependenciesOnInsert);
+	}
 
 	private Port fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Port)
@@ -70,17 +78,17 @@ public final class PortDatabase extends CharacterizableDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final Port port = this.fromStorableObject(storableObject);
 		final Identifier typeId = port.getType().getId();
 		final Identifier equipmentId = port.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE	+ COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId);
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Port port = (storableObject == null) ? new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 				null,
@@ -109,7 +117,7 @@ public final class PortDatabase extends CharacterizableDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
 		final Port port = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.54 2005/07/14 16:08:05 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.55 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class PortTypeDatabase extends CharacterizableDatabase {
@@ -32,6 +32,14 @@ public final class PortTypeDatabase extends CharacterizableDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
+
+	public PortTypeDatabase() {
+		super();
+	}
+
+	public PortTypeDatabase(final boolean checkDependenciesOnInsert) {
+		super(checkDependenciesOnInsert);
+	}
 
 	private PortType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PortType)
@@ -58,7 +66,7 @@ public final class PortTypeDatabase extends CharacterizableDatabase {
 
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -71,9 +79,9 @@ public final class PortTypeDatabase extends CharacterizableDatabase {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final PortType portType = this.fromStorableObject(storableObject);
-		return APOSTROPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(portType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ portType.getSort().value() + COMMA
 			+ portType.getKind().value();
 	}

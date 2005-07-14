@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.34 2005/07/14 16:08:05 bass Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.35 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class CableLinkTypeDatabase extends CharacterizableDatabase {
@@ -35,10 +35,12 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.CABLELINK_TYPE_CODE;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -52,6 +54,7 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -65,14 +68,15 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 	
-	protected boolean checkEntity(short conditionCode) {
+	protected boolean checkEntity(final short conditionCode) {
 		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINK_TYPE_CODE, Level.FINEST);
 		return ObjectEntities.CABLELINK_TYPE_CODE == conditionCode;		
 	}
 
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+	@Override
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ cableLinkType.getSort().value() + COMMA
@@ -82,15 +86,16 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return sql;
 	}
 
-	private CableLinkType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private CableLinkType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CableLinkType)
 			return (CableLinkType)storableObject;
 		throw new IllegalDataException("CableLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
+		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		preparedStatement.setString( ++startParameterNumber, cableLinkType.getCodename());
 		preparedStatement.setString( ++startParameterNumber, cableLinkType.getDescription());
 		preparedStatement.setString( ++startParameterNumber, cableLinkType.getName());
@@ -101,7 +106,8 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	@Override
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		CableLinkType cableLinkType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (cableLinkType == null) {
@@ -132,8 +138,9 @@ public final class CableLinkTypeDatabase extends CharacterizableDatabase {
 		return cableLinkType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-      CableLinkType cableLinkType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
+		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  cableLinkType.getId() + "'; argument: " + arg);

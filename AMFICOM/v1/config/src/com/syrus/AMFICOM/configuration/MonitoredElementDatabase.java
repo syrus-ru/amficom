@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.75 2005/07/14 16:08:05 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.76 2005/07/14 18:16:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/07/14 16:08:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.76 $, $Date: 2005/07/14 18:16:29 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -53,6 +53,14 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	private static String		updateMultipleSQLValues;
 
 	private static final int	SIZE_LOCAL_ADDRESS_COLUMN	= 64;
+
+	public MonitoredElementDatabase() {
+		super();
+	}
+
+	public MonitoredElementDatabase(final boolean checkDependenciesOnInsert) {
+		super(checkDependenciesOnInsert);
+	}
 
 	private MonitoredElement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -93,10 +101,10 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		final String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE;
 		return sql;
 	}
 
@@ -117,7 +125,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	@Override
 	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
+		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		super.retrieveEntity(monitoredElement);
 		this.retrieveMonitoredDomainMemberIds(monitoredElement);
 	}
@@ -399,10 +407,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 
 		final Map<Integer, Set<MonitoredElement>> sortedMonitoredElements = new HashMap<Integer, Set<MonitoredElement>>();
 
-//		Set monitoredElementsOneSort;
-//		Integer meSort;
-
-//		MonitoredElement monitoredElement;
 		for (final Iterator it = monitoredElements.iterator(); it.hasNext();) {
 			final MonitoredElement monitoredElement = (MonitoredElement) it.next();
 			final Integer meSort = new Integer(monitoredElement.getSort().value());
