@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.51 2005/07/08 09:47:48 arseniy Exp $
+ * $Id: Identifier.java,v 1.52 2005/07/14 17:50:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.51 $, $Date: 2005/07/08 09:47:48 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/14 17:50:44 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -205,12 +205,10 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables1.size() + identifiables2.size());
-		for (final Iterator<? extends Identifiable> it = identifiables1.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables1) {
 			identifiers.add(identifiable.getId());
 		}
-		for (final Iterator<? extends Identifiable> it = identifiables2.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables2) {
 			identifiers.add(identifiable.getId());
 		}
 		return identifiers;
@@ -228,8 +226,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = Identifier.createIdentifiers(identifiables1);
-		for (final Iterator<? extends Identifiable> it = identifiables2.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables2) {
 			identifiers.remove(identifiable.getId());
 		}
 		return identifiers;
@@ -246,8 +243,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
-		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables) {
 			identifiers.add(identifiable.getId());
 		}
 	}
@@ -263,8 +259,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
-		for (final Iterator<? extends Identifiable> it = identifiables.iterator(); it.hasNext();) {
-			final Identifiable identifiable = it.next();
+		for (final Identifiable identifiable : identifiables) {
 			identifiers.remove(identifiable.getId());
 		}
 	}
