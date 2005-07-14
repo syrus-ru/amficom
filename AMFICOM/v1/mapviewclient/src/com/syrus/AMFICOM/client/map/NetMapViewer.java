@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.25 2005/07/11 13:18:04 bass Exp $
+ * $Id: NetMapViewer.java,v 1.26 2005/07/14 17:13:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -76,8 +76,8 @@ import com.syrus.util.Log;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/07/14 17:13:17 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -415,6 +415,7 @@ public abstract class NetMapViewer {
 		{
 			if(pce.getPropertyName().equals(MapEvent.NEED_FULL_REPAINT))
 			{
+				this.logicalNetLayer.calculateVisualElements();
 				repaint(true);
 				return;
 			}
@@ -424,18 +425,8 @@ public abstract class NetMapViewer {
 				return;
 			}
 
-			if(pce.getSource().equals(this.logicalNetLayer))
-				return;
-
-			MapView mapView = this.logicalNetLayer.getMapView();
-			
 			MapViewController mapViewController = this.logicalNetLayer.getMapViewController();
 
-			if(pce.getPropertyName().equals(MapEvent.DESELECT_ALL))
-			{
-				this.logicalNetLayer.deselectAll();
-			}
-			else
 			if(pce.getPropertyName().equals(MapEvent.MAP_CHANGED))
 			{
 				Set selectedElements = this.logicalNetLayer.getMapView().getMap().getSelectedElements();
@@ -505,7 +496,17 @@ public abstract class NetMapViewer {
 					snc.updateScaleCoefficient(site);
 				}
 
+				this.logicalNetLayer.calculateVisualElements();
 				repaint(false);
+			}
+			if(pce.getSource().equals(this.logicalNetLayer))
+				return;
+
+			MapView mapView = this.logicalNetLayer.getMapView();
+			
+			if(pce.getPropertyName().equals(MapEvent.DESELECT_ALL))
+			{
+				this.logicalNetLayer.deselectAll();
 			}
 			else
 			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
