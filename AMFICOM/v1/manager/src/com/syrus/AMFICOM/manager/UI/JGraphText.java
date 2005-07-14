@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.3 2005/07/14 13:16:36 bob Exp $
+ * $Id: JGraphText.java,v 1.4 2005/07/14 13:43:18 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/14 13:43:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -74,6 +74,7 @@ import org.jgraph.graph.ConnectionSet.Connection;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.LangModelManager;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
@@ -319,7 +320,7 @@ public class JGraphText {
 				public void actionPerformed(ActionEvent e) {
 					graph.setPortsVisible(!JGraphText.this.graph.isPortsVisible());
 					this.putValue(SMALL_ICON, JGraphText.this.graph.isPortsVisible() ? connectonIcon : connectoffIcon);
-					this.putValue(SHORT_DESCRIPTION, JGraphText.this.graph.isPortsVisible() ? "enable" : "disable");
+					this.putValue(SHORT_DESCRIPTION, LangModelManager.getString(JGraphText.this.graph.isPortsVisible() ?  "Action.connectionEnable" : "Action.connectionDisable"));
 				}
 			};
 			action.actionPerformed(null);
@@ -336,6 +337,7 @@ public class JGraphText {
 				undo();
 			}
 		};
+		undo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Undo"));
 		undo.setEnabled(false);
 		toolBar.add(undo);
 
@@ -348,6 +350,7 @@ public class JGraphText {
 				redo();
 			}
 		};
+		redo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Redo"));
 		redo.setEnabled(false);
 		toolBar.add(redo);
 
@@ -433,34 +436,53 @@ public class JGraphText {
 //		toback.setEnabled(false);
 //		toolBar.add(toback);
 		
-		// Zoom Std
 		toolBar.addSeparator();
-		URL zoomUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/zoom.gif");
-		ImageIcon zoomIcon = new ImageIcon(zoomUrl);
-		toolBar.add(new AbstractAction("", zoomIcon) {
-			public void actionPerformed(ActionEvent e) {
-				graph.setScale(1.0);
-			}
-		});
-		// Zoom In
-		URL zoomInUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/zoomin.gif");
-		ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
-		toolBar.add(new AbstractAction("", zoomInIcon) {
-			public void actionPerformed(ActionEvent e) {
-				graph.setScale(2 * graph.getScale());
-			}
-		});
-		// Zoom Out
-		URL zoomOutUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/zoomout.gif");
-		ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
-		toolBar.add(new AbstractAction("", zoomOutIcon) {
-			public void actionPerformed(ActionEvent e) {
-				graph.setScale(graph.getScale() / 2);
-			}
-		});
+		{
+			// Zoom Std
+
+			URL zoomUrl = getClass().getClassLoader().getResource(
+					"com/syrus/AMFICOM/manager/resources/icons/zoom.gif");
+			ImageIcon zoomIcon = new ImageIcon(zoomUrl);
+			Action zoom = new AbstractAction("", zoomIcon) {
+				
+				private static final long	serialVersionUID	= 1338961419658950016L;
+
+				public void actionPerformed(ActionEvent e) {
+					graph.setScale(1.0);
+				}
+			};
+			toolBar.add(zoom);
+			
+			zoom.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ActualSize"));
+		}
+		
+		{
+			// Zoom In
+			URL zoomInUrl = getClass().getClassLoader().getResource(
+					"com/syrus/AMFICOM/manager/resources/icons/zoomin.gif");
+			ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
+			AbstractAction zoomIn = new AbstractAction("", zoomInIcon) {
+				public void actionPerformed(ActionEvent e) {
+					graph.setScale(2 * graph.getScale());
+				}
+			};
+			toolBar.add(zoomIn);
+			zoomIn.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomIn"));
+		}
+		
+		{
+			// Zoom Out
+			URL zoomOutUrl = getClass().getClassLoader().getResource(
+					"com/syrus/AMFICOM/manager/resources/icons/zoomout.gif");
+			ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
+			AbstractAction zoomOut = new AbstractAction("", zoomOutIcon) {
+				public void actionPerformed(ActionEvent e) {
+					graph.setScale(graph.getScale() / 2);
+				}
+			};
+			toolBar.add(zoomOut);
+			zoomOut.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomOut"));
+		}
 
 		// Group
 		toolBar.addSeparator();
