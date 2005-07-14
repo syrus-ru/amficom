@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.98 2005/07/14 15:45:55 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.99 2005/07/14 17:14:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.98 $, $Date: 2005/07/14 15:45:55 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/14 17:14:06 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1150,7 +1150,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.98 $, $Date: 2005/07/14 15:45:55 $
+	 * @version $Revision: 1.99 $, $Date: 2005/07/14 17:14:06 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1997,8 +1997,8 @@ public class LogicalNetLayer
 		}
 		for (Iterator veIterator = this.visualElements.iterator(); veIterator.hasNext();) {
 			Object veElement = veIterator.next();
-			if (veElement instanceof SiteNode) {
-				getMapViewController().getController((SiteNode)veElement).paint((SiteNode)veElement, g, visibleBounds);
+			if (veElement instanceof AbstractNode) {
+				getMapViewController().getController((AbstractNode)veElement).paint((AbstractNode)veElement, g, visibleBounds);
 			}
 		}
 		long t2 = System.currentTimeMillis();
