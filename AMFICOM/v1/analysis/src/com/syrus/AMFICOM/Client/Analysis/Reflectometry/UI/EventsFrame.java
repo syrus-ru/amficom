@@ -473,9 +473,9 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
                 //System.err.println("row " + row + " column " + column);
                 // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
                 DetailedEvent pri =
-                    Heap.getMTAEPrimary().getDetailedEvents()[nPrimary];
+                    Heap.getMTAEPrimary().getDetailedEvent(nPrimary);
                 DetailedEvent et =
-                    Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon];
+                    Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon);
                 if (SimpleReflectogramEventComparer.eventsAreDifferent(pri, et,
                         SimpleReflectogramEventComparer.CHANGETYPE_LOSS,
                         0.5))

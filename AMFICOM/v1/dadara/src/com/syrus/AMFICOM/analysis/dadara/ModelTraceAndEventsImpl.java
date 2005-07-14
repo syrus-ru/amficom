@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.17 2005/07/14 14:28:38 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.18 2005/07/14 15:48:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/07/14 14:28:38 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/14 15:48:32 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -39,6 +39,8 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	protected ModelTrace mt; // will just contain mt
     protected ComplexInfo cinfo;
 
+	private DetailedEvent[] detailedEventsCache = null; 
+
 	private static DataStreamable.Reader dsReader = null; // DIS reader singleton-style object
 
     // private only: cinfo should be initialized later
@@ -50,7 +52,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
         this.rse = rse;
         this.mf = mf;
         this.deltaX = deltaX;
-        this.setTraceLength(calcTraceLength());
+        this.traceLength = calcTraceLength();
         mt = new ModelTraceImplMF(this.getMF(), this.getTraceLength());
     }
 
@@ -218,7 +220,28 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
         return linAtt * eventLength(i);
     }
 
-    private DetailedEvent getDetailedEvent(int i) {
+    /**
+     * обеспечивает кэширование с lazy-инициализацией
+     */
+    public DetailedEvent getDetailedEvent(int i) {
+    	if (detailedEventsCache == null)
+    		detailedEventsCache = new DetailedEvent[rse.length];
+    	if (detailedEventsCache[i] == null)
+    		detailedEventsCache[i] = makeDetailedEvent(i);
+    	return detailedEventsCache[i];
+    }
+
+    /**
+     * обеспечивает кэширование с lazy-инициализацией
+     */
+    public DetailedEvent[] getDetailedEvents() {
+        DetailedEvent[] ret = new DetailedEvent[rse.length];
+        for (int i = 0; i < rse.length; i++)
+            ret[i] = getDetailedEvent(i);
+        return ret;
+    }
+
+    private DetailedEvent makeDetailedEvent(int i) {
         SimpleReflectogramEvent ev = rse[i];
         double y0 = mt.getY(ev.getBegin());
         double y1 = mt.getY(ev.getEnd());
@@ -269,14 +292,6 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
         }
     }
 
-    public DetailedEvent[] getDetailedEvents() {
-        // @todo: add caching (maybe event a constructor-time pre-computation)
-        DetailedEvent[] ret = new DetailedEvent[rse.length];
-        for (int i = 0; i < rse.length; i++)
-            ret[i] = getDetailedEvent(i);
-        return ret;
-    }
-
     /**
      * protected because hopes that caller will not modify the array returned
      * @return internal array of reliability events.
@@ -300,10 +315,6 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			return 0;
 		else
 			return getRSE()[getRSE().length - 1].getEnd() + 1;
-	}
-	private void setTraceLength(int traceLength)
-	{
-		this.traceLength = traceLength;
 	}
 
     /**

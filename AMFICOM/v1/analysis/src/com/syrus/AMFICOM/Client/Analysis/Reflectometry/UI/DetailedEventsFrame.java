@@ -167,10 +167,10 @@ implements EtalonMTMListener,
 //				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
 //				: null;
         DetailedEvent dataEvent = nEvent != -1
-            ? Heap.getMTAEPrimary().getDetailedEvents()[nEvent]
+            ? Heap.getMTAEPrimary().getDetailedEvent(nEvent)
             : null;
         DetailedEvent etalonEvent = nEtalon != -1
-                ? Heap.getMTMEtalon().getMTAE().getDetailedEvents()[nEtalon]
+                ? Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon)
                 : null;
                 
 		int dataType = dataEvent != null
@@ -196,7 +196,7 @@ implements EtalonMTMListener,
 
             return;
         }
-		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvents()[num];
+		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
 		int eventType = ev.getEventType();
 		double resMt =  Heap.getBSPrimaryTrace().getResolution();
     double resKm = resMt / 1000.0;
