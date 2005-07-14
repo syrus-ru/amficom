@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.7 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.8 2005/07/14 13:20:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/14 13:20:34 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -174,7 +174,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 				+ APOSTOPHE + schemeOptimizeInfo.getNodesSpliceProb() + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeOptimizeInfo.getNodesCutProb() + APOSTOPHE + COMMA
 				+ APOSTOPHE + schemeOptimizeInfo.getSurvivorRate() + APOSTOPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeOptimizeInfo.getParentScheme().getId());
+				+ DatabaseIdentifier.toSQLString(schemeOptimizeInfo.getParentSchemeId());
 		return sql;
 	}
 
@@ -206,7 +206,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getNodesSpliceProb());
 		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getNodesCutProb());
 		preparedStatement.setDouble(++startParameterNumber, schemeOptimizeInfo.getSurvivorRate());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeOptimizeInfo.getParentScheme().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeOptimizeInfo.getParentSchemeId());
 		return startParameterNumber;
 	}
 
