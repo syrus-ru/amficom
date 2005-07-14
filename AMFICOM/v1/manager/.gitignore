@@ -14,5 +14,7 @@ build.xml
 .ora
 .mach
 .settings
+.classpath
+.project
 .idl
 .#*
