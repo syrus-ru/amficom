@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
@@ -15,13 +14,12 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 public class MapImagePanel extends JPanel
 {
- 	private static final Color BACKGROUND_COLOR = Color.WHITE;
- 	
  	private Image resultImage = null;
 	private Image mapImage = null;
 
@@ -68,14 +66,10 @@ public class MapImagePanel extends JPanel
  						BufferedImage.TYPE_USHORT_565_RGB);
 
 			this.viewer.setMapImageSize(this.getSize());
-		} catch (MapConnectionException e)
+		} catch (MapException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.errorMessage("MapImagePanel.setLayerSize | " + e.getMessage());
+			Log.errorException(e);
 		}
 	}
 
