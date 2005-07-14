@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.34 2005/07/08 14:34:31 peskovsky Exp $
+ * $Id: LinkTypeController.java,v 1.35 2005/07/14 15:42:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: peskovsky $
- * @version $Revision: 1.34 $, $Date: 2005/07/08 14:34:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/07/14 15:42:28 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -76,8 +76,6 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Instance
 	 */
 	private static LinkTypeController instance = null;
-	
-	private Map strokesHolder = new HashMap();
 	
 	static {
 		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
@@ -332,31 +330,6 @@ public final class LinkTypeController extends AbstractLinkController {
 	}
 
 	/**
-	 * Получить стиль типа линии. Стиль определяется
-	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_STYLE}. В случае, если
-	 * такого атрибута у элемента нет, берется значение по умолчанию
-	 * ({@link MapPropertiesManager#getStroke()}).
-	 * @param linkType тип линии
-	 * @return стиль
-	 */
-	public Stroke getStroke(PhysicalLinkType linkType)
-	{
-		Stroke resultStroke = (Stroke)this.strokesHolder.get(linkType);
-		if (resultStroke == null)
-		{
-			Characteristic ea = getCharacteristic(linkType, this.styleCharType);
-			if(ea == null)
-				resultStroke = MapPropertiesManager.getStroke();
-			else
-				resultStroke = LineComboBox.getStrokeByType(ea.getValue());
-			
-			this.strokesHolder.put(linkType,resultStroke);
-		}
-		
-		return resultStroke;
-	}
-
-	/**
 	 * Установить цвет типа линии. Цает определяется
 	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_COLOR}. В случае, если
 	 * такого атрибута у элемента нет, создается новый.
@@ -418,8 +391,15 @@ public final class LinkTypeController extends AbstractLinkController {
 
 			if(ea == null)
 				color = MapPropertiesManager.getColor();
-			else
+			else {
+				color = (Color)this.colors.get(ea.getValue());
+				if (color == null)
+				{
+					color = new Color(Integer.parseInt(ea.getValue()));
+					this.colors.put(ea.getValue(),color);
+				}
 				color = new Color(Integer.parseInt(ea.getValue()));
+			}
 			
 			colorsHolder.put(linkType, color);
 		}
@@ -489,7 +469,15 @@ public final class LinkTypeController extends AbstractLinkController {
 			Characteristic ea = getCharacteristic(linkType, this.alarmedColorCharType);
 			if(ea == null)
 				color = MapPropertiesManager.getAlarmedColor();
-			color = new Color(Integer.parseInt(ea.getValue()));
+			else {
+				color = (Color)this.colors.get(ea.getValue());
+				if (color == null)
+				{
+					color = new Color(Integer.parseInt(ea.getValue()));
+					this.colors.put(ea.getValue(),color);
+				}
+				color = new Color(Integer.parseInt(ea.getValue()));
+			}
 
 			alarmedColorsHolder.put(linkType, color);
 		}
