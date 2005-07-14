@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.54 2005/07/14 13:06:53 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.55 2005/07/14 13:27:16 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/14 13:06:53 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/14 13:27:16 $
  * @author $Author: saa $
  * @module mcm_v1
  */
@@ -60,14 +60,14 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	public static final String CODENAME_ALARMS = ParameterTypeCodename.DADARA_ALARMS.stringValue();
 	public static final String CODENAME_ANALYSIS_RESULT = ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue();
 
-	private static final Map OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
+	private static final Map<String,Identifier> OUT_PARAMETER_TYPE_IDS_MAP;
 
-	private final Map tracePars;	//Map <String codename, Parameter parameter>
-	private final Map criteriaPars;	//Map <String codename, Parameter parameter>
-	private final Map etalonPars;	//Map <String codename, Parameter parameter>
+	private final Map<String,byte[]> tracePars;
+	private final Map<String,byte[]> criteriaPars;
+	private final Map<String,byte[]> etalonPars;
 
 	static {
-		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap();
+		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap<String,Identifier>();
 		addParameterTypeIds(new String[] {CODENAME_ALARMS});
 	}
 
@@ -75,7 +75,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final java.util.Set typicalConditions = new HashSet(codenames.length);
+		final java.util.Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i],
 					OperationSort.OPERATION_EQUALS,
@@ -86,12 +86,12 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		try {
 			final StorableObjectCondition condition;
 			if (typicalConditions.size() == 1)
-				condition = (StorableObjectCondition) typicalConditions.iterator().next();
+				condition = typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
-			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
-			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
-				final ParameterType parameterType = (ParameterType) it.next();
+			final java.util.Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
+			for (final Iterator<ParameterType> it = parameterTypes.iterator(); it.hasNext();) {
+				final ParameterType parameterType = it.next();
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
 			}
 		}
@@ -110,20 +110,20 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	private DadaraAnalysisManager(final Result measurementResult,
 			final Analysis analysis,
 			final ParameterSet etalon) throws AnalysisException {
-		this.tracePars = new HashMap();
-		this.criteriaPars = new HashMap();
-		this.etalonPars = new HashMap();
+		this.tracePars = new HashMap<String,byte[]>();
+		this.criteriaPars = new HashMap<String,byte[]>();
+		this.etalonPars = new HashMap<String,byte[]>();
 		this.addSetParameters(this.tracePars, measurementResult.getParameters());
 		this.addSetParameters(this.criteriaPars, analysis.getCriteriaSet().getParameters());
 		this.addSetParameters(this.etalonPars, etalon.getParameters());
 	}
 
-	private void addSetParameters(final Map parsMap, final Parameter[] setParameters) throws AnalysisException {
+	private void addSetParameters(final Map<String,byte[]> parsMap, final Parameter[] setParameters) throws AnalysisException {
 		for (int i = 0; i < setParameters.length; i++)
 			this.addParameter(parsMap, setParameters[i]);
 	}
 
-	private void addParameter(final Map parsMap, final Parameter parameter) throws AnalysisException {
+	private void addParameter(final Map<String,byte[]> parsMap, final Parameter parameter) throws AnalysisException {
 		String codename = parameter.getType().getCodename();
 		if (codename != null) {
 			if (! parsMap.containsKey(codename))
@@ -135,12 +135,12 @@ public class DadaraAnalysisManager implements AnalysisManager {
 			throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 	}
 
-	private boolean hasParameter(final Map parsMap, final String codename) {
+	private boolean hasParameter(final Map<String,byte[]> parsMap, final String codename) {
 		return parsMap.get(codename) != null;
 	}
 
-	private byte[] getParameter(final Map parsMap, final String codename) throws AnalysisException {
-		byte[] rawData = (byte[]) parsMap.get(codename);
+	private byte[] getParameter(final Map<String,byte[]> parsMap, final String codename) throws AnalysisException {
+		byte[] rawData = parsMap.get(codename);
 		if (rawData == null)
 			throw new AnalysisException("Cannot get parameter of codename '" + codename + "'");
 		return rawData;
@@ -173,7 +173,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 
 	public Parameter[] analyse() throws AnalysisException {
 		// output parameters (not Parameter[] yet)
-		Map outParameters = new HashMap(); // Map <String codename, byte[] rawData>
+		Map<String,byte[]> outParameters = new HashMap<String,byte[]>(); // Map <String codename, byte[] rawData>
 		
 		// === Получаем входные данные ===
 
@@ -192,7 +192,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
 
 		// сравниваем: дополняем ar результатами сравнения и получаем алармы
-		List alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
+		List<ReflectogramMismatch> alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
 
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
@@ -207,13 +207,13 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		Parameter[] ret = new Parameter[outParameters.size()];
 		int i = 0;
 		try {
-			for (final Iterator it = outParameters.keySet().iterator(); it.hasNext(); i++) {
-				final String codename = (String) it.next();
-				final Identifier parameterTypeId = (Identifier) OUT_PARAMETER_TYPE_IDS_MAP.get(codename);
+			for (final Iterator<String> it = outParameters.keySet().iterator(); it.hasNext(); i++) {
+				final String codename = it.next();
+				final Identifier parameterTypeId = OUT_PARAMETER_TYPE_IDS_MAP.get(codename);
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				if (parameterType != null) {
 					try {
-						ret[i] = Parameter.createInstance(parameterType, (byte[]) outParameters.get(codename));
+						ret[i] = Parameter.createInstance(parameterType, outParameters.get(codename));
 					}
 					catch (CreateObjectException coe) {
 						throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);
