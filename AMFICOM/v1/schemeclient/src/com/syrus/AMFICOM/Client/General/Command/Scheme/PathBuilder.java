@@ -71,14 +71,14 @@ public class PathBuilder
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
-					SchemeLink link = ((SchemePort)port).getSchemeLink();
+					SchemeLink link = ((SchemePort)port).getAbstractSchemeLink();
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
 				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
-					SchemeCableLink clink = cport.getSchemeCableLink();
+					SchemeCableLink clink = cport.getAbstractSchemeLink();
 					if (clink == null)
 						return false;
 					newPE = addCableLink(path, cport, clink,
@@ -121,14 +121,14 @@ public class PathBuilder
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
-					SchemeLink link = ((SchemePort)port).getSchemeLink();
+					SchemeLink link = ((SchemePort)port).getAbstractSchemeLink();
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
 				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
-					SchemeCableLink clink = cport.getSchemeCableLink();
+					SchemeCableLink clink = cport.getAbstractSchemeLink();
 					if (clink == null)
 						return false;
 					newPE = addCableLink(path, cport, clink,
@@ -196,14 +196,14 @@ public class PathBuilder
 				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
-					SchemeLink link = ((SchemePort)port).getSchemeLink();
+					SchemeLink link = ((SchemePort)port).getAbstractSchemeLink();
 					if (link == null)
 						return false;
 					newPE = addLink(path, (SchemePort)port, link);
 				} else if (port instanceof SchemeCablePort)
 				{
 					SchemeCablePort cport = (SchemeCablePort)port;
-					SchemeCableLink clink = cport.getSchemeCableLink();
+					SchemeCableLink clink = cport.getAbstractSchemeLink();
 					if (clink == null)
 						return false;
 					newPE = addCableLink(path, cport, clink,
@@ -514,9 +514,9 @@ public class PathBuilder
 		for (Iterator it = cableports.iterator(); it.hasNext(); )
 		{
 			SchemeCablePort port = (SchemeCablePort)it.next();
-			if (port.getSchemeCableLink() != null)
+			if (port.getAbstractSchemeLink() != null)
 			{
-				if (port.getSchemeCableLink().getSchemeCableThreads().contains(thread))
+				if (port.getAbstractSchemeLink().getSchemeCableThreads().contains(thread))
 					return port;
 			}
 		}

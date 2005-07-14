@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.12 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeActions.java,v 1.13 2005/07/14 14:25:14 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/14 14:25:14 $
  * @module schemeclient_v1
  */
 
@@ -465,9 +465,9 @@ public class SchemeActions {
 			return false;
 		}
 
-		if (sp.getSchemeLink() != null && !sp.getSchemeLink().equals(sl)) {
+		if (sp.getAbstractSchemeLink() != null && !sp.getAbstractSchemeLink().equals(sl)) {
 			String message = "К порту " + sp.getName()
-					+ " уже подключена линия связи " + sp.getSchemeLink().getName() + ".\n";
+					+ " уже подключена линия связи " + sp.getAbstractSchemeLink().getName() + ".\n";
 			message += "Изменить подключенную линию на " + sl.getName() + "?";
 			// int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 			// message, "Подтверждение", JOptionPane.YES_NO_OPTION);
@@ -533,9 +533,9 @@ public class SchemeActions {
 							+ link.getSchemeCableLinkId());
 			return false;
 		}
-		if (sp.getSchemeCableLink() != null && !sp.getSchemeCableLink().equals(sl)) {
+		if (sp.getAbstractSchemeLink() != null && !sp.getAbstractSchemeLink().equals(sl)) {
 			String message = "К порту " + sp.getName()
-					+ " уже подключена линия связи " + sp.getSchemeCableLink().getName()
+					+ " уже подключена линия связи " + sp.getAbstractSchemeLink().getName()
 					+ ".\n";
 			message += "Изменить подключенную линию на " + sl.getName() + "?";
 
