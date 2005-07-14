@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+* $Id: GraphTreeModel.java,v 1.2 2005/07/14 12:06:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -45,13 +45,16 @@ public class GraphTreeModel implements TreeModel {
 	protected GraphModel			model;
 
 	protected DefaultGraphCell		root;
+	
+	private boolean direct;
 
-	public GraphTreeModel(GraphModel model) {
+	public GraphTreeModel(GraphModel model, boolean direct) {
 		this.model = model;
 		this.root = (DefaultGraphCell) this.model.getRootAt(0);
 		this.treeNodeIndexMap = new HashMap<TreeNode, Integer>();
 		this.treeNodePathMap = new HashMap<TreeNode, TreeNode[]>();
-		this.clearCache();
+		this.direct = direct;
+		this.clearCache();		
 	}
 
 	public void addTreeModelListener(TreeModelListener listener) {
@@ -103,7 +106,7 @@ public class GraphTreeModel implements TreeModel {
 
 		for (Object object : port.getEdges()) {
 			Edge edge = (Edge) object;
-			DefaultPort target = (DefaultPort) edge.getTarget();
+			DefaultPort target = (DefaultPort) (this.direct ? edge.getTarget() : edge.getSource());
 			if (target == port) {
 				continue;
 			}
@@ -112,9 +115,9 @@ public class GraphTreeModel implements TreeModel {
 			boolean sourceRootFound = false;
 			for (Object oEdge : target.getEdges()) {
 				Edge edge2 = (Edge) oEdge;
-				targetEdgeSourceCount += (edge2.getTarget() == target) ? 1 : 0;
+				targetEdgeSourceCount += ((this.direct ? edge2.getTarget() : edge2.getSource()) == target) ? 1 : 0;
 				if (!sourceRootFound) {
-					sourceRootFound = edge2.getSource() == rootPort;
+					sourceRootFound = (this.direct ? edge2.getSource() : edge2.getTarget()) == rootPort;
 				}
 			}
 
@@ -160,9 +163,9 @@ public class GraphTreeModel implements TreeModel {
 		final DefaultPort port = (DefaultPort) cell.getChildAt(0);
 
 		DefaultPort rootPort = (DefaultPort) this.root.getChildAt(0);
-		// System.out.println();
-		// System.out.println("GraphTreeModel.getChildCount() | parent:" +
-		// parent);
+		System.out.println();
+		System.out.println("GraphTreeModel.getChildCount() | parent:" +
+		parent);
 
 		this.cacheTreePath(cell);
 
@@ -170,19 +173,20 @@ public class GraphTreeModel implements TreeModel {
 		int count = 0;
 		for (Object object : port.getEdges()) {
 			Edge edge = (Edge) object;
-			DefaultPort target = (DefaultPort) edge.getTarget();
+			DefaultPort target = (DefaultPort) (this.direct ? edge.getTarget() : edge.getSource());
 			if (target == port) {
 				continue;
 			}
 
-//			System.out.println("GraphTreeModel.getChildCount() | target:" + target);
+			System.out.println("GraphTreeModel.getChildCount() | target:" + target);
 			int targetEdgeSourceCount = 0;
 			boolean sourceRootFound = false;
 			for (Object oEdge : target.getEdges()) {
 				Edge edge2 = (Edge) oEdge;
-				targetEdgeSourceCount += (edge2.getTarget() == target) ? 1 : 0;
+				targetEdgeSourceCount += ((this.direct ? edge2.getTarget() : edge2.getSource()) == target) ? 1 : 0;
 				if (!sourceRootFound) {
-					sourceRootFound = edge2.getSource() == rootPort;
+					sourceRootFound = (this.direct ? edge2.getSource() : edge2.getTarget()) == rootPort;
+					
 				}
 			}
 
@@ -225,7 +229,7 @@ public class GraphTreeModel implements TreeModel {
 			// //
 			// count += (sourceCount == 1 + (foundNotRootPort ? 1 : 0)) ? 1 : 0;
 		}
-//		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
+		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
 		return count;
 	}
 
@@ -519,8 +523,8 @@ public class GraphTreeModel implements TreeModel {
 
 				for (Object object : edges) {
 					Edge edge = (Edge) object;
-					Object source = edge.getSource();
-					Object target = edge.getTarget();
+					Object source = this.direct ? edge.getSource() : edge.getTarget();
+					Object target = this.direct ? edge.getTarget() : edge.getSource();
 
 					if (target == port && source != rootPort) {
 						nonRootSource++;
@@ -529,8 +533,8 @@ public class GraphTreeModel implements TreeModel {
 
 				for (Object object : edges) {
 					Edge edge = (Edge) object;
-					Object source = edge.getSource();
-					Object target = edge.getTarget();
+					Object source = this.direct ? edge.getSource() : edge.getTarget();
+					Object target = this.direct ? edge.getTarget() : edge.getSource();
 
 					if (target == port && (source != rootPort || nonRootSource == 0)) {
 						retNodes = getPathToRoot(((DefaultPort) source).getParent(), depth);
@@ -554,5 +558,10 @@ public class GraphTreeModel implements TreeModel {
 	public void valueForPathChanged(TreePath path, Object newValue) {
 		// TODO Auto-generated method stub
 
+	}
+
+	
+	public final boolean isDirect() {
+		return this.direct;
 	}
 }

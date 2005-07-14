@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+ * $Id: JGraphText.java,v 1.2 2005/07/14 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module Miscs
@@ -105,7 +105,7 @@ public class JGraphText {
 		// Construct Model and Graph
 		this.createRootItem();
 		
-		GraphModel model = new ManagerGraphModel(this.rootItem);
+		GraphModel model = new ManagerGraphModel(this.rootItem, false);
 		
 		this.graph = new JGraph(model,
 			new GraphLayoutCache(model,
@@ -186,7 +186,7 @@ public class JGraphText {
 		this.graph.getModel().addGraphModelListener(new GraphModelListener() {
 			public void graphChanged(GraphModelEvent e) {
 				GraphModelChange change = e.getChange();
-				
+				boolean direct = JGraphText.this.treeModel.isDirect();
 				Object[] inserted = change.getInserted();
 				if (inserted != null) {
 					for(Object insertedObject: inserted) {
@@ -194,8 +194,9 @@ public class JGraphText {
 							Edge edge = (Edge)insertedObject;
 							Object source = edge.getSource();
 							Object target = edge.getTarget();
-							MutableTreeNode targetParent = (MutableTreeNode)((DefaultPort)target).getParent();
-							MutableTreeNode sourceParent = (MutableTreeNode)((DefaultPort)source).getParent();
+							
+							MutableTreeNode targetParent = (MutableTreeNode)((DefaultPort)(direct ? target : source)).getParent();
+							MutableTreeNode sourceParent = (MutableTreeNode)((DefaultPort)(direct ? source : target)).getParent();
 							System.out.println(".graphChanged() | source:" + sourceParent + ", target:" + targetParent);
 							if (sourceParent != JGraphText.this.rootItem) {
 								JGraphText.this.treeModel.removeNodeFromParent(targetParent);
@@ -591,9 +592,9 @@ public class JGraphText {
 	private DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, double x,
 	             			double y, double w, double h, Color bg, boolean raised) {
 		DefaultGraphCell cell = this.createVertex(name, x, y, w, h, bg, raised);
-		this.createEdge(this.rootItem, cell, false);
+		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
 		if (parentCell != null && parentCell != this.rootItem) {
-			this.createEdge(parentCell, cell);
+			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
 		}
 		return cell;
 	}
@@ -605,9 +606,9 @@ public class JGraphText {
  		System.out.println("JGraphText.createChild() | insert " + cell);
 		cache.insert(cell);	
 
- 		this.createEdge(this.rootItem, cell, false);
+ 		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
  		if (parentCell != null && parentCell != this.rootItem) {
- 			this.createEdge(parentCell, cell);
+ 			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
  		}
  		return cell;
 	}
@@ -634,7 +635,7 @@ public class JGraphText {
 		GraphLayoutCache cache = this.graph.getGraphLayoutCache();		
 		cache.insert(this.rootItem);
 		
-		this.treeModel = new GraphTreeModel(this.graph.getModel());
+		this.treeModel = new GraphTreeModel(this.graph.getModel(), false);
 		this.tree = new JTree(this.treeModel);
 		
 		this.tree.setRootVisible(false);

@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.1 2005/07/14 10:14:11 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.2 2005/07/14 12:06:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import org.jgraph.graph.Edge;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/14 10:14:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/14 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -24,8 +24,11 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	
 	private final DefaultGraphCell rootItem;
 	
-	public ManagerGraphModel(final DefaultGraphCell rootItem) {
+	private boolean direct;
+	
+	public ManagerGraphModel(final DefaultGraphCell rootItem, boolean direct) {
 		this.rootItem = rootItem;
+		this.direct = direct;
 	}
 	
 	@Override
@@ -67,7 +70,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		if (!result) {
 			for(Object object : port.getEdges()) {
 				Edge edge  = (Edge)object;
-				DefaultPort defaultPort = (DefaultPort) (edge.getTarget());
+				DefaultPort defaultPort = (DefaultPort) (this.direct ? edge.getTarget() : edge.getSource());
 				result = this.isLooped(defaultPort, basePort, target);
 				if (result) {
 					break;
@@ -91,8 +94,8 @@ public class ManagerGraphModel extends DefaultGraphModel {
 			int yetConnected = 0;
 			for(Object oEdge : port2.getEdges()) {
 				Edge edge3 = (Edge)oEdge;
-				DefaultPort sourcePort = (DefaultPort) edge3.getSource();
-				DefaultPort targetPort = (DefaultPort) edge3.getTarget();
+				DefaultPort sourcePort = (DefaultPort) (this.direct ? edge3.getSource() : edge3.getTarget());
+				DefaultPort targetPort = (DefaultPort) (this.direct ? edge3.getTarget() : edge3.getSource());
 				if (targetPort == port && sourcePort != rootPort) {
 					yetConnected++;
 				}
@@ -104,8 +107,8 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				// check for looping
 				for(Object oEdge : port2.getEdges()) {
 					Edge edge3 = (Edge)oEdge;
-					DefaultPort sourcePort = (DefaultPort) edge3.getSource();
-					DefaultPort targetPort = (DefaultPort) edge3.getTarget();
+					DefaultPort sourcePort = (DefaultPort) (this.direct ? edge3.getSource() : edge3.getTarget());
+					DefaultPort targetPort = (DefaultPort) (this.direct ? edge3.getTarget() : edge3.getSource());
 					if (port != targetPort) {
 						result = !this.isLooped((DefaultPort) port, 
 							sourcePort,
