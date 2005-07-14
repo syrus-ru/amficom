@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.26 2005/06/24 14:13:40 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.27 2005/07/14 15:36:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,6 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -43,8 +42,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/06/24 14:13:40 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/07/14 15:36:36 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -155,17 +154,10 @@ public final class MeasurementPathController extends AbstractLinkController {
 		if(!isElementVisible(mpath, visibleBounds))
 			return;
 
-		BasicStroke stroke = (BasicStroke )getStroke(mpath);
-		Stroke str = new BasicStroke(
-				getLineSize(mpath), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
+		Stroke stroke = getStroke(mpath);
 		Color color = getColor(mpath);
 
-		paint(mpath, g, visibleBounds, str, color, isSelectionVisible(mpath));
+		paint(mpath, g, visibleBounds, stroke, color, isSelectionVisible(mpath));
 	}
 
 	/**

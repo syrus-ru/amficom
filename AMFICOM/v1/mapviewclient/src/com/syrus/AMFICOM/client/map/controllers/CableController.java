@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.23 2005/06/23 08:26:04 krupenn Exp $
+ * $Id: CableController.java,v 1.24 2005/07/14 15:36:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,6 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -43,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/23 08:26:04 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/14 15:36:15 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController {
@@ -167,17 +166,10 @@ public final class CableController extends AbstractLinkController {
 		if(!isElementVisible(cpath, visibleBounds))
 			return;
 
-		BasicStroke stroke = (BasicStroke )getStroke(cpath);
-		Stroke str = new BasicStroke(
-				getLineSize(cpath), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
+		Stroke stroke = getStroke(cpath);
 		Color color = getColor(cpath);
 
-		paint(cpath, g, visibleBounds, str, color, isSelectionVisible(cpath));
+		paint(cpath, g, visibleBounds, stroke, color, isSelectionVisible(cpath));
 	}
 
 	/**
