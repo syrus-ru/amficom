@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.46 2005/07/13 11:08:01 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.47 2005/07/14 13:35:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/13 11:08:01 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/14 13:35:51 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -211,16 +212,22 @@ public final class SchemeMonitoringSolution extends
 		return this.name;
 	}
 
+	Identifier getParentSchemeOptimizeInfoId() {
+		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeOptimizeInfoId.isVoid() || this.parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
+		return this.parentSchemeOptimizeInfoId;
+	}
+
 	/**
+	 * A wrapper around {@link #getParentSchemeOptimizeInfoId()}.
+	 *
 	 * @return <code>SchemeOptimizeInfo</code> parent for this
 	 *         <code>SchemeMonitoringSolution</code>, or <code>null</code>
 	 *         if none.
 	 */
 	public SchemeOptimizeInfo getParentSchemeOptimizeInfo() {
-		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
-
 		try {
-			return (SchemeOptimizeInfo) StorableObjectPool.getStorableObject(this.parentSchemeOptimizeInfoId, true);
+			return (SchemeOptimizeInfo) StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

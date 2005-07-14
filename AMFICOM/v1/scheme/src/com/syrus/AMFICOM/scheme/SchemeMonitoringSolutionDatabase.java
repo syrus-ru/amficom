@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.8 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.9 2005/07/14 13:35:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/14 13:35:51 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
@@ -143,7 +143,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 				+ APOSTOPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 				+ schemeMonitoringSolution.getPrice() + COMMA
 				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfo().getId());
+				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 		return sql;
 	}
 
@@ -165,7 +165,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.getPrice());
 		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.isActive() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfo().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 		return startParameterNumber;
 	}
 

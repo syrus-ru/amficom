@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.42 2005/07/14 13:20:34 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.43 2005/07/14 13:32:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFOSWITCH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -53,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/14 13:20:34 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/14 13:32:15 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -320,7 +321,9 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	Identifier getParentSchemeId() {
 		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+		final boolean parentSchemeIdVoid = this.parentSchemeId.isVoid();
+		assert !parentSchemeIdVoid : EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeId.getMajor() == SCHEME_CODE;
 		return this.parentSchemeId;
 	}
 
