@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.55 2005/07/14 13:27:16 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.56 2005/07/14 20:27:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/07/14 13:27:16 $
- * @author $Author: saa $
+ * @version $Revision: 1.56 $, $Date: 2005/07/14 20:27:50 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -107,6 +107,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	 * @param etalon
 	 * @throws AnalysisException
 	 */
+	@SuppressWarnings("unused")
 	private DadaraAnalysisManager(final Result measurementResult,
 			final Analysis analysis,
 			final ParameterSet etalon) throws AnalysisException {
@@ -200,7 +201,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// === Формируем результаты ===
 
 		// добавляем алармы в результаты анализа
-		ReflectogramMismatch[] alarms = (ReflectogramMismatch[]) alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
+		ReflectogramMismatch[] alarms = alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
 		outParameters.put(CODENAME_ALARMS, ReflectogramMismatch.alarmsToByteArray(alarms));
 
 		// формируем результаты анализа
