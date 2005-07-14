@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.38 2005/07/12 08:40:54 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.39 2005/07/14 16:25:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -50,7 +53,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/14 16:25:22 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject {
@@ -231,15 +234,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		return Collections.unmodifiableSet(dependencies);
 	}
 
-	public SiteNode getEndSiteNode() {
+	Identifier getEndSiteNodeId() {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
 				&& !this.endSiteNodeId.isVoid(): OBJECT_NOT_INITIALIZED;
 		assert !this.endSiteNodeId.equals(this.startSiteNodeId): CIRCULAR_DEPS_PROHIBITED;
+		assert this.endSiteNodeId.getMajor() == SITENODE_CODE;
+		return this.endSiteNodeId;
+	}
 
+	/**
+	 * A wrapper around {@link #getEndSiteNodeId()}.
+	 */
+	public SiteNode getEndSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.endSiteNodeId, true);
+			return (SiteNode) StorableObjectPool.getStorableObject(this.getEndSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -250,22 +260,37 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		return this.endSpare;
 	}
 
-	public SchemeCableLink getParentSchemeCableLink() {
+	Identifier getParentSchemeCableLinkId() {
 		assert this.parentSchemeCableLinkId != null: OBJECT_BADLY_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
+		return this.parentSchemeCableLinkId;
+	}
 
+	/**
+	 * A wrapper around {@link #getParentSchemeCableLinkId()}.
+	 */
+	public SchemeCableLink getParentSchemeCableLink() {
 		try {
-			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.parentSchemeCableLinkId, true);
+			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
 	}
 
-	public PhysicalLink getPhysicalLink() {
+	Identifier getPhysicalLinkId() {
 		assert this.physicalLinkId != null: OBJECT_NOT_INITIALIZED;
+		assert this.physicalLinkId.isVoid() || this.physicalLinkId.getMajor() == PHYSICALLINK_CODE;
+		return this.physicalLinkId;
+	}
+
+	/**
+	 * A wrapper around {@link #getPhysicalLinkId()}.
+	 */
+	public PhysicalLink getPhysicalLink() {
 		try {
-			return (PhysicalLink) StorableObjectPool.getStorableObject(this.physicalLinkId, true);
+			return (PhysicalLink) StorableObjectPool.getStorableObject(this.getPhysicalLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -284,15 +309,22 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject {
 		return this.sequentialNumber;
 	}
 
-	public SiteNode getStartSiteNode() {
+	Identifier getStartSiteNodeId() {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
 				&& !this.endSiteNodeId.isVoid(): OBJECT_NOT_INITIALIZED;
 		assert !this.startSiteNodeId.equals(this.endSiteNodeId): CIRCULAR_DEPS_PROHIBITED;
+		assert this.startSiteNodeId.getMajor() == SITENODE_CODE;
+		return this.startSiteNodeId;
+	}
 
+	/**
+	 * A wrapper around {@link #getStartSiteNodeId()}.
+	 */
+	public SiteNode getStartSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.startSiteNodeId, true);
+			return (SiteNode) StorableObjectPool.getStorableObject(this.getStartSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

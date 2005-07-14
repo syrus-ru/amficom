@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.10 2005/07/14 16:08:08 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.11 2005/07/14 16:25:22 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 16:08:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/14 16:25:22 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -149,10 +149,10 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		String sql = APOSTROPHE + cableChannelingItem.getRowX() + APOSTROPHE + COMMA
 				+ APOSTROPHE + cableChannelingItem.getPlaceY() + APOSTROPHE + COMMA
 				+ APOSTROPHE + cableChannelingItem.getSequentialNumber() + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getPhysicalLink().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getStartSiteNode().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getEndSiteNode().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getParentSchemeCableLink().getId());
+				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getPhysicalLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getStartSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getEndSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getParentSchemeCableLinkId());
 		return sql;
 	}
 
@@ -175,10 +175,10 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getRowX());
 		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getPlaceY());
 		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getSequentialNumber());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getPhysicalLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getStartSiteNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getEndSiteNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getParentSchemeCableLink().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getPhysicalLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getStartSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getEndSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getParentSchemeCableLinkId());
 		return startParameterNumber;
 	}
 
