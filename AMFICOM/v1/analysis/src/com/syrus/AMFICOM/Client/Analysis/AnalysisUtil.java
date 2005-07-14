@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -166,7 +166,7 @@ public class AnalysisUtil
 
 		{
 			ParameterType ptype = getParameterType(
-				ParameterTypeCodenames.DADARA_CRITERIA, DataType.DATA_TYPE_RAW);
+				ParameterTypeCodenames.DADARA_CRITERIA, DataType.RAW);
 			params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
@@ -188,14 +188,14 @@ public class AnalysisUtil
 	{
 		Parameter[] params = new Parameter[2];
 
-		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON, DataType.DATA_TYPE_RAW);
+		ParameterType ptype = getParameterType(ParameterTypeCodenames.DADARA_ETALON, DataType.RAW);
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
 		BellcoreStructure bs = Heap.getBSEtalonTrace();
 
-		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.DATA_TYPE_RAW);
+		ptype = getParameterType(ParameterTypeCodenames.REFLECTOGRAMMA_ETALON, DataType.RAW);
 		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
