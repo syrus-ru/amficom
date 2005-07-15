@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.126 2005/07/14 18:47:10 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.127 2005/07/15 11:36:35 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,17 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/07/14 18:47:10 $
+ * @version $Revision: 1.127 $, $Date: 2005/07/15 11:36:35 $
  * @author $Author: arseniy $
  * @module general_v1
+ * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
+ * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
+ * 1) заполнить кишки различными объектами;
+ * 2) пометить некоторые из этих объектов на удаление;
+ * 3) проверить все вызовы подгрузки get<*>, при этом во входных наборах идентификаторов (как и "для", так и "кроме")
+ * должны присутствовать идентификаторы помеченных на удаление объектов;
+ * 4) проверить вызов refresh
+ * 5) проверить все вызовы flush, убедиться что объекты, помеченные на удаление, действительно удаляются.
  */
 public abstract class StorableObjectPool {
 
@@ -1021,7 +1029,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.126 $, $Date: 2005/07/14 18:47:10 $
+	 * @version $Revision: 1.127 $, $Date: 2005/07/15 11:36:35 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
