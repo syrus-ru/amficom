@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.2 2005/06/03 10:43:53 stas Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.3 2005/07/15 14:33:13 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.analysis;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/03 10:43:53 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 14:33:13 $
  * @module analysis_v1
  */
 
@@ -132,6 +133,7 @@ public class AnalysisParametersWrapper implements Wrapper {
 				} else if (key.equals(KEY_NOISE_FACTOR)) {
 					params.setNoiseFactor(((Double)value).doubleValue());
 				}
+				Heap.notifyAnalysisParametersUpdated();
 			} catch (NumberFormatException e) {
 				//TODO make double editor
 				// ignore

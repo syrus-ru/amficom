@@ -192,33 +192,9 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		this.updColorModel();
 	}
 
-	// XXX: то, что делается здесь, частично продублировано в  AnalysisParameterWrapper.setValue()
-	// вероятно, правильнее дополнить setValue() командами типа
-	//    (??) analysisParametersUpdatedHere = true
-	//    Heap.notifyAnalysisParametersUpdated()
-	//    (??) analysisParametersUpdatedHere = true,
-	// а настоящий метод убрать.
-    void updateHeapAP()
-    {
-        Heap.getMinuitAnalysisParams().setMinThreshold(
-                ((Double )table.getValueAt(0, 1)).doubleValue());
-        Heap.getMinuitAnalysisParams().setMinSplice(
-                ((Double )table.getValueAt(1, 1)).doubleValue());
-        Heap.getMinuitAnalysisParams().setMinConnector(
-                ((Double )table.getValueAt(2, 1)).doubleValue());
-        Heap.getMinuitAnalysisParams().setMinEnd(
-                ((Double )table.getValueAt(3, 1)).doubleValue());
-        Heap.getMinuitAnalysisParams().setNoiseFactor(
-                ((Double )table.getValueAt(4, 1)).doubleValue());
-        analysisParametersUpdatedHere = true;
-        Heap.notifyAnalysisParametersUpdated();
-        analysisParametersUpdatedHere  = false;
-    }
-
 	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
 		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		updateHeapAP();
 		new AnalysisCommand().execute();
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
