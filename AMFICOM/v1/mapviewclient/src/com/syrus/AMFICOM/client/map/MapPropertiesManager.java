@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.29 2005/07/15 14:05:39 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.30 2005/07/15 15:05:29 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.29 $, $Date: 2005/07/15 14:05:39 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/15 15:05:29 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -85,7 +85,7 @@ public final class MapPropertiesManager
  	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";
  	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
  	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating";
-	protected static final String KEY_NAVIGATE_AREA_SIZE = "0.03";
+	protected static final String KEY_NAVIGATE_AREA_SIZE = "navigateAreaSize";
 
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
@@ -94,22 +94,21 @@ public final class MapPropertiesManager
 	protected static String dataBasePath = "";
 	protected static String dataBaseView = "";
 	protected static String dataBaseURL = "";
-	protected static String lastLong = "";
-	protected static String lastLat = "";
-	protected static String lastZoom = "";
+	protected static double lastLong = 0.D;
+	protected static double lastLat = 0.D;
+	protected static double lastZoom = 1.D;
 	protected static String lastView = "";
 	protected static String lastDirectory = ".";
-	protected static String descreteNavigation = "false";
-	protected static String useTopologicalImageCache = "false";
-	protected static String optimizeLinks = "false";
-	protected static String topoImageMaxTimeWait = "30000";
-	protected static String moveMouseNavigating = "true";
+	protected static boolean descreteNavigation = false;
+	protected static boolean useTopologicalImageCache = false;
+	protected static boolean optimizeLinks = false;
+	protected static long topoImageMaxTimeWait = 30000;
+	protected static boolean moveMouseNavigating = true;
 	/**
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
 	 * в процентах от габарита окна карты
 	 */
-	protected static String navigateAreaSize = "0.03";
-	
+	protected static double navigateAreaSize = 0.03;
 	
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
@@ -342,83 +341,47 @@ public final class MapPropertiesManager
 	
 	public static double getZoom()
 	{
-		try
-		{
-			double zoom = Double.parseDouble(lastZoom);
-			return zoom;
-		}
-		catch(Exception e)
-		{
-			return DEFAULT_ZOOM;
-		}
+		return lastZoom;
 	}
 	
 	public static void setZoom(double zoom)
 	{
-		String oldval = lastZoom;
-		try
-		{
-			lastZoom = String.valueOf(zoom);
-		}
-		catch(Exception e)
-		{
-			lastZoom = oldval;
-		}
+		lastZoom = zoom;
 	}
 
 	public static DoublePoint getCenter()
 	{
-		try
-		{
-			double lng = Double.parseDouble(lastLong);
-			double lat = Double.parseDouble(lastLat);
-			
-			return new DoublePoint(lng, lat);
-		}
-		catch(Exception e)
-		{
-			return null;
-		}
+		return new DoublePoint(lastLong, lastLat);
 	}
 
 	public static void setCenter(DoublePoint center)
 	{
-		String longoldval = lastLong;
-		String latoldval = lastLat;
-		try
-		{
-			lastLong = String.valueOf(center.getX());
-			lastLat = String.valueOf(center.getY());
-		}
-		catch(Exception e)
-		{
-			lastLong = longoldval;
-			lastLat = latoldval;
-		}
+		lastLong = center.getX();
+		lastLat = center.getY();
 	}
 
 	public static boolean isDescreteNavigation() {
-		return Boolean.valueOf(descreteNavigation).booleanValue();
+		return descreteNavigation;
 	}
 	
  	public static boolean isTopologicalImageCache() {
-		return Boolean.valueOf(useTopologicalImageCache).booleanValue();
+		return useTopologicalImageCache;
 	}
 
 	public static boolean isOptimizeLinks() {
-		return Boolean.valueOf(optimizeLinks).booleanValue();
+		return optimizeLinks;
 	}
 	
-	public static int getTopoImageMaxTimeWait() {
-		return Integer.parseInt(topoImageMaxTimeWait);
+	public static long getTopoImageMaxTimeWait() {
+		return topoImageMaxTimeWait;
 	}
 	
 	public static boolean isMoveMouseNavigating() {
-		return Boolean.parseBoolean(moveMouseNavigating);
+		return moveMouseNavigating;
 	}
 
-	public static int getNavigateAreaSize() {
-		return Integer.parseInt(navigateAreaSize);
+	public static double getNavigateAreaSize() {
+		return navigateAreaSize;
 	}
 	
 	/**
@@ -434,27 +397,81 @@ public final class MapPropertiesManager
 		connectionClass = properties.getProperty(KEY_CONNECTION_CLASS);		
 		rendererClass = properties.getProperty(KEY_RENDERER_CLASS);
 		
-		lastLong = properties.getProperty(KEY_LAST_LONGITUDE);
-		if (lastLong.equals("NaN"))
-			lastLong = "0.0000";
-		
-		lastLat = properties.getProperty(KEY_LAST_LATITUDE);
-		if (lastLat.equals("NaN"))
-			lastLat = "0.0000";
-		
-		lastZoom = properties.getProperty(KEY_LAST_ZOOM);
-		if (lastZoom.equals("NaN"))
-			lastZoom = "0.0000";
+		try {
+			lastLong = Double.parseDouble(properties.getProperty(KEY_LAST_LONGITUDE));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_LAST_LONGITUDE + " from properties file.");			
+			Log.errorException(e);
+		}
+
+		try {
+			lastLat = Double.parseDouble(properties.getProperty(KEY_LAST_LATITUDE));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_LAST_LATITUDE + " from properties file.");			
+			Log.errorException(e);
+		}
+
+		try {
+			lastZoom = Double.parseDouble(properties.getProperty(KEY_LAST_ZOOM));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_LAST_ZOOM + " from properties file.");			
+			Log.errorException(e);
+		}
 		
 		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
-		descreteNavigation = properties.getProperty(KEY_DESCRETE_NAVIGATION);
-		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);
-		topoImageMaxTimeWait = properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT);		
-		optimizeLinks = properties.getProperty(KEY_OPTIMIZE_LINKS);
-		moveMouseNavigating = properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING);
-		navigateAreaSize = properties.getProperty(KEY_NAVIGATE_AREA_SIZE);		
 		
-//		selectionColor = iniFile.getValue("selectionColor");
+		try {
+			descreteNavigation = Boolean.parseBoolean(properties.getProperty(KEY_DESCRETE_NAVIGATION));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_DESCRETE_NAVIGATION + " from properties file.");			
+			Log.errorException(e);
+		}
+
+		try {
+			useTopologicalImageCache = Boolean.parseBoolean(properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_TOPOLOGICAL_IMAGE_CACHE + " from properties file.");			
+			Log.errorException(e);
+		}
+		
+		try {
+			topoImageMaxTimeWait = Long.parseLong(properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_TOPO_IMAGE_MAX_TIMEWAIT + " from properties file.");			
+			Log.errorException(e);
+		}
+		
+		try {
+			optimizeLinks = Boolean.parseBoolean(properties.getProperty(KEY_OPTIMIZE_LINKS));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_OPTIMIZE_LINKS + " from properties file.");			
+			Log.errorException(e);
+		}
+		
+		try {
+			moveMouseNavigating = Boolean.parseBoolean(properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_MOVE_MOUSE_NAVIGATING + " from properties file.");			
+			Log.errorException(e);
+		}
+		
+		try {
+			navigateAreaSize = Double.parseDouble(properties.getProperty(KEY_NAVIGATE_AREA_SIZE));
+		} catch (Exception e) {
+			Log.errorMessage("Failed reading parameter "
+					+ KEY_NAVIGATE_AREA_SIZE + " from properties file.");			
+			Log.errorException(e);
+		}
+
+		//		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
 //		showPhysicalNodes = iniFile.getValue("showNodes");
 		lastView = properties.getProperty(KEY_LAST_VIEW);
@@ -469,12 +486,12 @@ public final class MapPropertiesManager
 		dataBaseView = "";
 		dataBaseURL = "";
 		lastDirectory = ".";
-		descreteNavigation = "false";
-		useTopologicalImageCache = "false";
-		optimizeLinks = "false";
-		moveMouseNavigating = "true";
-		topoImageMaxTimeWait = "30000";
-		navigateAreaSize = "0.03";
+		descreteNavigation = false;
+		useTopologicalImageCache = false;
+		optimizeLinks = false;
+		moveMouseNavigating = true;
+		topoImageMaxTimeWait = 30000;
+		navigateAreaSize = 0.03;
 		viewerClass = "";
 		connectionClass = "";		
 		rendererClass = "";
@@ -491,9 +508,9 @@ public final class MapPropertiesManager
 		{
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(iniFileName));
-			properties.setProperty(KEY_LAST_LONGITUDE, lastLong);
-			properties.setProperty(KEY_LAST_LATITUDE, lastLat);
-			properties.setProperty(KEY_LAST_ZOOM, lastZoom);			
+			properties.setProperty(KEY_LAST_LONGITUDE, Double.toString(lastLong));
+			properties.setProperty(KEY_LAST_LATITUDE, Double.toString(lastLat));
+			properties.setProperty(KEY_LAST_ZOOM, Double.toString(lastZoom));			
 			properties.setProperty(KEY_LAST_DIRECTORY, lastDirectory);
 			properties.store(new FileOutputStream(iniFileName), null);
 		}
