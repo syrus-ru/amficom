@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.99 2005/07/14 17:14:06 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.100 2005/07/15 10:49:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.99 $, $Date: 2005/07/14 17:14:06 $
+ * @version $Revision: 1.100 $, $Date: 2005/07/15 10:49:19 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1150,7 +1150,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.99 $, $Date: 2005/07/14 17:14:06 $
+	 * @version $Revision: 1.100 $, $Date: 2005/07/15 10:49:19 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1772,28 +1772,17 @@ public class LogicalNetLayer
 
 			while(startRecursionNode != null) {
 				if (! nodesCalculated.get(startRecursionNode).booleanValue()) {
-					Set<NodeLink> allLinksForStartRecursionNode =
-						this.linksForNodes.get(startRecursionNode);
-					
-					if (allLinksForStartRecursionNode != null){
-						//Если к узлу не было проложено ни одного NodeLinka, то для него Set == null
-						for (NodeLink outgoingLink : allLinksForStartRecursionNode) {
-							if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-								nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
-								pullVisualLinksFromNode1(
-										startRecursionNode, 
-										startRecursionNode,
-										outgoingLink, 
-										nodesCalculated,
-										nodeLinksCalculated,
-										frontedge,
-										map,
-										color,
-										stroke,
-										pullAttributesFromController);
-							}
-						}
-					}
+						pullVisualLinksFromNode1(
+								startRecursionNode, 
+								startRecursionNode,
+								null, 
+								nodesCalculated,
+								nodeLinksCalculated,
+								frontedge,
+								map,
+								color,
+								stroke,
+								pullAttributesFromController);
 				}
 				Iterator<AbstractNode> it = frontedge.iterator();
 				if(it.hasNext()) {
@@ -1847,7 +1836,17 @@ public class LogicalNetLayer
 			throw new AssertionError(
 					"LogicalNetLayer | pullVisualLinksFromNode | The nodeProcessed can't be null");
 
-		if (nodesCalculated.get(nodeProcessed).booleanValue()) {
+		//Получаем список всех входящих/исходящих линий для данного узла
+		Set<NodeLink> allLinksForNodeProcessed = this.linksForNodes.get(nodeProcessed);
+		
+		if (allLinksForNodeProcessed == null
+				|| allLinksForNodeProcessed.size() == 0) {
+			this.visualElements.add(nodeProcessed);
+			return;
+		}
+
+		if (	nodesCalculated.get(nodeProcessed).booleanValue()
+			||	((allLinksForNodeProcessed.size() == 1 && incomingLink != null))) {
 			long t1 = System.currentTimeMillis();
 			//Условие останова - данный узел уже рассматривался.
 			//Создаём элемент отображения и выходим.
@@ -1872,8 +1871,6 @@ public class LogicalNetLayer
 			MapViewController.addTime4(t2 - t1);
 			return;
 		}
-		//Получаем список всех входящих/исходящих линий для данного узла
-		Set<NodeLink> allLinksForNodeProcessed = this.linksForNodes.get(nodeProcessed);
 
 		long t5 = System.currentTimeMillis();
 		//Экранные координаты узла, от которого мы тянем визуальный элемент 
@@ -1889,7 +1886,7 @@ public class LogicalNetLayer
 		MapViewController.addTime5(t6 - t5);
 
 		if (	(distance >= MINIMUM_SCREEN_LENGTH)
-			||	(allLinksForNodeProcessed.size() > 2)) {
+			||	((allLinksForNodeProcessed.size() > 2) && incomingLink != null)) {
 			long t1 = System.currentTimeMillis();
 			//Получили достаточно длинный сегмент или наткнулись на узел с развилкой -
 			//создаём элемент отображения и дальше тянем новый(е) элемент отображения,
