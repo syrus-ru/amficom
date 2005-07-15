@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.46 2005/07/15 14:57:43 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.47 2005/07/15 15:04:13 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,15 +55,14 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.46 $, $Date: 2005/07/15 14:57:43 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.47 $, $Date: 2005/07/15 15:04:13 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
 {
 	protected MapNodeLinkSizeField sizeEditBox = null;
 
-	private final double navigateAreaSize = MapPropertiesManager.getNavigateAreaSize();	
 	/**
 	 * Сущность для перемещения курсора мыши в нужную точку
 	 */
@@ -76,9 +75,6 @@ public final class MapMouseListener implements MouseListener
 
 	private NetMapViewer netMapViewer;
 	
-	private boolean mouseMovedWhileNavigating =
-		MapPropertiesManager.isMoveMouseNavigating();
-
 	public MapMouseListener(NetMapViewer netMapViewer)
 		throws MapDataException
 	{
@@ -228,15 +224,15 @@ public final class MapMouseListener implements MouseListener
 			int mouseY = point.y;
 
 			int quadrantX =
-				(mouseX < imageSize.width * this.navigateAreaSize) 
+				(mouseX < imageSize.width * MapPropertiesManager.getNavigateAreaSize()) 
 				? 0
-				: (mouseX < imageSize.width * (1 - this.navigateAreaSize)) 
+				: (mouseX < imageSize.width * (1 - MapPropertiesManager.getNavigateAreaSize())) 
 				? 1
 				:2;
 			int quadrantY =
-				(mouseY < imageSize.height * this.navigateAreaSize) 
+				(mouseY < imageSize.height * MapPropertiesManager.getNavigateAreaSize()) 
 				? 0
-				: (mouseY < imageSize.height * (1 - this.navigateAreaSize)) 
+				: (mouseY < imageSize.height * (1 - MapPropertiesManager.getNavigateAreaSize())) 
 				? 1
 				: 2;
 
@@ -273,7 +269,7 @@ public final class MapMouseListener implements MouseListener
 				
 				this.netMapViewer.setCenter(newCenter);
 				
-				if (this.mouseMovedWhileNavigating){
+				if (MapPropertiesManager.isMoveMouseNavigating()){
 					//Курсор ставим в ту же (в топографических координатах) точку - 
 					//центр уже сменен
 					Point newMousePosition = 
@@ -461,7 +457,7 @@ public final class MapMouseListener implements MouseListener
 						finishMoveHand(me);
 						break;
 					case MapState.NAVIGATE:
-						if (this.mouseMovedWhileNavigating) 
+						if (MapPropertiesManager.isMoveMouseNavigating()) 
 							this.netMapViewer.setCursor(Cursor.getDefaultCursor());
 						break;
 					case MapState.MOVE_FIXDIST:

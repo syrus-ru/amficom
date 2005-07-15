@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.25 2005/07/15 14:59:11 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.26 2005/07/15 15:04:13 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,16 +37,14 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.25 $, $Date: 2005/07/15 14:59:11 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/07/15 15:04:13 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
 {
 	NetMapViewer netMapViewer;
 	
-	private final double navigateAreaSize = MapPropertiesManager.getNavigateAreaSize();
-
 	public MapMouseMotionListener(NetMapViewer netMapViewer)
 	{
 		this.netMapViewer = netMapViewer;
@@ -194,15 +192,15 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			int mouseY = me.getPoint().y;
 
 			int cursorX =
-				(mouseX < imageSize.width * this.navigateAreaSize) 
+				(mouseX < imageSize.width * MapPropertiesManager.getNavigateAreaSize()) 
 				? 0
-				: (mouseX < imageSize.width * (1 - this.navigateAreaSize)) 
+				: (mouseX < imageSize.width * (1 - MapPropertiesManager.getNavigateAreaSize())) 
 				? 1
 				:2;
 			int cursorY =
-				(mouseY < imageSize.height * this.navigateAreaSize) 
+				(mouseY < imageSize.height * MapPropertiesManager.getNavigateAreaSize()) 
 				? 0
-				: (mouseY < imageSize.height * (1 - this.navigateAreaSize)) 
+				: (mouseY < imageSize.height * (1 - MapPropertiesManager.getNavigateAreaSize())) 
 				? 1
 				: 2;
 

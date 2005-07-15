@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.11 2005/07/14 13:01:42 peskovsky Exp $
+ * $Id: TopologicalImageCache.java,v 1.12 2005/07/15 15:04:38 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.11 $, $Date: 2005/07/14 13:01:42 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/15 15:04:38 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -42,12 +42,6 @@ public class TopologicalImageCache implements MapImageRenderer
 	 */
 	private static final double ACTIVE_AREA_SIZE = 0.25;
 
-//	/**
-//	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
-//	 * в процентах от габарита окна карты
-//	 */
-//	private static final double BORDER_AREA_SIZE = 0.1;
-	
 	/**
 	 * Пороговая длина радиус-вектора от точки входа в активную область. Если
 	 * длина радиус-вектора меньше пороговой, вычисление самой приоритетной
@@ -166,9 +160,6 @@ public class TopologicalImageCache implements MapImageRenderer
 	private final MapCoordinatesConverter coordsConverter;
 
 	private final MapContext mapContext;
-	
-	private int maximumTimeWait = MapPropertiesManager.getTopoImageMaxTimeWait();
-	private boolean mouseMovedWhileNavigating = MapPropertiesManager.isMoveMouseNavigating();
 	
 	public TopologicalImageCache(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
@@ -303,7 +294,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			this.lastActiveArea.setSize(0,0);
 			this.nonActiveZoneLastSector.setSize(0,0);				
 			
-			if (!this.mouseMovedWhileNavigating)
+			if (!MapPropertiesManager.isMoveMouseNavigating())
 				reactMouseLocation();
 		}
 	}
@@ -688,7 +679,7 @@ public class TopologicalImageCache implements MapImageRenderer
 			}
 			
 			long currentTime = System.currentTimeMillis();
-			if ((currentTime - startTime) > this.maximumTimeWait)
+			if ((currentTime - startTime) > MapPropertiesManager.getTopoImageMaxTimeWait())
 			{
 				//Остановливаем работу потока подгрузки
 				this.loadingThread.cancel();
