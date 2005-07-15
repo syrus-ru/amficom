@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/07/15 08:46:54 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/07/15 12:40:52 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
+import com.sun.org.apache.xerces.internal.impl.xs.opti.SchemaParsingConfig;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -38,8 +39,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/07/15 08:46:54 $
+ * @author $Author: max $
+ * @version $Revision: 1.24 $, $Date: 2005/07/15 12:40:52 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -116,13 +117,15 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case SCHEMECABLELINK_CODE:
 				final SchemeCableLink schemeCableLink = (SchemeCableLink) storableObject;
 				switch (super.linkedEntityCode) {
-				case SCHEMECABLEPORT_CODE:
-					final boolean precondition1 = super.conditionTest(schemeCableLink.sourceAbstractSchemePortId);
-					final boolean precondition2 = super.conditionTest(schemeCableLink.targetAbstractSchemePortId);
-					assert !(precondition1 && precondition2);
-					return precondition1 ^ precondition2;
-				default:
-					throw newIllegalObjectEntityException();
+					case SCHEMECABLEPORT_CODE:
+						final boolean precondition1 = super.conditionTest(schemeCableLink.sourceAbstractSchemePortId);
+						final boolean precondition2 = super.conditionTest(schemeCableLink.targetAbstractSchemePortId);
+						assert !(precondition1 && precondition2);
+						return precondition1 ^ precondition2;
+					case SCHEME_CODE:
+						return super.conditionTest(schemeCableLink.parentSchemeId);
+					default:
+						throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLETHREAD_CODE:
 				final SchemeCableThread schemeCableThread = (SchemeCableThread) storableObject;
@@ -190,6 +193,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				case UPDIKE_CODE:
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			case SCHEMEPATH_CODE:
+				final SchemePath schemePath = (SchemePath) storableObject;
+				switch (super.linkedEntityCode) {
+				case SCHEME_CODE:
+					return super.conditionTest(schemePath.parentSchemeId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
