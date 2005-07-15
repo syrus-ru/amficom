@@ -3,7 +3,6 @@ lib
 .classpath
 .project
 .settings
-test
 .corba
 .mach
 .idl
