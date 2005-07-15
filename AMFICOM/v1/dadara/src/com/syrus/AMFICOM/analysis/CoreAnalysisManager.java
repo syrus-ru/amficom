@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.101 2005/07/15 10:00:30 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.102 2005/07/15 11:57:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.101 $, $Date: 2005/07/15 10:00:30 $
+ * @version $Revision: 1.102 $, $Date: 2005/07/15 11:57:25 $
  * @module
  */
 
@@ -246,14 +246,16 @@ public class CoreAnalysisManager
 			double minConnector,
 			double minEnd,
 			double noiseFactor,
-			int reflSize,
 			int nReflSize,
+			double rSACrit,
+			int rSSmall,
+			int rSBig,
 			int traceLength,
 			double[] noiseArray)
 	{
 		return analyse6(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, noiseFactor,
-			nReflSize, 0.5, (int)(nReflSize * 1.5), reflSize, // FIXME: rSACrit, rSASmall
+			nReflSize, rSACrit, rSSmall, rSBig,
 			traceLength, noiseArray);
 	}
 
@@ -276,18 +278,8 @@ public class CoreAnalysisManager
 	 * @param ap проверяемые параметры
 	 * @return true, если набор корректен, false, если набор некорректен
 	 */
-	public static boolean checkAnalysisParameters(AnalysisParameters ap)
-	{
-        final double MIN_MIN_THRESHOLD = 0.001; // FIXME: debug: MIN_MIN_THRESHOLD should be 0.01 or 0.005 or 0.001 (?)
-		if (ap.getMinThreshold() < MIN_MIN_THRESHOLD)
-			return false;
-		if (ap.getMinSplice() < ap.getMinThreshold())
-			return false;
-		if (ap.getMinConnector() < ap.getMinSplice())
-			return false;
-        if (ap.getMinEnd() < ap.getMinConnector())
-            return false;
-		return true;
+	public static boolean checkAnalysisParameters(AnalysisParameters ap) {
+		return ap.isCorrect();
 	}
 
     /**
@@ -338,30 +330,35 @@ public class CoreAnalysisManager
         // определяем reflSize и nReflSize
         // FIXME: привести reflSize и nReflSize в порядок
 
-        int reflSize = ReflectogramMath.getReflectiveEventSize(tpa.y, 0.5);
+        //int reflSize = ReflectogramMath.getReflectiveEventSize(tpa.y, 0.5);
         int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
                 tpa.y,
                 tpa.pulseWidth,
                 tpa.ior,
                 tpa.deltaX);
 
-        reflSize = tpa.traceLength / 10; // FIXME!
-        if (reflSize < nReflSize * 10)
-            reflSize = nReflSize * 10; // FIXME!
+        int rsBig = (int) (tpa.traceLength * ap.getL2rsaBig());
+        if (rsBig < nReflSize * ap.getNrs2rsaBig())
+            rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
 
 //        long t1 = System.currentTimeMillis();
 
         // формирование событий по усредненной кривой
 
         ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
-                tpa.y, tpa.deltaX,
-                ap.getMinThreshold(), // XXX: 0.010
+                tpa.y,
+                tpa.deltaX,
+                ap.getMinThreshold(),
                 ap.getMinSplice(),
                 ap.getMinConnector(),
                 ap.getMinEnd(),
                 ap.getNoiseFactor(),
-                reflSize, nReflSize,
-                tpa.traceLength, tpa.avNoise);
+                nReflSize,
+                ap.getRsaCrit(),
+                (int)(nReflSize * ap.getNrs2rsaSmall()),
+                rsBig,
+                tpa.traceLength,
+                tpa.avNoise);
 
         // FIX//ME: debug output of IA results
 //      for (int i = 0; i < rse.length; i++)

@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.8 2005/07/14 14:28:38 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.9 2005/07/15 11:57:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,60 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/07/14 14:28:38 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/15 11:57:25 $
  * @module
  */
 public class AnalysisParameters
 implements DataStreamable, Cloneable
 {
-	private double[] param;
+	private double[] param; // основные параметры анализа
+
+	// дополнительные параметры анализа - экспериментальная версия
+	private double tau2nrs = 1.0;
+	private int nrsMin = 15;
+	private double rsaCrit = 0.5;
+	private double nrs2rsaSmall = 1.5;
+	private double nrs2rsaBig = 10.0;
+	private double l2rsaBig = 0.1;
+
 	private static DSReader reader;
-    private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
-        0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
+	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
+		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
+
+    /**
+     * Определяет допустимость набора параметров.
+     * @return true, если набор допустим, false, если недопустим
+     */
+    public boolean isCorrect() {
+    	// проверяем основные параметры
+        final double MIN_MIN_THRESHOLD = 0.0001; // FIXME: debug: MIN_MIN_THRESHOLD should be >= 0.001
+		if (getMinThreshold() < MIN_MIN_THRESHOLD)
+			return false;
+		if (getMinSplice() < getMinThreshold())
+			return false;
+		if (getMinConnector() < getMinSplice())
+			return false;
+        if (getMinEnd() < getMinConnector())
+            return false;
+
+        // проверяем дополнительные параметры
+        if (tau2nrs < 0)
+        	return false;
+        if (nrsMin < 0)
+        	return false;
+        if (tau2nrs == 0 && nrsMin == 0)
+        	return false;
+        if (rsaCrit < 0)
+        	return false;
+        if (nrs2rsaSmall <= 0)
+        	return false;
+        if (nrs2rsaBig < nrs2rsaSmall)
+        	return false;
+        if (l2rsaBig < 0)
+        	return false;
+
+        return true;
+    }
 
 	public double getMinThreshold() {
 		return param[0];
@@ -168,5 +212,41 @@ implements DataStreamable, Cloneable
 			reader = new DSReader();
 		}
 		return reader;
+	}
+	public double getL2rsaBig() {
+		return l2rsaBig;
+	}
+	public void setL2rsaBig(double big) {
+		l2rsaBig = big;
+	}
+	public double getNrs2rsaBig() {
+		return nrs2rsaBig;
+	}
+	public void setNrs2rsaBig(double nrs2rsaBig) {
+		this.nrs2rsaBig = nrs2rsaBig;
+	}
+	public double getNrs2rsaSmall() {
+		return nrs2rsaSmall;
+	}
+	public void setNrs2rsaSmall(double nrs2rsaSmall) {
+		this.nrs2rsaSmall = nrs2rsaSmall;
+	}
+	public int getNrsMin() {
+		return nrsMin;
+	}
+	public void setNrsMin(int nrsMin) {
+		this.nrsMin = nrsMin;
+	}
+	public double getRsaCrit() {
+		return rsaCrit;
+	}
+	public void setRsaCrit(double rsaCrit) {
+		this.rsaCrit = rsaCrit;
+	}
+	public double getTau2nrs() {
+		return tau2nrs;
+	}
+	public void setTau2nrs(double tau2nrs) {
+		this.tau2nrs = tau2nrs;
 	}
 }
