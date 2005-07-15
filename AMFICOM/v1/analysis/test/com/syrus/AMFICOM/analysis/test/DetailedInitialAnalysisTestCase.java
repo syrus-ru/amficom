@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.3 2005/07/14 16:15:46 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.4 2005/07/15 13:21:22 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import junit.framework.TestCase;
+
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
@@ -26,13 +28,11 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.HashCodeGenerator;
 
-import junit.framework.TestCase;
-
 /**
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/14 16:15:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/15 13:21:22 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -171,8 +171,53 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
     	System.out.println("evaluateAnalysisDB = " + res);
     }
 
+    public final void xtestNotCrush1()
+    throws IOException {
+    	AnalysisParameters ap = ClientAnalysisManager.getDefaultAPClone();
+    	double[] p = true
+    		? new double[] {
+    			0.0010,
+    			0.01,
+    			0.40139146197572784,
+    			2.377935021636042,
+    			1.3,
+    			1.0,
+    			15.0,
+    			0.4258108386998794,
+    			1.5,
+    			9.096430843400073,
+    			0.1 }
+    		: new double[] {
+    			0.0010,
+    			0.01,
+    			0.5,
+    			3.5,
+    			1.3,
+    			1.0,
+    			15.0,
+    			0.5,
+    			1.5,
+    			10.0,
+    			0.1 };
+
+    	ap.setMinThreshold(p[0]);
+		ap.setMinSplice(p[1]);
+		ap.setMinConnector(p[2]);
+		ap.setMinEnd(p[3]);
+		ap.setNoiseFactor(p[4]);
+		ap.setTau2nrs(p[5]);
+		ap.setNrsMin((int) p[6]);
+		ap.setRsaCrit(p[7]);
+		ap.setNrs2rsaSmall(p[8]);
+		ap.setNrs2rsaBig(p[9]);
+		ap.setL2rsaBig(p[10]);
+
+    	double res = evaluateAnalysisDB(ap, false, null);
+    	System.out.println("ref test result = " + res);
+    }
+
     // @todo supply a javadoc
-    // @todo?  actually, this is not just a testcase - move?
+    // @todo? actually, this is not just a testcase - move?
     // cache may be null
     public static final double evaluateAnalysisDB(AnalysisParameters ap,
     		boolean verbose,
