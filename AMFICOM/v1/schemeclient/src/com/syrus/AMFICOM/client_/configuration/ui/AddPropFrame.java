@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.11 2005/06/22 10:16:05 stas Exp $
+ * $Id: AddPropFrame.java,v 1.12 2005/07/15 12:50:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,24 +34,23 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/15 12:50:59 $
  * @module schemeclient_v1
  */
 
@@ -179,12 +178,9 @@ public class AddPropFrame extends JDialog {
 		else {
 			if (!nameField.getText().equals(SchemeResourceKeys.EMPTY)) {
 				try {
-					Identifier userId = LoginManager.getUserId();
-					selectedType = CharacteristicType
-							.createInstance(userId, nameField.getText(), "", nameField.getText(),
-									DataType.DATA_TYPE_STRING, sort);
+					selectedType = SchemeObjectsFactory.createCharacteristicType(nameField.getText(), sort);
 				} catch (CreateObjectException ex) {
-					ex.printStackTrace();
+					Log.errorException(ex);
 					return;
 				}
 			} else
