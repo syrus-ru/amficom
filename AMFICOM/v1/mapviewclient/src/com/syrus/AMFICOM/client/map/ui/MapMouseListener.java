@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.45 2005/07/15 14:05:39 peskovsky Exp $
+ * $Id: MapMouseListener.java,v 1.46 2005/07/15 14:57:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.45 $, $Date: 2005/07/15 14:05:39 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.46 $, $Date: 2005/07/15 14:57:43 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -576,17 +576,14 @@ public final class MapMouseListener implements MouseListener
 				MapApplicationModel.OPERATION_ZOOM_BOX, 
 				false);
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+
+		logicalNetLayer.getMapState().setOperationMode(MapState.NO_OPERATION);
+
 		if (!logicalNetLayer.getStartPoint().equals(logicalNetLayer.getEndPoint()))
 		{
 			this.netMapViewer.zoomToBox(
 					converter.convertScreenToMap(logicalNetLayer.getStartPoint()),
 					converter.convertScreenToMap(logicalNetLayer.getEndPoint()));
-
-			// todo where mapView center&scale should be set?
-//			logicalNetLayer.getMapView().setScale(
-//					mapContext.getScale());
-//			logicalNetLayer.getMapView().setCenter(
-//					mapContext.getCenter());
 		}
 	}
 
