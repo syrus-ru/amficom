@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.3 2005/07/14 13:16:36 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.4 2005/07/15 08:26:11 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,11 +14,10 @@ import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.Edge;
 
 import com.syrus.AMFICOM.manager.AbstractBean;
-import com.syrus.AMFICOM.manager.Validator;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/15 08:26:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -132,11 +131,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 						if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
 							AbstractBean sourceBean = (AbstractBean) sourceObject;
 							AbstractBean targetBean = (AbstractBean) targetObject;
-							Validator validator = sourceBean.getValidator();
-							// TODO development bypass
-							if (validator != null) {
-								result = validator.isValid(sourceBean, targetBean);
-							}
+							result = sourceBean.isTargetValid(targetBean);
 						}
 					}
 				}

@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBean.java,v 1.2 2005/07/14 13:16:36 bob Exp $
+* $Id: AbstractBean.java,v 1.3 2005/07/15 08:26:11 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 08:26:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -38,8 +38,11 @@ public abstract class AbstractBean {
 		return this.storableObject;
 	}
 	
-	public final Validator getValidator() {
-		return this.validator;
+	public final boolean isTargetValid(AbstractBean targetBean) {
+		return this.validator != null ?
+			this.validator.isValid(this, targetBean) :
+//			TODO development bypass
+			true;
 	}
 	
 	public final JPanel getPropertyPanel() {

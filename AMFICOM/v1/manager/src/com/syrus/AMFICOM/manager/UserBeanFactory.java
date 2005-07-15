@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
+* $Id: UserBeanFactory.java,v 1.3 2005/07/15 08:26:11 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import org.jgraph.graph.GraphConstants;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 08:26:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -27,7 +27,9 @@ public class UserBeanFactory extends AbstractBeanFactory {
 
 	private static UserBeanFactory instance;
 	
-	private static int count = 0;
+	private int count = 0;
+	
+	private Validator validator;
 	
 	private UserBeanFactory() {
 		super("Entity.User", 
@@ -50,24 +52,11 @@ public class UserBeanFactory extends AbstractBeanFactory {
 	
 	@Override
 	public AbstractBean createBean() {
-		final String name1 = "User" + (++count);
+		final String name1 = "User" + (++this.count);
 
-		Validator validator = new Validator() {
-			
-			public boolean isValid(	AbstractBean sourceBean,
-									AbstractBean targetBean) {
-				System.out.println("UserBeanFactory.Validator$1.isValid() | " 
-					+ sourceBean.getStorableObject() 
-					+ " -> " 
-					+ targetBean.getStorableObject());
-				return sourceBean != null && 
-					targetBean != null && 
-					sourceBean.getStorableObject().startsWith("User") &&
-					targetBean.getStorableObject().startsWith("ARM");
-			}
-		};
 		
-		return new AbstractBean(name1, validator, null) {
+		
+		return new AbstractBean(name1, this.getValidator(), null) {
 
 			@Override
 			public void updateEdgeAttributes(	DefaultEdge edge,
@@ -79,6 +68,26 @@ public class UserBeanFactory extends AbstractBeanFactory {
 				GraphConstants.setForeground(attributes, Color.BLACK);
 			}
 		};		
+	}
+	
+	private Validator getValidator() {
+		if (this.validator == null) {
+			this.validator = new Validator() {
+				
+				public boolean isValid(	AbstractBean sourceBean,
+										AbstractBean targetBean) {
+					System.out.println("UserBeanFactory.Validator$1.isValid() | " 
+						+ sourceBean.getStorableObject() 
+						+ " -> " 
+						+ targetBean.getStorableObject());
+					return sourceBean != null && 
+						targetBean != null && 
+						sourceBean.getStorableObject().startsWith("User") &&
+						targetBean.getStorableObject().startsWith("ARM");
+				}
+			};
+		}
+		return this.validator;
 	}
 	
 }

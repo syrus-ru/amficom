@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.5 2005/07/14 14:03:46 bob Exp $
+ * $Id: JGraphText.java,v 1.6 2005/07/15 08:26:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/14 14:03:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/15 08:26:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -20,6 +20,9 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -33,6 +36,7 @@ import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -80,7 +84,6 @@ import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
-import com.syrus.AMFICOM.manager.Validator;
 
 public class JGraphText {	
 	
@@ -129,7 +132,7 @@ public class JGraphText {
 		
 		this.createTreeModel();
 		
-		undoManager = new GraphUndoManager() {
+		this.undoManager = new GraphUndoManager() {
 			// Override Superclass
 			public void undoableEditHappened(UndoableEditEvent e) {
 				// First Invoke Superclass
@@ -142,7 +145,7 @@ public class JGraphText {
 		// Add Listeners to Graph
 		//
 		// Register UndoManager with the Model
-		graph.getModel().addUndoableEditListener(undoManager);
+		this.graph.getModel().addUndoableEditListener(this.undoManager);
 		
 //		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 //		graphLayoutCache.setVisible(this.rootItem, false);
@@ -333,27 +336,27 @@ public class JGraphText {
 		URL undoUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/undo.gif");
 		ImageIcon undoIcon = new ImageIcon(undoUrl);
-		undo = new AbstractAction("", undoIcon) {
+		this.undo = new AbstractAction("", undoIcon) {
 			public void actionPerformed(ActionEvent e) {
 				undo();
 			}
 		};
-		undo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Undo"));
-		undo.setEnabled(false);
-		toolBar.add(undo);
+		this.undo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Undo"));
+		this.undo.setEnabled(false);
+		toolBar.add(this.undo);
 
 		// Redo
 		URL redoUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/redo.gif");
 		ImageIcon redoIcon = new ImageIcon(redoUrl);
-		redo = new AbstractAction("", redoIcon) {
+		this.redo = new AbstractAction("", redoIcon) {
 			public void actionPerformed(ActionEvent e) {
 				redo();
 			}
 		};
-		redo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Redo"));
-		redo.setEnabled(false);
-		toolBar.add(redo);
+		this.redo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Redo"));
+		this.redo.setEnabled(false);
+		toolBar.add(this.redo);
 
 		//
 		// Edit Block
@@ -396,7 +399,7 @@ public class JGraphText {
 		URL removeUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/delete.gif");
 		ImageIcon removeIcon = new ImageIcon(removeUrl);
-		remove = new AbstractAction("", removeIcon) {
+		this.remove = new AbstractAction("", removeIcon) {
 			public void actionPerformed(ActionEvent e) {
 				if (!graph.isSelectionEmpty()) {
 					Object[] cells = graph.getSelectionCells();
@@ -405,8 +408,8 @@ public class JGraphText {
 				}
 			}
 		};
-		remove.setEnabled(false);
-		toolBar.add(remove);
+		this.remove.setEnabled(false);
+		toolBar.add(this.remove);
 
 		
 //		 TODO
@@ -485,32 +488,32 @@ public class JGraphText {
 			zoomOut.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomOut"));
 		}
 
-		// Group
-		toolBar.addSeparator();
-		URL groupUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/group.gif");
-		ImageIcon groupIcon = new ImageIcon(groupUrl);
-		group = new AbstractAction("", groupIcon) {
-			public void actionPerformed(ActionEvent e) {
-//				 TODO
-//				group(graph.getSelectionCells());
-			}
-		};
-		group.setEnabled(false);
-		toolBar.add(group);
-
-		// Ungroup
-		URL ungroupUrl = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/ungroup.gif");
-		ImageIcon ungroupIcon = new ImageIcon(ungroupUrl);
-		ungroup = new AbstractAction("", ungroupIcon) {
-			public void actionPerformed(ActionEvent e) {
-				// TODO
-//				ungroup(graph.getSelectionCells());
-			}
-		};
-		ungroup.setEnabled(false);
-		toolBar.add(ungroup);
+//		// Group
+//		toolBar.addSeparator();
+//		URL groupUrl = getClass().getClassLoader().getResource(
+//				"com/syrus/AMFICOM/manager/resources/icons/group.gif");
+//		ImageIcon groupIcon = new ImageIcon(groupUrl);
+//		this.group = new AbstractAction("", groupIcon) {
+//			public void actionPerformed(ActionEvent e) {
+////				 TODO
+////				group(graph.getSelectionCells());
+//			}
+//		};
+//		this.group.setEnabled(false);
+//		toolBar.add(this.group);
+//
+//		// Ungroup
+//		URL ungroupUrl = getClass().getClassLoader().getResource(
+//				"com/syrus/AMFICOM/manager/resources/icons/ungroup.gif");
+//		ImageIcon ungroupIcon = new ImageIcon(ungroupUrl);
+//		ungroup = new AbstractAction("", ungroupIcon) {
+//			public void actionPerformed(ActionEvent e) {
+//				// TODO
+////				ungroup(graph.getSelectionCells());
+//			}
+//		};
+//		this.ungroup.setEnabled(false);
+//		toolBar.add(this.ungroup);
 		
 		return toolBar;
 	}
@@ -518,7 +521,7 @@ public class JGraphText {
 	// Undo the last Change to the Model or the View
 	public void undo() {
 		try {
-			undoManager.undo(graph.getGraphLayoutCache());
+			this.undoManager.undo(this.graph.getGraphLayoutCache());
 		} catch (Exception ex) {
 			System.err.println(ex);
 		} finally {
@@ -529,7 +532,7 @@ public class JGraphText {
 	// Redo the last Change to the Model or the View
 	public void redo() {
 		try {
-			undoManager.redo(graph.getGraphLayoutCache());
+			this.undoManager.redo(this.graph.getGraphLayoutCache());
 		} catch (Exception ex) {
 			System.err.println(ex);
 		} finally {
@@ -540,25 +543,26 @@ public class JGraphText {
 	// Update Undo/Redo Button State based on Undo Manager
 	protected void updateHistoryButtons() {
 		// The View Argument Defines the Context
-		undo.setEnabled(undoManager.canUndo(graph.getGraphLayoutCache()));
-		redo.setEnabled(undoManager.canRedo(graph.getGraphLayoutCache()));
+		this.undo.setEnabled(this.undoManager.canUndo(this.graph.getGraphLayoutCache()));
+		this.redo.setEnabled(this.undoManager.canRedo(this.graph.getGraphLayoutCache()));
 	}
 	
 	private JToolBar createEntityToolBar() {
 		JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
 		toolBar.setFloatable(false);
-		toolBar.add(this.createAction(UserBeanFactory.getInstance()));
-		toolBar.add(this.createAction(ARMBeanFactory.getInstance()));
+		this.createAction(toolBar, UserBeanFactory.getInstance());
+		this.createAction(toolBar, ARMBeanFactory.getInstance());
 		toolBar.addSeparator();
-		toolBar.add(this.createAction(RTUBeanFactory.getInstance()));
-		toolBar.add(this.createAction(ServerBeanFactory.getInstance()));
-		toolBar.add(this.createAction(MCMBeanFactory.getInstance()));
+		this.createAction(toolBar, RTUBeanFactory.getInstance());
+		this.createAction(toolBar, ServerBeanFactory.getInstance());
+		this.createAction(toolBar, MCMBeanFactory.getInstance());
 		toolBar.addSeparator();
-		toolBar.add(this.createAction(NetBeanFactory.getInstance()));
+		this.createAction(toolBar, NetBeanFactory.getInstance());
 		return toolBar;
 	}
 	
-	private Action createAction(final AbstractBeanFactory factory) {
+	private void createAction(final JToolBar toolBar,
+	                          final AbstractBeanFactory factory) {
 		final String name = factory.getName();
 		Icon icon = factory.getIcon();
 		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
@@ -579,9 +583,25 @@ public class JGraphText {
 			}
 		};
 		
+		
+		
 		action.putValue(Action.SHORT_DESCRIPTION, name);
 		
-		return action;
+		JButton button = toolBar.add(action);
+		
+		button.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				System.out.println(".mouseEntered() | name:" + name);
+			}
+		});
+		
+		button.addFocusListener(new FocusAdapter() {			
+			public void focusGained(FocusEvent e) {
+				System.out.println(".focusGained() | name:" + name);
+			};
+		});
 	}
 	
 	DefaultEdge createEdge(DefaultGraphCell source, DefaultGraphCell target) {
@@ -599,9 +619,7 @@ public class JGraphText {
 			if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
 				AbstractBean sourceBean = (AbstractBean) sourceObject;
 				AbstractBean targetBean = (AbstractBean) targetObject;
-				Validator validator = sourceBean.getValidator();
-				// TODO development bypass
-				canConnect = validator == null || validator.isValid(sourceBean, targetBean);
+				canConnect = sourceBean.isTargetValid(targetBean);
 			}
 			
 			if (canConnect) {
@@ -635,15 +653,15 @@ public class JGraphText {
 		GraphConstants.setLabelAlongEdge(attributes, true);
 	}
 	
-	private DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, double x,
-	             			double y, double w, double h, Color bg, boolean raised) {
-		DefaultGraphCell cell = this.createVertex(name, x, y, w, h, bg, raised);
-		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
-		if (parentCell != null && parentCell != this.rootItem) {
-			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
-		}
-		return cell;
-	}
+//	private DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, double x,
+//	             			double y, double w, double h, Color bg, boolean raised) {
+//		DefaultGraphCell cell = this.createVertex(name, x, y, w, h, bg, raised);
+//		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
+//		if (parentCell != null && parentCell != this.rootItem) {
+//			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
+//		}
+//		return cell;
+//	}
 	
 	DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, Object object, double x,
 	         	             			double y, double w, double h, Icon image) {

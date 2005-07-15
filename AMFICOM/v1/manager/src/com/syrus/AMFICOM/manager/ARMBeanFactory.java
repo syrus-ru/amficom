@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.3 2005/07/15 08:26:11 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 08:26:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -22,7 +22,9 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	private static ARMBeanFactory instance;
 	
-	private static int count = 0;
+	private int count = 0;
+	
+	private Validator validator;
 	
 	private ARMBeanFactory() {
 		super("Entity.AutomatedWorkplace", 
@@ -44,24 +46,9 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		final String name1 = "ARM" + (++count);
-		// TODO Auto-generated method stub
-		
-		Validator validator = new Validator() {
-			
-			public boolean isValid(	AbstractBean sourceBean,
-									AbstractBean targetBean) {
-				System.out.println("ARMBeanFactory.Validator$1.isValid() | " 
-					+ sourceBean.getStorableObject() 
-					+ " -> " 
-					+ targetBean.getStorableObject());
-				return sourceBean != null && 
-					targetBean != null && 
-					sourceBean.getStorableObject().startsWith("ARM") &&
-					targetBean.getStorableObject().startsWith("Net");
-			}
-		};
-		return new AbstractBean(name1, validator, null) {
+		final String name1 = "ARM" + (++this.count);
+
+		return new AbstractBean(name1, this.getValidator(), null) {
 
 			@Override
 			public void updateEdgeAttributes(	DefaultEdge edge,
@@ -70,5 +57,25 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 				
 			}
 		};
-	}	
+	}
+	
+	private Validator getValidator() {
+		if (this.validator == null) {
+			this.validator = new Validator() {
+				
+				public boolean isValid(	AbstractBean sourceBean,
+										AbstractBean targetBean) {
+					System.out.println("ARMBeanFactory.Validator$1.isValid() | " 
+						+ sourceBean.getStorableObject() 
+						+ " -> " 
+						+ targetBean.getStorableObject());
+					return sourceBean != null && 
+						targetBean != null && 
+						sourceBean.getStorableObject().startsWith("ARM") &&
+						targetBean.getStorableObject().startsWith("Net");
+				}
+			};
+		}
+		return this.validator;
+	}
 }
