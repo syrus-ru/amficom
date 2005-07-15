@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.53 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.54 2005/07/15 11:44:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/15 11:44:06 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -558,8 +558,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return parentSchemeProtoGroup;
 	}
 
+	/**
+	 * @throws IllegalStateException
+	 */
 	Identifier getParentSchemeProtoElementId() {
-		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertParentSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		final boolean parentSchemeProtoElementIdVoid = this.parentSchemeProtoElementId.isVoid();
 		assert parentSchemeProtoElementIdVoid || this.parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 		if (parentSchemeProtoElementIdVoid) {
@@ -581,8 +587,14 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
+	/**
+	 * @throws IllegalStateException
+	 */
 	Identifier getParentSchemeProtoGroupId() {
-		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertParentSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		final boolean parentSchemeProtoGroupIdVoid = this.parentSchemeProtoGroupId.isVoid();
 		assert parentSchemeProtoGroupIdVoid || this.parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 		if (parentSchemeProtoGroupIdVoid) {
