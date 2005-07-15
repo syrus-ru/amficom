@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.4 2005/07/15 11:59:00 bob Exp $
+* $Id: UserBeanFactory.java,v 1.5 2005/07/15 14:53:22 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import org.jgraph.graph.GraphConstants;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 11:59:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/15 14:53:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -51,11 +51,15 @@ public class UserBeanFactory extends AbstractBeanFactory {
 			"com/syrus/AMFICOM/manager/resources/user.gif");
 		
 		this.names = new ArrayList<String>();
-		this.names.add("Абонент");
+		this.names.add(LangModelManager.getString("Entity.User.Subscriber"));
 		this.names.add(null);
-		this.names.add("Администратор системный");
-		this.names.add("Администратор среды мониторинга");
-		this.names.add("Аналитик");
+		this.names.add(LangModelManager.getString("Entity.User.SystemAdministator"));
+		this.names.add(LangModelManager.getString("Entity.User.MediaMonitoringAdministator"));
+		this.names.add(LangModelManager.getString("Entity.User.Analyst"));
+		this.names.add(LangModelManager.getString("Entity.User.Operator"));
+		this.names.add(null);
+		this.names.add(LangModelManager.getString("Entity.User.Planner"));
+		this.names.add(LangModelManager.getString("Entity.User.Specialist"));
 		this.names.add(null);
 	}
 	
@@ -92,13 +96,11 @@ public class UserBeanFactory extends AbstractBeanFactory {
 			                          final Object cell) {
 				
 				if (cell != null) {
-					System.out.println(".getMenu() | cell:" + cell + '[' + cell.getClass().getName() + ']');
-					// Edit
-					JPopupMenu menu = new JPopupMenu();
+					JPopupMenu popupMenu = new JPopupMenu();
 					String lastName = null;
 					for(final String name: names) {
 						if (name != null) {
-							menu.add(new AbstractAction(name) {
+							popupMenu.add(new AbstractAction(name) {
 								public void actionPerformed(ActionEvent e) {
 									storableObject = name;
 									AttributeMap attributeMap = new AttributeMap();
@@ -109,20 +111,28 @@ public class UserBeanFactory extends AbstractBeanFactory {
 								}
 							});
 						} else {
-							menu.addSeparator();
+							popupMenu.addSeparator();
 						}
 						
 						lastName = name;
 					}
 					
 					if (lastName != null) {
-						menu.addSeparator();
+						popupMenu.addSeparator();
 					}
 					
-					menu.add(new AbstractAction(LangModelManager.getString("Entity.User.new")  + "...") {
+					popupMenu.add(new AbstractAction(
+						LangModelManager.getString("Entity.User.new")  + 
+						"...") {
 						
 						public void actionPerformed(ActionEvent e) {
-							String string = JOptionPane.showInputDialog(null, "", "New...", JOptionPane.OK_CANCEL_OPTION);
+							String string = JOptionPane.showInputDialog(null, 
+								LangModelManager.getString("Dialog.Add.User"), 
+								LangModelManager.getString("Entity.User.new"), 
+								JOptionPane.OK_CANCEL_OPTION);
+							if (string == null) {
+								return;
+							}
 							names.add(string);
 							storableObject = string;
 							AttributeMap attributeMap = new AttributeMap();
@@ -137,7 +147,7 @@ public class UserBeanFactory extends AbstractBeanFactory {
 //							graph.startEditingAtCell(cell);
 //						}
 //					});
-					return menu;
+					return popupMenu;
 				}
 				
 //				// Remove

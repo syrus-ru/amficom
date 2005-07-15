@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.3 2005/07/14 13:16:36 bob Exp $
+* $Id: GraphTreeModel.java,v 1.4 2005/07/15 14:53:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/15 14:53:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -174,7 +174,7 @@ public class GraphTreeModel implements TreeModel {
 		for (Object object : port.getEdges()) {
 			Edge edge = (Edge) object;
 			DefaultPort target = (DefaultPort) (this.direct ? edge.getTarget() : edge.getSource());
-			if (target == port) {
+			if (target == port || target == null) {
 				continue;
 			}
 

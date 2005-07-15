@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.7 2005/07/15 11:59:00 bob Exp $
+ * $Id: JGraphText.java,v 1.8 2005/07/15 14:53:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/15 11:59:00 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/15 14:53:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -19,7 +19,6 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -87,7 +86,7 @@ import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
 
-public class JGraphText {	
+public class JGraphText implements GraphSelectionListener {	
 	
 	JGraph graph;
 	
@@ -218,60 +217,68 @@ public class JGraphText {
 				
 					Object[] removed = change.getRemoved();
 					if (removed != null) {
-						for(Object removedObject: removed) {
-							System.out.println(".graphChanged() | removedObject:" + removedObject);
-						}
-					}
-					
-					{
-						
-						
-						ConnectionSet connectionSet = change.getConnectionSet();
-						if (connectionSet != null) {
-							// connections changed !
-							Set connections = connectionSet.getConnections();
-							for(Object oConnection: connections) {
-								Connection connection = (Connection)oConnection;
-								Edge edge = (Edge) connection.getEdge();
-								
-								DefaultPort oldPort = (DefaultPort) connection.getPort();							
-								MutableTreeNode oldPortParent = (MutableTreeNode) oldPort.getParent();
-	
-								boolean source = connection.isSource();
-								
-								DefaultPort newPort = (DefaultPort) (source ? edge.getSource() : edge.getTarget());							
-								MutableTreeNode newPortParent = (MutableTreeNode) newPort.getParent();
-	
-								System.out.println(".graphChanged() | oldPortParent:" + oldPortParent +", newPortParent:" + newPortParent
-									+ ", edge:" + edge);
-	
-								DefaultPort sourcePort = (DefaultPort) (source ? edge.getTarget() : edge.getSource());							
-								MutableTreeNode sourcePortParent = (MutableTreeNode) sourcePort.getParent();
-								
-								System.out.println(".graphChanged() | source is " + source);
-								
-								if (source) {
-									// TODO unimplemented yet
-								} else {
-									JGraphText.this.treeModel.removeNodeFromParent(oldPortParent);
-									JGraphText.this.treeModel.removeNodeFromParent(newPortParent);
-									
-									JGraphText.this.treeModel.clearCache();
-									
-									JGraphText.this.treeModel.insertNodeInto(newPortParent, sourcePortParent);								
-									JGraphText.this.treeModel.insertNodeInto(oldPortParent, JGraphText.this.rootItem);
+							for(Object removedObject: removed) {
+								System.out.println(".graphChanged() | removedObject:" + removedObject + "[" + removedObject.getClass().getName() +"]");
+								if (removedObject instanceof DefaultGraphCell) {
+									DefaultGraphCell cell = (DefaultGraphCell)removedObject;
+									if (cell.getAllowsChildren()) {
+										JGraphText.this.treeModel.removeNodeFromParent(cell);
+//										DefaultPort defaultPort = (DefaultPort) cell.getChildAt(0);
+//										for(Object edge: defaultPort.getEdges()) {
+//											System.out.println(".graphChanged() | " + edge);
+//										}
+//										JGraphText.this.treeModel.removeNodeFromParent(cell);
+									}
 								}
 								
 							}
-						} else {
-							for(Object object: change.getChanged()) {
-								TreeNode treeNode = (TreeNode)object;
-								if (treeNode.getAllowsChildren()) {
-									JGraphText.this.treeModel.nodeChanged(treeNode);
+						} else 	{
+							ConnectionSet connectionSet = change.getConnectionSet();
+							if (connectionSet != null) {
+								// connections changed !
+								Set connections = connectionSet.getConnections();
+								for(Object oConnection: connections) {
+									Connection connection = (Connection)oConnection;
+									Edge edge = (Edge) connection.getEdge();
+									
+									DefaultPort oldPort = (DefaultPort) connection.getPort();							
+									MutableTreeNode oldPortParent = (MutableTreeNode) oldPort.getParent();
+		
+									boolean source = connection.isSource();
+									
+									DefaultPort newPort = (DefaultPort) (source ? edge.getSource() : edge.getTarget());							
+									MutableTreeNode newPortParent = (MutableTreeNode) newPort.getParent();
+		
+									System.out.println(".graphChanged() | oldPortParent:" + oldPortParent +", newPortParent:" + newPortParent
+										+ ", edge:" + edge);
+		
+									DefaultPort sourcePort = (DefaultPort) (source ? edge.getTarget() : edge.getSource());							
+									MutableTreeNode sourcePortParent = (MutableTreeNode) sourcePort.getParent();
+									
+									System.out.println(".graphChanged() | source is " + source);
+									
+									if (source) {
+										// TODO unimplemented yet
+									} else {
+										JGraphText.this.treeModel.removeNodeFromParent(oldPortParent);
+										JGraphText.this.treeModel.removeNodeFromParent(newPortParent);
+										
+										JGraphText.this.treeModel.clearCache();
+										
+										JGraphText.this.treeModel.insertNodeInto(newPortParent, sourcePortParent);								
+										JGraphText.this.treeModel.insertNodeInto(oldPortParent, JGraphText.this.rootItem);
+									}
+									
+								}
+							} else {
+								for(Object object: change.getChanged()) {
+									TreeNode treeNode = (TreeNode)object;
+									if (treeNode.getAllowsChildren()) {
+										JGraphText.this.treeModel.nodeChanged(treeNode);
+									}
 								}
 							}
 						}
-					}
 				}
 				
 //				JGraphText.this.treeModel.reload((TreeNode) JGraphText.this.treeModel.getRoot());
@@ -412,7 +419,7 @@ public class JGraphText {
 		};
 		this.remove.setEnabled(false);
 		toolBar.add(this.remove);
-
+		this.remove.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Delete"));
 		
 //		 TODO
 //		// To Front
@@ -591,19 +598,19 @@ public class JGraphText {
 		
 		JButton button = toolBar.add(action);
 		
-		button.addMouseListener(new MouseAdapter() {
-			
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				System.out.println(".mouseEntered() | name:" + name);
-			}
-		});
-		
-		button.addFocusListener(new FocusAdapter() {			
-			public void focusGained(FocusEvent e) {
-				System.out.println(".focusGained() | name:" + name);
-			};
-		});
+//		button.addMouseListener(new MouseAdapter() {
+//			
+//			@Override
+//			public void mouseEntered(MouseEvent e) {
+//				System.out.println(".mouseEntered() | name:" + name);
+//			}
+//		});
+//		
+//		button.addFocusListener(new FocusAdapter() {			
+//			public void focusGained(FocusEvent e) {
+//				System.out.println(".focusGained() | name:" + name);
+//			};
+//		});
 	}
 	
 	DefaultEdge createEdge(DefaultGraphCell source, DefaultGraphCell target) {
@@ -625,8 +632,8 @@ public class JGraphText {
 			}
 			
 			if (canConnect) {
-				DefaultEdge edge = new DefaultEdge();
-				// "edge" + (++this.edgeCount)
+				DefaultEdge edge = new DefaultEdge("edge" + (++this.edgeCount));
+				// 
 				edge.setSource(sourcePort);
 				edge.setTarget(targetPort);
 //				 Set Arrow Style for edge
@@ -694,6 +701,65 @@ public class JGraphText {
 //		cache.insert(cells);		
 	}
 
+
+	public void valueChanged(GraphSelectionEvent e) {
+		final Object cell = e.getCell();
+		final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
+		System.out.println(".valueChanged() | " + e +"\n\t" + cell + '[' + cell.getClass().getName() + ']');
+		final GraphModel model = this.graph.getModel();
+		if (model.isEdge(cell)) {
+			if (e.isAddedCell()) {
+				Edge edge = (Edge)cell;
+				TreeNode sourceNode = (TreeNode) edge.getSource();
+				TreeNode targetNode = (TreeNode) edge.getSource();
+				if (sourceNode != null) {
+					this.tree.scrollPathToVisible(new TreePath(this.treeModel.getPathToRoot(sourceNode.getParent())));
+				}
+				if (targetNode != null) {
+					this.tree.scrollPathToVisible(new TreePath(this.treeModel.getPathToRoot(targetNode.getParent())));
+				}
+			} else {
+				selectionModel.clearSelection();
+			}
+		} else {				
+			if (e.isAddedCell()){
+				if (!model.isPort(cell)) {
+					
+					DefaultGraphCell graphCell = (DefaultGraphCell)cell;
+					DefaultPort port = (DefaultPort) graphCell.getChildAt(0);
+					
+					Set edges = port.getEdges();
+					for(Object edge: edges) {
+						System.out.println("JGraphText.valueChanged() || " + edge + '[' + edge.getClass().getName() + ']');
+					}
+//					this.graph.getSelectionModel().addSelectionCells(edges.toArray());
+					
+					TreeNode[] pathToRoot = this.treeModel.getPathToRoot((TreeNode) cell);
+					if (pathToRoot != null) {
+						TreePath path = new TreePath(pathToRoot);
+						selectionModel.setSelectionPath(path);
+					} else {
+						selectionModel.clearSelection();
+					}
+//					System.out.println("JGraphText.valueChanged() | cell:" + cell + '[' + cell.getClass().getName() + ']');
+				}
+				
+				
+			} else {
+				selectionModel.clearSelection();
+			}
+		}
+		
+//		 Update Button States based on Current Selection
+		boolean enabled = !this.graph.isSelectionEmpty();
+		this.remove.setEnabled(enabled);
+//		ungroup.setEnabled(enabled);
+//		tofront.setEnabled(enabled);
+//		toback.setEnabled(enabled);
+//		copy.setEnabled(enabled);
+//		cut.setEnabled(enabled);
+	}
+
 	
 	private void createTreeModel() {		
 		
@@ -706,34 +772,7 @@ public class JGraphText {
 		
 		this.tree.setRootVisible(false);
 		
-		this.graph.getSelectionModel().addGraphSelectionListener(new GraphSelectionListener() {
-			public void valueChanged(GraphSelectionEvent e) {
-				final Object cell = e.getCell();
-				final TreeSelectionModel selectionModel = JGraphText.this.tree.getSelectionModel();
-//				System.out.println(".valueChanged() | " + e +"\n\t" + cell + '[' + cell.getClass().getName() + ']');
-				if (cell instanceof Edge) {
-					if (e.isAddedCell()) {
-						Edge edge = (Edge)cell;
-						JGraphText.this.tree.scrollPathToVisible(new TreePath(JGraphText.this.treeModel.getPathToRoot(((TreeNode) edge.getSource()).getParent())));
-						JGraphText.this.tree.scrollPathToVisible(new TreePath(JGraphText.this.treeModel.getPathToRoot(((TreeNode) edge.getTarget()).getParent())));
-					} else {
-						selectionModel.clearSelection();
-					}
-				} else {				
-					if (e.isAddedCell()){
-						TreeNode[] pathToRoot = JGraphText.this.treeModel.getPathToRoot((TreeNode) cell);
-						if (pathToRoot != null) {
-							TreePath path = new TreePath(pathToRoot);
-							selectionModel.setSelectionPath(path);
-						} else {
-							selectionModel.clearSelection();
-						}
-					} else {
-						selectionModel.clearSelection();
-					}
-				}
-			}
-		});
+		this.graph.getSelectionModel().addGraphSelectionListener(this);
 		
 		this.tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
