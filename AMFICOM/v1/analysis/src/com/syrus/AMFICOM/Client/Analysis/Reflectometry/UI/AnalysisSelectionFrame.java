@@ -1,20 +1,35 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTAEListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.AnalysisParametersWrapper;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
-import com.syrus.AMFICOM.client.UI.*;
-import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -23,20 +38,12 @@ import com.syrus.io.BellcoreStructure;
 public class AnalysisSelectionFrame extends JInternalFrame implements
 		BsHashChangeListener, PrimaryMTAEListener, AnalysisParametersListener, ReportTable
 {
-	private Dispatcher dispatcher;
-
 	private WrapperedPropertyTableModel tModelMinuit;
-
 	private WrapperedPropertyTable table;
-	
 	private JPanel mainPanel;
-
 	JScrollPane scrollPane = new JScrollPane();
-
 	JViewport viewport = new JViewport();
-
 	ApplicationContext aContext;
-
     private boolean analysisParametersUpdatedHere = false;
 
 	public AnalysisSelectionFrame(ApplicationContext aContext)
@@ -52,12 +59,11 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		}
 		this.aContext = aContext;
 
-		init_module(aContext.getDispatcher());
+		init_module();
 	}
 
-	void init_module(Dispatcher dispatcher1)
+	void init_module()
 	{
-		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
         Heap.addAnalysisParametersListener(this);
@@ -186,8 +192,12 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		this.updColorModel();
 	}
 
-    // @todo: this update should be performed every time the user changes analysis parameter(s), not only when a button clicked.
-    // (both if a value is entered and if a combobox selection is changed)
+	// XXX: то, что делается здесь, частично продублировано в  AnalysisParameterWrapper.setValue()
+	// вероятно, правильнее дополнить setValue() командами типа
+	//    (??) analysisParametersUpdatedHere = true
+	//    Heap.notifyAnalysisParametersUpdated()
+	//    (??) analysisParametersUpdatedHere = true,
+	// а настоящий метод убрать.
     void updateHeapAP()
     {
         Heap.getMinuitAnalysisParams().setMinThreshold(
@@ -253,7 +263,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 	}
 
 	public void bsHashRemoved(String key)
-	{
+	{ // ignore: we expect bsHashRemovedAll() being called when primary trace removed
 	}
 
 	public void bsHashRemovedAll()
