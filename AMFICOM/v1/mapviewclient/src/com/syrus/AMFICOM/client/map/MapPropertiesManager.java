@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.28 2005/07/14 13:01:42 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.29 2005/07/15 14:05:39 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.28 $, $Date: 2005/07/14 13:01:42 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/15 14:05:39 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -84,7 +84,9 @@ public final class MapPropertiesManager
  	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";
  	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";
  	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
- 	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating"; 	
+ 	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating";
+	protected static final String KEY_NAVIGATE_AREA_SIZE = "0.03";
+
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -101,7 +103,13 @@ public final class MapPropertiesManager
 	protected static String useTopologicalImageCache = "false";
 	protected static String optimizeLinks = "false";
 	protected static String topoImageMaxTimeWait = "30000";
-	protected static String moveMouseNavigating = "true";	
+	protected static String moveMouseNavigating = "true";
+	/**
+	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
+	 * в процентах от габарита окна карты
+	 */
+	protected static String navigateAreaSize = "0.03";
+	
 	
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
@@ -401,6 +409,18 @@ public final class MapPropertiesManager
 		return Boolean.valueOf(optimizeLinks).booleanValue();
 	}
 	
+	public static int getTopoImageMaxTimeWait() {
+		return Integer.parseInt(topoImageMaxTimeWait);
+	}
+	
+	public static boolean isMoveMouseNavigating() {
+		return Boolean.parseBoolean(moveMouseNavigating);
+	}
+
+	public static int getNavigateAreaSize() {
+		return Integer.parseInt(navigateAreaSize);
+	}
+	
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
@@ -431,7 +451,8 @@ public final class MapPropertiesManager
 		useTopologicalImageCache = properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE);
 		topoImageMaxTimeWait = properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT);		
 		optimizeLinks = properties.getProperty(KEY_OPTIMIZE_LINKS);
-		moveMouseNavigating = properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING);		
+		moveMouseNavigating = properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING);
+		navigateAreaSize = properties.getProperty(KEY_NAVIGATE_AREA_SIZE);		
 		
 //		selectionColor = iniFile.getValue("selectionColor");
 //		selectionStyle = iniFile.getValue("selectionStyle");
@@ -451,8 +472,9 @@ public final class MapPropertiesManager
 		descreteNavigation = "false";
 		useTopologicalImageCache = "false";
 		optimizeLinks = "false";
-		moveMouseNavigating = "true";		
+		moveMouseNavigating = "true";
 		topoImageMaxTimeWait = "30000";
+		navigateAreaSize = "0.03";
 		viewerClass = "";
 		connectionClass = "";		
 		rendererClass = "";
@@ -1053,12 +1075,5 @@ public final class MapPropertiesManager
 	public static NumberFormat getScaleFormat()
 	{
 		return scaleFormat;
-	}
-	
-	public static int getTopoImageMaxTimeWait() {
-		return Integer.parseInt(topoImageMaxTimeWait);
-	}
-	public static boolean isMoveMouseNavigating() {
-		return Boolean.parseBoolean(moveMouseNavigating);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.23 2005/07/15 13:18:35 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.24 2005/07/15 14:05:39 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,13 +37,15 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.23 $, $Date: 2005/07/15 13:18:35 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/07/15 14:05:39 $
+ * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
 {
 	NetMapViewer netMapViewer;
+	
+	private final double navigateAreaSize = MapPropertiesManager.getNavigateAreaSize();
 
 	public MapMouseMotionListener(NetMapViewer netMapViewer)
 	{
@@ -192,15 +194,15 @@ public final class MapMouseMotionListener implements MouseMotionListener
 			int mouseY = me.getPoint().y;
 
 			int cursorX =
-				(mouseX < imageSize.width * BORDER_AREA_SIZE_COEFICIENT) 
+				(mouseX < imageSize.width * this.navigateAreaSize) 
 				? 0
-				: (mouseX < imageSize.width * (1 - BORDER_AREA_SIZE_COEFICIENT)) 
+				: (mouseX < imageSize.width * (1 - this.navigateAreaSize)) 
 				? 1
 				:2;
 			int cursorY =
-				(mouseY < imageSize.height * BORDER_AREA_SIZE_COEFICIENT) 
+				(mouseY < imageSize.height * this.navigateAreaSize) 
 				? 0
-				: (mouseY < imageSize.height * (1 - BORDER_AREA_SIZE_COEFICIENT)) 
+				: (mouseY < imageSize.height * (1 - this.navigateAreaSize)) 
 				? 1
 				: 2;
 
@@ -209,11 +211,6 @@ public final class MapMouseMotionListener implements MouseMotionListener
 
 		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
-	/**
-	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
-	 * в процентах от габарита окна карты
-	 */
-	public static final double BORDER_AREA_SIZE_COEFICIENT = 0.01;
 
 	private static Cursor[][] cursors = new Cursor[3][3];
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.44 2005/07/14 13:01:42 peskovsky Exp $
+ * $Id: MapMouseListener.java,v 1.45 2005/07/15 14:05:39 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.44 $, $Date: 2005/07/14 13:01:42 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/15 14:05:39 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -63,6 +63,7 @@ public final class MapMouseListener implements MouseListener
 {
 	protected MapNodeLinkSizeField sizeEditBox = null;
 
+	private final double navigateAreaSize = MapPropertiesManager.getNavigateAreaSize();	
 	/**
 	 * Сущность для перемещения курсора мыши в нужную точку
 	 */
@@ -227,15 +228,15 @@ public final class MapMouseListener implements MouseListener
 			int mouseY = point.y;
 
 			int quadrantX =
-				(mouseX < imageSize.width * MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT) 
+				(mouseX < imageSize.width * this.navigateAreaSize) 
 				? 0
-				: (mouseX < imageSize.width * (1 - MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT)) 
+				: (mouseX < imageSize.width * (1 - this.navigateAreaSize)) 
 				? 1
 				:2;
 			int quadrantY =
-				(mouseY < imageSize.height * MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT) 
+				(mouseY < imageSize.height * this.navigateAreaSize) 
 				? 0
-				: (mouseY < imageSize.height * (1 - MapMouseMotionListener.BORDER_AREA_SIZE_COEFICIENT)) 
+				: (mouseY < imageSize.height * (1 - this.navigateAreaSize)) 
 				? 1
 				: 2;
 
