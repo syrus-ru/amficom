@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,6 @@ import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
@@ -85,7 +85,7 @@ public final class MapViewTreePanel extends JPanel
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
 				Dispatcher disp = this.aContext.getDispatcher();
-				disp.removePropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+				disp.removePropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 				disp.removePropertyChangeListener(MapEvent.MAP_SELECTED, this);
 				disp.removePropertyChangeListener(MapEvent.MAP_CHANGED, this);
 				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
@@ -99,7 +99,7 @@ public final class MapViewTreePanel extends JPanel
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
-		disp.addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+		disp.addPropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_SELECTED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
@@ -132,24 +132,15 @@ public final class MapViewTreePanel extends JPanel
 				MapView mapView = (MapView )pce.getSource();
 				updateTree(mapView);
 			}
-			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE)) {
-				MapNavigateEvent mne = (MapNavigateEvent )pce;
-				if(mne.isMapElementSelected()) {
-					MapElement mapElement = (MapElement )mne.getNewValue();
-					Item node = this.model.findNode(this.root, mapElement);
-					if(node != null) {
-						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
-						this.tree.getSelectionModel().addSelectionPath(path);
-						this.tree.scrollPathToVisible(path);
-					}
-				}
-				else if (mne.isMapElementDeselected()) {
-					MapElement mapElement = (MapElement )mne.getNewValue();
-					Item node = this.model.findNode(this.root, mapElement);
-					if(node != null) {
-						TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
-						this.tree.getSelectionModel().removeSelectionPath(path);
-					}
+			if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
+				Collection selection = (Collection )pce.getNewValue();
+				Collection items = this.model.findNodes(this.root, selection);
+				this.tree.getSelectionModel().clearSelection();
+				for(Iterator iter = items.iterator(); iter.hasNext();) {
+					Item node = (Item )iter.next();
+					TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
+					this.tree.getSelectionModel().addSelectionPath(path);
+					this.tree.scrollPathToVisible(path);
 				}
 			}
 		}
@@ -208,15 +199,17 @@ public final class MapViewTreePanel extends JPanel
 		if(dispatcher != null) {
 			this.performProcessing = false;
 			TreePath paths[] = e.getPaths();
+			Collection toSelect = new LinkedList();
+			Collection toDeSelect = new LinkedList();
 			for (int i = 0; i < paths.length; i++) 
 			{
 				Item node = (Item )paths[i].getLastPathComponent();
 				if(node.getObject() instanceof MapElement) {
 					MapElement mapElement = (MapElement )node.getObject();
 					if(e.isAddedPath(paths[i]))
-						dispatcher.firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT, mapElement));
+						toSelect.add(mapElement);
 					else
-						dispatcher.firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT, mapElement));
+						toDeSelect.add(mapElement);
 				}
 				else if(node.getObject() instanceof Map) {
 					Map map = (Map )node.getObject();
@@ -229,7 +222,9 @@ public final class MapViewTreePanel extends JPanel
 						dispatcher.firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
 				}
 			}
-			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED));
+			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_SELECT, toSelect));
+			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_DESELECT, toDeSelect));
+//			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED, toSelect));
 //			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
 			this.performProcessing = true;
 		}

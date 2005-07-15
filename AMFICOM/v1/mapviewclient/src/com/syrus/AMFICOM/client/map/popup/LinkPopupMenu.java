@@ -261,9 +261,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, this.link);
-			
-			this.netMapViewer.repaint(false);
-
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
@@ -274,7 +271,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if(collector != null)
 		{
 			super.removeLinkFromCollector(collector, this.link);
-			this.netMapViewer.repaint(false);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
@@ -290,7 +286,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 			set.addAll(collector.getPhysicalLinks());
 			super.removeLinksFromCollector(collector, set);
 			super.removeCollector(collector);
-			this.netMapViewer.repaint(false);
+			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}

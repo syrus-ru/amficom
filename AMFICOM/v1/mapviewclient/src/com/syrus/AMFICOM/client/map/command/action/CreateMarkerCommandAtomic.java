@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.21 2005/07/11 13:18:04 bass Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.22 2005/07/15 17:06:06 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
 /**
  *  оманда создани€ метки на линии
  * 
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/07/15 17:06:06 $
  * @module mapviewclient_v1
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand
@@ -131,6 +131,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 			// операци€ закончена - оповестить слушателей
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.marker);
+			this.logicalNetLayer.sendSelectionChangeEvent();
 			setResult(Command.RESULT_OK);
 		}
 		catch(Exception e)

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.21 2005/07/11 13:18:03 bass Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.22 2005/07/15 17:06:07 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * данна€ команда
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/07/11 13:18:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/07/15 17:06:07 $
  * @module mapviewclient_v1
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -306,7 +306,6 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 				}
 			}
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
-			this.logicalNetLayer.sendMapSelectedEvent(this.startNode);
 			setResult(Command.RESULT_OK);
 		}
 		catch(Throwable e)

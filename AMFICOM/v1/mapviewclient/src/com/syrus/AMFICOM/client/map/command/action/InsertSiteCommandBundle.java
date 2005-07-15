@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.22 2005/07/11 13:18:03 bass Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.23 2005/07/15 17:06:07 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/07/11 13:18:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/07/15 17:06:07 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -155,6 +155,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
+			this.logicalNetLayer.sendSelectionChangeEvent();
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

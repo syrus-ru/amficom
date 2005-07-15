@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.17 2005/07/11 13:18:03 bass Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.18 2005/07/15 17:06:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.17 $, $Date: 2005/07/11 13:18:03 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/15 17:06:07 $
  * @module mapviewclient_v1
- * @author $Author: bass $
+ * @author $Author: krupenn $
  */
 public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 {
@@ -87,6 +87,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(node);
 			this.logicalNetLayer.notifySchemeEvent(node);
+			this.logicalNetLayer.sendSelectionChangeEvent();
 			setResult(Command.RESULT_OK);
 		}
 		catch(Throwable e)

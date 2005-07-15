@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.25 2005/07/15 14:55:35 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.26 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/07/15 14:55:35 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/15 17:06:08 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends AbstractMapStrategy 
@@ -90,14 +90,10 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 					map.setSelected(mapElement, false);
 					this.selection.remove(mapElement);
 					
-					super.logicalNetLayer.sendMapDeselectedEvent(mapElement);
-					
-					if (this.selection.getElements().size() == 0)
-					{
+					if (this.selection.getElements().size() == 0) {
 						super.logicalNetLayer.setCurrentMapElement(VoidElement.getInstance(super.logicalNetLayer.getMapView()));
 					}
-					else if (this.selection.getElements().size() == 1)
-					{
+					else if (this.selection.getElements().size() == 1) {
 						super.logicalNetLayer.setCurrentMapElement((MapElement)this.selection.getElements().iterator().next());
 					}
 				}// mel.isSelected()
@@ -105,9 +101,8 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 				{
 					map.setSelected(mapElement, true);
 					this.selection.add(mapElement);
-					
-					super.logicalNetLayer.sendMapSelectedEvent(mapElement);
 				}// ! mel.isSelected()
+				this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 			}// ! mel instanceof VoidElement
 		}//MapState.SELECT_ACTION_MODE
 		else
@@ -126,6 +121,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 					map.setSelected(mapElement, true);
 				}
 			}
+			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		}// ! MapState.SELECT_ACTION_MODE
 	}
 

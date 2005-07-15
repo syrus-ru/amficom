@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.55 2005/06/29 15:48:27 krupenn Exp $
+ * $Id: MapFrame.java,v 1.56 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.55 $, $Date: 2005/06/29 15:48:27 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/15 17:06:08 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -278,6 +278,9 @@ public class MapFrame extends JInternalFrame
 			{
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_SELECT, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_DESELECT, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.PLACE_ELEMENT, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_CENTER_CHANGED, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
@@ -297,6 +300,9 @@ public class MapFrame extends JInternalFrame
 			setModel(aContext.getApplicationModel());
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_SELECT, this);
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_DESELECT, this);
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.PLACE_ELEMENT, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_CENTER_CHANGED, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.16 2005/06/06 12:57:03 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.17 2005/07/15 17:06:08 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/06 12:57:03 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/15 17:06:08 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -80,7 +81,21 @@ public class MapViewTreeModel implements ChildrenFactory {
 				return foundNode;
 		}
 		return null;
+	}
 
+	public Collection findNodes(Item item, Collection objects) {
+		Collection items = new LinkedList();
+		fillFoundNodes(item, objects, items);
+		return items;
+	}
+
+	public void fillFoundNodes(Item item, Collection objects, Collection items) {
+		if(objects.contains(item.getObject()))
+			items.add(item);
+		for(Iterator iter = item.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			fillFoundNodes(childNode, objects, items);
+		}
 	}
 
 	public String getObjectName(Object object) {

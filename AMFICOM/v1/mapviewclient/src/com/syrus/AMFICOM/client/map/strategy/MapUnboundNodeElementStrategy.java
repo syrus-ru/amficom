@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.23 2005/06/24 13:01:03 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.24 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/24 13:01:03 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/15 17:06:08 $
  * @module mapviewclient_v1
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
@@ -101,6 +101,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
 		super.logicalNetLayer.getMapView().getMap().setSelected(this.unbound, true);
+		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	/**

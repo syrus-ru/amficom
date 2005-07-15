@@ -1,5 +1,5 @@
 /**
- * $Id: MapEventMarkerStrategy.java,v 1.17 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapEventMarkerStrategy.java,v 1.18 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * Стратегия управления маркером события.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/15 17:06:08 $
  * @module mapviewclient_v1
  */
 public final class MapEventMarkerStrategy extends AbstractMapStrategy 
@@ -79,6 +79,7 @@ public final class MapEventMarkerStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
 		super.logicalNetLayer.getMapView().getMap().setSelected(this.marker, true);
+		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 }
 

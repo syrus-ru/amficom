@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.2 2005/06/16 11:00:07 krupenn Exp $
+ * $Id: MapEvent.java,v 1.3 2005/07/15 17:06:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/06/16 11:00:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 17:06:32 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -51,10 +51,6 @@ public class MapEvent extends PropertyChangeEvent
 	/** Поместить элемент на карту. */
 	public static final String PLACE_ELEMENT = "placeelement";
 
-	/** Выделен элемент карты. */
-	public static final String MAP_ELEMENT_SELECTED = "mapelementselectedevent";
-	/** Снято выделение элемента карты. */
-	public static final String MAP_ELEMENT_DESELECTED = "mapelementdeselectedevent";
 	/** Изменен элемент карты. */
 	public static final String MAP_ELEMENT_CHANGED = "mapelementchangedevent";
 
@@ -69,6 +65,12 @@ public class MapEvent extends PropertyChangeEvent
 	/** Снять выделение со всех объектов. */
 	public static final String DESELECT_ALL = "deselectall";
 	
+	/** Необходимо выделить объекты. */
+	public static final String NEED_SELECT = "needselect";
+
+	/** Необходимо снять выделение с объектов. */
+	public static final String NEED_DESELECT = "needdeselect";
+
 	public MapEvent(Object source, String type)
 	{	
 		super(source, type, null, null);

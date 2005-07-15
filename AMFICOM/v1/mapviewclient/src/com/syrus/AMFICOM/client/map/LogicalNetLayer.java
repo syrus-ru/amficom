@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.100 2005/07/15 10:49:19 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.101 2005/07/15 17:06:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.map.command.action.MoveNodeCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.AbstractNodeController;
@@ -74,7 +73,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.100 $, $Date: 2005/07/15 10:49:19 $
+ * @version $Revision: 1.101 $, $Date: 2005/07/15 17:06:06 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -684,30 +683,11 @@ public class LogicalNetLayer
 			getContext().getDispatcher().firePropertyChange(new MapEvent(this, eventString));
 		}
 	}
-
-	/**
-	 * Генерация сообщеия о выборке элемента карты.
-	 * @param selectedElement выбранный элемент карты
-	 */
-	public void sendMapSelectedEvent(MapElement selectedElement)
-	{
+	
+	public void sendSelectionChangeEvent() {
 		if(getContext() != null)
-			if(getContext().getDispatcher() != null)
-		{
-			getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT, selectedElement));
-		}
-	}
-
-	/**
-	 * Генерация сообщеия о развыборке элемента карты.
-	 * @param deselectedElement развыбранный элемент карты
-	 */
-	public void sendMapDeselectedEvent(MapElement deselectedElement)
-	{
-		if(getContext() != null)
-			if(getContext().getDispatcher() != null)
-		{
-			getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT, deselectedElement));
+			if(getContext().getDispatcher() != null) {
+			getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED, this.mapView.getMap().getSelectedElements()));
 		}
 	}
 
@@ -847,7 +827,6 @@ public class LogicalNetLayer
 			return;
 		if(! (curMapElement instanceof Selection))
 			this.mapView.getMap().setSelected(curMapElement, true);
-		sendMapSelectedEvent(this.currentMapElement);
 		notifySchemeEvent(this.currentMapElement);
 	}
 
@@ -955,8 +934,6 @@ public class LogicalNetLayer
 		{
 			MapElement mapElement = (MapElement )it.next();
 			mapElement.setSelected(false);
-			
-			sendMapDeselectedEvent(mapElement);			
 		}
 		this.mapView.getMap().clearSelection();
 	}
@@ -1150,7 +1127,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.100 $, $Date: 2005/07/15 10:49:19 $
+	 * @version $Revision: 1.101 $, $Date: 2005/07/15 17:06:06 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.47 2005/07/15 15:04:13 peskovsky Exp $
+ * $Id: MapMouseListener.java,v 1.48 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -55,8 +54,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.47 $, $Date: 2005/07/15 15:04:13 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.48 $, $Date: 2005/07/15 17:06:08 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseListener implements MouseListener
@@ -326,9 +325,7 @@ public final class MapMouseListener implements MouseListener
 				strategy.doContextChanges(me);
 			}
 
-			mapElement = logicalNetLayer.getCurrentMapElement();
-
-			logicalNetLayer.sendMapSelectedEvent(mapElement);
+			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		}
 		else
 		if (SwingUtilities.isRightMouseButton(me))
@@ -407,6 +404,7 @@ public final class MapMouseListener implements MouseListener
 		{
 			map.setSelected(mapElement, true);
 			logicalNetLayer.setCurrentMapElement(mapElement);
+			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		}
 		else
 		{
@@ -517,7 +515,7 @@ public final class MapMouseListener implements MouseListener
 				strategy.doContextChanges(me);
 			}
 
-			logicalNetLayer.sendMapEvent(MapEvent.SELECTION_CHANGED);
+			logicalNetLayer.sendSelectionChangeEvent();
 		}
 		//					mapState.setActionMode(MapState.NULL_ACTION_MODE);
 		this.netMapViewer.repaint(false);

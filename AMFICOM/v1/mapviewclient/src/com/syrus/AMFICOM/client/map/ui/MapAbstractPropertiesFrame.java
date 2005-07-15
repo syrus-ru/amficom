@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.7 2005/06/22 07:27:32 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.8 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 import javax.swing.event.ChangeEvent;
@@ -20,7 +21,7 @@ import javax.swing.event.ChangeEvent;
 import com.syrus.AMFICOM.client.UI.AbstractPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.props.MapViewVisualManager;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.7 $, $Date: 2005/06/22 07:27:32 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/15 17:06:08 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -51,7 +52,7 @@ public abstract class MapAbstractPropertiesFrame extends
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
 				this.aContext.getDispatcher().removePropertyChangeListener(
-						MapEvent.MAP_NAVIGATE,
+						MapEvent.SELECTION_CHANGED,
 						this);
 				this.aContext.getDispatcher().removePropertyChangeListener(
 						MapEvent.MAP_SELECTED,
@@ -63,7 +64,7 @@ public abstract class MapAbstractPropertiesFrame extends
 		this.aContext = aContext;
 		if(aContext.getDispatcher() != null) {
 			aContext.getDispatcher().addPropertyChangeListener(
-					MapEvent.MAP_NAVIGATE,
+					MapEvent.SELECTION_CHANGED,
 					this);
 			aContext.getDispatcher().addPropertyChangeListener(
 					MapEvent.MAP_SELECTED,
@@ -77,20 +78,26 @@ public abstract class MapAbstractPropertiesFrame extends
 	public void propertyChange(PropertyChangeEvent pce) {
 		if(!this.performProcessing)
 			return;
-		if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE)) {
-			MapNavigateEvent event = (MapNavigateEvent )pce;
-			if(event.isMapElementSelected()) {
-				MapElement mapElement = (MapElement )event.getNewValue();
-				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
-				if(vm instanceof MarkerEditor) {
-					MarkerEditor markerEditor = (MarkerEditor)vm;
-					markerEditor.setLogicalNetLayer(
-							MapDesktopCommand.findMapFrame((JDesktopPane)this.getParent()).getMapViewer().getLogicalNetLayer());
-				}
-				super.setVisualManager(vm);
-				if(this.editor != null)
-					this.editor.setObject(mapElement);
+		if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
+//			Map map = (Map )pce.getNewValue();
+//			Collection selection = map.getSelectedElements();
+			LogicalNetLayer lnl = MapDesktopCommand.findMapFrame((JDesktopPane)this.getParent()).getMapViewer().getLogicalNetLayer();
+			Collection selection = (Collection )pce.getNewValue();
+			MapElement mapElement;
+			if(selection.size() == 1) {
+				mapElement = (MapElement )selection.iterator().next();
 			}
+			else {
+				mapElement = lnl.getCurrentMapElement();// get selection object
+			}
+			VisualManager vm = MapVisualManager.getVisualManager(mapElement);
+			if(vm instanceof MarkerEditor) {
+				MarkerEditor markerEditor = (MarkerEditor)vm;
+				markerEditor.setLogicalNetLayer(lnl);
+			}
+			super.setVisualManager(vm);
+			if(this.editor != null)
+				this.editor.setObject(mapElement);
 		}
 		else
 			if(pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {

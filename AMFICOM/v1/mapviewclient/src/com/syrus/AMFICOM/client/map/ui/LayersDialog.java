@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.6 2005/07/13 14:56:11 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.7 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,6 @@ import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
-import com.syrus.AMFICOM.client.UI.ATable;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.16 2005/06/23 14:28:51 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.17 2005/07/15 17:06:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.16 $, $Date: 2005/06/23 14:28:51 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/15 17:06:07 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -386,10 +386,9 @@ import com.syrus.AMFICOM.mapview.MapView;
 		{
 			MapElement mapE = (MapElement)this.model.getObject(selection[(i)]);
 			map.setSelected(mapE, true);
-
-			this.mapFrame.getContext().getDispatcher().firePropertyChange(
-					new MapNavigateEvent(this, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT, mapE));		
 		}
+		this.mapFrame.getContext().getDispatcher().firePropertyChange(
+				new MapEvent(this, MapEvent.SELECTION_CHANGED, map.getSelectedElements()));		
 		
 		Command centerCommand = new CenterSelectionCommand(this.mapFrame.getContext().getApplicationModel(), this.mapFrame.getMapViewer());
 		centerCommand.execute();

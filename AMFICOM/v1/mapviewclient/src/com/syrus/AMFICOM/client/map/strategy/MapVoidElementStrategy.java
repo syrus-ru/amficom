@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.28 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.29 2005/07/15 17:06:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -27,11 +28,12 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.util.Log;
 
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/06/16 10:57:21 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/15 17:06:08 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -86,6 +88,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		if (actionMode == MapState.NULL_ACTION_MODE)
 		{
 			super.logicalNetLayer.deselectAll();
+			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		}//MapState.NULL_ACTION_MODE
 	}
 
@@ -139,7 +142,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	protected  void selectElementsInRect(Rectangle selectionRect)
 		throws MapConnectionException, MapDataException
 	{
-//		Map map = super.logicalNetLayer.getMapView().getMap();
+		long t1 = System.nanoTime();
 		//Здесь просто проверяется что элемент содержится в прямоугольной области
 		Iterator e = this.map.getNodes().iterator();
 		
@@ -152,7 +155,6 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 			if (selectionRect.contains(p))
 			{
 				this.map.setSelected(node, true);
-				super.logicalNetLayer.sendMapSelectedEvent(node);
 			}
 			else
 			{
@@ -177,7 +179,6 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 							nodeLink.getEndNode().getLocation())))
 				{
 					this.map.setSelected(nodeLink, true);
-					super.logicalNetLayer.sendMapSelectedEvent(nodeLink);					
 				}
 				else
 				{
@@ -207,8 +208,6 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 					}
 				}
 				this.map.setSelected(link, select);
-				if (select)
-					super.logicalNetLayer.sendMapSelectedEvent(link);				
 			}
 		}
 		
@@ -225,6 +224,9 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 			sel.addAll(selection);
 			super.logicalNetLayer.setCurrentMapElement(sel);
 		}
+		long t2 = System.nanoTime();
+		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+		Log.debugMessage("MapVoidElementStrategy.selectElementsInRect | " + (t2 - t1) + " ns ", Level.INFO);
 	}
 }
 

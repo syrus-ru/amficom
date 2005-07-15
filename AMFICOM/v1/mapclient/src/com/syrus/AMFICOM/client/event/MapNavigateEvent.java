@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.2 2005/06/16 11:00:46 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.3 2005/07/15 17:06:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
  *
  *
  *
- * @version $Revision: 1.2 $, $Date: 2005/06/16 11:00:46 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 17:06:32 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -79,16 +79,6 @@ public class MapNavigateEvent extends MapEvent
 	 * Используются поля {@link #markerId}, {@link #distance}
 	 */
 	public static final int DATA_MARKER_MOVED_EVENT = 11;
-	/**
-	 * Элемент выделен.
-	 * Используются поля {@link #source}
-	 */
-	public static final int MAP_ELEMENT_SELECTED_EVENT = 13;
-	/**
-	 * Снято выбеление элемента.
-	 * Используются поля {@link #source}
-	 */
-	public static final int MAP_ELEMENT_DESELECTED_EVENT = 14;
 
 	/**
 	 * Тип события.
@@ -295,13 +285,4 @@ public class MapNavigateEvent extends MapEvent
 		return this.mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
 	}
 
-	public boolean isMapElementSelected()
-	{
-		return this.mapEventType == MAP_ELEMENT_SELECTED_EVENT;
-	}
-
-	public boolean isMapElementDeselected()
-	{
-		return this.mapEventType == MAP_ELEMENT_DESELECTED_EVENT;
-	}
 }
