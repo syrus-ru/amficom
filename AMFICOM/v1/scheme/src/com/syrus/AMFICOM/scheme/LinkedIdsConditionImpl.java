@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.24 2005/07/15 12:40:52 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.25 2005/07/15 12:54:05 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.24 $, $Date: 2005/07/15 12:40:52 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/15 12:54:05 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -193,14 +193,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				case UPDIKE_CODE:
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
-				default:
-					throw newIllegalObjectEntityException();
-				}
-			case SCHEMEPATH_CODE:
-				final SchemePath schemePath = (SchemePath) storableObject;
-				switch (super.linkedEntityCode) {
-				case SCHEME_CODE:
-					return super.conditionTest(schemePath.parentSchemeId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
