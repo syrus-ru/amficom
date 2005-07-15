@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.164 2005/07/14 16:08:04 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.165 2005/07/15 19:42:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.164 $, $Date: 2005/07/14 16:08:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.165 $, $Date: 2005/07/15 19:42:37 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -520,7 +520,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
+	public static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
 		final String aliasCount = "count";
 		final String tableName = ObjectEntities.codeToString(id.getMajor());
 		final String sql = SQL_SELECT + SQL_COUNT + aliasCount
