@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.15 2005/07/06 12:15:16 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.16 2005/07/15 11:31:13 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/06 12:15:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/07/15 11:31:13 $
+ * @author $Author: max $
  * @module util
  */
 public class LRUMapSaver {
@@ -64,6 +64,7 @@ public class LRUMapSaver {
 			out.writeObject(objectEntityName);
 			out.writeObject(keys);
 			out.close();
+			saveFile.delete();
 			tempFile.renameTo(saveFile);
 			if(cleanLRUMap) {
 				lruMap.clear();

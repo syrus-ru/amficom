@@ -1,5 +1,5 @@
 /*-
- * $Id: FIFOSaver.java,v 1.10 2005/07/06 12:15:16 arseniy Exp $
+ * $Id: FIFOSaver.java,v 1.11 2005/07/15 11:31:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/06 12:15:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/07/15 11:31:13 $
+ * @author $Author: max $
  * @module util
  */
 public final class FIFOSaver {
@@ -56,6 +56,7 @@ public final class FIFOSaver {
 			out.writeObject(fifo.getObjects());
 			out.writeObject(new Integer(fifo.getNumber()));
 			out.close();
+			saveFile.delete();
 			tempFile.renameTo(saveFile);
 		} catch (FileNotFoundException fnfe) {
 			Log.errorMessage("FifoSaver.save | Error: " + fnfe.getMessage());        	
