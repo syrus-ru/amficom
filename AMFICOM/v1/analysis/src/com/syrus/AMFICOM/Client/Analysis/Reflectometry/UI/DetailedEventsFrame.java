@@ -1,16 +1,35 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.*;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.DetailedEventResource;
+import com.syrus.AMFICOM.analysis.DetailedEventWrapper;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class DetailedEventsFrame extends JInternalFrame
@@ -193,13 +212,12 @@ implements EtalonMTMListener,
 	{
 		int num = Heap.getCurrentEvent1();
 		if (num < 0) {
-
             return;
         }
 		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
 		int eventType = ev.getEventType();
 		double resMt =  Heap.getBSPrimaryTrace().getResolution();
-    double resKm = resMt / 1000.0;
+		double resKm = resMt / 1000.0;
 		res.initAdditional(ev, resKm);
 		switch (eventType)
 		{
@@ -222,7 +240,7 @@ implements EtalonMTMListener,
 			case SimpleReflectogramEvent.ENDOFTRACE:
 				tModel.setKeys(endKeys);
 				break;
-			}
+		}
 		mainTable.updateUI();
 	}
 
@@ -282,12 +300,13 @@ implements EtalonMTMListener,
 			sameType = key;
 		}
 
+		@Override
 		public Component getTableCellRendererComponent(	JTable table,
-														Object value,
-														boolean isSelected1,
-														boolean hasFocus,
-														int row,
-														int column) {
+				Object value,
+				boolean isSelected1,
+				boolean hasFocus,
+				int row,
+				int column) {
 			Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
 
 			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
