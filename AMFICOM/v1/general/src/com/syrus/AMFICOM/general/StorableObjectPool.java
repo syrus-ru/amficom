@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.127 2005/07/15 11:36:35 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.128 2005/07/15 11:44:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/07/15 11:36:35 $
+ * @version $Revision: 1.128 $, $Date: 2005/07/15 11:44:22 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -40,6 +40,10 @@ import com.syrus.util.Log;
  * должны присутствовать идентификаторы помеченных на удаление объектов;
  * 4) проверить вызов refresh
  * 5) проверить все вызовы flush, убедиться что объекты, помеченные на удаление, действительно удаляются.
+ * @todo Версии успешно сохранённых объектов должны выставлятся здесь и только здесь
+ * (а не в StorableObjectDatabase или в CORBAObjectLoader). Метод saveWithDependencies должен получать
+ * сведения о сохранении от метода saveStorableObjects, исходя из которых именно он и должен
+ * обновлять версии успешно сохранённых объектов. Учение о Сохранении подлежит переработке.
  */
 public abstract class StorableObjectPool {
 
@@ -1029,7 +1033,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.127 $, $Date: 2005/07/15 11:36:35 $
+	 * @version $Revision: 1.128 $, $Date: 2005/07/15 11:44:22 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
