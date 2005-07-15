@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.1 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.2 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,25 +14,23 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JToolBar;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoToolBar;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -92,7 +90,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 		this.schemeCellContainer = (SchemeCellContainer)or;
 		GraphActions.clearGraph(pane.getGraph());
 		if (this.schemeCellContainer != null) {
-			pane.openSchemeCellContainer(schemeCellContainer);
+			pane.openSchemeCellContainer(schemeCellContainer, false);
 		}
 	}
 
@@ -111,7 +109,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 		SchemeImageResource image = schemeCellContainer.getUgoCell();
 		if (image == null) {
 			try {
-				image = SchemeImageResource.createInstance(LoginManager.getUserId());
+				image = SchemeObjectsFactory.createSchemeImageResource();
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				return;

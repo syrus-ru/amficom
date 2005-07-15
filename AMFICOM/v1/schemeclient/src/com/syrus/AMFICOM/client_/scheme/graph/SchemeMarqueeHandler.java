@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.13 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.14 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.jgraph.graph.GraphUndoManager;
 import com.jgraph.graph.PortView;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -63,16 +64,14 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -366,16 +365,13 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			try {
 				AbstractSchemePort schemePort;
 				if (!isCable) { //port
-					schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					schemePort = SchemeObjectsFactory.createSchemePort(name, directionType, deviceCell.getSchemeDevice());
 				} else {
-					schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, deviceCell.getSchemeDevice());
+					schemePort = SchemeObjectsFactory.createSchemeCablePort(name, directionType, deviceCell.getSchemeDevice());
 				}
 				schemePort.setPortType(type);
-				schemePort.setParentSchemeDevice(deviceCell.getSchemeDevice());
-				StorableObjectPool.putStorableObject(schemePort);
 				
 				Color color = SchemeActions.determinePortColor(schemePort);
-				
 
 				if (!isCable) { //port
 					PortCell cell = SchemeActions.createPort(graph, deviceCell, 
@@ -407,7 +403,6 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					
 					try {
 						SchemeDevice device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
-						StorableObjectPool.putStorableObject(device);
 						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
@@ -442,9 +437,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							Identifier userId = LoginManager.getUserId();
 							
 							try {
-								SchemeCableLink link = SchemeCableLink.createInstance(userId, "cable" + System.currentTimeMillis(), scheme);
+								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
 								link.setAbstractLinkType(type);
-								StorableObjectPool.putStorableObject(link);
 								DefaultCableLink cell = SchemeActions.createCableLink(graph,
 										firstPort, port, graph.fromScreen(new Point(start)), 
 										graph.fromScreen(new Point(current)), link.getId());
@@ -474,9 +468,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						
 						SchemeLink link;
 						try {
-							link = SchemeLink.createInstance(LoginManager.getUserId(), "link" + System.currentTimeMillis());
+							link = SchemeObjectsFactory.createSchemeLink("link" + System.currentTimeMillis());
 							link.setAbstractLinkType(type);
-							StorableObjectPool.putStorableObject(link);
 							DefaultLink cell = SchemeActions.createLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
 									graph.fromScreen(new Point(current)), link.getId());

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeResource.java,v 1.5 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -106,7 +107,7 @@ public class SchemeResource {
 		SchemeImageResource ir = object.getUgoCell();
 		if (ir == null) {
 			try {
-				ir = SchemeImageResource.createInstance(LoginManager.getUserId());
+				ir = SchemeObjectsFactory.createSchemeImageResource();
 				object.setUgoCell(ir);
 			} catch (ApplicationException e) {
 				Log.errorException(e);

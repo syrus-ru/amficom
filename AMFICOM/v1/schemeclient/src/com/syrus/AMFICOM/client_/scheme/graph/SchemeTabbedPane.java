@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.5 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.6 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -130,7 +131,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		tabs.addTab("", new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/close_unchanged.gif")), graphView);
 		tabs.setSelectedComponent(graphView);
-		graph.setGraphChanged(false);
+		setGraphChanged(false);
 	}
 	
 	public void selectPanel(ElementsPanel p) {
@@ -173,10 +174,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			SchemeEvent see = (SchemeEvent) ae;
 			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();
-				openScheme(scheme);
+				openScheme(scheme, true);
 			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
-				openSchemeElement(schemeElement);
+				openSchemeElement(schemeElement, true);
 			} else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object obj = see.getObject();
 				if (obj instanceof Scheme) {
@@ -189,17 +190,19 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		super.propertyChange(ae);
 	}
 	
-	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
+	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
 		if (schemeCellContainer instanceof Scheme) {
-			openScheme((Scheme)schemeCellContainer);
-		} else if (schemeCellContainer instanceof SchemeElement) {
-			openSchemeElement((SchemeElement)schemeCellContainer);
-		} else {
-			Log.debugMessage("Error: try to open SchemeProtoElement in SchemeTabbedPane ", Level.FINER);
-		}
+			return openScheme((Scheme)schemeCellContainer, doClone);
+		} 
+		if (schemeCellContainer instanceof SchemeElement) {
+			return openSchemeElement((SchemeElement)schemeCellContainer, doClone);
+		} 
+		Log.debugMessage("Error: try to open SchemeProtoElement in SchemeTabbedPane ", Level.FINER);
+		return Collections.EMPTY_MAP;
 	}
 	
-	public void openScheme(Scheme sch) {
+	public Map openScheme(Scheme sch, boolean doClone) {
+		Map clones = Collections.EMPTY_MAP;
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p = (UgoPanel)it.next();
@@ -214,15 +217,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
 							sp.getSchemeResource().setScheme(sch);
-							GraphActions.clearGraph(sp.getGraph());
-							if (sch.getSchemeCell() != null)
-								sp.insertCell(sch.getSchemeCell().getData(), new Point(0, 0), true);
-							fixImages(getGraph());
-							setGraphChanged(false);
+							clones = super.openSchemeCellContainer(sch, doClone);
 						}		
 					}
-					updateTitle(sch.getName());
-					return;
+					return clones;
 				}
 			}				
 		}
@@ -231,13 +229,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		addPanel(p);
 		p.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
-		if (sch.getSchemeCell() != null)
-			p.insertCell(sch.getSchemeCell().getData(), new Point(0, 0), true);
-		fixImages(getGraph());
-		setGraphChanged(false);
+		clones = super.openSchemeCellContainer(sch, doClone);
+		return clones;
 	}
 	
-	public void openSchemeElement(SchemeElement se) {
+	public Map openSchemeElement(SchemeElement se, boolean doClone) {
+		Map clones = Collections.EMPTY_MAP;
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p1 = (UgoPanel)it.next();
@@ -252,23 +249,19 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
 							p.getSchemeResource().setSchemeElement(se);
-							GraphActions.clearGraph(p.getGraph());
-							p.insertCell(se.getSchemeCell().getData(), new Point(0, 0), true);
-							fixImages(getGraph());
-							setGraphChanged(false);
+							clones = super.openSchemeCellContainer(se, doClone);
 						}
 					}
-					return;
+					return clones;
 				}
 			}
 		}
 		ElementsPanel p = new ElementsPanel(aContext);
 		addPanel(p);
 		p.getSchemeResource().setSchemeElement(se);
-		p.insertCell(se.getSchemeCell().getData(), new Point(0, 0), true);
-		fixImages(getGraph());
 		updateTitle(se.getName());
-		setGraphChanged(false);
+		clones = super.openSchemeCellContainer(se, doClone);
+		return clones;
 	}
 	/*
 	public boolean removeScheme(Scheme sch) {

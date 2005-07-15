@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.9 2005/07/11 12:31:38 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.10 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
@@ -49,7 +48,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -169,7 +168,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		SchemeImageResource sir = cellContainer.getUgoCell();
 		if (sir == null) {
 			try {
-				sir = SchemeImageResource.createInstance(LoginManager.getUserId());
+				sir = SchemeObjectsFactory.createSchemeImageResource();
 				cellContainer.setUgoCell(sir);
 			} catch (ApplicationException ex) {
 				Log.errorException(ex);

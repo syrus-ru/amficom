@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.8 2005/07/11 12:31:38 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.9 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -75,7 +75,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
 			 */
 			public void componentShown(ComponentEvent e) {
-				initModule();
 				ElementsEditorMainFrame.this.desktopPane.setPreferredSize(ElementsEditorMainFrame.this.desktopPane.getSize());
 				ElementsEditorMainFrame.this.windowArranger.arrange();
 			}
@@ -89,15 +88,20 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				aContext.getApplicationModel().getCommand("menuExit").execute();
 			}
 		});
+	}
 
-		elementsTab = new ElementsTabbedPane(aContext);
+	public ElementsEditorMainFrame() {
+		this(new ApplicationContext());
+	}
+
+	protected void initFrames() {
 		this.frames = new UIDefaults();
+		this.elementsTab = new ElementsTabbedPane(aContext);
 		
 		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
-				elementsTab = new ElementsTabbedPane(aContext);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(aContext, elementsTab);
 				editorFrame.setClosable(false);
 				editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
@@ -198,19 +202,17 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			}
 		});
 	}
-
-	public ElementsEditorMainFrame() {
-		this(new ApplicationContext());
-	}
-
-	public void initModule() {
+	
+	protected void initModule() {
 		super.initModule();
+		
+		initFrames();
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
 		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext,
 				elementsTab));
-		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(aContext,
-				elementsTab));
+		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(elementsTab));
 
 		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
 		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
@@ -312,5 +314,10 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
 		treeFrame.setVisible(false);
 	}
-
+//
+//	private boolean hasUnsavedChanges() {
+//		elementsTab.getP
+//		
+//		return false;
+//	}
 }

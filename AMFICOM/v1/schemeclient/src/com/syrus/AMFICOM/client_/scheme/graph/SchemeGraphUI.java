@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.6 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.7 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,23 +8,43 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.dnd.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.TooManyListenersException;
 
-import com.jgraph.graph.*;
+import com.jgraph.graph.CellHandle;
+import com.jgraph.graph.CellView;
+import com.jgraph.graph.DefaultEdge;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphContext;
+import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.BasicGraphUI;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.*;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -58,14 +78,18 @@ public class SchemeGraphUI extends GPGraphUI {
 			//			Point p = e.getLocation();
 			DataFlavor[] df = e.getCurrentDataFlavors();
 
-			if (df[0].getHumanPresentableName().equals("ProtoElementLabel")) {
+			if (df[0].getHumanPresentableName().equals(LogicalTreeUI.TRANSFERABLE_OBJECTS)) {
 				try {
-					SchemeProtoElement proto = (SchemeProtoElement) e.getTransferable()
-							.getTransferData(df[0]);
+					List transferableObjects = (List)e.getTransferable().getTransferData(df[0]);
 					e.acceptDrop(DnDConstants.ACTION_MOVE);
 					e.getDropTargetContext().dropComplete(true);
-					((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(
-							new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
+					if (transferableObjects.size() > 0) {
+						Object transferable = transferableObjects.iterator().next(); 
+						if (transferable instanceof SchemeProtoElement) {
+							SchemeProtoElement proto = (SchemeProtoElement)transferable;
+							((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
+						}
+					}
 				} catch (UnsupportedFlavorException ex) {
 					e.getDropTargetContext().dropComplete(false);
 				} catch (IOException ex) {
@@ -204,6 +228,9 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 	protected void paintBackground(Graphics g) {
+		long startTime = System.currentTimeMillis();
+		System.out.println();
+		
 		super.paintBackground(g);
 
 		if (graph instanceof SchemeGraph) {
@@ -228,6 +255,8 @@ public class SchemeGraphUI extends GPGraphUI {
 				}
 			}
 		}
+		
+		System.out.println(" TOTAL: time " + (System.currentTimeMillis() - startTime) + " ms");
 	}
 
 	protected boolean startEditing(Object cell, MouseEvent event) {
@@ -270,6 +299,7 @@ public class SchemeGraphUI extends GPGraphUI {
 
 	// FIXME сильно тормозит прорисовка - оптимизировать
 	protected void paintGrid(int gs, Graphics g, Rectangle r) {
+		
 		if (gs > 0) {
 			int w = graph.getPreferredSize().width;
 			int h = graph.getPreferredSize().height;
@@ -278,21 +308,29 @@ public class SchemeGraphUI extends GPGraphUI {
 
 			int x0 = 0;
 			int y0 = 0;
-			int xe = graph.getWidth();
-			int ye = graph.getHeight();
+			int xe = graph.getVisibleRect().width;
+			int ye = graph.getVisibleRect().height;
 			if (graph instanceof SchemeGraph) {
 				if (((SchemeGraph) graph).isBorderVisible()) {
-					x0 = 10 * gs;
-					y0 = 2 * gs;
-					xe = (w / gs - 2) * gs;
-					ye = (h / gs - 2) * gs;
+					x0 = Math.max(x0, 10 * gs);
+					y0 = Math.max(y0, 2 * gs);
+					xe = Math.min(xe, (w / gs - 2) * gs);
+					ye = Math.min(ye, (h / gs - 2) * gs);
 				}
 			}
 
+//			int counter = 0;
 			g.setColor(graph.getGridColor());
+			
+//			long startTime = System.currentTimeMillis();
+//			System.out.println("\tx0 = " + x0 + "; xe = " + xe + "; gs = " + gs);
+//			System.out.println("\ty0 = " + y0 + "; ye = " + ye + "; gs = " + gs);
 			for (int x = x0; x <= xe; x += gs)
-				for (int y = y0; y <= ye; y += gs)
+				for (int y = y0; y <= ye; y += gs) {
 					g.drawLine(x, y, x, y);
+//					counter++;
+				}
+//			System.out.println("\tpaintGrid " + counter + " points for " + (System.currentTimeMillis() - startTime) + " ms");
 		}
-	}
+	} 
 }

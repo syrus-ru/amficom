@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.2 2005/07/11 12:31:41 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.3 2005/07/15 13:07:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:41 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 13:07:58 $
  * @module schemeclient_v1
  */
 
@@ -116,6 +116,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String SYNCHRONIZE = "synchronize"; //$NON-NLS-1$
 	public static final String THREAD_NUMBER = "threadNumber"; //$NON-NLS-1$
 	public static final String THREAD = "thread"; //$NON-NLS-1$
+	public static final String PARENT_GROUP = "parent_group"; //$NON-NLS-1$
 			
 	public static final String NEW_SCHEME = "new_scheme"; //$NON-NLS-1$
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.5 2005/07/11 12:31:38 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.6 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
@@ -34,11 +36,15 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
 public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeListener {
+	
+	public ElementsTabbedPane() {
+		super();
+	}
 	
 	public ElementsTabbedPane(ApplicationContext aContext) {
 		super(aContext);
@@ -74,21 +80,26 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 			SchemeEvent see = (SchemeEvent) ae;
 			if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
-				openSchemeCellContainer(proto);
+				
+//				proto.clone()
+				
+				openSchemeCellContainer(proto, true);
 			}
 		}
 	}
 	
-	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
+	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+		Map clones = Collections.EMPTY_MAP;
 		UgoPanel p = getCurrentPanel();
 		SchemeGraph graph = p.getGraph();
 //		p.getSchemeResource().setSchemeProtoElement(proto);
 		GraphActions.clearGraph(p.getGraph());
 		if (schemeCellContainer.getSchemeCell() != null) {
-			p.insertCell(schemeCellContainer.getSchemeCell().getData(), new Point(0, 0), true);
+			clones = p.insertCell(schemeCellContainer.getSchemeCell().getData(), new Point(0, 0), doClone);
 			fixImages(graph);
 		}
-		graph.setGraphChanged(false);
+		setGraphChanged(false);
+		return clones;
 	}
 	
 	/**

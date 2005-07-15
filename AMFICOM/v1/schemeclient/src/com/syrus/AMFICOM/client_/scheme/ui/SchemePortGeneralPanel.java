@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.13 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.14 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeWrapper;
@@ -46,8 +47,6 @@ import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -59,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -426,34 +425,13 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //				port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
 
-			
-			/*
-			if (lbPortLabel.isSelected()) {
-				if (port == null) {
-					try {
-						Identifier userId = LoginManager.getUserId();
-						port = Port.createInstance(userId, schemePort.getPortType(), schemePort.getDescription(), parent.getEquipment().getId());
-						schemePort.setPort(port);
-					} catch (CreateObjectException e) {
-						Log.errorException(e);
-					}
-				}
-		} else if (port != null) {
-				StorableObjectPool.delete(port.getId());
-				schemePort.setPort(null);
-				cbMpBox.setSelected(false);
-			} else {
-				cbMpBox.setSelected(false);
-			}*/
-			
 			MeasurementPort mp = schemePort.getMeasurementPort();
 			if (cbMpBox.isSelected()) {
 				if (mp == null) {
 					if (parent != null && parent.getKis() != null) {
 						try {
-							Identifier userId = LoginManager.getUserId();
 							MeasurementPortType mpType = (MeasurementPortType) cmbMpTypeCombo.getSelectedItem();
-							mp = MeasurementPort.createInstance(userId, mpType, schemePort.getName(), schemePort.getDescription(), parent.getKis().getId(), schemePort.getPort().getId());
+							mp = SchemeObjectsFactory.createMeasurementPort(mpType, schemePort);
 							schemePort.setMeasurementPort(mp);
 						} catch (CreateObjectException e) {
 							Log.errorException(e);

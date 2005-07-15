@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.7 2005/07/11 12:31:38 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.8 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 import java.awt.BorderLayout;
 import java.awt.Point;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.ImageIcon;
@@ -33,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -173,14 +174,21 @@ public class UgoTabbedPane extends JPanel {
 		}
 	}
 
-	public void openSchemeCellContainer(SchemeCellContainer schemeCellContainer) {
+	/**
+	 * @param schemeCellContainer Scheme or SchemeElement or SchemeProtoElement
+	 * @param doClone
+	 * @return Map 
+	 */
+	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+		Map clones = Collections.EMPTY_MAP;
 		SchemeGraph graph = getGraph();
 		GraphActions.clearGraph(graph);
 		if (schemeCellContainer.getUgoCell() != null) {
-			getCurrentPanel().insertCell(schemeCellContainer.getUgoCell().getData(), new Point(0, 0), true);
+			clones = getCurrentPanel().insertCell(schemeCellContainer.getUgoCell().getData(), new Point(0, 0), doClone);
 			fixImages(graph);
 		}
-		graph.setGraphChanged(false);
+		setGraphChanged(false);
+		return clones;
 	}
 	
 	public void setGraphChanged(boolean b) {

@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.3 2005/07/11 12:31:38 stas Exp $
+ * $Id: CreateUgo.java,v 1.4 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -78,7 +79,7 @@ public class CreateUgo {
 		
 		SchemeDevice dev;
 		try {
-			dev = SchemeDevice.createInstance(LoginManager.getUserId(), "SchemeDevice"+System.currentTimeMillis());
+			dev = SchemeObjectsFactory.createSchemeDevice("SchemeDevice"+System.currentTimeMillis());
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			return;

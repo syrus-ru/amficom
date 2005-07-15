@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.12 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.13 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -111,11 +111,47 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 			}
 		});
 
+		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
+			public void arrange() {
+				SchemeEditorMainFrame f = (SchemeEditorMainFrame) mainframe;
+
+				int w = f.desktopPane.getSize().width;
+				int h = f.desktopPane.getSize().height;
+
+				JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
+				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
+				JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
+				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
+				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
+				
+				normalize(editorFrame);
+				normalize(generalFrame);
+				normalize(characteristicsFrame);
+				normalize(additionalFrame);
+				normalize(treeFrame);
+
+				editorFrame.setSize(3 * w / 5, h);
+				additionalFrame.setSize(w / 5, h / 4);
+				generalFrame.setSize(w/5, h/2);
+				characteristicsFrame.setSize(w/5, h / 4);
+				treeFrame.setSize(w / 5, h);
+
+				editorFrame.setLocation(w / 5, 0);
+				additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
+				generalFrame.setLocation(4*w/5, 0);
+				characteristicsFrame.setLocation(4*w/5, h/2);
+				treeFrame.setLocation(0, 0);
+			}
+		});
+	}
+	
+	protected void initFrames() {
 		this.frames = new UIDefaults();
+		schemeTab = new SchemeTabbedPane(this.aContext);
+		
 		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
-				schemeTab = new SchemeTabbedPane(SchemeEditorMainFrame.this.aContext);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(SchemeEditorMainFrame.this.aContext, schemeTab);
 				editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 				desktopPane.add(editorFrame);
@@ -179,41 +215,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				return treeFrame;
 			}
 		});
-		
-		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
-			public void arrange() {
-				SchemeEditorMainFrame f = (SchemeEditorMainFrame) mainframe;
-
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
-
-				JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
-				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
-				JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
-				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
-				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
-				
-				normalize(editorFrame);
-				normalize(generalFrame);
-				normalize(characteristicsFrame);
-				normalize(additionalFrame);
-				normalize(treeFrame);
-
-				editorFrame.setSize(3 * w / 5, h);
-				additionalFrame.setSize(w / 5, h / 4);
-				generalFrame.setSize(w/5, h/2);
-				characteristicsFrame.setSize(w/5, h / 4);
-				treeFrame.setSize(w / 5, h);
-
-				editorFrame.setLocation(w / 5, 0);
-				additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
-				generalFrame.setLocation(4*w/5, 0);
-				characteristicsFrame.setLocation(4*w/5, h/2);
-				treeFrame.setLocation(0, 0);
-			}
-		});
 	}
-	
 	
 	public SchemeEditorMainFrame() {
 		this(new ApplicationContext());
@@ -222,11 +224,14 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		
 	public void initModule() {
 		super.initModule();
+		
+		initFrames();
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
 		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
-		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(aContext, schemeTab));
+		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(schemeTab));
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab));
 
 		
@@ -353,18 +358,6 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		 * aContext.getApplicationModel(); aModel.setEnabled("menuPathEdit", false);
 		 * aModel.setEnabled("menuPathDelete", false); aModel.fireModelChanged(""); } }
 		 */
-		else if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
-			SchemeEvent se = (SchemeEvent)ae;
-			if (se.isType(SchemeEvent.OPEN_SCHEME)) {
-				Scheme scheme = (Scheme)se.getObject();
-				schemeTab.openScheme(scheme);
-			} 
-			else if (se.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
-				Identifier se_id = (Identifier) ae.getSource();
-				SchemeElement sel = (SchemeElement)se.getObject();
-				schemeTab.openSchemeElement(sel);
-			}
-		}
 		super.propertyChange(ae);
 	}
 

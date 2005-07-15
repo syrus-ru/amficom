@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.1 2005/07/11 12:31:39 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.2 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -16,6 +17,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
@@ -31,16 +33,17 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
 public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
-	private FiltrableIconedNode root;
+	private PopulatableIconedNode root;
 	
 	public ProtoGroupTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -48,12 +51,11 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 	
 	public Item getRoot() {
 		if (root == null) {
-			root = new FiltrableIconedNode();
+			root = new PopulatableIconedNode();
 			root.setChildrenFactory(this);
 			root.setObject(SchemeResourceKeys.SCHEME_PROTO_GROUP);
 			root.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_GROUP));
 			root.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
-			root.setDefaultCondition(new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, ObjectEntities.SCHEMEPROTOGROUP_CODE));
 		}
 		return root;
 	}
@@ -82,45 +84,69 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
 			if (s.equals(SchemeResourceKeys.SCHEME_PROTO_GROUP)) {
-				createProtoGroup((FiltrableIconedNode)node);
+				addToProtoGroup(node);
 			} else if (s.equals(SchemeResourceKeys.SCHEME_PROTO_ELEMENT)) {
 				addToProtoElement(node);
 			} 
 		} else if (node.getObject() instanceof SchemeProtoGroup) {
-			createProtoGroup((FiltrableIconedNode)node);
+			addToProtoGroup(node);
+		} else if (node.getObject() instanceof SchemeProtoElement) {
+			addToProtoElement(node);
 		}
 	}
 
-	private void createProtoGroup(FiltrableIconedNode node) {
+	private void addToProtoGroup(Item node) {
 		Collection contents = CommonUIUtilities.getChildObjects(node);
 		try {
-			StorableObjectCondition condition = node.getResultingCondition();
-			Collection groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(groups, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(groups, node.getChildren());
+			// first add ProtoGroups (always)
+			Identifier parentId = (node.equals(root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
+			StorableObjectCondition condition1 = new LinkedIdsCondition(parentId, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
+			Collection<Item> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+
+			final Collection<Item> children;
+			//	next add ProtoElements according to FilteredCondition
+			if (node instanceof FiltrableIconedNode) {
+				FiltrableIconedNode filtrableNode = (FiltrableIconedNode)node;
+				StorableObjectCondition condition2 = filtrableNode.getResultingCondition();
+				Collection<Item> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+				children = new ArrayList<Item>(groups.size() + protos.size());
+				children.addAll(groups);
+				children.addAll(protos);
+			} else {
+				children = groups;
+			}
+
+			Collection toAdd = CommonUIUtilities.getObjectsToAdd(children, contents);
+			Collection toRemove = CommonUIUtilities.getItemsToRemove(children, node.getChildren());
 			for (Iterator it = toRemove.iterator(); it.hasNext();) {
 				Item child = (Item)it.next();
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-				SchemeProtoGroup protoGroup = (SchemeProtoGroup)it.next();
-				FiltrableIconedNode child = new FiltrableIconedNode();
-				child.setChildrenFactory(this);
-				child.setObject(protoGroup);
-				child.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
-				StorableObjectCondition condition2;
-				
-				if (!protoGroup.getSchemeProtoGroups().isEmpty())
-					condition2 = new LinkedIdsCondition(protoGroup.getId(), ObjectEntities.SCHEMEPROTOGROUP_CODE);
-				else
-					condition2 = new LinkedIdsCondition(protoGroup.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE);
-				child.setDefaultCondition(condition2);
-				node.addChild(child);
+				Object childObject = it.next();
+				if (childObject instanceof SchemeProtoGroup) {
+					SchemeProtoGroup protoGroup = (SchemeProtoGroup)childObject;
+					FiltrableIconedNode child = new FiltrableIconedNode();
+					child.setChildrenFactory(this);
+					child.setObject(protoGroup);
+					child.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
+					child.setDefaultCondition(new LinkedIdsCondition(protoGroup.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE));
+					node.addChild(child);					
+				} else {
+					SchemeProtoElement protoElement = (SchemeProtoElement)childObject;
+					FiltrableIconedNode child = new FiltrableIconedNode();
+					child.setChildrenFactory(this);
+					child.setObject(protoElement);
+					child.setIcon(null);
+					child.setDefaultCondition(new LinkedIdsCondition(protoElement.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE));
+					node.addChild(child);
+					
+					child.setCanHaveChildren(false);
+				}
 			}
 		} 
 		catch (ApplicationException ex) {
-			ex.printStackTrace();
+			Log.errorException(ex);
 		}
 	}
 
@@ -136,6 +162,11 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			children.add(SchemeResourceKeys.SCHEME_LINK);
 		if (!proto.getSchemeDevices().isEmpty())
 			children.add(SchemeResourceKeys.SCHEME_DEVICE);
+
+		if (!proto.getSchemePortsRecursively().isEmpty())
+			children.add(SchemeResourceKeys.SCHEME_PORT);
+		if (!proto.getSchemeCablePortsRecursively().isEmpty())
+			children.add(SchemeResourceKeys.SCHEME_CABLE_PORT);
 		
 		Collection toAdd = CommonUIUtilities.getObjectsToAdd(children, contents);
 		Collection toRemove = CommonUIUtilities.getItemsToRemove(children, node.getChildren());
@@ -148,16 +179,9 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			FiltrableIconedNode child = new FiltrableIconedNode();
 			child.setChildrenFactory(this);
 			child.setObject(SchemeResourceKeys.SCHEME_PROTO_ELEMENT);
+			child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_ELEMENT));
 			child.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
 			StorableObjectCondition condition2 = new LinkedIdsCondition(proto.getId(), ObjectEntities.SCHEMEPROTOELEMENT_CODE);
-			child.setDefaultCondition(condition2);
-			node.addChild(child);
-		}
-		if (toAdd.contains(SchemeResourceKeys.SCHEME_DEVICE)) {
-			FiltrableIconedNode child = new FiltrableIconedNode();
-			child.setChildrenFactory(this);
-			child.setObject(SchemeResourceKeys.SCHEME_DEVICE);
-			StorableObjectCondition condition2 = new LinkedIdsCondition(proto.getId(), ObjectEntities.SCHEMEDEVICE_CODE);
 			child.setDefaultCondition(condition2);
 			node.addChild(child);
 		}
@@ -165,6 +189,16 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			FiltrableIconedNode child = new FiltrableIconedNode();
 			child.setChildrenFactory(this);
 			child.setObject(SchemeResourceKeys.SCHEME_LINK);
+			child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
+			StorableObjectCondition condition2 = new LinkedIdsCondition(proto.getId(), ObjectEntities.SCHEMELINK_CODE);
+			child.setDefaultCondition(condition2);
+			node.addChild(child);
+		}
+		if (toAdd.contains(SchemeResourceKeys.SCHEME_LINK)) {
+			FiltrableIconedNode child = new FiltrableIconedNode();
+			child.setChildrenFactory(this);
+			child.setObject(SchemeResourceKeys.SCHEME_LINK);
+			child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
 			StorableObjectCondition condition2 = new LinkedIdsCondition(proto.getId(), ObjectEntities.SCHEMEDEVICE_CODE);
 			child.setDefaultCondition(condition2);
 			node.addChild(child);

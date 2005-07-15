@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.25 2005/07/11 12:31:40 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.26 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,25 +10,35 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/07/11 12:31:40 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.configuration.ui.ConfigurationTreeModel;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
@@ -98,18 +108,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 	
-	Collection getChildObjects(Item node) {
-		Collection childObjects = new ArrayList(node.getChildren().size());
-		for (Iterator it = node.getChildren().iterator(); it.hasNext();)
-			childObjects.add(((Item)it.next()).getObject());
-		return childObjects;
-	}
-	
-
-	
-
 	public void populate(Item node) {
-		Collection contents = getChildObjects(node);
+		Collection contents = CommonUIUtilities.getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
@@ -121,25 +121,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					if (!contents.contains(schemeTypes[i]))
 						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
 				}
-			} 
-			/*else if (s.equals(Constants.SCHEME_PROTO_GROUP)) {
-				try {
-					Identifier domainId = new Identifier(((RISDSessionInfo) aContext
-							.getSessionInterface()).getAccessIdentifier().domain_id);
-					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
-							ObjectEntities.SCHEMEPROTOGROUP_CODE);
-					Set groups = SchemeStorableObjectPool.getStorableObjectsByCondition(
-							condition, true);
-
-					for (Iterator it = groups.iterator(); it.hasNext();) {
-						SchemeProtoGroup group = (SchemeProtoGroup) it.next();
-						if (!contents.contains(group))
-							node.addChild(new PopulatableIconedNode(this, group));
-					}
-				} 
-				catch (ApplicationException ex) {
-					ex.printStackTrace();
-				}
+			}
+			/*
 			} 
 			else if (s.equals(Constants.SCHEME)) {
 				Scheme parent = (Scheme) ((Item) node.getParent()).getObject();
@@ -219,18 +202,16 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					if (!contents.contains(path))
 						node.addChild(new PopulatableIconedNode(this, path, path.getName(), false));
 				}
-			}
+			}*/
 		} 
 		else {
 			if (node.getObject() instanceof Kind) {
 				Kind type = (Kind) node.getObject();
-				TypicalCondition condition = new TypicalCondition(String.valueOf(type
-						.value()), OperationSort.OPERATION_EQUALS,
-						ObjectEntities.SCHEME_CODE,
-						com.syrus.AMFICOM.scheme.SchemeController.COLUMN_TYPE);
+				TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
+						OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
+						StorableObjectWrapper.COLUMN_TYPE_ID);
 				try {
-					Set schemes = SchemeStorableObjectPool
-							.getStorableObjectsByCondition(condition, true);
+					Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					for (Iterator it = schemes.iterator(); it.hasNext();) {
 						Scheme sc = (Scheme) it.next();
@@ -241,31 +222,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				catch (ApplicationException ex1) {
 					ex1.printStackTrace();
 				}
-			}
-			if (node.getObject() instanceof SchemeProtoGroup) {
-				SchemeProtoGroup parent_group = (SchemeProtoGroup) node.getObject();
-				for (final Iterator schemeProtoGroupIterator = parent_group.getSchemeProtoGroups().iterator(); schemeProtoGroupIterator.hasNext();) {
-					final SchemeProtoGroup map_group = (SchemeProtoGroup) schemeProtoGroupIterator.next();
-					ImageIcon icon;
-					if (map_group.getSymbol() == null) {
-						icon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"));
-					} else {
-						icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-								map_group.getSymbol().getImage()).getScaledInstance(16, 16,
-								Image.SCALE_SMOOTH));
-					}
-					if (!contents.contains(map_group))
-						node.addChild(new PopulatableIconedNode(this, map_group, map_group.getName(), !map_group.getSchemeProtoGroups().isEmpty() || !map_group.getSchemeProtoElements().isEmpty()));
-				}
-				if (parent_group.getSchemeProtoGroups().isEmpty()) {
-					for (final Iterator schemeProtoElementIterator = parent_group.getSchemeProtoElements().iterator(); schemeProtoElementIterator.hasNext();) {
-						final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) schemeProtoElementIterator.next();
-						// schemeProtoElement.parent(parent_group);
-						if (! contents.contains(schemeProtoElement))
-							node.addChild(new PopulatableIconedNode(this, schemeProtoElement, schemeProtoElement.getName(), false));
-					}
-				}
-			} 
+			}/*
 			else if (node.getObject() instanceof Scheme) {
 				Scheme s = (Scheme) node.getObject();
 				if (s.getSchemeElementsAsArray().length != 0) {

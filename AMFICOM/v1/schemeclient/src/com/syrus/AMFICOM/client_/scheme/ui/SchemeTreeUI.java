@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.6 2005/07/11 12:31:40 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.7 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,11 +38,13 @@ import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -132,6 +134,10 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 			type = ObjectSelectedEvent.CABLELINK_TYPE;
 		else if (object instanceof EquipmentType)
 			type = ObjectSelectedEvent.EQUIPMENT_TYPE;
+		else if (object instanceof SchemeProtoGroup)
+			type = ObjectSelectedEvent.SCHEME_PROTOGROUP;
+		else if (object instanceof SchemeProtoElement)
+			type = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
 		else if (object instanceof String || object instanceof Kind) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)

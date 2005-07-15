@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.7 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.8 2005/07/15 13:07:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/15 13:07:57 $
  * @module schemeclient_v1
  */
 
@@ -57,8 +57,7 @@ public class SchemeLinkGeneralPanel extends AbstractSchemeLinkGeneralPanel {
 			if (cbLinkBox.isSelected()) {
 				if (link == null) {
 					try {
-						link = SchemeObjectsFactory.createLink();
-						schemeLink.setAbstractLink(link);
+						link = SchemeObjectsFactory.createLink((SchemeLink)schemeLink);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
