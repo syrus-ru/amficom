@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.99 2005/07/14 14:05:10 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.100 2005/07/15 09:57:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.99 $, $Date: 2005/07/14 14:05:10 $
+ * @version $Revision: 1.100 $, $Date: 2005/07/15 09:57:50 $
  * @module
  */
 
@@ -698,7 +698,7 @@ public class CoreAnalysisManager
      * обрыва и эталонным MTM, формирует список алармов.
      * Текущая версия возвращает 0 или 1 алармов.
      * <p>
-     * @todo Кроме того, если в эталоне определен EventAnchorer,
+     * Кроме того, если в эталоне определен EventAnchorer,
      * а при сравнении не обнаружено обрыва,
      * результаты анализа дополняются привязкой EventAnchorer на основе эталона.
      * @param ar Результаты анализа
