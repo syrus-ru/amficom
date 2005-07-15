@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.26 2005/07/05 15:43:46 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.27 2005/07/15 09:02:48 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,13 +39,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/07/05 15:43:46 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/15 09:02:48 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
 	private static final long serialVersionUID = -5633433107083921318L;
 
-	private List<Object> data;
+	private byte image[];
 
 	SchemeImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -62,7 +61,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	}
 
 	/**
-	 * There's no formal parameter for {@link #data}; this property has to
+	 * There's no formal parameter for {@link #image}; this property has to
 	 * be set explicitly via {@link #setData(List)} or
 	 * {@link #setData0(List)}.
 	 */
@@ -75,11 +74,11 @@ public final class SchemeImageResource extends AbstractImageResource {
 			creatorId,
 			creatorId,
 			version);
-		this.data = new ArrayList<Object>(3);
+		this.image = new byte[0];
 	}
 
 	/**
-	 * There's no formal parameter for {@link #data}; this property has to
+	 * There's no formal parameter for {@link #image}; this property has to
 	 * be set explicitly via {@link #setData(List)} or
 	 * {@link #setData0(List)}.
 	 */
@@ -100,11 +99,11 @@ public final class SchemeImageResource extends AbstractImageResource {
 	}
 
 	/**
-	 * Common (both client-side and server-side) accessor for {@link #data}
+	 * Common (both client-side and server-side) accessor for {@link #image}
 	 * property.
 	 */
 	public List getData() {
-		return Collections.unmodifiableList(this.data);
+		return Collections.unmodifiableList(this.safeUnpack(this.image));
 	}
 
 	/**
@@ -112,7 +111,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	 */
 	@Override
 	public byte[] getImage() {
-		return this.safePack(this.data);
+		return this.image;
 	}
 
 	/**
@@ -122,7 +121,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	@Override
 	public IdlImageResource getTransferable(final ORB orb) {
 		final ImageResourceData imageResourceData = new ImageResourceData();
-		imageResourceData.image(ImageResourceSort.SCHEME, safePack(this.data));
+		imageResourceData.image(ImageResourceSort.SCHEME, this.image);
 		return IdlImageResourceHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -134,7 +133,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	}
 
 	/**
-	 * Client-side modifier for {@link #data} property, which increments
+	 * Client-side modifier for {@link #image} property, which increments
 	 * entity version on every modification.
 	 */
 	public void setData(final List<Object> data) {
@@ -154,21 +153,19 @@ public final class SchemeImageResource extends AbstractImageResource {
 			final long version,
 			final byte packedData[]) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		this.data = safeUnpack(packedData);
+		this.image = packedData;
 	}
 
 	/**
-	 * Server-side modifier for {@link #data} property, which doesn't honor
+	 * Server-side modifier for {@link #image} property, which doesn't honor
 	 * version information.
 	 */
 	protected void setData0(final List<Object> data) {
-		this.data.clear();
-		if (data != null)
-			this.data.addAll(data);
+		this.image = this.safePack(data);
 	}
 
 	protected void setImage0(final byte image[]) {
-		this.data = safeUnpack(image);
+		this.image = image;
 	}
 
 	/**
@@ -242,6 +239,6 @@ public final class SchemeImageResource extends AbstractImageResource {
 
 		final ImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
-		this.data = safeUnpack(imageResourceData.image());
+		this.image = imageResourceData.image();
 	}
 }
