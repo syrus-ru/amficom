@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.3 2005/07/15 08:26:11 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.4 2005/07/15 11:59:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.manager;
 
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/15 08:26:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/15 11:59:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -45,23 +43,12 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() {
-		final String name1 = "Net" + (++this.count);
+	public AbstractBean createBean() {		
+		AbstractBean bean = new AbstractBean() {};
+		bean.setStorableObject("Net" + (++this.count));
+		bean.setValidator(this.getValidator());
 		
-		return new AbstractBean(name1, this.getValidator(), null) {
-			@Override
-			public void updateEdgeAttributes(	DefaultEdge edge,
-												DefaultPort port) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public String toString() {
-				return this.storableObject;
-			}
-
-		};
+		return bean;
 	}
 
 	private final Validator getValidator() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.3 2005/07/15 11:59:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.manager;
 
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultPort;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/15 11:59:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -42,15 +40,7 @@ public class ServerBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		return new AbstractBean(null, null, null) {
-			@Override
-			public void updateEdgeAttributes(	DefaultEdge edge,
-												DefaultPort port) {
-				// TODO Auto-generated method stub
-				
-			}
-
-		};
+		return new AbstractBean() {};
 	}
 	
 }

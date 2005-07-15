@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.6 2005/07/15 08:26:11 bob Exp $
+ * $Id: JGraphText.java,v 1.7 2005/07/15 11:59:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/15 08:26:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/15 11:59:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -19,6 +19,7 @@ import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -39,6 +40,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -623,8 +625,8 @@ public class JGraphText {
 			}
 			
 			if (canConnect) {
-				DefaultEdge edge = new DefaultEdge("edge" + (++this.edgeCount));
-				
+				DefaultEdge edge = new DefaultEdge();
+				// "edge" + (++this.edgeCount)
 				edge.setSource(sourcePort);
 				edge.setTarget(targetPort);
 //				 Set Arrow Style for edge
@@ -746,6 +748,37 @@ public class JGraphText {
 		});
 	}
 
+	//
+	// PopupMenu
+	//
+//	public JPopupMenu createPopupMenu(final Point pt, final Object cell) {
+//		JPopupMenu menu = new JPopupMenu();
+//		if (cell != null) {
+//			// Edit
+//			menu.add(new AbstractAction("Edit") {
+//				public void actionPerformed(ActionEvent e) {
+//					graph.startEditingAtCell(cell);
+//				}
+//			});
+//		}
+//		// Remove
+//		if (!graph.isSelectionEmpty()) {
+//			menu.addSeparator();
+//			menu.add(new AbstractAction("Remove") {
+//				public void actionPerformed(ActionEvent e) {
+//					remove.actionPerformed(e);
+//				}
+//			});
+//		}
+//		menu.addSeparator();
+//		// Insert
+//		menu.add(new AbstractAction("Insert") {
+//			public void actionPerformed(ActionEvent ev) {
+////				insert(pt);
+//			}
+//		});
+//		return menu;
+//	}
 	
 	public static void main(String[] args) {
 
@@ -858,8 +891,21 @@ public class JGraphText {
 			if (SwingUtilities.isRightMouseButton(e)) {
 				// TODO
 //				// Find Cell in Model Coordinates
-//				Object cell = graph.getFirstCellForLocation(e.getX(), e.getY());
-//				// Create PopupMenu for the Cell
+				DefaultGraphCell cell = (DefaultGraphCell) graph.getFirstCellForLocation(e.getX(), e.getY());
+				System.out.println("MyMarqueeHandler.mousePressed() | cell:" + cell);
+				if (cell.getAllowsChildren()) {
+					DefaultPort port = (DefaultPort) cell.getChildAt(0);
+					Object userObject = port.getUserObject();
+					if (userObject instanceof AbstractBean) {
+						AbstractBean bean = (AbstractBean)userObject;
+						JPopupMenu menu = bean.getMenu(JGraphText.this.graph, cell);
+						if (menu != null) {
+							menu.show(graph, e.getX(), e.getY());
+						}
+					}
+				}
+				
+//				// Create PopupMenu for the Cell 
 //				JPopupMenu menu = createPopupMenu(e.getPoint(), cell);
 //				// Display PopupMenu
 //				menu.show(graph, e.getX(), e.getY());
