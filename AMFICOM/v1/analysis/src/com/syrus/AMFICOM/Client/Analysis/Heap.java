@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.79 2005/07/12 16:58:03 saa Exp $
+ * $Id: Heap.java,v 1.80 2005/07/15 08:36:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
@@ -87,7 +88,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.79 $, $Date: 2005/07/12 16:58:03 $
+ * @version $Revision: 1.80 $, $Date: 2005/07/15 08:36:06 $
  * @module
  */
 public class Heap
@@ -104,11 +105,10 @@ public class Heap
     private static AnalysisParameters currentAP;
 	private static AnalysisParameters defaultAP;
 	private static AnalysisParameters initialAP;
-	//private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
-	private static HashMap tAMs = new HashMap();	// <TraceAndMTAE>, *
+	private static Map<String,TraceAndMTAE> tAMs = new HashMap<String,TraceAndMTAE>();	// <TraceAndMTAE>, *
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
+	private static Map<String,ReflectogrammLoadDialog> dialogHash = new HashMap<String,ReflectogrammLoadDialog>();	// "dialog", "*"
 
 	// etalon
 	private static double minTraceLevel;			// (negative value)
@@ -133,15 +133,15 @@ public class Heap
 
     // listeners
 
-    private static LinkedList bsHashChangedListeners = new LinkedList();
-    private static LinkedList primaryTraceListeners = new LinkedList();
-    private static LinkedList primaryMTAEListeners = new LinkedList();
-    private static LinkedList primaryRefAnalysisListeners = new LinkedList();
-    private static LinkedList etalonMTMListeners = new LinkedList();
-    private static LinkedList currentTraceChangeListeners = new LinkedList();
-    private static LinkedList currentEventChangeListeners = new LinkedList();
-    private static LinkedList analysisParametersListeners = new LinkedList();
-    private static LinkedList refMismatchListeners = new LinkedList();
+    private static LinkedList<BsHashChangeListener> bsHashChangedListeners = new LinkedList<BsHashChangeListener>();
+    private static LinkedList<PrimaryTraceListener> primaryTraceListeners = new LinkedList<PrimaryTraceListener>();
+    private static LinkedList<PrimaryMTAEListener> primaryMTAEListeners = new LinkedList<PrimaryMTAEListener>();
+    private static LinkedList<PrimaryRefAnalysisListener> primaryRefAnalysisListeners = new LinkedList<PrimaryRefAnalysisListener>();
+    private static LinkedList<EtalonMTMListener> etalonMTMListeners = new LinkedList<EtalonMTMListener>();
+    private static LinkedList<CurrentTraceChangeListener> currentTraceChangeListeners = new LinkedList<CurrentTraceChangeListener>();
+    private static LinkedList<CurrentEventChangeListener> currentEventChangeListeners = new LinkedList<CurrentEventChangeListener>();
+    private static LinkedList<AnalysisParametersListener> analysisParametersListeners = new LinkedList<AnalysisParametersListener>();
+    private static LinkedList<RefMismatchListener> refMismatchListeners = new LinkedList<RefMismatchListener>();
 
     // constructor is not available
     private Heap() {
@@ -151,7 +151,7 @@ public class Heap
     // methods
 
     public static ReflectogrammLoadDialog getRLDialogByKey(String key) {
-        return (ReflectogrammLoadDialog) dialogHash.get(key);
+        return dialogHash.get(key);
     }
 
     public static void setRLDialogByKey(String key,
@@ -177,7 +177,7 @@ public class Heap
     }
 
     public static TraceAndMTAE getAnyTamByKey(String key) {
-    	return (TraceAndMTAE) tAMs.get(key);
+    	return tAMs.get(key);
     }
     private static void setAnyTamByKey(String key, TraceAndMTAE tam) {
     	tAMs.put(key, tam);
@@ -298,13 +298,10 @@ public class Heap
     }
 
     private static String getFirstSecondaryBSKey() {
-        Iterator it = tAMs.keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            if (key == PRIMARY_TRACE_KEY)
-                continue;
-            return key;
-        }
+    	for (String key: tAMs.keySet()) {
+            if (key != PRIMARY_TRACE_KEY)
+            	return key;
+    	}
         return null;
     }
 
@@ -355,9 +352,9 @@ public class Heap
     }
 
     public static Collection getBSCollection() {
-    	ArrayList coll = new ArrayList(tAMs.size());
-    	for (Iterator it = tAMs.values().iterator(); it.hasNext();) {
-    		coll.add(((TraceAndMTAE)it.next()).getBS());
+    	Collection<BellcoreStructure> coll = new ArrayList<BellcoreStructure>(tAMs.size());
+    	for (TraceAndMTAE tam: tAMs.values()) {
+    		coll.add(tam.getBS());
     	}
     	return coll;
     }
@@ -394,7 +391,7 @@ public class Heap
 	}
 
     private static void removeAllBS() {
-    	tAMs = new HashMap();
+    	tAMs = new HashMap<String, TraceAndMTAE>();
     }
 
     public static void removeAnyBSByName(String id) {
@@ -465,21 +462,21 @@ public class Heap
     // notifyPrimaryTraceChanged -> primaryTraceCUpdated()
     public static void notifyBsHashAdd(String key, BellcoreStructure bs) {
         Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Level.FINEST);
-        for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((BsHashChangeListener) it.next()).bsHashAdded(key, bs);
+        for (BsHashChangeListener listener: bsHashChangedListeners)
+            listener.bsHashAdded(key, bs);
     }
 
     //  primary trace всегда останется
     public static void notifyBsHashRemove(String key) {
         Log.debugMessage("Heap.notifyBsHashRemove | key " + key, Level.FINEST);
-        for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((BsHashChangeListener) it.next()).bsHashRemoved(key);
+        for (BsHashChangeListener listener: bsHashChangedListeners)
+            listener.bsHashRemoved(key);
     }
 
     private static void notifyBsHashRemoveAll() {
         Log.debugMessage("Heap.notifyBsHashRemoveAll | ", Level.FINEST);
-        for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext();)
-            ((BsHashChangeListener) it.next()).bsHashRemovedAll();
+        for (BsHashChangeListener listener: bsHashChangedListeners)
+            listener.bsHashRemovedAll();
     }
 
     /**
@@ -487,97 +484,94 @@ public class Heap
      */
     public static void notifyPrimaryTraceOpened() {
         Log.debugMessage("Heap.notifyPrimaryTraceOpened | ", Level.FINEST);
-        for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();)
-            ((PrimaryTraceListener) it.next()).primaryTraceCUpdated();
+        for (PrimaryTraceListener listener: primaryTraceListeners)
+            listener.primaryTraceCUpdated();
     }
 
     public static void notifyPrimaryTraceClosed() {
         Log.debugMessage("Heap.notifyPrimaryTraceClosed | ", Level.FINEST);
-        for (Iterator it = primaryTraceListeners.iterator(); it.hasNext();)
-            ((PrimaryTraceListener) it.next()).primaryTraceRemoved();
+        for (PrimaryTraceListener listener: primaryTraceListeners)
+            listener.primaryTraceRemoved();
     }
 
     public static void notifyAnalysisParametersUpdated() {
         Log.debugMessage("Heap.notifyAnalysisParametersUpdated | ", Level.FINEST);
         // notify tams
-    	for (Iterator it = tAMs.values().iterator(); it.hasNext();) {
-    		((TraceAndMTAE)it.next()).
-    				setAnalysisParameters(getMinuitAnalysisParams());
+    	for (TraceAndMTAE value: tAMs.values()) {
+    		value.setAnalysisParameters(getMinuitAnalysisParams());
     	}
         // notify subscribers
-        for (Iterator it = analysisParametersListeners.iterator(); it.hasNext(); )
-            ((AnalysisParametersListener) it.next()).analysisParametersUpdated();
+        for (AnalysisParametersListener listener: analysisParametersListeners)
+            listener.analysisParametersUpdated();
     }
 
     private static void notifyRefMismatchCUpdated() {
         Log.debugMessage("Heap.notifyRefMismatchCUpdated | ", Level.FINEST);
-        for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
-            ((RefMismatchListener) it.next()).refMismatchCUpdated();
+        for (RefMismatchListener listener: refMismatchListeners)
+            listener.refMismatchCUpdated();
     }
 
     private static void notifyRefMismatchRemoved() {
         Log.debugMessage("Heap.notifyRefMismatchRemoved | ", Level.FINEST);
-        for (Iterator it = refMismatchListeners.iterator(); it.hasNext(); )
-            ((RefMismatchListener) it.next()).refMismatchRemoved();
+        for (RefMismatchListener listener: refMismatchListeners)
+            listener.refMismatchRemoved();
     }
 
     private static void notifyPrimaryMTAECUpdated() {
         Log.debugMessage("Heap.notifyPrimaryMTAECUpdated | ", Level.FINEST);
-        for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
-            ((PrimaryMTAEListener) it.next()).primaryMTMCUpdated();
+        for (PrimaryMTAEListener listener: primaryMTAEListeners)
+            listener.primaryMTMCUpdated();
     }
 
     private static void notifyPrimaryMTAERemoved() {
         Log.debugMessage("Heap.notifyPrimaryMTAERemoved | ", Level.FINEST);
-        for (Iterator it = primaryMTAEListeners.iterator(); it.hasNext();)
-            ((PrimaryMTAEListener) it.next()).primaryMTMRemoved();
+        for (PrimaryMTAEListener listener: primaryMTAEListeners)
+            listener.primaryMTMRemoved();
     }
 
     private static void notifyPrimaryRefAnalysisCUpdated() {
         Log.debugMessage("Heap.notifyPrimaryRefAnalysisCUpdated | ",
                         Level.FINEST);
-        for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
-            ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisCUpdated();
+        for (PrimaryRefAnalysisListener listener: primaryRefAnalysisListeners)
+            listener.primaryRefAnalysisCUpdated();
     }
 
     private static void notifyPrimaryRefAnalysisRemoved() {
         Log.debugMessage("Heap.notifyPrimaryRefAnalysisRemoved | ", Level.FINEST);
-        for (Iterator it = primaryRefAnalysisListeners.iterator(); it.hasNext();)
-            ((PrimaryRefAnalysisListener)it.next()).primaryRefAnalysisRemoved();
+        for (PrimaryRefAnalysisListener listener: primaryRefAnalysisListeners)
+            listener.primaryRefAnalysisRemoved();
     }
 
     private static void notifyEtalonMTMCUpdated() {
         Log.debugMessage("Heap.notifyEtalonMTMCUpdated | ", Level.FINEST);
-        for (Iterator it = etalonMTMListeners.iterator(); it.hasNext();)
-            ((EtalonMTMListener) it.next()).etalonMTMCUpdated();
+        for (EtalonMTMListener listener: etalonMTMListeners)
+            listener.etalonMTMCUpdated();
     }
 
     private static void notifyEtalonMTMRemoved() {
         Log.debugMessage("Heap.notifyEtalonMTMRemoved | ", Level.FINEST);
-        for (Iterator it = etalonMTMListeners.iterator(); it.hasNext();)
-            ((EtalonMTMListener) it.next()).etalonMTMRemoved();
+        for (EtalonMTMListener listener: etalonMTMListeners)
+            listener.etalonMTMRemoved();
     }
 
     private static void notifyCurrentTraceChanged() {
         Log.debugMessage("Heap.notifyCurrentTraceChanged | ", Level.FINEST);
-        for (Iterator it = currentTraceChangeListeners.iterator(); it.hasNext();)
-            ((CurrentTraceChangeListener) it.next())
-                    .currentTraceChanged(currentTrace);
+        for (CurrentTraceChangeListener listener: currentTraceChangeListeners)
+            listener.currentTraceChanged(currentTrace);
     }
 
     private static void notifyCurrentEventChanged() {
         Log.debugMessage("Heap.notifyCurrentEventChanged | nEvent = (" + getCurrentEvent1() + ", " + getCurrentEtalonEvent1() + ")", Level.FINEST);
-        for (Iterator it = currentEventChangeListeners.iterator(); it.hasNext();)
-            ((CurrentEventChangeListener) it.next())
-                    .currentEventChanged();
+        for (CurrentEventChangeListener listener: currentEventChangeListeners)
+            listener.currentEventChanged();
     }
 
-    private static void addListener(Collection c, Object listener) {
+    private static <T> void addListener(Collection<T> c, T listener) {
         if (!c.contains(listener))
             c.add(listener);
     }
 
-    private static void removeListener(Collection c, Object listener) {
+    private static <T> void removeListener(Collection<T> c, T listener) {
         if (c.contains(listener))
             c.remove(listener);
     }
