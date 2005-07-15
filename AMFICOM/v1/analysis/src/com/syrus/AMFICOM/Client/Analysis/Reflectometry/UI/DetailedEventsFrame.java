@@ -212,7 +212,7 @@ implements EtalonMTMListener,
 	{
 		int num = Heap.getCurrentEvent1();
 		if (num < 0) {
-            return;
+            return; // XXX: no current event - should display empty table
         }
 		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
 		int eventType = ev.getEventType();
@@ -242,6 +242,7 @@ implements EtalonMTMListener,
 				break;
 		}
 		mainTable.updateUI();
+		this.setData();
 	}
 
 	public void etalonMTMCUpdated()
@@ -267,7 +268,6 @@ implements EtalonMTMListener,
 	public void currentEventChanged()
 	{
 		this.updateTableModel();
-		this.setData();
 	}
 
     public void primaryRefAnalysisCUpdated() {
