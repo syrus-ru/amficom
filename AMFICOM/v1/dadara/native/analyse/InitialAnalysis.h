@@ -126,7 +126,7 @@ private:
     int  findConnector(int i, ArrList& splashes, EventParams *&ep);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и создать (не добавляя), изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
     int  processIfIsNonId(int i, ArrList& splashes);// поиск неид. областей (есть и другой код, создающий неид. области)
     void setSpliceParamsBySplash(EventParams& ep, Splash& sp1);
-    void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2);
+    void setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l);
     void setUnrecognizedParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2);
 
 	// этап 3.2. - уточнение начал и концов

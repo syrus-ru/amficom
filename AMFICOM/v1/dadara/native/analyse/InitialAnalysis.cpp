@@ -848,12 +848,14 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	int ret = 0;
     Splash* sp1 = (Splash*)splashes[i]; // начальный всплеск
 	Splash* sp2 = 0; // конечный всплеск; sp2 == 0 тогда и только тогда, когда ret == 0
+	double l12 = 0; // расстояниие между всплесками - должно быть не больше RSBig
 	if (sp1->begin_conn == -1 || sp1->sign < 0)
 		return ret;
 	double distCrit = fabs(sp1->f_extr) > rACrit ? rSBig : rSSmall;
 	for (int j = i + 1; j < splashes.getLength(); j++) {
 		Splash *tmp = (Splash*)splashes[j];
-		if (fabs(tmp->begin_thr - sp1->end_thr) > distCrit) // достигли макс. протяжености
+		double ltmp = fabs(tmp->begin_thr - sp1->end_thr);
+		if (ltmp > distCrit) // достигли макс. протяжености
 	break;
 		if (tmp->sign > 0) { // подъем
 			if (tmp->begin_thr != -1)
@@ -866,11 +868,13 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 			// коннекторной амплитуды
 			ret = j - i + 1;
 			sp2 = tmp;
+			l12 = ltmp;
 	break; // на нем и останавливаемся
 		} else if (tmp->begin_weld != -1) {
 			// сварочной амплитуды - кандидат на спад
 			ret = j - i + 1;
 			sp2 = tmp;
+			l12 = ltmp;
 	continue; // не останавливаемся, продолжаем поиск
 		}
 		// всплески меньшие чем weld, игнорируем
@@ -878,7 +882,7 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	if (ret == 0)
 		return ret;
 	ep = new EventParams;
-	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
+	setConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2, l12 );
 	//correctConnectorFront(ep); // уточняем фронт коннекора
 #ifdef debug_lines
 	double begin = ep->begin, end = ep->end;
@@ -887,7 +891,7 @@ int InitialAnalysis::findConnector(int i, ArrList& splashes, EventParams *&ep)
 	return ret;
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2 )
+void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1, Splash& sp2, double l)
 {   double r1s, r1b, r2, r3s, r3b, rmin;
     ep.type = EventParams::CONNECTOR;
     ep.begin = sp1.begin_thr;
@@ -918,7 +922,6 @@ void InitialAnalysis::setConnectorParamsBySplashes(EventParams& ep, Splash& sp1,
 	r1b = sp1.r_acrit;
 	r2  = sp1.r_weld;
 
-    double l = sp2.begin_thr - sp1.end_conn;
     assert(l>=-1);// -1 может быть так как мы искуствнно расширяем на одну точку каждый всплеск (начало ДО уровня, а конец ПОСЛЕ )
 	int av_scale = (sp1.scale + sp2.scale) / 2; // используем средний масштаб для определения R3-параметров. XXX: возможно, надо использовать максимальный либо начальный
     r3s = r2*(rSSmall - l)/av_scale;
