@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisType.java,v 1.5 2005/07/15 12:00:46 arseniy Exp $
+ * $Id: TestAnalysisType.java,v 1.6 2005/07/15 12:05:25 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/15 12:00:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/15 12:05:25 $
  * @author $Author: arseniy $
  * @module test
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: TestReflectogramma.java,v 1.1 2005/06/17 15:48:34 arseniy Exp $
+ * $Id: TestReflectogramma.java,v 1.2 2005/07/15 12:00:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/17 15:48:34 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/15 12:00:46 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -46,11 +46,13 @@ public final class TestReflectogramma extends TestCase {
 		super(name);
 	}
 
+	@Override
 	public void setUp() {
 		Application.init(APPLICATION_NAME);
 		establishDatabaseConnection();
 	}
 
+	@Override
 	public void tearDown() {
 		DatabaseConnection.closeConnection();
 	}

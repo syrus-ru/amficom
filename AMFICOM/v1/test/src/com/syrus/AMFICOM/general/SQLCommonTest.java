@@ -1,5 +1,5 @@
 /*
- * $Id: SQLCommonTest.java,v 1.2 2005/06/22 14:45:47 arseniy Exp $
+ * $Id: SQLCommonTest.java,v 1.3 2005/07/15 12:00:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,22 +22,24 @@ public class SQLCommonTest extends CommonTest {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
 
+	@Override
 	void oneTimeSetUp() {
 		super.oneTimeSetUp();
 		establishDatabaseConnection();
 		initIdentifierPool();
 	}
 
+	@Override
 	void oneTimeTearDown() {
 		DatabaseConnection.closeConnection();
 		super.oneTimeTearDown();
 	}
 
 	public static final void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}

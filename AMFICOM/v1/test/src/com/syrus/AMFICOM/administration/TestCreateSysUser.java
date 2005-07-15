@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.4 2005/06/28 15:31:46 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.5 2005/07/15 12:00:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import static com.syrus.AMFICOM.administration.SystemUserWrapper.COLUMN_SORT;
 import static com.syrus.AMFICOM.administration.SystemUserWrapper.SYS_LOGIN;
 import static com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort._USER_SORT_SYSADMIN;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTOPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
@@ -50,7 +50,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/28 15:31:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/15 12:00:46 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -96,10 +96,10 @@ public final class TestCreateSysUser extends TestCase {
 				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
 				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
 				+ Long.toString(0) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(SYS_LOGIN, SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_LOGIN, SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
 				+ Integer.toString(_USER_SORT_SYSADMIN) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE + COMMA 
-				+ APOSTOPHE + DatabaseString.toQuerySubString(description, SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
+				+ APOSTROPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTROPHE + COMMA 
+				+ APOSTROPHE + DatabaseString.toQuerySubString(description, SIZE_DESCRIPTION_COLUMN) + APOSTROPHE
 				+ StorableObjectDatabase.CLOSE_BRACKET;
 		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 		statement.executeUpdate(sql);
@@ -109,7 +109,7 @@ public final class TestCreateSysUser extends TestCase {
 				+ COLUMN_PASSWORD
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
-				+ APOSTOPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + APOSTOPHE
+				+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + APOSTROPHE
 				+ CLOSE_BRACKET;
 		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
 		statement.executeUpdate(sql);
