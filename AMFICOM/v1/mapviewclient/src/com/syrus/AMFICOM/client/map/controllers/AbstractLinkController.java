@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.27 2005/07/14 15:35:31 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.28 2005/07/15 13:16:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/14 15:35:31 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/15 13:16:29 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -114,7 +114,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			Identifier userId,
 			String codename) {
 		CharacteristicTypeSort sort = CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL;
-		DataType dataType = DataType.DATA_TYPE_STRING;
+		DataType dataType = DataType.STRING;
 
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
