@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.26 2005/07/14 17:13:17 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.27 2005/07/15 10:48:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/14 17:13:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/15 10:48:30 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -499,6 +499,13 @@ public abstract class NetMapViewer {
 				this.logicalNetLayer.calculateVisualElements();
 				repaint(false);
 			}
+			else
+			if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED))
+			{
+				this.logicalNetLayer.calculateVisualElements();
+				repaint(false);
+			}
+
 			if(pce.getSource().equals(this.logicalNetLayer))
 				return;
 
