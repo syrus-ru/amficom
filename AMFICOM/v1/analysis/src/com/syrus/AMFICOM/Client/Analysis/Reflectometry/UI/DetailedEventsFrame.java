@@ -54,6 +54,8 @@ implements EtalonMTMListener,
 	private JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
+	private static final String[] emptyKeys = new String[] { };
+
 	private static final String[] linearKeys = new String[] {
 			DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
@@ -122,7 +124,7 @@ implements EtalonMTMListener,
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		res = new DetailedEventResource();
-		tModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, linearKeys);
+		tModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, emptyKeys);
 		
 		this.mainTable = new WrapperedPropertyTable(tModel);
 
@@ -211,37 +213,39 @@ implements EtalonMTMListener,
 	private void updateTableModel()
 	{
 		int num = Heap.getCurrentEvent1();
-		if (num < 0) {
-            return; // XXX: no current event - should display empty table
-        }
-		DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
-		int eventType = ev.getEventType();
-		double resMt =  Heap.getBSPrimaryTrace().getResolution();
-		double resKm = resMt / 1000.0;
-		res.initAdditional(ev, resKm);
-		switch (eventType)
-		{
-			case SimpleReflectogramEvent.LINEAR:
-				tModel.setKeys(linearKeys);
-				break;
-			case SimpleReflectogramEvent.DEADZONE:
-				tModel.setKeys(dzKeys);
-				break;
-			case SimpleReflectogramEvent.NOTIDENTIFIED:
-				tModel.setKeys(notidKeys);
-				break;
-			case SimpleReflectogramEvent.CONNECTOR:
-				tModel.setKeys(reflectionKeys);
-				break;
-			case SimpleReflectogramEvent.LOSS:
-			case SimpleReflectogramEvent.GAIN:
-				tModel.setKeys(spliceKeys);
-				break;
-			case SimpleReflectogramEvent.ENDOFTRACE:
-				tModel.setKeys(endKeys);
-				break;
+		if (num >= 0) {
+			DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
+			int eventType = ev.getEventType();
+			double resMt =  Heap.getBSPrimaryTrace().getResolution();
+			double resKm = resMt / 1000.0;
+			res.initAdditional(ev, resKm);
+			switch (eventType)
+			{
+				case SimpleReflectogramEvent.LINEAR:
+					tModel.setKeys(linearKeys);
+					break;
+				case SimpleReflectogramEvent.DEADZONE:
+					tModel.setKeys(dzKeys);
+					break;
+				case SimpleReflectogramEvent.NOTIDENTIFIED:
+					tModel.setKeys(notidKeys);
+					break;
+				case SimpleReflectogramEvent.CONNECTOR:
+					tModel.setKeys(reflectionKeys);
+					break;
+				case SimpleReflectogramEvent.LOSS:
+				case SimpleReflectogramEvent.GAIN:
+					tModel.setKeys(spliceKeys);
+					break;
+				case SimpleReflectogramEvent.ENDOFTRACE:
+					tModel.setKeys(endKeys);
+					break;
+			}
+			mainTable.updateUI();
+		} else {
+			tModel.setKeys(emptyKeys);
+			mainTable.updateUI();
 		}
-		mainTable.updateUI();
 		this.setData();
 	}
 
