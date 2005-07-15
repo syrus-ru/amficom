@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.50 2005/07/14 19:27:31 bass Exp $
+ * $Id: SchemePath.java,v 1.51 2005/07/15 08:46:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/14 19:27:31 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/15 08:46:54 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -78,7 +78,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	private Identifier parentSchemeMonitoringSolutionId;
 
-	private Identifier parentSchemeId;
+	Identifier parentSchemeId;
 
 	private Set<Characteristic> characteristics;
 

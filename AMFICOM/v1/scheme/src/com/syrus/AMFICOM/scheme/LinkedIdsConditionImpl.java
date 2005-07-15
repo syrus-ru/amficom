@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/07/13 11:24:27 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/07/15 08:46:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.22 $, $Date: 2005/07/13 11:24:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/07/15 08:46:54 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -87,55 +87,55 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case SCHEMEPORT_CODE:
 				final SchemePort schemePort = (SchemePort) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMEDEVICE_CODE:
-						return super.conditionTest(schemePort.parentSchemeDeviceId);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEDEVICE_CODE:
+					return super.conditionTest(schemePort.parentSchemeDeviceId);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLEPORT_CODE:
 				final SchemeCablePort schemeCablePort = (SchemeCablePort) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMEDEVICE_CODE:
-						return super.conditionTest(schemeCablePort.parentSchemeDeviceId);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEDEVICE_CODE:
+					return super.conditionTest(schemeCablePort.parentSchemeDeviceId);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMELINK_CODE:
 				final SchemeLink schemeLink = (SchemeLink) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMEPORT_CODE:
-						final boolean precondition1 = super.conditionTest(schemeLink.sourceAbstractSchemePortId);
-						final boolean precondition2 = super.conditionTest(schemeLink.targetAbstractSchemePortId);
-						assert !(precondition1 && precondition2);
-						return precondition1 ^ precondition2;
-					case SCHEMEPROTOELEMENT_CODE:
-						return super.conditionTest(schemeLink.parentSchemeProtoElementId);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEPORT_CODE:
+					final boolean precondition1 = super.conditionTest(schemeLink.sourceAbstractSchemePortId);
+					final boolean precondition2 = super.conditionTest(schemeLink.targetAbstractSchemePortId);
+					assert !(precondition1 && precondition2);
+					return precondition1 ^ precondition2;
+				case SCHEMEPROTOELEMENT_CODE:
+					return super.conditionTest(schemeLink.parentSchemeProtoElementId);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLELINK_CODE:
 				final SchemeCableLink schemeCableLink = (SchemeCableLink) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMECABLEPORT_CODE:
-						final boolean precondition1 = super.conditionTest(schemeCableLink.sourceAbstractSchemePortId);
-						final boolean precondition2 = super.conditionTest(schemeCableLink.targetAbstractSchemePortId);
-						assert !(precondition1 && precondition2);
-						return precondition1 ^ precondition2;
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMECABLEPORT_CODE:
+					final boolean precondition1 = super.conditionTest(schemeCableLink.sourceAbstractSchemePortId);
+					final boolean precondition2 = super.conditionTest(schemeCableLink.targetAbstractSchemePortId);
+					assert !(precondition1 && precondition2);
+					return precondition1 ^ precondition2;
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLETHREAD_CODE:
 				final SchemeCableThread schemeCableThread = (SchemeCableThread) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMEPORT_CODE:
-						final boolean precondition1 = super.conditionTest(schemeCableThread.sourceSchemePortId);
-						final boolean precondition2 = super.conditionTest(schemeCableThread.targetSchemePortId);
-						assert !(precondition1 && precondition2);
-						return precondition1 ^ precondition2;
-					case SCHEMECABLELINK_CODE:
-						return super.conditionTest(schemeCableThread.parentSchemeCableLinkId);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEPORT_CODE:
+					final boolean precondition1 = super.conditionTest(schemeCableThread.sourceSchemePortId);
+					final boolean precondition2 = super.conditionTest(schemeCableThread.targetSchemePortId);
+					assert !(precondition1 && precondition2);
+					return precondition1 ^ precondition2;
+				case SCHEMECABLELINK_CODE:
+					return super.conditionTest(schemeCableThread.parentSchemeCableLinkId);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMEELEMENT_CODE:
 				final SchemeElement schemeElement = (SchemeElement) storableObject;
@@ -160,10 +160,18 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case PATHELEMENT_CODE:
 				final PathElement pathElement = (PathElement) storableObject;
 				switch (super.linkedEntityCode) {
-					case SCHEMEPATH_CODE:
-						return super.conditionTest(pathElement.parentSchemePathId);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEPATH_CODE:
+					return super.conditionTest(pathElement.parentSchemePathId);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			case SCHEMEPATH_CODE:
+				final SchemePath schemePath = (SchemePath) storableObject;
+				switch (super.linkedEntityCode) {
+				case SCHEME_CODE:
+					return super.conditionTest(schemePath.parentSchemeId);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMEPROTOELEMENT_CODE:
 				final SchemeProtoElement protoElement = (SchemeProtoElement) storableObject;

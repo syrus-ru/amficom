@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.19 2005/07/13 11:24:27 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.20 2005/07/15 08:46:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.19 $, $Date: 2005/07/13 11:24:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/15 08:46:54 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -56,54 +56,54 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case SCHEMEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEDEVICE_CODE:
-						return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					default:
-						throw newIllegalObjectEntityException();	
+				case SCHEMEDEVICE_CODE:
+					return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				default:
+					throw newIllegalObjectEntityException();	
 				}
 			case SCHEMECABLEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEDEVICE_CODE:
-						return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEDEVICE_CODE:
+					return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPORT_CODE:
-						return StorableObjectDatabase.OPEN_BRACKET
-								+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-								+ StorableObjectDatabase.SQL_OR
-								+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-								+ StorableObjectDatabase.CLOSE_BRACKET;
-					case SCHEMEPROTOELEMENT_CODE:
-						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEPORT_CODE:
+					return StorableObjectDatabase.OPEN_BRACKET
+							+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+							+ StorableObjectDatabase.SQL_OR
+							+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+							+ StorableObjectDatabase.CLOSE_BRACKET;
+				case SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMECABLEPORT_CODE:
-						return StorableObjectDatabase.OPEN_BRACKET
-								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
-								+ StorableObjectDatabase.SQL_OR
-								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
-								+ StorableObjectDatabase.CLOSE_BRACKET;
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMECABLEPORT_CODE:
+					return StorableObjectDatabase.OPEN_BRACKET
+							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
+							+ StorableObjectDatabase.SQL_OR
+							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
+							+ StorableObjectDatabase.CLOSE_BRACKET;
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMECABLETHREAD_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPORT_CODE:
-						return StorableObjectDatabase.OPEN_BRACKET
-								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-								+ StorableObjectDatabase.SQL_OR
-								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-								+ StorableObjectDatabase.CLOSE_BRACKET;
-					case SCHEMECABLELINK_CODE:
-						return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-					default:
-						throw newIllegalObjectEntityException();
+				case SCHEMEPORT_CODE:
+					return StorableObjectDatabase.OPEN_BRACKET
+							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+							+ StorableObjectDatabase.SQL_OR
+							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+							+ StorableObjectDatabase.CLOSE_BRACKET;
+				case SCHEMECABLELINK_CODE:
+					return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+				default:
+					throw newIllegalObjectEntityException();
 				}
 			case SCHEMEELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -127,6 +127,13 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEPATH_CODE:
 					return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			case SCHEMEPATH_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case SCHEME_CODE:
+					return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_ID);
 				default:
 					throw newIllegalObjectEntityException();
 				}
