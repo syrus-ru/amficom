@@ -230,7 +230,7 @@ public final class MapViewTreePanel extends JPanel
 				}
 			}
 			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED));
-			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
+//			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
 			this.performProcessing = true;
 		}
 	}
