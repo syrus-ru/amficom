@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.100 2005/07/15 09:57:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.101 2005/07/15 10:00:30 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.100 $, $Date: 2005/07/15 09:57:50 $
+ * @version $Revision: 1.101 $, $Date: 2005/07/15 10:00:30 $
  * @module
  */
 
@@ -390,7 +390,7 @@ public class CoreAnalysisManager
 
 //        long t4 = System.currentTimeMillis();
 
-        // FIXME: debug output of analysis timing
+        // FIX//ME: debug output of analysis timing
 //      System.out.println("makeAnalysis: "
 //          + "getDataAndLengthAndNoise: " + (t1-t0)
 //          + "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
@@ -641,8 +641,6 @@ public class CoreAnalysisManager
 
 	/**
 	 * See specification of {@link #nCalcTraceLength(double[])}
-	 * @todo скрыть этот метод, а его вызовы переделать на использование
-	 * {@link #makePreAnalysis(BellcoreStructure, boolean)}
 	 * @param y Рефлектограмма
 	 * @return длина до конца волокна
 	 */
