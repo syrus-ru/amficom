@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.40 2005/07/11 08:18:59 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.41 2005/07/15 19:43:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/07/15 19:43:11 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public abstract class CORBAObjectLoader {
@@ -71,8 +71,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.41 $, $Date: 2005/07/15 19:43:11 $
 	 * @module csbridge_v1
 	 */
 	public interface TransmitProcedure {
@@ -83,8 +83,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.41 $, $Date: 2005/07/15 19:43:11 $
 	 * @see CORBAObjectLoader#loadStorableObjectsButIdsByCondition(short, Set,
 	 *      StorableObjectCondition,
 	 *      com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitButIdsByConditionProcedure)
@@ -99,8 +99,8 @@ public abstract class CORBAObjectLoader {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.40 $, $Date: 2005/07/11 08:18:59 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.41 $, $Date: 2005/07/15 19:43:11 $
 	 * @module csbridge_v1
 	 */
 	protected interface ReceiveProcedure {
@@ -110,6 +110,7 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
+	 * @todo Remove parameter entityCode when remove factories
 	 * <p>
 	 * Overridden in <code>MCMObjectLoader</code> and <code>CORBACMServerObjectLoader</code>.
 	 * </p>
@@ -149,6 +150,7 @@ public abstract class CORBAObjectLoader {
 	}
 
 	/**
+	 * @todo Remove parameter entityCode when remove factories
 	 * <p>This method can be considered a duplicate of
 	 * {@link #loadStorableObjects(short, Set, com.syrus.AMFICOM.general.CORBAObjectLoader.TransmitProcedure)},
 	 * since any particular <code>load...ButIdsByCondition()</code> method can
