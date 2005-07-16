@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.37 2005/07/14 18:32:31 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.38 2005/07/16 20:54:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/14 18:32:31 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/16 20:54:48 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -89,8 +89,7 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 
 	@Override
 	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final CableThreadType cableThreadType = this.fromStorableObject(storableObject);
-		super.retrieveEntity(cableThreadType);
+		super.retrieveEntity(storableObject);
 	}
 
 	@Override
