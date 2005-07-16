@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.23 2005/07/15 13:10:07 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.24 2005/07/16 19:04:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,16 +22,18 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.23 $, $Date: 2005/07/15 13:10:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/07/16 19:04:55 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -52,62 +54,62 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case SCHEMEELEMENT_CODE:
 					return super.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
 				default:
-					throw newIllegalObjectEntityException();	
+					throw super.newExceptionLinkedEntityIllegal();	
 				}
 			case SCHEMEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEDEVICE_CODE:
-					return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-				default:
-					throw newIllegalObjectEntityException();	
+					case SCHEMEDEVICE_CODE:
+						return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();	
 				}
 			case SCHEMECABLEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEDEVICE_CODE:
-					return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
-				default:
-					throw newIllegalObjectEntityException();
+					case SCHEMEDEVICE_CODE:
+						return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPORT_CODE:
-					return StorableObjectDatabase.OPEN_BRACKET
-							+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-							+ StorableObjectDatabase.SQL_OR
-							+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-							+ StorableObjectDatabase.CLOSE_BRACKET;
-				case SCHEMEPROTOELEMENT_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-				case SCHEME_CODE:
-					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
-				default:
-					throw newIllegalObjectEntityException();
+					case SCHEMEPORT_CODE:
+						return OPEN_BRACKET
+								+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+								+ SQL_OR
+								+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+								+ CLOSE_BRACKET;
+					case SCHEMEPROTOELEMENT_CODE:
+						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+					case SCHEME_CODE:
+						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMECABLELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case SCHEMECABLEPORT_CODE:
-						return StorableObjectDatabase.OPEN_BRACKET
+						return OPEN_BRACKET
 								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
-								+ StorableObjectDatabase.SQL_OR
+								+ SQL_OR
 								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
-								+ StorableObjectDatabase.CLOSE_BRACKET;
+								+ CLOSE_BRACKET;
 					case SCHEME_CODE:
 						return super.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
 					default:
-						throw newIllegalObjectEntityException();
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMECABLETHREAD_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case SCHEMEPORT_CODE:
-					return StorableObjectDatabase.OPEN_BRACKET
-							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-							+ StorableObjectDatabase.SQL_OR
-							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-							+ StorableObjectDatabase.CLOSE_BRACKET;
-				case SCHEMECABLELINK_CODE:
-					return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-				default:
-					throw newIllegalObjectEntityException();
+					case SCHEMEPORT_CODE:
+						return OPEN_BRACKET
+								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+								+ SQL_OR
+								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+								+ CLOSE_BRACKET;
+					case SCHEMECABLELINK_CODE:
+						return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -116,7 +118,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case SCHEME_CODE:
 					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEDEVICE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -125,21 +127,21 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case SCHEMEPROTOELEMENT_CODE:
 					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case PATHELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEPATH_CODE:
 					return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPATH_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEME_CODE:
 					return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPROTOELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -148,7 +150,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case SCHEMEPROTOGROUP_CODE:
 					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPROTOGROUP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
@@ -157,10 +159,10 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				case UPDIKE_CODE:
 					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 				default:
-					throw newIllegalObjectEntityException();
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			default:
-				throw newIllegalObjectEntityException();
+				throw super.newExceptionEntityIllegal();
 		}
 	}
 }
