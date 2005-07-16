@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.11 2005/06/17 11:25:48 bass Exp $
+ * $Id: ApplicationProperties.java,v 1.12 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,12 @@
 
 package com.syrus.util;
 
-import java.util.ResourceBundle;
-import java.util.PropertyResourceBundle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.PropertyResourceBundle;
+import java.util.ResourceBundle;
 
 public class ApplicationProperties {
 	public static final String COMMON_FILE_NAME = "common";

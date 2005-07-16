@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConnection.java,v 1.15 2005/06/19 19:01:35 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.16 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.util.database;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 import com.syrus.util.Log;
 
 public class DatabaseConnection {

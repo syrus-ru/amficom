@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreWriter.java,v 1.12 2005/07/06 12:15:16 arseniy Exp $
+ * $Id: BellcoreWriter.java,v 1.13 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,12 @@
 
 package com.syrus.io;
 
-import java.io.*;
-import java.nio.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/06 12:15:16 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/16 21:40:20 $
  * @author $Author: arseniy $
  * @module util
  */

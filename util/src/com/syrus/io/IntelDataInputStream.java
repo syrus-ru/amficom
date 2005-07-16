@@ -1,5 +1,5 @@
 /*
- * $Id: IntelDataInputStream.java,v 1.8 2005/06/08 13:49:06 bass Exp $
+ * $Id: IntelDataInputStream.java,v 1.9 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 
 package com.syrus.io;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/08 13:49:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/16 21:40:20 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class IntelDataInputStream extends DataInputStream {

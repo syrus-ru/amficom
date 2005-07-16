@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.16 2005/06/17 11:25:48 bass Exp $
+ * $Id: ByteArrayDatabase.java,v 1.17 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,19 @@
 
 package com.syrus.util.database;
 
-import java.io.*;
-import java.sql.*;
-import com.syrus.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/06/17 11:25:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/07/16 21:40:20 $
  * @module util
  */
 public final class ByteArrayDatabase {

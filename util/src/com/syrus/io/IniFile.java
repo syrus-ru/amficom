@@ -1,5 +1,5 @@
 /*
- * $Id: IniFile.java,v 1.12 2005/06/20 14:24:40 bass Exp $
+ * $Id: IniFile.java,v 1.13 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,17 @@
 
 package com.syrus.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/06/20 14:24:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/07/16 21:40:20 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */

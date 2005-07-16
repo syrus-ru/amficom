@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.14 2005/06/17 11:25:48 bass Exp $
+ * $Id: DatabaseDate.java,v 1.15 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,11 @@
 
 package com.syrus.util.database;
 
-import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.sql.SQLException;
-import java.sql.ResultSet;
+import java.util.Date;
 
 import com.syrus.util.Log;
 

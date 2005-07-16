@@ -1,5 +1,5 @@
 /*
- * $Id: DataReader.java,v 1.10 2005/06/17 11:25:48 bass Exp $
+ * $Id: DataReader.java,v 1.11 2005/07/16 21:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 
 package com.syrus.io;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/17 11:25:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/16 21:40:20 $
+ * @author $Author: arseniy $
  * @module util
  */
 public abstract class DataReader extends BellcoreStructure {
