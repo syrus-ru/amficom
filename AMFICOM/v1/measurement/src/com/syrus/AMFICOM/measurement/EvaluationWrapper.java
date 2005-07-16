@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationWrapper.java,v 1.8 2005/06/22 10:22:59 bob Exp $
+ * $Id: EvaluationWrapper.java,v 1.9 2005/07/16 22:01:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/07/16 22:01:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class EvaluationWrapper extends StorableObjectWrapper {
@@ -53,6 +53,7 @@ public class EvaluationWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Evaluation) {
@@ -96,6 +97,7 @@ public class EvaluationWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

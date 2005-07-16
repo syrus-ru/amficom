@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.7 2005/06/23 18:45:09 bass Exp $
+ * $Id: MeasurementWrapper.java,v 1.8 2005/07/16 22:01:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/23 18:45:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/16 22:01:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementWrapper extends StorableObjectWrapper {
@@ -59,6 +59,7 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Measurement) {
@@ -121,6 +122,7 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(final String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

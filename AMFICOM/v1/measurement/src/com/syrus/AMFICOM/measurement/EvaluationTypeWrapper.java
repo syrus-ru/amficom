@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.10 2005/06/22 10:22:59 bob Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.11 2005/07/16 22:01:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/07/16 22:01:17 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class EvaluationTypeWrapper extends StorableObjectWrapper {
@@ -53,6 +53,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof EvaluationType) {
@@ -105,6 +106,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		if (key.equals(MODE_IN) || key.equals(MODE_OUT) || key.equals(MODE_THRESHOLD) || key.equals(MODE_ETALON))
 			return java.util.Set.class;
