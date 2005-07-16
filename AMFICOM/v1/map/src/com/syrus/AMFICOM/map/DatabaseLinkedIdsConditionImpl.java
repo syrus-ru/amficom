@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/06/27 10:07:11 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.4 2005/07/16 18:57:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,16 +7,24 @@
  */
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
+
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Maxim Selivanov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/06/27 10:07:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/16 18:57:18 $
  * @module map_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -28,29 +36,29 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.NODELINK_CODE:
+			case NODELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.PHYSICALLINK_CODE:
+					case PHYSICALLINK_CODE:
 						return super.getQuery(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID);
-					case ObjectEntities.TOPOLOGICALNODE_CODE:
-					case ObjectEntities.SITENODE_CODE:
-						return StorableObjectDatabase.OPEN_BRACKET +
+					case TOPOLOGICALNODE_CODE:
+					case SITENODE_CODE:
+						return OPEN_BRACKET +
 								super.getQuery(NodeLinkWrapper.COLUMN_START_NODE_ID)
-								+ StorableObjectDatabase.SQL_OR + 
+								+ SQL_OR + 
 								super.getQuery(NodeLinkWrapper.COLUMN_END_NODE_ID) + 
-								StorableObjectDatabase.CLOSE_BRACKET;
+								CLOSE_BRACKET;
 					default:
-						throw newIllegalObjectEntityException();
+						throw newExceptionLinkedEntityIllegal();
 				}
-			case ObjectEntities.MAP_CODE:
+			case MAP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
 					default:
-						throw newIllegalObjectEntityException();
+						throw newExceptionLinkedEntityIllegal();
 				}
 			default:
-				throw newIllegalObjectEntityException();
+				throw newExceptionEntityIllegal();
 		}
 	}
 }
