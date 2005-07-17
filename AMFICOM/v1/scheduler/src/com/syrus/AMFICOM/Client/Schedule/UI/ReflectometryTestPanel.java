@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/07/13 16:11:01 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/17 05:25:51 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -652,9 +652,17 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	private String getUnit(ParameterType parameterType) {
-		java.util.Set characteristics = parameterType.getCharacteristics();
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			Characteristic characteristic = (Characteristic) it.next();
+		Set<Characteristic> characteristics = null;
+		try {
+			characteristics = parameterType.getCharacteristics();
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		if (characteristics == null) {
+			return "";
+		}
+
+		for (final Characteristic characteristic : characteristics) {
 			if (characteristic.getType().getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
 				String value = characteristic.getValue();
 				if (value != null && value.trim().length() != 0) { return ',' + characteristic.getValue(); }
