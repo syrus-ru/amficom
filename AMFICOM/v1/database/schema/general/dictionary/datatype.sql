@@ -1,9 +1,9 @@
--- $Id: datatype.sql,v 1.3 2005/06/15 09:40:34 bass Exp $
+-- $Id: datatype.sql,v 1.4 2005/07/17 04:53:00 arseniy Exp $
 
 CREATE TABLE DataType (
- id NUMBER(2, 0),
+ code NUMBER(2, 0),
  codename VARCHAR2(32 CHAR) NOT NULL,
  description VARCHAR2(256 CHAR),
 --
- CONSTRAINT dt_pk PRIMARY KEY (id)
+ CONSTRAINT dt_pk PRIMARY KEY (code)
 );
