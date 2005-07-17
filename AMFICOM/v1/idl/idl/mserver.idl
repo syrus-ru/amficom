@@ -276,6 +276,11 @@ module corba {
 
 /////////////////////////////////////////// Measurement Recieve ////////////////////////////////////////////
 
+		general::corba::StorableObjectSeq receiveMeasurements(in measurement::corba::MeasurementSeq measurements,
+			in boolean force,
+			in security::corba::SessionKey sessionKeyT)
+			raises (general::corba::AMFICOMRemoteException);
+
 		general::corba::StorableObjectSeq receiveTests(in measurement::corba::TestSeq tests,
 			in boolean force,
 			in security::corba::SessionKey sessionKeyT)

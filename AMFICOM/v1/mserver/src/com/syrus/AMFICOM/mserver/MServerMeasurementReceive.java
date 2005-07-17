@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementReceive.java,v 1.20 2005/06/25 17:07:52 bass Exp $
+ * $Id: MServerMeasurementReceive.java,v 1.21 2005/07/17 05:03:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.mserver;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionS
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlResult;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.mserver.corba.MServerOperations;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/25 17:07:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/07/17 05:03:57 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerMeasurementReceive extends ServerCore implements MServerOperations {
@@ -55,7 +57,7 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 			synchronized (CORBAMServerObjectLoader.lock) {
 				CORBAMServerObjectLoader.preferredMCMId = mcmId;
 				Result result;
-				java.util.Set results = new HashSet(resultsT.length);
+				final Set<Result> results = new HashSet<Result>(resultsT.length);
 				for (int i = 0; i < resultsT.length; i++) {
 					try {
 						result = new Result(resultsT[i]);
@@ -86,6 +88,12 @@ abstract class MServerMeasurementReceive extends ServerCore implements MServerOp
 			Log.errorException(throwable);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, throwable.getMessage());
 		}
+	}
+
+	public IdlStorableObject[] receiveMeasurements(IdlMeasurement[] measurementsT, boolean force, IdlSessionKey sessionKeyT)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("MServerImplementation.receiveMeasurements | Received " + measurementsT.length + " tests", Log.DEBUGLEVEL07);
+		return super.receiveStorableObjects(ObjectEntities.MEASUREMENT_CODE, measurementsT, force, sessionKeyT);
 	}
 
 	public IdlStorableObject[] receiveTests(IdlTest[] testsT, boolean force, IdlSessionKey sessionKeyT)
