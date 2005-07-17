@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.40 2005/07/14 16:08:04 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.41 2005/07/17 05:12:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,15 +11,14 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/14 16:08:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/07/17 05:12:07 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -101,13 +100,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Characteristic characteristic = this.fromStorableObject(storableObject);
-		super.retrieveEntity(characteristic);
-	}
-
-	@Override
 	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws RetrieveObjectException, SQLException, IllegalDataException {
 		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject);
@@ -163,17 +155,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 						+ "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Characteristic characteristic = this.fromStorableObject(storableObject);
-		super.insertEntity(characteristic);		
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.84 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.85 2005/07/17 05:07:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -34,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/17 05:07:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -120,12 +118,6 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, measurement.getTestId());
 		return startParameterNumber;
-	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Measurement measurement = this.fromStorableObject(storableObject);
-		this.retrieveEntity(measurement);
 	}
 
 	@Override
@@ -232,17 +224,6 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		final Measurement measurement = this.fromStorableObject(storableObject);
-		super.insertEntity(measurement);
-	}
-
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }

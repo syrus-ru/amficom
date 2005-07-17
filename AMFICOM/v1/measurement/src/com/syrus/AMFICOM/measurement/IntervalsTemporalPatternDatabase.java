@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.11 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.12 2005/07/17 05:07:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -40,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/17 05:07:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -58,13 +57,6 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		if (storableObject instanceof IntervalsTemporalPattern)
 			return (IntervalsTemporalPattern) storableObject;
 		throw new IllegalDataException("IntervalsTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		super.retrieveEntity(intervalsTemporalPattern);
 	}
 
 	@Override

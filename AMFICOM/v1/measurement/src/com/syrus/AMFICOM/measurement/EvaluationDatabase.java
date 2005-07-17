@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.59 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.60 2005/07/17 05:07:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/17 05:07:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -43,12 +43,6 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof Evaluation)
 			return (Evaluation) storableObject;
 		throw new IllegalDataException("EvaluationDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Evaluation evaluation = this.fromStorableObject(storableObject);
-		this.retrieveEntity(evaluation);
 	}
 
 	@Override
@@ -147,17 +141,6 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  evaluation.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		final Evaluation evaluation = this.fromStorableObject(storableObject);
-		super.insertEntity(evaluation);
-	}
-
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.30 2005/07/14 18:47:10 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.31 2005/07/17 05:12:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/14 18:47:10 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/17 05:12:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -90,13 +89,6 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		super.retrieveEntity(characteristicType);
-	}
-
-	@Override
 	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		CharacteristicType characteristicType = storableObject == null ? null : this.fromStorableObject(storableObject);
@@ -136,17 +128,6 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 						+ "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		super.insertEntity(characteristicType);		
-	}
-
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }

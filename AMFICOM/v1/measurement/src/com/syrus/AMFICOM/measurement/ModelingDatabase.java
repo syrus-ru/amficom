@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.47 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.48 2005/07/17 05:07:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,11 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/17 05:07:55 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -44,12 +41,6 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof Modeling)
 			return (Modeling) storableObject;
 		throw new IllegalDataException("ModelingDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Modeling modeling = this.fromStorableObject(storableObject);
-		this.retrieveEntity(modeling);
 	}
 
 	@Override
@@ -140,17 +131,6 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 						+ " '" + modeling.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-  public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		Modeling modeling = this.fromStorableObject(storableObject);
-		super.insertEntity(modeling);
-	}
-
-	@Override
-  public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-  	super.insertEntities(storableObjects);
 	}
 
 }

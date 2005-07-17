@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.7 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.8 2005/07/17 05:07:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,10 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,7 +23,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:07:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -43,12 +39,6 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 			return (PeriodicalTemporalPattern) storableObject;
 		throw new IllegalDataException("PeriodicalTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		this.retrieveEntity(periodicalTemporalPattern);
-	}	
 
 	@Override
 	protected short getEntityCode() {		
@@ -113,17 +103,6 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		super.insertEntity(periodicalTemporalPattern);
-	}
-
-	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }

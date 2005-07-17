@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.19 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.20 2005/07/17 05:09:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,11 @@ package com.syrus.AMFICOM.event;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -26,7 +22,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/17 05:09:11 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -236,12 +232,6 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final EventSource eventSource = this.fromStorableObject(storableObject);
-		this.retrieveEntity(eventSource);
-	}
-
-	@Override
 	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
 		final EventSource eventSource = this.fromStorableObject(storableObject);
@@ -250,17 +240,6 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventSource.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final EventSource eventSource = this.fromStorableObject(storableObject);
-		super.insertEntity(eventSource);
-	}
-
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.165 2005/07/15 19:42:37 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.166 2005/07/17 05:12:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.165 $, $Date: 2005/07/15 19:42:37 $
+ * @version $Revision: 1.166 $, $Date: 2005/07/17 05:12:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -332,8 +332,10 @@ public abstract class StorableObjectDatabase {
 
 	// ////////////////////// retrieve /////////////////////////
 
-	public abstract void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException;
+	public void retrieve(final StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		this.retrieveEntity(storableObject);
+	}
 
 	public abstract Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -561,9 +563,13 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// insert /////////////////////////
 
-	public abstract void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException;
+	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
+		this.insertEntity(storableObject);
+	}
 
-	public abstract void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException;
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+		this.insertEntities(storableObjects);
+	}
 
 	protected final void insertEntity(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		final Identifier id = storableObject.getId();
