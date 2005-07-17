@@ -1,4 +1,4 @@
--- $Id: result.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
+-- $Id: result.sql,v 1.12 2005/07/17 04:54:39 arseniy Exp $
 
 CREATE TABLE Result (
  id NUMBER(19),
@@ -13,7 +13,6 @@ CREATE TABLE Result (
  evaluation_id,
  modeling_id,
  sort NUMBER(2, 0) NOT NULL,
- alarm_level NUMBER(2, 0) NOT NULL,
 --
  CONSTRAINT res_pk PRIMARY KEY (id),
  CONSTRAINT res_creator_fk FOREIGN KEY (creator_id)
