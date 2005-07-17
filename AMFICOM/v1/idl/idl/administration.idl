@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.14 2005/07/12 09:13:44 bass Exp $
+ * $Id: administration.idl,v 1.15 2005/07/17 05:23:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,8 +62,6 @@ module administration {
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
 
-			public general::corba::IdentifierSeq characteristicIds;
-
 #ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
 #endif // NO_DEFAULT_FACTORIES
@@ -76,8 +74,7 @@ module administration {
 					in general::corba::WString32 login,
 					in SystemUserSort sort,
 					in general::corba::WString128 name,
-					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq characteristicIds);
+					in general::corba::WString256 description);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -94,8 +91,6 @@ module administration {
 #endif // NO_ALIASES
 			public general::corba::WString128 name;
 			public general::corba::WString256 description;
-				
-			public general::corba::IdentifierSeq characteristicIds;
 
 #ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
@@ -108,8 +103,7 @@ module administration {
 					in long long version,
 					in general::corba::Identifier domainId,
 					in general::corba::WString128 name,
-					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq characteristicIds);
+					in general::corba::WString256 description);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -128,8 +122,6 @@ module administration {
 			public general::corba::WString256 description;
 			public general::corba::WString64 hostname;
 
-			public general::corba::IdentifierSeq characteristicIds;
-
 #ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
 #endif // NO_DEFAULT_FACTORIES
@@ -142,8 +134,7 @@ module administration {
 					in general::corba::Identifier domainId,
 					in general::corba::WString128 name,
 					in general::corba::WString256 description,
-					in general::corba::WString64 hostname,
-					in general::corba::IdentifierSeq characteristicIds);
+					in general::corba::WString64 hostname);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -195,7 +186,6 @@ module administration {
 			public general::corba::WString64 hostname;
 			public general::corba::Identifier userId;
 			public general::corba::Identifier serverId;
-			public general::corba::IdentifierSeq characteristicIds;
 
 #ifndef NO_DEFAULT_FACTORIES
 			factory defaultInit();
@@ -211,8 +201,7 @@ module administration {
 					in general::corba::WString256 description,
 					in general::corba::WString64 hostname,
 					in general::corba::Identifier userId,
-					in general::corba::Identifier serverId,
-					in general::corba::IdentifierSeq characteristicIds);
+					in general::corba::Identifier serverId);
 		};
 		
 		/*\u002a\u002f@SuppressWarnings("all")/**/
