@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.46 2005/07/12 14:32:23 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.47 2005/07/17 05:13:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/07/12 14:32:23 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/17 05:13:49 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -406,4 +406,19 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		}
 		return false;
 	}
+
+	protected IllegalObjectEntityException newExceptionEntityIllegal() {
+		return new IllegalObjectEntityException("Unsupported entity '"
+				+ ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode
+				+ "; linked entity '"+ ObjectEntities.codeToString(this.linkedEntityCode) + "'/" + this.linkedEntityCode,
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+	}
+
+	protected IllegalObjectEntityException newExceptionLinkedEntityIllegal() {
+		return new IllegalObjectEntityException("Unsupported linked entity '"
+				+ ObjectEntities.codeToString(this.linkedEntityCode) + "'/" + this.linkedEntityCode
+				+ " for entity '" + ObjectEntities.codeToString(this.entityCode) + "'/" + this.entityCode,
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+	}
+
 }
