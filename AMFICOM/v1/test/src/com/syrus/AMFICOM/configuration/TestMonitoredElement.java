@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.7 2005/07/01 13:27:29 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.8 2005/07/17 05:26:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/01 13:27:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:26:21 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -47,7 +47,7 @@ public class TestMonitoredElement extends TestCase {
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Domain domain = (Domain) it.next();
 
-		final String localAddress = "SW=01:01";
+		final String localAddress = "2:01:01";
 
 		ec.setEntityCode(ObjectEntities.TRANSPATH_CODE);
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();

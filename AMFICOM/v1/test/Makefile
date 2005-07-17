@@ -4,8 +4,8 @@
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
 #TEST_CLASS=TestCharacteristicQP1640A
 #TEST_PACKAGE=com.syrus.AMFICOM.general
-TEST_CLASS=TestAnalysisType
-TEST_PACKAGE=com.syrus.AMFICOM.measurement
+TEST_CLASS=TestParameterType
+TEST_PACKAGE=com.syrus.AMFICOM.general
 #TEST_CLASS=TestCMServer
 #TEST_PACKAGE=com.syrus.AMFICOM.cmserver
 
