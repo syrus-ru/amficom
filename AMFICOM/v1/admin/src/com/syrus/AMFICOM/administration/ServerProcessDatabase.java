@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.10 2005/07/14 18:04:11 arseniy Exp $
+ * $Id: ServerProcessDatabase.java,v 1.11 2005/07/17 05:17:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -27,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/14 18:04:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:17:48 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -76,12 +75,6 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 			+ DatabaseIdentifier.toSQLString(serverProcess.getServerId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(serverProcess.getUserId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
-	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		this.retrieveEntity(serverProcess);	
 	}
 
 	@Override
@@ -134,17 +127,6 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getUserId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		super.insertEntity(serverProcess);
-	}
-
-	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }
