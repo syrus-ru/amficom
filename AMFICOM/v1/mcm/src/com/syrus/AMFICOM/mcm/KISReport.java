@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.42 2005/06/22 13:02:54 arseniy Exp $
+ * $Id: KISReport.java,v 1.43 2005/07/17 04:57:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/06/22 13:02:54 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/17 04:57:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -51,13 +51,13 @@ public class KISReport {
 		addOutParameterTypeIds(new ParameterTypeCodename[] {ParameterTypeCodename.REFLECTOGRAMMA});
 	}
 
-	private static void addOutParameterTypeIds(ParameterTypeCodename[] codenames) {
+	private static void addOutParameterTypeIds(final ParameterTypeCodename[] codenames) {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
 		final java.util.Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
-			typicalConditions.add(new TypicalCondition(codenames[i].toString(),
+			typicalConditions.add(new TypicalCondition(codenames[i].stringValue(),
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETER_TYPE_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME));
