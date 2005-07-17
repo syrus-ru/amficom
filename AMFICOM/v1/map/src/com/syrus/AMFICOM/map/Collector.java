@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.55 2005/07/07 13:12:30 bass Exp $
+ * $Id: Collector.java,v 1.56 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -72,7 +72,6 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	private String description;
 
 	private Set<PhysicalLink> physicalLinks;
-	private Set<Characteristic> characteristics;
 
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -80,8 +79,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 
 	Collector(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.physicalLinks = new HashSet();
-		this.characteristics = new HashSet();
+		this.physicalLinks = new HashSet<PhysicalLink>();
 
 		final CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_CODE);
 		try {
@@ -113,8 +111,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		this.name = name;
 		this.description = description;
 
-		this.physicalLinks = new HashSet();
-		this.characteristics = new HashSet();
+		this.physicalLinks = new HashSet<PhysicalLink>();
 	}
 
 	public static Collector createInstance(final Identifier creatorId, final Map map, final String name, final String description)
@@ -142,24 +139,19 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlCollector ct = (IdlCollector) transferable;
+		final IdlCollector ct = (IdlCollector) transferable;
 		super.fromTransferable(ct);
 
 		this.name = ct.name;
 		this.description = ct.description;
 
-		Set ids;
-
-		ids = Identifier.fromTransferables(ct.physicalLinkIds);
+		final Set<Identifier> ids = Identifier.fromTransferables(ct.physicalLinkIds);
 		this.physicalLinks = StorableObjectPool.getStorableObjects(ids, true);
-
-		ids = Identifier.fromTransferables(ct.characteristicIds);
-		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.physicalLinks);
 		return dependencies;
 	}
@@ -171,7 +163,6 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	@Override
 	public IdlCollector getTransferable(final ORB orb) {
 		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return IdlCollectorHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -181,8 +172,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 				this.version,
 				this.name,
 				this.description,
-				physicalLinkIds,
-				charIds);
+				physicalLinkIds);
 	}
 
 	public String getDescription() {
@@ -211,17 +201,17 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		super.markAsChanged();
 	}
 
-	public Set getPhysicalLinks() {
+	public Set<PhysicalLink> getPhysicalLinks() {
 		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	protected void setPhysicalLinks0(final Set physicalLinks) {
+	protected void setPhysicalLinks0(final Set<PhysicalLink> physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
 	}
 
-	public void setPhysicalLinks(final Set physicalLinks) {
+	public void setPhysicalLinks(final Set<PhysicalLink> physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		super.markAsChanged();
 	}
@@ -400,33 +390,10 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	public Set getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void addCharacteristic(final Characteristic characteristic) {
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public XmlObject getXMLTransferable() {
@@ -468,8 +435,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 				creatorId,
 				0);
 
-		this.physicalLinks = new HashSet();
-		this.characteristics = new HashSet();
+		this.physicalLinks = new HashSet<PhysicalLink>();
 		
 		this.fromXMLTransferable(xmlCollector, clonedIdsPool);
 	}

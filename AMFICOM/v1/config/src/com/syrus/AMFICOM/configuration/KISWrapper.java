@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.10 2005/06/22 10:21:41 bob Exp $
+ * $Id: KISWrapper.java,v 1.11 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class KISWrapper extends StorableObjectWrapper {
@@ -43,8 +42,12 @@ public final class KISWrapper extends StorableObjectWrapper {
 	
 	private KISWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_EQUIPMENT_ID, COLUMN_MCM_ID, COLUMN_HOSTNAME, COLUMN_TCP_PORT, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_EQUIPMENT_ID,
+				COLUMN_MCM_ID,
+				COLUMN_HOSTNAME,
+				COLUMN_TCP_PORT };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -64,6 +67,7 @@ public final class KISWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof KIS) {
@@ -80,8 +84,6 @@ public final class KISWrapper extends StorableObjectWrapper {
 				return kis.getHostName();
 			if (key.equals(COLUMN_TCP_PORT))
 				return new Short(kis.getTCPPort());
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return kis.getCharacteristics();
 		}
 		return value;
 	}
@@ -105,8 +107,6 @@ public final class KISWrapper extends StorableObjectWrapper {
 				kis.setHostName((String) value);
 			else if (key.equals(COLUMN_TCP_PORT))
 				kis.setTCPPort(((Short)value).shortValue());
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				kis.setCharacteristics((Set) value);
 		}
 	}
 
@@ -123,6 +123,7 @@ public final class KISWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -137,8 +138,6 @@ public final class KISWrapper extends StorableObjectWrapper {
 		} else if (key.equals(COLUMN_EQUIPMENT_ID)
 				|| key.equals(COLUMN_MCM_ID)) {
 			return Identifier.class;
-		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

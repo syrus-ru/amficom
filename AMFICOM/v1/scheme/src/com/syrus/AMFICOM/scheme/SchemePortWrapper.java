@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.6 2005/07/14 14:24:06 bass Exp $
+ * $Id: SchemePortWrapper.java,v 1.7 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,14 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/14 14:24:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:26 $
+ * @author $Author: arseniy $
  * @module scheme_v1
  */
 public final class SchemePortWrapper extends StorableObjectWrapper {
@@ -53,8 +52,7 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 				COLUMN_PORT_TYPE_ID,
 				COLUMN_PORT_ID,
 				COLUMN_MEASUREMENT_PORT_ID,
-				COLUMN_PARENT_DEVICE_ID,
-				COLUMN_CHARACTERISTICS}));
+				COLUMN_PARENT_DEVICE_ID}));
 	}
 
 	public List<String> getKeys() {
@@ -81,8 +79,6 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_MEASUREMENT_PORT_ID)
 				|| key.equals(COLUMN_PARENT_DEVICE_ID)) {
 			return Identifier.class;
-		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}
@@ -117,8 +113,6 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 				return schemePort.getMeasurementPortId();
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
 				return schemePort.getParentSchemeDeviceId();
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				return schemePort.getCharacteristics();
 			}
 		}
 		return null;
@@ -148,8 +142,6 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 				schemePort.measurementPortId = (Identifier) value;
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
 				schemePort.parentSchemeDeviceId = (Identifier) value;
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				schemePort.setCharacteristics((Set) value);
 			}
 		}
 	}

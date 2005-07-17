@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.89 2005/07/14 18:16:29 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.90 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/07/14 18:16:29 $
+ * @version $Revision: 1.90 $, $Date: 2005/07/17 05:19:00 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public final class EquipmentDatabase extends CharacterizableDatabase {
+public final class EquipmentDatabase extends StorableObjectDatabase {
 	private static final int SIZE_SUPPLIER_COLUMN   = 128;
 
 	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;

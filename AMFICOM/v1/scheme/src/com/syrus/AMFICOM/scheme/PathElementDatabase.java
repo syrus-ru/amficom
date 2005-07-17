@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.10 2005/07/14 18:40:45 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.11 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -30,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/14 18:40:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -43,43 +39,6 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof PathElement)
 			return (PathElement) storableObject;
 		throw new IllegalDataException("PathElementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
-	/**
-	 * @param storableObjects
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects)
-			throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(StorableObject storableObject)
-			throws IllegalDataException, CreateObjectException {
-		PathElement pe = fromStorableObject(storableObject);
-		super.insertEntity(pe);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 */
-	@Override
-	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		PathElement pe = fromStorableObject(storableObject);
-		super.retrieveEntity(pe);
 	}
 
 	/**

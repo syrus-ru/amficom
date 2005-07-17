@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.6 2005/04/11 11:51:24 bob Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.7 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/11 11:51:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class PhysicalLinkWrapper extends StorableObjectWrapper {
@@ -49,9 +48,17 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 
 	private PhysicalLinkWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_PHYSICAL_LINK_TYPE_ID, COLUMN_CITY,
-				COLUMN_STREET, COLUMN_BUILDING, COLUMN_DIMENSION_X, COLUMN_DIMENSION_Y, COLUMN_TOPLEFT,
-				COLUMN_START_NODE_ID, COLUMN_END_NODE_ID, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_PHYSICAL_LINK_TYPE_ID,
+				COLUMN_CITY,
+				COLUMN_STREET,
+				COLUMN_BUILDING,
+				COLUMN_DIMENSION_X,
+				COLUMN_DIMENSION_Y,
+				COLUMN_TOPLEFT,
+				COLUMN_START_NODE_ID,
+				COLUMN_END_NODE_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -76,9 +83,8 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return String.class;
 	}
 
@@ -87,6 +93,7 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof PhysicalLink) {
 			PhysicalLink physicalLink = (PhysicalLink) object;
@@ -106,8 +113,6 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 				return physicalLink.getStartNode();
 			else if (key.equals(COLUMN_END_NODE_ID))
 				return physicalLink.getEndNode();
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				return physicalLink.getCharacteristics();
 		}
 		return null;
 	}
@@ -139,8 +144,6 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 				physicalLink.setStartNode((AbstractNode) value);
 			else if (key.equals(COLUMN_END_NODE_ID))
 				physicalLink.setEndNode((AbstractNode) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				physicalLink.setCharacteristics((Set) value);
 		}
 	}
 

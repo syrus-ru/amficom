@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.7 2005/04/11 11:51:24 bob Exp $
+ * $Id: MarkWrapper.java,v 1.8 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:51:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MarkWrapper extends StorableObjectWrapper {
@@ -45,9 +44,15 @@ public class MarkWrapper extends StorableObjectWrapper {
 
 	private MarkWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_PHYSICAL_LINK_ID, COLUMN_DISTANCE, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
-				COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_LONGITUDE,
+				COLUMN_LATIUDE,
+				COLUMN_PHYSICAL_LINK_ID,
+				COLUMN_DISTANCE,
+				COLUMN_CITY,
+				COLUMN_STREET,
+				COLUMN_BUILDING };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -72,9 +77,8 @@ public class MarkWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return String.class;
 	}
 
@@ -83,6 +87,7 @@ public class MarkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof Mark) {
 			Mark mark = (Mark) object;
@@ -104,8 +109,6 @@ public class MarkWrapper extends StorableObjectWrapper {
 				return mark.getStreet();
 			else if (key.equals(COLUMN_BUILDING))
 				return mark.getBuilding();
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				return mark.getCharacteristics();
 
 		}
 		return null;
@@ -140,8 +143,6 @@ public class MarkWrapper extends StorableObjectWrapper {
 				mark.setStreet((String) value);
 			else if (key.equals(COLUMN_BUILDING))
 				mark.setBuilding((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				mark.setCharacteristics((Set) value);
 		}
 	}
 

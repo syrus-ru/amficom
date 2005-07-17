@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.45 2005/07/14 18:32:31 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.46 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -27,12 +27,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/14 18:32:31 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/17 05:19:00 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public final class LinkDatabase extends CharacterizableDatabase {
+public final class LinkDatabase extends StorableObjectDatabase {
 	private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
 
 	private static final int SIZE_SUPPLIER_COLUMN  = 128;

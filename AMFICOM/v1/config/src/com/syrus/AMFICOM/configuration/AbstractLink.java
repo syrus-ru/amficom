@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.1 2005/06/22 15:05:18 bass Exp $
+ * $Id: AbstractLink.java,v 1.2 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,14 @@ import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypedObject;
 
 public abstract class AbstractLink extends DomainMember implements Characterizable, TypedObject {
@@ -28,8 +32,6 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	String supplierCode;
 	String mark;
 	int color;
-
-	Set<Characteristic> characteristics;
 
 	AbstractLink(final Identifier id) {
 		super(id);
@@ -113,51 +115,13 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	}
 
 	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(com.syrus.AMFICOM.general.Characteristic)
-	 */
-	public final void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(com.syrus.AMFICOM.general.Characteristic)
-	 */
-	public final void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	/**
+	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
-	 */
-	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
-	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public final Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public final String getDescription() {

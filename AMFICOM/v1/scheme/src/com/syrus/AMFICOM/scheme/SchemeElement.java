@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.51 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeElement.java,v 1.52 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/14 19:25:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -624,8 +624,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				this.getUgoCellId().getTransferable(),
 				this.getSchemeCellId().getTransferable(),
 				this.getParentSchemeId().getTransferable(),
-				this.getParentSchemeElementId().getTransferable(),
-				Identifier.createTransferables(super.getCharacteristics()));
+				this.getParentSchemeElementId().getTransferable());
 	}
 
 	Identifier getUgoCellId() {
@@ -1012,8 +1011,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
 		super.fromTransferable(schemeElement, schemeElement.name,
 				schemeElement.description,
-				schemeElement.parentSchemeId,
-				schemeElement.characteristicIds);
+				schemeElement.parentSchemeId);
 		this.label = schemeElement.label;
 		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
 		this.equipmentId = new Identifier(schemeElement.equipmentId);

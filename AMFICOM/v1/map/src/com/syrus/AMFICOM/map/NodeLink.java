@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.57 2005/07/07 13:12:30 bass Exp $
+ * $Id: NodeLink.java,v 1.58 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -29,13 +28,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
@@ -45,8 +44,8 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -74,8 +73,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	private AbstractNode startNode;
 	private AbstractNode endNode;
 	private double length;
-
-	private Set<Characteristic> characteristics;
 
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -119,8 +116,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.length = length;
-
-		this.characteristics = new HashSet();
 
 		this.selected = false;
 	}
@@ -179,10 +174,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 
 		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
 		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
-
-		Set<Identifier> characteristicIds = Identifier.fromTransferables(nlt.characteristicIds);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -191,7 +182,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	 */
 	@Override
 	public IdlNodeLink getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return IdlNodeLinkHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -203,8 +193,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 				this.physicalLink.getId().getTransferable(),
 				this.startNode.getId().getTransferable(),
 				this.endNode.getId().getTransferable(),
-				this.length,
-				charIds);
+				this.length);
 	}
 
 	public AbstractNode getEndNode() {
@@ -460,37 +449,10 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		}
 	}
 
-	public Set getCharacteristics() {
-		return  Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void addCharacteristic(final Characteristic characteristic) {
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	@Override
@@ -541,7 +503,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 				creatorId,
 				creatorId,
 				0);
-		this.characteristics = new HashSet();
 		this.selected = false;
 		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool);
 	}

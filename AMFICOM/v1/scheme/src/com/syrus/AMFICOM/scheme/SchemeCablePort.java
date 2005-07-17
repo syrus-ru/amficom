@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.44 2005/07/14 14:24:06 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.45 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/14 14:24:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -223,8 +223,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				super.portTypeId.getTransferable(),
 				super.portId.getTransferable(),
 				super.measurementPortId.getTransferable(),
-				super.parentSchemeDeviceId.getTransferable(),
-				Identifier.createTransferables(super.getCharacteristics()));
+				super.parentSchemeDeviceId.getTransferable());
 	}
 
 	/**
@@ -252,7 +251,6 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				schemeCablePort.cablePortTypeId,
 				schemeCablePort.cablePortId,
 				schemeCablePort.measurementPortId,
-				schemeCablePort.parentSchemeDeviceId,
-				schemeCablePort.characteristicIds);
+				schemeCablePort.parentSchemeDeviceId);
 	}
 }

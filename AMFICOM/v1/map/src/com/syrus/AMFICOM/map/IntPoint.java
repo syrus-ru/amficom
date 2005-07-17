@@ -1,5 +1,5 @@
 /**
- * $Id: IntPoint.java,v 1.4 2005/05/18 11:48:20 bass Exp $
+ * $Id: IntPoint.java,v 1.5 2005/07/17 05:20:43 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.util.HashCodeGenerator;
  * Пара целых чисел, соответствующих, например, координатам объекта в
  * целочисленной двумерной плоскости.
  *
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/17 05:20:43 $
  * @module
  */
 public class IntPoint implements Cloneable {
@@ -49,6 +49,7 @@ public class IntPoint implements Cloneable {
 		this.y = y;
 	}
 
+	@Override
 	public String toString() {
 		return "IntPoint[" + this.x + ", " + this.y + "]";
 	}
@@ -93,6 +94,7 @@ public class IntPoint implements Cloneable {
 		return Math.sqrt(px * px + py * py);
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -101,6 +103,7 @@ public class IntPoint implements Cloneable {
 		}
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof IntPoint) {
 			IntPoint p2d = (IntPoint) obj;
@@ -109,6 +112,7 @@ public class IntPoint implements Cloneable {
 		return super.equals(obj);
 	}
 
+	@Override
 	public int hashCode() {
 		HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addInt(this.x);

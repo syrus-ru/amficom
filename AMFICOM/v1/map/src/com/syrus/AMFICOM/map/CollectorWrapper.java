@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.7 2005/04/11 11:51:23 bob Exp $
+ * $Id: CollectorWrapper.java,v 1.8 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:51:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class CollectorWrapper extends StorableObjectWrapper {
@@ -36,8 +36,7 @@ public class CollectorWrapper extends StorableObjectWrapper {
 
 	private CollectorWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTICS,
-				LINK_COLUMN_PHYSICAL_LINK_ID};
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, LINK_COLUMN_PHYSICAL_LINK_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -62,8 +61,9 @@ public class CollectorWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+		if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 			return List.class;
 		return String.class;
 	}
@@ -73,15 +73,14 @@ public class CollectorWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof Collector) {
-			Collector collector = (Collector) object;
+			final Collector collector = (Collector) object;
 			if (key.equals(COLUMN_NAME))
 				return collector.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return collector.getDescription();
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				return collector.getCharacteristics();
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 				return collector.getPhysicalLinks();
 
@@ -104,8 +103,6 @@ public class CollectorWrapper extends StorableObjectWrapper {
 				collector.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				collector.setDescription((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				collector.setCharacteristics((Set) value);
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
 				collector.setPhysicalLinks((Set) value);
 		}

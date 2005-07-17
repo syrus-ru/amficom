@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.70 2005/07/06 15:49:25 bass Exp $
+ * $Id: PortType.java,v 1.71 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -30,18 +29,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -52,12 +51,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	private int sort;
 	private int kind;
 
-	private Set<Characteristic> characteristics;
-
 	PortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE);
 		try {
@@ -94,7 +89,6 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.name = name;
 		this.sort = sort;
 		this.kind = kind;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 
@@ -145,11 +139,6 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
 		this.kind = ptt.kind.value();
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -158,8 +147,6 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	 */
 	@Override
 	public IdlPortType getTransferable(final ORB orb) {
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlPortTypeHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -171,8 +158,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				PortTypeSort.from_int(this.sort),
-				PortTypeKind.from_int(this.kind),
-				charIds);
+				PortTypeKind.from_int(this.kind));
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -223,32 +209,10 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		return Collections.emptySet();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
 }

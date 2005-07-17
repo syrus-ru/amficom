@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.21 2005/07/12 13:55:31 bass Exp $
+ * $Id: CablePath.java,v 1.22 2005/07/17 05:20:55 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -27,6 +28,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/07/12 13:55:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/07/17 05:20:55 $
  * @module mapviewclient_v1
  */
 public final class CablePath implements MapElement
@@ -68,11 +70,11 @@ public final class CablePath implements MapElement
 	/**
 	 * Сортированный список узлов, по которым проходит кабель.
 	 */
-	protected transient List sortedNodes = new LinkedList();
+	protected transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 	/**
 	 * Сортированный список фрагментов линий, по которым проходит кабель.
 	 */
-	protected transient List sortedNodeLinks = new LinkedList();
+	protected transient List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 	/**
 	 * Флаг сортировки фрагментов.
 	 */
@@ -81,7 +83,7 @@ public final class CablePath implements MapElement
 	/**
 	 * Список линий, по которым проходит кабель.
 	 */
-	protected transient List links = new LinkedList();
+	protected transient List<PhysicalLink> links = new LinkedList<PhysicalLink>();
 	/**
 	 * Флаг сортировки линий.
 	 */
@@ -182,29 +184,14 @@ public final class CablePath implements MapElement
 	/**
 	 *
 	 * {@inheritDoc}
+	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set getCharacteristics()
+	public Set<Characteristic> getCharacteristics() throws ApplicationException
 	{
 		return this.schemeCableLink.getCharacteristics();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addCharacteristic(Characteristic ch)
-	{
-		this.schemeCableLink.addCharacteristic(ch);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeCharacteristic(Characteristic ch)
-	{
-		this.schemeCableLink.removeCharacteristic(ch);
-	}
-	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -440,16 +427,14 @@ public final class CablePath implements MapElement
 	 * Получить список линий, по которым проходит кабель.
 	 * @return список линий
 	 */
-	public List getLinks()
-	{	
+	public List<PhysicalLink> getLinks() {
 		return Collections.unmodifiableList(this.links);
 	}
 
 	/**
 	 * Очистить список линий, по которым проходит кабель.
 	 */
-	public void clearLinks()
-	{	
+	public void clearLinks() {
 		this.links.clear();
 		this.binding.clear();
 	}
@@ -459,8 +444,7 @@ public final class CablePath implements MapElement
 	 * <br>Внимание! концевые точки линии не обновляются.
 	 * @param link линия
 	 */
-	public void removeLink(PhysicalLink link)
-	{
+	public void removeLink(final PhysicalLink link) {
 		this.links.remove(link);
 		this.getBinding().remove(link);
 		this.nodeLinksSorted = false;
@@ -472,8 +456,7 @@ public final class CablePath implements MapElement
 	 * @param addLink добавляемая линия
 	 * @param cci оюъект, описывающий привязку кабеля к линии
 	 */
-	public void addLink(PhysicalLink addLink, CableChannelingItem cci)
-	{
+	public void addLink(final PhysicalLink addLink, final CableChannelingItem cci) {
 		this.links.add(addLink);
 		this.binding.put(addLink, cci);
 		this.linksSorted = false;
@@ -485,47 +468,41 @@ public final class CablePath implements MapElement
 	 * Сортировать список линий, по которым проходит кабель, начиная с
 	 * начального узла кабеля до конечного.
 	 */
-	public void sortLinks()
-	{
-		if(!this.linksSorted)
-		{
+	public void sortLinks() {
+		if (!this.linksSorted) {
 			AbstractNode smne = this.getStartNode();
-			List origList = new LinkedList();
+			final List<PhysicalLink> origList = new LinkedList<PhysicalLink>();
 			origList.addAll(this.getLinks());
-			List list = new LinkedList();
+			final List<PhysicalLink> list = new LinkedList<PhysicalLink>();
 			int count = origList.size();
 			for (int i = 0; i < count; i++)
-//			while(!smne.equals(this.getEndNode()))
+			// while(!smne.equals(this.getEndNode()))
 			{
 				boolean canSort = false;
-				for(Iterator it = origList.iterator(); it.hasNext();)
-				{
-					PhysicalLink link = (PhysicalLink)it.next();
+				for (Iterator it = origList.iterator(); it.hasNext();) {
+					PhysicalLink link = (PhysicalLink) it.next();
 
-					if(link.getStartNode().equals(smne))
-					{
+					if (link.getStartNode().equals(smne)) {
 						list.add(link);
 						it.remove();
 						smne = link.getEndNode();
 						CableChannelingItem cci = this.getBinding().getCCI(link);
-						cci.setStartSiteNode((SiteNode )link.getStartNode());
-						cci.setEndSiteNode((SiteNode )link.getEndNode());
+						cci.setStartSiteNode((SiteNode) link.getStartNode());
+						cci.setEndSiteNode((SiteNode) link.getEndNode());
 						canSort = true;
 						break;
-					} else
-					if(link.getEndNode().equals(smne))
-					{
+					} else if (link.getEndNode().equals(smne)) {
 						list.add(link);
 						it.remove();
 						smne = link.getStartNode();
 						CableChannelingItem cci = this.getBinding().getCCI(link);
-						cci.setStartSiteNode((SiteNode )link.getEndNode());
-						cci.setEndSiteNode((SiteNode )link.getStartNode());
+						cci.setStartSiteNode((SiteNode) link.getEndNode());
+						cci.setEndSiteNode((SiteNode) link.getStartNode());
 						canSort = true;
 						break;
 					}
 				}
-				if(!canSort)
+				if (!canSort)
 					// unconsistent - cannot sort
 					return;
 			}
@@ -538,22 +515,21 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Получить следующую линию по цепочке сортированных линий.
-	 * @param physicalLink линия
-	 * @return следующая линия, или <code>null</code>, если link - последняя
-	 * в списке
+	 * 
+	 * @param physicalLink
+	 *        линия
+	 * @return следующая линия, или <code>null</code>, если link - последняя в
+	 *         списке
 	 */
-	public PhysicalLink nextLink(PhysicalLink physicalLink)
-	{
+	public PhysicalLink nextLink(PhysicalLink physicalLink) {
 		PhysicalLink ret = null;
-		if(physicalLink == null)
-		{
-			if(this.getLinks().size() != 0)
-				ret = (PhysicalLink)this.getLinks().get(0);
-		} else
-		{
+		if (physicalLink == null) {
+			if (this.getLinks().size() != 0)
+				ret = this.getLinks().get(0);
+		} else {
 			int index = this.getLinks().indexOf(physicalLink);
-			if(index != this.getLinks().size() - 1 && index != -1)
-				ret = (PhysicalLink)this.getLinks().get(index + 1);
+			if (index != this.getLinks().size() - 1 && index != -1)
+				ret = this.getLinks().get(index + 1);
 		}
 		return ret;
 	}
@@ -564,18 +540,15 @@ public final class CablePath implements MapElement
 	 * @return предыдущая линия, или <code>null</code>, если link - первая
 	 * в списке
 	 */
-	public PhysicalLink previousLink(PhysicalLink physicalLink)
-	{
+	public PhysicalLink previousLink(PhysicalLink physicalLink) {
 		PhysicalLink ret = null;
-		if(physicalLink == null)
-		{
-			if(this.getLinks().size() != 0)
-				ret = (PhysicalLink)this.getLinks().get(this.getLinks().size() - 1);
-		} else
-		{
+		if (physicalLink == null) {
+			if (this.getLinks().size() != 0)
+				ret = this.getLinks().get(this.getLinks().size() - 1);
+		} else {
 			int index = this.getLinks().indexOf(physicalLink);
-			if(index > 0)
-				ret = (PhysicalLink)this.getLinks().get(index - 1);
+			if (index > 0)
+				ret = this.getLinks().get(index - 1);
 		}
 		return ret;
 	}
@@ -596,7 +569,7 @@ public final class CablePath implements MapElement
 	 * @return список отсортированных узлов, или <code>Collections.EMPTY_LIST</code>, если
 	 * узлы не отсортированы
 	 */
-	public List getSortedNodes()
+	public List<AbstractNode> getSortedNodes()
 	{
 		if(!this.nodeLinksSorted)
 			return EMPTY_SORTED_LIST;
@@ -610,7 +583,7 @@ public final class CablePath implements MapElement
 	 * @return список отсортированных фрагментов линий, или
 	 * <code>Collections.EMPTY_LIST</code>, если узлы не отсортированы
 	 */
-	public List getSortedNodeLinks()
+	public List<NodeLink> getSortedNodeLinks()
 	{
 		if(!this.nodeLinksSorted)
 			return EMPTY_SORTED_LIST;
@@ -625,8 +598,8 @@ public final class CablePath implements MapElement
 		this.sortLinks();
 		// if(!nodeLinksSorted)
 		{
-			List list = new LinkedList();
-			List nodeList = new LinkedList();
+			List<NodeLink> list = new LinkedList<NodeLink>();
+			List<AbstractNode> nodeList = new LinkedList<AbstractNode>();
 
 			AbstractNode node = getStartNode();
 
@@ -639,15 +612,13 @@ public final class CablePath implements MapElement
 					list.addAll(link.getNodeLinks());
 					nodeList.addAll(link.getSortedNodes());
 				} else {
-					List nodeLinks = link.getNodeLinks();
-					List nodeLinksList = new ArrayList(nodeLinks);
-					for (ListIterator listIterator = nodeLinksList.listIterator(nodeLinksList.size()); listIterator
-							.hasPrevious();) {
+					final List<NodeLink> nodeLinks = link.getNodeLinks();
+					final List<NodeLink> nodeLinksList = new ArrayList<NodeLink>(nodeLinks);
+					for (final ListIterator<NodeLink> listIterator = nodeLinksList.listIterator(nodeLinksList.size()); listIterator.hasPrevious();) {
 						list.add(listIterator.previous());
 					}
-					List sortedNodes2 = link.getSortedNodes();
-					for (ListIterator listIterator = sortedNodes2.listIterator(sortedNodes2.size()); listIterator
-							.hasPrevious();) {
+					List<AbstractNode> sortedNodes2 = link.getSortedNodes();
+					for (final ListIterator<AbstractNode> listIterator = sortedNodes2.listIterator(sortedNodes2.size()); listIterator.hasPrevious();) {
 						nodeList.add(listIterator.previous());
 					}
 				}
@@ -821,19 +792,4 @@ public final class CablePath implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(Set characteristics) {
-		this.schemeCableLink.setCharacteristics(characteristics);
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(Set characteristics) {
-		this.schemeCableLink.setCharacteristics0(characteristics);
-	}
 }

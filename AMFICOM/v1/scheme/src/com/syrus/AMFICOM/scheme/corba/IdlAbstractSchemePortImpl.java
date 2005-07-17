@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAbstractSchemePortImpl.java,v 1.1 2005/07/07 15:52:10 bass Exp $
+ * $Id: IdlAbstractSchemePortImpl.java,v 1.2 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/17 05:20:26 $
  * @module scheme_v1
  */
 final class IdlAbstractSchemePortImpl extends IdlAbstractSchemePort {
@@ -35,8 +35,7 @@ final class IdlAbstractSchemePortImpl extends IdlAbstractSchemePort {
 			final String description,
 			final DirectionType directionType,
 			final IdlIdentifier measurementPortId,
-			final IdlIdentifier parentSchemeDeviceId,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlIdentifier parentSchemeDeviceId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -48,7 +47,6 @@ final class IdlAbstractSchemePortImpl extends IdlAbstractSchemePort {
 		this.directionType = directionType;
 		this.measurementPortId = measurementPortId;
 		this.parentSchemeDeviceId = parentSchemeDeviceId;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

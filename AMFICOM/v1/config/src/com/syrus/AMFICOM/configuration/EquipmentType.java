@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.74 2005/07/06 15:49:25 bass Exp $
+ * $Id: EquipmentType.java,v 1.75 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -28,18 +27,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -50,12 +49,8 @@ public final class EquipmentType extends StorableObjectType implements Character
 	private String manufacturer;
 	private String manufacturerCode;
 
-	private Set<Characteristic> characteristics;
-
 	EquipmentType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final EquipmentTypeDatabase database = (EquipmentTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
@@ -92,7 +87,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 		this.name = name;
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 
@@ -140,11 +134,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 		this.name = ett.name;
 		this.manufacturer = ett.manufacturer;
 		this.manufacturerCode = ett.manufacturerCode;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ett.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(ett.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -153,7 +142,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 */
 	@Override
 	public IdlEquipmentType getTransferable(final ORB orb) {
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlEquipmentTypeHelper.init(orb,
 				super.id.getTransferable(),
@@ -166,8 +154,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				this.manufacturer != null ? this.manufacturer : "",
-				this.manufacturerCode != null ? this.manufacturerCode : "",
-				charIds);
+				this.manufacturerCode != null ? this.manufacturerCode : "");
 	}
 
 	protected synchronized void setAttributes(final Date created,
@@ -200,33 +187,10 @@ public final class EquipmentType extends StorableObjectType implements Character
 		return Collections.emptySet();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public String getManufacturer() {

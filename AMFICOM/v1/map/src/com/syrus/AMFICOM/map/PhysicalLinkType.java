@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.54 2005/07/07 13:12:30 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.55 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -29,6 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
@@ -46,8 +45,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -75,8 +74,6 @@ public final class PhysicalLinkType extends StorableObjectType
 	private static final long serialVersionUID = 3690191057812271924L;
 
 	private transient PhysicalLinkTypeSort sort;
-	
-	private Set<Characteristic> characteristics;
 
 	private String name;
 
@@ -131,8 +128,6 @@ public final class PhysicalLinkType extends StorableObjectType
 			this.bindingDimension = new IntDimension(0, 0);
 		else
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
-
-		this.characteristics = new HashSet();
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,
@@ -174,9 +169,6 @@ public final class PhysicalLinkType extends StorableObjectType
 
 		//@todo retreive from transferable!
 		this.sort = PhysicalLinkTypeSort.fromString(pltt.codename);
-
-		Set ids = Identifier.fromTransferables(pltt.characteristicIds);
-		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
 	}
 
@@ -191,7 +183,6 @@ public final class PhysicalLinkType extends StorableObjectType
 	 */
 	@Override
 	public IdlPhysicalLinkType getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return IdlPhysicalLinkTypeHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -203,18 +194,20 @@ public final class PhysicalLinkType extends StorableObjectType
 				this.name,
 				this.description,
 				this.bindingDimension.getWidth(),
-				this.bindingDimension.getHeight(),
-				charIds);
+				this.bindingDimension.getHeight());
 	}
 
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
 
+	@Override
 	protected void setDescription0(String description) {
 		this.description = description;
 	}
 
+	@Override
 	public void setDescription(final String description) {
 		this.setDescription0(description);
 		super.markAsChanged();
@@ -267,6 +260,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = PhysicalLinkTypeSort.fromString(codename);
 	}
 
+	@Override
 	public void setCodename(String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
@@ -286,42 +280,15 @@ public final class PhysicalLinkType extends StorableObjectType
 		return new IntDimension(this.bindingDimension);
 	}
 
+	@Override
 	protected void setCodename0(final String codename) {
 		super.setCodename0(codename);
 	}
 
-	public Set getCharacteristics() {
-		return  Collections.unmodifiableSet(this.characteristics);
-	}
-	
-	public void addCharacteristic(final Characteristic characteristic){
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic)
-	{
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public PhysicalLinkTypeSort getSort() {
@@ -369,7 +336,6 @@ public final class PhysicalLinkType extends StorableObjectType
 				0,
 				codename,
 				description);
-		this.characteristics = new HashSet();
 		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool);
 	}
 

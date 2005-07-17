@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.51 2005/07/07 13:12:30 bass Exp $
+ * $Id: TopologicalNode.java,v 1.52 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -37,7 +34,6 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 
@@ -46,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:44 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -97,18 +93,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		super.description = tnt.description;
 		super.location = new DoublePoint(tnt.longitude, tnt.latitude);
 		this.active = tnt.active;
-
-		try {
-			this.characteristics = new HashSet(tnt.characteristicIds.length);
-			Set<Identifier> characteristicIds = new HashSet(tnt.characteristicIds.length);
-			for (int i = 0; i < tnt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(tnt.characteristicIds[i]));
-
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-			this.setCharacteristics0(characteristics0);
-		} catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
 	}
 
 	TopologicalNode(final Identifier id,
@@ -129,8 +113,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				description,
 				new DoublePoint(longitude, latitude));
 		this.active = active;
-
-		this.characteristics = new HashSet();
 	}
 
 	TopologicalNode(final Identifier id,
@@ -153,8 +135,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				new DoublePoint(longitude, latitude));
 		this.physicalLink = physicalLink;
 		this.active = active;
-
-		this.characteristics = new HashSet();
 
 		this.selected = false;
 	}
@@ -226,7 +206,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	 */
 	@Override
 	public IdlTopologicalNode getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return IdlTopologicalNodeHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -239,8 +218,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				this.location.getX(),
 				this.location.getY(),
 				this.physicalLink.getId().getTransferable(),
-				this.active,
-				charIds);
+				this.active);
 	}
 
 	public boolean isActive() {
@@ -405,25 +383,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		}
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
 	public XmlObject getXMLTransferable() {
 		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = com.syrus.amficom.map.xml.TopologicalNode.Factory.newInstance();
 		fillXMLTransferable(xmlTopologicalNode);
@@ -458,7 +417,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				"",
 				"",
 				new DoublePoint(0, 0));
-		this.characteristics = new HashSet();
 		this.selected = false;
 		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool);
 	}

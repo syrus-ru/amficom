@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.11 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: MapWrapper.java,v 1.12 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/05/30 14:50:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MapWrapper extends StorableObjectWrapper {
@@ -77,6 +77,7 @@ public class MapWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		if (key.equals(LINK_COLUMN_COLLECTOR_ID) || key.equals(LINK_COLUMN_MARK_ID)
 				|| key.equals(LINK_COLUMN_NODE_LINK_ID) || key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)
@@ -90,6 +91,7 @@ public class MapWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof Map) {
 			Map map = (Map) object;

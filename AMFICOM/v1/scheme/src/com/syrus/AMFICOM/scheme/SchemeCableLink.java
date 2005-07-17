@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.49 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.50 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/14 19:25:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -330,8 +330,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				this.getAbstractLinkId().getTransferable(),
 				this.getSourceAbstractSchemePortId().getTransferable(),
 				this.getTargetAbstractSchemePortId().getTransferable(),
-				this.getParentSchemeId().getTransferable(),
-				Identifier.createTransferables(super.getCharacteristics()));
+				this.getParentSchemeId().getTransferable());
 	}
 
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
@@ -499,7 +498,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				schemeCableLink.cableLinkId,
 				schemeCableLink.sourceSchemeCablePortId,
 				schemeCableLink.targetSchemeCablePortId,
-				schemeCableLink.parentSchemeId,
-				schemeCableLink.characteristicIds);
+				schemeCableLink.parentSchemeId);
 	}
 }

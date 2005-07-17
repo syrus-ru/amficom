@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.7 2005/07/14 13:08:51 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.8 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.scheme;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/14 13:08:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:26 $
+ * @author $Author: arseniy $
  * @module scheme_v1
  */
 public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
@@ -59,8 +58,7 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 				COLUMN_UGO_CELL_ID,
 				COLUMN_SCHEME_CELL_ID,
 				COLUMN_PARENT_SCHEME_PROTO_GROUP_ID,
-				COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID,
-				COLUMN_CHARACTERISTICS}));
+				COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID}));
 	}
 
 	public List<String> getKeys() {
@@ -88,8 +86,6 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_PARENT_SCHEME_PROTO_GROUP_ID)
 				|| key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
 			return Identifier.class;
-		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}
@@ -128,8 +124,6 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 				return schemeProtoElement.getParentSchemeProtoGroupId();
 			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
 				return schemeProtoElement.getParentSchemeProtoElementId();
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				return schemeProtoElement.getCharacteristics();
 			}
 		}
 		return null;
@@ -163,8 +157,6 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 				schemeProtoElement.parentSchemeProtoGroupId = (Identifier) value;
 			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
 				schemeProtoElement.parentSchemeProtoElementId = (Identifier) value;
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				schemeProtoElement.setCharacteristics((Set) value);
 			}
 		}
 	}

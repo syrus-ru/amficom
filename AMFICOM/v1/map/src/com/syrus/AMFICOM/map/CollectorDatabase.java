@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.35 2005/07/14 16:08:03 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.36 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,15 +20,16 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -40,11 +41,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
-public final class CollectorDatabase extends CharacterizableDatabase {
+public final class CollectorDatabase extends StorableObjectDatabase {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
@@ -58,35 +59,39 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 				+ storableObject.getClass().getName());
 	}
 
+	 @Override
 	public void retrieve(StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Collector collector = this.fromStorableObject(storableObject);
+		final Collector collector = this.fromStorableObject(storableObject);
 		super.retrieveEntity(collector);
 		this.retrievePhysicalLinks(Collections.singleton(collector));
 	}
 
-	private void retrievePhysicalLinks(Set collectors) throws RetrieveObjectException {
+	private void retrievePhysicalLinks(final Set<Collector> collectors) throws RetrieveObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
-		java.util.Map map = super.retrieveLinkedEntityIds(collectors,
+		final java.util.Map<Identifier, Set<Identifier>> map = super.retrieveLinkedEntityIds(collectors,
 				COLLECTOR_PHYSICAL_LINK,
 				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
-		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Collector collector = (Collector) it.next();
-			Set physicalLinkIds = (Set) map.get(collector);
+		for (final Collector collector : collectors) {
+			final Identifier collectorId = collector.getId();
+			final Set<Identifier> physicalLinkIds = map.get(collectorId);
 			try {
-				collector.setPhysicalLinks0(StorableObjectPool.getStorableObjects(physicalLinkIds, true));
-			} catch (ApplicationException e) {
-				throw new RetrieveObjectException(e);
+				final Set<PhysicalLink> physicalLinks = StorableObjectPool.getStorableObjects(physicalLinkIds, true);
+				collector.setPhysicalLinks0(physicalLinks);
+			} catch (ApplicationException ae) {
+				throw new RetrieveObjectException(ae);
 			}
 		}
 	}
 
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.COLLECTOR_CODE;
 	}
 
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA + StorableObjectWrapper.COLUMN_DESCRIPTION;
@@ -94,6 +99,7 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		return columns;
 	}
 
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA + QUESTION;
@@ -101,26 +107,29 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		return updateMultipleSQLValues;
 	}
 
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		Collector collector = fromStorableObject(storableObject);
+		final Collector collector = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Collector collector = fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		final Collector collector = fromStorableObject(storableObject);
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
-		Collector collector = (storableObject == null) ? new Collector(DatabaseIdentifier.getIdentifier(resultSet,
+		final Collector collector = (storableObject == null) ? new Collector(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null) : fromStorableObject(storableObject);
 
 		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -133,9 +142,10 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		return collector;
 	}
 
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException {
-		Collector collector = this.fromStorableObject(storableObject);
+		final Collector collector = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
@@ -144,7 +154,8 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
+	@Override
+	public void insert(final StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		super.insert(storableObject);
 		try {
 			this.updatePhysicalLinks(Collections.singleton(storableObject));
@@ -164,24 +175,26 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
 		this.updatePhysicalLinks(Collections.singleton(storableObject));
 	}
 
-	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind)
+	@Override
+	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final UpdateKind updateKind)
 			throws VersionCollisionException,
 				UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updatePhysicalLinks(storableObjects);
 	}	
 
-	private void updatePhysicalLinks(Set collectors) throws UpdateObjectException {
+	private void updatePhysicalLinks(final Set collectors) throws UpdateObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
-		java.util.Map collectorIdPhysicalLinkIdsMap = new HashMap();
+		final java.util.Map<Identifier, Set<Identifier>> collectorIdPhysicalLinkIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector;
 			try {
@@ -189,12 +202,8 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 			} catch (IllegalDataException e) {
 				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
 			}
-			Set physicalLinks = collector.getPhysicalLinks();
-			Set physicalLinkIds = new HashSet(physicalLinks.size());
-			for (Iterator iter = physicalLinks.iterator(); iter.hasNext();) {
-				PhysicalLink physicalLink = (PhysicalLink) iter.next();
-				physicalLinkIds.add(physicalLink.getId());
-			}
+			final Set<PhysicalLink> physicalLinks = collector.getPhysicalLinks();
+			final Set<Identifier> physicalLinkIds = Identifier.createIdentifiers(physicalLinks);
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
 		}
 
@@ -204,16 +213,18 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 	}
 
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		this.delete(Collections.singleton(id));
 	}
 
-	public void delete(Set ids) {
-		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
+	@Override
+	public void delete(final Set<? extends Identifiable> ids) {
+		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
 		stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("CollectorDatabase.delete(Collection) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
@@ -236,8 +247,9 @@ public final class CollectorDatabase extends CharacterizableDatabase {
 		super.delete(ids);
 	}	
 
+	@Override
 	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set collection = super.retrieveByCondition(conditionQuery);
+		final Set<Collector> collection = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(collection);
 		return collection;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.7 2005/04/11 11:51:24 bob Exp $
+ * $Id: NodeLinkWrapper.java,v 1.8 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:51:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class NodeLinkWrapper extends StorableObjectWrapper {
@@ -38,8 +37,11 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 
 	private NodeLinkWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_PHYSICAL_LINK_ID, COLUMN_START_NODE_ID,
-				COLUMN_END_NODE_ID, COLUMN_LENGTH};
+		final String[] keysArray = new String[] { COLUMN_NAME,
+				COLUMN_PHYSICAL_LINK_ID,
+				COLUMN_START_NODE_ID,
+				COLUMN_END_NODE_ID,
+				COLUMN_LENGTH };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -64,9 +66,8 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return String.class;
 	}
 
@@ -75,6 +76,7 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof NodeLink) {
 			NodeLink nodeLink = (NodeLink) object;
@@ -88,8 +90,6 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 				return nodeLink.getEndNode();
 			else if (key.equals(COLUMN_LENGTH))
 				return new Double(nodeLink.getLength());
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				return nodeLink.getCharacteristics();
 		}
 		return null;
 	}
@@ -115,8 +115,6 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 				nodeLink.setEndNode((AbstractNode) value);
 			else if (key.equals(COLUMN_LENGTH))
 				nodeLink.setLength(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				nodeLink.setCharacteristics((Set) value);
 		}
 	}
 }

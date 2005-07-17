@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.9 2005/06/17 12:40:40 bass Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.10 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/17 12:40:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class TopologicalNodeWrapper extends StorableObjectWrapper {
@@ -41,8 +40,7 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 
 	private TopologicalNodeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_ACTIVE, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE, COLUMN_ACTIVE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -67,9 +65,8 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return String.class;
 	}
 
@@ -78,6 +75,7 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof TopologicalNode) {
 			TopologicalNode topologicalNode = (TopologicalNode) object;
@@ -93,8 +91,7 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 				return Boolean.valueOf(topologicalNode.isActive());
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID)) {
 				return topologicalNode.getPhysicalLink();
-			} else if (key.equals(COLUMN_CHARACTERISTICS))
-				return topologicalNode.getCharacteristics();
+			}
 		}
 		return null;
 	}
@@ -122,8 +119,6 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 				topologicalNode.setActive(((Boolean) value).booleanValue());
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID))
 				topologicalNode.setPhysicalLink((PhysicalLink) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				topologicalNode.setCharacteristics((Set) value);
 		}
 	}
 

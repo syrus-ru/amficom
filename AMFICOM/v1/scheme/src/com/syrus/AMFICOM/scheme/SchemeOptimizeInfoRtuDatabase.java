@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.6 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.7 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_COD
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -24,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/12 08:40:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase {
@@ -100,20 +98,6 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 
 	/**
 	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieve(com.syrus.AMFICOM.general.StorableObject)
-	 */
-	@Override
-	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param storableObject
 	 * @param retrieveKind
 	 * @param arg
 	 * @throws IllegalDataException
@@ -129,27 +113,4 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#insert(com.syrus.AMFICOM.general.StorableObject)
-	 */
-	@Override
-	public void insert(StorableObject storableObject)
-			throws IllegalDataException, CreateObjectException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param storableObjects
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#insert(java.util.Set)
-	 */
-	@Override
-	public void insert(Set<? extends StorableObject> storableObjects) throws IllegalDataException,
-			CreateObjectException {
-		throw new UnsupportedOperationException();
-	}
 }

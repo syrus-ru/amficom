@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.60 2005/07/06 15:49:25 bass Exp $
+ * $Id: TransmissionPathType.java,v 1.61 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -28,18 +27,18 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -49,12 +48,8 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 
 	private String name;
 
-	private Set<Characteristic> characteristics;
-
 	TransmissionPathType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE);
 		try {
@@ -87,7 +82,6 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 				codename,
 				description);
 		this.name = name;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -128,11 +122,6 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(tptt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(tptt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -141,7 +130,6 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	 */
 	@Override
 	public IdlTransmissionPathType getTransferable(final ORB orb) {
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlTransmissionPathTypeHelper.init(orb,
 				super.id.getTransferable(),
@@ -152,8 +140,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 				super.version,
 				super.codename,
 				super.description != null ? super.description : "",
-				this.name != null ? this.name : "",
-				charIds);
+				this.name != null ? this.name : "");
 	}
 
 	public String getName() {
@@ -182,32 +169,9 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		return Collections.emptySet();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: DoublePoint.java,v 1.5 2005/05/18 11:48:20 bass Exp $
+ * $Id: DoublePoint.java,v 1.6 2005/07/17 05:20:43 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ package com.syrus.AMFICOM.map;
  * Класс необходим для работы с географическими объектами, их отображения,
  * конвертации координат.
  *
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  */
 public class DoublePoint implements Cloneable {
@@ -57,6 +57,7 @@ public class DoublePoint implements Cloneable {
 		this.y = y;
 	}
 
+	@Override
 	public String toString() {
 		return "DoublePoint[" + this.x + ", " + this.y + "]";
 	}
@@ -101,6 +102,7 @@ public class DoublePoint implements Cloneable {
 		return Math.sqrt(px * px + py * py);
 	}
 
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -109,12 +111,14 @@ public class DoublePoint implements Cloneable {
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		long bits = java.lang.Double.doubleToLongBits(getX());
 		bits ^= java.lang.Double.doubleToLongBits(getY()) * 31;
 		return (((int) bits) ^ ((int) (bits >> 32)));
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof DoublePoint) {
 			DoublePoint p2d = (DoublePoint) obj;

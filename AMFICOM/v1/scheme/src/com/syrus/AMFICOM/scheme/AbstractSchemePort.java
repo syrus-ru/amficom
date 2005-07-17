@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.36 2005/07/14 19:25:47 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.37 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
-import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
@@ -42,6 +41,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -49,8 +50,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/07/14 19:25:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -80,8 +81,6 @@ public abstract class AbstractSchemePort extends
 
 	Identifier parentSchemeDeviceId;
 
-	private Set<Characteristic> characteristics;
-
 	boolean portTypeSet = false;
 
 	/**
@@ -89,7 +88,6 @@ public abstract class AbstractSchemePort extends
 	 */
 	AbstractSchemePort(final Identifier id) {
 		super(id);
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -126,8 +124,6 @@ public abstract class AbstractSchemePort extends
 
 		this.measurementPortId = Identifier.possiblyVoid(measurementPort);
 		this.parentSchemeDeviceId = Identifier.possiblyVoid(parentSchemeDevice);
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -138,12 +134,6 @@ public abstract class AbstractSchemePort extends
 		// super();
 	}
 
-	public final void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
 	public final DirectionType getDirectionType() {
@@ -151,8 +141,10 @@ public abstract class AbstractSchemePort extends
 		return this.directionType;
 	}
 
-	public final Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
+	public final Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**
@@ -268,13 +260,6 @@ public abstract class AbstractSchemePort extends
 		}
 	}
 
-	public final void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
 	/**
 	 * @param created
 	 * @param modified
@@ -329,24 +314,6 @@ public abstract class AbstractSchemePort extends
 			return;
 		this.directionType = directionType;
 		super.markAsChanged();
-	}
-
-	public final void setCharacteristics(final Set<Characteristic> characteristics) {
-		setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
-	 */
-	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
-		assert characteristics != null: NON_NULL_EXPECTED;
-		if (this.characteristics == null)
-			this.characteristics = new HashSet<Characteristic>(characteristics.size());
-		else
-			this.characteristics.clear();
-		this.characteristics.addAll(characteristics);
 	}
 
 	/**
@@ -472,13 +439,10 @@ public abstract class AbstractSchemePort extends
 			final IdlIdentifier portTypeId1,
 			final IdlIdentifier portId1,
 			final IdlIdentifier measurementPortId1,
-			final IdlIdentifier parentSchemeDeviceId1,
-			final IdlIdentifier characteristicIds[])
+			final IdlIdentifier parentSchemeDeviceId1)
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true);
-			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.28 2005/07/14 16:08:03 bass Exp $
+ * $Id: SiteNodeDatabase.java,v 1.29 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -27,13 +26,13 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
-public final class SiteNodeDatabase extends CharacterizableDatabase {
-	 private static String columns;
-	
+public final class SiteNodeDatabase extends StorableObjectDatabase {
+	private static String columns;
+
 	private static String updateMultipleSQLValues;
 
 	private SiteNode fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -42,18 +41,14 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException("SiteNodeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		SiteNode siteNode = this.fromStorableObject(storableObject);
-		super.retrieveEntity(siteNode);
-	}	
-	
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.SITENODE_CODE;
 	}	
-	
+
+	@Override
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeWrapper.COLUMN_LONGITUDE + COMMA
@@ -66,9 +61,10 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 		}
 		return columns;
 	}	
-	
+
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -81,8 +77,8 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
+
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		SiteNode siteNode = fromStorableObject(storableObject);
@@ -97,7 +93,8 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return startParameterNumber;
 	}
-	
+
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		SiteNode siteNode = fromStorableObject(storableObject);
 		String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
@@ -111,7 +108,8 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 			+ DatabaseString.toQuerySubString(siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return values;
 	}
-	
+
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		SiteNode siteNode = (storableObject == null) ?
@@ -145,9 +143,9 @@ public final class SiteNodeDatabase extends CharacterizableDatabase {
 		return siteNode;
 	}
 
-	
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		SiteNode siteNode = this.fromStorableObject(storableObject);
+		final SiteNode siteNode = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  siteNode.getId() + "'; argument: " + arg);

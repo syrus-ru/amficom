@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.67 2005/07/04 13:00:53 bass Exp $
+ * $Id: MeasurementPort.java,v 1.68 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,12 +35,11 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/07/04 13:00:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -54,12 +53,8 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	private Identifier kisId;
 	private Identifier portId;
 
-	private Set<Characteristic> characteristics;
-
 	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE);
 		try {
@@ -96,7 +91,6 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		this.description = description;
 		this.kisId = kisId;
 		this.portId = portId;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 	
 	/**
@@ -151,11 +145,6 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 
 		this.kisId = new Identifier(mpt.kisId);
 		this.portId = new Identifier(mpt.portId);
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(mpt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(mpt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -164,8 +153,6 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	 */
 	@Override
 	public IdlMeasurementPort getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlMeasurementPortHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -177,8 +164,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 				this.name,
 				this.description,
 				this.kisId.getTransferable(),
-				this.portId.getTransferable(),
-				charIds);
+				this.portId.getTransferable());
 	}
 
 	public StorableObjectType getType() {
@@ -247,33 +233,10 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		super.markAsChanged();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.94 2005/07/11 08:18:58 bass Exp $
+ * $Id: KIS.java,v 1.95 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,13 +35,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/07/11 08:18:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.95 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -59,12 +58,8 @@ public final class KIS extends DomainMember implements Characterizable {
 	private String hostname;
 	private short tcpPort;
 
-	private Set<Characteristic> characteristics;
-
 	KIS(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final KISDatabase database = (KISDatabase) DatabaseContext.getDatabase(ObjectEntities.KIS_CODE);
 		try {
@@ -105,8 +100,6 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -163,11 +156,6 @@ public final class KIS extends DomainMember implements Characterizable {
 		this.description = kt.description;
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcpPort;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(kt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(kt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -176,7 +164,6 @@ public final class KIS extends DomainMember implements Characterizable {
 	 */
 	@Override
 	public IdlKIS getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlKISHelper.init(orb,
 				super.id.getTransferable(),
@@ -191,8 +178,7 @@ public final class KIS extends DomainMember implements Characterizable {
 				this.hostname,
 				this.tcpPort,
 				this.equipmentId.getTransferable(),
-				this.mcmId.getTransferable(),
-				charIds);
+				this.mcmId.getTransferable());
 	}
 
 	public String getName() {
@@ -263,33 +249,10 @@ public final class KIS extends DomainMember implements Characterizable {
 		return dependencies;
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**

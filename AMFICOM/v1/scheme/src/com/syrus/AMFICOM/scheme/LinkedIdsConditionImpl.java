@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.26 2005/07/15 13:10:07 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.27 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
-import com.sun.org.apache.xerces.internal.impl.xs.opti.SchemaParsingConfig;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -39,8 +38,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.26 $, $Date: 2005/07/15 13:10:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {

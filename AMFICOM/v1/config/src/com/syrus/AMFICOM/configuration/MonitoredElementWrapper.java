@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.12 2005/07/03 19:16:23 bass Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.13 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/03 19:16:23 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class MonitoredElementWrapper extends StorableObjectWrapper {
@@ -65,6 +65,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof MonitoredElement) {
@@ -95,13 +96,13 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				me.setMeasurementPortId((Identifier) value);
 			else if (key.equals(COLUMN_SORT))
-				me.setSort(MonitoredElementSort.from_int((Integer)value));
+				me.setSort(MonitoredElementSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				me.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
-				Set meDomainMemeberIds = new HashSet(((Set) value).size());
+				Set<Identifier> meDomainMemeberIds = new HashSet<Identifier>(((Set) value).size());
 				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					meDomainMemeberIds.add(it.next());
+					meDomainMemeberIds.add((Identifier) it.next());
 				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
 			}
 		}
@@ -116,6 +117,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {

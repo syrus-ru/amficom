@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTopologicalNodeImpl.java,v 1.2 2005/07/11 08:18:56 bass Exp $
+ * $Id: IdlTopologicalNodeImpl.java,v 1.3 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:44 $
  * @module map_v1
  */
 final class IdlTopologicalNodeImpl extends IdlTopologicalNode {
@@ -40,8 +40,7 @@ final class IdlTopologicalNodeImpl extends IdlTopologicalNode {
 			final double longitude,
 			final double latitude,
 			final IdlIdentifier physicalLinkId,
-			final boolean active,
-			final IdlIdentifier characteristicIds[]) {
+			final boolean active) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -54,7 +53,6 @@ final class IdlTopologicalNodeImpl extends IdlTopologicalNode {
 		this.latitude = latitude;
 		this.physicalLinkId = physicalLinkId;
 		this.active = active;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

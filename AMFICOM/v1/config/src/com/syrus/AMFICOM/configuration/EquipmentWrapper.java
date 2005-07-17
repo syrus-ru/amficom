@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.14 2005/06/22 10:21:41 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.15 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,14 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class EquipmentWrapper extends StorableObjectWrapper {
@@ -57,10 +56,20 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 
 	private EquipmentWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
-				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
-				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
-				COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_TYPE_ID,
+				COLUMN_IMAGE_ID,
+				COLUMN_LONGITUDE,
+				COLUMN_LATITUDE,
+				COLUMN_SUPPLIER,
+				COLUMN_SUPPLIER_CODE,
+				COLUMN_HW_SERIAL,
+				COLUMN_HW_VERSION,
+				COLUMN_SW_SERIAL,
+				COLUMN_SW_VERSION,
+				COLUMN_INVENTORY_NUMBER,
+				ObjectEntities.EQUIPMENTMELINK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -80,6 +89,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Equipment) {
@@ -110,8 +120,6 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 				return equipment.getSwVersion();
 			if (key.equals(COLUMN_INVENTORY_NUMBER))
 				return equipment.getInventoryNumber();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return equipment.getCharacteristics();
 			if (key.equals(ObjectEntities.EQUIPMENTMELINK))
 				return equipment.getMonitoredElementIds();
 		}
@@ -151,8 +159,6 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 				equipment.setSwVersion((String) value);
 			else if (key.equals(COLUMN_INVENTORY_NUMBER))
 				equipment.setInventoryNumber((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				equipment.setCharacteristics((Set)value);
 		}
 	}
 
@@ -165,6 +171,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -188,8 +195,6 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		} else if (key.equals(COLUMN_LONGITUDE) 
 				|| key.equals(COLUMN_LATITUDE)) {
 			return Float.class;
-		} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

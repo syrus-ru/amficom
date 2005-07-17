@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.54 2005/07/07 13:12:30 bass Exp $
+ * $Id: SiteNode.java,v 1.55 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -39,7 +37,6 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
@@ -58,8 +55,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/07/17 05:20:44 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -116,14 +113,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 		try {
 			this.type = (SiteNodeType) StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
-
-			this.characteristics = new HashSet(snt.characteristicIds.length);
-			Set<Identifier> characteristicIds = new HashSet(snt.characteristicIds.length);
-			for (int i = 0; i < snt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
-
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-			this.setCharacteristics0(characteristics0);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -155,8 +144,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.city = city;
 		this.street = street;
 		this.building = building;
-
-		this.characteristics = new HashSet();
 
 		this.selected = false;
 	}
@@ -231,9 +218,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	 */
 	@Override
 	public IdlSiteNode getTransferable(final ORB orb) {
-		int i = 0;
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlSiteNodeHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -249,8 +233,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				this.type.getId().getTransferable(),
 				this.city,
 				this.street,
-				this.building,
-				charIds);
+				this.building);
 	}
 
 	public StorableObjectType getType() {
@@ -452,25 +435,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
 	public XmlObject getXMLTransferable() {
 		com.syrus.amficom.map.xml.SiteNode xmlSiteNode = com.syrus.amficom.map.xml.SiteNode.Factory.newInstance();
 		fillXMLTransferable(xmlSiteNode);
@@ -515,7 +479,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		if(xmlSiteNode.getUid().getStringValue().equals("507133")) {
 			System.out.println("id for 507133 is " + this.id.toString());
 		}
-		this.characteristics = new HashSet();
 		this.selected = false;
 		this.fromXMLTransferable(xmlSiteNode, clonedIdsPool);
 	}

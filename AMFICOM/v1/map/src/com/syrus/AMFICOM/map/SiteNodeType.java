@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.47 2005/07/07 13:12:30 bass Exp $
+ * $Id: SiteNodeType.java,v 1.48 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -30,6 +29,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -39,16 +39,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
-import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -56,8 +55,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/07/17 05:20:44 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -76,8 +75,6 @@ implements Characterizable, Namable, XMLBeansTransferable {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3690481316080464696L;
-
-	private Set<Characteristic> characteristics;
 
 	private Identifier imageId;
 	private String name;
@@ -125,8 +122,6 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		this.imageId = imageId;
 		this.topological = topological;
 		this.sort = sort;
-
-		this.characteristics = new HashSet();
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,
@@ -172,9 +167,6 @@ implements Characterizable, Namable, XMLBeansTransferable {
 
 		//@todo retreive from transferable!
 		this.sort = SiteNodeTypeSort.fromString(sntt.codename);
-
-		Set ids = Identifier.fromTransferables(sntt.characteristicIds);
-		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
 	}
 
 	@Override
@@ -182,6 +174,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		return Collections.singleton((Identifiable) this.imageId);
 	}
 
+	@Override
 	public String getDescription() {
 		return this.description;
 	}
@@ -200,7 +193,6 @@ implements Characterizable, Namable, XMLBeansTransferable {
 	 */
 	@Override
 	public IdlSiteNodeType getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		return IdlSiteNodeTypeHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -212,14 +204,14 @@ implements Characterizable, Namable, XMLBeansTransferable {
 				this.name,
 				this.description,
 				this.imageId.getTransferable(),
-				this.topological,
-				charIds);
+				this.topological);
 	}
 
 	public boolean isTopological() {
 		return this.topological;
 	}
 
+	@Override
 	public void setDescription(final String description) {
 		super.description = description;
 		super.markAsChanged();
@@ -259,43 +251,17 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
+	@Override
 	public void setCodename(final String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
 		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
-	public Set getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void addCharacteristic(final Characteristic characteristic) {
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public SiteNodeTypeSort getSort() {
@@ -354,7 +320,6 @@ implements Characterizable, Namable, XMLBeansTransferable {
 				0,
 				codename,
 				description);
-		this.characteristics = new HashSet();
 		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool);
 	}
 

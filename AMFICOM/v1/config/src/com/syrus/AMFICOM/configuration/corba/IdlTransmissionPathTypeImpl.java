@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTransmissionPathTypeImpl.java,v 1.2 2005/07/11 08:18:58 bass Exp $
+ * $Id: IdlTransmissionPathTypeImpl.java,v 1.3 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/17 05:19:01 $
  * @module config_v1
  */
 final class IdlTransmissionPathTypeImpl extends IdlTransmissionPathType {
@@ -37,8 +37,7 @@ final class IdlTransmissionPathTypeImpl extends IdlTransmissionPathType {
 			final long version,
 			final String codename,
 			final String description,
-			final String name,
-			final IdlIdentifier characteristicIds[]) {
+			final String name) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -48,7 +47,6 @@ final class IdlTransmissionPathTypeImpl extends IdlTransmissionPathType {
 		this.codename = codename;
 		this.description = description;
 		this.name = name;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

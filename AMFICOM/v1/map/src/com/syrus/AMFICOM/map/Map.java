@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.58 2005/07/14 09:49:49 krupenn Exp $
+ * $Id: Map.java,v 1.59 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.58 $, $Date: 2005/07/14 09:49:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -87,15 +87,15 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	private Set<Mark> marks;
 	private Set<Collector> collectors;
 
-	protected transient Set maps;
-	protected transient Set externalNodes;
+	protected transient Set<Map> maps;
+	protected transient Set<AbstractNode> externalNodes;
 
-	protected transient Set selectedElements;
+	protected transient Set<MapElement> selectedElements;
 	/**
 	 * Сортированный список всех элементов топологической схемы
 	 */
-	protected transient List allElements;
-	protected transient Set nodeElements;
+	protected transient List<MapElement> allElements;
+	protected transient Set<AbstractNode> nodeElements;
 
 
 	Map(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -133,18 +133,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.name = name;
 		this.description = description;
 
-		this.siteNodes = new HashSet();
-		this.topologicalNodes = new HashSet();
-		this.nodeLinks = new HashSet();
-		this.physicalLinks = new HashSet();
-		this.marks = new HashSet();
-		this.collectors = new HashSet();
+		this.siteNodes = new HashSet<SiteNode>();
+		this.topologicalNodes = new HashSet<TopologicalNode>();
+		this.nodeLinks = new HashSet<NodeLink>();
+		this.physicalLinks = new HashSet<PhysicalLink>();
+		this.marks = new HashSet<Mark>();
+		this.collectors = new HashSet<Collector>();
 
-		this.maps = new HashSet();
-		this.selectedElements = new HashSet();
-		this.allElements = new LinkedList();
-		this.nodeElements = new HashSet();
-		this.externalNodes = new HashSet();
+		this.maps = new HashSet<Map>();
+		this.selectedElements = new HashSet<MapElement>();
+		this.allElements = new LinkedList<MapElement>();
+		this.nodeElements = new HashSet<AbstractNode>();
+		this.externalNodes = new HashSet<AbstractNode>();
 	}
 
 	public static Map createInstance(final Identifier creatorId,
@@ -180,7 +180,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.name = mt.name;
 		this.description = mt.description;
 
-		Set ids;
+		Set<Identifier> ids;
 		
 		ids = Identifier.fromTransferables(mt.siteNodeIds);
 		this.siteNodes = StorableObjectPool.getStorableObjects(ids, true);
@@ -203,7 +203,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.siteNodes);
 		dependencies.addAll(this.topologicalNodes);
 		dependencies.addAll(this.nodeLinks);
@@ -219,12 +219,12 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	@Override
 	public IdlMap getTransferable(final ORB orb) {
-		IdlIdentifier[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
-		IdlIdentifier[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
-		IdlIdentifier[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
-		IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
-		IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
-		IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
+		final IdlIdentifier[] siteNodeIds = Identifier.createTransferables(this.siteNodes);
+		final IdlIdentifier[] topologicalNodeIds = Identifier.createTransferables(this.topologicalNodes);
+		final IdlIdentifier[] nodeLinkIds = Identifier.createTransferables(this.nodeLinks);
+		final IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
+		final IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
+		final IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
 		return IdlMapHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -243,18 +243,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 				collectorIds);
 	}
 
-	public Set getCollectors() {
+	public Set<Collector> getCollectors() {
 		return Collections.unmodifiableSet(this.collectors);
 	}
 
-	protected void setCollectors0(final Set collectors) {
+	protected void setCollectors0(final Set<Collector> collectors) {
 		this.collectors.clear();
 		if (collectors != null) {
 			this.collectors.addAll(collectors);
 		}
 	}
 
-	public void setCollectors(final Set collectors) {
+	public void setCollectors(final Set<Collector> collectors) {
 		this.setCollectors0(collectors);
 		super.markAsChanged();
 	}
@@ -272,18 +272,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}	
 
-	public Set getMarks() {
+	public Set<Mark> getMarks() {
 		return Collections.unmodifiableSet(this.marks);
 	}
 
-	protected void setMarks0(final Set marks) {
+	protected void setMarks0(final Set<Mark> marks) {
 		this.marks.clear();
 		if (marks != null) {
 			this.marks.addAll(marks);
 		}
 	}
 
-	public void setMarks(final Set marks) {
+	public void setMarks(final Set<Mark> marks) {
 		this.setMarks0(marks);
 		super.markAsChanged();
 	}
@@ -301,27 +301,27 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
-	public Set getNodeLinks() {
+	public Set<NodeLink> getNodeLinks() {
 		return Collections.unmodifiableSet(this.nodeLinks);
 	}
 
-	protected void setNodeLinks0(final Set nodeLinks) {
+	protected void setNodeLinks0(final Set<NodeLink> nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null) {
 			this.nodeLinks.addAll(nodeLinks);
 		}
 	}
 
-	public void setNodeLinks(final Set nodeLinks) {
+	public void setNodeLinks(final Set<NodeLink> nodeLinks) {
 		this.setNodeLinks0(nodeLinks);
 		super.markAsChanged();
 	}
 
-	public Set getPhysicalLinks() {
+	public Set<PhysicalLink> getPhysicalLinks() {
 		return Collections.unmodifiableSet(this.physicalLinks);
 	}
 
-	protected void setPhysicalLinks0(final Set physicalLinks) {
+	protected void setPhysicalLinks0(final Set<PhysicalLink> physicalLinks) {
 		this.physicalLinks.clear();
 		if (physicalLinks != null) {
 			this.physicalLinks.addAll(physicalLinks);
@@ -329,39 +329,39 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
-	public void setPhysicalLinks(final Set physicalLinks) {
+	public void setPhysicalLinks(final Set<PhysicalLink> physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		super.markAsChanged();
 	}
 
-	public Set getSiteNodes() {
+	public Set<SiteNode> getSiteNodes() {
 		return Collections.unmodifiableSet(this.siteNodes);
 	}
 
-	protected void setSiteNodes0(final Set siteNodes) {
+	protected void setSiteNodes0(final Set<SiteNode> siteNodes) {
 		this.siteNodes.clear();
 		if (siteNodes != null) {
 			this.siteNodes.addAll(siteNodes);
 		}
 	}
 
-	public void setSiteNodes(final Set siteNodes) {
+	public void setSiteNodes(final Set<SiteNode> siteNodes) {
 		this.setSiteNodes0(siteNodes);
 		super.markAsChanged();
 	}
 
-	public Set getTopologicalNodes() {
+	public Set<TopologicalNode> getTopologicalNodes() {
 		return Collections.unmodifiableSet(this.topologicalNodes);
 	}
 
-	protected void setTopologicalNodes0(final Set topologicalNodes) {
+	protected void setTopologicalNodes0(final Set<TopologicalNode> topologicalNodes) {
 		this.topologicalNodes.clear();
 		if (topologicalNodes != null) {
 			this.topologicalNodes.addAll(topologicalNodes);
 		}
 	}
 
-	public void setTopologicalNodes(final Set topologicalNodes) {
+	public void setTopologicalNodes(final Set<TopologicalNode> topologicalNodes) {
 		this.setTopologicalNodes0(topologicalNodes);
 		super.markAsChanged();
 	}
@@ -370,28 +370,28 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		return Collections.unmodifiableSet(this.maps);
 	}
 
-	protected void setMaps0(final Set maps) {
+	protected void setMaps0(final Set<Map> maps) {
 		this.maps.clear();
 		if (maps != null)
 			this.maps.addAll(maps);
 	}
 
-	public void setMaps(final Set maps) {
+	public void setMaps(final Set<Map> maps) {
 		this.setMaps0(maps);
 		super.markAsChanged();
 	}
 
-	public Set getExternalNodes() {
+	public Set<AbstractNode> getExternalNodes() {
 		return Collections.unmodifiableSet(this.externalNodes);
 	}
 
-	protected void setExternalNodes0(final Set externalNodes) {
+	protected void setExternalNodes0(final Set<AbstractNode> externalNodes) {
 		this.externalNodes.clear();
 		if (externalNodes != null)
 			this.externalNodes.addAll(externalNodes);
 	}
 
-	public void setExternalNodes(final Set externalNodes) {
+	public void setExternalNodes(final Set<AbstractNode> externalNodes) {
 		this.setExternalNodes0(externalNodes);
 		super.markAsChanged();
 	}
@@ -409,61 +409,55 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.description = description;
 	}
 
-	public Set getAllCollectors() {
-		Set returnElements = new HashSet();
+	public Set<Collector> getAllCollectors() {
+		final Set<Collector> returnElements = new HashSet<Collector>();
 		returnElements.addAll(this.collectors);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllCollectors());
 		}
 		return returnElements;
 	}
 
-	public Set getAllMarks() {
-		Set returnElements = new HashSet();
+	public Set<Mark> getAllMarks() {
+		final Set<Mark> returnElements = new HashSet<Mark>();
 		returnElements.addAll(this.marks);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllMarks());
 		}
 		return returnElements;
 	}
 
-	public Set getAllNodeLinks() {
-		Set returnElements = new HashSet();
+	public Set<NodeLink> getAllNodeLinks() {
+		final Set<NodeLink> returnElements = new HashSet<NodeLink>();
 		returnElements.addAll(this.nodeLinks);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllNodeLinks());
 		}
 		return returnElements;
 	}
 
-	public Set getAllPhysicalLinks() {
-		Set returnElements = new HashSet();
+	public Set<PhysicalLink> getAllPhysicalLinks() {
+		final Set<PhysicalLink> returnElements = new HashSet<PhysicalLink>();
 		returnElements.addAll(this.physicalLinks);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllPhysicalLinks());
 		}
 		return returnElements;
 	}
 
-	public Set getAllSiteNodes() {
-		Set returnElements = new HashSet();
+	public Set<SiteNode> getAllSiteNodes() {
+		final Set<SiteNode> returnElements = new HashSet<SiteNode>();
 		returnElements.addAll(this.siteNodes);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllSiteNodes());
 		}
 		return returnElements;
 	}
 
-	public Set getAllTopologicalNodes() {
-		Set returnElements = new HashSet();
+	public Set<TopologicalNode> getAllTopologicalNodes() {
+		final Set<TopologicalNode> returnElements = new HashSet<TopologicalNode>();
 		returnElements.addAll(this.topologicalNodes);
-		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map) iter.next();
+		for (final Map innerMap : this.maps) {
 			returnElements.addAll(innerMap.getAllTopologicalNodes());
 		}
 		return returnElements;
@@ -474,7 +468,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 *
 	 * @return список узлов
 	 */
-	public Set getNodes() {
+	public Set<AbstractNode> getNodes() {
 		this.nodeElements.clear();
 		this.nodeElements.addAll(this.getAllSiteNodes());
 		this.nodeElements.addAll(this.getAllTopologicalNodes());
@@ -660,11 +654,11 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return список линий
 	 */
 	public Set getPhysicalLinksAt(final AbstractNode node) {
-		HashSet returnLinks = new HashSet();
+		final HashSet<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
 		Iterator e = this.getAllPhysicalLinks().iterator();
 
 		while (e.hasNext()) {
-			PhysicalLink link = (PhysicalLink) e.next();
+			final PhysicalLink link = (PhysicalLink) e.next();
 			if ((link.getEndNode().equals(node)) || (link.getStartNode().equals(node)))
 				returnLinks.add(link);
 		}
@@ -697,7 +691,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.physicalLinks.remove(physicalLink);
 		physicalLink.setRemoved(true);
 
-		Collector coll = getCollector(physicalLink);
+		final Collector coll = getCollector(physicalLink);
 		if (coll != null)
 			coll.removePhysicalLink(physicalLink);
 		super.markAsChanged();
@@ -786,10 +780,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		return null;
 	}
 
-	public List getNodeLinks(final PhysicalLink link) {
-		List nlinks = new ArrayList();
-		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
-			NodeLink nodeLink = (NodeLink) it.next();
+	public List<NodeLink> getNodeLinks(final PhysicalLink link) {
+		final List<NodeLink> nlinks = new ArrayList<NodeLink>();
+		for (final NodeLink nodeLink : this.nodeLinks) {
 			if (nodeLink.getPhysicalLink().equals(link))
 				nlinks.add(nodeLink);
 		}
@@ -804,8 +797,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(final AbstractNode node) {
-		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink nodeLink = (NodeLink) it.next();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			if ((nodeLink.getStartNode().equals(node)) || (nodeLink.getEndNode().equals(node))) {
 				return nodeLink;
 			}
@@ -823,11 +815,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(final AbstractNode startNode, final AbstractNode endNode) {
-		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink link = (NodeLink) it.next();
-			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
-					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) {
-				return link;
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
+			if (((nodeLink.getStartNode().equals(startNode)) && (nodeLink.getEndNode().equals(endNode)))
+					|| ((nodeLink.getStartNode().equals(endNode)) && (nodeLink.getEndNode().equals(startNode)))) {
+				return nodeLink;
 			}
 		}
 		return null;
@@ -838,7 +829,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 *
 	 * @return список всех элементов
 	 */
-	public List getAllElements() {
+	public List<MapElement> getAllElements() {
 		this.allElements.clear();
 
 		this.allElements.addAll(this.getAllMarks());
@@ -859,7 +850,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * <code>{@link MapElement#isSelected()}</code> возвращает <code>true</code>.
 	 * @return набор выделенных элементов
 	 */
-	public Set getSelectedElements() {
+	public Set<MapElement> getSelectedElements() {
 		return Collections.unmodifiableSet(this.selectedElements);
 	}
 
@@ -929,20 +920,14 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @param node узел
 	 * @return Список фрагментов
 	 */
-	public Set getNodeLinks(final AbstractNode node)
-	{
-		Set returnNodeLinks = new HashSet();
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			NodeLink nodeLink = (NodeLink )it.next();
-			
-			if ( (nodeLink.getEndNode().equals(node))
-				|| (nodeLink.getStartNode().equals(node)))
-			{
+	public Set<NodeLink> getNodeLinks(final AbstractNode node) {
+		final Set<NodeLink> returnNodeLinks = new HashSet<NodeLink>();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
+			if ((nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node))) {
 				returnNodeLinks.add(nodeLink);
 			}
 		}
-	
+
 		return returnNodeLinks;
 	}
 
@@ -958,66 +943,56 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @param nodeLink фрагмент линии
 	 * @return другой фрагмент линии
 	 */
-	public NodeLink getOtherNodeLink(final AbstractNode node, NodeLink nodeLink)
-	{
-		if(!node.getClass().equals(TopologicalNode.class))
-		{
+	public NodeLink getOtherNodeLink(final AbstractNode node, NodeLink nodeLink) {
+		if (!node.getClass().equals(TopologicalNode.class)) {
 			return null;
 		}
-	
+
 		NodeLink startNodeLink = null;
-		for(Iterator it = getNodeLinks(node).iterator(); it.hasNext();)
-			{
-				NodeLink nl = (NodeLink )it.next();
-				if(nodeLink != nl)
-				{
-					startNodeLink = nl;
-					break;
-				}
+		for (final NodeLink nl : this.getNodeLinks()) {
+			if (nodeLink != nl) {
+				startNodeLink = nl;
+				break;
 			}
-			
+		}
+
 		return startNodeLink;
 	}
 
 	/**
 	 * Получить вектор узлов на противоположных концах всех фрагментов линий
 	 * данного элемента.
-	 * @param node узел
+	 * 
+	 * @param node
+	 *        узел
 	 * @return список узлов
 	 */
-	public Set getOppositeNodes(final AbstractNode node)
-	{
-		Set returnNodes = new HashSet();
-		Iterator e = getNodeLinks(node).iterator();
-	
-		while (e.hasNext())
-		{
-			NodeLink nodeLink = (NodeLink )e.next();
-	
-			if ( nodeLink.getEndNode().equals(node) )
+	public Set<AbstractNode> getOppositeNodes(final AbstractNode node) {
+		final Set<AbstractNode> returnNodes = new HashSet<AbstractNode>();
+		final Iterator<NodeLink> e = this.getNodeLinks(node).iterator();
+
+		while (e.hasNext()) {
+			final NodeLink nodeLink = e.next();
+
+			if (nodeLink.getEndNode().equals(node))
 				returnNodes.add(nodeLink.getStartNode());
 			else
 				returnNodes.add(nodeLink.getEndNode());
 		}
-	
+
 		return returnNodes;
 	}
 
 	/**
-	 * Получить список линий, начинающихся или заканчивающихся
-	 * на данном узле.
+	 * Получить список линий, начинающихся или заканчивающихся на данном узле.
+	 * 
 	 * @return список линий
 	 */
-	public Set getPhysicalLinks(final AbstractNode node)
-	{
-		Set returnLinks = new HashSet();
+	public Set<PhysicalLink> getPhysicalLinks(final AbstractNode node) {
+		final Set<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
 
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
-		{
-			PhysicalLink physicalLink = (PhysicalLink )it.next();
-			
-			if ( (physicalLink.getEndNode().equals(node))
-					|| (physicalLink.getStartNode().equals(node)) )
+		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
+			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
 				returnLinks.add(physicalLink);
 		}
 
@@ -1131,18 +1106,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.name = xmlMap.getName();
 		this.description = xmlMap.getDescription();
 
-		this.siteNodes = new HashSet();
-		this.topologicalNodes = new HashSet();
-		this.nodeLinks = new HashSet();
-		this.physicalLinks = new HashSet();
-		this.marks = new HashSet();
-		this.collectors = new HashSet();
+		this.siteNodes = new HashSet<SiteNode>();
+		this.topologicalNodes = new HashSet<TopologicalNode>();
+		this.nodeLinks = new HashSet<NodeLink>();
+		this.physicalLinks = new HashSet<PhysicalLink>();
+		this.marks = new HashSet<Mark>();
+		this.collectors = new HashSet<Collector>();
 
-		this.maps = new HashSet();
-		this.selectedElements = new HashSet();
-		this.allElements = new LinkedList();
-		this.nodeElements = new HashSet();
-		this.externalNodes = new HashSet();
+		this.maps = new HashSet<Map>();
+		this.selectedElements = new HashSet<MapElement>();
+		this.allElements = new LinkedList<MapElement>();
+		this.nodeElements = new HashSet<AbstractNode>();
+		this.externalNodes = new HashSet<AbstractNode>();
 		
 		com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = 
 			xmlMap.getTopologicalnodes().getTopologicalnodeArray();

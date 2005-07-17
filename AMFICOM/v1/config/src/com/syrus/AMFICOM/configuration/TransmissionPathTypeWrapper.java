@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeWrapper.java,v 1.9 2005/06/22 10:21:41 bob Exp $
+ * $Id: TransmissionPathTypeWrapper.java,v 1.10 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
@@ -28,7 +27,7 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 
 	private TransmissionPathTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -48,6 +47,7 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof TransmissionPathType) {
@@ -58,8 +58,6 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 				return type.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return type.getCharacteristics();
 		}
 		return value;
 	}
@@ -77,8 +75,6 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 				type.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				type.setCharacteristics((Set) value);
 		}
 	}
 
@@ -95,6 +91,7 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -105,8 +102,6 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
 		}
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return null;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.14 2005/07/12 13:55:30 bass Exp $
+ * $Id: Selection.java,v 1.15 2005/07/17 05:20:55 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/12 13:55:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/17 05:20:55 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -35,7 +35,7 @@ public final class Selection implements MapElement {
 	/**
 	 * Список выбранных элементов.
 	 */
-	protected Set elements = new HashSet();
+	protected Set<MapElement> elements = new HashSet<MapElement>();
 
 	/**
 	 * Общий центр выбранных элементов.
@@ -130,7 +130,7 @@ public final class Selection implements MapElement {
 	 *
 	 * @param coll набор элементов
 	 */
-	public void addAll(Set coll) {
+	public void addAll(Set<MapElement> coll) {
 		this.elements.addAll(coll);
 		recalcLocation();
 		recalcType();
@@ -253,21 +253,7 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public Set getCharacteristics() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public void addCharacteristic(Characteristic ch) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public void removeCharacteristic(Characteristic ch) {
+	public Set<Characteristic> getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -346,19 +332,4 @@ public final class Selection implements MapElement {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Set)
-	 */
-	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Set)
-	 */
-	public void setCharacteristics0(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.106 2005/07/14 08:08:25 bass Exp $
+ * $Id: Equipment.java,v 1.107 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -35,15 +34,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/07/14 08:08:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.107 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -65,12 +62,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String swVersion;
 	private String inventoryNumber;
 
-	private Set<Characteristic> characteristics;
-
 	Equipment(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final EquipmentDatabase database = (EquipmentDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE);
 		try {
@@ -126,8 +119,6 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swSerial = swSerial;
 		this.swVersion = swVersion;
 		this.inventoryNumber = inventoryNumber;
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -219,11 +210,6 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(et.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(et.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -232,8 +218,6 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	 */
 	@Override
 	public IdlEquipment getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlEquipmentHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -254,8 +238,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				this.swSerial != null ? this.swSerial : "",
 				this.swVersion != null ? this.swVersion : "",
 				this.inventoryNumber != null ? this.inventoryNumber : "",
-				this.imageId.getTransferable(),
-				charIds);
+				this.imageId.getTransferable());
 	}
 
 	public EquipmentType getType() {
@@ -279,33 +262,10 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		return this.imageId;
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	protected synchronized void setAttributes(final Date created,

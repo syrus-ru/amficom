@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.77 2005/07/06 15:49:25 bass Exp $
+ * $Id: TransmissionPath.java,v 1.78 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,17 +28,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -53,12 +52,8 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
-	private Set<Characteristic> characteristics;
-
 	TransmissionPath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE);
 		try {
@@ -91,8 +86,6 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -143,15 +136,12 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
 		super.fromTransferable(tpt, new Identifier(tpt.domainId));
 
+		this.type = (TransmissionPathType) StorableObjectPool.getStorableObject(new Identifier(tpt._typeId), true);
+
 		this.name = tpt.name;
 		this.description = tpt.description;
 		this.startPortId = new Identifier(tpt.startPortId);
 		this.finishPortId = new Identifier(tpt.finishPortId);
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(tpt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(tpt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 
 	/**
@@ -160,7 +150,6 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	 */
 	@Override
 	public IdlTransmissionPath getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlTransmissionPathHelper.init(orb,
 				super.id.getTransferable(),
@@ -174,8 +163,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 				this.description,
 				this.type.getId().getTransferable(),
 				this.startPortId.getTransferable(),
-				this.finishPortId.getTransferable(),
-				charIds);
+				this.finishPortId.getTransferable());
 	}
 
 	public String getName() {
@@ -230,34 +218,11 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		return dependencies;
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}	
 	
 	/**
 	 * @param finishPortId The finishPortId to set.

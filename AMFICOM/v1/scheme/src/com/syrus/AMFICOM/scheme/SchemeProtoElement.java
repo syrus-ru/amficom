@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.54 2005/07/15 11:44:06 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.55 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -73,8 +74,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/15 11:44:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/07/17 05:20:26 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -101,8 +102,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	Identifier parentSchemeProtoElementId;
 
-	private Set<Characteristic> characteristics;
-
 	private boolean parentSet = false;
 
 	private ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
@@ -115,7 +114,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	SchemeProtoElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.characteristics = new HashSet<Characteristic>();
 		try {
 			DatabaseContext.getDatabase(SCHEMEPROTOELEMENT_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -162,8 +160,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -371,16 +367,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param characteristic
-	 * @see Characterizable#addCharacteristic(Characteristic)
-	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
 	 * @param childItem
 	 * @see Item#addChild(Item)
 	 */
@@ -439,10 +425,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @throws ApplicationException 
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**
@@ -719,8 +708,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				this.ugoCellId.getTransferable(),
 				this.schemeCellId.getTransferable(),
 				this.parentSchemeProtoGroupId.getTransferable(),
-				this.parentSchemeProtoElementId.getTransferable(),
-				Identifier.createTransferables(this.characteristics));
+				this.parentSchemeProtoElementId.getTransferable());
 	}
 
 	Identifier getUgoCellId() {
@@ -757,17 +745,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	public void removeChangeListener(final ItemListener itemListener) {
 		assert this.itemListeners.contains(itemListener);
 		this.itemListeners.remove(itemListener);
-	}
-
-	/**
-	 * @param characteristic
-	 * @see Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
 	}
 
 	/**
@@ -856,28 +833,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.schemeCellId = schemeCellId;
 		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
 		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
-	}
-
-	/**
-	 * @param characteristics
-	 * @see Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		assert characteristics != null: NON_NULL_EXPECTED;
-		if (this.characteristics == null)
-			this.characteristics = new HashSet<Characteristic>(characteristics.size());
-		else
-			this.characteristics.clear();
-		this.characteristics.addAll(characteristics);
 	}
 
 	/**
@@ -1142,8 +1097,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
 		try {
 			super.fromTransferable(schemeProtoElement);
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemeProtoElement.characteristicIds), true);
-			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

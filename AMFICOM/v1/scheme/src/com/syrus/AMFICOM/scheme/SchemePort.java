@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.44 2005/07/14 14:24:06 bass Exp $
+ * $Id: SchemePort.java,v 1.45 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/07/14 14:24:06 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/07/17 05:20:26 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -240,8 +240,7 @@ public final class SchemePort extends AbstractSchemePort {
 				super.portTypeId.getTransferable(),
 				super.portId.getTransferable(),
 				super.measurementPortId.getTransferable(),
-				super.parentSchemeDeviceId.getTransferable(),
-				Identifier.createTransferables(super.getCharacteristics()));
+				super.parentSchemeDeviceId.getTransferable());
 	}
 
 	/**
@@ -266,7 +265,6 @@ public final class SchemePort extends AbstractSchemePort {
 				schemePort.description,
 				schemePort.directionType, schemePort.portTypeId,
 				schemePort.portId, schemePort.measurementPortId,
-				schemePort.parentSchemeDeviceId,
-				schemePort.characteristicIds);
+				schemePort.parentSchemeDeviceId);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.13 2005/07/14 16:08:08 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.14 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -31,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/14 16:08:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -44,43 +40,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof Scheme)
 			return (Scheme) storableObject;			
 		throw new IllegalDataException("Scheme.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
-	/**
-	 * @param storableObjects
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects)
-			throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(StorableObject storableObject)
-			throws IllegalDataException, CreateObjectException {
-		Scheme scheme = fromStorableObject(storableObject);
-		super.insertEntity(scheme);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 */
-	@Override
-	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		Scheme scheme = fromStorableObject(storableObject);
-		super.retrieveEntity(scheme);
 	}
 
 	/**

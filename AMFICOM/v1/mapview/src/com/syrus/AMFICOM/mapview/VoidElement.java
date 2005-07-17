@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.13 2005/07/12 13:55:31 bass Exp $
+ * $Id: VoidElement.java,v 1.14 2005/07/17 05:20:55 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  * Пустой элемент.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/12 13:55:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/07/17 05:20:55 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -133,7 +133,7 @@ public final class VoidElement implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public Set getCharacteristics() {
+	public Set<Characteristic> getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 

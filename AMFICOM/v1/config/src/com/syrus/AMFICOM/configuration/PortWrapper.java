@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.14 2005/07/04 11:33:30 bass Exp $
+ * $Id: PortWrapper.java,v 1.15 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/04 11:33:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class PortWrapper extends StorableObjectWrapper {
@@ -34,8 +33,7 @@ public final class PortWrapper extends StorableObjectWrapper {
 
 	private PortWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_EQUIPMENT_ID,
-				COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_EQUIPMENT_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -55,6 +53,7 @@ public final class PortWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Port) {
@@ -65,8 +64,6 @@ public final class PortWrapper extends StorableObjectWrapper {
 				return port.getType();
 			if (key.equals(COLUMN_EQUIPMENT_ID))
 				return port.getEquipmentId();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return port.getCharacteristics();
 		}
 		return value;
 	}
@@ -84,8 +81,6 @@ public final class PortWrapper extends StorableObjectWrapper {
 				port.setType((PortType) value);
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				port.setEquipmentId((Identifier) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				port.setCharacteristics((Set) value);
 		}
 	}
 
@@ -102,6 +97,7 @@ public final class PortWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -113,8 +109,6 @@ public final class PortWrapper extends StorableObjectWrapper {
 			return PortType.class;
 		else if (key.equals(COLUMN_EQUIPMENT_ID))
 			return Identifier.class;
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return null;
 	}
 }

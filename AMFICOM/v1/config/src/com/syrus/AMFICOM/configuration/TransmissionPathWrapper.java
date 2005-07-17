@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.12 2005/06/22 10:21:41 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.13 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/22 10:21:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class TransmissionPathWrapper extends StorableObjectWrapper {
@@ -39,8 +39,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 
 	private TransmissionPathWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS,
-				ObjectEntities.TRANSPATHMELINK};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, ObjectEntities.TRANSPATHMELINK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -60,6 +59,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof TransmissionPath) {
@@ -74,8 +74,6 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 				return path.getStartPortId();
 			if (key.equals(COLUMN_FINISH_PORT_ID))
 				return path.getFinishPortId();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return path.getCharacteristics();
 			if (key.equals(ObjectEntities.TRANSPATHMELINK))
 				return path.getMonitoredElementIds();
 		}
@@ -99,8 +97,6 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 				path.setStartPortId((Identifier) value);
 			else if (key.equals(COLUMN_FINISH_PORT_ID))
 				path.setFinishPortId((Identifier) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				path.setCharacteristics((Set) value);
 		}
 	}
 
@@ -113,6 +109,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -127,7 +124,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		else if (key.equals(COLUMN_START_PORT_ID)
 				|| key.equals(COLUMN_FINISH_PORT_ID))
 			return Identifier.class;
-		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK))
+		if (key.equals(ObjectEntities.EQUIPMENTMELINK))
 			return Set.class;
 		return null;
 	}

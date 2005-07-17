@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.45 2005/07/14 13:08:50 bass Exp $
+ * $Id: SchemeLink.java,v 1.46 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/14 13:08:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -626,8 +626,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				this.getTargetAbstractSchemePortId().getTransferable(),
 				this.getParentSchemeId().getTransferable(),
 				this.getParentSchemeElementId().getTransferable(),
-				this.getParentSchemeProtoElementId().getTransferable(),
-				Identifier.createTransferables(super.getCharacteristics()));
+				this.getParentSchemeProtoElementId().getTransferable());
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -883,8 +882,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 				schemeLink.linkId,
 				schemeLink.sourceSchemePortId,
 				schemeLink.targetSchemePortId,
-				schemeLink.parentSchemeId,
-				schemeLink.characteristicIds);
+				schemeLink.parentSchemeId);
 		this.siteNodeId = new Identifier(schemeLink.siteNodeId);
 		this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
 		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);

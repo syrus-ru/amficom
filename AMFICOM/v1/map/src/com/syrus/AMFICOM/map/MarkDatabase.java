@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.26 2005/07/14 16:08:03 bass Exp $
+ * $Id: MarkDatabase.java,v 1.27 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,13 +12,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
@@ -27,11 +26,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
-public final class MarkDatabase extends CharacterizableDatabase {
+public final class MarkDatabase extends StorableObjectDatabase {
 	 public static final int SIZE_CITY_COLUMN = 128;
     public static final int SIZE_STREET_COLUMN = 128;
     public static final int SIZE_BUILDING_COLUMN = 128;
@@ -46,16 +45,12 @@ public final class MarkDatabase extends CharacterizableDatabase {
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Mark mark = this.fromStorableObject(storableObject);
-		this.retrieveEntity(mark);
-	}	
-	
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MARK_CODE;
 	}	
 	
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null){
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -71,6 +66,7 @@ public final class MarkDatabase extends CharacterizableDatabase {
 		return columns;
 	}	
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -87,9 +83,10 @@ public final class MarkDatabase extends CharacterizableDatabase {
 	}
 	
 	
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		Mark mark = fromStorableObject(storableObject);
+		final Mark mark = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, mark.getLocation().getX());
@@ -102,9 +99,10 @@ public final class MarkDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 	
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		Mark mark = fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		final Mark mark = fromStorableObject(storableObject);
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(mark.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ mark.getLocation().getX() + COMMA
 			+ mark.getLocation().getY() + COMMA
@@ -116,9 +114,10 @@ public final class MarkDatabase extends CharacterizableDatabase {
 		return values;
 	}
 	
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
-		Mark mark = (storableObject == null) ?
+		final Mark mark = (storableObject == null) ?
 				new Mark(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, 0.0, 0.0, null, 0.0, null, null, null) :
 					fromStorableObject(storableObject);
 				
@@ -150,6 +149,7 @@ public final class MarkDatabase extends CharacterizableDatabase {
 	}
 
 	
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		Mark mark = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {

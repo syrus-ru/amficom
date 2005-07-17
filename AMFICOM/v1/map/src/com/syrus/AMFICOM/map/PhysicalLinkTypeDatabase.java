@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.26 2005/07/14 16:08:03 bass Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.27 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,24 +11,23 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
-public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
+public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
@@ -38,17 +37,13 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 			return (PhysicalLinkType) storableObject;
 		throw new IllegalDataException("PhysicalLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-
 	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(physicalLinkType);
-	}	
-	
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.PHYSICALLINK_TYPE_CODE;
 	}	
 	
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null){
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
@@ -60,6 +55,7 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 		return columns;
 	}	
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null){
 			updateMultipleSQLValues = QUESTION + COMMA
@@ -72,6 +68,7 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	}
 	
 	
+	@Override
 	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
@@ -83,6 +80,7 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 	
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
 		String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
@@ -93,6 +91,7 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 		return values;
 	}
 	
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, SQLException {
 		PhysicalLinkType physicalLinkType = (storableObject == null) ?
@@ -112,10 +111,12 @@ public final class PhysicalLinkTypeDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) {
-//		PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
+	@Override
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
+		final PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  physicalLinkType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

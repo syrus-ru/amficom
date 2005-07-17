@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.66 2005/07/06 15:49:25 bass Exp $
+ * $Id: Link.java,v 1.67 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,12 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlLink;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -29,12 +26,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/07/06 15:49:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/07/17 05:19:00 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -42,8 +38,6 @@ public final class Link extends AbstractLink {
 
 	Link(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		try {
 			DatabaseContext.getDatabase(ObjectEntities.LINK_CODE).retrieve(this);
@@ -88,7 +82,6 @@ public final class Link extends AbstractLink {
 
 		this.color = color;
 		this.mark = mark;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -152,11 +145,6 @@ public final class Link extends AbstractLink {
 		this.supplier = idlLink.supplier;
 		this.supplierCode = idlLink.supplierCode;
 
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(idlLink.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(idlLink.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
-
 		super.type = (LinkType) StorableObjectPool.getStorableObject(new Identifier(idlLink._typeId), true);
 	}
 
@@ -165,8 +153,6 @@ public final class Link extends AbstractLink {
 	 */
 	@Override
 	public IdlLink getTransferable(final ORB orb) {
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlLinkHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -182,8 +168,7 @@ public final class Link extends AbstractLink {
 				this.supplier,
 				this.supplierCode,
 				this.color,
-				(this.mark != null) ? this.mark : "",
-				charIds);
+				(this.mark != null) ? this.mark : "");
 	}
 
 	protected synchronized void setAttributes(final Date created,

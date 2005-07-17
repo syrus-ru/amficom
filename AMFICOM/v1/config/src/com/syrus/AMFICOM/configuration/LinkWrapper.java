@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.10 2005/06/22 15:05:18 bass Exp $
+ * $Id: LinkWrapper.java,v 1.11 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/22 15:05:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class LinkWrapper extends StorableObjectWrapper {
@@ -44,8 +43,12 @@ public final class LinkWrapper extends StorableObjectWrapper {
 
 	private LinkWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
-				COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE, COLUMN_COLOR, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_TYPE_ID,
+				COLUMN_SUPPLIER,
+				COLUMN_SUPPLIER_CODE,
+				COLUMN_COLOR };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -84,8 +87,6 @@ public final class LinkWrapper extends StorableObjectWrapper {
 				return new Integer(link.getColor());
 			if (key.equals(COLUMN_MARK))
 				return link.getMark();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return link.getCharacteristics();
 		}
 		return value;
 	}
@@ -111,8 +112,6 @@ public final class LinkWrapper extends StorableObjectWrapper {
 				link.setColor(((Integer) value).intValue());
 			else if (key.equals(COLUMN_MARK))
 				link.setMark((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				link.setCharacteristics((Set) value);
 		}
 	}
 
@@ -145,9 +144,6 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		}
 		if (key.equals(COLUMN_COLOR)) {
 			return Integer.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.31 2005/07/14 19:25:47 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.32 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
-import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -31,6 +30,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -41,8 +42,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/07/14 19:25:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeElement extends
@@ -61,14 +62,11 @@ public abstract class AbstractSchemeElement extends
 	 */
 	Identifier parentSchemeId;
 
-	private Set<Characteristic> characteristics;
-
 	/**
 	 * @param id
 	 */
 	AbstractSchemeElement(final Identifier id) {
 		super(id);
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -91,8 +89,6 @@ public abstract class AbstractSchemeElement extends
 		this.name = name;
 		this.description = description;
 		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -104,20 +100,13 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @param characteristic
-	 * @see Characterizable#addCharacteristic(Characteristic)
-	 */
-	public final void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
+	 * @throws ApplicationException 
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
+	public final Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**
@@ -173,39 +162,6 @@ public abstract class AbstractSchemeElement extends
 	}
 
 	/**
-	 * @param characteristic
-	 * @see Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public final void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see Characterizable#setCharacteristics(Set)
-	 */
-	public final void setCharacteristics(final Set<Characteristic> characteristics) {
-		setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see Characterizable#setCharacteristics0(Set)
-	 */
-	public final void setCharacteristics0(final Set<Characteristic> characteristics) {
-		assert characteristics != null: NON_NULL_EXPECTED;
-		if (this.characteristics == null)
-			this.characteristics = new HashSet<Characteristic>(characteristics.size());
-		else
-			this.characteristics.clear();
-		this.characteristics.addAll(characteristics);
-	}
-
-	/**
 	 * @see Describable#setDescription(String)
 	 */
 	public final void setDescription(final String description) {
@@ -252,18 +208,14 @@ public abstract class AbstractSchemeElement extends
 	 * @param name1
 	 * @param description1
 	 * @param parentSchemeId1
-	 * @param characteristicIds
 	 * @throws CreateObjectException
 	 */
 	void fromTransferable(final IdlStorableObject header,
 			final String name1, final String description1,
-			final IdlIdentifier parentSchemeId1,
-			final IdlIdentifier characteristicIds[])
+			final IdlIdentifier parentSchemeId1)
 			throws CreateObjectException {
 		try {
 			super.fromTransferable(header);
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(characteristicIds), true);
-			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

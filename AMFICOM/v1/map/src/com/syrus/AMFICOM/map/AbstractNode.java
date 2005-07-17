@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.28 2005/07/12 13:12:23 bass Exp $
+ * $Id: AbstractNode.java,v 1.29 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/12 13:12:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -37,8 +38,6 @@ public abstract class AbstractNode
 {
 
 	static final long serialVersionUID = -2623880496462305233L;
-
-	protected Set<Characteristic> characteristics;
 
 	protected String	name;
 
@@ -76,7 +75,6 @@ public abstract class AbstractNode
 
 	protected AbstractNode(Identifier id) {
 		super(id);
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	AbstractNode(final Identifier id,
@@ -92,7 +90,6 @@ public abstract class AbstractNode
 		this.name = name;
 		this.description = desription;
 		this.location.setLocation(location.getX(), location.getY());
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	AbstractNode(final IdlStorableObject transferable) throws CreateObjectException {
@@ -106,7 +103,6 @@ public abstract class AbstractNode
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		super.fromTransferable(transferable);
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	public Identifier getImageId() {
@@ -118,20 +114,10 @@ public abstract class AbstractNode
 		super.markAsChanged();
 	}
 	
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void addCharacteristic(Characteristic ch)
-	{
-		this.characteristics.add(ch);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic ch)
-	{
-		this.characteristics.remove(ch);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**
@@ -182,17 +168,6 @@ public abstract class AbstractNode
 	
 	public void setName(final String name) {
 		this.setName0(name);
-		super.markAsChanged();
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-	
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
 		super.markAsChanged();
 	}
 

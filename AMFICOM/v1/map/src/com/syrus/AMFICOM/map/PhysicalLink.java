@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.73 2005/07/07 13:12:30 bass Exp $
+ * $Id: PhysicalLink.java,v 1.74 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -60,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * ѕредуствновленными €вл€ютс€  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -107,15 +105,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private boolean leftToRight;
 	private boolean topToBottom;
 
-	private Set<Characteristic> characteristics;
-
-	private transient List nodeLinks = null;
+	private transient List<NodeLink> nodeLinks = null;
 	protected transient boolean selected = false;
 	protected transient boolean selectionVisible = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 	protected transient PhysicalLinkBinding binding = null;
-	protected transient List sortedNodes = new LinkedList();
+	protected transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 	protected transient boolean nodeLinksSorted = false;
 
 	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -171,8 +167,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 
-		this.characteristics = new HashSet();
-		this.nodeLinks = new ArrayList();
+		this.nodeLinks = new ArrayList<NodeLink>();
 
 		this.selected = false;
 
@@ -275,9 +270,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
 		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
-		Set ids = Identifier.fromTransferables(plt.characteristicIds);
-		this.characteristics = StorableObjectPool.getStorableObjects(ids, true);
-
 		this.selected = false;
 
 		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
@@ -294,7 +286,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	@Override
 	public IdlPhysicalLink getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
 
 		return IdlPhysicalLinkHelper.init(orb,
@@ -316,8 +307,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				this.dimensionY,
 				this.leftToRight,
 				this.topToBottom,
-				nodeLinkIds,
-				charIds);
+				nodeLinkIds);
 	}
 
 	public StorableObjectType getType() {
@@ -433,32 +423,32 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		super.markAsChanged();
 	}
 
-	public List getNodeLinks() {
+	public List<NodeLink> getNodeLinks() {
 		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
 			this.nodeLinks = findNodeLinks();
 		return Collections.unmodifiableList(this.nodeLinks);
 	}
 
-	private List findNodeLinks() {
+	private List<NodeLink> findNodeLinks() {
 		try {
-			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
-			Set nlinks;
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
+			Set<NodeLink> nlinks;
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			List nlinkslist = new ArrayList(nlinks.size());
-			for(Iterator iter = nlinks.iterator(); iter.hasNext();) {
-				nlinkslist.add(iter.next());
+			List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
+			for (final NodeLink nodeLink : nlinks) {
+				nlinkslist.add(nodeLink);
 			}
 			return nlinkslist;
 		} catch(ApplicationException e) {
 			// TODO how to work it over?!
 			e.printStackTrace();
 		}
-		return new LinkedList();
+		return new LinkedList<NodeLink>();
 	}
 
-	public void setNodeLinks(final List nodeLinks) {
+	public void setNodeLinks(final List<NodeLink> nodeLinks) {
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
@@ -561,8 +551,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public double getLengthLt() {
 		double returnValue = 0;
-		for (Iterator it = getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink nodeLink = (NodeLink) it.next();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			returnValue += nodeLink.getLengthLt();
 		}
 		return returnValue;
@@ -614,12 +603,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          узел
 	 * @return список фрагментов
 	 */
-	public java.util.List getNodeLinksAt(final AbstractNode node) {
-		LinkedList returnNodeLink = new LinkedList();
-		Iterator e = getNodeLinks().iterator();
-
-		while (e.hasNext()) {
-			NodeLink nodeLink = (NodeLink) e.next();
+	public List<NodeLink> getNodeLinksAt(final AbstractNode node) {
+		final LinkedList<NodeLink> returnNodeLink = new LinkedList<NodeLink>();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			if ((nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node)))
 				returnNodeLink.add(nodeLink);
 		}
@@ -636,8 +622,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public NodeLink getStartNodeLink() {
 		NodeLink startNodeLink = null;
 
-		for (Iterator it = getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink nodeLink = (NodeLink) it.next();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			if (nodeLink.getStartNode().equals(getStartNode()) || nodeLink.getEndNode().equals(getStartNode())) {
 				startNodeLink = nodeLink;
 				break;
@@ -662,9 +647,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * @return список отсортированных узлов, или <code>null</code>, если узлы
 	 *         не отсортированы
 	 */
-	public List getSortedNodes() {
-		if (!this.nodeLinksSorted)
-			return Collections.EMPTY_LIST;
+	public List<AbstractNode> getSortedNodes() {
+		if (!this.nodeLinksSorted) {
+			return Collections.emptyList();
+		}
 		return this.sortedNodes;
 	}
 
@@ -677,18 +663,18 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		if (!this.nodeLinksSorted) {
 			AbstractNode smne = this.getStartNode();
 			NodeLink currentNodeLink = null;
-			LinkedList list = new LinkedList();
-			List nodeList = new LinkedList();
+			final LinkedList<NodeLink> list = new LinkedList<NodeLink>();
+			final List<AbstractNode> nodeList = new LinkedList<AbstractNode>();
 
-			List origNodeLinks = new LinkedList();
-			origNodeLinks.addAll(getNodeLinks());
+			final List<NodeLink> origNodeLinks = new LinkedList<NodeLink>();
+			origNodeLinks.addAll(this.getNodeLinks());
 
 			int count = origNodeLinks.size();
 			for (int i = 0; i < count; i++) {
 				nodeList.add(smne);
 
-				for (Iterator it = origNodeLinks.iterator(); it.hasNext();) {
-					NodeLink nodeLink = (NodeLink) it.next();
+				for (final Iterator<NodeLink> it = origNodeLinks.iterator(); it.hasNext();) {
+					final NodeLink nodeLink = it.next();
 
 					if (!nodeLink.equals(currentNodeLink)) {
 						if (nodeLink.getStartNode().equals(smne)) {
@@ -726,11 +712,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public NodeLink nextNodeLink(final NodeLink nodeLink) {
 		this.sortNodeLinks();
-		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
-			NodeLink bufNodeLink = (NodeLink )iter.next();
+		for(final Iterator<NodeLink> iter = this.nodeLinks.iterator(); iter.hasNext();) {
+			final NodeLink bufNodeLink = iter.next();
 			if(bufNodeLink.equals(nodeLink)) {
 				if(iter.hasNext())
-					return (NodeLink )iter.next();
+					return iter.next();
 				return null;
 			}
 		}
@@ -748,8 +734,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public NodeLink previousNodeLink(final NodeLink nodeLink) {
 		this.sortNodeLinks();
 		NodeLink prevNodeLink = null;
-		for(Iterator iter = this.nodeLinks.iterator(); iter.hasNext();) {
-			NodeLink bufNodeLink = (NodeLink )iter.next();
+		for(final Iterator<NodeLink> iter = this.nodeLinks.iterator(); iter.hasNext();) {
+			final NodeLink bufNodeLink = iter.next();
 			if(bufNodeLink.equals(nodeLink))
 				return prevNodeLink;
 			prevNodeLink = bufNodeLink;
@@ -850,16 +836,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * {@inheritDoc}
 	 */
 	public void revert(final MapElementState state) {
-		PhysicalLinkState mples = (PhysicalLinkState) state;
+		final PhysicalLinkState mples = (PhysicalLinkState) state;
 
 		this.setName(mples.name);
 		this.setDescription(mples.description);
 		this.setStartNode(mples.startNode);
 		this.setEndNode(mples.endNode);
 
-		this.nodeLinks = new ArrayList(mples.nodeLinks.size());
-		for (Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
-			NodeLink mnle = (NodeLink) it.next();
+		this.nodeLinks = new ArrayList<NodeLink>(mples.nodeLinks.size());
+		for (final Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
+			final NodeLink mnle = (NodeLink) it.next();
 			mnle.setPhysicalLink(this);
 //			this.nodeLinks.add(mnle);
 		}
@@ -975,37 +961,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	public Set getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void addCharacteristic(final Characteristic characteristic) {
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	public XmlObject getXMLTransferable() {
@@ -1051,8 +1010,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				creatorId,
 				creatorId,
 				0);
-		this.characteristics = new HashSet();
-		this.nodeLinks = new ArrayList();
+		this.nodeLinks = new ArrayList<NodeLink>();
 		this.selected = false;
 		this.fromXMLTransferable(xmlPhysicalLink, clonedIdsPool);
 	}

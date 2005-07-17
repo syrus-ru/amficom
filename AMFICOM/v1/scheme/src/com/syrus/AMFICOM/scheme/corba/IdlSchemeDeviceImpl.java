@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeDeviceImpl.java,v 1.2 2005/07/11 08:19:03 bass Exp $
+ * $Id: IdlSchemeDeviceImpl.java,v 1.3 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:19:03 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:26 $
  * @module scheme_v1
  */
 final class IdlSchemeDeviceImpl extends IdlSchemeDevice {
@@ -38,8 +38,7 @@ final class IdlSchemeDeviceImpl extends IdlSchemeDevice {
 			final String name,
 			final String description,
 			final IdlIdentifier parentSchemeProtoElementId,
-			final IdlIdentifier parentSchemeElementId,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlIdentifier parentSchemeElementId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -50,7 +49,6 @@ final class IdlSchemeDeviceImpl extends IdlSchemeDevice {
 		this.description = description;
 		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
 		this.parentSchemeElementId = parentSchemeElementId;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

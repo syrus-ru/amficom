@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.31 2005/07/12 13:55:31 bass Exp $
+ * $Id: MeasurementPath.java,v 1.32 2005/07/17 05:20:55 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
 /**
  * Ёлемент пути.
  *
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/07/12 13:55:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/07/17 05:20:55 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPath implements MapElement
@@ -85,19 +86,19 @@ public final class MeasurementPath implements MapElement
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List sortedCablePaths = new LinkedList();
+	protected List<CablePath> sortedCablePaths = new LinkedList<CablePath>();
 	/**
 	 * —ортированный список фрагментов линий, из которых строитс€
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List sortedNodeLinks = new LinkedList();
+	protected List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 	/**
 	 * —ортированный список узлов, по которым проходит
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List sortedNodes = new LinkedList();
+	protected List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 
 	/**
 	 *  онструктор.
@@ -141,26 +142,11 @@ public final class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * @throws ApplicationException 
 	 */
-	public Set<Characteristic> getCharacteristics()
+	public Set<Characteristic> getCharacteristics() throws ApplicationException
 	{
 		return this.schemePath.getCharacteristics();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void addCharacteristic(Characteristic ch)
-	{
-		this.schemePath.addCharacteristic(ch);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeCharacteristic(Characteristic ch)
-	{
-		this.schemePath.removeCharacteristic(ch);
 	}
 
 	/**
@@ -382,55 +368,51 @@ public final class MeasurementPath implements MapElement
 	 * измерительный путь.
 	 * to avoid instantiation of multiple objects.
 	 */
-	protected List unsortedCablePaths = new LinkedList();
+	protected List<CablePath> unsortedCablePaths = new LinkedList<CablePath>();
 
 	/**
 	 * ѕолучить список топологических кабелей, которые вход€т в состав пути.
 	 * —писок строитс€ динамически.
 	 * @return список кабельных путей
 	 */
-	protected List getCablePaths()
-	{
-		synchronized(this.unsortedCablePaths)
-		{
-			Scheme scheme = this.schemePath.getParentScheme();
+	protected List<CablePath> getCablePaths() {
+		synchronized (this.unsortedCablePaths) {
+			final Scheme scheme = this.schemePath.getParentScheme();
 
 			this.unsortedCablePaths.clear();
-			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
-				PathElement pathElement = (PathElement )iter.next();
-				switch(pathElement.getKind().value())
-				{
+			for (final PathElement pathElement : this.schemePath.getPathElements()) {
+				switch (pathElement.getKind().value()) {
 					case Kind._SCHEME_ELEMENT:
-						SchemeElement schemeElement = (SchemeElement )pathElement.getAbstractSchemeElement();
-						SiteNode site = this.mapView.findElement(schemeElement);
-						if(site != null)
-						{
-							//TODO think if link to 'site' is needed for mPath
-		//					mPath.addCablePath(site);
+						final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
+						final SiteNode site = this.mapView.findElement(schemeElement);
+						if (site != null) {
+							// TODO think if link to 'site' is needed for mPath
+							// mPath.addCablePath(site);
 						}
 						break;
 					case Kind._SCHEME_LINK:
-						SchemeLink schemeLink = (SchemeLink )pathElement.getAbstractSchemeElement();
-						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
-						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
-						SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
-						SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
-						if(startSiteNode == endSiteNode)
-						{
-							//TODO think if link to 'link' is needed for mPath
-		//					mPath.addCablePath(startSiteNode);
+						final SchemeLink schemeLink = (SchemeLink) pathElement.getAbstractSchemeElement();
+						final SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
+								schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
+						final SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
+								schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
+						final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
+						final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
+						if (startSiteNode == endSiteNode) {
+							// TODO think if link to 'link' is needed for mPath
+							// mPath.addCablePath(startSiteNode);
 						}
 						break;
 					case Kind._SCHEME_CABLE_LINK:
-						SchemeCableLink schemeCableLink = (SchemeCableLink )pathElement.getAbstractSchemeElement();
-						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
-						if(cablePath != null)
-						{
+						final SchemeCableLink schemeCableLink = (SchemeCableLink) pathElement.getAbstractSchemeElement();
+						final CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
+						if (cablePath != null) {
 							this.unsortedCablePaths.add(cablePath);
 						}
 						break;
 					default:
-						throw new UnsupportedOperationException("MeasurementPath.getCablePaths: Unknown path element kind: " + pathElement.getKind());
+						throw new UnsupportedOperationException("MeasurementPath.getCablePaths: Unknown path element kind: "
+								+ pathElement.getKind());
 				}
 			}
 		}
@@ -459,7 +441,7 @@ public final class MeasurementPath implements MapElement
 	 * Get {@link #sortedCablePaths}.
 	 * @return this.sortedCablePaths
 	 */
-	public List getSortedCablePaths()
+	public List<CablePath> getSortedCablePaths()
 	{
 		return Collections.unmodifiableList(this.sortedCablePaths);
 	}
@@ -488,11 +470,11 @@ public final class MeasurementPath implements MapElement
 				this.sortedNodes.addAll(cpath.getSortedNodes());
 			} else
 			{
-				List reversedSortedNodeLinks = new ArrayList(cpath.getSortedNodeLinks());
+				final List<NodeLink> reversedSortedNodeLinks = new ArrayList<NodeLink>(cpath.getSortedNodeLinks());
 				Collections.reverse(reversedSortedNodeLinks);
 				for (int i = 0; i < reversedSortedNodeLinks.size(); i++)
 					this.sortedNodeLinks.add(reversedSortedNodeLinks.get(i));
-				List reversedSortedNodes = new ArrayList(cpath.getSortedNodes());
+				final List<AbstractNode> reversedSortedNodes = new ArrayList<AbstractNode>(cpath.getSortedNodes());
 				Collections.reverse(reversedSortedNodes);
 				for (int i = 0; i < reversedSortedNodes.size(); i++)
 					this.sortedNodes.add(reversedSortedNodes.get(i));
@@ -562,19 +544,4 @@ public final class MeasurementPath implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.schemePath.setCharacteristics(characteristics);
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.schemePath.setCharacteristics0(characteristics);
-	}
 }

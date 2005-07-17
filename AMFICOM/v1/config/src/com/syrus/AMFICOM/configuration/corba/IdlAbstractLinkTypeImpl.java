@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAbstractLinkTypeImpl.java,v 1.1 2005/07/06 15:49:24 bass Exp $
+ * $Id: IdlAbstractLinkTypeImpl.java,v 1.2 2005/07/17 05:19:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/06 15:49:24 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/17 05:19:01 $
  * @module config_v1
  */
 final class IdlAbstractLinkTypeImpl extends IdlAbstractLinkType {
@@ -37,8 +37,7 @@ final class IdlAbstractLinkTypeImpl extends IdlAbstractLinkType {
 			final LinkTypeSort sort,
 			final String manufacturer,
 			final String manufacturerCode,
-			final IdlIdentifier imageId,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlIdentifier imageId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -52,7 +51,6 @@ final class IdlAbstractLinkTypeImpl extends IdlAbstractLinkType {
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

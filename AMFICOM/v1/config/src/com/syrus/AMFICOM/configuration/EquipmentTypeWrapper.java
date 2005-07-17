@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeWrapper.java,v 1.12 2005/06/22 07:43:48 bob Exp $
+ * $Id: EquipmentTypeWrapper.java,v 1.13 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,12 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/22 07:43:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/07/17 05:19:00 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -35,8 +34,11 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 
 	private EquipmentTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_MANUFACTURER, COLUMN_MANUFACTURER_CODE, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_MANUFACTURER,
+				COLUMN_MANUFACTURER_CODE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -56,6 +58,7 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof EquipmentType) {
@@ -70,8 +73,6 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 				return type.getManufacturer();
 			if (key.equals(COLUMN_MANUFACTURER_CODE))
 				return type.getManufacturerCode();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return type.getCharacteristics();
 		}
 		return value;
 	}
@@ -93,8 +94,6 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 				type.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
 				type.setManufacturerCode((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				type.setCharacteristics((Set)value);
 		}
 	}
 
@@ -109,6 +108,7 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(final String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -119,9 +119,6 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 				|| key.equals(COLUMN_MANUFACTURER)
 				|| key.equals(COLUMN_MANUFACTURER_CODE)) {
 			return String.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

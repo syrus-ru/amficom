@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.30 2005/07/12 08:40:53 bass Exp $
+ * $Id: MapStorableObjectPool.java,v 1.31 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/12 08:40:53 $
- * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapStorableObjectPool extends StorableObjectPool {
@@ -201,6 +201,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
+	@Override
 	protected void saveStorableObjects(final Set storableObjects, final boolean force) throws ApplicationException {
 		if (storableObjects.isEmpty())
 			return;

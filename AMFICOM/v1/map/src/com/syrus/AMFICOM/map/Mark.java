@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.50 2005/07/07 13:12:30 bass Exp $
+ * $Id: Mark.java,v 1.51 2005/07/17 05:20:43 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -20,7 +19,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -33,7 +31,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
 
@@ -44,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/07 13:12:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/07/17 05:20:43 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -111,13 +108,6 @@ public final class Mark extends AbstractNode {
 
 		try {
 			this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
-
-			super.characteristics = new HashSet(mt.characteristicIds.length);
-			Set<Identifier> characteristicIds = new HashSet(mt.characteristicIds.length);
-			for (int i = 0; i < mt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-			this.setCharacteristics0(characteristics0);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -149,8 +139,6 @@ public final class Mark extends AbstractNode {
 		this.city = city;
 		this.street = street;
 		this.building = building;
-
-		super.characteristics = new HashSet();
 	}
 
 	public static Mark createInstance(final Identifier creatorId,
@@ -223,8 +211,6 @@ public final class Mark extends AbstractNode {
 	 */
 	@Override
 	public IdlMark getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlMarkHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -240,8 +226,7 @@ public final class Mark extends AbstractNode {
 				this.distance,
 				this.city,
 				this.street,
-				this.building,
-				charIds);
+				this.building);
 	}
 
 	public String getBuilding() {
@@ -379,6 +364,7 @@ public final class Mark extends AbstractNode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DoublePoint getLocation() {
 		return (DoublePoint) this.location.clone();
 	}
@@ -386,6 +372,7 @@ public final class Mark extends AbstractNode {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setLocation(final DoublePoint location) {
 		super.setLocation(location);
 		setDistance(this.getFromStartLengthLt());
@@ -542,25 +529,6 @@ public final class Mark extends AbstractNode {
 		} catch (ApplicationException e) {
 			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
 	}
 
 }

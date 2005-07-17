@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.29 2005/07/14 16:08:06 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.30 2005/07/17 05:20:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,20 +16,20 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -42,11 +42,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/14 16:08:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/07/17 05:20:55 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
-public final class MapViewDatabase extends CharacterizableDatabase {
+public final class MapViewDatabase extends StorableObjectDatabase {
     // domain_id VARCHAR2(32),
     public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(128),
@@ -84,31 +84,40 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	}
 
 	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MapView mapView = this.fromStorableObject(storableObject);
+	@Override
+	public void retrieve(StorableObject storableObject)
+			throws IllegalDataException,
+				ObjectNotFoundException,
+				RetrieveObjectException {
+		final MapView mapView = this.fromStorableObject(storableObject);
 		this.retrieveEntity(mapView);
-		Set maps = Collections.singleton(mapView);
-		
-		java.util.Map schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
-		for (Iterator it = schemeIdsMap.keySet().iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			Set schemeIds = (Set)schemeIdsMap.get(id);
-			if (id.equals(mapView.getId())){
-				try{
-				mapView.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
-				}catch(ApplicationException ae){
-					throw new RetrieveObjectException(this.getEntityName() + "Database.retrieve | cannot retrieve schemes" ,  ae);
+		final Set<MapView> maps = Collections.singleton(mapView);
+
+		final java.util.Map<Identifier, Set<Identifier>> schemeIdsMap = super.retrieveLinkedEntityIds(maps,
+				MAPVIEW_SCHEME,
+				LINK_COLUMN_MAPVIEW_ID,
+				LINK_COLUMN_SCHEME_ID);
+		for (final Identifier id : schemeIdsMap.keySet()) {
+			final Set<Identifier> schemeIds = schemeIdsMap.get(id);
+			if (id.equals(mapView.getId())) {
+				try {
+					final Set<Scheme> schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
+					mapView.setSchemes0(schemes);
+				} catch (ApplicationException ae) {
+					throw new RetrieveObjectException(this.getEntityName() + "Database.retrieve | cannot retrieve schemes", ae);
 				}
 			}
-		}		
+		}
 	}	
 	
+	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MAPVIEW_CODE;
 	}	
 	
+	@Override
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = COLUMN_DOMAIN_ID + COMMA
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
@@ -121,8 +130,9 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		return columns;
 	}	
 	
+	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -136,7 +146,8 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 	}
 	
 	
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+@Override
+		protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		MapView mapView = fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getDomainId());
@@ -150,6 +161,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		return startParameterNumber;
 	}
 	
+	@Override
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		MapView mapView = fromStorableObject(storableObject);
 		String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
@@ -163,6 +175,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		return values;
 	}
 	
+	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		MapView map = (storableObject == null) ?
@@ -190,7 +203,7 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		return map;
 	}
 
-	
+	@Override
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
 		MapView mapView = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -200,17 +213,19 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		}
 	}
 
+	@Override
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		super.insert(storableObject);
 		try {
-			this.updateSchemeIds(Collections.singleton(storableObject));
+			final MapView mapView = this.fromStorableObject(storableObject);
+			this.updateSchemeIds(Collections.singleton(mapView));
 		} catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
 	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateSchemeIds(storableObjects);
@@ -219,109 +234,69 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 		}
 	}
 
+	@Override
 	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObject, modifierId, updateKind);
-		this.updateSchemeIds(Collections.singleton(storableObject));
+		try {
+			final MapView mapView = this.fromStorableObject(storableObject);
+			this.updateSchemeIds(Collections.singleton(mapView));
+		} catch (IllegalDataException ide) {
+			throw new UpdateObjectException(ide);
+		}
 	}
 
+	@Override
 	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
 		super.update(storableObjects, modifierId, updateKind);
 		this.updateSchemeIds(storableObjects);
 	}	
 
-	private void updateSchemeIds(Set mapViews) throws UpdateObjectException {
+	private void updateSchemeIds(final Set<MapView> mapViews) throws UpdateObjectException {
 		if (mapViews == null || mapViews.isEmpty())
 			return;
 
-		Map mapIdLinkedObjectIds = new HashMap();
-		
-		for (Iterator colIter = mapViews.iterator(); colIter.hasNext();) {
-			StorableObject storableObject = (StorableObject) colIter.next();
-	        MapView mapView;
-			try {
-				mapView = fromStorableObject(storableObject);
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException("MapViewDatabase.updateSchemeIds | storableObject isn't map view");
-			}
-			Set linkedObjectList = mapView.getSchemes();
-	
-			Set linkedObjectIds = new HashSet(linkedObjectList.size());
-	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();)
-	            linkedObjectIds.add(((Scheme) it.next()).getId());
-	
-	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
+		final Map<Identifier, Set<Identifier>> mapIdLinkedObjectIds = new HashMap<Identifier, Set<Identifier>>();
+
+		for (final MapView mapView : mapViews) {
+			final Set<Scheme> linkedObjectList = mapView.getSchemes();
+			final Set<Identifier> linkedObjectIds = Identifier.createIdentifiers(linkedObjectList);
+			mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
 		//TODO: may be wrong correction
 		//super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 	}
 	
-	public void delete(Identifier id) {
+	@Override
+	public void delete(final Identifier id) {
 		this.delete(Collections.singleton(id));
 	}
 	
-	public void delete(Set ids) {
+	@Override
+	public void delete(final Set<? extends Identifiable> ids) {
 		super.delete(ids);
-
-		java.util.Map linkedObjectIds = new HashMap();
-
-		java.util.Map mapIds = new HashMap();
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Identifier mapId = (Identifier) it.next();
-			try {
-				MapView map = (MapView) StorableObjectPool.getStorableObject(mapId, true);
-				mapIds.put(mapId, map);
-			} catch (ApplicationException ae) {
-				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
-			}
-		}
-
-		for (Iterator it = ids.iterator(); it.hasNext();) {
-			Identifier mapId = (Identifier) it.next();
-			MapView mapView = (MapView) mapIds.get(mapId);
-			linkedObjectIds.put(mapView, mapView.getSchemes());
-		}
-
-		this.deleteSchemeIds(linkedObjectIds);
-
+		this.deleteSchemeIds(ids);
 	}
 
-	private void deleteSchemeIds(java.util.Map linkedObjectIds) {
-		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_SCHEME_ID);
-
-		linkBuffer.append(SQL_IN);
-		linkBuffer.append(OPEN_BRACKET);
-
-		int i = 0;
-		for (Iterator mvIter = linkedObjectIds.keySet().iterator(); mvIter.hasNext();) {
-			Identifier mapViewId = (Identifier) mvIter.next();
-			Set schemes = (Set) linkedObjectIds.get(mapViewId);
-			for (Iterator it = schemes.iterator(); it.hasNext(); i++) {
-				Identifier id = ((Scheme) it.next()).getId();
-
-				linkBuffer.append(DatabaseIdentifier.toSQLString(id));
-				if (it.hasNext()) {
-					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
-						linkBuffer.append(COMMA);
-					} else {
-						linkBuffer.append(CLOSE_BRACKET);
-						linkBuffer.append(SQL_AND);
-						linkBuffer.append(LINK_COLUMN_SCHEME_ID);
-						linkBuffer.append(SQL_IN);
-						linkBuffer.append(OPEN_BRACKET);
-					}
-				}
-
+	private void deleteSchemeIds(final Set<? extends Identifiable> ids) {
+		final Set<Identifier> schemeIds = new HashSet<Identifier>();
+		for (final Identifiable identifiable : ids) {
+			final Identifier mapId = identifiable.getId();
+			try {
+				final MapView mapView = (MapView) StorableObjectPool.getStorableObject(mapId, true);
+				schemeIds.addAll(Identifier.createIdentifiers(mapView.getSchemes()));
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 
-		linkBuffer.append(CLOSE_BRACKET);
+		final StringBuffer stringBuffer = idsEnumerationString(schemeIds, LINK_COLUMN_SCHEME_ID, true);
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + linkBuffer.toString());
+			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + stringBuffer.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
 			Log.errorException(sqle1);
@@ -337,24 +312,24 @@ public final class MapViewDatabase extends CharacterizableDatabase {
 			}
 		}
 	}
-
+			
+	@Override
 	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		Set maps = super.retrieveByCondition(conditionQuery);
+		final Set<MapView> maps = super.retrieveByCondition(conditionQuery);
 		
-		java.util.Map mapIds = new HashMap();
-		for (Iterator it = maps.iterator(); it.hasNext();) {
-			MapView map = (MapView) it.next();
+		java.util.Map<Identifier, MapView> mapIds = new HashMap<Identifier, MapView>();
+		for (final MapView map : maps) {
 			mapIds.put(map.getId(), map);
 		}
 		
-		java.util.Map schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
-		for (Iterator it = schemeIdsMap.keySet().iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
-			MapView map = (MapView) mapIds.get(id);
-			Set schemeIds = (Set)schemeIdsMap.get(id);				
-			if (id.equals(map.getId())){
+		final java.util.Map<Identifier, Set<Identifier>> schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		for (final Identifier id : schemeIdsMap.keySet()) {
+			final MapView map = mapIds.get(id);
+			final Set<Identifier> schemeIds = schemeIdsMap.get(id);				
+			if (id.equals(map.getId())) {
 				try {
-					map.setSchemes0(StorableObjectPool.getStorableObjects(schemeIds, true));
+					final Set<Scheme> schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
+					map.setSchemes0(schemes);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | cannot retrieve schemes" ,  ae);
 				}

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.7 2005/04/11 11:51:24 bob Exp $
+ * $Id: SiteNodeWrapper.java,v 1.8 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.map;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/11 11:51:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class SiteNodeWrapper extends StorableObjectWrapper {
@@ -46,9 +45,15 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 
 	private SiteNodeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_LONGITUDE, COLUMN_LATIUDE,
-				COLUMN_IMAGE_ID, COLUMN_SITE_NODE_TYPE_ID, COLUMN_CITY, COLUMN_STREET, COLUMN_BUILDING,
-				COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_LONGITUDE,
+				COLUMN_LATIUDE,
+				COLUMN_IMAGE_ID,
+				COLUMN_SITE_NODE_TYPE_ID,
+				COLUMN_CITY,
+				COLUMN_STREET,
+				COLUMN_BUILDING };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -73,9 +78,8 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_CHARACTERISTICS))
-			return Set.class;
 		return String.class;
 	}
 
@@ -84,6 +88,7 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
+	@Override
 	public Object getValue(Object object, String key) {
 		if (object instanceof SiteNode) {
 			SiteNode siteNode = (SiteNode) object;
@@ -105,8 +110,6 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 				return siteNode.getStreet();
 			else if (key.equals(COLUMN_BUILDING))
 				return siteNode.getBuilding();
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				return siteNode.getCharacteristics();
 		}
 		return null;
 	}
@@ -140,8 +143,6 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 				siteNode.setStreet((String) value);
 			else if (key.equals(COLUMN_BUILDING))
 				siteNode.setBuilding((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				siteNode.setCharacteristics((Set) value);
 		}
 	}
 }

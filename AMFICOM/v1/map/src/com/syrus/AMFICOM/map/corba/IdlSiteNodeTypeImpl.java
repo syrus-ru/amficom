@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSiteNodeTypeImpl.java,v 1.2 2005/07/11 08:18:56 bass Exp $
+ * $Id: IdlSiteNodeTypeImpl.java,v 1.3 2005/07/17 05:20:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:44 $
  * @module map_v1
  */
 final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
@@ -39,8 +39,7 @@ final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
 			final String name,
 			final String description,
 			final IdlIdentifier imageId,
-			final boolean topological,
-			final IdlIdentifier characteristicIds[]) {
+			final boolean topological) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -52,7 +51,6 @@ final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
 		this.description = description;
 		this.imageId = imageId;
 		this.topological = topological;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

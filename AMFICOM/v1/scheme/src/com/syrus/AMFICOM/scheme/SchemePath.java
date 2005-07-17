@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.51 2005/07/15 08:46:54 bass Exp $
+ * $Id: SchemePath.java,v 1.52 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -62,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/15 08:46:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -80,8 +81,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	Identifier parentSchemeId;
 
-	private Set<Characteristic> characteristics;
-
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -89,8 +88,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	SchemePath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
-		this.characteristics = new HashSet<Characteristic>();
 		try {
 			DatabaseContext.getDatabase(SCHEMEPATH_CODE).retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -192,16 +189,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
-	 */
-	public void addCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		this.characteristics.add(characteristic);
-		super.markAsChanged();
-	}
-
-	/**
 	 * Adds <code>PathElement</code> to the end of this
 	 * <code>SchemePath</code>, adjusting its
 	 * <code>sequentialNumber</code> accordingly.
@@ -223,10 +210,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
+	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**
@@ -330,8 +320,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 				this.description,
 				this.transmissionPathId.getTransferable(),
 				this.parentSchemeMonitoringSolutionId.getTransferable(),
-				this.parentSchemeId.getTransferable(),
-				Identifier.createTransferables(this.characteristics));
+				this.parentSchemeId.getTransferable());
 	}
 
 	Identifier getTransmissionPathId() {
@@ -350,17 +339,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
-	}
-
-	/**
-	 * @param characteristic
-	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
-	 */
-	public void removeCharacteristic(final Characteristic characteristic) {
-		assert characteristic != null: NON_NULL_EXPECTED;
-		assert characteristic.getCharacterizableId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		this.characteristics.remove(characteristic);
-		super.markAsChanged();
 	}
 
 	/**
@@ -409,28 +387,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		this.transmissionPathId = transmissionPathId;
 		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
 		this.parentSchemeId = parentSchemeId;
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		assert characteristics != null: NON_NULL_EXPECTED;
-		if (this.characteristics == null)
-			this.characteristics = new HashSet<Characteristic>(characteristics.size());
-		else
-			this.characteristics.clear();
-		this.characteristics.addAll(characteristics);
 	}
 
 	/**
@@ -523,8 +479,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 		try {
 			super.fromTransferable(schemePath);
-			final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(schemePath.characteristicIds), true);
-			this.setCharacteristics0(characteristics0);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

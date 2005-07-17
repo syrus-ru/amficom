@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.55 2005/07/14 18:46:55 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.56 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -33,12 +32,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/07/14 18:46:55 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/17 05:19:00 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -52,12 +50,8 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	private String manufacturerCode;
 	private Identifier imageId;
 
-	private Set<Characteristic> characteristics;
-
 	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
 		try {
@@ -98,8 +92,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -154,11 +146,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		this.manufacturerCode = cltt.manufacturerCode;
 		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(cltt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(cltt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 	}
 	
 	/**
@@ -167,7 +154,6 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 	 */
 	@Override
 	public IdlCableLinkType getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlCableLinkTypeHelper.init(orb,
 				super.id.getTransferable(),
@@ -182,8 +168,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				LinkTypeSort.from_int(this.sort),
 				this.manufacturer,
 				this.manufacturerCode,
-				this.imageId.getTransferable(),
-				charIds);
+				this.imageId.getTransferable());
 	}
 
 	@Override
@@ -282,32 +267,9 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return Collections.emptySet();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 }

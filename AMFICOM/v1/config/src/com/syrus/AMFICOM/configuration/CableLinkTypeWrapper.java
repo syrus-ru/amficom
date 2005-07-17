@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.17 2005/07/14 18:46:55 arseniy Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.18 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,13 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/14 18:46:55 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/17 05:19:00 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -44,9 +42,13 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 
 	private CableLinkTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME,
-				COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_KIND, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_CODENAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_NAME,
+				COLUMN_KIND,
+				COLUMN_MANUFACTURER,
+				COLUMN_MANUFACTURER_CODE,
+				COLUMN_IMAGE_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -85,8 +87,6 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 				return type.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
 				return type.getImageId();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return type.getCharacteristics();
 		}
 		return value;
 	}
@@ -112,8 +112,6 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 				type.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				type.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				type.setCharacteristics((Set<Characteristic>) value);
 		}
 	}
 
@@ -143,9 +141,6 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		}
 		if (key.equals(COLUMN_IMAGE_ID)) {
 			return Identifier.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

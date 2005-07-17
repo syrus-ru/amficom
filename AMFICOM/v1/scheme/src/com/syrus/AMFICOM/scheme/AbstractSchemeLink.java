@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.24 2005/07/14 13:08:51 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.25 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/07/14 13:08:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -415,7 +415,6 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param sourceAbstractSchemePortId1
 	 * @param targetAbstractSchemePortId1
 	 * @param parentSchemeId1
-	 * @param characteristicIds
 	 * @throws CreateObjectException
 	 */
 	void fromTransferable(final IdlStorableObject header,
@@ -425,10 +424,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final IdlIdentifier abstractLinkId1,
 			final IdlIdentifier sourceAbstractSchemePortId1,
 			final IdlIdentifier targetAbstractSchemePortId1,
-			final IdlIdentifier parentSchemeId1,
-			final IdlIdentifier characteristicIds[])
+			final IdlIdentifier parentSchemeId1)
 			throws CreateObjectException {
-		super.fromTransferable(header, name, description, parentSchemeId1, characteristicIds);
+		super.fromTransferable(header, name, description, parentSchemeId1);
 		this.physicalLength = physicalLength1;
 		this.opticalLength = opticalLength1;
 		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);

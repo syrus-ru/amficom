@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAbstractSchemeElementImpl.java,v 1.1 2005/07/07 15:52:10 bass Exp $
+ * $Id: IdlAbstractSchemeElementImpl.java,v 1.2 2005/07/17 05:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/17 05:20:26 $
  * @module scheme_v1
  */
 final class IdlAbstractSchemeElementImpl extends IdlAbstractSchemeElement {
@@ -32,8 +32,7 @@ final class IdlAbstractSchemeElementImpl extends IdlAbstractSchemeElement {
 			final long version,
 			final String name,
 			final String description,
-			final IdlIdentifier parentSchemeId,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlIdentifier parentSchemeId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -43,7 +42,6 @@ final class IdlAbstractSchemeElementImpl extends IdlAbstractSchemeElement {
 		this.name = name;
 		this.description = description;
 		this.parentSchemeId = parentSchemeId;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

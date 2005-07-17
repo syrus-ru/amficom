@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.11 2005/07/14 16:25:22 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.12 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -29,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/14 16:25:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -42,43 +38,6 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		if(storableObject instanceof CableChannelingItem)
 			return (CableChannelingItem) storableObject;
 		throw new IllegalDataException("CableChannelingItemDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
-	/**
-	 * @param storableObjects
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(Set<? extends StorableObject> storableObjects)
-			throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws CreateObjectException
-	 */
-	@Override
-	public void insert(StorableObject storableObject)
-			throws IllegalDataException, CreateObjectException {
-		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
-		super.insertEntity(cableChannelingItem);
-	}
-
-	/**
-	 * @param storableObject
-	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 */
-	@Override
-	public void retrieve(StorableObject storableObject)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
-		super.retrieveEntity(cableChannelingItem);
 	}
 
 	/**

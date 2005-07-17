@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.6 2005/07/06 15:49:25 bass Exp $
+ * $Id: CableLink.java,v 1.7 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,12 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableLink;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -29,13 +26,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/06 15:49:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/07/17 05:19:00 $
  * @module config_v1
  */
 public final class CableLink extends AbstractLink {
@@ -43,8 +39,6 @@ public final class CableLink extends AbstractLink {
 
 	CableLink(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		try {
 			DatabaseContext.getDatabase(ObjectEntities.CABLELINK_CODE).retrieve(this);
@@ -89,7 +83,6 @@ public final class CableLink extends AbstractLink {
 
 		this.color = color;
 		this.mark = mark;
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -153,11 +146,6 @@ public final class CableLink extends AbstractLink {
 		this.supplier = idlCableLink.supplier;
 		this.supplierCode = idlCableLink.supplierCode;
 
-		Set<Identifier> characteristicIds = Identifier.fromTransferables(idlCableLink.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(idlCableLink.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
-
 		super.type = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(idlCableLink._typeId), true);
 	}
 
@@ -167,8 +155,6 @@ public final class CableLink extends AbstractLink {
 	 */
 	@Override
 	public IdlCableLink getTransferable(final ORB orb) {
-		IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-
 		return IdlCableLinkHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -184,8 +170,7 @@ public final class CableLink extends AbstractLink {
 				this.supplier,
 				this.supplierCode,
 				this.color,
-				(this.mark != null) ? this.mark : "",
-				charIds);
+				(this.mark != null) ? this.mark : "");
 	}
 
 	protected synchronized void setAttributes(final Date created,

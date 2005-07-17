@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.9 2005/07/14 16:08:08 bass Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.10 2005/07/17 05:20:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -26,11 +26,11 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 16:08:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/07/17 05:20:25 $
  * @module scheme_v1
  */
-public final class SchemeDeviceDatabase extends CharacterizableDatabase {
+public final class SchemeDeviceDatabase extends StorableObjectDatabase {
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;

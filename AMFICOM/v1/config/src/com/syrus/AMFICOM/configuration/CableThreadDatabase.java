@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.31 2005/07/14 18:32:31 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.32 2005/07/17 05:19:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,12 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/14 18:32:31 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/17 05:19:00 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -134,15 +131,6 @@ public final class CableThreadDatabase extends StorableObjectDatabase  {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
-			throws IllegalDataException,
-				ObjectNotFoundException,
-				RetrieveObjectException {
-		CableThread cableThread = this.fromStorableObject(storableObject);
-		super.retrieveEntity(cableThread);
-	}
-
-	@Override
 	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
 			throws IllegalDataException {
 		final CableThread cableThread = this.fromStorableObject(storableObject);
@@ -151,17 +139,6 @@ public final class CableThreadDatabase extends StorableObjectDatabase  {
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  cableThread.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final CableThread cableThread = this.fromStorableObject(storableObject);
-		super.insertEntity(cableThread);
-	}
-
-	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
 	}
 
 }
