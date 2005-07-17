@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.21 2005/07/16 18:51:58 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.22 2005/07/17 05:10:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/16 18:51:58 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/17 05:10:02 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -78,6 +78,5 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 				+ " for entity '" + ObjectEntities.codeToString(entityCode) + "'/" + entityCode,
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
-	
 
 }

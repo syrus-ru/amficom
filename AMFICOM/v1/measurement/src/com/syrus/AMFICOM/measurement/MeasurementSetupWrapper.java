@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.16 2005/07/11 08:20:01 bass Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.17 2005/07/17 05:08:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/11 08:20:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/17 05:08:45 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -73,6 +73,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		
 		Object value = super.getValue(object, key);
@@ -112,12 +113,16 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 			if (string != null) {
 				ParameterType parameterType = (ParameterType) parameters[i].getType();
 				buffer.append(parameterType.getDescription() + ':' + string);
-				java.util.Set characteristics = parameterType.getCharacteristics();
+				Set<Characteristic> characteristics = null;
+				try {
+					characteristics = parameterType.getCharacteristics();
+				} catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
 				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
 					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
-				if (!characteristics.isEmpty()) {
-					for (Iterator it = characteristics.iterator(); it.hasNext();) {
-						Characteristic characteristic = (Characteristic) it.next();
+				if (characteristics != null && !characteristics.isEmpty()) {
+					for (final Characteristic characteristic : characteristics) {
 						StorableObjectType type = characteristic.getType();
 						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
@@ -174,9 +179,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 			if (key.equals(COLUMN_MEASUREMENT_DURAION))
 				measurementSetup.setMeasurementDuration(((Long) value).longValue());
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
-				measurementSetup.setMonitoredElementIds((java.util.Set) value);
+				measurementSetup.setMonitoredElementIds((Set) value);
 			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
-				measurementSetup.setMeasurementTypeIds((java.util.Set) value);
+				measurementSetup.setMeasurementTypeIds((Set) value);
 		}
 	}
 
@@ -193,6 +198,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
