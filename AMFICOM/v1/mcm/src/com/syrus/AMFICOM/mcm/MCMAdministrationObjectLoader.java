@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.33 2005/07/03 19:16:32 bass Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.34 2005/07/17 05:00:36 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,17 +20,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/03 19:16:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/07/17 05:00:36 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMAdministrationObjectLoader extends MCMObjectLoader implements AdministrationObjectLoader {
@@ -41,43 +35,19 @@ final class MCMAdministrationObjectLoader extends MCMObjectLoader implements Adm
 
 	/* Load multiple objects*/
 	public Set loadSystemUsers(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.SYSTEMUSER_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitSystemUsers(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.SYSTEMUSER_CODE, ids);
 	}
 
 	public Set loadDomains(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.DOMAIN_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitDomains(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.DOMAIN_CODE, ids);
 	}
 
 	public Set loadServers(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.SERVER_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitServers(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.SERVER_CODE, ids);
 	}
 
 	public Set loadMCMs(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MCM_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitMCMs(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.MCM_CODE, ids);
 	}
 
 

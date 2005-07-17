@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.52 2005/07/13 10:52:36 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.53 2005/07/17 05:00:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,16 +32,9 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/07/13 10:52:36 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/17 05:00:36 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -55,106 +48,46 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	/* Load multiple objects*/
 
 	public Set loadEquipmentTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitEquipmentTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_TYPE_CODE, ids);
 	}
 
 	public Set loadPortTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PORT_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitPortTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.PORT_TYPE_CODE, ids);
 	}
 
 	public Set loadMeasurementPortTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitMeasurementPortTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_TYPE_CODE, ids);
 	}
 
 	public Set loadTransmissionPathTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitTransmissionPathTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.TRANSPATH_TYPE_CODE, ids);
 	}
 
 
 
 
 	public Set loadEquipments(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitEquipments(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.EQUIPMENT_CODE, ids);
 	}
 
 	public Set loadPorts(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PORT_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitPorts(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.PORT_CODE, ids);
 	}
 
 	public Set loadMeasurementPorts(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitMeasurementPorts(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.MEASUREMENTPORT_CODE, ids);
 	}
 
 	public Set loadTransmissionPaths(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.TRANSPATH_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitTransmissionPaths(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.TRANSPATH_CODE, ids);
 	}
 
 	public Set loadKISs(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.KIS_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitKISs(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.KIS_CODE, ids);
 	}
 
 	public Set loadMonitoredElements(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitMonitoredElements(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.MONITOREDELEMENT_CODE, ids);
 	}
 
 
@@ -163,17 +96,7 @@ final class MCMConfigurationObjectLoader extends MCMObjectLoader implements Conf
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadKISsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_CODE,
-				ids,
-				condition,
-				new TransmitButIdsByConditionProcedure() {
-					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
-							IdlIdentifier[] idsT,
-							IdlSessionKey sessionKey,
-							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
-						return ((MServer) server).transmitKISsButIdsByCondition(idsT, conditionT, sessionKey);
-					}
-				});
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.KIS_CODE, ids, condition);
 	}
 
 

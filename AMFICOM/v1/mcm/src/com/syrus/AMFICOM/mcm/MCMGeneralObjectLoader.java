@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.32 2005/07/03 19:16:32 bass Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.33 2005/07/17 05:00:36 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/03 19:16:32 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/07/17 05:00:36 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObjectLoader {
@@ -42,33 +42,15 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	/* Load multiple objects*/
 
 	public Set loadParameterTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitParameterTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.PARAMETER_TYPE_CODE, ids);
 	}
 
 	public Set loadCharacteristicTypes(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitCharacteristicTypes(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_TYPE_CODE, ids);
 	}
 
 	public Set loadCharacteristics(final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids, new TransmitProcedure() {
-			public IdlStorableObject[] transmitStorableObjects(CommonServer server,
-					IdlIdentifier[] idsT,
-					IdlSessionKey sessionKey) throws AMFICOMRemoteException {
-				return ((MServer) server).transmitCharacteristics(idsT, sessionKey);
-			}
-		});
+		return super.loadStorableObjects(ObjectEntities.CHARACTERISTIC_CODE, ids);
 	}
 
 
