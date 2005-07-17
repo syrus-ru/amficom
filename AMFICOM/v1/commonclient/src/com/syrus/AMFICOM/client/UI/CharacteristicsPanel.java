@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.12 2005/07/11 12:38:09 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.13 2005/07/17 05:24:52 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/07/11 12:38:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/07/17 05:24:52 $
  * @module commonclient_v1
  */
 
@@ -243,8 +243,9 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		for (Iterator tits = this.typeSortsCharacterizedIds.values().iterator(); tits
-				.hasNext();) {
+/*@todo Посоветовать Владимиру Александровичу это всё снести 
+ * 
+		for (Iterator tits = this.typeSortsCharacterizedIds.values().iterator(); tits.hasNext();) {
 			Object obj = tits.next();
 			if (obj instanceof CharacterizableObject) {
 				Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
@@ -262,6 +263,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				}
 			}
 		}
+		*/
 		try {
 			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, true);
 		} catch (ApplicationException e) {
