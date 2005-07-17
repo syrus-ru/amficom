@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.12 2005/06/22 19:39:19 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.13 2005/07/17 01:40:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/06/22 19:39:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/17 01:40:03 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -69,10 +69,12 @@ public class CORBAServer {
 			this.hook = hook;
 		}
 
+		@Override
 		public int hashCode() {
 	    return System.identityHashCode(this.hook);
 		}
 
+		@Override
 		public boolean equals(Object object) {
 			if (object instanceof WrappedHook)
 				return (((WrappedHook) object).hook == this.hook);
@@ -164,6 +166,7 @@ public class CORBAServer {
 
 	private void runORB() {
 		Thread thread = new Thread() {
+			@Override
 			public void run() {
 				CORBAServer.this.orb.run();
 			}
@@ -172,6 +175,7 @@ public class CORBAServer {
 		thread.setName(this.orb.getClass().getName());
 		thread.start();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				CORBAServer.this.shutdown();
 			}

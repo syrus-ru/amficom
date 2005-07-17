@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectLoader.java,v 1.6 2005/06/10 15:31:17 arseniy Exp $
+ * $Id: ObjectLoader.java,v 1.7 2005/07/17 01:40:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,11 +11,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/10 15:31:17 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/17 01:40:03 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  * @deprecated No really need to us this.
  */
+@Deprecated
 public abstract class ObjectLoader {
 
 	/**
@@ -26,12 +27,13 @@ public abstract class ObjectLoader {
 	 * @return Set of identifiers
 	 * @deprecated Use Identifier#createSubstractionIdentifiers
 	 */
-	protected static final Set createLoadIds(final Set ids, final Set butIdentifiables) {
+	@Deprecated
+	protected static final Set createLoadIds(final Set<Identifier> ids, final Set<Identifiable> butIdentifiables) {
 		assert ids != null && !ids.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
 		assert butIdentifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final Set loadIds = new HashSet(ids);
-		final Set butIds = Identifier.createIdentifiers(butIdentifiables);
+		final Set<Identifier> loadIds = new HashSet<Identifier>(ids);
+		final Set<Identifier> butIds = Identifier.createIdentifiers(butIdentifiables);
 		loadIds.removeAll(butIds);
 		return loadIds;
 	}
@@ -44,11 +46,12 @@ public abstract class ObjectLoader {
 	 * @param butIdentifiables
 	 * @deprecated Use Identifier#substractFromIdentifiers
 	 */
-	protected static final void removeFromLoadIds(final Set loadIds, final Set butIdentifiables) {
+	@Deprecated
+	protected static final void removeFromLoadIds(final Set<Identifier> loadIds, final Set<Identifiable> butIdentifiables) {
 		assert loadIds != null && !loadIds.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
 		assert butIdentifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final Set butIds = Identifier.createIdentifiers(butIdentifiables);
+		final Set<Identifier> butIds = Identifier.createIdentifiers(butIdentifiables);
 		loadIds.removeAll(butIds);
 	}
 
@@ -60,12 +63,13 @@ public abstract class ObjectLoader {
 	 * @return Set of identifiers
 	 * @deprecated Use Identifier#createSumIdentifiers
 	 */
-	protected static final Set createLoadButIds(final Set butIds, final Set alsoButIdentifiables) {
+	@Deprecated
+	protected static final Set createLoadButIds(final Set<Identifier> butIds, final Set<Identifiable> alsoButIdentifiables) {
 		assert butIds != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert alsoButIdentifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final Set loadButIds = new HashSet(butIds);
-		final Set alsoButIds = Identifier.createIdentifiers(alsoButIdentifiables);
+		final Set<Identifier> loadButIds = new HashSet<Identifier>(butIds);
+		final Set<Identifier> alsoButIds = Identifier.createIdentifiers(alsoButIdentifiables);
 		loadButIds.addAll(alsoButIds);
 		return loadButIds;
 	}
@@ -78,11 +82,12 @@ public abstract class ObjectLoader {
 	 * @param alsoButIdentifiables
 	 * @deprecated Use Identifier#addToIdentifiers
 	 */
-	protected static final void addToLoadButIds(final Set loadButIds, final Set alsoButIdentifiables) {
+	@Deprecated
+	protected static final void addToLoadButIds(final Set<Identifier> loadButIds, final Set<Identifiable> alsoButIdentifiables) {
 		assert loadButIds != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert alsoButIdentifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final Set alsoButIds = Identifier.createIdentifiers(alsoButIdentifiables);
+		final Set<Identifier> alsoButIds = Identifier.createIdentifiers(alsoButIdentifiables);
 		loadButIds.addAll(alsoButIds);
 	}
 }
