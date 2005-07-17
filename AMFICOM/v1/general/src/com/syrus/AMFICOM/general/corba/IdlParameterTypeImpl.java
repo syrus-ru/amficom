@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlParameterTypeImpl.java,v 1.3 2005/07/13 16:01:31 arseniy Exp $
+ * $Id: IdlParameterTypeImpl.java,v 1.4 2005/07/17 05:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/13 16:01:31 $
- * @module general_v1
+ * @version $Revision: 1.4 $, $Date: 2005/07/17 05:17:13 $
+ * @module general
  */
 final class IdlParameterTypeImpl extends IdlParameterType {
 	private static final long serialVersionUID = 6364129720469699973L;
@@ -36,8 +36,7 @@ final class IdlParameterTypeImpl extends IdlParameterType {
 			final String codename,
 			final String description,
 			final String name,
-			final IdlDataType dataType,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlDataType dataType) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -48,7 +47,6 @@ final class IdlParameterTypeImpl extends IdlParameterType {
 		this.description = description;
 		this.name = name;
 		this.dataType = dataType;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

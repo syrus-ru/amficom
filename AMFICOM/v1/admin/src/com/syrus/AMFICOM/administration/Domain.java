@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.44 2005/07/04 13:00:54 bass Exp $
+ * $Id: Domain.java,v 1.45 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,13 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/07/04 13:00:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -34,6 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -46,15 +46,11 @@ public final class Domain extends DomainMember implements Characterizable {
 	private String name;
 	private String description;
 
-	private Set<Characteristic> characteristics;
-
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	Domain(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE);
 		try {
@@ -97,8 +93,6 @@ public final class Domain extends DomainMember implements Characterizable {
 				domainId);
 		this.name = name;
 		this.description = description;
-
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -110,11 +104,6 @@ public final class Domain extends DomainMember implements Characterizable {
 		super.fromTransferable(dt, new Identifier(dt.domainId));
 		this.name = dt.name;
 		this.description = dt.description;
-
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(dt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(dt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -134,17 +123,14 @@ public final class Domain extends DomainMember implements Characterizable {
 				super.version,
 				super.domainId.getTransferable(),
 				this.name,
-				this.description,
-				Identifier.createTransferables(this.characteristics));
+				this.description);
 	}	
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.name != null
-				&& this.description != null
-				&& this.characteristics != null
-				&& this.characteristics != Collections.EMPTY_SET;
+				&& this.description != null;
 	}
 
 	public String getName() {
@@ -165,36 +151,10 @@ public final class Domain extends DomainMember implements Characterizable {
 		super.markAsChanged();
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**

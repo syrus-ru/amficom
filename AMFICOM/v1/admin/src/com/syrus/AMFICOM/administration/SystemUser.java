@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.14 2005/07/05 15:23:17 bass Exp $
+ * $Id: SystemUser.java,v 1.15 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.administration;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -29,19 +28,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/05 15:23:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -52,16 +51,12 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	private int sort;
 	private String name;
 	private String description;
-
-	private Set<Characteristic> characteristics;
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public SystemUser(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
-
-		this.characteristics = new HashSet<Characteristic>();
 
 		final SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 		try {
@@ -106,8 +101,6 @@ public final class SystemUser extends StorableObject implements Characterizable,
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
-		
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -164,12 +157,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 		this.sort = ut.sort.value();
 		this.name = ut.name;
 		this.description = ut.description;
-		
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ut.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(ut.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -179,9 +167,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	@Override
 	public IdlSystemUser getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
-		
+
 		return IdlSystemUserHelper.init(orb,
 				super.id.getTransferable(),
 				super.created.getTime(),
@@ -192,8 +178,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,
-				this.description,
-				charIds);
+				this.description);
 	}
 
 	/**
@@ -206,8 +191,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 		return super.isValid()
 				&& this.login != null && this.login.length() != 0
 				&& this.name != null && this.name.length() != 0
-				&& this.description != null
-				&& this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+				&& this.description != null;
 	}
 	
 	public String getLogin() {
@@ -225,39 +209,16 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
 	}
-	
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
-	}
 
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
 	/**

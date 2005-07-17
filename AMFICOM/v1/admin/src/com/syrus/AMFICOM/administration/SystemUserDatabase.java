@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.9 2005/07/14 18:04:11 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.10 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,25 +13,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/14 18:04:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/17 05:18:01 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public final class SystemUserDatabase extends CharacterizableDatabase {
+public final class SystemUserDatabase extends StorableObjectDatabase {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	static final int SIZE_LOGIN_COLUMN = 32;
@@ -96,6 +96,18 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 		return user;
 	}
 
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final SystemUser user = this.fromStorableObject(storableObject);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getLogin(), SIZE_LOGIN_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, user.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
+	}
+
 	public SystemUser retrieveForLogin(final String login) throws RetrieveObjectException, ObjectNotFoundException {
 		final String condition = SystemUserWrapper.COLUMN_LOGIN
 				+ EQUALS
@@ -120,18 +132,6 @@ public final class SystemUserDatabase extends CharacterizableDatabase {
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  user.getId() + "'; argument: " + arg);
 				return null;
 		}
-	}
-
-	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
-			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		final SystemUser user = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getLogin(), SIZE_LOGIN_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, user.getSort().value());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return startParameterNumber;
 	}
 
 }

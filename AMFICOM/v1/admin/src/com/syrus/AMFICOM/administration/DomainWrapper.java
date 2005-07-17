@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.10 2005/06/25 17:50:50 bass Exp $
+ * $Id: DomainWrapper.java,v 1.11 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,14 +11,12 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class DomainWrapper extends StorableObjectWrapper {
@@ -29,7 +27,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 
 	private DomainWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -58,8 +56,6 @@ public class DomainWrapper extends StorableObjectWrapper {
 				return domain.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return domain.getDescription();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return domain.getCharacteristics();
 		}
 		return value;
 	}
@@ -75,8 +71,6 @@ public class DomainWrapper extends StorableObjectWrapper {
 				domain.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				domain.setDescription((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				domain.setCharacteristics((Set<Characteristic>) value);
 		}
 	}
 
@@ -102,8 +96,6 @@ public class DomainWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_NAME)
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(COLUMN_CHARACTERISTICS)) { 
-			return Set.class; 
 		}
 		return null;
 	}

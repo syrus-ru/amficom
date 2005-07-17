@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/06/27 10:01:37 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/07/17 05:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,50 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+
 import java.util.Set;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/27 10:01:37 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/17 05:17:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -38,22 +78,68 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.CHARACTERISTIC_CODE:
-				Characteristic characteristic = (Characteristic) storableObject;
+			case CHARACTERISTIC_CODE:
+				final Characteristic characteristic = (Characteristic) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
-						condition = super.conditionTest(characteristic.getType().getId());
-						break;
-					default:
+
+					/* General */
+					case PARAMETER_TYPE_CODE:
+
+					/* Administration */
+					case SYSTEMUSER_CODE:
+					case DOMAIN_CODE:
+					case SERVER_CODE:
+					case MCM_CODE:
+
+					/* Configuration */
+					case EQUIPMENT_TYPE_CODE:
+					case PORT_TYPE_CODE:
+					case MEASUREMENTPORT_TYPE_CODE:
+					case TRANSPATH_TYPE_CODE:
+					case LINK_TYPE_CODE:
+					case CABLELINK_TYPE_CODE:
+					case CABLETHREAD_TYPE_CODE:
+					case EQUIPMENT_CODE:
+					case PORT_CODE:
+					case MEASUREMENTPORT_CODE:
+					case TRANSPATH_CODE:
+					case KIS_CODE:
+					case LINK_CODE:
+					case CABLELINK_CODE:
+
+					/* Scheme */
+					case SCHEMECABLELINK_CODE:
+					case SCHEMELINK_CODE:
+					case SCHEMEELEMENT_CODE:
+					case SCHEMECABLEPORT_CODE:
+					case SCHEMEPORT_CODE:
+					case SCHEMECABLETHREAD_CODE:
+					case SCHEMEDEVICE_CODE:
+					case SCHEMEPATH_CODE:
+					case SCHEMEPROTOELEMENT_CODE:
+
+					/* Map */
+					case COLLECTOR_CODE:
+					case MARK_CODE:
+					case NODELINK_CODE:
+					case PHYSICALLINK_CODE:
+					case PHYSICALLINK_TYPE_CODE:
+					case SITENODE_CODE:
+					case SITENODE_TYPE_CODE:
+					case TOPOLOGICALNODE_CODE:
+
 						condition = super.conditionTest(characteristic.getCharacterizableId());
+						break;
+//					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
+//						condition = super.conditionTest(characteristic.getType().getId());
+//						break;
+					default:
+						throw newExceptionLinkedEntityIllegal();
 				}
 				break;
 			default:
-				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
-						+ ", " + ObjectEntities.codeToString(this.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw newExceptionEntityIllegal();
 		}
-
 		return condition;
 	}
 
@@ -64,9 +150,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				this.entityCode = CHARACTERISTIC_SHORT;
 				break;
 			default:
-				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
-						+ ", " + ObjectEntities.codeToString(this.entityCode),
-						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw newExceptionEntityIllegal();
 		}
 	}
 

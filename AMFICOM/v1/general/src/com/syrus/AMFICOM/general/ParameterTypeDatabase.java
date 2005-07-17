@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.29 2005/07/14 16:08:04 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.30 2005/07/17 05:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/14 16:08:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/07/17 05:17:13 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
-public final class ParameterTypeDatabase extends CharacterizableDatabase  {
+public final class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -52,8 +52,7 @@ public final class ParameterTypeDatabase extends CharacterizableDatabase  {
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
+
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
 		final ParameterType parameterType = this.fromStorableObject(storableObject);

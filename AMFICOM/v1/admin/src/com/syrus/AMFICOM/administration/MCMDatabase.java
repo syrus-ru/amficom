@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.32 2005/07/14 18:04:11 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.33 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,25 +13,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/14 18:04:11 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/17 05:18:01 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public final class MCMDatabase extends CharacterizableDatabase {
+public final class MCMDatabase extends StorableObjectDatabase {
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
@@ -130,21 +130,21 @@ public final class MCMDatabase extends CharacterizableDatabase {
 		return mcm;
 	}
 
-  @Override
-public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-  	final MCM mcm = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mcm.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
   public Set<MCM> retrieveForServer(final Identifier serverId) throws RetrieveObjectException, IllegalDataException {
   	final String serverIdStr = DatabaseIdentifier.toSQLString(serverId);
   	final String condition = MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
 		return this.retrieveByCondition(condition);
   }
+
+  @Override
+	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
+			throws IllegalDataException {
+		final MCM mcm = this.fromStorableObject(storableObject);
+		switch (retrieveKind) {
+			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mcm.getId() + "'; argument: " + arg);
+				return null;
+		}
+	}
 }

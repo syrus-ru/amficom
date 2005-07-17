@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.10 2005/06/25 17:50:50 bass Exp $
+ * $Id: MCMWrapper.java,v 1.11 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,13 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class MCMWrapper extends StorableObjectWrapper {
@@ -38,8 +36,7 @@ public class MCMWrapper extends StorableObjectWrapper {
 
 	private MCMWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_USER_ID, COLUMN_SERVER_ID,
-				COLUMN_HOSTNAME, COLUMN_CHARACTERISTICS };
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_USER_ID, COLUMN_SERVER_ID, COLUMN_HOSTNAME };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -74,8 +71,6 @@ public class MCMWrapper extends StorableObjectWrapper {
 				return mcm.getServerId();
 			if (key.equals(COLUMN_HOSTNAME))
 				return mcm.getHostName();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return mcm.getCharacteristics();
 		}
 		return value;
 	}
@@ -97,8 +92,6 @@ public class MCMWrapper extends StorableObjectWrapper {
 				mcm.setServerId((Identifier) value);
 			else if (key.equals(COLUMN_HOSTNAME))
 				mcm.setHostName((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				mcm.setCharacteristics((Set<Characteristic>) value);
 
 		}
 	}
@@ -130,9 +123,6 @@ public class MCMWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_USER_ID)
 				|| key.equals(COLUMN_SERVER_ID)) {
 			return Identifier.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

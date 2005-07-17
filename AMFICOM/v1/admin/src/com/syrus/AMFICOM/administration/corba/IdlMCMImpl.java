@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMCMImpl.java,v 1.2 2005/07/11 08:19:00 bass Exp $
+ * $Id: IdlMCMImpl.java,v 1.3 2005/07/17 05:18:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:19:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/17 05:18:02 $
  * @module admin_v1
  */
 final class IdlMCMImpl extends IdlMCM {
@@ -40,8 +40,7 @@ final class IdlMCMImpl extends IdlMCM {
 			final String description,
 			final String hostname,
 			final IdlIdentifier userId,
-			final IdlIdentifier serverId,
-			final IdlIdentifier characteristicIds[]) {
+			final IdlIdentifier serverId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -54,7 +53,6 @@ final class IdlMCMImpl extends IdlMCM {
 		this.hostname = hostname;
 		this.userId = userId;
 		this.serverId = serverId;
-		this.characteristicIds = characteristicIds;
 	}
 
 	/**

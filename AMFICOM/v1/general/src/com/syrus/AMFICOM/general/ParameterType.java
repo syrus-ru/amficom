@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.42 2005/07/13 16:05:00 arseniy Exp $
+ * $Id: ParameterType.java,v 1.43 2005/07/17 05:17:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,20 +10,18 @@ package com.syrus.AMFICOM.general;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlDataType;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/07/13 16:05:00 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/17 05:17:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -33,16 +31,12 @@ public final class ParameterType extends StorableObjectType implements Character
 
 	private String name;
 	private DataType dataType;
-	
-	private Set<Characteristic> characteristics;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	ParameterType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
-		this.characteristics = new HashSet<Characteristic>();
 		
 		final ParameterTypeDatabase database = (ParameterTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PARAMETER_TYPE_CODE);
 		try {
@@ -85,8 +79,6 @@ public final class ParameterType extends StorableObjectType implements Character
 				description);
 		this.name = name;
 		this.dataType = dataType;
-		
-		this.characteristics = new HashSet<Characteristic>();
 	}
 
 	/**
@@ -130,7 +122,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 */
 	@Override
 	protected boolean isValid() {
-		return super.isValid() && this.name != null && this.characteristics != null && this.characteristics != Collections.EMPTY_SET;
+		return super.isValid() && this.name != null;
 	}
 
 	/**
@@ -147,12 +139,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		}
 		this.name = ptt.name;
 		this.dataType = DataType.fromTransferable(ptt.dataType);
-		
-		final Set<Identifier> characteristicIds = Identifier.fromTransferables(ptt.characteristicIds);
-		this.characteristics = new HashSet<Characteristic>(ptt.characteristicIds.length);
-		final Set<Characteristic> characteristics0 = StorableObjectPool.getStorableObjects(characteristicIds, true);
-		this.setCharacteristics0(characteristics0);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
@@ -162,8 +149,6 @@ public final class ParameterType extends StorableObjectType implements Character
 	@Override
 	public IdlParameterType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-		final IdlIdentifier[] charIds = Identifier.createTransferables(this.characteristics);
 
 		return IdlParameterTypeHelper.init(orb,
 				this.id.getTransferable(),
@@ -175,8 +160,7 @@ public final class ParameterType extends StorableObjectType implements Character
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
-				(IdlDataType) this.dataType.getTransferable(orb),
-				charIds);
+				(IdlDataType) this.dataType.getTransferable(orb));
 	}
 
 	public String getName() {
@@ -238,38 +222,12 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.dataType = dataType;
 	}
 
-	public void addCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.add(characteristic);
-			super.markAsChanged();
-		}
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
 	}
 
-	public void removeCharacteristic(final Characteristic characteristic) {
-		if (characteristic != null) {
-			this.characteristics.remove(characteristic);
-			super.markAsChanged();
-		}
-	}
-
-	public Set<Characteristic> getCharacteristics() {
-		return Collections.unmodifiableSet(this.characteristics);
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public void setCharacteristics0(final Set<Characteristic> characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-
-	public void setCharacteristics(final Set<Characteristic> characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.markAsChanged();
-	}
-	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */

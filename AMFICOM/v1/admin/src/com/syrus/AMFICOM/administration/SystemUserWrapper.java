@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.7 2005/06/25 17:50:50 bass Exp $
+ * $Id: SystemUserWrapper.java,v 1.8 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,13 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {
@@ -45,7 +43,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 
 	private SystemUserWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_LOGIN, COLUMN_NAME, COLUMN_SORT, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_LOGIN, COLUMN_NAME, COLUMN_SORT};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -78,8 +76,6 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 				return user.getName();
 			if (key.equals(COLUMN_SORT))
 				return new Integer(user.getSort().value());
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return user.getCharacteristics();
 		}
 		return value;
 	}
@@ -99,8 +95,6 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 				user.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
 				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				user.setCharacteristics((Set<Characteristic>) value);
 		}
 	}
 
@@ -130,9 +124,6 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 		}
 		if (key.equals(COLUMN_SORT)) {
 			return Integer.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) {
-			return Set.class;
 		}
 		return null;
 	}

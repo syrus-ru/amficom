@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.10 2005/06/22 16:32:16 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.11 2005/07/17 05:17:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 16:32:16 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/17 05:17:13 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -48,6 +48,7 @@ public abstract class StorableObjectWrapper implements Wrapper {
 
 	public static final String COLUMN_TYPE_ID = "type_id";
 
+	@Deprecated
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
 	public static final String LINK_COLUMN_PARAMETER_MODE = "parameter_mode";

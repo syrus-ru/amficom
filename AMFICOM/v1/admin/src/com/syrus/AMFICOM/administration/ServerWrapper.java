@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.9 2005/06/25 17:50:50 bass Exp $
+ * $Id: ServerWrapper.java,v 1.10 2005/07/17 05:18:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,15 +11,13 @@ package com.syrus.AMFICOM.administration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/17 05:18:01 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class ServerWrapper extends StorableObjectWrapper {
@@ -35,8 +33,7 @@ public class ServerWrapper extends StorableObjectWrapper {
 
 	private ServerWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, DomainMember.COLUMN_DOMAIN_ID,
-				COLUMN_HOSTNAME, COLUMN_CHARACTERISTICS};
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, DomainMember.COLUMN_DOMAIN_ID, COLUMN_HOSTNAME };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -69,8 +66,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 				return server.getDomainId();
 			if (key.equals(COLUMN_HOSTNAME))
 				return server.getHostName();
-			if (key.equals(COLUMN_CHARACTERISTICS))
-				return server.getCharacteristics();
 		}
 		return value;
 	}
@@ -90,8 +85,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 				server.setDomainId((Identifier) value);
 			else if (key.equals(COLUMN_HOSTNAME))
 				server.setHostName((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS))
-				server.setCharacteristics((Set<Characteristic>) value);
 		}
 	}
 
@@ -121,9 +114,6 @@ public class ServerWrapper extends StorableObjectWrapper {
 		}
 		if (key.equals(DomainMember.COLUMN_DOMAIN_ID)) {
 			return Identifier.class;
-		}
-		if (key.equals(COLUMN_CHARACTERISTICS)) { 
-			return Set.class; 
 		}
 		return null;
 	}
