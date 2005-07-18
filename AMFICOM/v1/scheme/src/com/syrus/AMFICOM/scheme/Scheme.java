@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.52 2005/07/14 19:25:47 bass Exp $
+ * $Id: Scheme.java,v 1.53 2005/07/18 17:21:54 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/18 17:21:54 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -361,9 +361,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeCableLink> getSchemeCableLinks() {
+		return Collections.unmodifiableSet(this.getSchemeCableLinks0());
+	}
+
+	private Set<SchemeCableLink> getSchemeCableLinks0() {
 		try {
-			final Set<SchemeCableLink> schemeCableLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true);
-			return Collections.unmodifiableSet(schemeCableLinks);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -394,9 +397,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeElement> getSchemeElements() {
+		return Collections.unmodifiableSet(this.getSchemeElements0());
+	}
+
+	private Set<SchemeElement> getSchemeElements0() {
 		try {
-			final Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
-			return Collections.unmodifiableSet(schemeElements);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -412,9 +418,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
+		return Collections.unmodifiableSet(this.getSchemeLinks0());
+	}
+
+	private Set<SchemeLink> getSchemeLinks0() {
 		try {
-			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
-			return Collections.unmodifiableSet(schemeLinks);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -425,9 +434,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
+		return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
+	}
+
+	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0() {
 		try {
-			final Set<SchemeOptimizeInfo> schemeOptimizeInfos = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true);
-			return Collections.unmodifiableSet(schemeOptimizeInfos);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -672,16 +684,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) {
 		assert schemeCableLinks != null: NON_NULL_EXPECTED;
-		for (final SchemeCableLink oldSchemeCableLink : getSchemeCableLinks()) {
-			/*
-			 * Check is made to prevent SchemeCableLinks from
-			 * permanently losing their parents.
-			 */
-			assert !schemeCableLinks.contains(oldSchemeCableLink);
-			removeSchemeCableLink(oldSchemeCableLink);
+		final Set<SchemeCableLink> oldSchemeCableLinks = this.getSchemeCableLinks0();
+		/*
+		 * Check is made to prevent SchemeCableLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCableLinks.removeAll(schemeCableLinks);
+		for (final SchemeCableLink oldSchemeCableLink : oldSchemeCableLinks) {
+			this.removeSchemeCableLink(oldSchemeCableLink);
 		}
 		for (final SchemeCableLink schemeCableLink : schemeCableLinks) {
-			addSchemeCableLink(schemeCableLink);
+			this.addSchemeCableLink(schemeCableLink);
 		}
 	}
 
@@ -699,13 +712,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
-		for (final SchemeElement oldSchemeElement : getSchemeElements()) {
-			/*
-			 * Check is made to prevent SchemeElements from
-			 * permanently losing their parents.
-			 */
-			assert !schemeElements.contains(oldSchemeElement);
-			removeSchemeElement(oldSchemeElement);
+		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
+		/*
+		 * Check is made to prevent SchemeElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeElements.removeAll(schemeElements);
+		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
+			this.removeSchemeElement(oldSchemeElement);
 		}
 		for (final SchemeElement schemeElement : schemeElements) {
 			this.addSchemeElement(schemeElement);
@@ -726,13 +740,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		for (final SchemeLink oldSchemeLink : getSchemeLinks()) {
-			/*
-			 * Check is made to prevent SchemeLinks from
-			 * permanently losing their parents.
-			 */
-			assert !schemeLinks.contains(oldSchemeLink);
-			removeSchemeLink(oldSchemeLink);
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
+		/*
+		 * Check is made to prevent SchemeLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeLinks.removeAll(schemeLinks);
+		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
+			this.removeSchemeLink(oldSchemeLink);
 		}
 		for (final SchemeLink schemeLink : schemeLinks) {
 			this.addSchemeLink(schemeLink);
@@ -741,13 +756,14 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) {
 		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
-		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : getSchemeOptimizeInfos()) {
-			/*
-			 * Check is made to prevent SchemeOptimizeInfos from
-			 * permanently losing their parents.
-			 */
-			assert !schemeOptimizeInfos.contains(oldSchemeOptimizeInfo);
-			removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
+		final Set<SchemeOptimizeInfo> oldSchemeOptimizeInfos = this.getSchemeOptimizeInfos0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfos from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfos.removeAll(schemeOptimizeInfos);
+		for (final SchemeOptimizeInfo oldSchemeOptimizeInfo : oldSchemeOptimizeInfos) {
+			this.removeSchemeOptimizeInfo(oldSchemeOptimizeInfo);
 		}
 		for (final SchemeOptimizeInfo schemeOptimizeInfo : schemeOptimizeInfos) {
 			this.addSchemeOptimizeInfo(schemeOptimizeInfo);
@@ -818,9 +834,12 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set<SchemePath> getSchemePaths() {
+		return Collections.unmodifiableSet(this.getSchemePaths0());
+	}
+
+	private Set<SchemePath> getSchemePaths0() {
 		try {
-			final Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
-			return Collections.unmodifiableSet(schemePaths);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -829,12 +848,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null : NON_NULL_EXPECTED;
-		for (final SchemePath oldSchemePath : this.getSchemePaths()) {
-			/*
-			 * Check is made to prevent SchemePaths from
-			 * permanently losing their parents.
-			 */
-			assert !schemePaths.contains(oldSchemePath);
+		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
+		/*
+		 * Check is made to prevent SchemePaths from
+		 * permanently losing their parents.
+		 */
+		oldSchemePaths.removeAll(schemePaths);
+		for (final SchemePath oldSchemePath : oldSchemePaths) {
 			this.removeSchemePath(oldSchemePath);
 		}
 		for (final SchemePath schemePath : schemePaths) {
