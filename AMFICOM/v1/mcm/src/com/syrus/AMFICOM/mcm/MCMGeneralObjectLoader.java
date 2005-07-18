@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.33 2005/07/17 05:00:36 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.34 2005/07/18 11:03:25 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,17 +19,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.CommonServer;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.mserver.corba.MServer;
-import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/17 05:00:36 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/18 11:03:25 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -58,17 +51,7 @@ final class MCMGeneralObjectLoader extends MCMObjectLoader implements GeneralObj
 	/* Load multiple objects but ids by condition*/
 
 	public Set loadParameterTypesButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
-		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_TYPE_CODE,
-				ids,
-				condition,
-				new TransmitButIdsByConditionProcedure() {
-					public IdlStorableObject[] transmitStorableObjectsButIdsCondition(CommonServer server,
-							IdlIdentifier[] idsT,
-							IdlSessionKey sessionKey,
-							IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
-						return ((MServer) server).transmitParameterTypesButIdsByCondition(idsT, conditionT, sessionKey);
-					}
-				});
+		return super.loadStorableObjectsButIdsByCondition(ObjectEntities.PARAMETER_TYPE_CODE, ids, condition);
 	}
 
 
