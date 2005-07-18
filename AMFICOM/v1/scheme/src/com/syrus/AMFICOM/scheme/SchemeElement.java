@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.52 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.53 2005/07/18 19:04:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/18 19:04:32 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -511,9 +511,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @return an immutable set.
 	 */
 	public Set<SchemeDevice> getSchemeDevices() {
+		return Collections.unmodifiableSet(this.getSchemeDevices0());
+	}
+
+	private Set<SchemeDevice> getSchemeDevices0() {
 		try {
-			final Set<SchemeDevice> schemeDevices = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
-			return Collections.unmodifiableSet(schemeDevices);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -525,9 +528,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @return an immutable set.
 	 */
 	public Set<SchemeElement> getSchemeElements() {
+		return Collections.unmodifiableSet(this.getSchemeElements0());
+	}
+
+	private Set<SchemeElement> getSchemeElements0() {
 		try {
-			final Set<SchemeElement> schemeElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
-			return Collections.unmodifiableSet(schemeElements);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -539,9 +545,12 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @return an immutable set.
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
+		return Collections.unmodifiableSet(this.getSchemeLinks0());
+	}
+
+	private Set<SchemeLink> getSchemeLinks0() {
 		try {
-			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
-			return Collections.unmodifiableSet(schemeLinks);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -911,13 +920,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
-		for (final SchemeDevice oldSchemeDevice : getSchemeDevices()) {
-			/*
-			 * Check is made to prevent SchemeDevices from
-			 * permanently losing their parents.
-			 */
-			assert !schemeDevices.contains(oldSchemeDevice);
-			removeSchemeDevice(oldSchemeDevice);
+		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
+		/*
+		 * Check is made to prevent SchemeDevices from
+		 * permanently losing their parents.
+		 */
+		oldSchemeDevices.removeAll(schemeDevices);
+		for (final SchemeDevice oldSchemeDevice : oldSchemeDevices) {
+			this.removeSchemeDevice(oldSchemeDevice);
 		}
 		for (final SchemeDevice schemeDevice : schemeDevices) {
 			this.addSchemeDevice(schemeDevice);
@@ -926,13 +936,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
 		assert schemeElements != null: NON_NULL_EXPECTED;
-		for (final SchemeElement oldSchemeElement : getSchemeElements()) {
-			/*
-			 * Check is made to prevent SchemeElements from
-			 * permanently losing their parents.
-			 */
-			assert !schemeElements.contains(oldSchemeElement);
-			removeSchemeElement(oldSchemeElement);
+		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
+		/*
+		 * Check is made to prevent SchemeElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeElements.removeAll(schemeElements);
+		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
+			this.removeSchemeElement(oldSchemeElement);
 		}
 		for (final SchemeElement schemeElement : schemeElements) {
 			this.addSchemeElement(schemeElement);
@@ -941,13 +952,14 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		for (final SchemeLink oldSchemeLink : getSchemeLinks()) {
-			/*
-			 * Check is made to prevent SchemeLinks from
-			 * permanently losing their parents.
-			 */
-			assert !schemeLinks.contains(oldSchemeLink);
-			removeSchemeLink(oldSchemeLink);
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
+		/*
+		 * Check is made to prevent SchemeLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeLinks.removeAll(schemeLinks);
+		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
+			this.removeSchemeLink(oldSchemeLink);
 		}
 		for (final SchemeLink schemeLink : schemeLinks) {
 			this.addSchemeLink(schemeLink);
