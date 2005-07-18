@@ -37,7 +37,7 @@ public class Transceiver extends SleepButWorkThread {
 
 	private boolean running;
 
-	public Transceiver(KIS kis) {
+	public Transceiver(final KIS kis) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
 
@@ -54,7 +54,7 @@ public class Transceiver extends SleepButWorkThread {
 		this.running = true;
 	}
 
-	public void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
+	public void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -65,7 +65,7 @@ public class Transceiver extends SleepButWorkThread {
 			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 	}
 
-	protected void addAcquiringMeasurement(Measurement measurement, TestProcessor testProcessor) {
+	protected void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -75,9 +75,9 @@ public class Transceiver extends SleepButWorkThread {
 			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 	}
 
-	protected void abortMeasurementsForTestProcessor(TestProcessor testProcessor) {
+	protected void abortMeasurementsForTestProcessor(final TestProcessor testProcessor) {
 		synchronized (this.testProcessors) {
-			for (Iterator it = this.testProcessors.keySet().iterator(); it.hasNext();) {
+			for (final Iterator it = this.testProcessors.keySet().iterator(); it.hasNext();) {
 				final Identifier measurementId = (Identifier) it.next();
 				final TestProcessor tp = this.testProcessors.get(measurementId);
 				if (tp.getTestId().equals(testProcessor.getTestId())) {
@@ -207,7 +207,7 @@ public class Transceiver extends SleepButWorkThread {
 
 				}// if (this.kisConnection.isEstablished())
 				else {
-					long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
+					final long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
 					try {
 						this.kisConnection.establish(kisConnectionTimeout, true);
 						super.clearFalls();

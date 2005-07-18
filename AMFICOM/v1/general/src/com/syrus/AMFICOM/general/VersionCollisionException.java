@@ -1,5 +1,5 @@
 /*
- * $Id: VersionCollisionException.java,v 1.6 2005/05/18 11:07:38 bass Exp $
+ * $Id: VersionCollisionException.java,v 1.7 2005/07/18 13:27:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/05/18 11:07:38 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/18 13:27:50 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -26,7 +26,7 @@ public class VersionCollisionException extends ApplicationException {
 	 * @param desiredVersion
 	 * @param actualVersion
 	 */
-	public VersionCollisionException(String message, long desiredVersion, long actualVersion) {
+	public VersionCollisionException(final String message, final long desiredVersion, final long actualVersion) {
 		super(message);
 		this.desiredVersion = desiredVersion;
 		this.actualVersion = actualVersion;
@@ -39,7 +39,10 @@ public class VersionCollisionException extends ApplicationException {
 	 * @param desiredVersion
 	 * @param actualVersion
 	 */
-	public VersionCollisionException(String message, Throwable cause, long desiredVersion, long actualVersion) {
+	public VersionCollisionException(final String message,
+			final Throwable cause,
+			final long desiredVersion,
+			final long actualVersion) {
 		super(message, cause);
 		this.desiredVersion = desiredVersion;
 		this.actualVersion = actualVersion;
@@ -51,7 +54,7 @@ public class VersionCollisionException extends ApplicationException {
 	 * @param desiredVersion
 	 * @param actualVersion
 	 */
-	public VersionCollisionException(Throwable cause, long desiredVersion, long actualVersion) {
+	public VersionCollisionException(final Throwable cause, final long desiredVersion, final long actualVersion) {
 		super(cause);
 		this.desiredVersion = desiredVersion;
 		this.actualVersion = actualVersion;
@@ -71,5 +74,10 @@ public class VersionCollisionException extends ApplicationException {
 	 */
 	public long getActualVersion() {
 		return this.actualVersion;
+	}
+
+	@Override
+	public String getMessage() {
+		return super.getMessage() + "; desired version: " + this.desiredVersion + ", actual version: " + this.actualVersion;
 	}
 }
