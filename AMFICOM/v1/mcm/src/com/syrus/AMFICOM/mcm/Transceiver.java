@@ -120,7 +120,7 @@ public class Transceiver extends SleepButWorkThread {
 							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
-							StorableObjectPool.flush(measurementId, true);
+							StorableObjectPool.flush(measurementId, false);
 							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
@@ -165,7 +165,7 @@ public class Transceiver extends SleepButWorkThread {
 								try {
 									result = this.kisReport.createResult();
 									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-									StorableObjectPool.flush(measurementId, true);
+									StorableObjectPool.flush(measurementId, false);
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {
