@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.47 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.48 2005/07/18 18:53:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/18 18:53:56 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -367,9 +367,12 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeProtoElement> getSchemeProtoElements() {
+		return Collections.unmodifiableSet(this.getSchemeProtoElements0());
+	}
+
+	private Set<SchemeProtoElement> getSchemeProtoElements0() {
 		try {
-			final Set<SchemeProtoElement> schemeProtoElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
-			return Collections.unmodifiableSet(schemeProtoElements);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -588,12 +591,13 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) {
 		assert schemeProtoElements != null: NON_NULL_EXPECTED;
-		for (final SchemeProtoElement oldSchemeProtoElement : this.getSchemeProtoElements()) {
-			/*
-			 * Check is made to prevent SchemeProtoElements from
-			 * permanently losing their parents.
-			 */
-			assert !schemeProtoElements.contains(oldSchemeProtoElement);
+		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
+		/*
+		 * Check is made to prevent SchemeProtoElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeProtoElements.removeAll(schemeProtoElements);
+		for (final SchemeProtoElement oldSchemeProtoElement : oldSchemeProtoElements) {
 			this.removeSchemeProtoElement(oldSchemeProtoElement);
 		}
 		for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
