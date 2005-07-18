@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.9 2005/07/15 11:57:25 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.10 2005/07/18 11:29:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/07/15 11:57:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/18 11:29:31 $
  * @module
  */
 public class AnalysisParameters
@@ -29,6 +29,9 @@ implements DataStreamable, Cloneable
 	private double nrs2rsaSmall = 1.5;
 	private double nrs2rsaBig = 10.0;
 	private double l2rsaBig = 0.1;
+
+	// еще дополнительный параметр
+	private double scaleFactor = 1.0;
 
 	private static DSReader reader;
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
@@ -64,6 +67,11 @@ implements DataStreamable, Cloneable
         if (nrs2rsaBig < nrs2rsaSmall)
         	return false;
         if (l2rsaBig < 0)
+        	return false;
+
+        if (scaleFactor < 1.0)
+        	return false;
+        if (scaleFactor > 10) // XXX
         	return false;
 
         return true;
@@ -248,5 +256,13 @@ implements DataStreamable, Cloneable
 	}
 	public void setTau2nrs(double tau2nrs) {
 		this.tau2nrs = tau2nrs;
+	}
+
+	public double getScaleFactor() {
+		return scaleFactor;
+	}
+
+	public void setScaleFactor(double scaleFactor) {
+		this.scaleFactor = scaleFactor;
 	}
 }

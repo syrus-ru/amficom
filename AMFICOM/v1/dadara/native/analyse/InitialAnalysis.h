@@ -43,6 +43,7 @@ public:
 		double rACrit,	// порог "большого" коннектора
 		int rSSmall,	// макс. длина для маленького коннектора
 		int rSBig,		// макс. длина для большого коннектора
+		double scaleFactor,
 		int lengthTillZero = 0,
 		double *externalNoise = 0); // null to find automatically
 
@@ -78,7 +79,7 @@ private:
 	int lastPoint;
 	double wletMeanValue; // среднее значение образа рефлектограммы
 
-	void performAnalysis(double *f_wletTEMP, int scaleB);
+	void performAnalysis(double *f_wletTEMP, int scaleB, double scaleFactor);
 	int getLastPoint();
     static double get_wlet_fabs(int s, int x);//вернуть модуль текущего вейвлета
 

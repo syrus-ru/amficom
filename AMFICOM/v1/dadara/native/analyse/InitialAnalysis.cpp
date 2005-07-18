@@ -34,6 +34,7 @@ InitialAnalysis::InitialAnalysis(
 	double rACrit,				// порог "большого" коннектора
 	int rSSmall,				// макс. длина для маленького коннектора
 	int rSBig,					// макс. длина для большого коннектора
+	double scaleFactor,			// множитель прогрессии масштабов (1.0 .. 2.0 ..)
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
 	double *externalNoise)		//вычисленный заранее шум ( ==0 -> ищем сами)
 {
@@ -98,7 +99,7 @@ InitialAnalysis::InitialAnalysis(
 
 	prf_b("IA: analyse");
 	double *f_wletTEMP	= new double[lastPoint + 1]; // space for temporal wavelet image parts
-	performAnalysis(f_wletTEMP, scaleB);
+	performAnalysis(f_wletTEMP, scaleB, scaleFactor);
 	delete[] f_wletTEMP;
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "IA: f_wletTEMP deleted\n");
@@ -157,7 +158,7 @@ int InitialAnalysis::findMaxOverlappingSplashIndex(Splash &spl, ArrList &arrList
 	return ret;
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
+void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFactor)
 {	// ======= ПЕРВЫЙ ЭТАП АНАЛИЗА - ПОДГОТОВКА =======
 	{	// выполняем вейвлет-преобразование на начальном масштабе, определяем наклон, смещаем вейвлет-образ
 		// f_wletB - вейвлет-образ функции, scaleB - ширина вейвлета, wn - норма вейвлета
@@ -189,9 +190,14 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB)
 #endif
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
 	ArrList accSpl; // текущий список найденных сварок (пустой)
-	int scaleIndex;
-	for (scaleIndex = 4; scaleIndex <= 4; scaleIndex += 2) {
-		int scale = scaleB * scaleIndex / 4;
+	int scaleCount;
+	for (scaleCount = -1; scaleCount <= 1; scaleCount++) {
+		int scale = scaleCount <= 0 ? scaleCount < 0 ?
+				  (int)(scaleB / scaleFactor)
+				: scaleB
+				: (int)(scaleB * scaleFactor);
+		if (scale == scaleB && scaleCount != 0)
+			continue;
 		if (scale < getMinScale())
 			continue;
 		// проводим поиск всплесков на данном масштабе

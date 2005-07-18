@@ -26,10 +26,10 @@
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
- * Method:    analyse6
- * Signature: ([DDDDDDDIDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
+ * Method:    analyse7
+ * Signature: ([DDDDDDDIDIII[DD)[Lcom/syrus/AMFICOM/analysis/dadara/ReliabilitySimpleReflectogramEventImpl;
  */
-JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse6(
+JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse7(
 	JNIEnv* env,
 	jclass obj,
 	jdoubleArray y,
@@ -44,7 +44,8 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	jint rSSmall,
 	jint rSBig,
 	jint traceLength,
-	jdoubleArray noiseObj)
+	jdoubleArray noiseObj,
+	jdouble scaleFactor)
 {
 	prf_b("analyse() - enter");
 
@@ -96,6 +97,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 		rSACrit,
 		rSSmall,
 		rSBig,
+		scaleFactor,
 		traceLength,
 		noiseData);
 

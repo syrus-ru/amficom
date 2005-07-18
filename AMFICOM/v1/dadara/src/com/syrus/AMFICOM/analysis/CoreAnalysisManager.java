@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.102 2005/07/15 11:57:25 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.103 2005/07/18 11:29:31 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.102 $, $Date: 2005/07/15 11:57:25 $
+ * @version $Revision: 1.103 $, $Date: 2005/07/18 11:29:31 $
  * @module
  */
 
@@ -84,9 +84,10 @@ public class CoreAnalysisManager
 	 * может быть 0, тогда будет найдена автоматически
 	 * @param noiseDB уровень шума по 3 сигма, в абс. дБ;
 	 * может быть null - тогда будет найден автоматически
+	 * @param scaleFactor - множитель для прогрессии используемых масштабов. XXX: тестовая опция, для Виталия
 	 * @return массив событий
 	 */
-	private static native ReliabilitySimpleReflectogramEventImpl[] analyse6(
+	private static native ReliabilitySimpleReflectogramEventImpl[] analyse7(
 			double[] y,
 			double dX,
 			double minLevel,
@@ -99,7 +100,8 @@ public class CoreAnalysisManager
             int rSSmall,
             int rSBig,
 			int traceLength,
-			double[] noiseDB);
+			double[] noiseDB,
+			double scaleFactor);
 
 	/**
 	 * Вычисляет уровень шума в виде "ожидаемая амплитуда флуктуаций по
@@ -251,12 +253,14 @@ public class CoreAnalysisManager
 			int rSSmall,
 			int rSBig,
 			int traceLength,
-			double[] noiseArray)
+			double[] noiseArray,
+			double scaleFactor
+			)
 	{
-		return analyse6(y, deltaX,
+		return analyse7(y, deltaX,
 			minLevel, minWeld, minConnector, minEnd, noiseFactor,
 			nReflSize, rSACrit, rSSmall, rSBig,
-			traceLength, noiseArray);
+			traceLength, noiseArray, scaleFactor);
 	}
 
 	/**
@@ -358,7 +362,8 @@ public class CoreAnalysisManager
                 (int)(nReflSize * ap.getNrs2rsaSmall()),
                 rsBig,
                 tpa.traceLength,
-                tpa.avNoise);
+                tpa.avNoise,
+                ap.getScaleFactor());
 
         // FIX//ME: debug output of IA results
 //      for (int i = 0; i < rse.length; i++)
