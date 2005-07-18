@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.48 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.49 2005/07/18 18:00:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/18 18:00:05 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -249,9 +249,12 @@ public final class SchemeMonitoringSolution extends
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemePath> getSchemePaths() {
+		return Collections.unmodifiableSet(this.getSchemePaths0());
+	}
+
+	private Set<SchemePath> getSchemePaths0() {
 		try {
-			final Set<SchemePath> schemePaths = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true);
-			return Collections.unmodifiableSet(schemePaths);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -363,12 +366,13 @@ public final class SchemeMonitoringSolution extends
 
 	public void setSchemePaths(final Set<SchemePath> schemePaths) {
 		assert schemePaths != null: NON_NULL_EXPECTED;
-		for (final SchemePath oldSchemePath : getSchemePaths()) {
-			/*
-			 * Check is made to prevent SchemePaths from
-			 * permanently losing their parents.
-			 */
-			assert !schemePaths.contains(oldSchemePath);
+		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
+		/*
+		 * Check is made to prevent SchemePaths from
+		 * permanently losing their parents.
+		 */
+		oldSchemePaths.removeAll(schemePaths);
+		for (final SchemePath oldSchemePath : oldSchemePaths) {
 			this.removeSchemePath(oldSchemePath);
 		}
 		for (final SchemePath schemePath : schemePaths) {
