@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.50 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.51 2005/07/18 19:21:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,8 +60,8 @@ import com.syrus.util.Log;
 /**
  * #07 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/07/18 19:21:14 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -405,9 +405,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCablePort> getSchemeCablePorts() {
+		return Collections.unmodifiableSet(this.getSchemeCablePorts0());
+	}
+
+	private Set<SchemeCablePort> getSchemeCablePorts0() {
 		try {
-			final Set<SchemeCablePort> schemecablePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true, true);
-			return Collections.unmodifiableSet(schemecablePorts);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -419,9 +422,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemePort> getSchemePorts() {
+		return Collections.unmodifiableSet(this.getSchemePorts0());
+	}
+
+	private Set<SchemePort> getSchemePorts0() {
 		try {
-			final Set<SchemePort> schemePorts = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true, true);
-			return Collections.unmodifiableSet(schemePorts);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -595,31 +601,33 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) {
 		assert schemeCablePorts != null: NON_NULL_EXPECTED;
-		for (final SchemeCablePort oldSchemeCablePort : getSchemeCablePorts()) {
-			/*
-			 * Check is made to prevent SchemeCablePorts from
-			 * permanently losing their parents.
-			 */
-			assert !schemeCablePorts.contains(oldSchemeCablePort);
-			removeSchemeCablePort(oldSchemeCablePort);
+		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0();
+		/*
+		 * Check is made to prevent SchemeCablePorts from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCablePorts.removeAll(schemeCablePorts);
+		for (final SchemeCablePort oldSchemeCablePort : oldSchemeCablePorts) {
+			this.removeSchemeCablePort(oldSchemeCablePort);
 		}
 		for (final SchemeCablePort schemeCablePort : schemeCablePorts) {
-			addSchemeCablePort(schemeCablePort);
+			this.addSchemeCablePort(schemeCablePort);
 		}
 	}
 
 	public void setSchemePorts(final Set<SchemePort> schemePorts) {
 		assert schemePorts != null: NON_NULL_EXPECTED;
-		for (final SchemePort oldSchemePort : getSchemePorts()) {
-			/*
-			 * Check is made to prevent SchemePorts from
-			 * permanently losing their parents.
-			 */
-			assert !schemePorts.contains(oldSchemePort);
-			removeSchemePort(oldSchemePort);
+		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0();
+		/*
+		 * Check is made to prevent SchemePorts from
+		 * permanently losing their parents.
+		 */
+		oldSchemePorts.removeAll(schemePorts);
+		for (final SchemePort oldSchemePort : oldSchemePorts) {
+			this.removeSchemePort(oldSchemePort);
 		}
 		for (final SchemePort schemePort : schemePorts) {
-			addSchemePort(schemePort);
+			this.addSchemePort(schemePort);
 		}
 	}
 
