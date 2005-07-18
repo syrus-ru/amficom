@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.45 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.46 2005/07/18 18:47:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/18 18:47:21 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -354,9 +354,12 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
+		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
+	}
+
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() {
 		try {
-			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true);
-			return Collections.unmodifiableSet(schemeMonitoringSolutions);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -367,9 +370,12 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
+		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
+	}
+
+	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0() {
 		try {
-			final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true);
-			return Collections.unmodifiableSet(schemeOptimizeInfoRtus);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -380,9 +386,12 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
+		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
+	}
+
+	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0() {
 		try {
-			final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true);
-			return Collections.unmodifiableSet(schemeOptimizeInfoSwitches);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -608,46 +617,49 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 
 	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
-		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : getSchemeMonitoringSolutions()) {
-			/*
-			 * Check is made to prevent SchemeMonitoringSolutions from
-			 * permanently losing their parents.
-			 */
-			assert !schemeMonitoringSolutions.contains(oldSchemeMonitoringSolution);
-			removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
+		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
+		/*
+		 * Check is made to prevent SchemeMonitoringSolutions from
+		 * permanently losing their parents.
+		 */
+		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
+			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
 		}
 		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
-			addSchemeMonitoringSolution(schemeMonitoringSolution);
+			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
 		}
 	}
 
 	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
-		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : getSchemeOptimizeInfoRtus()) {
-			/*
-			 * Check is made to prevent SchemeOptimizeInfoRtus from
-			 * permanently losing their parents.
-			 */
-			assert !schemeOptimizeInfoRtus.contains(oldSchemeOptimizeInfoRtu);
-			removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
+		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfoRtus from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfoRtus.removeAll(schemeOptimizeInfoRtus);
+		for (final SchemeOptimizeInfoRtu oldSchemeOptimizeInfoRtu : oldSchemeOptimizeInfoRtus) {
+			this.removeSchemeOptimizeInfoRtu(oldSchemeOptimizeInfoRtu);
 		}
 		for (final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu : schemeOptimizeInfoRtus) {
-			addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
+			this.addSchemeOptimizeInfoRtu(schemeOptimizeInfoRtu);
 		}
 	}
 
 	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
-		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : getSchemeOptimizeInfoSwitches()) {
-			/*
-			 * Check is made to prevent SchemeOptimizeInfoSwitches from
-			 * permanently losing their parents.
-			 */
-			assert !schemeOptimizeInfoSwitches.contains(oldSchemeOptimizeInfoSwitch);
-			removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
+		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0();
+		/*
+		 * Check is made to prevent SchemeOptimizeInfoSwitches from
+		 * permanently losing their parents.
+		 */
+		oldSchemeOptimizeInfoSwitches.removeAll(schemeOptimizeInfoSwitches);
+		for (final SchemeOptimizeInfoSwitch oldSchemeOptimizeInfoSwitch : oldSchemeOptimizeInfoSwitches) {
+			this.removeSchemeOptimizeInfoSwitch(oldSchemeOptimizeInfoSwitch);
 		}
 		for (final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch : schemeOptimizeInfoSwitches) {
-			addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
+			this.addSchemeOptimizeInfoSwitch(schemeOptimizeInfoSwitch);
 		}
 	}
 
