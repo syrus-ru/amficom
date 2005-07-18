@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.55 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.56 2005/07/18 17:41:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,8 +74,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.55 $, $Date: 2005/07/17 05:20:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/07/18 17:41:53 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -630,9 +630,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeDevice> getSchemeDevices() {
+		return Collections.unmodifiableSet(this.getSchemeDevices0());
+	}
+
+	private Set<SchemeDevice> getSchemeDevices0() {
 		try {
-			final Set<SchemeDevice> schemeDevices = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
-			return Collections.unmodifiableSet(schemeDevices);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -644,9 +647,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
+		return Collections.unmodifiableSet(this.getSchemeLinks0());
+	}
+
+	private Set<SchemeLink> getSchemeLinks0() {
 		try {
-			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
-			return Collections.unmodifiableSet(schemeLinks);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -658,9 +664,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeProtoElement> getSchemeProtoElements() {
+		return Collections.unmodifiableSet(this.getSchemeProtoElements0());
+	}
+
+	private Set<SchemeProtoElement> getSchemeProtoElements0() {
 		try {
-			final Set<SchemeProtoElement> schemeProtoElements = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
-			return Collections.unmodifiableSet(schemeProtoElements);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -1014,12 +1023,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
-		for (final SchemeDevice oldSchemeDevice : this.getSchemeDevices()) {
-			/*
-			 * Check is made to prevent SchemeDevices from
-			 * permanently losing their parents.
-			 */
-			assert !schemeDevices.contains(oldSchemeDevice);
+		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
+		/*
+		 * Check is made to prevent SchemeDevices from
+		 * permanently losing their parents.
+		 */
+		oldSchemeDevices.removeAll(schemeDevices);
+		for (final SchemeDevice oldSchemeDevice : oldSchemeDevices) {
 			this.removeSchemeDevice(oldSchemeDevice);
 		}
 		for (final SchemeDevice schemeDevice : schemeDevices) {
@@ -1032,12 +1042,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		for (final SchemeLink oldSchemeLink : this.getSchemeLinks()) {
-			/*
-			 * Check is made to prevent SchemeLinks from
-			 * permanently losing their parents.
-			 */
-			assert !schemeLinks.contains(oldSchemeLink);
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
+		/*
+		 * Check is made to prevent SchemeLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeLinks.removeAll(schemeLinks);
+		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
 			this.removeSchemeLink(oldSchemeLink);
 		}
 		for (final SchemeLink schemeLink : schemeLinks) {
@@ -1050,12 +1061,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) {
 		assert schemeProtoElements != null: NON_NULL_EXPECTED;
-		for (final SchemeProtoElement oldSchemeProtoElement : this.getSchemeProtoElements()) {
-			/*
-			 * Check is made to prevent SchemeProtoElements from
-			 * permanently losing their parents.
-			 */
-			assert !schemeProtoElements.contains(oldSchemeProtoElement);
+		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
+		/*
+		 * Check is made to prevent SchemeProtoElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeProtoElements.removeAll(schemeProtoElements);
+		for (final SchemeProtoElement oldSchemeProtoElement : oldSchemeProtoElements) {
 			this.removeSchemeProtoElement(oldSchemeProtoElement);
 		}
 		for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
