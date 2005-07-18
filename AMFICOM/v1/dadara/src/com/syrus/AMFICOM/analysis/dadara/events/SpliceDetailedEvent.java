@@ -1,5 +1,5 @@
 /*-
- * $Id: SpliceDetailedEvent.java,v 1.2 2005/07/14 14:28:39 saa Exp $
+ * $Id: SpliceDetailedEvent.java,v 1.3 2005/07/18 14:24:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,12 @@ import java.io.IOException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
+ * ”силение или потери. Ќа сварки, на изгибе или на усилителе.
+ * y0 - уровень начала событи€, дЅ (отрицательное значение)
+ * y1 - уровень конца событи€, дЅ (отрицательное значение)
+ * loss - уровень потерь на событии (это не совсем то же, что и разница уровн€ на конце и в начале)
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/18 14:24:42 $
  * @module
  */
 public class SpliceDetailedEvent extends DetailedEvent {

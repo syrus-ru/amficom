@@ -1,5 +1,5 @@
 /*-
- * $Id: NotIdentifiedDetailedEvent.java,v 1.2 2005/07/14 14:28:39 saa Exp $
+ * $Id: NotIdentifiedDetailedEvent.java,v 1.3 2005/07/18 14:24:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,15 @@ import java.io.IOException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
+ * Неидентифицированный участок рефлектограммы.
+ * y0 - уровень начала события, дБ (отрицательное значение)
+ * y1 - уровень конца события, дБ (отрицательное значение)
+ * yMax - максимальное значение рефлектограммы на данном участке, дБ
+ * yMin - минимальное значение рефлектограммы на данном участке, дБ
+ * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дБ
+ * loss - предполагаемый уровень потерь на событии
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/18 14:24:42 $
  * @module
  */
 public class NotIdentifiedDetailedEvent extends DetailedEvent {

@@ -1,5 +1,5 @@
 /*-
- * $Id: DeadZoneDetailedEvent.java,v 1.2 2005/07/14 14:28:39 saa Exp $
+ * $Id: DeadZoneDetailedEvent.java,v 1.3 2005/07/18 14:24:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,12 @@ import java.io.IOException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
+ * Параметры мертвой зоны
+ * po - экстраполированный (по смежному лин. участку) уровень для начала волокна (отрицательное значение)
+ * adz - ширина ADZ, в точках
+ * edz - ширина EDZ, в точках
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/18 14:24:42 $
  * @module
  */
 public class DeadZoneDetailedEvent extends DetailedEvent {

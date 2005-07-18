@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEvent.java,v 1.1 2005/05/05 11:45:28 saa Exp $
+ * $Id: DetailedEvent.java,v 1.2 2005/07/18 14:24:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,16 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
+ * Представляет максимальный набор информации по событию, кроме информации
+ * о достоверности. Это начало, конец, тип и специфическая информация.
+ * 
  * Все абс. уровни производных классов отсчитываются от максимума,
  * и имеют отрицательные значения.
  * Все отн. величины имеют знаки, соответствующие их названию. 
  * {@link #begin}, {@link #end} {@link #eventType} - см.
  * описание {@link SimpleReflectogramEvent}
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/05/05 11:45:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/18 14:24:42 $
  * @module
  */
 public abstract class DetailedEvent

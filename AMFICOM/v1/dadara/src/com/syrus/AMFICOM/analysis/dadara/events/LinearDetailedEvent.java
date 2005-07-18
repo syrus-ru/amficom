@@ -1,5 +1,5 @@
 /*-
- * $Id: LinearDetailedEvent.java,v 1.2 2005/07/14 14:28:39 saa Exp $
+ * $Id: LinearDetailedEvent.java,v 1.3 2005/07/18 14:24:42 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,13 @@ import java.io.IOException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
+ * Ћинейный участок рефлектограммы.
+ * y0 - уровень начала событи€, дЅ (отрицательное значение)
+ * y1 - уровень конца событи€, дЅ (отрицательное значение)
+ * rmsDev - среднеквадратическое отклонение рефлектограммы от аналитической кривой, дЅ
+ * maxDev - максимальное отклонение рефлектограммы от аналитической кривой, дЅ
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/18 14:24:42 $
  * @module
  */
 public class LinearDetailedEvent extends DetailedEvent {
