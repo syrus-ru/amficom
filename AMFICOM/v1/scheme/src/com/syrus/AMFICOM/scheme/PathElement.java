@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.46 2005/07/14 19:27:31 bass Exp $
+ * $Id: PathElement.java,v 1.47 2005/07/18 11:11:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/14 19:27:31 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/18 11:11:47 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -572,9 +572,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	public SchemeElement getSchemeElement() {
-		final SchemeDevice parentSchemeDevice = getStartAbstractSchemePort().getParentSchemeDevice();
-		assert (parentSchemeDevice == getEndAbstractSchemePort().getParentSchemeDevice()): NO_COMMON_PARENT;
-		return parentSchemeDevice.getParentSchemeElement();
+		final AbstractSchemePort startAbstractSchemePort = this.getStartAbstractSchemePort();
+		final AbstractSchemePort endAbstractSchemePort = this.getEndAbstractSchemePort();
+		SchemeDevice parentSchemeDevice;
+		if (startAbstractSchemePort != null) {
+			parentSchemeDevice = startAbstractSchemePort.getParentSchemeDevice();
+			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDevice().getId().equals(parentSchemeDevice.getId()) : NO_COMMON_PARENT;
+		} else if (endAbstractSchemePort != null) {
+			parentSchemeDevice = endAbstractSchemePort.getParentSchemeDevice();
+		} else {
+			Log.debugMessage("PathElement.getSchemeElement() | Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
+					SEVERE);
+			parentSchemeDevice = null;
+		}
+		return parentSchemeDevice == null ? null : parentSchemeDevice.getParentSchemeElement();
 	}
 
 	Identifier getSchemeLinkId() {
