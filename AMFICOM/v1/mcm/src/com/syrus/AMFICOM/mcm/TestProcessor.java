@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.57 2005/06/23 18:45:06 bass Exp $
+ * $Id: TestProcessor.java,v 1.58 2005/07/18 11:35:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/06/23 18:45:06 $
- * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/07/18 11:35:17 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -51,9 +51,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	boolean running;
 
 
-	public TestProcessor(Test test) {
+	public TestProcessor(final Test test) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
-					ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
 
 		this.test = test;
 
@@ -65,7 +65,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.running = true;
 
 		//	Проверить, не устарел ли этот тест
-		long timePassed = System.currentTimeMillis() - this.test.getStartTime().getTime();
+		final long timePassed = System.currentTimeMillis() - this.test.getStartTime().getTime();
 		if (timePassed > this.forgetFrame) {
 			Log.debugMessage("Passed " + timePassed / 1000 + " sec (more than " + this.forgetFrame / 1000
 					+ " sec) from start time. Aborting test '" + this.test.getId() + "'", Log.DEBUGLEVEL03);
@@ -74,7 +74,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		if (this.running) {
 			// Проверить правильность КИС. Найти приёмопередатчик.
-			Identifier kisId = test.getKISId();
+			final Identifier kisId = test.getKISId();
 			this.transceiver = MeasurementControlModule.transceivers.get(kisId);
 			if (this.transceiver == null) {
 				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
@@ -197,13 +197,13 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	protected final void addMeasurementResult(Result result) {
+	protected final void addMeasurementResult(final Result result) {
 		if (! this.measurementResultList.contains(result))
 			this.measurementResultList.add(result);
 	}
 
-	final void newMeasurementCreation(Date startTime) throws CreateObjectException {
-		Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
+	final void newMeasurementCreation(final Date startTime) throws CreateObjectException {
+		final Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
 		this.transceiver.addMeasurement(measurement, this);
 		this.currentMeasurementStartTime = startTime.getTime();
 		try {
@@ -232,16 +232,13 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	final void processMeasurementResult() {
-		Result measurementResult;
-		Measurement measurement;
 		if (!this.measurementResultList.isEmpty()) {
-			measurementResult = this.measurementResultList.remove(0);
+			final Result measurementResult = this.measurementResultList.remove(0);
 			this.numberOfReceivedMResults++;
-			measurement = (Measurement) measurementResult.getAction();
+			final Measurement measurement = (Measurement) measurementResult.getAction();
 
-			Result[] aeResults = null;
 			try {
-				aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 				for (int i = 0; i < aeResults.length; i++)
 					if (aeResults[i] != null)
 						MeasurementControlModule.resultList.add(aeResults[i]);
