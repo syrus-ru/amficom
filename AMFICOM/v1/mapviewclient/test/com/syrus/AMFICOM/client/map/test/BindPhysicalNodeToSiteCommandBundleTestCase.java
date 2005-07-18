@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.1 2005/07/07 11:43:20 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.2 2005/07/18 08:38:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -67,7 +67,7 @@ public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTe
 		assertEquals(topologicalNodes.size(), 1);
 
 		TopologicalNode node = (TopologicalNode)topologicalNodes.iterator().next();
-		assertSame(node.getPhysicalLink(), link1);
+		assertSame(node.getPhysicalLink(), this.link1);
 
 		//test itself
 		BindPhysicalNodeToSiteCommandBundle command = new BindPhysicalNodeToSiteCommandBundle(node, this.well1);

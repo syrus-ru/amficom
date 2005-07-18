@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.5 2005/07/12 08:40:58 bass Exp $
+ * $Id: METS.java,v 1.6 2005/07/18 08:38:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -43,9 +40,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -53,8 +48,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/12 08:40:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/18 08:38:16 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class METS {
