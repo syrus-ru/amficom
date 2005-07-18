@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.11 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.12 2005/07/18 16:31:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/18 16:31:26 $
  * @module scheme_v1
  */
 public final class SchemeLinkDatabase extends StorableObjectDatabase {
@@ -114,8 +114,8 @@ public final class SchemeLinkDatabase extends StorableObjectDatabase {
 		SchemeLink schemeLink = fromStorableObject(storableObject);
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + schemeLink.getPhysicalLength() + APOSTROPHE + COMMA
-				+ APOSTROPHE + schemeLink.getOpticalLength() + APOSTROPHE + COMMA
+				+ schemeLink.getPhysicalLength() + COMMA
+				+ schemeLink.getOpticalLength() + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getAbstractLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeLink.getSiteNodeId()) + COMMA

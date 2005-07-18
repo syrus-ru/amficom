@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.27 2005/07/14 16:08:06 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.28 2005/07/18 16:31:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/14 16:08:06 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/18 16:31:25 $
  * @module resource_v1
  */
 
@@ -161,7 +161,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTROPHE + COMMA
-			+ APOSTROPHE + sort.value() + APOSTROPHE;
+				+ sort.value();
 		return sql;
 	}
 

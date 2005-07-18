@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.12 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.13 2005/07/18 16:31:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/18 16:31:26 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends StorableObjectDatabase {
@@ -107,7 +107,7 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase {
 		SchemeCablePort schemeCablePort = fromStorableObject(storableObject);
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeCablePort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCablePort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + schemeCablePort.getDirectionType().value() + APOSTROPHE + COMMA
+				+ schemeCablePort.getDirectionType().value() + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCablePort.getMeasurementPortId()) + COMMA

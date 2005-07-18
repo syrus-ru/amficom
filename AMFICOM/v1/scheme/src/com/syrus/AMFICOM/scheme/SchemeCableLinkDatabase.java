@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.11 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.12 2005/07/18 16:31:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/18 16:31:26 $
  * @module scheme_v1
  */
 public final class SchemeCableLinkDatabase extends StorableObjectDatabase {
@@ -89,8 +89,8 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase {
 		SchemeCableLink schemeCableLink = fromStorableObject(storableObject);
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeCableLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + schemeCableLink.getPhysicalLength() + APOSTROPHE + COMMA
-				+ APOSTROPHE + schemeCableLink.getOpticalLength() + APOSTROPHE + COMMA
+				+ schemeCableLink.getPhysicalLength() + COMMA
+				+ schemeCableLink.getOpticalLength() + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getAbstractLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeCableLink.getSourceAbstractSchemePortId()) + COMMA
