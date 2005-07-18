@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.103 2005/07/18 11:29:31 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.104 2005/07/18 12:30:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.103 $, $Date: 2005/07/18 11:29:31 $
+ * @version $Revision: 1.104 $, $Date: 2005/07/18 12:30:34 $
  * @module
  */
 
@@ -329,7 +329,7 @@ public class CoreAnalysisManager
             TracePreAnalysis tpa,
             AnalysisParameters ap)
     {
-//        long t0 = System.currentTimeMillis();
+//        long t0 = System.nanoTime();
 
         // определяем reflSize и nReflSize
         // FIXME: привести reflSize и nReflSize в порядок
@@ -345,7 +345,7 @@ public class CoreAnalysisManager
         if (rsBig < nReflSize * ap.getNrs2rsaBig())
             rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
 
-//        long t1 = System.currentTimeMillis();
+//        long t1 = System.nanoTime();
 
         // формирование событий по усредненной кривой
 
@@ -377,26 +377,26 @@ public class CoreAnalysisManager
             ? rse[rse.length - 1].getEnd() + 1
             : 0;
 
-//        long t2 = System.currentTimeMillis();
+//        long t2 = System.nanoTime();
 
         // фитируем
 
         ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
 
-//        long t3 = System.currentTimeMillis();
+//        long t3 = System.nanoTime();
 
         double[] yTypical = tpa.y; // FIXME: надо брать одну, самую типовую р/г, а не усредненную, т.к. потом по этим данным будет считаться rms
 
         ModelTraceAndEventsImpl mtae =
             new ModelTraceAndEventsImpl(rse, mf, yTypical, tpa.deltaX);
 
-//        long t4 = System.currentTimeMillis();
+//        long t4 = System.nanoTime();
 
         // FIX//ME: debug output of analysis timing
 //      System.out.println("makeAnalysis: "
-//          + "getDataAndLengthAndNoise: " + (t1-t0)
-//          + "; IA: " + (t2-t1) + "; fit: " + (t3-t2)
-//          + "; makeMTAE: " + (t4-t3)
+//          + "getDataAndLengthAndNoise: " + (t1-t0)/1e6
+//          + "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
+//          + "; makeMTAE: " + (t4-t3)/1e6
 //          );
 
         return mtae;
