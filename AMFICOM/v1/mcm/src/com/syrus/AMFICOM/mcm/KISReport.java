@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.43 2005/07/17 04:57:52 arseniy Exp $
+ * $Id: KISReport.java,v 1.44 2005/07/18 11:15:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/07/17 04:57:52 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/18 11:15:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -55,7 +55,7 @@ public class KISReport {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final java.util.Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
+		final Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i].stringValue(),
 					OperationSort.OPERATION_EQUALS,
@@ -69,9 +69,8 @@ public class KISReport {
 				condition = typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
-			final java.util.Set parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
-			for (final Iterator it = parameterTypes.iterator(); it.hasNext();) {
-				final ParameterType parameterType = (ParameterType) it.next();
+			final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
+			for (final ParameterType parameterType : parameterTypes) {
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
 			}
 		}
@@ -80,9 +79,7 @@ public class KISReport {
 		}
 	}
 
-	public KISReport(String measurementIdStr,
-									 String[] parameterCodenames,
-									 byte[][] parameterValues) {
+	public KISReport(final String measurementIdStr, final String[] parameterCodenames, final byte[][] parameterValues) {
 		this.measurementId = new Identifier(measurementIdStr);
 		this.parameterCodenames = parameterCodenames;
 		this.parameterValues = parameterValues;
@@ -99,7 +96,7 @@ public class KISReport {
 				parameters[i] = Parameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
-			Result result = measurement.createResult(LoginManager.getUserId(), parameters);
+			final Result result = measurement.createResult(LoginManager.getUserId(), parameters);
 			StorableObjectPool.flush(result, true);
 			return result;
 		}
