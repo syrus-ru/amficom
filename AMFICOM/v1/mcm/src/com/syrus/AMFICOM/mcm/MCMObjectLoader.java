@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.15 2005/07/17 05:02:36 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.16 2005/07/18 12:42:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/17 05:02:36 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/18 12:42:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -111,10 +111,14 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		objects.addAll(loadedObjects);
 
 		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+		final Map<Short, Set<StorableObject>> levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>(1);
+		levelLoadObjectsMap.put(new Short(entityCode), loadedObjects);
+		loadObjectsMap.put(new Integer(0), levelLoadObjectsMap);
+
 		final Map<Short, Set<Identifier>> missingDependencesMap = createMissingDependenciesMap(loadedObjects);
 		for (final Short entityKey : missingDependencesMap.keySet()) {
 			this.loadStorableObjectsWithDependencies(loadObjectsMap,
-					0,
+					1,
 					entityKey.shortValue(),
 					missingDependencesMap.get(entityKey));
 		}
