@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.58 2005/07/18 11:35:17 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.59 2005/07/18 15:26:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,12 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/07/18 11:35:17 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/18 15:26:32 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -120,7 +120,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			this.abort();
 		}
 
-		Collection results;
+		Set<Result> results;
 		Result measurementResult = null;
 		if (lastMeasurement != null) {
 			try{
@@ -135,7 +135,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
 						results = lastMeasurement.getResults(true);
 						if (results != null && !results.isEmpty())
-							measurementResult = (Result) results.iterator().next();
+							measurementResult = results.iterator().next();
 						if (measurementResult != null)
 							this.addMeasurementResult(measurementResult);
 						else
@@ -147,9 +147,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						Result analysisResult = null;
 						Result evaluationResult = null;
 						if (results != null && !results.isEmpty()) {
-							Result result;
 							for (Iterator it = results.iterator(); it.hasNext();) {
-								result = (Result) it.next();
+								final Result result = (Result) it.next();
 								switch (result.getSort().value()) {
 									case ResultSort._RESULT_SORT_MEASUREMENT:
 										measurementResult = result;
@@ -164,24 +163,27 @@ public abstract class TestProcessor extends SleepButWorkThread {
 							}
 						}
 						if (measurementResult != null)
-							MeasurementControlModule.resultList.add(measurementResult);
+							Log.debugMessage("TestProcessor.startWithProcessingTest | Found measurement result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
 						else
-							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find measurement result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						if (analysisResult != null)
-							MeasurementControlModule.resultList.add(analysisResult);
+							Log.debugMessage("TestProcessor.startWithProcessingTest | Found analysis result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
 						else
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						if (evaluationResult != null)
-							MeasurementControlModule.resultList.add(evaluationResult);
+							Log.debugMessage("TestProcessor.startWithProcessingTest | Found evaluation result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
 						else
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find evaluation result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 
 						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
 						try {
-							StorableObjectPool.flush(lastMeasurement.getId(), true);
+							StorableObjectPool.flush(lastMeasurement.getId(), false);
 						}
 						catch (ApplicationException ae) {
 							Log.errorException(ae);
@@ -241,27 +243,27 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
 				for (int i = 0; i < aeResults.length; i++)
 					if (aeResults[i] != null)
-						MeasurementControlModule.resultList.add(aeResults[i]);
+						Log.debugMessage("TestProcessor.processMeasurementResult | Result: '" + aeResults[i].getId()
+								+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL09);
 
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED);
+
+				try {
+					StorableObjectPool.flush(ObjectEntities.RESULT_CODE, false);
+					//- Every action contains in dependencies of it's result
+					//StorableObjectPool.flush(measurement.getId(), false);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
 			}
 			catch (TestProcessingException tpe) {
 				Log.errorException(tpe);
 			}
 
-			try {
-				StorableObjectPool.flush(ObjectEntities.RESULT_CODE, false);
-				//- Every action contains in dependencies of it's result
-				//StorableObjectPool.flush(measurement.getId(), false);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-
-			MeasurementControlModule.resultList.add(measurementResult);
 			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
 			try {
-				StorableObjectPool.flush(measurement.getId(), false);
+				StorableObjectPool.flush(measurement, false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -272,7 +274,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	private final void updateMyTestStatus(TestStatus status) {
 		this.test.setStatus(status);
 		try {
-			StorableObjectPool.flush(this.test.getId(), true);
+			StorableObjectPool.flush(this.test.getId(), false);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
