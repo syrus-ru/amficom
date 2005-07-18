@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.37 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.38 2005/07/18 16:32:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/07/18 16:32:56 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort extends
@@ -430,7 +430,6 @@ public abstract class AbstractSchemePort extends
 	 * @param portId1
 	 * @param measurementPortId1
 	 * @param parentSchemeDeviceId1
-	 * @param characteristicIds
 	 * @throws CreateObjectException
 	 */
 	void fromTransferable(final IdlStorableObject header,
