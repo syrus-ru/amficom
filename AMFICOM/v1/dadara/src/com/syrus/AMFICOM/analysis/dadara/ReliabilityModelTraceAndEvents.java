@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilityModelTraceAndEvents.java,v 1.1 2005/04/30 09:09:30 saa Exp $
+ * $Id: ReliabilityModelTraceAndEvents.java,v 1.2 2005/07/18 12:41:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,20 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 /**
- * Method {@link #getSimpleEvents()} will return
- * array of {@link ReliabilitySimpleReflectogramEvent},
- * not just
- * array of {@link SimpleReflectogramEvent}.
+ * Дополняет {@link ModelTraceAndEvents} информацией о надежности событий.
+ * Контракт этого интерфейса заключается в том, что
+ * метод {@link #getSimpleEvents()} будет возвращать
+ * массив {@link ReliabilitySimpleReflectogramEvent},
+ * а не просто массив {@link SimpleReflectogramEvent},
+ * как это предписано суперинтерфейсом.
  * 
- * Method {@link #getSimpleEvent(int)} will return
+ * Аналогично, метод {@link #getSimpleEvent(int)} будет возвращать
  * {@link ReliabilitySimpleReflectogramEvent},
- * not just {@link SimpleReflectogramEvent}.
+ * а не просто {@link SimpleReflectogramEvent}.
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.1 $, $Date: 2005/04/30 09:09:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/18 12:41:10 $
  * @module
  */
 public interface ReliabilityModelTraceAndEvents extends ModelTraceAndEvents {
