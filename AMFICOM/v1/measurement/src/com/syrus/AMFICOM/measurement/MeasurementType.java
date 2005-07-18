@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.86 2005/07/07 17:58:18 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.87 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/07/07 17:58:18 $
+ * @version $Revision: 1.87 $, $Date: 2005/07/18 13:13:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,6 +48,21 @@ public final class MeasurementType extends ActionType implements Namable {
 	private static final long serialVersionUID = 3257570589907562804L;
 
 	public static final String CODENAME_REFLECTOMETRY = "reflectometry";
+
+	private enum ParameterMode {
+		MODE_IN("IN"),
+		MODE_OUT("OUT");
+
+		private String stringValue;
+
+		private ParameterMode(final String stringValue) {
+			this.stringValue = stringValue;
+		}
+
+		String stringValue() {
+			return this.stringValue;
+		}
+	}
 
 	private Set<Identifier> inParameterTypeIds;
 	private Set<Identifier> outParameterTypeIds;
@@ -235,8 +250,8 @@ public final class MeasurementType extends ActionType implements Namable {
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
 		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_IN));
-		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(MeasurementTypeWrapper.MODE_OUT));
+		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_IN.stringValue()));
+		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_OUT.stringValue()));
 	}
 
 	/**
@@ -245,8 +260,8 @@ public final class MeasurementType extends ActionType implements Namable {
 	@Override
 	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
 		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(2);
-		parameterTypeIdsModeMap.put(MeasurementTypeWrapper.MODE_IN, this.inParameterTypeIds);
-		parameterTypeIdsModeMap.put(MeasurementTypeWrapper.MODE_OUT, this.outParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypeIds);
 		return parameterTypeIdsModeMap;
 	}
 

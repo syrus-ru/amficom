@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.10 2005/07/03 19:16:31 bass Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.11 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,28 +11,25 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/03 19:16:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/07/18 13:13:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ModelingTypeWrapper extends StorableObjectWrapper {
 
-	public static final String MODE_IN = "IN";
-	public static final String MODE_OUT = "OUT";
 	public static final String LINK_COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 
-	private static ModelingTypeWrapper	instance;
+	private static ModelingTypeWrapper instance;
 
-	private List						keys;
+	private List keys;
 
 	private ModelingTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -52,18 +49,15 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof ModelingType) {
 			ModelingType modelingType = (ModelingType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return modelingType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return modelingType.getDescription();
-			if (key.equals(MODE_IN))
-				return modelingType.getInParameterTypeIds();
-			if (key.equals(MODE_OUT))
-				return modelingType.getOutParameterTypeIds();
 		}
 		return value;
 	}
@@ -79,10 +73,6 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 				modelingType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				modelingType.setDescription((String) value);
-			else if (key.equals(MODE_IN))
-				modelingType.setInParameterTypeIds((Set) value);
-			else if (key.equals(MODE_OUT))
-				modelingType.setOutParameterTypeIds((Set) value);
 		}
 	}
 
@@ -99,16 +89,16 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
 		if (key.equals(COLUMN_NAME) 
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(MODE_IN) || key.equals(MODE_OUT))
-			return Set.class;
+		}
 		return null;
 	}
 

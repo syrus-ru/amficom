@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.10 2005/07/16 22:01:17 arseniy Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.11 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,30 +11,26 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/16 22:01:17 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/18 13:13:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementTypeWrapper extends StorableObjectWrapper {
 
-	public static final String				MODE_IN									= "IN";
-	public static final String				MODE_OUT								= "OUT";
-	public static final String				LINK_COLUMN_MEASUREMENT_TYPE_ID			= "measurement_type_id";
-	public static final String				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID	= "measurement_port_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
 
-	private static MeasurementTypeWrapper	instance;
+	private static MeasurementTypeWrapper instance;
 
-	private List							keys;
+	private List keys;
 
 	private MeasurementTypeWrapper() {
 		// private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT,
-				LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -56,17 +52,13 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof MeasurementType) {
-			MeasurementType measurementType = (MeasurementType) object;
+			final MeasurementType measurementType = (MeasurementType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return measurementType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return measurementType.getDescription();
-			if (key.equals(MODE_IN))
-				return measurementType.getInParameterTypeIds();
-			if (key.equals(MODE_OUT))
-				return measurementType.getOutParameterTypeIds();
 			if (key.equals(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID))
 				return measurementType.getMeasurementPortTypeIds();
 
@@ -87,12 +79,6 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 				measurementType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				measurementType.setDescription((String) value);
-			else if (key.equals(MODE_IN))
-				measurementType.setInParameterTypeIds((Set) value);
-			else if (key.equals(MODE_OUT))
-				measurementType.setOutParameterTypeIds((Set) value);
-			else if (key.equals(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID))
-				measurementType.setMeasurementPortTypeIds((Set) value);
 		}
 	}
 
@@ -109,18 +95,13 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
 		if (key.equals(COLUMN_CODENAME)
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		}
-		if (key.equals(MODE_IN) 
-				|| key.equals(MODE_OUT) 
-				|| key.equals(LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID)) {
-			return Set.class;
 		}
 		return null;
 	}

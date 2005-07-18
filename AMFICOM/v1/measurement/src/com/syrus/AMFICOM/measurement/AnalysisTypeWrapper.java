@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.13 2005/07/14 19:07:11 arseniy Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.14 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,30 +11,25 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/14 19:07:11 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/18 13:13:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper extends StorableObjectWrapper {
 
-	public static final String MODE_IN = "IN";
-	public static final String MODE_CRITERION = "CRI";
-	public static final String MODE_ETALON = "ETA";
-	public static final String MODE_OUT = "OUT";
 	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 
-	private static AnalysisTypeWrapper	instance;
+	private static AnalysisTypeWrapper instance;
 
-	private List						keys;
+	private List keys;
 
 	private AnalysisTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_CRITERION, MODE_ETALON};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -63,15 +58,6 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 				return analysisType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return analysisType.getDescription();
-			if (key.equals(MODE_IN))
-				return analysisType.getInParameterTypeIds();
-			if (key.equals(MODE_OUT))
-				return analysisType.getOutParameterTypeIds();
-			if (key.equals(MODE_CRITERION))
-				return analysisType.getCriteriaParameterTypeIds();
-			if (key.equals(MODE_ETALON))
-				return analysisType.getEtalonParameterTypeIds();
-
 		}
 		return value;
 	}
@@ -87,14 +73,6 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 				analysisType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
-			else if (key.equals(MODE_IN))
-				analysisType.setInParameterTypeIds((Set) value);
-			else if (key.equals(MODE_OUT))
-				analysisType.setOutParameterTypeIds((Set) value);
-			else if (key.equals(MODE_CRITERION))
-				analysisType.setCriteriaParameterTypeIds((Set) value);
-			else if (key.equals(MODE_ETALON))
-				analysisType.setEtalonParameterTypeIds((Set) value);
 		}
 	}
 
@@ -116,11 +94,6 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_CODENAME) 
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(MODE_IN) 
-				|| key.equals(MODE_OUT) 
-				|| key.equals(MODE_CRITERION) 
-				|| key.equals(MODE_ETALON)) {
-			return Set.class;
 		}
 		return null;
 	}

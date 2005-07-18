@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.83 2005/07/07 17:58:18 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.84 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/07/07 17:58:18 $
+ * @version $Revision: 1.84 $, $Date: 2005/07/18 13:13:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -47,6 +47,23 @@ public final class AnalysisType extends ActionType {
 	private static final long serialVersionUID = 3256722866476495413L;
 
 	public static final String CODENAME_DADARA = "dadara";
+
+	private enum ParameterMode {
+		MODE_IN("IN"),
+		MODE_CRITERION("CRI"),
+		MODE_ETALON("ETA"),
+		MODE_OUT("OUT");
+
+		private String stringValue;
+
+		private ParameterMode(final String stringValue) {
+			this.stringValue = stringValue;
+		}
+
+		String stringValue() {
+			return this.stringValue;
+		}
+	}
 
 	private Set<Identifier> inParameterTypeIds;
 	private Set<Identifier> criteriaParameterTypeIds;
@@ -274,10 +291,10 @@ public final class AnalysisType extends ActionType {
 	@Override
 	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
 		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_IN));
-		this.setCriteriaParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_CRITERION));
-		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_ETALON));
-		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(AnalysisTypeWrapper.MODE_OUT));
+		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_IN.stringValue()));
+		this.setCriteriaParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_CRITERION.stringValue()));
+		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_ETALON.stringValue()));
+		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_OUT.stringValue()));
 	}
 
 	/**
@@ -286,10 +303,10 @@ public final class AnalysisType extends ActionType {
 	@Override
 	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
 		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(4);
-		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_IN, this.inParameterTypeIds);
-		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_CRITERION, this.criteriaParameterTypeIds);
-		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_ETALON, this.etalonParameterTypeIds);
-		parameterTypeIdsModeMap.put(AnalysisTypeWrapper.MODE_OUT, this.outParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_CRITERION.stringValue(), this.criteriaParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_ETALON.stringValue(), this.etalonParameterTypeIds);
+		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypeIds);
 		return parameterTypeIdsModeMap;
 	}
 

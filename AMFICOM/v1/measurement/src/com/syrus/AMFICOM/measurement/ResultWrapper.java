@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.11 2005/06/23 18:45:08 bass Exp $
+ * $Id: ResultWrapper.java,v 1.12 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/18 13:13:19 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ResultWrapper extends StorableObjectWrapper {
@@ -39,8 +39,8 @@ public class ResultWrapper extends StorableObjectWrapper {
 
 	public static final String COLUMN_ACTION_ID = "action_id";
 
-	public static final String	LINK_COLUMN_RESULT_ID	= "result_id";
-	
+	public static final String LINK_COLUMN_RESULT_ID = "result_id";
+
 	public static final String LINK_FIELD_RESULT_PARAMETERS = "result_parameters";
 	public static final String LINK_COLUMN_PARAMETER_VALUE = "value";
 
@@ -50,7 +50,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 
 	private ResultWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_ACTION_ID, COLUMN_SORT, LINK_FIELD_RESULT_PARAMETERS};
+		final String[] keysArray = new String[] { COLUMN_ACTION_ID, COLUMN_SORT, LINK_FIELD_RESULT_PARAMETERS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -70,17 +70,18 @@ public class ResultWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Result) {
-			Result result = (Result) object;
+			final Result result = (Result) object;
 			if (key.equals(COLUMN_ACTION_ID))
 				return result.getAction();
 			if (key.equals(COLUMN_SORT))
 				return new Integer(result.getSort().value());
 			if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
-				Parameter[] parameters = result.getParameters();
-				Map values = new HashMap(parameters.length * 3);
+				final Parameter[] parameters = result.getParameters();
+				final Map<String, Object> values = new HashMap<String, Object>(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(COLUMN_ID + i, parameters[i].getId());
 					values.put(COLUMN_TYPE_ID + i, parameters[i].getType());
@@ -98,7 +99,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, final String key, final Object value) {
 		if (object instanceof Result) {
-			Result result = (Result) object;
+			final Result result = (Result) object;
 			if (key.equals(COLUMN_ACTION_ID))
 				result.setAction((Action) value);
 			else
@@ -106,13 +107,13 @@ public class ResultWrapper extends StorableObjectWrapper {
 					result.setSort(ResultSort.from_int(((Integer) value).intValue()));
 				else
 					if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
-						Map resultParametersMap = (Map) value;
+						final Map resultParametersMap = (Map) value;
 						/* there are 3*N keys for N Parameter */
-						Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
+						final Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
 						for (int i = 0; i < resultParameters.length; i++) {
-							Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
-							ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
-							byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
+							final Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
+							final ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
+							final byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
 							resultParameters[i] = new Parameter(parameterId, parameterType, resultParameterValue);
 
@@ -135,8 +136,9 @@ public class ResultWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

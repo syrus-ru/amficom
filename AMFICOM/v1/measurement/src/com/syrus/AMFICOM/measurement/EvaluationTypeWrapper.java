@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.11 2005/07/16 22:01:17 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.12 2005/07/18 13:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,25 +15,21 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/16 22:01:17 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/18 13:13:19 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class EvaluationTypeWrapper extends StorableObjectWrapper {
 
-	public static final String MODE_IN = "IN";
-	public static final String MODE_THRESHOLD = "THS";
-	public static final String MODE_ETALON = "ETA";
-	public static final String MODE_OUT = "OUT";
 	public static final String LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
 
-	private static EvaluationTypeWrapper	instance;
+	private static EvaluationTypeWrapper instance;
 
-	private List							keys;
+	private List keys;
 
 	private EvaluationTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_THRESHOLD, MODE_ETALON};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -62,15 +58,6 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 				return evaluationType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return evaluationType.getDescription();
-			if (key.equals(MODE_IN))
-				return evaluationType.getInParameterTypeIds();
-			if (key.equals(MODE_OUT))
-				return evaluationType.getOutParameterTypeIds();
-			if (key.equals(MODE_THRESHOLD))
-				return evaluationType.getThresholdParameterTypeIds();
-			if (key.equals(MODE_ETALON))
-				return evaluationType.getEtalonParameterTypeIds();
-
 		}
 		return value;
 	}
@@ -86,14 +73,6 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 				evaluationType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				evaluationType.setDescription((String) value);
-			else if (key.equals(MODE_IN))
-				evaluationType.setInParameterTypeIds((java.util.Set) value);
-			else if (key.equals(MODE_OUT))
-				evaluationType.setOutParameterTypeIds((java.util.Set) value);
-			else if (key.equals(MODE_THRESHOLD))
-				evaluationType.setThresholdParameterTypeIds((java.util.Set) value);
-			else if (key.equals(MODE_ETALON))
-				evaluationType.setEtalonParameterTypeIds((java.util.Set) value);
 		}
 	}
 
@@ -108,8 +87,6 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Class getPropertyClass(String key) {
-		if (key.equals(MODE_IN) || key.equals(MODE_OUT) || key.equals(MODE_THRESHOLD) || key.equals(MODE_ETALON))
-			return java.util.Set.class;
 		return String.class;
 	}
 
