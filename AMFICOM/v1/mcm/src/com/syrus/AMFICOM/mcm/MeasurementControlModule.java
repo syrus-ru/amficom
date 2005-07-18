@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.110 2005/07/13 19:23:59 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.111 2005/07/18 15:23:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/07/13 19:23:59 $
+ * @version $Revision: 1.111 $, $Date: 2005/07/18 15:23:36 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -109,9 +108,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static final String PASSWORD = "mcm";
 
-	/*	Error codes for method processFall()	(remove results, ...)*/
-	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
-
 
 	/**
 	 * Identifier of this MCM.
@@ -126,9 +122,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	/*	Scheduled tests transferred from server	*/
 	protected static List<Test> testList;
 
-	/*	Results for transfer to server	*/
-	protected static List<Result> resultList;
-
 	/*	key - test_id, value - corresponding test processor	*/
 	protected static Map<Identifier, TestProcessor> testProcessors;
 
@@ -140,9 +133,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private long forwardProcessing;
 	private boolean running;
-
-	/*	Variables for method processFall()	(remove results, ...)*/
-	private List resultsToRemove;
 
 	private MeasurementControlModule() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
@@ -221,8 +211,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			/*	Create and start transceiver for every KIS*/
 			activateKISTransceivers();
 	
-			/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-			prepareResultList();
+			/*	Create and fill testList - sheduled tests ordered by start_time;	*/
 			prepareTestList();
 	
 			/*	Activate servant*/
@@ -329,11 +318,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void prepareResultList() {
-		/*!!	resultList - results (return later...)	!!*/
-		resultList = Collections.synchronizedList(new ArrayList<Result>());
-	}
-
 	@Override
 	public void run() {
 		while (this.running) {
@@ -416,7 +400,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
+				StorableObjectPool.flush(ObjectEntities.TEST_CODE, false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -471,7 +455,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(test.getId(), true);
+				StorableObjectPool.flush(test.getId(), false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -491,21 +475,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
 				break;
-			case FALL_CODE_RECEIVE_RESULTS:
-				removeResults();
-				break;
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
-	}
-
-	private void removeResults() {
-		if (this.resultsToRemove != null && ! this.resultsToRemove.isEmpty()) {
-			resultList.removeAll(this.resultsToRemove);
-			this.resultsToRemove = null;
-		}
-		else
-			Log.errorMessage("removeResults | list is NULL or empty");
 	}
 
 	protected void shutdown() {
