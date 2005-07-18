@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.50 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.51 2005/07/18 19:15:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/07/18 19:15:08 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -197,9 +197,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 */
 	public Set<CableChannelingItem> getCableChannelingItems() {
+		return Collections.unmodifiableSet(this.getCableChannelingItems0());
+	}
+
+	private Set<CableChannelingItem> getCableChannelingItems0() {
 		try {
-			final Set<CableChannelingItem> cableChannelingItems = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
-			return Collections.unmodifiableSet(cableChannelingItems);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -261,9 +264,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCableThread> getSchemeCableThreads() {
+		return Collections.unmodifiableSet(this.getSchemeCableThreads0());
+	}
+
+	private Set<SchemeCableThread> getSchemeCableThreads0() {
 		try {
-			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);
-			return Collections.unmodifiableSet(schemeCableThreads);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -381,13 +387,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	public void setCableChannelingItems(final Set<CableChannelingItem> cableChannelingItems) {
 		assert cableChannelingItems != null: NON_NULL_EXPECTED;
-		for (final CableChannelingItem oldCableChannelingItem : getCableChannelingItems()) {
-			/*
-			 * Check is made to prevent CableChannelingItems from
-			 * permanently losing their parents.
-			 */
-			assert !cableChannelingItems.contains(oldCableChannelingItem);
-			removeCableChannelingItem(oldCableChannelingItem);
+		final Set<CableChannelingItem> oldCableChannelingItems = this.getCableChannelingItems0();
+		/*
+		 * Check is made to prevent CableChannelingItems from
+		 * permanently losing their parents.
+		 */
+		oldCableChannelingItems.removeAll(cableChannelingItems);
+		for (final CableChannelingItem oldCableChannelingItem : oldCableChannelingItems) {
+			this.removeCableChannelingItem(oldCableChannelingItem);
 		}
 		for (final CableChannelingItem cableChannelingItem : cableChannelingItems) {
 			this.addCableChannelingItem(cableChannelingItem);
@@ -442,13 +449,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 
 	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) {
 		assert schemeCableThreads != null: NON_NULL_EXPECTED;
-		for (final SchemeCableThread oldSchemeCableThread : getSchemeCableThreads()) {
-			/*
-			 * Check is made to prevent SchemeCableThreads from
-			 * permanently losing their parents.
-			 */
-			assert !schemeCableThreads.contains(oldSchemeCableThread);
-			removeSchemeCableThread(oldSchemeCableThread);
+		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0();
+		/*
+		 * Check is made to prevent SchemeCableThreads from
+		 * permanently losing their parents.
+		 */
+		oldSchemeCableThreads.removeAll(schemeCableThreads);
+		for (final SchemeCableThread oldSchemeCableThread : oldSchemeCableThreads) {
+			this.removeSchemeCableThread(oldSchemeCableThread);
 		}
 		for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
 			this.addSchemeCableThread(schemeCableThread);
