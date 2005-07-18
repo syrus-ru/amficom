@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.36 2005/07/15 17:06:07 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.37 2005/07/18 09:39:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -39,11 +40,12 @@ import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
+import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/07/15 17:06:07 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/18 09:39:29 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -202,10 +204,14 @@ public final class LinkTypeController extends AbstractLinkController {
 	public static Characteristic getCharacteristic(
 			PhysicalLinkType linkType,
 			CharacteristicType cType) {
-		for(Iterator it = linkType.getCharacteristics().iterator(); it.hasNext();) {
-			Characteristic ch = (Characteristic )it.next();
-			if(ch.getType().equals(cType))
-				return ch;
+		try {
+			for(Iterator it = linkType.getCharacteristics().iterator(); it.hasNext();) {
+				Characteristic ch = (Characteristic )it.next();
+				if(ch.getType().equals(cType))
+					return ch;
+			}
+		} catch(ApplicationException e) {
+			Log.debugException(e, Level.WARNING);
 		}
 		return null;
 	}
@@ -233,7 +239,6 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				linkType.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			}
@@ -291,7 +296,6 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				linkType.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			}
@@ -349,7 +353,6 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				linkType.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			}
@@ -426,7 +429,6 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				linkType.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			}
@@ -505,7 +507,6 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				linkType.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			}

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.28 2005/07/15 13:16:29 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.29 2005/07/18 09:39:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -37,11 +38,12 @@ import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.util.Log;
 
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/07/15 13:16:29 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/18 09:39:29 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -160,11 +162,15 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	public static Characteristic getCharacteristic(
 			MapElement mapElement,
 			CharacteristicType cType) {
-		for(Iterator it = mapElement.getCharacteristics().iterator(); it.hasNext();) {
-			Characteristic ch = (Characteristic )it.next();
-			if(ch.getType().equals(cType)) {
-				return ch;
+		try {
+			for(Iterator it = mapElement.getCharacteristics().iterator(); it.hasNext();) {
+				Characteristic ch = (Characteristic )it.next();
+				if(ch.getType().equals(cType)) {
+					return ch;
+				}
 			}
+		} catch(ApplicationException e) {
+			Log.debugException(e, Level.WARNING);
 		}
 		return null;
 	}
@@ -189,7 +195,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						mapElement,
 						true,
 						true);
-				mapElement.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			} catch(CreateObjectException e) {
@@ -242,7 +247,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						mapElement,
 						true,
 						true);
-				mapElement.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			} catch(CreateObjectException e) {
@@ -327,7 +331,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						mapElement,
 						true,
 						true);
-				mapElement.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			} catch(CreateObjectException e) {
@@ -387,7 +390,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						mapElement,
 						true,
 						true);
-				mapElement.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			} catch(CreateObjectException e) {
@@ -446,7 +448,6 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						mapElement,
 						true,
 						true);
-				mapElement.addCharacteristic(attribute);
 				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute.getId(), true);
 			} catch(CreateObjectException e) {
