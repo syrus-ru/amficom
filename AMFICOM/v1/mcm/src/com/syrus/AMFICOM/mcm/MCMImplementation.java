@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.46 2005/07/13 19:23:59 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.47 2005/07/19 17:26:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,15 +31,17 @@ import com.syrus.AMFICOM.mcm.corba.MCMPOA;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/13 19:23:59 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/19 17:26:46 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -145,6 +147,30 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
+  public IdlResult[] transmitResults(final IdlIdentifier[] identifier_Transferables)
+			throws AMFICOMRemoteException {
+		final Set<Identifier> ids = Identifier.fromTransferables(identifier_Transferables);
+
+		Set objects = null;
+		try {
+			objects = StorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlResult[] transferables = new IdlResult[objects.size()];
+		int i = 0;
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Result result = (Result) it.next();
+			transferables[i] = result.getTransferable(orb);
+		}
+		return transferables;
+	}
+
+
+
 	public IdlMeasurement[] transmitMeasurementsButIdsByCondition(final IdlIdentifier[] identifier_Transferables,
 			final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
 		final Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
@@ -186,6 +212,22 @@ public class MCMImplementation extends MCMPOA {
 		}
 		return transferables;
 	}
+
+	public IdlResult[] transmitResultsButIdsByCondition(final IdlIdentifier[] identifier_Transferables,
+			final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {
+		final Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+
+		final ORB orb = MCMSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
+		final IdlResult[] transferables = new IdlResult[objects.size()];
+		int i = 0;
+		for (final Iterator it = objects.iterator(); it.hasNext(); i++) {
+			final Result result = (Result) it.next();
+			transferables[i] = result.getTransferable(orb);
+		}
+		return transferables;
+	}
+
+
 
   private Set getObjectsButIdsCondition(final IdlIdentifier[] identifier_Transferables,
   		final IdlStorableObjectCondition storableObjectCondition_Transferable) throws AMFICOMRemoteException {

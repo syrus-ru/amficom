@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementTransmit.java,v 1.16 2005/06/25 17:07:51 bass Exp $
+ * $Id: MServerMeasurementTransmit.java,v 1.17 2005/07/19 17:27:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
+import com.syrus.AMFICOM.measurement.corba.IdlResult;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/25 17:07:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/19 17:27:30 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
@@ -100,6 +101,15 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
 		final int length = storableObjectsT.length;
 		final IdlMeasurementSetup[] ret = new IdlMeasurementSetup[length];
+		System.arraycopy(storableObjectsT, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlResult[] transmitResults(final IdlIdentifier[] idsT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity[] storableObjectsT = super.transmitStorableObjects(idsT, sessionKeyT);
+		final int length = storableObjectsT.length;
+		final IdlResult[] ret = new IdlResult[length];
 		System.arraycopy(storableObjectsT, 0, ret, 0, length);
 		return ret;
 	}
@@ -221,6 +231,16 @@ abstract class MServerMeasurementTransmit extends MServerConfigurationTransmit {
 		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
 		final int length = storableObjects.length;
 		final IdlMeasurementSetup[] ret = new IdlMeasurementSetup[length];
+		System.arraycopy(storableObjects, 0, ret, 0, length);
+		return ret;
+	}
+
+	public IdlResult[] transmitResultsButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		final IDLEntity storableObjects[] = super.transmitStorableObjectsButIdsByCondition(idsT, sessionKeyT, conditionT);
+		final int length = storableObjects.length;
+		final IdlResult[] ret = new IdlResult[length];
 		System.arraycopy(storableObjects, 0, ret, 0, length);
 		return ret;
 	}
