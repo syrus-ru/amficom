@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.51 2005/07/18 19:15:08 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.52 2005/07/19 12:04:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,8 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -55,7 +57,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/18 19:15:08 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/19 12:04:46 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -173,6 +175,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		}
 	}
 
+	/**
+	 * Adds <code>CableChannelingItem</code> to the end of this
+	 * <code>SchemeCableLink</code>, adjusting its
+	 * <code>sequentialNumber</code> accordingly.
+	 *
+	 * @param cableChannelingItem
+	 * @see SchemePath#addPathElement(PathElement)
+	 */
 	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
 		cableChannelingItem.setParentSchemeCableLink(this);
@@ -193,13 +203,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return schemeCableLink;
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
-	public Set<CableChannelingItem> getCableChannelingItems() {
-		return Collections.unmodifiableSet(this.getCableChannelingItems0());
+	public SortedSet<CableChannelingItem> getCableChannelingItems() {
+		return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getCableChannelingItems0()));
 	}
 
+	/**
+	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
+	 */
 	private Set<CableChannelingItem> getCableChannelingItems0() {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
@@ -260,7 +270,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCableThread> getSchemeCableThreads() {
@@ -339,6 +348,15 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				this.getParentSchemeId().getTransferable());
 	}
 
+	/**
+	 * Removes the <code>CableChannelingItem</code> from this
+	 * <code>SchemeCableLink</code>, changing its
+	 * <code>sequentialNumber</code> to <code>-1</code> and removing all
+	 * its subsequent <code>CableChannelingItem</code>s.
+	 *
+	 * @param cableChannelingItem
+	 * @see SchemePath#removePathElement(PathElement)
+	 */
 	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
 		assert cableChannelingItem.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
@@ -383,22 +401,6 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, physicalLength, opticalLength, cableLinkTypeId, linkId, sourceSchemeCablePortId, targetSchemeCablePortId, parentSchemeId);
 
 		assert !parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-	}
-
-	public void setCableChannelingItems(final Set<CableChannelingItem> cableChannelingItems) {
-		assert cableChannelingItems != null: NON_NULL_EXPECTED;
-		final Set<CableChannelingItem> oldCableChannelingItems = this.getCableChannelingItems0();
-		/*
-		 * Check is made to prevent CableChannelingItems from
-		 * permanently losing their parents.
-		 */
-		oldCableChannelingItems.removeAll(cableChannelingItems);
-		for (final CableChannelingItem oldCableChannelingItem : oldCableChannelingItems) {
-			this.removeCableChannelingItem(oldCableChannelingItem);
-		}
-		for (final CableChannelingItem cableChannelingItem : cableChannelingItems) {
-			this.addCableChannelingItem(cableChannelingItem);
-		}
 	}
 
 	/**
@@ -507,5 +509,15 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 				schemeCableLink.sourceSchemeCablePortId,
 				schemeCableLink.targetSchemeCablePortId,
 				schemeCableLink.parentSchemeId);
+	}
+
+	/**
+	 * @param cableChannelingItem
+	 * @see SchemePath#assertContains(PathElement)
+	 */
+	boolean assertContains(final CableChannelingItem cableChannelingItem) {
+		final SortedSet<CableChannelingItem> cableChanelingItems = this.getCableChannelingItems();
+		return cableChannelingItem.getParentSchemeCableLinkId().equals(super.id)
+				&& cableChanelingItems.headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber;
 	}
 }

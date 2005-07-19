@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.52 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemePath.java,v 1.53 2005/07/19 12:04:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/19 12:04:46 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -194,6 +194,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * <code>sequentialNumber</code> accordingly.
 	 *
 	 * @param pathElement
+	 * @see SchemeCableLink#addCableChannelingItem(CableChannelingItem)
 	 */
 	public void addPathElement(final PathElement pathElement) {
 		assert pathElement != null: NON_NULL_EXPECTED;
@@ -292,7 +293,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
 	private Set<PathElement> getPathElements0() {
@@ -344,10 +344,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	/**
 	 * Removes the <code>PathElement</code> from this
 	 * <code>SchemePath</code>, changing its
-	 * <code>sequentialNumber</code> to <code>0</code> and removing all
+	 * <code>sequentialNumber</code> to <code>-1</code> and removing all
 	 * its subsequent <code>PathElement</code>s.
 	 *
 	 * @param pathElement
+	 * @see SchemeCableLink#removeCableChannelingItem(CableChannelingItem)
 	 */
 	public void removePathElement(final PathElement pathElement) {
 		assert pathElement != null: NON_NULL_EXPECTED;
@@ -435,27 +436,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		}
 		this.parentSchemeId = newParentSchemeId;
 		super.markAsChanged();
-	}
-
-	public void setPathElements(final SortedSet<PathElement> pathElements) {
-		assert pathElements != null: NON_NULL_EXPECTED;
-		final SortedSet<PathElement> oldPathElements = this.getPathElements();
-		for (final PathElement oldPathElement : oldPathElements) {
-			/*
-			 * Check is made to prevent PathElements from
-			 * permanently losing their parents.
-			 */
-			assert !pathElements.contains(oldPathElement);
-		}
-		/*
-		 * It's enough to remove the first PathElement only.
-		 */
-		if (!oldPathElements.isEmpty()) {
-			this.removePathElement(oldPathElements.first());
-		}
-		for (final PathElement pathElement : pathElements) {
-			this.addPathElement(pathElement);
-		}
 	}
 
 	/**
@@ -727,9 +707,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 
 	/**
 	 * @param pathElement
+	 * @see SchemeCableLink#assertContains(CableChannelingItem)
 	 */
 	boolean assertContains(final PathElement pathElement) {
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = this.getPathElements();
 		return pathElement.getParentSchemePathId().equals(super.id)
 				&& pathElements.headSet(pathElement).size() == pathElement.sequentialNumber;
 	}
