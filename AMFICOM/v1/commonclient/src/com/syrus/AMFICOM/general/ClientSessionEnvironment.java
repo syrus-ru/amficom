@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.15 2005/07/11 08:19:41 bass Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.16 2005/07/19 15:21:07 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/11 08:19:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/19 15:21:07 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
@@ -103,6 +103,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		return instance;
 	}
 
+	@Override
 	public void login(	String login,
 						String password) throws CommunicationException, LoginException {
 		if (this.xmlPath == null) {
@@ -117,6 +118,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		}
 	}
 
+	@Override
 	public void logout() throws CommunicationException, LoginException {
 		if (this.xmlPath == null) {
 			super.logout();
