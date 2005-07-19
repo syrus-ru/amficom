@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.53 2005/07/18 19:04:32 bass Exp $
+ * $Id: SchemeElement.java,v 1.54 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/18 19:04:32 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -507,7 +507,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeDevice> getSchemeDevices() {
@@ -524,7 +523,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeElement> getSchemeElements() {
@@ -541,7 +539,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
@@ -558,7 +555,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<Scheme> getSchemes() {

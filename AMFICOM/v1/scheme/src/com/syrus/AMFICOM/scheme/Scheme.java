@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.53 2005/07/18 17:21:54 bass Exp $
+ * $Id: Scheme.java,v 1.54 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/18 17:21:54 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -357,9 +357,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeCableLink> getSchemeCableLinks() {
 		return Collections.unmodifiableSet(this.getSchemeCableLinks0());
 	}
@@ -393,9 +390,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeElement> getSchemeElements() {
 		return Collections.unmodifiableSet(this.getSchemeElements0());
 	}
@@ -414,9 +408,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		return this.kind;
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeLink> getSchemeLinks() {
 		return Collections.unmodifiableSet(this.getSchemeLinks0());
 	}
@@ -430,9 +421,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
 		return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
 	}

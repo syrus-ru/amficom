@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.45 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: SchemePort.java,v 1.46 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/07/17 05:20:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -206,9 +206,6 @@ public final class SchemePort extends AbstractSchemePort {
 		return port;
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public SchemeCableThread getSchemeCableThread() {
 		try {
 			final Set<SchemeCableThread> schemeCableThreads = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);

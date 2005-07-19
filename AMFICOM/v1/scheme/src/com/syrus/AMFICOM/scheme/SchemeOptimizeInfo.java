@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.46 2005/07/18 18:47:21 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.47 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/18 18:47:21 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
@@ -350,9 +350,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		return this.rtuDeleteProb;
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
 		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
 	}
@@ -366,9 +363,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		}
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
 		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
 	}
@@ -382,9 +376,6 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 		}
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
 		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
 	}

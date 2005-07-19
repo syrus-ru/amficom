@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.51 2005/07/18 19:21:14 bass Exp $
+ * $Id: SchemeDevice.java,v 1.52 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/18 19:21:14 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -401,7 +401,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCablePort> getSchemeCablePorts() {
@@ -418,7 +417,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemePort> getSchemePorts() {

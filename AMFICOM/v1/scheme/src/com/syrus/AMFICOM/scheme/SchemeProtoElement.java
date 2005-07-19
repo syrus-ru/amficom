@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.56 2005/07/18 17:41:53 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.57 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/18 17:41:53 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -626,7 +626,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeDevice> getSchemeDevices() {
@@ -643,7 +642,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
@@ -660,7 +658,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
 	 * @return an immutable set.
 	 */
 	public Set<SchemeProtoElement> getSchemeProtoElements() {

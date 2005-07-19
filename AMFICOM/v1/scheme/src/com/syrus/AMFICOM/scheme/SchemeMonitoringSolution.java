@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.49 2005/07/18 18:00:05 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.50 2005/07/19 11:59:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/18 18:00:05 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/19 11:59:57 $
  * @module scheme_v1
  */
 public final class SchemeMonitoringSolution extends
@@ -245,9 +245,6 @@ public final class SchemeMonitoringSolution extends
 		return this.active;
 	}
 
-	/**
-	 * @todo parameter breakOnLoadError to StorableObjectPool.getStorableObjectsByCondition
-	 */
 	public Set<SchemePath> getSchemePaths() {
 		return Collections.unmodifiableSet(this.getSchemePaths0());
 	}
