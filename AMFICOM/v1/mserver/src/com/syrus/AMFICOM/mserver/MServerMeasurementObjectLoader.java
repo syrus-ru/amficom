@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.42 2005/07/13 19:08:04 arseniy Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.43 2005/07/19 17:28:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/07/13 19:08:04 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/19 17:28:06 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -83,6 +83,22 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 							final IdlIdentifier loadIdsT[],
 							final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitEvaluations(loadIdsT);
+					}
+				});
+	}
+
+	/**
+	 * @todo make access validation on MCM
+	 */
+	@Override
+	public Set loadResults(final Set<Identifier> ids) throws ApplicationException {
+		return CORBAMServerObjectLoader.loadStorableObjects(ObjectEntities.RESULT_CODE,
+				ids,
+				new CORBAMServerObjectLoader.TransmitProcedure() {
+					public final IdlStorableObject[] transmitStorableObjects(final MCM mcmRef,
+							final IdlIdentifier loadIdsT[],
+							final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+						return mcmRef.transmitResults(loadIdsT);
 					}
 				});
 	}
@@ -139,6 +155,24 @@ final class MServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoad
 							final IdlStorableObjectCondition conditionT,
 							final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
 						return mcmRef.transmitEvaluationsButIdsByCondition(loadButIdsT, conditionT);
+					}
+				});
+	}
+
+	/**
+	 * @todo make access validation on MCM
+	 */
+	@Override
+	public Set loadResultsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
+		return CORBAMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.RESULT_CODE,
+				ids,
+				condition,
+				new CORBAMServerObjectLoader.TransmitButIdsByConditionProcedure() {
+					public final IdlStorableObject[] transmitStorableObjectsButIdsByCondition(final MCM mcmRef,
+							final IdlIdentifier loadButIdsT[],
+							final IdlStorableObjectCondition conditionT,
+							final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+						return mcmRef.transmitResultsButIdsByCondition(loadButIdsT, conditionT);
 					}
 				});
 	}

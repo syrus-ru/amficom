@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.56 2005/07/13 19:35:43 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.57 2005/07/19 17:28:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/07/13 19:35:43 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/19 17:28:55 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -98,6 +98,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		});
 	}
 
+	@Override
+	public Set loadResults(final Set<Identifier> ids) throws ApplicationException {
+		return this.corbaCMServerObjectLoader.loadStorableObjects(ObjectEntities.RESULT_CODE, ids, new TransmitProcedure() {
+			public final IdlStorableObject[] transmitStorableObjects(final CommonServer commonServer,
+					final IdlIdentifier[] idsT,
+					final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+				return ((MServer) commonServer).transmitResults(idsT, sessionKeyT);
+			}
+		});
+	}
+
 
 
 
@@ -143,6 +154,21 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 							final IdlSessionKey sessionKeyT,
 							final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
 						return ((MServer) commonServer).transmitEvaluationsButIdsByCondition(idsT, conditionT, sessionKeyT);
+					}
+				});
+	}
+
+	@Override
+	public Set loadResultsButIds(final StorableObjectCondition condition, final Set<Identifier> ids) throws ApplicationException {
+		return this.corbaCMServerObjectLoader.loadStorableObjectsButIdsByCondition(ObjectEntities.RESULT_CODE,
+				ids,
+				condition,
+				new TransmitButIdsByConditionProcedure() {
+					public final IdlStorableObject[] transmitStorableObjectsButIdsCondition(final CommonServer commonServer,
+							final IdlIdentifier[] idsT,
+							final IdlSessionKey sessionKeyT,
+							final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
+						return ((MServer) commonServer).transmitResultsButIdsByCondition(idsT, conditionT, sessionKeyT);
 					}
 				});
 	}
