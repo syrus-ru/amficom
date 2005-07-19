@@ -1,15 +1,29 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
+import java.util.Set;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
 import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -45,26 +59,30 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 
 	public void execute()
 	{
-		ReflectogrammLoadDialog dialog;
+//		ReflectogrammLoadDialog dialog;
 		JFrame parent = Environment.getActiveWindow();
-		if(Heap.getRLDialogByKey(parent.getName()) != null)
-		{
-			dialog = Heap.getRLDialogByKey(parent.getName());
-		} else
-		{
-			dialog = new ReflectogrammLoadDialog (aContext);
-			Heap.setRLDialogByKey(parent.getName(), dialog);
-		}
+
+//		if(Heap.getRLDialogByKey(parent.getName()) != null)
+//		{
+//			dialog = Heap.getRLDialogByKey(parent.getName());
+//		}
+//		else
+//		{
+//			dialog = new ReflectogrammLoadDialog (aContext);
+//			Heap.setRLDialogByKey(parent.getName(), dialog);
+//		}
 
 		//Environment.getActiveWindow()
 
-		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
+		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
 			return;
+			
 		
-		Result result1 = dialog.getResult();
-		if (result1 == null)
+		Set<Result> results = TraceLoadDialog.getResults();
+		if (results.isEmpty())
 			return;
 
+		Result result1 = results.iterator().next();
 		BellcoreStructure bs = null;
 		
 
