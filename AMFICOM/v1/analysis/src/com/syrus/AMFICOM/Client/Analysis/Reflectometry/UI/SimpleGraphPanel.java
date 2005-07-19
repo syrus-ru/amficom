@@ -122,10 +122,6 @@ public class SimpleGraphPanel extends JPanel
 		setDefaultScales();
 	}
 
-//	public void setWeakColors(boolean weakColors)
-//	{
-//	    this.weakColor = weakColors;
-//	}
 	protected boolean hasWeakTraceColors() {
 		return false;
 	}
@@ -190,7 +186,7 @@ public class SimpleGraphPanel extends JPanel
 	    double a = weight;
 	    double b = 255 * (1.0 - weight);
 	    return isTraceColor && hasWeakTraceColors() ?
-			new Color( // FIXME: каждый раз создается новый объект цвета
+			new Color( // XXX: каждый раз создается новый объект цвета
 				(int )(color1.getRed() * a + b),
 				(int )(color1.getGreen() * a + b),
 				(int )(color1.getBlue() * a + b))

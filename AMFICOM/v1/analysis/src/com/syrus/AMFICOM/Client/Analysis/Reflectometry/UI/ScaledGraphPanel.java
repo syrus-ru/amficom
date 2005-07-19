@@ -30,10 +30,6 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	protected double Kx = 1; // коэффициент пересчета из точек в единицы деления
 	protected double Ky = 1; // коэффициент пересчета из точек в единицы деления
 
-//	protected Color scaleColor; // color to paint scale mesh
-//	protected Color scaleDigitColor; // color to paint scale digits
-//	protected Color selectColor;
-
 	protected Point startpos = new Point();
 	protected Point currpos = new Point();
 	protected Point tmppos;

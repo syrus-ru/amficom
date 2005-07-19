@@ -31,10 +31,6 @@ public class TraceEventsPanel extends ScaledGraphPanel
 
 	public void updEvents(String id)
 	{
-//        if (!id.equals(Heap.PRIMARY_TRACE_KEY))
-//            return; // XXX: do not expect any refAnalysis other than one for PRIMARY_TRACE
-//        sevents = Heap.getMTAEPrimary().getSimpleEvents();
-//        sevents = Heap.getAnyMTAE(id).getSimpleEvents();
 		sevents = Heap.getAnyMTAE(id) != null
     		? Heap.getAnyMTAE(id).getSimpleEvents()
     		: null; // XXX: наверное, лучше инкапсулировать sevents, и обращаться к Heap каждый раз, а не отслеживать изменения
