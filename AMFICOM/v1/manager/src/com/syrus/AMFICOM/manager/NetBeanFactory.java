@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.5 2005/07/19 09:49:00 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.6 2005/07/19 14:31:13 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/19 14:31:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -57,7 +57,10 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					public boolean isValid(	AbstractBean sourceBean,
 											AbstractBean targetBean) {
 						
-						return false;
+						return sourceBean != null && 
+							targetBean != null && 
+							sourceBean.getCodeName().equals("Net") &&
+							targetBean.getCodeName().equals("Domain");
 					}
 				};
 		}

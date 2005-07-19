@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.4 2005/07/15 14:53:22 bob Exp $
+* $Id: GraphTreeModel.java,v 1.5 2005/07/19 14:31:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 14:53:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 14:31:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -483,6 +483,7 @@ public class GraphTreeModel implements TreeModel {
 	}
 
 	public TreeNode[] getPathToRoot(TreeNode aNode) {
+//		System.out.println("GraphTreeModel.getPathToRoot() | " + aNode + '[' + aNode.getClass().getName() + ']');
 		TreeNode[] nodes = this.treeNodePathMap.get(aNode);
 		if (nodes != null) {
 			return nodes;
@@ -551,7 +552,8 @@ public class GraphTreeModel implements TreeModel {
 
 	public void reload(TreeNode node) {
 		if (node != null) {
-			fireTreeStructureChanged(this, this.getPathToRoot(node), null, null);
+			this.clearCache();
+			this.fireTreeStructureChanged(this, this.getPathToRoot(node), null, null);
 		}
 	}
 
