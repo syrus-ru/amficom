@@ -19,8 +19,8 @@ import javax.swing.JPasswordField;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/16 09:54:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 17:55:46 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public class ModuleCodeDialog {
@@ -106,7 +106,7 @@ public class ModuleCodeDialog {
 		dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		
 		this.result = JOptionPane.CANCEL_OPTION;
-		dialog.show();
+		dialog.setVisible(true);
 		
 		while (optionPane.getValue() == okButton) {
 			if (new String(this.fieldPassword.getPassword()).equals(this.stb)) {
@@ -120,7 +120,7 @@ public class ModuleCodeDialog {
 				LangModelGeneral.getString("ModuleCode.Title") + " '" + this.title + '\'', JOptionPane.ERROR_MESSAGE,
 				null);
 			this.result = JOptionPane.CANCEL_OPTION;
-			dialog.show();
+			dialog.setVisible(true);
 		}
 
 		dialog.dispose();		

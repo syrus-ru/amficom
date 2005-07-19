@@ -1,14 +1,21 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.io.*;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
 
 public class AddTraceFromDatabaseCommand extends AbstractCommand
 {
@@ -19,6 +26,7 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("aContext"))
@@ -30,11 +38,13 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new AddTraceFromDatabaseCommand(aContext);
+		return new AddTraceFromDatabaseCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		ReflectogrammLoadDialog dialog;
@@ -44,32 +54,32 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 			dialog = Heap.getRLDialogByKey(parent.getName());
 		} else
 		{
-			dialog = new ReflectogrammLoadDialog (aContext);
+			dialog = new ReflectogrammLoadDialog (this.aContext);
 			Heap.setRLDialogByKey(parent.getName(), dialog);
 		}
 		
 		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
 			return;
 		
-		Result result = dialog.getResult();
-		if (result == null)
+		Result result1 = dialog.getResult();
+		if (result1 == null)
 			return;
 
 		BellcoreStructure bs = null;
 
-		Parameter[] parameters = result.getParameters();
+		Parameter[] parameters = result1.getParameters();
 		for (int i = 0; i < parameters.length; i++)
 		{
 			Parameter param = parameters[i];
 			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;
 
-		if (result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
-			bs.title = ((Measurement)result.getAction()).getName();
+		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
+			bs.title = ((Measurement)result1.getAction()).getName();
 		Heap.putSecondaryTraceByKey(bs.title, bs);
 		Heap.setCurrentTrace(bs.title);
 	}

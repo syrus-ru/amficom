@@ -17,18 +17,14 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand
 {
@@ -41,6 +37,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals("aContext"))
@@ -52,11 +49,13 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
-		return new LoadTraceFromDatabaseCommand(dispatcher, aContext);
+		return new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 //		ReflectogrammLoadDialog dialog;
@@ -91,7 +90,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		{
 			Parameter param = parameters[i];
 			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
@@ -100,7 +99,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		if (!Heap.hasEmptyAllBSMap())
 		{
 			if (Heap.getBSPrimaryTrace() != null)
-				new FileCloseCommand(aContext).execute();
+				new FileCloseCommand(this.aContext).execute();
 		}
 		Heap.setBSPrimaryTrace(bs);
 

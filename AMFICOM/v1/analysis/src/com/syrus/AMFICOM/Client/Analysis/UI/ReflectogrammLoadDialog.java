@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.21 2005/07/19 13:21:52 stas Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.22 2005/07/19 17:55:02 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.PopulatableItem;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
@@ -54,8 +53,8 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/19 13:21:52 $
- * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2005/07/19 17:55:02 $
+ * @author $Author: arseniy $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
@@ -131,7 +130,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 					}*/
 						
 //				ReflectogrammLoadDialog.this.setTree();
-				TreePath selectedPath = treeUI.getTree().getSelectionModel().getSelectionPath();
+				TreePath selectedPath = ReflectogrammLoadDialog.this.treeUI.getTree().getSelectionModel().getSelectionPath();
 				PopulatableItem itemToRefresh = selectedPath != null 
 						? (PopulatableItem)selectedPath.getLastPathComponent()
 						: ReflectogrammLoadDialog.this.rootItem;
@@ -139,7 +138,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 				updateRecursively(itemToRefresh);
 //					treeUI.getTree().collapsePath(selectedPath != null ? selectedPath : new TreePath(ReflectogrammLoadDialog.this.rootItem));
 						
-				ReflectogrammLoadDialog.this.show();
+				ReflectogrammLoadDialog.this.setVisible(true);
 			}
 		});
 		ocPanel.add(Box.createHorizontalGlue());
@@ -165,16 +164,11 @@ public class ReflectogrammLoadDialog extends JDialog {
 		}
 	}
 
+	@Override
 	public void setVisible(boolean key) {
-		if (!domainId.equals(LoginManager.getDomainId()))
-			setTree();
-		super.setVisible(key);
-	}
-
-	public void show() {
 		if (!this.domainId.equals(LoginManager.getDomainId()))
-			setTree();
-		super.show();
+			this.setTree();
+		super.setVisible(key);
 	}
 
 	void setTree() {
@@ -189,18 +183,18 @@ public class ReflectogrammLoadDialog extends JDialog {
 				Domain domain = (Domain)StorableObjectPool.getStorableObject(this.domainId, true);
 
 //				childrenFactory = ArchiveChildrenFactory.getInstance();
-				childrenFactory = ResultChildrenFactory.getInstance();
-				((ResultChildrenFactory)childrenFactory).setDomainId(this.domainId);
+				this.childrenFactory = ResultChildrenFactory.getInstance();
+				((ResultChildrenFactory) this.childrenFactory).setDomainId(this.domainId);
 				this.rootItem = new IconPopulatableItem();
 				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
 				this.rootItem.setName(LangModelAnalyse.getString("Archive"));
 				this.rootItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-				this.rootItem.setChildrenFactory(childrenFactory);
-				treeUI = new LogicalTreeUI(this.rootItem, false);
-				treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
-				treeUI.getTreeModel().setAllwaysSort(false);
-				this.scrollPane.getViewport().add(treeUI.getTree(), null);
-				treeUI.addSelectionListener(new SelectionListener() {
+				this.rootItem.setChildrenFactory(this.childrenFactory);
+				this.treeUI = new LogicalTreeUI(this.rootItem, false);
+				this.treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
+				this.treeUI.getTreeModel().setAllwaysSort(false);
+				this.scrollPane.getViewport().add(this.treeUI.getTree(), null);
+				this.treeUI.addSelectionListener(new SelectionListener() {
 
 					public void selectedItems(Collection items) {
 						if (!items.isEmpty()) {
@@ -208,10 +202,10 @@ public class ReflectogrammLoadDialog extends JDialog {
 								Item item = (Item) it.next();
 								Object object = item.getObject();
 								if (object instanceof Result) {
-									okButton.setEnabled(true);
-									result = (Result) object;
+									ReflectogrammLoadDialog.this.okButton.setEnabled(true);
+									ReflectogrammLoadDialog.this.result = (Result) object;
 								} else {
-									okButton.setEnabled(false);
+									ReflectogrammLoadDialog.this.okButton.setEnabled(false);
 								}
 							}
 						}
@@ -231,7 +225,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 	}
 
 	public int showDialog() {
-		super.show();
+		super.setVisible(true);
 		return this.resultCode;
 	}
 
@@ -249,14 +243,14 @@ public class ReflectogrammLoadDialog extends JDialog {
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter param = parameters[i];
 			ParameterType type = (ParameterType) param.getType();
-			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
+			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 
 		try {
 			if (this.result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 				Measurement measurement = (Measurement) this.result.getAction();
-				Test test = (Test) MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
+				Test test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 				bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
 				bs.title = test.getDescription();
 			}
