@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.12 2005/07/15 13:06:31 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.13 2005/07/19 12:49:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,19 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -59,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/07/15 13:06:31 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/19 12:49:22 $
  * @module schemeclient_v1
  */
 
@@ -78,9 +88,9 @@ public class SchemeObjectsFactory {
 		return cht;
 	}
 	
-	public static EquipmentType createEquipmentType() throws CreateObjectException {
+	public static EquipmentType createEquipmentType(String name, String codeName) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		EquipmentType eqt = EquipmentType.createInstance(userId, "", "", "", "", "");
+		EquipmentType eqt = EquipmentType.createInstance(userId, codeName, "", name, "", "");
 //		try {
 //			StorableObjectPool.putStorableObject(eqt);
 //		} catch (IllegalObjectEntityException e) {
@@ -352,7 +362,8 @@ public class SchemeObjectsFactory {
 	
 	public static Scheme createScheme() throws CreateObjectException {
 		Scheme scheme = Scheme.createInstance(LoginManager.getUserId(), LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME)
-				+ (schemeCounter == 1 ? "" : "(" + schemeCounter + ")"), Kind.NETWORK, LoginManager.getDomainId()); 
+				+ (schemeCounter == 1 ? "" : "(" + schemeCounter + ")"), Kind.NETWORK, LoginManager.getDomainId());
+		schemeCounter++;
 //		try {
 //			StorableObjectPool.putStorableObject(scheme);
 //		} 
@@ -398,12 +409,13 @@ public class SchemeObjectsFactory {
 	public static SchemeLink createSchemeLink(String name) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		SchemeLink schemeLink = SchemeLink.createInstance(userId, name);
-//		try {
-//			StorableObjectPool.putStorableObject(schemeLink);
-//		} 
-//		catch (ApplicationException e) {
-//			Log.errorException(e);
-//		}
+		return schemeLink;
+	}
+	
+	public static SchemeLink createSchemeLink(String name, SchemeElement schemeElement) throws CreateObjectException {
+		assert schemeElement != null;
+		Identifier userId = LoginManager.getUserId();
+		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, schemeElement);
 		return schemeLink;
 	}
 	
@@ -417,5 +429,43 @@ public class SchemeObjectsFactory {
 //			Log.errorException(e);
 //		}
 		return schemeLink;
+	}
+	
+	public static void assignClonedIds(Map<DefaultGraphCell, DefaultGraphCell> clonedCells, Map<Identifier, Identifier> clonedIds) {
+		for (DefaultGraphCell clonedCell : clonedCells.values()) {
+			if (clonedCell instanceof DeviceGroup) {
+				DeviceGroup dev = (DeviceGroup)clonedCell;
+				Identifier id = dev.getElementId();
+				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
+					dev.setProtoElementId(clonedIds.get(id));
+				} else {
+					dev.setSchemeElementId(clonedIds.get(id));
+				}
+			} else if (clonedCell instanceof DeviceCell) {
+				DeviceCell cell = (DeviceCell)clonedCell;
+				Identifier id = cell.getSchemeDeviceId();
+				cell.setSchemeDeviceId(clonedIds.get(id));
+			} else if (clonedCell instanceof PortCell) {
+				PortCell cell = (PortCell)clonedCell;
+				Identifier id = cell.getSchemePortId();
+				cell.setSchemePortId(clonedIds.get(id));
+			} else if (clonedCell instanceof CablePortCell) {
+				CablePortCell cell = (CablePortCell)clonedCell;
+				Identifier id = cell.getSchemeCablePortId();
+				cell.setSchemeCablePortId(clonedIds.get(id));
+			} else if (clonedCell instanceof DefaultCableLink) {
+				DefaultCableLink cell = (DefaultCableLink)clonedCell;
+				Identifier id = cell.getSchemeCableLinkId();
+				cell.setSchemeCableLinkId(clonedIds.get(id));
+			} else if (clonedCell instanceof DefaultLink) {
+				DefaultLink cell = (DefaultLink)clonedCell;
+				Identifier id = cell.getSchemeLinkId();
+				cell.setSchemeLinkId(clonedIds.get(id));
+			} else if (clonedCell instanceof BlockPortCell) {
+				BlockPortCell cell = (BlockPortCell)clonedCell;
+				Identifier id = cell.getAbstractSchemePortId();
+				cell.setAbstractSchemePortId(clonedIds.get(id));
+			}
+		}
 	}
 }
