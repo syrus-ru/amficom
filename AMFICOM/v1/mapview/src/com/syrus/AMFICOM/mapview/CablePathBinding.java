@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathBinding.java,v 1.4 2005/04/26 16:04:00 krupenn Exp $
+ * $Id: CablePathBinding.java,v 1.5 2005/07/19 07:02:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import java.util.Iterator;
 /**
  * Класс хранит данные о привязке кабеля к линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/04/26 16:04:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 07:02:17 $
  * @module mapviewclient_v1
  */
 public final class CablePathBinding extends HashMap
@@ -46,12 +46,12 @@ public final class CablePathBinding extends HashMap
 
 	/**
 	 * Конструктор.
-	 * @param mcpb привязка
+	 * @param binding привязка
 	 */
-	public CablePathBinding(CablePathBinding mcpb)
+	public CablePathBinding(CablePathBinding binding)
 	{
-		super(mcpb);
-		this.cablePath = mcpb.getCablePath();
+		super(binding);
+		this.cablePath = binding.getCablePath();
 	}
 
 	/**
