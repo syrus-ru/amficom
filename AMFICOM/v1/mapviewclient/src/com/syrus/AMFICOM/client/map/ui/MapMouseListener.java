@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.48 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.49 2005/07/19 13:21:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.48 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/19 13:21:13 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -97,7 +97,7 @@ public final class MapMouseListener implements MouseListener
 			// show properties on double click
 			if ( this.netMapViewer.getLogicalNetLayer().getMapView() != null)
 			{
-				showContextMenu();
+//				showContextMenu();
 			}
 		}
 	}
@@ -129,27 +129,27 @@ public final class MapMouseListener implements MouseListener
 		
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);//Установить режим
 
-//		System.out.println("Pressed at (" + me.getPoint().x + ", " + me.getPoint().y + ")");
-
-//		if ( this.logicalNetLayer.getMapView() != null)
-		{
-			Point point = me.getPoint();
+		Point point = me.getPoint();
+		
+		// do not change start and end point when drawing new node link
+		if(mapState.getActionMode() != MapState.DRAW_LINES_ACTION_MODE) {
 			logicalNetLayer.setStartPoint(point);//Установить начальную точку
 			logicalNetLayer.setEndPoint(point);//Установить конечную точку
-			switch ( mapState.getOperationMode())
-			{
-				case MapState.MOVE_HAND://Флаг для меремещения карты лапкой
-					// fall throuth
-				case MapState.MEASURE_DISTANCE:
-					// fall throuth
-				case MapState.ZOOM_TO_POINT:
-					// fall throuth
-				case MapState.ZOOM_TO_RECT:
-					// fall throuth
-				case MapState.MOVE_TO_CENTER:
-					//Берём фокус
-					this.netMapViewer.getVisualComponent().grabFocus();
-					break;
+		}
+		switch ( mapState.getOperationMode())
+		{
+			case MapState.MOVE_HAND://Флаг для меремещения карты лапкой
+				// fall throuth
+			case MapState.MEASURE_DISTANCE:
+				// fall throuth
+			case MapState.ZOOM_TO_POINT:
+				// fall throuth
+			case MapState.ZOOM_TO_RECT:
+				// fall throuth
+			case MapState.MOVE_TO_CENTER:
+				//Берём фокус
+				this.netMapViewer.getVisualComponent().grabFocus();
+				break;
 				case MapState.MOVE_FIXDIST:
 					try {
 						moveFixedDistance(point);
@@ -199,7 +199,6 @@ public final class MapMouseListener implements MouseListener
 					}
 					break;
 			}//switch (mapState.getOperationMode()
-		}
 		try {
 			if(proceed)
 				this.netMapViewer.repaint(false);
@@ -265,6 +264,11 @@ public final class MapMouseListener implements MouseListener
 				//Географические координаты текущего положения мыши
 				DoublePoint mousePositionSph = 
 					converter.convertScreenToMap(new Point(mouseX, mouseY));
+				
+				Point startPoint = this.netMapViewer.getLogicalNetLayer().getStartPoint();
+				startPoint.x -= (quadrantX - 1) * xDifferenceScr;
+				startPoint.y -= (quadrantY - 1) * yDifferenceScr;
+				this.netMapViewer.getLogicalNetLayer().setStartPoint(startPoint);
 				
 				this.netMapViewer.setCenter(newCenter);
 				
