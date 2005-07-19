@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.26 2005/07/15 15:04:13 peskovsky Exp $
+ * $Id: MapMouseMotionListener.java,v 1.27 2005/07/19 13:15:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.26 $, $Date: 2005/07/15 15:04:13 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.27 $, $Date: 2005/07/19 13:15:11 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapMouseMotionListener implements MouseMotionListener
@@ -216,10 +216,18 @@ public final class MapMouseMotionListener implements MouseMotionListener
 //			MapMouseMotionListener.IMG_SIZE,
 //			MapMouseMotionListener.IMG_SIZE,
 //			Image.SCALE_SMOOTH)
+	private static final String NORTH = "north";
 	private static final String NORTHWEST = "northwest";
+	private static final String WEST = "west";
+	private static final String SOUTHWEST = "southwest";
+	private static final String SOUTH = "south";
+	private static final String SOUTHEAST = "southeast";
+	private static final String EAST = "east";
+	private static final String NORTHEAST = "northeast";
 	static {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Point hotSpot = new Point(0, 0);
+		Dimension cursorSize = toolkit.getBestCursorSize(24, 24);
+		Point hotSpot = new Point(cursorSize.width / 2, cursorSize.height / 2);
 		cursors[0][0] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gonorthwest.gif"),
 				hotSpot,
@@ -227,31 +235,31 @@ public final class MapMouseMotionListener implements MouseMotionListener
 		cursors[0][1] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gowest.gif"),
 				hotSpot,
-				NORTHWEST);
+				WEST);
 		cursors[0][2] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gosouthwest.gif"),
 				hotSpot,
-				NORTHWEST);
+				SOUTHWEST);
 		cursors[1][0] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gonorth.gif"),
 				hotSpot,
-				NORTHWEST);
+				NORTH);
 		cursors[1][1] = Cursor.getDefaultCursor();
 		cursors[1][2] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gosouth.gif"),
 				hotSpot,
-				NORTHWEST);
+				SOUTH);
 		cursors[2][0] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gonortheast.gif"),
 				hotSpot,
-				NORTHWEST);
+				NORTHEAST);
 		cursors[2][1] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/goeast.gif"),
 				hotSpot,
-				NORTHWEST);		
+				EAST);		
 		cursors[2][2] = toolkit.createCustomCursor(
 				toolkit.createImage("images/cursors/gosoutheast.gif"),
 				hotSpot,
-				NORTHWEST);
+				SOUTHEAST);
 	}
 }
