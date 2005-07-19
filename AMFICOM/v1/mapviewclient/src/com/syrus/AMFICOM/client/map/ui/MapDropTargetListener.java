@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.28 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.29 2005/07/19 07:05:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/19 07:05:24 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -95,13 +95,16 @@ public final class MapDropTargetListener implements DropTargetListener
 						
 						if(or instanceof SchemeElement) {
 							SchemeElement se = (SchemeElement )or;
-	
-							schemeElementDropped(se, point);
+							Identifier id = se.getId();
+							SchemeElement sereal = (SchemeElement )StorableObjectPool.getStorableObject(id, false);
+							schemeElementDropped(sereal, point);
 						}
 						else
 						if(or instanceof SchemeCableLink) {
 							SchemeCableLink scl = (SchemeCableLink )or;
-							schemeCableLinkDropped(scl);
+							Identifier id = scl.getId();
+							SchemeCableLink sclreal = (SchemeCableLink )StorableObjectPool.getStorableObject(id, false);
+							schemeCableLinkDropped(sclreal);
 						}
 					}
 				}
