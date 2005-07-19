@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.46 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.47 2005/07/19 13:32:56 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2005/07/19 13:32:56 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -70,7 +70,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 	private Identifier siteNodeId;
 
-	private Identifier parentSchemeElementId;
+	Identifier parentSchemeElementId;
 
 	Identifier parentSchemeProtoElementId;
 

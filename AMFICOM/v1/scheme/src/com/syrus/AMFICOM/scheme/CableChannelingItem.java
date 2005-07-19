@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.40 2005/07/19 12:04:46 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.41 2005/07/19 13:32:56 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/07/19 12:04:46 $
+ * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2005/07/19 13:32:56 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject implements Comparable<CableChannelingItem> {
@@ -73,7 +73,7 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 
 	private Identifier endSiteNodeId;
 
-	private Identifier parentSchemeCableLinkId;
+	Identifier parentSchemeCableLinkId;
 
 	/**
 	 * @param id
