@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.client.map.props;
 
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +22,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
@@ -35,6 +38,7 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
@@ -48,6 +52,13 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	private JPanel jPanel = new JPanel();
 	WrapperedList cableList = null;
 	JScrollPane cablesScrollPane = new JScrollPane();
+
+	private JLabel dimensionLabel = new JLabel();
+	private JPanel dimensionPanel = new JPanel();
+	private JLabel xLabel = new JLabel();
+	private JTextField mTextField = new JTextField();
+	private JTextField nTextField = new JTextField();
+	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	TunnelLayout tunnelLayout = null;
 	JScrollPane tunnelsScrollPane = new JScrollPane();
@@ -76,6 +87,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	static Icon rightlefticon;
 
 	private NetMapViewer netMapViewer;
+
+	private static Dimension buttonSize = new Dimension(24, 24);
 
 	static {
 		horverticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/horvert.gif"));
@@ -124,7 +137,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				}
 			}
 		});
-		this.bindButton.setText("Привязать");
+		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif")));
+		this.bindButton.setToolTipText("Ввести кабель в трубу");
+		this.bindButton.setPreferredSize(buttonSize);
+		this.bindButton.setMaximumSize(buttonSize);
+		this.bindButton.setMinimumSize(buttonSize);
 		this.bindButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setBindMode(PhysicalLinkAddEditor.this.bindButton.isSelected());
@@ -132,7 +149,11 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				// bind(or);
 			}
 		});
-		this.unbindButton.setText("Отвязать");
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
+		this.bindButton.setToolTipText("Убрать привязку к тоннелю");
+		this.unbindButton.setPreferredSize(buttonSize);
+		this.unbindButton.setMaximumSize(buttonSize);
+		this.unbindButton.setMinimumSize(buttonSize);
 		this.unbindButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Object or = PhysicalLinkAddEditor.this.cableList
@@ -140,7 +161,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				unbind(or);
 			}
 		});
-		this.buttonsPanel.setLayout(new FlowLayout());
+		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
+		this.buttonsPanel.setLayout(new GridBagLayout());
 		this.buttonsPanel.add(this.bindButton);
 		this.buttonsPanel.add(this.unbindButton);
 
@@ -183,26 +205,34 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.horvertLabel.setIcon(horverticon);
+		this.horvertLabel.setToolTipText("Выбор направления нумерации");
 		this.topDownLabel.setIcon(topdownicon);
+		this.topDownLabel.setToolTipText("Порядок нумерации по вертикали");
 		this.leftRightLabel.setIcon(leftrighticon);
+		this.leftRightLabel.setToolTipText("Порядок нумерации по горизонтали");
 		
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
+		this.xLabel.setText("X");
+//		this.mTextField.setPreferredSize(new Dimension(60, 23));
+//		this.nTextField.setPreferredSize(new Dimension(60, 23));
+		this.dimensionPanel.setLayout(this.gridBagLayout2);
+
 		constraints.gridx = 0;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
-		constraints.gridheight = 2;
-		constraints.weightx = 1.0;
-		constraints.weighty = 0.1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.5;
+		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.BOTH;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.cablesScrollPane, constraints);
+		this.dimensionPanel.add(this.mTextField, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 0;
@@ -212,13 +242,91 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.dimensionPanel.add(this.xLabel, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.5;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.dimensionPanel.add(this.nTextField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.1;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.cablesScrollPane, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.buttonsPanel, constraints);
 
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionLabel, constraints);
+
 		constraints.gridx = 1;
 		constraints.gridy = 1;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.dimensionPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 3;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.9;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.tunnelsScrollPane, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -230,34 +338,24 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.directionPanel, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 2;
-		constraints.gridwidth = 2;
-		constraints.gridheight = 1;
-		constraints.weightx = 1.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(Box.createVerticalStrut(3), constraints);
-
-		constraints.gridx = 0;
-		constraints.gridy = 3;
-		constraints.gridwidth = 2;
-		constraints.gridheight = 3;
-		constraints.weightx = 1.0;
-		constraints.weighty = 0.9;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.BOTH;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.tunnelsScrollPane, constraints);
+//		constraints.gridx = 0;
+//		constraints.gridy = 2;
+//		constraints.gridwidth = 2;
+//		constraints.gridheight = 1;
+//		constraints.weightx = 1.0;
+//		constraints.weighty = 0.0;
+//		constraints.anchor = GridBagConstraints.WEST;
+//		constraints.fill = GridBagConstraints.HORIZONTAL;
+//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+//		constraints.ipadx = 0;
+//		constraints.ipady = 0;
+//		this.jPanel.add(Box.createVerticalStrut(3), constraints);
 
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
+
+		super.addToUndoableListener(this.mTextField);
+		super.addToUndoableListener(this.nTextField);
 	}
 
 	public Object getObject() {
@@ -270,10 +368,16 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		if(this.physicalLink == null) {
 			this.cableList.setEnabled(false);
 			this.tunnelLayout.setBinding(null);
+
+			this.mTextField.setText("");
+			this.nTextField.setText("");
 		}
 		else {
 			this.cableList.setEnabled(true);
 			PhysicalLinkBinding binding = this.physicalLink.getBinding();
+
+			this.mTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getWidth()));
+			this.nTextField.setText(String.valueOf(this.physicalLink.getBinding().getDimension().getHeight()));
 
 			this.tunnelLayout.setBinding(binding);
 
@@ -378,6 +482,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		// nothing to commit
+		int m = Integer.parseInt(this.mTextField.getText());
+		int n = Integer.parseInt(this.nTextField.getText());
+		if(!this.physicalLink.getBinding().getDimension().equals(new IntDimension(m, n)))
+			this.physicalLink.getBinding().setDimension(new IntDimension(m, n));
 	}
 }

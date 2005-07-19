@@ -60,13 +60,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	private JLabel addressLabel = new JLabel();
 	private GridBagLayout gridBagLayout3 = new GridBagLayout();
 
-	private JLabel dimensionLabel = new JLabel();
-	private JPanel dimensionPanel = new JPanel();
-	private JLabel xLabel = new JLabel();
-	private JTextField mTextField = new JTextField();
-	private JTextField nTextField = new JTextField();
-	private GridBagLayout gridBagLayout2 = new GridBagLayout();
-
 	private JLabel colorLabel = new JLabel();
 	private ColorChooserComboBox colorComboBox = new ColorChooserComboBox(); 
 	
@@ -103,7 +96,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.endLabel.setText(LangModelMap.getString("EndNode"));
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
 		this.addressLabel.setText(LangModelMap.getString("Address"));
-		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
 		this.descLabel.setText(LangModelMap.getString("Description"));
 		this.cityLabel.setText(LangModelMap.getString("CityKurz"));
 		this.streetLabel.setText(LangModelMap.getString("StreetKurz"));
@@ -113,50 +105,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.thicknessLabel.setText(LangModelMap.getString("Thickness"));
 		this.styleLabel.setText(LangModelMap.getString("Style"));
 
-		this.xLabel.setText("X");
-//		this.mTextField.setPreferredSize(new Dimension(60, 23));
-//		this.nTextField.setPreferredSize(new Dimension(60, 23));
-		this.dimensionPanel.setLayout(this.gridBagLayout2);
 		GridBagConstraints constraints = new GridBagConstraints();
-
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.5;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.dimensionPanel.add(this.mTextField, constraints);
-
-		constraints.gridx = 1;
-		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(0, 5, 0, 5);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.dimensionPanel.add(this.xLabel, constraints);
-
-		constraints.gridx = 2;
-		constraints.gridy = 0;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.5;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.dimensionPanel.add(this.nTextField, constraints);
 
 		this.streetPanel.setLayout(this.gridBagLayout3);
 
@@ -399,32 +348,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 //		this.jPanel.add(this.buildingTextField, ReusedGridBagConstraints.get(2, 7, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		constraints.gridx = 0;
-		constraints.gridy = 8;
-		constraints.gridwidth = 2;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.dimensionLabel, constraints);
-
-		constraints.gridx = 2;
-		constraints.gridy = 8;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.dimensionPanel, constraints);
-
-		constraints.gridx = 0;
 		constraints.gridy = 9;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -533,8 +456,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		super.addToUndoableListener(this.cityTextField);
 		super.addToUndoableListener(this.streetTextField);
 		super.addToUndoableListener(this.buildingTextField);
-		super.addToUndoableListener(this.mTextField);
-		super.addToUndoableListener(this.nTextField);
 		super.addToUndoableListener(this.descTextArea);
 		super.addToUndoableListener(this.colorComboBox);
 		super.addToUndoableListener(this.thicknessComboBox);
@@ -564,9 +485,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText("");
 
-			this.mTextField.setText("");
-			this.nTextField.setText("");
-
 			this.cityTextField.setText("");
 			this.streetTextField.setText("");
 			this.buildingTextField.setText("");
@@ -594,9 +512,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.startComboBox.setSelectedItem(this.link.getStartNode());
 			this.endComboBox.addItem(this.link.getEndNode());
 			this.endComboBox.setSelectedItem(this.link.getEndNode());
-
-			this.mTextField.setText(String.valueOf(this.link.getBinding().getDimension().getWidth()));
-			this.nTextField.setText(String.valueOf(this.link.getBinding().getDimension().getHeight()));
 
 			this.cityTextField.setText(this.link.getCity());
 			this.streetTextField.setText(this.link.getStreet());
@@ -630,11 +545,6 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.link.setCity(this.cityTextField.getText());
 			this.link.setStreet(this.streetTextField.getText());
 			this.link.setBuilding(this.buildingTextField.getText());
-
-			int m = Integer.parseInt(this.mTextField.getText());
-			int n = Integer.parseInt(this.nTextField.getText());
-			if(!this.link.getBinding().getDimension().equals(new IntDimension(m, n)))
-				this.link.getBinding().setDimension(new IntDimension(m, n));
 
 			PhysicalLinkController physicalLinkController = 
 				(PhysicalLinkController )
