@@ -1,3 +1,9 @@
+#
+# $Id: Makefile,v 1.68 2005/07/19 13:25:04 arseniy Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := measurement
 
 LIBNAME := $(MODULE_NAME).jar
