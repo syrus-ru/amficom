@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.21 2005/07/01 16:08:59 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.22 2005/07/19 07:07:03 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -71,7 +71,7 @@ public final class SchemeSampleData {
 		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt); 
 		
-		scheme1 = Scheme.createInstance(userId, "Схемка", Kind.NETWORK, domainId);
+		scheme1 = Scheme.createInstance(userId, "Схемка (бол)", Kind.NETWORK, domainId);
 		scheme1element0 = SchemeElement.createInstance(userId, "Один элемент", scheme1);
 		scheme1element0.setDescription("Описалово");
 		scheme1element0.setEquipmentType(equipmentType);
@@ -154,6 +154,9 @@ public final class SchemeSampleData {
 		SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink4);
 
 		scheme1path0 = SchemePath.createInstance(userId, "Путяра измерений", scheme1);
+
+		PathElement scheme1pelstart = PathElement.createInstance(userId, scheme1path0, null, scheme1dev00port00);
+
 		PathElement scheme1pel0 = PathElement.createInstance(userId, scheme1path0, scheme1link0);
 		SchemeUtils.setOpticalLength(scheme1pel0, 3.0);
 		SchemeUtils.setPhysicalLength(scheme1pel0, 3.0);
@@ -176,6 +179,8 @@ public final class SchemeSampleData {
 		SchemeUtils.setOpticalLength(scheme1pel6, 1000.0);
 		SchemeUtils.setPhysicalLength(scheme1pel6, 1000.0);
 
+		PathElement scheme1pelend = PathElement.createInstance(userId, scheme1path0, scheme1dev20cport21, null);
+
 		scheme1.setHeight(100);
 		scheme1.setLabel("lab1");
 		scheme1.setWidth(100);
@@ -188,7 +193,7 @@ public final class SchemeSampleData {
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
 
-		scheme2 = Scheme.createInstance(userId, "Схемочка", Kind.NETWORK, domainId);
+		scheme2 = Scheme.createInstance(userId, "Схемочка (мал)", Kind.NETWORK, domainId);
 		SchemeElement scheme2el0 = SchemeElement.createInstance(userId, "Один элемент", scheme2);
 		scheme2el0.setDescription("Описалово");
 		scheme2el0.setEquipmentType(equipmentType);
@@ -220,9 +225,11 @@ public final class SchemeSampleData {
 		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme2clink0);
 
 		scheme2path0 = SchemePath.createInstance(userId, "Путяра измерений", scheme2);
+		PathElement scheme2pelstart = PathElement.createInstance(userId, scheme2path0, null, scheme2dev10port10);
 		PathElement scheme2pel0 = PathElement.createInstance(userId, scheme2path0, scheme2link0);
 		PathElement scheme2pel1 = PathElement.createInstance(userId, scheme2path0, scheme2dev10port10, scheme2dev10cport10);
 		PathElement scheme2pel2 = PathElement.createInstance(userId, scheme2path0, scheme2clink0th);
+		PathElement scheme2pelend = PathElement.createInstance(userId, scheme2path0, scheme2dev10cport10, null);
 
 		scheme2.setHeight(100);
 		scheme2.setLabel("lab1");
