@@ -160,11 +160,6 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		limit_currpos();
 	}
 
-	protected void updColorModel()
-	{
-		super.updColorModel();
-	}
-
 	public void paint(Graphics g)
 	{
 		paint_scales(g);
