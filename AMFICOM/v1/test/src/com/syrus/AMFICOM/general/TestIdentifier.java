@@ -1,5 +1,5 @@
 /*
- * $Id: TestIdentifier.java,v 1.4 2005/06/20 15:13:54 arseniy Exp $
+ * $Id: TestIdentifier.java,v 1.5 2005/07/19 17:55:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/20 15:13:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 17:55:27 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -32,7 +32,7 @@ public class TestIdentifier extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testEquals() {
+	public void _testEquals() {
 		final Identifier id1 = new Identifier("Measurement_1");
 		Identifier id2 = new Identifier(ObjectEntities.MEASUREMENT_CODE, 1);
 		assertEquals(id1, id2);
@@ -50,13 +50,13 @@ public class TestIdentifier extends TestCase {
 		assertFalse("Different minors", id1.equals(id2));
 	}
 
-	public void testIllegalMajor() {
+	public void _testIllegalMajor() {
 		Identifier id = new Identifier(StorableObjectPool.БАЙАН + "_1");
 		System.out.println("major: " + id.getMajor() + ", minor: " + id.getMinor()
 				+ ", code: " + id.getIdentifierCode() + ", string: " + id.getIdentifierString());
 	}
 
-	public void testIllegalMinor() {
+	public void _testIllegalMinor() {
 		try {
 			new Identifier("Measurement_100000000000000000");
 			fail("Illegal minor");
@@ -66,7 +66,7 @@ public class TestIdentifier extends TestCase {
 		}
 	}
 
-	public void _testCreateSumIdentifiers() throws ApplicationException {
+	public void _testCreateSumIdentifiers() {
 		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
@@ -98,7 +98,7 @@ public class TestIdentifier extends TestCase {
 				&& sumIds.size() >= identifiables1.size());
 	}
 
-	public void _testCreateSubstractionIdentifiers() throws ApplicationException {
+	public void _testCreateSubstractionIdentifiers() {
 		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		//1
@@ -139,5 +139,11 @@ public class TestIdentifier extends TestCase {
 		}
 		assertTrue("Size of substraction", subIds.size() >= identifiables1.size() - identifiables2.size()
 				&& subIds.size() <= identifiables1.size());
+	}
+
+	public void testGetLongValue() {
+		final Identifier identifier = new Identifier("ParameterType_10");
+		final long identifierCode = identifier.getIdentifierCode();
+		System.out.println("Identifier: '" + identifier + "', code: " + identifierCode);
 	}
 }

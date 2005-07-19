@@ -1,5 +1,5 @@
 /*
- * $Id: CommonTest.java,v 1.11 2005/06/20 15:13:14 arseniy Exp $
+ * $Id: CommonTest.java,v 1.12 2005/07/19 17:55:27 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import junit.framework.TestSuite;
 import com.syrus.util.Application;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/20 15:13:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/19 17:55:27 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -39,10 +39,12 @@ public class CommonTest {
 	public final TestSetup createTestSetup() {
 		final TestSetup testSetup = new TestSetup(this.TEST_SUITE) {
 
+			@Override
 			protected void setUp() {
 				oneTimeSetUp();
 			}
 
+			@Override
 			protected void tearDown() {
 				oneTimeTearDown();
 			}
