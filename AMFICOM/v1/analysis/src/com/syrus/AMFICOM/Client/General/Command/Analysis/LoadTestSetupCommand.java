@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
+//import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.model.*;
@@ -30,7 +31,7 @@ public class LoadTestSetupCommand extends AbstractCommand
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getBSPrimaryTrace();
+	/*	BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null || bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -75,6 +76,6 @@ public class LoadTestSetupCommand extends AbstractCommand
         // XXX: are these notifications needed?
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
-		Heap.setCurrentTracePrimary();
+		Heap.setCurrentTracePrimary();*/
 	}
 }
