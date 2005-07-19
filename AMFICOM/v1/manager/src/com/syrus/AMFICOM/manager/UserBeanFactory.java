@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.5 2005/07/15 14:53:22 bob Exp $
+* $Id: UserBeanFactory.java,v 1.6 2005/07/19 09:49:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,28 +8,23 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.JMenu;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import org.jgraph.JGraph;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultPort;
-import org.jgraph.graph.GraphConstants;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/15 14:53:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,11 +33,15 @@ public class UserBeanFactory extends AbstractBeanFactory {
 
 	private static UserBeanFactory instance;
 	
-	private int count = 0;
-	
 	private Validator validator;
 	
-	List<String> names;
+	private List<String> names;
+
+	private PropertyChangeListener	listener;
+
+	WrapperedPropertyTable	table;
+
+	private JPanel	panel;
 	
 	private UserBeanFactory() {
 		super("Entity.User", 
@@ -77,101 +76,46 @@ public class UserBeanFactory extends AbstractBeanFactory {
 	
 	@Override
 	public AbstractBean createBean() {
-		AbstractBean bean = new AbstractBean() {
-
-			
-			
-			@Override
-			public void updateEdgeAttributes(	DefaultEdge edge,
-												DefaultPort port) {
-				AttributeMap attributes = edge.getAttributes();
-				GraphConstants.setLineWidth(attributes, 10.0f);
-				GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_TECHNICAL);
-				GraphConstants.setLineColor(attributes, Color.LIGHT_GRAY);
-				GraphConstants.setForeground(attributes, Color.BLACK);
-			}
-			
-			@Override
-			public JPopupMenu getMenu(final	JGraph graph,
-			                          final Object cell) {
-				
-				if (cell != null) {
-					JPopupMenu popupMenu = new JPopupMenu();
-					String lastName = null;
-					for(final String name: names) {
-						if (name != null) {
-							popupMenu.add(new AbstractAction(name) {
-								public void actionPerformed(ActionEvent e) {
-									storableObject = name;
-									AttributeMap attributeMap = new AttributeMap();
-									GraphConstants.setValue(attributeMap, name);
-									Map viewMap = new Hashtable();
-									viewMap.put(cell, attributeMap);
-									graph.getModel().edit(viewMap, null, null, null);
-								}
-							});
-						} else {
-							popupMenu.addSeparator();
-						}
-						
-						lastName = name;
-					}
-					
-					if (lastName != null) {
-						popupMenu.addSeparator();
-					}
-					
-					popupMenu.add(new AbstractAction(
-						LangModelManager.getString("Entity.User.new")  + 
-						"...") {
-						
-						public void actionPerformed(ActionEvent e) {
-							String string = JOptionPane.showInputDialog(null, 
-								LangModelManager.getString("Dialog.Add.User"), 
-								LangModelManager.getString("Entity.User.new"), 
-								JOptionPane.OK_CANCEL_OPTION);
-							if (string == null) {
-								return;
-							}
-							names.add(string);
-							storableObject = string;
-							AttributeMap attributeMap = new AttributeMap();
-							GraphConstants.setValue(attributeMap, string);
-							Map viewMap = new Hashtable();
-							viewMap.put(cell, attributeMap);
-							graph.getModel().edit(viewMap, null, null, null);
-						}
-					});
-//					menu.add(new AbstractAction("Edit") {
-//						public void actionPerformed(ActionEvent e) {
-//							graph.startEditingAtCell(cell);
-//						}
-//					});
-					return popupMenu;
-				}
-				
-//				// Remove
-//				if (!graph.isSelectionEmpty()) {
-//					menu.addSeparator();
-//					menu.add(new AbstractAction("Remove") {
-//						public void actionPerformed(ActionEvent e) {
-//							remove.actionPerformed(e);
-//						}
-//					});
-//				}
-//				menu.addSeparator();
-//				// Insert
-//				menu.add(new AbstractAction("Insert") {
-//					public void actionPerformed(ActionEvent ev) {
-////						insert(pt);
-//					}
-//				});
-				return null;
-			}
-			
-		};
-		bean.setStorableObject("User" + (++this.count));
+		UserBean bean = new UserBean(this.names);
+		bean.setName("User" + (++super.count));
+		bean.setCodeName("User");
 		bean.setValidator(this.getValidator());
+		
+		if (this.table == null) {
+			final UserBeanWrapper wrapper = UserBeanWrapper.getInstance();
+	
+			this.table = 
+				new WrapperedPropertyTable(wrapper, 
+					bean, 
+					new String[] { UserBeanWrapper.KEY_FULL_NAME, 
+						UserBeanWrapper.KEY_USER_NATURE}
+				);
+			this.table.setDefaultTableCellRenderer();			
+	
+			this.listener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					WrapperedPropertyTableModel model = (WrapperedPropertyTableModel)UserBeanFactory.this.table.getModel();
+					model.fireTableDataChanged();
+				}
+			};
+			
+			
+			this.panel = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.weightx = 1.0;
+			gbc.weighty = 1.0;
+			this.panel.add(this.table.getTableHeader(), gbc);		
+			this.panel.add(new JScrollPane(this.table), gbc);
+
+			System.out.println("UserBeanFactory.createBean() | create table ");
+		}
+		
+		bean.table = this.table;
+		bean.addPropertyChangeListener(this.listener);
+		
+		bean.setPropertyPanel(this.panel);
 		
 		return bean;
 	}
@@ -183,13 +127,13 @@ public class UserBeanFactory extends AbstractBeanFactory {
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
 					System.out.println("UserBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getStorableObject() 
+						+ sourceBean.getName() 
 						+ " -> " 
-						+ targetBean.getStorableObject());
+						+ targetBean.getName());
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getStorableObject().startsWith("User") &&
-						targetBean.getStorableObject().startsWith("ARM");
+						sourceBean.getCodeName().equals("User") &&
+						targetBean.getCodeName().equals("ARM");
 				}
 			};
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.4 2005/07/15 11:59:00 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.5 2005/07/19 09:49:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 11:59:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -19,8 +19,6 @@ package com.syrus.AMFICOM.manager;
 public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	private static ARMBeanFactory instance;
-	
-	private int count = 0;
 	
 	private Validator validator;
 	
@@ -47,7 +45,8 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		AbstractBean bean = new AbstractBean() {};
 		
 		bean.setValidator(this.getValidator());
-		bean.setStorableObject("ARM" + (++this.count));
+		bean.setCodeName("ARM");
+		bean.setName("ARM" + (++this.count));
 		
 		return bean;
 	}
@@ -59,13 +58,13 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
 					System.out.println("ARMBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getStorableObject() 
+						+ sourceBean.getName() 
 						+ " -> " 
-						+ targetBean.getStorableObject());
+						+ targetBean.getName());
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getStorableObject().startsWith("ARM") &&
-						targetBean.getStorableObject().startsWith("Net");
+						sourceBean.getCodeName().equals("ARM") &&
+						targetBean.getCodeName().equals("Net");
 				}
 			};
 		}

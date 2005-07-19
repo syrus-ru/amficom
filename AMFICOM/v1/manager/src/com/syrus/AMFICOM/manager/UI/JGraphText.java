@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.8 2005/07/15 14:53:22 bob Exp $
+ * $Id: JGraphText.java,v 1.9 2005/07/19 09:49:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/15 14:53:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -20,14 +20,14 @@ import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,6 +73,7 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
+import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 import org.jgraph.graph.ConnectionSet.Connection;
 
@@ -100,12 +101,16 @@ public class JGraphText implements GraphSelectionListener {
 	
 	private JPanel panel;
 	
+	private JPanel propertyPanel;
+	
 	// Undo Manager
 	protected GraphUndoManager undoManager;
 
 	// Actions which Change State
 	protected Action undo, redo, remove, group, ungroup, tofront, toback, cut,
 			copy, paste;
+
+	private GridBagConstraints	gbc2;
 
 	
 	public JGraphText() {
@@ -307,8 +312,19 @@ public class JGraphText implements GraphSelectionListener {
 			
 			gbc.weightx = 1.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.gridheight = GridBagConstraints.RELATIVE;
 			JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.tree), new JScrollPane(this.graph));
 			this.panel.add(splitPane, gbc);
+			
+			this.propertyPanel = new JPanel(new GridBagLayout());
+			this.gbc2 = new GridBagConstraints();
+			this.gbc2.fill = GridBagConstraints.BOTH;
+			this.gbc2.weightx = 1.0;
+			this.gbc2.weighty = 1.0;
+			this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
+			
+			gbc.gridheight = GridBagConstraints.REMAINDER;	
+			this.panel.add(this.propertyPanel, gbc);
 		}
 		
 		return this.panel;
@@ -412,8 +428,21 @@ public class JGraphText implements GraphSelectionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (!graph.isSelectionEmpty()) {
 					Object[] cells = graph.getSelectionCells();
+					GraphModel model = graph.getModel();
 					cells = graph.getDescendants(cells);
-					graph.getModel().remove(cells);
+					List list = new ArrayList(3 * cells.length / 2);
+					for(Object cell: cells) {
+						if (model.isPort(cell)) {
+							Port port = (Port)cell;
+							for(Iterator it=port.edges();it.hasNext();) {
+								list.add(it.next());
+							}
+						}						
+						list.add(cell);
+					}
+					model.remove(list.toArray());
+					
+					
 				}
 			}
 		};
@@ -703,12 +732,24 @@ public class JGraphText implements GraphSelectionListener {
 
 
 	public void valueChanged(GraphSelectionEvent e) {
+
+//		try {
+//			throw new Exception();
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+		
 		final Object cell = e.getCell();
 		final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
-		System.out.println(".valueChanged() | " + e +"\n\t" + cell + '[' + cell.getClass().getName() + ']');
+//		System.out.println(".valueChanged() | " + cell + '[' + cell.getClass().getName() + ']');
 		final GraphModel model = this.graph.getModel();
+		
+		this.propertyPanel.removeAll();
+		
 		if (model.isEdge(cell)) {
 			if (e.isAddedCell()) {
+//				System.out.println("JGraphText.valueChanged() | edge ");
 				Edge edge = (Edge)cell;
 				TreeNode sourceNode = (TreeNode) edge.getSource();
 				TreeNode targetNode = (TreeNode) edge.getSource();
@@ -723,17 +764,7 @@ public class JGraphText implements GraphSelectionListener {
 			}
 		} else {				
 			if (e.isAddedCell()){
-				if (!model.isPort(cell)) {
-					
-					DefaultGraphCell graphCell = (DefaultGraphCell)cell;
-					DefaultPort port = (DefaultPort) graphCell.getChildAt(0);
-					
-					Set edges = port.getEdges();
-					for(Object edge: edges) {
-						System.out.println("JGraphText.valueChanged() || " + edge + '[' + edge.getClass().getName() + ']');
-					}
-//					this.graph.getSelectionModel().addSelectionCells(edges.toArray());
-					
+				if (!model.isPort(cell) && !model.isEdge(cell)) {
 					TreeNode[] pathToRoot = this.treeModel.getPathToRoot((TreeNode) cell);
 					if (pathToRoot != null) {
 						TreePath path = new TreePath(pathToRoot);
@@ -741,14 +772,27 @@ public class JGraphText implements GraphSelectionListener {
 					} else {
 						selectionModel.clearSelection();
 					}
-//					System.out.println("JGraphText.valueChanged() | cell:" + cell + '[' + cell.getClass().getName() + ']');
+					
 				}
 				
+				DefaultGraphCell graphCell = (DefaultGraphCell)cell;
+				DefaultPort port = (DefaultPort) graphCell.getChildAt(0);
+				Object userObject = port.getUserObject();
+				
+				if (userObject instanceof AbstractBean) {
+					JPanel propertyPanel2 = ((AbstractBean)userObject).getPropertyPanel();
+					if (propertyPanel2 != null) {
+						this.propertyPanel.add(propertyPanel2, this.gbc2);
+					}					
+				}
 				
 			} else {
 				selectionModel.clearSelection();
 			}
 		}
+
+		this.propertyPanel.revalidate();
+		this.propertyPanel.repaint();
 		
 //		 Update Button States based on Current Selection
 		boolean enabled = !this.graph.isSelectionEmpty();
@@ -908,7 +952,7 @@ public class JGraphText implements GraphSelectionListener {
 
 		// Override to Gain Control (for PopupMenu and ConnectMode)
 		public boolean isForceMarqueeEvent(MouseEvent e) {
-			System.out.println("MyMarqueeHandler.isForceMarqueeEvent()");
+//			System.out.println("MyMarqueeHandler.isForceMarqueeEvent()");
 			if (e.isShiftDown())
 				return false;
 			// If Right Mouse Button we want to Display the PopupMenu
@@ -1008,6 +1052,7 @@ public class JGraphText implements GraphSelectionListener {
 
 		// Connect the First Port and the Current Port in the Graph or Repaint
 		public void mouseReleased(MouseEvent e) {
+//			System.out.println("MyMarqueeHandler.mouseReleased()");
 			// If Valid Event, Current and First Port
 			if (e != null && this.port != null && this.firstPort != null
 					&& this.firstPort != this.port) {
@@ -1016,19 +1061,23 @@ public class JGraphText implements GraphSelectionListener {
 				DefaultPort sourcePort = (DefaultPort) this.firstPort.getCell();
 				DefaultPort targetPort = (DefaultPort) this.port.getCell();
 				DefaultEdge edge = JGraphText.this.createEdge((DefaultGraphCell)sourcePort.getParent(), (DefaultGraphCell)targetPort.getParent());
+				
+				
+				
 				if (edge != null) {
 					Object userObject = sourcePort.getUserObject();
 					if (userObject instanceof AbstractBean) {
-						System.out.println("MyMarqueeHandler.mouseReleased()");
+//						System.out.println("MyMarqueeHandler.mouseReleased()");
 						AbstractBean bean = (AbstractBean)userObject;
 						bean.updateEdgeAttributes(edge, targetPort);
-						GraphLayoutCache graphLayoutCache = JGraphText.this.graph.getGraphLayoutCache();
-						graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
 					}
+					GraphLayoutCache graphLayoutCache = JGraphText.this.graph.getGraphLayoutCache();
+					graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
 				}
 				e.consume();
 				// Else Repaint the Graph
-			} else
+			} 
+//			else
 				JGraphText.this.graph.repaint();
 			// Reset Global Vars
 			this.firstPort = this.port = null;

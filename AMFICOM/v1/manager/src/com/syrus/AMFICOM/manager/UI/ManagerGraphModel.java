@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.4 2005/07/15 08:26:11 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.5 2005/07/19 09:49:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 08:26:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -137,6 +137,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				}
 			}
 		}
+		System.out.println("ManagerGraphModel.acceptsTarget() | result is " + result);
 		return result;
 	}			
 }

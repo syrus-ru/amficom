@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.4 2005/07/15 11:59:00 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.5 2005/07/19 09:49:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 11:59:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -19,8 +19,6 @@ package com.syrus.AMFICOM.manager;
 public class NetBeanFactory extends AbstractBeanFactory {
 	
 	private static NetBeanFactory instance;
-	
-	private int count = 0;
 	
 	private Validator validator;
 	
@@ -45,7 +43,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	@Override
 	public AbstractBean createBean() {		
 		AbstractBean bean = new AbstractBean() {};
-		bean.setStorableObject("Net" + (++this.count));
+		bean.setName("Net" + (++super.count));
+		bean.setCodeName("Net");
 		bean.setValidator(this.getValidator());
 		
 		return bean;

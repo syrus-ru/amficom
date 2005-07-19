@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.2 2005/07/14 13:16:36 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.3 2005/07/19 09:49:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/14 13:16:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -29,6 +29,8 @@ public abstract class AbstractBeanFactory {
 	protected String nameKey;
 	
 	protected String shortNameKey;
+	
+	protected int count = 0;
 	
 	protected AbstractBeanFactory(final String nameKey, 
 	                              final String shortNameKey,

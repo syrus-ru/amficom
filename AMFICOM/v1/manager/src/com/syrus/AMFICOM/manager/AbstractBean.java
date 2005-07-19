@@ -1,10 +1,10 @@
 /*-
-* $Id: AbstractBean.java,v 1.4 2005/07/15 11:59:00 bob Exp $
-*
-* Copyright ¿ 2005 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: AbstractBean.java,v 1.5 2005/07/19 09:49:00 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.manager;
 
@@ -15,78 +15,90 @@ import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultPort;
 
+import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/15 11:59:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
  */
 public abstract class AbstractBean {
 
-	protected String	storableObject;
-	protected Validator	validator;
+	protected Identifier	storableObject;
+	protected Validator		validator;
 
-	protected JPanel	propertyPanel;
-	protected JPopupMenu		menu;
-	
+	protected String		name;
+	protected String		codeName;
+
+	protected JPanel		propertyPanel;
+
 	protected AbstractBean() {
 		// nothing
 	}
-	
-	protected AbstractBean(final String storableObject,
-	                       final Validator validator,
-	                       final JPanel propertyPanel,
-	                       final JPopupMenu menu) {
+
+	protected AbstractBean(final Identifier storableObject,
+			final Validator validator,
+			final JPanel propertyPanel) {
 		this.storableObject = storableObject;
 		this.validator = validator;
 		this.propertyPanel = propertyPanel;
-		this.menu = menu;
 	}
-	
-	public final String getStorableObject() {
+
+	public final Identifier getStorableObject() {
 		return this.storableObject;
 	}
-	
+
 	public final boolean isTargetValid(AbstractBean targetBean) {
-		return this.validator != null ?
-			this.validator.isValid(this, targetBean) :
-//			TODO development bypass
-			true;
+		return this.validator != null ? this.validator.isValid(this, targetBean) :
+		// TODO development bypass
+				true;
 	}
-	
-	public final JPanel getPropertyPanel() {
+
+	public JPanel getPropertyPanel() {
 		return this.propertyPanel;
 	}
-	
-	public JPopupMenu getMenu(final JGraph graph, final Object cell) {
-		return this.menu;
+
+	public JPopupMenu getMenu(	final JGraph graph,
+								final Object cell) {
+		return null;
 	}
-	
-	public void updateEdgeAttributes(DefaultEdge edge, DefaultPort port) {
+
+	public void updateEdgeAttributes(	DefaultEdge edge,
+										DefaultPort port) {
 		// nothing yet
 	}
 
-	
-	protected final void setMenu(JPopupMenu menu) {
-		this.menu = menu;
-	}
-
-	
 	protected final void setPropertyPanel(JPanel propertyPanel) {
 		this.propertyPanel = propertyPanel;
 	}
 
-	
-	protected final void setStorableObject(String storableObject) {
+	protected final void setStorableObject(Identifier storableObject) {
 		this.storableObject = storableObject;
 	}
 
-	
 	protected final void setValidator(Validator validator) {
 		this.validator = validator;
 	}
+	
+	protected final String getCodeName() {
+		return this.codeName;
+	}
+	
+	protected final void setCodeName(String codeName) {
+		this.codeName = codeName;
+	}
+	
+	protected final String getName() {
+		return this.name;
+	}
+	
+	protected final void setName(String name) {
+		this.name = name;
+	}
 
-
+	@Override
+	public String toString() {
+		return this.getClass().getName() + " is " + this.codeName + '/' + this.name + '/';
+	}
 }
-
