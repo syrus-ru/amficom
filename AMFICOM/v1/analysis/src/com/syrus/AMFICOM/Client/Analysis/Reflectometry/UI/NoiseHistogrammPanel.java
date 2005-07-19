@@ -41,7 +41,7 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 	public void paint(Graphics g) {
 		if (showAll) {
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_NOISE_HISTOGRAMM));
-			traceColor = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
+			color = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
 			paint_trace(g);
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_DEFAULT));
 		}

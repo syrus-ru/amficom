@@ -13,10 +13,7 @@ public class SimpleGraphPanel extends JPanel
 {
 	public static final int MOUSE_COUPLING = 5;
 
-	private Color color; // color given externally for curve
-	protected Color traceColor; // color really used to paint graphic itself (shadowed color)
-
-	protected boolean weakColor;
+	protected Color color; // color given for curve (real shadowed color may be different)
 
 	protected double[] y; // array of graphic points
 	protected double deltaX;  // range between two neighbour points
@@ -112,11 +109,11 @@ public class SimpleGraphPanel extends JPanel
         }
     }
 
+    // FIXME: arg color seemes to be is misused
 	public SimpleGraphPanel (double[] y, double deltaX, Color color)
 	{
 		init (y, deltaX);
 		setDefaultScales();
-		traceColor = correctColor(color);
 	}
 
 	public SimpleGraphPanel (double[] y, double deltaX)
@@ -125,11 +122,14 @@ public class SimpleGraphPanel extends JPanel
 		setDefaultScales();
 	}
 
-	public void setWeakColors(boolean weakColors)
-	{
-	    this.weakColor = weakColors;
+//	public void setWeakColors(boolean weakColors)
+//	{
+//	    this.weakColor = weakColors;
+//	}
+	protected boolean hasWeakTraceColors() {
+		return false;
 	}
-	
+
 	public void init (double[] y1, double deltaX1)
 	{
 		this.deltaX = deltaX1;
@@ -182,16 +182,15 @@ public class SimpleGraphPanel extends JPanel
 	}
 
 	protected void updColorModel() {
-		this.traceColor = this.correctColor(this.color);
 	}
 
-	protected Color correctColor(Color color1)
+	protected Color correctColor(Color color1, boolean isTraceColor)
 	{
 	    double weight = 0.3; // XXX: color soften factor
 	    double a = weight;
 	    double b = 255 * (1.0 - weight);
-	    return weakColor ?
-			new Color(
+	    return isTraceColor && hasWeakTraceColors() ?
+			new Color( // FIXME: каждый раз создается новый объект цвета
 				(int )(color1.getRed() * a + b),
 				(int )(color1.getGreen() * a + b),
 				(int )(color1.getBlue() * a + b))
@@ -239,7 +238,7 @@ public class SimpleGraphPanel extends JPanel
 		if (!isShowGraph()) {
 			return;
 		}
-		g.setColor(traceColor);
+		g.setColor(correctColor(color, true));
 		int iFrom = Math.max(0, -start);
 		int iTo = Math.min(end + 1, y.length) - start - 1;
 		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);

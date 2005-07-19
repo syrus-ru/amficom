@@ -86,7 +86,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			//p = new SimpleGraphPanel(y, deltaX);
 			p = new ReflectogramPanel(ppp, id, true);
 		}
-		p.setWeakColors(true);
+//		p.setWeakColors(true);
 
 		ppp.addGraphPanel(p);
 		ppp.updScale2fit();

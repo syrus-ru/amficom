@@ -106,12 +106,12 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	protected void paint_trace(Graphics g)
 	{
-		g.setColor(traceColor);
+		g.setColor(color);
 
 		for (int i= Math.max(0, -start); i < Math.min (end + 1, y.length) - start - 1; i++)
 		{
 			if (y[i+start] > level)
-				g.setColor(traceColor);
+				g.setColor(color);
 			else
 				g.setColor(Color.gray);
 
