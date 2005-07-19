@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.7 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.8 2005/07/19 14:20:24 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/19 14:20:24 $
  * @module schemeclient_v1
  */
 
@@ -228,9 +228,6 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 	protected void paintBackground(Graphics g) {
-		long startTime = System.currentTimeMillis();
-		System.out.println();
-		
 		super.paintBackground(g);
 
 		if (graph instanceof SchemeGraph) {
@@ -255,18 +252,16 @@ public class SchemeGraphUI extends GPGraphUI {
 				}
 			}
 		}
-		
-		System.out.println(" TOTAL: time " + (System.currentTimeMillis() - startTime) + " ms");
 	}
 
 	protected boolean startEditing(Object cell, MouseEvent event) {
 		this.selected = cell;
-		boolean b = false;
+		boolean b;
 		try {
 			b = super.startEditing(cell, event);
 		} catch (Exception ex) {
+			b = false;
 		}
-
 		return b;
 	}
 
@@ -297,7 +292,6 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
-	// FIXME сильно тормозит прорисовка - оптимизировать
 	protected void paintGrid(int gs, Graphics g, Rectangle r) {
 		
 		if (gs > 0) {
@@ -305,11 +299,11 @@ public class SchemeGraphUI extends GPGraphUI {
 			int h = graph.getPreferredSize().height;
 
 			gs = (int) (gs * graph.getScale());
-
-			int x0 = 0;
-			int y0 = 0;
-			int xe = graph.getVisibleRect().width;
-			int ye = graph.getVisibleRect().height;
+			Rectangle r1 = graph.getVisibleRect();
+			int x0 = (r1.x / gs + 1) * gs; // - r1.x
+			int y0 = (r1.y / gs + 1) * gs;
+			int xe = r1.x + r1.width;
+			int ye = r1.y + r1.height;
 			if (graph instanceof SchemeGraph) {
 				if (((SchemeGraph) graph).isBorderVisible()) {
 					x0 = Math.max(x0, 10 * gs);
@@ -318,19 +312,11 @@ public class SchemeGraphUI extends GPGraphUI {
 					ye = Math.min(ye, (h / gs - 2) * gs);
 				}
 			}
-
-//			int counter = 0;
 			g.setColor(graph.getGridColor());
 			
-//			long startTime = System.currentTimeMillis();
-//			System.out.println("\tx0 = " + x0 + "; xe = " + xe + "; gs = " + gs);
-//			System.out.println("\ty0 = " + y0 + "; ye = " + ye + "; gs = " + gs);
 			for (int x = x0; x <= xe; x += gs)
-				for (int y = y0; y <= ye; y += gs) {
+				for (int y = y0; y <= ye; y += gs)
 					g.drawLine(x, y, x, y);
-//					counter++;
-				}
-//			System.out.println("\tpaintGrid " + counter + " points for " + (System.currentTimeMillis() - startTime) + " ms");
 		}
 	} 
 }
