@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.59 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: Map.java,v 1.60 2005/07/19 07:01:33 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2005/07/17 05:20:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.60 $, $Date: 2005/07/19 07:01:33 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -199,6 +199,8 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 		ids = Identifier.fromTransferables(mt.collectorIds);
 		this.collectors = StorableObjectPool.getStorableObjects(ids, true);
+
+		this.allElements = new LinkedList<MapElement>();
 	}
 
 	@Override
