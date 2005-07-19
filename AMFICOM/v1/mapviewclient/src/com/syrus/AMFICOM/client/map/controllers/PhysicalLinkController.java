@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.21 2005/07/14 15:38:36 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.22 2005/07/19 13:12:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/07/14 15:38:36 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/19 13:12:30 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -57,13 +57,14 @@ public class PhysicalLinkController extends AbstractLinkController {
 			return null;
 
 		PhysicalLink link = (PhysicalLink )mapElement;
+		PhysicalLinkType linkType = (PhysicalLinkType )link.getType();
 
-		String s1 = link.getName();
+		String s1 = linkType.getName() + ": " + link.getName();
 		String s2 = "";
 		String s3 = "";
 		try {
 			AbstractNode smne = link.getStartNode();
-			s2 =  ":\n" 
+			s2 =  "\n" 
 				+ "   " 
 				+ LangModelMap.getString("From") 
 				+ " " 
