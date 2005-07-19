@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Analysis.UI;
+/*package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 							ortn = new ObjectResourceTreeNode(t, t.getDescription(), true, true);
 							vec.add(ortn);
 						}
-						*/
+						/
 						// quick fix by saa.
 						for(Iterator it = testsHt.iterator(); it.hasNext(); )
 						{
@@ -150,3 +150,4 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 	}
 }
 
+*/

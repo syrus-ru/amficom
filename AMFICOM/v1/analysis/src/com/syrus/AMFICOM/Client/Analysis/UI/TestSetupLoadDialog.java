@@ -7,13 +7,13 @@ import java.util.List;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
-public class TestSetupLoadDialog extends JDialog implements OperationListener
+public class TestSetupLoadDialog extends JDialog 
+//implements OperationListener
 {
+	/*
 	public int ret_code = 0;
 	public MeasurementSetup resource;
 
@@ -128,6 +128,5 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 	void cancelButton_actionPerformed(ActionEvent e)
 	{
 		dispose();
-	}
+	}*/
 }
-

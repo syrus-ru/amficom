@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.20 2005/06/23 18:45:05 bass Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.21 2005/07/19 13:21:52 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Toolkit;
@@ -23,30 +22,40 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client.model.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.*;
+import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.IconPopulatableItem;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.logic.Populatable;
+import com.syrus.AMFICOM.logic.PopulatableItem;
+import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/06/23 18:45:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/07/19 13:21:52 $
+ * @author $Author: stas $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
@@ -62,14 +71,14 @@ public class ReflectogrammLoadDialog extends JDialog {
 	private JButton				cancelButton;
 	private JButton				updateButton	= new JButton();
 	
-	private PopulatableItem rootItem;
+	ChildrenFactory childrenFactory;
+	IconPopulatableItem rootItem;
+	LogicalTreeUI treeUI;
 
 	public ReflectogrammLoadDialog(ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
 		this.domainId = LoginManager.getDomainId();
-//		this.domainId = new Identifier(
-//										((RISDSessionInfo) aContext.getSessionInterface()).getAccessIdentifier().domain_id);
 
 		this.setModal(true);
 
@@ -112,14 +121,24 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.updateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {		
-				try {
-					StorableObjectPool.refresh();
-				} catch (ApplicationException e1) {
-					JOptionPane.showMessageDialog((Component) e.getSource(), e1.getMessage(), LangModelAnalyse.getString("Error"),
-						JOptionPane.OK_OPTION);
-				}
-				ReflectogrammLoadDialog.this.setTree();
-				ReflectogrammLoadDialog.this.okButton.setEnabled(false);
+					
+				// XXX no need to refresh pool? //Stas
+				/*try {
+						StorableObjectPool.refresh();
+					} catch (ApplicationException e1) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), e1.getMessage(), LangModelAnalyse.getString("Error"),
+								JOptionPane.OK_OPTION);
+					}*/
+						
+//				ReflectogrammLoadDialog.this.setTree();
+				TreePath selectedPath = treeUI.getTree().getSelectionModel().getSelectionPath();
+				PopulatableItem itemToRefresh = selectedPath != null 
+						? (PopulatableItem)selectedPath.getLastPathComponent()
+						: ReflectogrammLoadDialog.this.rootItem;
+				
+				updateRecursively(itemToRefresh);
+//					treeUI.getTree().collapsePath(selectedPath != null ? selectedPath : new TreePath(ReflectogrammLoadDialog.this.rootItem));
+						
 				ReflectogrammLoadDialog.this.show();
 			}
 		});
@@ -134,6 +153,16 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.setTree();
 
 		this.getContentPane().add(ocPanel, BorderLayout.SOUTH);
+	}
+	
+	void updateRecursively(Item item) {
+		if (item instanceof Populatable) {
+			Populatable populatable = (Populatable)item;
+			if (populatable.isPopulated())
+				populatable.populate();
+			for (Iterator it = item.getChildren().iterator(); it.hasNext();)
+				updateRecursively((Item)it.next());
+		}
 	}
 
 	public void setVisible(boolean key) {
@@ -157,15 +186,17 @@ public class ReflectogrammLoadDialog extends JDialog {
 			
 		try {
 			if (this.rootItem == null) {
-				Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(this.domainId, true);
+				Domain domain = (Domain)StorableObjectPool.getStorableObject(this.domainId, true);
 
-				ArchiveChildrenFactory childrenFactory = ArchiveChildrenFactory.getInstance();
-				childrenFactory.setDomainId(this.domainId);
-				this.rootItem = new PopulatableItem();
+//				childrenFactory = ArchiveChildrenFactory.getInstance();
+				childrenFactory = ResultChildrenFactory.getInstance();
+				((ResultChildrenFactory)childrenFactory).setDomainId(this.domainId);
+				this.rootItem = new IconPopulatableItem();
 				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
 				this.rootItem.setName(LangModelAnalyse.getString("Archive"));
+				this.rootItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
 				this.rootItem.setChildrenFactory(childrenFactory);
-				LogicalTreeUI treeUI = new LogicalTreeUI(this.rootItem, false);
+				treeUI = new LogicalTreeUI(this.rootItem, false);
 				treeUI.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
 				treeUI.getTreeModel().setAllwaysSort(false);
 				this.scrollPane.getViewport().add(treeUI.getTree(), null);
