@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkCharacteristicsPanel.java,v 1.8 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeLinkCharacteristicsPanel.java,v 1.9 2005/07/19 06:54:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,14 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/19 06:54:18 $
  * @module schemeclient_v1
  */
 
@@ -41,27 +43,31 @@ public class SchemeLinkCharacteristicsPanel extends CharacteristicsPanel {
 		super.clear();
 
 		if (schemeLink != null) {
-			super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-					schemeLink,
-					schemeLink.getId(), true);
-			super.addCharacteristics(schemeLink.getCharacteristics(), schemeLink.getId());
-			
-			Link link = schemeLink.getAbstractLink();
-			if (link != null) {
-				for (int i = 0; i < sorts.length; i++)
-					super.setTypeSortMapping(sorts[i],
-							link,
-							link.getId(), true);
-				super.addCharacteristics(link.getCharacteristics(), link.getId());
-			} else {
-				LinkType linkType = schemeLink.getAbstractLinkType();
-				if (linkType != null) {
+			try {
+				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+						schemeLink,
+						schemeLink.getId(), true);
+				super.addCharacteristics(schemeLink.getCharacteristics(), schemeLink.getId());
+				Link link = schemeLink.getAbstractLink();
+				if (link != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
-								linkType,
-								linkType.getId(), false);
-					super.addCharacteristics(linkType.getCharacteristics(), linkType.getId());
+								link,
+								link.getId(), true);
+					super.addCharacteristics(link.getCharacteristics(), link.getId());
+				} else {
+					LinkType linkType = schemeLink.getAbstractLinkType();
+					if (linkType != null) {
+						for (int i = 0; i < sorts.length; i++)
+							super.setTypeSortMapping(sorts[i],
+									linkType,
+									linkType.getId(), false);
+						super.addCharacteristics(linkType.getCharacteristics(), linkType.getId());
+					}
 				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+				showNoSelection();
 			}
 		} 
 		else

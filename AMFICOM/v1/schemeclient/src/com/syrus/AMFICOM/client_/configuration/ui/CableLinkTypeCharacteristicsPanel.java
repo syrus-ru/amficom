@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.6 2005/07/11 12:31:37 stas Exp $
+ * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.7 2005/07/19 06:49:44 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,13 @@ package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.util.Log;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/19 06:49:44 $
  * @module schemeclient_v1
  */
 
@@ -39,11 +41,16 @@ public class CableLinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 		super.clear();
 		
 		if (type != null) {
-			for (int i = 0; i < sorts.length; i++)
-				super.setTypeSortMapping(sorts[i],
-						type,
-						type.getId(), true);
-			super.addCharacteristics(type.getCharacteristics(), type.getId());
+			try {
+				for (int i = 0; i < sorts.length; i++)
+					super.setTypeSortMapping(sorts[i],
+							type,
+							type.getId(), true);
+				super.addCharacteristics(type.getCharacteristics(), type.getId());
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+				showNoSelection();
+			}
 		} else
 			showNoSelection();
 	}
