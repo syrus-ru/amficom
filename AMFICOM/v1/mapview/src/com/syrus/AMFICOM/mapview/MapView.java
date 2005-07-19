@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.43 2005/07/17 05:20:55 arseniy Exp $
+* $Id: MapView.java,v 1.44 2005/07/19 07:02:54 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.43 $, $Date: 2005/07/17 05:20:55 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.44 $, $Date: 2005/07/19 07:02:54 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -92,6 +92,11 @@ public final class MapView extends DomainMember implements Namable {
 	
 	/** Список маркеров. */
 	protected transient Set<Marker> markers = new HashSet<Marker>();
+
+	/**
+	 * Сортированный список всех элементов топологической схемы
+	 */
+	protected transient List<MapElement> allElements;
 
 	MapView(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -139,6 +144,7 @@ public final class MapView extends DomainMember implements Namable {
 		this.map = map;
 
 		this.schemes = new HashSet<Scheme>();
+		this.allElements = new LinkedList<MapElement>();
 
 		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
 	}	
@@ -202,6 +208,8 @@ public final class MapView extends DomainMember implements Namable {
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
+
+		this.allElements = new LinkedList<MapElement>();
 	}
 
 	@Override
@@ -797,21 +805,14 @@ public final class MapView extends DomainMember implements Namable {
 	 * @return список всех топологических элементов
 	 */
 	public List<MapElement> getAllElements() {
-		List<MapElement> returnedElements = this.getMap().getAllElements();
+		this.allElements.clear();
 
-		for (final MapElement mapElement : this.getCablePaths()) {
-			returnedElements.add(mapElement);
-		}
+		this.allElements.addAll(this.getMap().getAllElements());
+		this.allElements.addAll(this.getCablePaths());
+		this.allElements.addAll(this.getMeasurementPaths());
+		this.allElements.addAll(this.markers);
 
-		for (final MapElement mapElement : this.getMeasurementPaths()) {
-			returnedElements.add(mapElement);
-		}
-
-		for (final MapElement mapElement : this.markers) {
-			returnedElements.add(mapElement);
-		}
-
-		return returnedElements;
+		return Collections.unmodifiableList(this.allElements);
 	}
 
 	/**
