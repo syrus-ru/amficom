@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.10 2005/07/01 16:17:23 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.11 2005/07/19 13:13:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -20,6 +21,7 @@ import java.awt.event.KeyListener;
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -38,7 +40,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.10 $, $Date: 2005/07/01 16:17:23 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/19 13:13:14 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -60,6 +62,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	private boolean searching = false;
 	
 	private MapFrame mapFrame;
+
+	private static Dimension buttonSize = new Dimension(24, 24);
 
 	public void setMapFrame(MapFrame mapFrame)
 	{
@@ -87,7 +91,10 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		this.setToolTipText(LangModelMap.getString("SearchTopologicalObjects"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		this.searchButton.setText(LangModelMap.getString("Search"));
+		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")));
+		this.searchButton.setPreferredSize(buttonSize);
+		this.searchButton.setMaximumSize(buttonSize);
+		this.searchButton.setMinimumSize(buttonSize);
 		this.searchButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -132,8 +139,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		constraints.ipady = 0;
 		this.add(this.searchField, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridx = 1;
+		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -146,8 +153,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		this.add(this.searchButton, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 2;
-		constraints.gridwidth = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;
@@ -159,8 +166,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		this.add(this.jScrollPane, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 3;
-		constraints.gridwidth = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;

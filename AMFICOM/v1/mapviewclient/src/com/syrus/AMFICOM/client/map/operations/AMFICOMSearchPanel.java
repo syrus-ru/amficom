@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.17 2005/07/15 17:06:07 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.18 2005/07/19 13:13:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,10 @@ package com.syrus.AMFICOM.client.map.operations;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -23,11 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
@@ -48,7 +52,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.17 $, $Date: 2005/07/15 17:06:07 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/19 13:13:14 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -89,6 +93,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 	
 	JButton centerButton = new JButton();
 	
+	private static Dimension buttonSize = new Dimension(24, 24);
+
 	/**
 	 * По умолчанию
 	 */
@@ -116,7 +122,10 @@ import com.syrus.AMFICOM.mapview.MapView;
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
 
-		this.searchButton.setText(LangModelMap.getString("Search"));
+		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif")));
+		this.searchButton.setPreferredSize(buttonSize);
+		this.searchButton.setMaximumSize(buttonSize);
+		this.searchButton.setMinimumSize(buttonSize);
 		this.searchButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -168,8 +177,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		constraints.ipady = 0;
 		this.add(this.searchField, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridx = 1;
+		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -180,11 +189,10 @@ import com.syrus.AMFICOM.mapview.MapView;
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.searchButton, constraints);
-//		this.add(jth, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 5, 5, 5), 0, 0));
 
 		constraints.gridx = 0;
-		constraints.gridy = 3;
-		constraints.gridwidth = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;
@@ -196,8 +204,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		this.add(this.scrollPane, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 4;
-		constraints.gridwidth = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
