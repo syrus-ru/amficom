@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.27 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/07/19 13:34:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -38,8 +39,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2005/07/19 13:34:34 $
  * @module scheme_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -112,6 +113,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(schemeLink.parentSchemeProtoElementId);
 				case SCHEME_CODE:
 					return super.conditionTest(schemeLink.parentSchemeId);
+				case SCHEMEELEMENT_CODE:
+					return super.conditionTest(schemeLink.parentSchemeElementId);
 				default:
 					throw newIllegalObjectEntityException();
 				}
@@ -194,6 +197,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
 				case UPDIKE_CODE:
 					return super.conditionTest(protoGroup.parentSchemeProtoGroupId);
+				default:
+					throw newIllegalObjectEntityException();
+				}
+			case CABLECHANNELINGITEM_CODE:
+				final CableChannelingItem cableChannelingItem = (CableChannelingItem) storableObject;
+				switch (super.linkedEntityCode) {
+				case SCHEMECABLELINK_CODE:
+					return super.conditionTest(cableChannelingItem.parentSchemeCableLinkId);
 				default:
 					throw newIllegalObjectEntityException();
 				}

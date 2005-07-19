@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.24 2005/07/16 19:04:55 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.25 2005/07/19 13:34:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/07/16 19:04:55 $
+ * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2005/07/19 13:34:34 $
  * @module scheme_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -82,6 +83,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
 					case SCHEME_CODE:
 						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+					case SCHEMEELEMENT_CODE:
+						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -158,6 +161,13 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
 				case UPDIKE_CODE:
 					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
+				}
+			case CABLECHANNELINGITEM_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case SCHEMECABLELINK_CODE:
+					return super.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
