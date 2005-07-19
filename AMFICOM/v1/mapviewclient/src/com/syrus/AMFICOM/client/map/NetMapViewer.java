@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.28 2005/07/15 17:06:06 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.29 2005/07/19 13:10:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/07/15 17:06:06 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/19 13:10:21 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -927,5 +927,60 @@ public abstract class NetMapViewer {
 	 */
 	public MapImageRenderer getRenderer() {
 		return this.renderer;
+	}
+
+	public void cancelMode() {
+		MapState state = this.logicalNetLayer.getMapState();
+
+		state.setActionMode(MapState.NULL_ACTION_MODE);
+		state.setOperationMode(MapState.NO_OPERATION);
+		state.setMouseMode(MapState.MOUSE_NONE);
+		state.setShowMode(MapState.SHOW_PHYSICAL_LINK);
+
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_MOVE_TO_CENTER, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_ZOOM_BOX, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_HAND_PAN, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_ZOOM_TO_POINT, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_ZOOM_IN, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_ZOOM_OUT, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_ZOOM_BOX, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_MEASURE_DISTANCE, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_MOVE_FIXED, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.OPERATION_CENTER_SELECTION, 
+				false);
+
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.MODE_NODE_LINK, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.MODE_LINK, 
+				true);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.MODE_CABLE_PATH, 
+				false);
+		this.logicalNetLayer.getContext().getApplicationModel().setSelected(
+				MapApplicationModel.MODE_PATH, 
+				false);
+
+		this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 	}
 }
