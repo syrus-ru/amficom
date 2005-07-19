@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.24 2005/07/14 15:36:15 krupenn Exp $
+ * $Id: CableController.java,v 1.25 2005/07/19 13:11:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/07/14 15:36:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/19 13:11:56 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController {
@@ -248,7 +248,6 @@ public final class CableController extends AbstractLinkController {
 						creatorId, 
 						startSpare,
 						endSpare,
-						0,//default
 						0,//default
 						0,//default
 						link,
