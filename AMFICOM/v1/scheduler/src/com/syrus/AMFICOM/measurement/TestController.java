@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.15 2005/07/20 07:28:43 bob Exp $
+ * $Id: TestController.java,v 1.16 2005/07/20 11:38:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/20 07:28:43 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/20 11:38:18 $
  * @author $Author: bob $
  * @module module
  */
@@ -97,7 +97,7 @@ public class TestController implements Wrapper {
 		ComparableLabel label = new ComparableLabel(name);
 		label.setOpaque(true);
 		Color color = SchedulerModel.getColor(testStatus);
-		label.setBackground(color);
+		label.setBackground(color.brighter());
 		return label;
 	}
 	
