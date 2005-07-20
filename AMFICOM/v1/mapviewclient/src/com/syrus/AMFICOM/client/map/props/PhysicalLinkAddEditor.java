@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -150,7 +149,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
-		this.bindButton.setToolTipText("Убрать привязку к тоннелю");
+		this.unbindButton.setToolTipText("Убрать привязку к тоннелю");
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -162,9 +161,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
+
 		this.buttonsPanel.setLayout(new GridBagLayout());
-		this.buttonsPanel.add(this.bindButton);
-		this.buttonsPanel.add(this.unbindButton);
 
 		this.directionPanel.setLayout(new FlowLayout());
 		this.directionPanel.add(this.topDownLabel);
@@ -214,12 +212,36 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
+		this.xLabel.setText("X");
+		this.dimensionPanel.setLayout(this.gridBagLayout2);
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
-		this.xLabel.setText("X");
-//		this.mTextField.setPreferredSize(new Dimension(60, 23));
-//		this.nTextField.setPreferredSize(new Dimension(60, 23));
-		this.dimensionPanel.setLayout(this.gridBagLayout2);
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.bindButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.unbindButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -242,7 +264,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.dimensionPanel.add(this.xLabel, constraints);
@@ -265,7 +287,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
-		constraints.weighty = 0.1;
+		constraints.weighty = 0.3;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
@@ -317,7 +339,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
-		constraints.weighty = 0.9;
+		constraints.weighty = 0.7;
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
@@ -484,7 +506,10 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		int m = Integer.parseInt(this.mTextField.getText());
 		int n = Integer.parseInt(this.nTextField.getText());
-		if(!this.physicalLink.getBinding().getDimension().equals(new IntDimension(m, n)))
+		if(!this.physicalLink.getBinding().getDimension().equals(new IntDimension(m, n))) {
 			this.physicalLink.getBinding().setDimension(new IntDimension(m, n));
+			this.tunnelLayout.setDimension(m, n);
+			this.tunnelLayout.updateElements();
+		}
 	}
 }
