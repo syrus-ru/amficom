@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.19 2005/07/15 17:06:07 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.20 2005/07/20 18:06:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/07/15 17:06:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/20 18:06:51 $
  * @module mapviewclient_v1
  */
 public class CreateSiteCommandAtomic extends MapActionCommand
@@ -109,7 +109,6 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
-			this.logicalNetLayer.sendSelectionChangeEvent();
 			setResult(Command.RESULT_OK);
 		}
 		catch(Exception e)

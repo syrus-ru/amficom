@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.10 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.11 2005/07/20 18:06:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/20 18:06:51 $
  * @module mapviewclient_v1
  */
 public class MapAddMapCommand extends AbstractCommand
@@ -128,9 +128,6 @@ public class MapAddMapCommand extends AbstractCommand
 			this.aContext.getDispatcher().firePropertyChange(new MapEvent(
 					mapView,
 					MapEvent.MAP_VIEW_CHANGED));
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(
-					mapView,
-					MapEvent.NEED_REPAINT));
 		}
 		this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(
 				this,
