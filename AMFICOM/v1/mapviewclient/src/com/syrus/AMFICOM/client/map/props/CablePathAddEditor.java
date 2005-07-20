@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.client.map.props;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -11,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -47,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -112,6 +115,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	private String stubObject = "";
 	private NetMapViewer netMapViewer;
 	
+	private static Dimension buttonSize = new Dimension(24, 24);
+
 	public CablePathAddEditor()
 	{
 		this.controller = CableBindingController.getInstance();
@@ -220,7 +225,11 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.bindButton.setText("Привязать");
+		this.bindButton.setToolTipText("Привязать");
+		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif")));
+		this.bindButton.setPreferredSize(buttonSize);
+		this.bindButton.setMaximumSize(buttonSize);
+		this.bindButton.setMinimumSize(buttonSize);
 		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -228,7 +237,11 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					addBinding();
 				}
 			});
-		this.bindChainButton.setText("Привязать цепочку");
+		this.bindChainButton.setToolTipText("Привязать цепочку");
+		this.bindChainButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindchain.gif")));
+		this.bindChainButton.setPreferredSize(buttonSize);
+		this.bindChainButton.setMaximumSize(buttonSize);
+		this.bindChainButton.setMinimumSize(buttonSize);
 		this.bindChainButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -236,7 +249,11 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					addChainBinding();
 				}
 			});
-		this.unbindButton.setText("Убрать связь");
+		this.unbindButton.setToolTipText("Убрать связь");
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/unbindlink.gif")));
+		this.unbindButton.setPreferredSize(buttonSize);
+		this.unbindButton.setMaximumSize(buttonSize);
+		this.unbindButton.setMinimumSize(buttonSize);
 		this.unbindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -244,7 +261,11 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					removeBinding();
 				}
 			});
-		this.clearBindingButton.setText("Отвязать кабель");
+		this.clearBindingButton.setToolTipText("Отвязать кабель");
+		this.clearBindingButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
+		this.clearBindingButton.setPreferredSize(buttonSize);
+		this.clearBindingButton.setMaximumSize(buttonSize);
+		this.clearBindingButton.setMinimumSize(buttonSize);
 		this.clearBindingButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -265,10 +286,11 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endLinkLabel.setText(LangModelMap.getString("EndLink"));
 		this.endNodeToLabel.setText(LangModelMap.getString("To"));
 
-		this.buttonsPanel.add(this.bindButton, null);
-		this.buttonsPanel.add(this.bindChainButton, null);
-		this.buttonsPanel.add(this.unbindButton, null);
-		this.buttonsPanel.add(this.clearBindingButton, null);
+		this.buttonsPanel.setLayout(new GridBagLayout());
+		this.buttonsPanel.add(this.bindButton);
+		this.buttonsPanel.add(this.bindChainButton);
+		this.buttonsPanel.add(this.unbindButton);
+		this.buttonsPanel.add(this.clearBindingButton);
 
 		this.scrollPane.getViewport().add(this.table);
 
@@ -366,10 +388,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.startPanel.add(this.startNodeLabel, constraints);
 
@@ -379,10 +401,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.startPanel.add(this.startLinkLabel, constraints);
 
@@ -392,10 +414,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.startPanel.add(this.startNodeToLabel, constraints);
 
@@ -458,10 +480,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.endPanel.add(this.endNodeLabel, constraints);
 
@@ -471,10 +493,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.endPanel.add(this.endLinkLabel, constraints);
 
@@ -484,10 +506,10 @@ GridBagConstraints constraints = new GridBagConstraints();
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 100;
+		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.endPanel.add(this.endNodeToLabel, constraints);
 
