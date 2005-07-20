@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.14 2005/06/06 12:57:01 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.15 2005/07/20 13:21:31 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -10,6 +10,7 @@ import java.util.Iterator;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * команду MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/06 12:57:01 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/20 13:21:31 $
  * @module mapviewclient_v1
  * @see MapViewSaveAsCommand
  */
@@ -92,6 +93,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 
 				mapFrame.setTitle(LangModelMap.getString("MapView") + " - "
 						+ newMapView.getName());
+				mapFrame.getMapViewer().getLogicalNetLayer().sendMapEvent(MapEvent.MAP_VIEW_CHANGED);
 			}
 			setResult(Command.RESULT_OK);
 		}
