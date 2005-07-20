@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.80 2005/07/15 08:36:06 saa Exp $
+ * $Id: Heap.java,v 1.81 2005/07/20 07:06:50 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.Client.Analysis;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.logging.Level;
@@ -88,7 +87,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.80 $, $Date: 2005/07/15 08:36:06 $
+ * @version $Revision: 1.81 $, $Date: 2005/07/20 07:06:50 $
  * @module
  */
 public class Heap
