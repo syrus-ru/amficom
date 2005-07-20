@@ -23,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/06 14:52:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/20 11:34:05 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -31,6 +31,7 @@ public class WrapperedTable extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
 	boolean allowSorting = true;
+	protected int	mColIndex = -1;
 
 	public WrapperedTable(final Wrapper controller, final List objectResourceList, final String[] keys) {
 		this(new WrapperedTableModel(controller, objectResourceList, keys));
@@ -152,26 +153,26 @@ public class WrapperedTable extends ATable {
 				// The index of the column whose header was
 				// clicked
 				int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-				int mColIndex = table.convertColumnIndexToModel(columnIndex);
+				WrapperedTable.this.mColIndex = table.convertColumnIndexToModel(columnIndex);
 				WrapperedTableModel model = (WrapperedTableModel) table.getModel();
 				String s;
-				if (model.getSortOrder(mColIndex))
+				if (model.getSortOrder(WrapperedTable.this.mColIndex))
 					s = " v "; //$NON-NLS-1$
 				else
 					s = " ^ "; //$NON-NLS-1$
-				String columnName = model.getColumnName(mColIndex);
+				String columnName = model.getColumnName(WrapperedTable.this.mColIndex);
 				table.getColumnModel().getColumn(columnIndex)
 						.setHeaderValue(s + (columnName == null ? "" : columnName) + s);
 
 				for (int i = 0; i < model.getColumnCount(); i++) {
-					if (i != mColIndex)
+					if (i != WrapperedTable.this.mColIndex)
 						table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
 								.setHeaderValue(model.getColumnName(i));
 				}
 
 				// Force the header to resize and repaint itself
 				header.resizeAndRepaint();
-				model.sortRows(mColIndex);
+				model.sortRows(WrapperedTable.this.mColIndex);
 
 				// Return if not clicked on any column header
 				if (columnIndex == -1) { return; }
@@ -204,5 +205,11 @@ public class WrapperedTable extends ATable {
 		});
 
 	}
-
+ 
+	public final void resort() {
+		if (this.mColIndex >= 0) {
+			WrapperedTableModel model = (WrapperedTableModel) this.getModel();
+			model.sortRows(this.mColIndex);
+		}
+	}
 }
