@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.8 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.9 2005/07/20 13:25:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.8 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/20 13:25:40 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -77,6 +77,8 @@ public abstract class MapAbstractPropertiesFrame extends
 
 	public void propertyChange(PropertyChangeEvent pce) {
 		if(!this.performProcessing)
+			return;
+		if(this.getParent() == null)
 			return;
 		if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
 //			Map map = (Map )pce.getNewValue();
