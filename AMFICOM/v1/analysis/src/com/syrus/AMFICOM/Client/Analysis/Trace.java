@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.1 2005/07/20 12:09:54 saa Exp $
+ * $Id: Trace.java,v 1.2 2005/07/20 14:01:01 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/07/20 12:09:54 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/20 14:01:01 $
  * @module
  */
 public class Trace {
@@ -74,6 +74,12 @@ public class Trace {
 		}
 		return mtae;
 	}
+	/**
+	 * Возвращается всегда один и тот же объект,
+	 * и его можно будет сравнивать по '=='.
+	 * (это нужно для выбора mostTypical Trace по mostTypical BS)
+	 * @return объект BellcoreStructure, один и тот же при повторных вызовах
+	 */
 	public BellcoreStructure getBS() {
 		return bs;
 	}
@@ -86,7 +92,6 @@ public class Trace {
 	public Object getKey() {
 		return key;
 	}
-
 	public double getDeltaX() {
 		return this.bs.getResolution();
 	}
