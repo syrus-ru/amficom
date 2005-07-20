@@ -41,7 +41,6 @@ implements PropertyChangeListener, BsHashChangeListener
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	double sigma;
-	BellcoreStructure bs;
 
 	public MarkersInfoFrame()
 	{
@@ -163,11 +162,11 @@ implements PropertyChangeListener, BsHashChangeListener
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key, BellcoreStructure bs1)
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			bs = Heap.getBSPrimaryTrace();
+			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 			sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
 			setVisible(true);
 		}
