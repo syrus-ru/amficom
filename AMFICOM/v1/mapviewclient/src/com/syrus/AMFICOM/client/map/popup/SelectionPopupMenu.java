@@ -203,8 +203,9 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		SiteNodeType proto = super.selectNodeProto();
 
 		if(proto != null) {
+			List elementsToBind = new LinkedList(this.selection.getElements());
 			List nodesToBind = new LinkedList();
-			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
+			for(Iterator it = elementsToBind.iterator(); it.hasNext();) {
 				MapElement me = (MapElement )it.next();
 				if(me instanceof UnboundNode) {
 					nodesToBind.add(me);
@@ -220,7 +221,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 			}
 
 			List alreadyBound = new LinkedList();
-			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
+			for(Iterator it = elementsToBind.iterator(); it.hasNext();) {
 				MapElement me = (MapElement )it.next();
 				if(me instanceof CablePath) {
 					CablePath path = (CablePath )me;
