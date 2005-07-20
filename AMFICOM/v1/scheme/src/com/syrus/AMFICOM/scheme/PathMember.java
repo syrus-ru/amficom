@@ -1,5 +1,5 @@
 /*-
- * $Id: PathMember.java,v 1.1 2005/07/20 14:49:49 bass Exp $
+ * $Id: PathMember.java,v 1.2 2005/07/20 15:10:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,10 @@ package com.syrus.AMFICOM.scheme;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/20 15:10:50 $
  * @module scheme_v1
  */
-public interface PathMember<T extends PathOwner<U>, U> {
+public interface PathMember<T extends PathOwner<U>, U extends PathMember> {
 	void insertSelfBefore(final U sibling);
 
 	void insertSelfAfter(final U sibling);
