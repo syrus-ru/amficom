@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.2 2005/05/27 13:01:39 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.3 2005/07/20 06:06:04 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,9 +27,10 @@ import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/27 13:01:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/20 06:06:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
@@ -72,6 +73,10 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 													boolean hasFocus,
 													int rowIndex,
 													int vColIndex) {
+		if (value == null) {
+			return null;
+		}
+		assert value != null : ErrorMessages.NON_NULL_EXPECTED;
 		Class clazz = value.getClass();
 		TableCellRenderer cellRenderer = (TableCellRenderer) renderers.get(clazz);
 		if (cellRenderer != null)
