@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.49 2005/07/20 10:58:33 bass Exp $
+ * $Id: PathElement.java,v 1.50 2005/07/20 14:49:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,14 +68,15 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/20 10:58:33 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/20 14:49:49 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
-public final class PathElement extends AbstractCloneableStorableObject implements Describable, Comparable<PathElement> {
+public final class PathElement extends AbstractCloneableStorableObject
+		implements Describable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -173,7 +174,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 */
 		this.sequentialNumber = parentSchemePath == null
 				? -1
-				: parentSchemePath.getPathElements().size();
+				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_ELEMENT;
 		this.startAbstractSchemePortId = Identifier.possiblyVoid(startAbstractSchemePort);
 		this.endAbstractSchemePortId = Identifier.possiblyVoid(endSbstractSchemePort);
@@ -206,7 +207,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = parentSchemePath == null
 				? -1
-				: parentSchemePath.getPathElements().size();
+				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_CABLE_LINK;
 		this.startAbstractSchemePortId = VOID_IDENTIFIER;
 		this.endAbstractSchemePortId = VOID_IDENTIFIER;
@@ -239,7 +240,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
 		this.sequentialNumber = parentSchemePath == null
 				? -1
-				: parentSchemePath.getPathElements().size();
+				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_LINK;
 		this.startAbstractSchemePortId = VOID_IDENTIFIER;
 		this.endAbstractSchemePortId = VOID_IDENTIFIER;
@@ -314,7 +315,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		 * Ending AbstractSchemePort may be null, as noone cares.
 		 */
 		assert parentSchemePath != null
-				&& (parentSchemePath.getPathElements().isEmpty()
+				&& (parentSchemePath.getPathMembers().isEmpty()
 						== (startAbstractSchemePort == null)): NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
@@ -523,9 +524,9 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * A wrapper around {@link #getParentSchemePathId()}.
 	 *
 	 * @see #getParentSchemePathId()
-	 * @see CableChannelingItem#getParentSchemeCableLink()
+	 * @see PathMember#getParentPathOwner()
 	 */
-	public SchemePath getParentSchemePath() {
+	public SchemePath getParentPathOwner() {
 		try {
 			return (SchemePath) StorableObjectPool.getStorableObject(this.getParentSchemePathId(), true);
 		} catch (final ApplicationException ae) {
@@ -607,10 +608,10 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	/**
 	 * @return this <code>PathElement</code>&apos;s sequential number
 	 *         (starting with 0).
-	 * @see CableChannelingItem#getSequentialNumber()
+	 * @see PathMember#getSequentialNumber()
 	 */
 	public int getSequentialNumber() {
-		assert this.getParentSchemePath().assertContains(this);
+		assert this.getParentPathOwner().assertContains(this);
 		return this.sequentialNumber;
 	}
 
@@ -820,9 +821,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 *
 	 * @param parentSchemePath
 	 * @param processSubsequentSiblings
-	 * @see CableChannelingItem#setParentSchemeCableLink(SchemeCableLink, boolean)
 	 */
-	public void setParentSchemePath(final SchemePath parentSchemePath,
+	public void setParentPathOwner(final SchemePath parentSchemePath,
 			final boolean processSubsequentSiblings) {
 		assert this.parentSchemePathId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemePathId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
@@ -834,12 +834,12 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 		int newSequentialNumber = parentSchemePath == null
 				? -1
-				: parentSchemePath.getPathElements().size();
+				: parentSchemePath.getPathMembers().size();
 		final Iterator<PathElement> pathElementIterator =
-				this.getParentSchemePath().getPathElements().tailSet(this).iterator();
+				this.getParentPathOwner().getPathMembers().tailSet(this).iterator();
 		if (processSubsequentSiblings) {
 			while (pathElementIterator.hasNext()) {
-				pathElementIterator.next().setParentSchemePath(newParentSchemePathId,
+				pathElementIterator.next().setParentPathOwner(newParentSchemePathId,
 						newSequentialNumber++);
 			}
 		} else {
@@ -847,7 +847,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 			final PathElement pathElement = pathElementIterator.next();
 			assert pathElement == this;
 
-			pathElement.setParentSchemePath(newParentSchemePathId,
+			pathElement.setParentPathOwner(newParentSchemePathId,
 					newSequentialNumber++);
 
 			while (pathElementIterator.hasNext()) {
@@ -856,7 +856,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		}
 	}
 
-	private void setParentSchemePath(final Identifier newParentSchemePathId,
+	private void setParentPathOwner(final Identifier newParentSchemePathId,
 			final int newSequentialNumber) {
 		this.parentSchemePathId = newParentSchemePathId;
 		super.markAsChanged();
@@ -981,6 +981,20 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		}
 	}
 
+	/**
+	 * @todo Remove {@code SuppressWarnings} annotation.
+	 */
+	public void insertSelfBefore(@SuppressWarnings("unused") final PathElement sibling) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @todo Remove {@code SuppressWarnings} annotation.
+	 */
+	public void insertSelfAfter(@SuppressWarnings("unused") final PathElement sibling) {
+		throw new UnsupportedOperationException();
+	}
+
 	/*-********************************************************************
 	 * Non-model members.                                                 *
 	 **********************************************************************/
@@ -990,7 +1004,7 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	private boolean isLast() {
-		return this.sequentialNumber + 1 == getParentSchemePath().getPathElements().size();
+		return this.sequentialNumber + 1 == this.getParentPathOwner().getPathMembers().size();
 	}
 
 	boolean hasOpticalPort() {

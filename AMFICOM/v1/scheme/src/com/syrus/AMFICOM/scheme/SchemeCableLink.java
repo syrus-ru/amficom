@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.53 2005/07/20 10:58:33 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.54 2005/07/20 14:49:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,10 +57,10 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/20 10:58:33 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/20 14:49:49 $
  * @module scheme_v1
  */
-public final class SchemeCableLink extends AbstractSchemeLink {
+public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
 	private static final long serialVersionUID = 3760847878314274867L;
 
 	/**
@@ -182,11 +182,10 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 *
 	 * @param cableChannelingItem
 	 * @param processSubsequentSiblings
-	 * @see SchemePath#addPathElement(PathElement, boolean)
 	 */
-	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
+	public void addPathMember(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		cableChannelingItem.setParentSchemeCableLink(this, processSubsequentSiblings);
+		cableChannelingItem.setParentPathOwner(this, processSubsequentSiblings);
 	}
 
 	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
@@ -204,14 +203,14 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		return schemeCableLink;
 	}
 
-	public SortedSet<CableChannelingItem> getCableChannelingItems() {
-		return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getCableChannelingItems0()));
+	public SortedSet<CableChannelingItem> getPathMembers() {
+		return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getPathMembers0()));
 	}
 
 	/**
 	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
 	 */
-	private Set<CableChannelingItem> getCableChannelingItems0() {
+	private Set<CableChannelingItem> getPathMembers0() {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
 		} catch (final ApplicationException ae) {
@@ -357,12 +356,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 *
 	 * @param cableChannelingItem
 	 * @param processSubsequentSiblings
-	 * @see SchemePath#removePathElement(PathElement, boolean)
+	 * @see SchemePath#removePathMember(PathElement, boolean)
 	 */
-	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
+	public void removePathMember(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
 		assert cableChannelingItem.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		cableChannelingItem.setParentSchemeCableLink(null, processSubsequentSiblings);
+		cableChannelingItem.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
@@ -518,7 +517,7 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * @see SchemePath#assertContains(PathElement)
 	 */
 	boolean assertContains(final CableChannelingItem cableChannelingItem) {
-		final SortedSet<CableChannelingItem> cableChanelingItems = this.getCableChannelingItems();
+		final SortedSet<CableChannelingItem> cableChanelingItems = this.getPathMembers();
 		return cableChannelingItem.getParentSchemeCableLinkId().equals(super.id)
 				&& cableChanelingItems.headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber;
 	}

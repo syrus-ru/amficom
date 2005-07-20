@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.5 2005/07/20 12:39:39 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.6 2005/07/20 14:49:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/20 12:39:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/20 14:49:49 $
  * @module scheme_v1
  */
 public final class SchemePathTestCase extends TestCase {
@@ -171,7 +171,7 @@ public final class SchemePathTestCase extends TestCase {
 
 		final AbstractSchemeElement abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
 
-		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathElements().isEmpty() ? null : startSchemePort, endSchemePort);
+		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathMembers().isEmpty() ? null : startSchemePort, endSchemePort);
 		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeCableThread);
 		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath, schemeLink);
 
@@ -180,19 +180,19 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier pathElementId1 = pathElement1.getId();
 		final Identifier pathElementId2 = pathElement2.getId();
 
-		SortedSet<PathElement> pathElements = schemePath.getPathElements();
+		SortedSet<PathElement> pathElements = schemePath.getPathMembers();
 		assertEquals(3, pathElements.size());
 		int i = 0;
 		for (final PathElement pathElement : pathElements) {
 			assertEquals(i, pathElement.getSequentialNumber());
-			assertEquals(schemePathName, pathElement.getParentSchemePath().getName());
+			assertEquals(schemePathName, pathElement.getParentPathOwner().getName());
 			assertEquals(abstractSchemeElements[i].getName(), pathElement.getAbstractSchemeElement().getName());
 			assertEquals(i++, pathElement.getKind().value());
 		}
 
-		schemePath.removePathElement(pathElement1, processSubsequentSiblings);
+		schemePath.removePathMember(pathElement1, processSubsequentSiblings);
 
-		pathElements = schemePath.getPathElements();
+		pathElements = schemePath.getPathMembers();
 		final int size = pathElements.size();
 
 		assertEquals(0, pathElement0.getSequentialNumber());
@@ -233,7 +233,7 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", DirectionType._IN, schemeDevice);
 		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", DirectionType._OUT, schemeDevice);
 
-		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathElements().isEmpty() ? null : startSchemePort, endSchemePort);
+		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathMembers().isEmpty() ? null : startSchemePort, endSchemePort);
 		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeLink);
 		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath, schemeLink);
 		final PathElement pathElement3 = PathElement.createInstance(userId, schemePath, schemeLink);
@@ -255,7 +255,7 @@ public final class SchemePathTestCase extends TestCase {
 		assertEquals(8, pathElement8.getSequentialNumber());
 		assertEquals(9, pathElement9.getSequentialNumber());
 
-		pathElement5.setParentSchemePath(null, false);
+		pathElement5.setParentPathOwner(null, false);
 
 		assertEquals(0, pathElement0.getSequentialNumber());
 		assertEquals(1, pathElement1.getSequentialNumber());

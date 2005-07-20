@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.28 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeUtils.java,v 1.29 2005/07/20 14:49:49 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/20 14:49:49 $
  * @module scheme_v1
  */
 public class SchemeUtils {
@@ -38,7 +38,7 @@ public class SchemeUtils {
 	 * @param pathElementId
 	 */
 	public static PathElement getPathElement(final SchemePath schemePath, final Identifier pathElementId) {
-		final Set<PathElement> pathElements = schemePath.getPathElements();
+		final Set<PathElement> pathElements = schemePath.getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			if (pathElement.getId().equals(pathElementId)) {
 				return pathElement;
@@ -287,7 +287,7 @@ public class SchemeUtils {
 	}
 
 	public static boolean isElementInPath(final SchemePath schemePath, final Identifier abstractSchemeElementId) {
-		for (final PathElement pathElement : schemePath.getPathElements()) {
+		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			if (pathElement.getAbstractSchemeElement().getId().equals(abstractSchemeElementId)) {
 				return true;
 			}
@@ -302,7 +302,7 @@ public class SchemeUtils {
 
 	public static double getOpticalLength(final SchemePath schemePath) {
 		double length = 0;
-		for (final PathElement pathElement : schemePath.getPathElements()) {
+		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			length += getOpticalLength(pathElement);
 		}
 		return length;
@@ -328,7 +328,7 @@ public class SchemeUtils {
 
 	public static double getPhysicalLength(final SchemePath schemePath) {
 		double length = 0;
-		for (final PathElement pathElement : schemePath.getPathElements()) {
+		for (final PathElement pathElement : schemePath.getPathMembers()) {
 			length += getPhysicalLength(pathElement);
 		}
 		return length;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.54 2005/07/20 10:58:33 bass Exp $
+ * $Id: SchemePath.java,v 1.55 2005/07/20 14:49:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,11 +64,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/20 10:58:33 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/20 14:49:49 $
  * @module scheme_v1
  */
-public final class SchemePath extends AbstractCloneableStorableObject implements
-		Describable, Characterizable {
+public final class SchemePath extends AbstractCloneableStorableObject
+		implements Describable, Characterizable, PathOwner<PathElement> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -195,11 +195,10 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 *
 	 * @param pathElement
 	 * @param processSubsequentSiblings
-	 * @see SchemeCableLink#addCableChannelingItem(CableChannelingItem, boolean)
 	 */
-	public void addPathElement(final PathElement pathElement, final boolean processSubsequentSiblings) {
+	public void addPathMember(final PathElement pathElement, final boolean processSubsequentSiblings) {
 		assert pathElement != null: NON_NULL_EXPECTED;
-		pathElement.setParentSchemePath(this, processSubsequentSiblings);
+		pathElement.setParentPathOwner(this, processSubsequentSiblings);
 	}
 
 	@Override
@@ -289,14 +288,14 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		}
 	}
 
-	public SortedSet<PathElement> getPathElements() {
-		return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(getPathElements0()));
+	public SortedSet<PathElement> getPathMembers() {
+		return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(getPathMembers0()));
 	}
 
 	/**
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
-	private Set<PathElement> getPathElements0() {
+	private Set<PathElement> getPathMembers0() {
 		try {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true, true);
 		} catch (final ApplicationException ae) {
@@ -350,12 +349,11 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 *
 	 * @param pathElement
 	 * @param processSubsequentSiblings
-	 * @see SchemeCableLink#removeCableChannelingItem(CableChannelingItem, boolean)
 	 */
-	public void removePathElement(final PathElement pathElement, final boolean processSubsequentSiblings) {
+	public void removePathMember(final PathElement pathElement, final boolean processSubsequentSiblings) {
 		assert pathElement != null: NON_NULL_EXPECTED;
 		assert pathElement.getParentSchemePathId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		pathElement.setParentSchemePath(null, processSubsequentSiblings);
+		pathElement.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
 	/**
@@ -480,7 +478,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 *         <code>PathElement</code> in this <code>SchemePath</code>.
 	 */
 	public SchemeElement getStartSchemeElement() {
-		final SortedSet<PathElement> pathElements = this.getPathElements();
+		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement startPathElement = pathElements.first();
 		assert startPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
@@ -492,7 +490,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 *         <code>PathElement</code> in this <code>SchemePath</code>.
 	 */
 	public SchemeElement getEndSchemeElement() {
-		final SortedSet<PathElement> pathElements = this.getPathElements();
+		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement endPathElement = pathElements.last();
 		assert endPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
@@ -507,7 +505,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public PathElement getNextNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		for (final PathElement pathElement1 : getPathElements().tailSet(pathElement)) {
+		for (final PathElement pathElement1 : getPathMembers().tailSet(pathElement)) {
 			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				return pathElement1;
 			}
@@ -521,7 +519,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public PathElement getNextPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		final SortedSet<PathElement> pathElements  = getPathElements().tailSet(pathElement);
+		final SortedSet<PathElement> pathElements  = getPathMembers().tailSet(pathElement);
 		if (pathElements.size() == 1)
 			return null;
 		final Iterator<PathElement> pathElementIterator = pathElements.iterator();
@@ -535,7 +533,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public double getOpticalDistance(final double physicalDistance) {
 		double opticalDistance = .0;
 		double d = .0;
-		for (final PathElement pathElement : getPathElements()) {
+		for (final PathElement pathElement : getPathMembers()) {
 			final double physicalLength = SchemeUtils.getPhysicalLength(pathElement);
 			if (d + physicalLength < physicalDistance) {
 				d += physicalLength;
@@ -556,7 +554,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		double opticalDistanceFromStart = 0;
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		for (final PathElement pathElement1 : pathElements) {
 //			if (pathElement1 == pathElement) {}
 			if (pathElement1.getId().equals(pathElement.getId())) {
@@ -574,7 +572,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @param opticalDistance
 	 */
 	public PathElement getPathElementByOpticalDistance(final double opticalDistance) {
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		if (pathElements.isEmpty())
 			return null;
 
@@ -594,7 +592,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	@Deprecated
 	public PathElement getPathElementByPhysicalDistance(final double physicalDistance) {
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		if (pathElements.isEmpty())
 			return null;
 
@@ -614,7 +612,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	public double getPhysicalDistance(final double opticalDistance) {
 		double physicalDistance = .0;
 		double d = .0;
-		for (final PathElement pathElement : getPathElements()) {
+		for (final PathElement pathElement : getPathMembers()) {
 			final double opticalLength = SchemeUtils.getOpticalLength(pathElement);
 			if (d + opticalLength < opticalDistance) {
 				d += opticalLength;
@@ -636,7 +634,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		double physicalDistanceFromStart = 0;
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		for (final PathElement pathElement1 : pathElements) {
 //			if (pathElement1 == pathElement) {}
 			if (pathElement1.getId().equals(pathElement.getId())) {
@@ -662,7 +660,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			return pathElement;
 
 		PathElement previousNode = null;
-		for (final PathElement pathElement1 : getPathElements().headSet(pathElement)) {
+		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
 			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				previousNode = pathElement1;
 			}
@@ -675,7 +673,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public PathElement getPreviousPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
-		final SortedSet<PathElement> pathElements = getPathElements().headSet(pathElement);
+		final SortedSet<PathElement> pathElements = getPathMembers().headSet(pathElement);
 		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
 	}
 
@@ -684,7 +682,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	public boolean hasNextPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
-		return pathElement.getSequentialNumber() < getPathElements().size() - 1;
+		return pathElement.getSequentialNumber() < getPathMembers().size() - 1;
 	}
 
 	/**
@@ -701,7 +699,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 */
 	@Deprecated
 	public void setTotalOpticalLength(final double totalOpticalength) {
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		if (pathElements.isEmpty())
 			return;
 		setOpticalLength(pathElements.first(), pathElements.last(), totalOpticalength);
@@ -712,7 +710,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * @see SchemeCableLink#assertContains(CableChannelingItem)
 	 */
 	boolean assertContains(final PathElement pathElement) {
-		final SortedSet<PathElement> pathElements = this.getPathElements();
+		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		return pathElement.getParentSchemePathId().equals(super.id)
 				&& pathElements.headSet(pathElement).size() == pathElement.sequentialNumber;
 	}
@@ -732,7 +730,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 			setOpticalLength(endPathElement, startPathElement, opticalLength);
 			return;
 		}
-		final SortedSet<PathElement> pathElements = getPathElements();
+		final SortedSet<PathElement> pathElements = getPathMembers();
 		assert assertContains(startPathElement): CHILDREN_ALIEN;
 		assert assertContains(endPathElement): CHILDREN_ALIEN;
 
