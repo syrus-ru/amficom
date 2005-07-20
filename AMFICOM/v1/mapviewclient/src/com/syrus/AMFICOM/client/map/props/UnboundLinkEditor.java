@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -199,7 +200,7 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.topologicalLengthTextField, constraints);
 
 		constraints.gridx =  0;
-		constraints.gridy = 1;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -212,7 +213,7 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.cableLabel, constraints);
 
 		constraints.gridx =  1;
-		constraints.gridy = 1;
+		constraints.gridy = 5;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -223,6 +224,19 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.cableComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 6;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(Box.createVerticalBox(), constraints);
 
 		this.nameTextField.setEnabled(false);
 		this.typeComboBox.setEnabled(false);
