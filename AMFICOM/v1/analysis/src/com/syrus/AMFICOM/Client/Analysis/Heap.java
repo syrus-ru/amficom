@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.85 2005/07/20 14:32:36 saa Exp $
+ * $Id: Heap.java,v 1.86 2005/07/20 14:42:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
@@ -28,10 +29,12 @@ import com.syrus.AMFICOM.Client.General.Event.PrimaryRefAnalysisListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -89,7 +92,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.85 $, $Date: 2005/07/20 14:32:36 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/20 14:42:07 $
  * @module
  */
 public class Heap
@@ -238,6 +241,62 @@ public class Heap
     throws SimpleApplicationException {
     	openPrimaryTrace(new Trace(result,
     			getMinuitAnalysisParams()));
+    }
+
+    public static void openManyTracesFromResult(Set<Result> results)
+    throws SimpleApplicationException {
+    	// проверяем, что входной список непуст
+    	if (results.isEmpty()) {
+    		throw new IllegalArgumentException("empty set of results");
+    	}
+
+    	// Создаем Trace и Bellcore по каждому входному результату
+    	Collection<Trace> traceColl = new ArrayList<Trace>(results.size());
+    	Collection<BellcoreStructure> bsColl = new ArrayList<BellcoreStructure>(results.size());
+    	for (Result res: results) {
+    		Trace tr = new Trace(res, getMinuitAnalysisParams());
+    		traceColl.add(tr);
+    		bsColl.add(tr.getBS());
+    	}
+
+    	// пытаемся выбрать самую типичную рефлектограмму.
+    	// если набор несовместен, используем первую попавшуюся.
+    	Trace tracePrimary = null;
+    	try {
+			BellcoreStructure bs =
+				CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			for (Trace tr: traceColl) {
+				if (tr.getBS() == bs) {
+					tracePrimary = tr;
+					break;
+				}
+			}
+			if (tracePrimary == null) {
+				Log.debugMessage("Heap.openManyTracesFromResult | Failed to choose most typical trace as primary",
+						Log.DEBUGLEVEL03);
+				System.err.println("Failed to choose most typical trace as primary"); // FIXME: debug-time message
+			} else {
+			Log.debugMessage("Heap.openManyTracesFromResult | chosed most typical trace as primary",
+					Log.DEBUGLEVEL07);
+			}
+		} catch (IncompatibleTracesException e) {
+			// ignore for now: tracePrimary == null check will do processing
+			Log.debugMessage("Heap.openManyTracesFromResult | incompatible traces, using first one",
+					Log.DEBUGLEVEL07);
+		}
+		if (tracePrimary == null) {
+			tracePrimary = traceColl.iterator().next();
+		}
+
+		// Открываем самую типичную как первичную
+		openPrimaryTrace(tracePrimary);
+
+		// Открываем все остальные как вторичные
+		for (Trace trace: traceColl) {
+			if (trace != tracePrimary) {
+				putSecondaryTrace(trace);
+			}
+		}
     }
 
     public static ModelTraceAndEvents getAnyMTAE(String key) {
@@ -488,7 +547,7 @@ public class Heap
     // two events generated:
     // notifyBsHashAdd -> bsHashAdded() and
     // notifyPrimaryTraceChanged -> primaryTraceCUpdated()
-    private static void notifyBsHashAdd(String key, BellcoreStructure bs) {
+    private static void notifyBsHashAdd(String key) {
         Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Level.FINEST);
         for (BsHashChangeListener listener: bsHashChangedListeners)
             listener.bsHashAdded(key);
@@ -682,7 +741,7 @@ public class Heap
     }
 
     public static void primaryTraceOpened() {
-        notifyBsHashAdd(PRIMARY_TRACE_KEY, getBSPrimaryTrace());
+        notifyBsHashAdd(PRIMARY_TRACE_KEY);
         notifyPrimaryTraceOpened();
     }
 
@@ -766,12 +825,17 @@ public class Heap
         }
     }
 
+    public static void putSecondaryTrace(Trace tr) {
+    	String key = (String) tr.getKey(); // FIXME: remove case, getKey should return String
+    	traces.put(key, tr);
+        notifyBsHashAdd(key);
+    }
+
     public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
-    	traces.put(key, new Trace(
+    	putSecondaryTrace(new Trace(
     			bs,
     			key,
     			getMinuitAnalysisParams()));
-        notifyBsHashAdd(key, bs);
     }
 
     public static void setBSReferenceTrace(BellcoreStructure bs, String key) {
@@ -779,7 +843,7 @@ public class Heap
         		bs,
         		key,
         		getMinuitAnalysisParams()));
-        notifyBsHashAdd(REFERENCE_TRACE_KEY, bs);
+        notifyBsHashAdd(REFERENCE_TRACE_KEY);
     }
 
     /**
