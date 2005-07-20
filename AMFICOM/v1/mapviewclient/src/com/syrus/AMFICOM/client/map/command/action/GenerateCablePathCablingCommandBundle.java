@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.26 2005/07/11 13:18:03 bass Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.27 2005/07/20 13:33:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
  *  из непроложенных линий генерируются тоннели и кабель привязывается к ним.
  *  Уже существующая привязка сохраняется. По непривязанным элементам 
  *  генерируются сетевые узла и схемные элементы привязываются к ним.
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/07/11 13:18:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/07/20 13:33:53 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -109,7 +109,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 
 					link = super.createPhysicalLink(startsite, endsite);
 					// фрагменты переносятся в новый сгенерированный тоннель
-					for(Iterator it2 = un.getNodeLinks().iterator(); it2.hasNext();)
+					for(Iterator it2 = new LinkedList(un.getNodeLinks()).iterator(); it2.hasNext();)
 					{
 						NodeLink mnle = (NodeLink)it2.next();
 						mnle.setPhysicalLink(link);
