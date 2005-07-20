@@ -91,7 +91,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	// private ObjectResourceTreeModel treeModel;
 	private Set<Identifier>		testIds								= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
-	java.util.Set				selectedTestIds;
+	Set<Identifier>				selectedTestIds;
 	Map							measurementSetupIdMap;
 
 	public static final String	COMMAND_GET_NAME					= "GetName";
@@ -986,13 +986,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void moveSelectedTests(Date startDate) {
-
-		try {
-			throw new Exception();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//
+//		try {
+//			throw new Exception();
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 
 		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
 		long t0 = System.currentTimeMillis();
@@ -1053,7 +1053,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// XXX - regenerate time line !!!
 
 		Test selectedTest = this.getSelectedTest();
-		if (selectedTest.getGroupTestId() == null) {
+		if (selectedTest.getGroupTestId().isVoid()) {
 			this.refreshTemporalStamps();
 		} else {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,
@@ -1083,7 +1083,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						if (this.selectedTestIds != null) {
 							this.selectedTestIds.clear();
 						} else {
-							this.selectedTestIds = new HashSet();
+							this.selectedTestIds = new HashSet<Identifier>();
 						}
 						this.selectedTestIds.add(test.getId());
 					} else {
