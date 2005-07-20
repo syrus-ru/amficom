@@ -69,8 +69,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/07/17 05:25:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/20 07:28:43 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -423,7 +423,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					} else if (codename.equals(this.lfdFlagParameterType.getCodename())) {
 						value = Boolean.toString(this.lfdOptionBox.isSelected());
 					}
-					if (value != null && !this.unchangedObjects.get(codename).equals(value)) {
+					String string = this.unchangedObjects.get(codename);
+					if (value != null && (string == null || !string.equals(value))) {
 						ByteArray byteArray = this.getByteArray(value.toString(), type);
 						try {
 							parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
@@ -779,11 +780,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					// System.out.println();
 					Characteristic characteristic = (Characteristic) it.next();
 					StorableObjectType type = characteristic.getType();
-					 System.out.println("characteristicType is " +
-					 type.getId());
+//					 System.out.println("characteristicType is " +					 type.getId());
 					String codename = type.getCodename();
 					String value = characteristic.getValue();
-					 System.out.println("codename is '" + codename + "', valueis: " + value);
+//					 System.out.println("codename is '" + codename + "', valueis: " + value);
 
 					if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 						String[] values = value.split("\\s+"); //$NON-NLS-1$
@@ -1086,7 +1086,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				ParameterType parameterType = (ParameterType) type;
 				String codename = parameterType.getCodename();
 				String stringValue = setParameters[i].getStringValue();
-				Log.debugMessage("ReflectometryTestPanel.setSet | codename: " + codename + ", stringValue:" + stringValue, Level.FINEST);
+//				Log.debugMessage("ReflectometryTestPanel.setSet | codename: " + codename + ", stringValue:" + stringValue, Level.FINEST);
 				if (codename.equals(ParameterTypeCodename.TRACE_INDEX_OF_REFRACTION.toString())) {
 					this.refractTextField.setText(stringValue);
 				} else if (codename.equals(ParameterTypeCodename.TRACE_WAVELENGTH.toString())) {

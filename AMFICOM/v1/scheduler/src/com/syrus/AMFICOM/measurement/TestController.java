@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.14 2005/06/23 18:45:05 bass Exp $
+ * $Id: TestController.java,v 1.15 2005/07/20 07:28:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:05 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/20 07:28:43 $
+ * @author $Author: bob $
  * @module module
  */
 public class TestController implements Wrapper {
@@ -172,13 +172,13 @@ public class TestController implements Wrapper {
 		if (object instanceof Test) {
 			Test test = (Test) object;
 			if (key.equals(KEY_TEMPORAL_TYPE)) {
-				if (test.getGroupTestId() == null) {
+				if (test.getGroupTestId().isVoid()) {
 					value = test.getTemporalType(); //$NON-NLS-1$
 				} else {
 					value = LangModelSchedule.getString("Sectional");
 				}
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
-				if (test.getGroupTestId() == null) {
+				if (test.getGroupTestId().isVoid()) {
 					TestTemporalType temporalType = test.getTemporalType();
 					for (Iterator iterator = this.temporalTypeMap.keySet().iterator(); iterator.hasNext();) {
 						String name = (String) iterator.next();
@@ -190,7 +190,7 @@ public class TestController implements Wrapper {
 					
 					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 						Identifier temporalPatternId = test.getTemporalPatternId();
-						if (temporalPatternId != null && temporalPatternId.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
+						if (!temporalPatternId.isVoid() && temporalPatternId.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
 							try {
 								PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId, true);
 								value = value + ", " + periodicalTemporalPattern.getPeriodDescription();

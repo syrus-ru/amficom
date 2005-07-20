@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -88,7 +89,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	private int					flag								= 0;
 
 	// private ObjectResourceTreeModel treeModel;
-	private java.util.Set		testIds								= new HashSet();
+	private Set<Identifier>		testIds								= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
 	java.util.Set				selectedTestIds;
 	Map							measurementSetupIdMap;
@@ -250,7 +251,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	/**
 	 * @return tests
 	 */
-	public java.util.Set getTestIds() {
+	public Set<Identifier> getTestIds() {
 		return this.testIds;
 	}
 
@@ -337,9 +338,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId != null) {
 			try {
-				java.util.Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
+				Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
 					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
-				java.util.Set testIds = new HashSet(testsByCondition.size());
+				Set<Identifier> testIds = new HashSet<Identifier>(testsByCondition.size());
 				for (Iterator iterator = testsByCondition.iterator(); iterator.hasNext();) {
 					Identifier testId = ((Test) iterator.next()).getId();
 					testIds.add(testId);
@@ -489,7 +490,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_RETURN_TYPE, null, test
 					.getReturnType()));
 			// this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
-			if (test.getGroupTestId() == null) {
+			if (test.getGroupTestId().isVoid()) {
 				this.refreshTemporalStamps();
 			} else {
 				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,

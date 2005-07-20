@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,8 +23,8 @@ import javax.swing.tree.TreePath;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.logic.AbstractItem;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
@@ -58,7 +60,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	ApplicationContext			aContext;
 
-	private Item				rootItem			= new ServiceItem("/");
+	private ServiceItem				rootItem			= new ServiceItem("/");
 
 	private Dispatcher			dispatcher;
 
@@ -179,6 +181,10 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void setElements(Collection elements) {
+		List<Item> childs = new ArrayList<Item>(this.rootItem.getChildren());
+		for(Item item: childs) {
+			item.setParent(null);
+		}
 		for (Iterator it = elements.iterator(); it.hasNext();) {
 			Item item = (Item) it.next();
 			if (item instanceof IconPopulatableItem) {

@@ -100,7 +100,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				try {
 					Test test1 = (Test) StorableObjectPool.getStorableObject(identifier, true);
 					Identifier groupTestId = test1.getGroupTestId();
-					if (groupTestId != null) {
+					if (!groupTestId.isVoid()) {
 						identifier = groupTestId;
 					}
 				} catch (ApplicationException e) {
@@ -109,7 +109,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					Test test = (Test) tableModel.getObject(i);
 					Identifier testId = test.getGroupTestId();
-					testId = testId != null ? testId : test.getId();
+					testId = !testId.isVoid() ? testId : test.getId();
 					if (testId.equals(identifier)) {
 						// selectedRows[j++] = i;
 						this.listTable.setRowSelectionInterval(i, i);
@@ -154,7 +154,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				Identifier groupTestId = test1.getGroupTestId();
 				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
 						+ groupTestId, Level.FINEST);
-				if (groupTestId != null && !groupTestId.equals(test1.getId())) {
+				if (!groupTestId.isVoid() && !groupTestId.equals(test1.getId())) {
 					continue;
 				}
 				if (model.getIndexOfObject(test1) < 0) {

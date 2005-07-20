@@ -32,6 +32,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -331,18 +332,20 @@ public class TimeParametersFrame extends JInternalFrame {
 				gbc.gridx = 1;
 				gbc.gridy++;
 				this.periodTimeSpinner = new TimeSpinner();
-				this.periodDaySpinner = new JSpinner();
+				this.periodDaySpinner = new JSpinner(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 //				this.periodMonthSpinner = new JSpinner();
 				{
 					Box box = new Box(BoxLayout.X_AXIS);
-					box.add(Box.createHorizontalGlue());
+//					
 					CommonUIUtilities.fixHorizontalSize(this.periodTimeSpinner);
 //					box.add(this.periodMonthSpinner);
 //					this.monthIntervalLabel = new JLabel(LangModelSchedule.getString("month"));
 //					box.add(this.monthIntervalLabel);
+					
 					box.add(this.periodDaySpinner);
-					this.dayIntervalLabel = new JLabel(LangModelSchedule.getString("day"));
+					this.dayIntervalLabel = new JLabel(LangModelSchedule.getString("day_s"));
 					box.add(this.dayIntervalLabel);
+					box.add(Box.createHorizontalGlue());
 					box.add(this.periodTimeSpinner);
 					box.add(this.pediodTimeButton);
 					Calendar calendar = Calendar.getInstance();
@@ -1023,7 +1026,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						result = this.continuosRadioButton.isSelected();
 						break;
 				}
-				if (test.getGroupTestId() != null) {
+				if (!test.getGroupTestId().isVoid()) {
 					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Level.FINEST);
 					result = this.groupRadioButton.isSelected();
 				}
@@ -1046,16 +1049,18 @@ public class TimeParametersFrame extends JInternalFrame {
 			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
 				TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
 				if (testTemporalStamps != null) {
-					TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, null, testTemporalStamps));
-					if (TimeParametersPanel.this.groupRadioButton.isSelected()) {
-						TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_GROUP_TEST, null, testTemporalStamps));
+					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, null, testTemporalStamps));
+					if (this.groupRadioButton.isSelected()) {
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_GROUP_TEST, null, testTemporalStamps));
 					}
 				}
 			} else if(propertyName.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
-				TimeParametersPanel.this.groupRadioButton.doClick();
+				if(!this.groupRadioButton.isSelected()) {
+					this.groupRadioButton.doClick();
+				}
 				Date date = (Date) newValue;
-				TimeParametersPanel.this.startDateSpinner.getModel().setValue(date);
-				TimeParametersPanel.this.startTimeSpinner.getModel().setValue(date);
+				this.startDateSpinner.getModel().setValue(date);
+				this.startTimeSpinner.getModel().setValue(date);
 			}
 			this.propertyChangeEvent = null;
 		}
@@ -1074,6 +1079,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endTimeButton.setVisible(enable);
 			
 			this.interavalLabel.setVisible(false);
+			this.startTimeButton.setVisible(false);
 			this.periodTimeSpinner.setVisible(false);
 			this.periodDaySpinner.setVisible(false);
 			this.pediodTimeButton.setVisible(false);
@@ -1081,7 +1087,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		void setGroupEnabled(boolean enable) {
-			this.interavalLabel.setText(LangModelSchedule.getString("Interval"));
+			this.interavalLabel.setText(LangModelSchedule.getString("Interval") + ':');
 			// this.endTimeButton.setEnabled(false);
 			this.endTimeButton.setVisible(false);
 			this.startTimeButton.setVisible(enable);
@@ -1110,7 +1116,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 			this.pediodTimeButton.setVisible(enable);
 			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
-			this.interavalLabel.setText(LangModelSchedule.getString("Period"));
+			this.interavalLabel.setText(LangModelSchedule.getString("Period") + ':');
 			this.periodTimeSpinner.setVisible(enable);
 			this.periodDaySpinner.setVisible(enable);
 			this.dayIntervalLabel.setVisible(enable);
@@ -1253,10 +1259,14 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			switch (testTemporalStamps.getTestTemporalType().value()) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-					this.oneRadioButton.doClick();
+					if (!this.oneRadioButton.isSelected()) {
+						this.oneRadioButton.doClick();
+					}
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					this.periodicalRadioButton.doClick();
+					if (!this.periodicalRadioButton.isSelected()) {
+						this.periodicalRadioButton.doClick();
+					}
 					AbstractTemporalPattern temporalPattern = testTemporalStamps.getTemporalPattern();
 					if (temporalPattern instanceof PeriodicalTemporalPattern) {
 						PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern)temporalPattern;
@@ -1274,7 +1284,9 @@ public class TimeParametersFrame extends JInternalFrame {
 //					this.timeStamps.setSelectedValue(testTemporalStamps.getTemporalPattern(), true);
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					this.continuosRadioButton.doClick();
+					if (!this.continuosRadioButton.isSelected()) {
+						this.continuosRadioButton.doClick();
+					}
 					break;
 
 			}

@@ -35,8 +35,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.15 $, $Date: 2005/07/11 08:19:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/20 07:28:43 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */
@@ -171,7 +171,7 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 	public void propertyChange(PropertyChangeEvent evt) {
 			String propertyName = evt.getPropertyName();
 			if (propertyName.equals(SchedulerModel.COMMAND_SET_RETURN_TYPE)) {
-				setReturnType( (TestReturnType) evt.getNewValue());
+				this.setReturnType( (TestReturnType) evt.getNewValue());
 			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_RETURN_TYPE)) {
 				TestReturnType testReturnType = getReturnType();
 				if (testReturnType != null) {
@@ -182,11 +182,17 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 
 	public void setReturnType(TestReturnType returnType) {		
 		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
-			this.allResultsButton.doClick();
+			if(!this.allResultsButton.isSelected()) {
+				this.allResultsButton.doClick();
+			}
 		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
-			this.recognizedEventsButton.doClick();
+			if(!this.recognizedEventsButton.isSelected()) {
+				this.recognizedEventsButton.doClick();
+			}
 		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
-			this.measurementIdButton.doClick();
+			if(!this.measurementIdButton.isSelected()) {
+				this.measurementIdButton.doClick();
+			}
 		}
 	}
 }
