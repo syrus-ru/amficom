@@ -135,7 +135,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		
 		TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);
-		tr.setTitle(bs.title);
+		tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
 		tr.setColor(GUIUtil.getColor(id));
 		tr.setShown(true);
 		

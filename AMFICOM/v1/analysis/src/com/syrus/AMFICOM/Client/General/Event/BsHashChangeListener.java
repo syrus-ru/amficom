@@ -1,5 +1,5 @@
 /*-
- * $Id: BsHashChangeListener.java,v 1.2 2005/04/30 06:14:03 saa Exp $
+ * $Id: BsHashChangeListener.java,v 1.3 2005/07/20 14:31:22 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/04/30 06:14:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/20 14:31:22 $
  * @module
  */
 public interface BsHashChangeListener
@@ -21,4 +21,3 @@ public interface BsHashChangeListener
 	void bsHashRemoved(String key);
 	void bsHashRemovedAll();
 }
-

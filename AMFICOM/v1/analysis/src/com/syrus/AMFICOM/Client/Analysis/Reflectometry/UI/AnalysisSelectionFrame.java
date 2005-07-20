@@ -216,7 +216,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
-			if (bs.measurementId == null)
+			if (Heap.getBSPrimaryTrace().measurementId == null)
 				setTitle(LangModelAnalyse.getString("analysisSelectionTitle")
 						+ " ("
 						+ LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN)
