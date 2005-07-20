@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.12 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.13 2005/07/20 13:22:08 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/20 13:22:08 $
  * @module mapviewclient_v1
  */
 
@@ -80,7 +80,7 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (propFrame != null)
 		{
 			normalize(propFrame);		
-			propFrame.setSize(w / 5, h * 2 / 5);
+			propFrame.setSize(w / 5, h / 2);
 			propFrame.setLocation(4 * w / 5, 0);
 		}
 
@@ -88,17 +88,17 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (addFrame != null)
 		{
 			normalize(addFrame);		
-			addFrame.setSize(w / 5, h * 2 / 5);
-			addFrame.setLocation(4 * w / 5, h * 2 / 5);
+			addFrame.setSize(w / 5, h / 2);
+			addFrame.setLocation(4 * w / 5, h / 2);
 		}
 
-		MapCharacteristicPropertiesFrame charFrame = MapDesktopCommand.findMapCharacteristicsFrame(this.desktop);
-		if (charFrame != null)
-		{
-			normalize(charFrame);
-			charFrame.setSize(w / 5, h / 5);
-			charFrame.setLocation(4 * w / 5, h * 4 / 5);
-		}
+//		MapCharacteristicPropertiesFrame charFrame = MapDesktopCommand.findMapCharacteristicsFrame(this.desktop);
+//		if (charFrame != null)
+//		{
+//			normalize(charFrame);
+//			charFrame.setSize(w / 5, h / 5);
+//			charFrame.setLocation(4 * w / 5, h * 4 / 5);
+//		}
 	}
 	
 	public void propertyChange(PropertyChangeEvent pce)
