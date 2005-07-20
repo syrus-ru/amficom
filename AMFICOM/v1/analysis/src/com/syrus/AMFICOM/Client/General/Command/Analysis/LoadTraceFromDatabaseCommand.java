@@ -70,8 +70,11 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		Result result1 = results.iterator().next();
 
 		try {
-			// открываем загруженную рефлектограмму как первичную
-			Heap.openPrimaryTraceFromResult(result1);
+//			// открываем загруженную рефлектограмму как первичную
+//			Heap.openPrimaryTraceFromResult(result1);
+
+			// открываем выбранный набор рефлектограмм
+			Heap.openManyTracesFromResult(results);
 		} catch (SimpleApplicationException e1) {
 			// ошибка - в результатах анализа нет рефлектограммы
 			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
