@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathVisualManager.java,v 1.6 2005/06/06 13:34:57 krupenn Exp $
+ * $Id: CablePathVisualManager.java,v 1.7 2005/07/20 13:22:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -21,6 +21,7 @@ public class CablePathVisualManager implements VisualManager {
 	private static CablePathVisualManager instance;
 
 	private static CablePathEditor generalPanel;
+	private static CablePathAddEditor addPanel;
 	private static MapElementCharacteristicsEditor charPanel;
 	
 	public static CablePathVisualManager getInstance() {
@@ -61,8 +62,9 @@ public class CablePathVisualManager implements VisualManager {
 	}
 
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		if (addPanel == null)
+			addPanel = new CablePathAddEditor();
+		return addPanel;
 	}
 
 }
