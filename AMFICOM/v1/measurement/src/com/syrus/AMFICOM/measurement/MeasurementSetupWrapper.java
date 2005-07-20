@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.17 2005/07/17 05:08:45 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.18 2005/07/20 11:07:56 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/17 05:08:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/07/20 11:07:56 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -112,19 +112,19 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 			String string = parameters[i].getStringValue();
 			if (string != null) {
 				ParameterType parameterType = (ParameterType) parameters[i].getType();
-				buffer.append(parameterType.getDescription() + ':' + string);
+				buffer.append(parameterType.getDescription() + ": " + string);
 				Set<Characteristic> characteristics = null;
 				try {
 					characteristics = parameterType.getCharacteristics();
 				} catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
-				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
-					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
+//				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
+//					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
 				if (characteristics != null && !characteristics.isEmpty()) {
 					for (final Characteristic characteristic : characteristics) {
 						StorableObjectType type = characteristic.getType();
-						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
+//						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
 							buffer.append(' ' + characteristic.getValue());
 							/* TODO check for all codename ?*/
