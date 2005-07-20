@@ -1,5 +1,5 @@
 /**
- * $Id: MapAdditionalPropertiesFrame.java,v 1.6 2005/06/24 13:04:05 krupenn Exp $
+ * $Id: MapAdditionalPropertiesFrame.java,v 1.7 2005/07/20 18:02:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,13 +14,14 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.props.CablePathAddEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkAddEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeAddEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.6 $, $Date: 2005/06/24 13:04:05 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/20 18:02:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -44,6 +45,11 @@ public final class MapAdditionalPropertiesFrame extends MapAbstractPropertiesFra
 				PhysicalLinkAddEditor linkEditor = (PhysicalLinkAddEditor )addEditor;
 				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
 				linkEditor.setNetMapViewer(mapFrame.getMapViewer());
+			}
+			else if(addEditor instanceof CablePathAddEditor) {
+				CablePathAddEditor cableEditor = (CablePathAddEditor )addEditor;
+				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
+				cableEditor.setNetMapViewer(mapFrame.getMapViewer());
 			}
 		}
 		return addEditor;
