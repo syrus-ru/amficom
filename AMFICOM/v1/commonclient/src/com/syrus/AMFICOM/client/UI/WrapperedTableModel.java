@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/23 11:17:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/20 11:34:24 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -199,6 +199,7 @@ public class WrapperedTableModel extends AbstractTableModel {
 		if (this.list != null) {
 			final String key = this.keys[columnIndex];
 			Collections.sort(this.list, new WrapperComparator(this.wrapper, key, ascending));
+			this.fireTableDataChanged();
 		}
 	}
 
