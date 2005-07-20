@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.83 2005/07/20 13:05:06 saa Exp $
+ * $Id: Heap.java,v 1.84 2005/07/20 14:06:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,7 +89,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.83 $, $Date: 2005/07/20 13:05:06 $
+ * @version $Revision: 1.84 $, $Date: 2005/07/20 14:06:45 $
  * @module
  */
 public class Heap
@@ -210,6 +210,7 @@ public class Heap
      * Автоматически закрывает все ранее открытые рефлектограммы.
      */ 
     private static void openPrimaryTrace(Trace tr) {
+    	closeAll();
     	setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
     }
 
