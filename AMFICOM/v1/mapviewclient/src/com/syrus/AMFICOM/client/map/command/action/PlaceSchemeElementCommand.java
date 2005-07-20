@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.24 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.25 2005/07/20 17:55:47 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
  * или по координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/07/20 13:34:10 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/20 17:55:47 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle

@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.19 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.20 2005/07/20 17:55:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -23,7 +22,7 @@ import com.syrus.util.Log;
 /**
  * убрать привязку схемного элемента с карты
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/07/20 13:34:10 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/20 17:55:47 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeElementCommand extends MapActionCommandBundle

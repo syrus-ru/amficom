@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.32 2005/07/20 15:01:33 bass Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.33 2005/07/20 17:55:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.Identifier;
@@ -31,8 +30,8 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/07/20 15:01:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/07/20 17:55:47 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
