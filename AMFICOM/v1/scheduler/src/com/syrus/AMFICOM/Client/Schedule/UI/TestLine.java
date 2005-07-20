@@ -478,6 +478,24 @@ public class TestLine extends TimeLine {
 				if (TestLine.this.startPoint == null) {
 					TestLine.this.startPoint = e.getPoint();
 					TestLine.this.previousPoint = TestLine.this.startPoint;
+					
+					if (!TestLine.this.selectedItems.isEmpty()) {
+						int minX = Integer.MAX_VALUE;
+						int width = 5;
+						for (Iterator it = TestLine.this.selectedItems.iterator(); it.hasNext();) {
+							TestTimeItem testTimeItem = (TestTimeItem) it.next();
+							if (testTimeItem.x < minX) {
+								minX = testTimeItem.x;
+								width = testTimeItem.getWidth();
+							}
+							
+						}
+						
+						if (Math.abs(e.getX() - minX) > width) {
+							System.out.println(".mouseDragged() | e.x:" + e.getX() + ", minX:" + minX);
+							TestLine.this.startPoint = null;
+						}
+					}
 					// Log.debugMessage(".mouseDragged | 1", Log.FINEST);
 					return;
 				}
