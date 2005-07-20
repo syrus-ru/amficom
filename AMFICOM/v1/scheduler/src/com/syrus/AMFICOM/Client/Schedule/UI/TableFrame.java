@@ -146,7 +146,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 	private void setTests() {
 		this.listTable.removeAll();
-		WrapperedTableModel model = (WrapperedTableModel) TableFrame.this.listTable.getModel();
+		WrapperedTableModel model = (WrapperedTableModel) this.listTable.getModel();
 		model.clear();
 		try {
 			for (Iterator it = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true).iterator(); it.hasNext();) {
@@ -162,6 +162,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					model.getValues().add(test1);
 				}
 			}
+			this.listTable.resort();
 		} catch (ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
 		}
