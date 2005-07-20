@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.2 2005/07/11 12:31:39 stas Exp $
+ * $Id: PortEdge.java,v 1.3 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,12 @@ import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 
 /**
  * used just for identification of link between PortCell and DeviceCell
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -45,6 +46,7 @@ public class PortEdge extends DefaultEdge {
 		List list = new ArrayList();
 		list.add(p);
 		list.add(p2);
+		
 		GraphConstants.setPoints(map, list);
 		//GraphConstants.setRouting(map, GraphConstants.ROUTING_SIMPLE);
 		GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
@@ -54,6 +56,10 @@ public class PortEdge extends DefaultEdge {
 		GraphConstants.setFontName(map, f.getName());
 		GraphConstants.setFontSize(map, f.getSize() - 2);
 		GraphConstants.setFontStyle(map, f.getStyle());
+		
+		int u = GraphConstants.PERCENT;
+		
+		GraphConstants.setLabelPosition(map, labelPosition);
 		viewMap.put(cell, map);
 		
 		cs.connect(cell, ellipsePort, false);

@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.4 2005/07/11 12:31:39 stas Exp $
+ * $Id: PortCell.java,v 1.5 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -75,6 +75,7 @@ public class PortCell extends EllipseCell {
 	}
 
 	public void setSchemePortId(Identifier portId) {
+		assert portId != null;
 		schemePortId = portId;
 	}
 }

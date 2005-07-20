@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.3 2005/07/11 12:31:38 stas Exp $
+ * $Id: BlockPortCell.java,v 1.4 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -89,6 +89,7 @@ public class BlockPortCell  extends DefaultGraphCell {
 	 * @param portId
 	 */
 	public void setAbstractSchemePortId(Identifier portId) {
+		assert portId != null;
 		this.schemePortId = portId;
 	}
 }

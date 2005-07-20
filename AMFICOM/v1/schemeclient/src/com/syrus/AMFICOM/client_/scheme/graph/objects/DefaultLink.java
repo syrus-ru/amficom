@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: DefaultLink.java,v 1.5 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -59,9 +59,11 @@ public class DefaultLink extends DefaultEdge {
 				targetCablePortCell = (PortCell) o;
 		}
 		DefaultLink cell = new DefaultLink(userObject);
-
+		
+		int u = GraphConstants.PERCENT;
 		Map map = new HashMap();
 		GraphConstants.setRouting(map, cell.getRouting());
+		GraphConstants.setLabelPosition(map, new Point((int)(u * 0.4), (int)(u * 0.49)));
 		
 		ArrayList list = new ArrayList();
 		list.add(p);
@@ -222,6 +224,7 @@ public class DefaultLink extends DefaultEdge {
 	}
 
 	public void setSchemeLinkId(Identifier id) {
+		assert id != null;
 		scheme_link_id = id;
 	}
 }

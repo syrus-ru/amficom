@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.5 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -64,9 +64,11 @@ public class DefaultCableLink extends DefaultEdge {
 		
 		DefaultCableLink cell = new DefaultCableLink(userObject);
 
+		int u = GraphConstants.PERCENT;
 		Map map = new HashMap();
 		GraphConstants.setRouting(map, cell.getRouting());
 		GraphConstants.setLineWidth(map, 2.49f);
+		GraphConstants.setLabelPosition(map, new Point((int)(u * 0.4), (int)(u * 0.49)));
 		
 		ArrayList list = new ArrayList();
 		list.add(p);

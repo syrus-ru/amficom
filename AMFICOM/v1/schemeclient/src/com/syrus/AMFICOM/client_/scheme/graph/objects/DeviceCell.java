@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.3 2005/07/11 12:31:38 stas Exp $
+ * $Id: DeviceCell.java,v 1.4 2005/07/20 11:12:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/20 11:12:53 $
  * @module schemeclient_v1
  */
 
@@ -71,6 +71,7 @@ public class DeviceCell extends DefaultGraphCell {
 	}
 
 	public void setSchemeDeviceId(Identifier id) {
+		assert id != null;
 		schemeDeviceId = id;
 	}
 }
