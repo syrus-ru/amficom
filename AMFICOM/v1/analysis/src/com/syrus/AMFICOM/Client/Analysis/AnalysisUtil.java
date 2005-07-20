@@ -24,11 +24,13 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
@@ -53,6 +55,8 @@ public class AnalysisUtil
 
 	/**
 	 * достаем собственно рефлектограмму из параметры результатов.
+	 * Если рефлектограмма получена в результате измерения, выставляем
+	 * у нее title, meId, measId
 	 * @throws SimpleApplicationException, если рефлектограммы в указанном результате нет
 	 */
 	public static BellcoreStructure getBellcoreStructureFromResult(
@@ -68,6 +72,14 @@ public class AnalysisUtil
 		}
 		if (bs == null)
 			throw new SimpleApplicationException(SimpleApplicationException.KEY_NULL_REFLECTOGRAMMA);
+
+		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			Measurement m = (Measurement)result1.getAction();
+			bs.title = m.getName();
+			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
+			bs.measurementId = m.getId().getIdentifierString();
+		}
+
 		return bs;
 	}
 

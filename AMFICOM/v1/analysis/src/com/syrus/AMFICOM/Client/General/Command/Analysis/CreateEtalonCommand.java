@@ -52,7 +52,7 @@ public class CreateEtalonCommand extends AbstractCommand
 		try {
 			mtm = CoreAnalysisManager.makeEtalon(bsColl, ap);
 			bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
-			Heap.setBSEtalonTrace(bs);
+			Heap.setEtalonTraceFromBS(bs);
 			Heap.setMTMEtalon(mtm);
 		} catch (IncompatibleTracesException e){
 			GUIUtil.showErrorMessage("incompatibleTraces");

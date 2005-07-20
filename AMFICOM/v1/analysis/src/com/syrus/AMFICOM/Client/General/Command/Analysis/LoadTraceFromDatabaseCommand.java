@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.io.BellcoreStructure;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand
 {
@@ -70,29 +69,23 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 
 		Result result1 = results.iterator().next();
 
-		BellcoreStructure bs;
 		try {
-			bs = AnalysisUtil.getBellcoreStructureFromResult(result1);
+			// закрываем все открытые рефлектограммы
+			if (Heap.getBSPrimaryTrace() != null)
+				new FileCloseCommand(this.aContext).execute();
+
+			// открываем загруженную рефлектограмму как первичную
+			Heap.openPrimaryTraceFromResult(result1);
 		} catch (SimpleApplicationException e1) {
 			// ошибка - в результатах анализа нет рефлектограммы
 			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
 		}
 
-		// закрываем все открытые рефлектограммы
-		if (Heap.getBSPrimaryTrace() != null)
-			new FileCloseCommand(this.aContext).execute();
-
-		// открываем загруженную рефлектограмму как первичную
-		Heap.setBSPrimaryTrace(bs);
-
 		// если загружаемый результат получен в результате измерения,
-		// то устанавливаем заголовок, meId, measId, ms и, если есть, эталон,
+		// то устанавливаем ms и, если есть, эталон
 		// согласно этому измерению
 		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 			Measurement m = (Measurement)result1.getAction();
-			bs.title = m.getName();
-			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
-			bs.measurementId = m.getId().getIdentifierString();
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 

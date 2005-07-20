@@ -1,15 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.client.model.*;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.TraceReader;
 
 public class TraceOpenReferenceCommand extends AbstractCommand
 {
@@ -54,13 +57,13 @@ public class TraceOpenReferenceCommand extends AbstractCommand
 			}
 			if (!Heap.hasEmptyAllBSMap())
 			{
-				if (Heap.getBSReferenceTrace() != null)
+				if (Heap.getReferenceTrace() != null)
 					 new FileRemoveCommand (Heap.REFERENCE_TRACE_KEY, aContext).execute();
 			}
 
 			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = activeRefId;
-			Heap.setBSReferenceTrace(bs);
+			Heap.setBSReferenceTrace(bs, bs.title);
 			//Heap.referenceTraceOpened(activeRefId, bs);
 			try
 			{

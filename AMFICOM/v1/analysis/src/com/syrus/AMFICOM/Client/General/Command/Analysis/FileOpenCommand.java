@@ -1,19 +1,29 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.io.*;
+import java.awt.Cursor;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import java.awt.Cursor;
-import javax.swing.*;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.*;
-import com.syrus.io.*;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.io.BellcoreCreator;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.TraceReader;
 
 public class FileOpenCommand extends AbstractCommand
 {
@@ -94,14 +104,8 @@ public class FileOpenCommand extends AbstractCommand
 
     private void processBS(BellcoreStructure bs) {
 		boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
-		if (!Heap.hasEmptyAllBSMap())
-		{
-			if (Heap.getBSPrimaryTrace() != null && !testBehaviour)
-				new FileCloseCommand(aContext).execute();
-		}
-
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		Heap.setBSPrimaryTrace(bs);
+		Heap.openPrimaryTraceFromBS(bs, bs.title);
 		Heap.setActiveContextActivePathIDToEmptyString();
 		Heap.makePrimaryAnalysis();
 

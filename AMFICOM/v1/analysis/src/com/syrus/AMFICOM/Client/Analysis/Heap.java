@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.81 2005/07/20 07:06:50 saa Exp $
+ * $Id: Heap.java,v 1.82 2005/07/20 12:09:54 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
-import com.syrus.AMFICOM.analysis.TraceAndMTAE;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -41,11 +41,13 @@ import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 /**
- * Временная замена клиентскому пулу com.syrus.AMFICOM.Client.Resource.Pool
+ * Замена клиентскому пулу com.syrus.AMFICOM.Client.Resource.Pool.
+ * Выполняет роль модели.
  * пока что API этой замены избыточна - например, getAllBSMap() делает необязательным
  * использование остальных методов работы с BS
  * 
@@ -87,7 +89,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.81 $, $Date: 2005/07/20 07:06:50 $
+ * @version $Revision: 1.82 $, $Date: 2005/07/20 12:09:54 $
  * @module
  */
 public class Heap
@@ -104,7 +106,7 @@ public class Heap
     private static AnalysisParameters currentAP;
 	private static AnalysisParameters defaultAP;
 	private static AnalysisParameters initialAP;
-	private static Map<String,TraceAndMTAE> tAMs = new HashMap<String,TraceAndMTAE>();	// <TraceAndMTAE>, *
+	private static Map<String,Trace> traces = new HashMap<String,Trace>();
 	private static RefAnalysis refAnalysisPrimary = null; // "refanalysis", PRIMARY_TRACE_KEY
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static Map<String,ReflectogrammLoadDialog> dialogHash = new HashMap<String,ReflectogrammLoadDialog>();	// "dialog", "*"
@@ -175,28 +177,65 @@ public class Heap
         return refAnalysisPrimary;
     }
 
-    public static TraceAndMTAE getAnyTamByKey(String key) {
-    	return tAMs.get(key);
+    public static Trace getAnyTraceByKey(String key) {
+    	return traces.get(key);
     }
-    private static void setAnyTamByKey(String key, TraceAndMTAE tam) {
-    	tAMs.put(key, tam);
+    private static void setAnyTraceByKey(String key, Trace trace) {
+    	traces.put(key, trace);
     }
     private static void removeAnyTamBykey(String key) {
-    	tAMs.remove(key);
+    	traces.remove(key);
     }
 
     public static BellcoreStructure getAnyBSTraceByKey(String key) {
-    	TraceAndMTAE tam = getAnyTamByKey(key);
-        return tam != null ? tam.getBS() : null;
+    	Trace trace = getAnyTraceByKey(key);
+        return trace != null ? trace.getBS() : null;
     }
 
     public static BellcoreStructure getBSPrimaryTrace() {
         return getAnyBSTraceByKey(PRIMARY_TRACE_KEY);
     }
 
-    public static void setBSPrimaryTrace(BellcoreStructure primaryTrace) {
-    	setAnyTamByKey(PRIMARY_TRACE_KEY, new TraceAndMTAE(
-    			primaryTrace,
+    /**
+     * Устанавливает (заменяет) первичную рефлектограмму.
+     * Предполагается использование этого метода для выбора первичной
+     * р/г среди уже загруженных.
+     */ 
+    public static void setPrimaryTrace(Trace tr) {
+    	setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
+    }
+
+    /**
+     * Открывает рефлектограмму как первичную.
+     * Автоматически закрывает все ранее открытые рефлектограммы.
+     */ 
+    private static void openPrimaryTrace(Trace tr) {
+    	setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
+    }
+
+    /**
+     * Открывает рефлектограмму как первичную.
+     * Автоматически закрывает все ранее открытые рефлектограммы.
+     * @param primaryTrace Рефлектограмма
+     * @param key ключ (будет использоваться как ключ, если первичной станет другая р/г)
+     */
+    public static void openPrimaryTraceFromBS(BellcoreStructure primaryTrace,
+    		String key) {
+    	openPrimaryTrace(new Trace(primaryTrace,
+    			key,
+    			getMinuitAnalysisParams()));
+    }
+
+    /**
+     * Открывает рефлектограмму из результата.
+     * Автоматически закрывает все ранее открытые рефлектограммы.
+     * @param result Результат измерения с рефлектограммой
+     * @throws SimpleApplicationException в результате нет рефлектограммы.
+     *   В таком случае открытые на данный момент р/г не закрываются
+     */
+    public static void openPrimaryTraceFromResult(Result result)
+    throws SimpleApplicationException {
+    	openPrimaryTrace(new Trace(result,
     			getMinuitAnalysisParams()));
     }
 
@@ -206,7 +245,7 @@ public class Heap
     	} else if (key.equals(ETALON_TRACE_KEY)) {
     		return getMTMEtalon() != null ? getMTMEtalon().getMTAE() : null;
     	} else {
-    		return getAnyTamByKey(key) != null ? getAnyTamByKey(key).getMTAE() : null;
+    		return getAnyTraceByKey(key) != null ? getAnyTraceByKey(key).getMTAE() : null;
     	}
     }
 
@@ -214,21 +253,23 @@ public class Heap
         return getAnyBSTraceByKey(ETALON_TRACE_KEY);
     }
 
-    public static void setBSEtalonTrace(BellcoreStructure etalonTrace) {
+    public static void setEtalonTraceFromBS(BellcoreStructure etalonTrace) {
+    	// @todo - эталон должен храниться отдельно от остальных (первичных и вторичных) рефлектограмм, и вообще не как Trace, а отдельно
         if (etalonTrace != null)
-        	setAnyTamByKey(ETALON_TRACE_KEY, new TraceAndMTAE(
+        	setAnyTraceByKey(ETALON_TRACE_KEY, new Trace(
         			etalonTrace,
+        			ETALON_TRACE_KEY,
         			getMinuitAnalysisParams()));
         else
         	removeAnyTamBykey(ETALON_TRACE_KEY);
     }
 
-    public static BellcoreStructure getBSReferenceTrace() {
-        return getAnyBSTraceByKey(REFERENCE_TRACE_KEY);
+    public static Trace getReferenceTrace() {
+        return getAnyTraceByKey(REFERENCE_TRACE_KEY);
     }
 
     public static boolean hasSecondaryBSKey(String id) {
-        return tAMs.containsKey(id);
+        return traces.containsKey(id);
     }
 
     /**
@@ -293,11 +334,11 @@ public class Heap
     // --------
 
     public static boolean hasEmptyAllBSMap() {
-        return tAMs.isEmpty();
+        return traces.isEmpty();
     }
 
     private static String getFirstSecondaryBSKey() {
-    	for (String key: tAMs.keySet()) {
+    	for (String key: traces.keySet()) {
             if (key != PRIMARY_TRACE_KEY)
             	return key;
     	}
@@ -305,7 +346,7 @@ public class Heap
     }
 
     public static void updateCurrentTraceWhenBSRemoved() {
-        if (!tAMs.containsKey(currentTrace))
+        if (!traces.containsKey(currentTrace))
             currentTrace = getFirstSecondaryBSKey();
         if (currentTrace == null)
             currentTrace = PRIMARY_TRACE_KEY;
@@ -351,9 +392,9 @@ public class Heap
     }
 
     public static Collection getBSCollection() {
-    	Collection<BellcoreStructure> coll = new ArrayList<BellcoreStructure>(tAMs.size());
-    	for (TraceAndMTAE tam: tAMs.values()) {
-    		coll.add(tam.getBS());
+    	Collection<BellcoreStructure> coll = new ArrayList<BellcoreStructure>(traces.size());
+    	for (Trace tr: traces.values()) {
+    		coll.add(tr.getBS());
     	}
     	return coll;
     }
@@ -390,7 +431,7 @@ public class Heap
 	}
 
     private static void removeAllBS() {
-    	tAMs = new HashMap<String, TraceAndMTAE>();
+    	traces = new HashMap<String, Trace>();
     }
 
     public static void removeAnyBSByName(String id) {
@@ -495,10 +536,7 @@ public class Heap
 
     public static void notifyAnalysisParametersUpdated() {
         Log.debugMessage("Heap.notifyAnalysisParametersUpdated | ", Level.FINEST);
-        // notify tams
-    	for (TraceAndMTAE value: tAMs.values()) {
-    		value.setAnalysisParameters(getMinuitAnalysisParams());
-    	}
+        // do not notify traces
         // notify subscribers
         for (AnalysisParametersListener listener: analysisParametersListeners)
             listener.analysisParametersUpdated();
@@ -741,15 +779,17 @@ public class Heap
     }
 
     public static void putSecondaryTraceByKey(String key, BellcoreStructure bs) {
-    	tAMs.put(key, new TraceAndMTAE(
+    	traces.put(key, new Trace(
     			bs,
+    			key,
     			getMinuitAnalysisParams()));
         notifyBsHashAdd(key, bs);
     }
 
-    public static void setBSReferenceTrace(BellcoreStructure bs) {
-        tAMs.put(REFERENCE_TRACE_KEY, new TraceAndMTAE(
+    public static void setBSReferenceTrace(BellcoreStructure bs, String key) {
+        traces.put(REFERENCE_TRACE_KEY, new Trace(
         		bs,
+        		key,
         		getMinuitAnalysisParams()));
         notifyBsHashAdd(REFERENCE_TRACE_KEY, bs);
     }
@@ -964,14 +1004,14 @@ public class Heap
 	}
 
 	public static void unSetEtalonPair() {
-		setBSEtalonTrace(null);
+		setEtalonTraceFromBS(null);
 		Heap.setAnchorer(null);
 		Heap.setMTMEtalon(null);
 	}
 
 	public static void setEtalonPair(BellcoreStructure bs,
 			Etalon etalonObj) {
-		setBSEtalonTrace(bs);
+		setEtalonTraceFromBS(bs);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());
