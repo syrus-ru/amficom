@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.3 2005/07/11 13:16:41 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.4 2005/07/20 13:23:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,7 +77,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertEquals(siteNodes.size(), 6);
 		assertEquals(cablePaths.size(), 0);
 
-		assertSame(this.building1, SchemeSampleData.scheme1element0.getSiteNode());
+		assertNull(SchemeSampleData.scheme1element0.getSiteNode());
 		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
 		assertEquals(cciSet.size(), 0);
 	}

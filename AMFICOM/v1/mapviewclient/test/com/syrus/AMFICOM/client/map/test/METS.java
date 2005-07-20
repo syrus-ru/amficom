@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.7 2005/07/19 13:21:42 krupenn Exp $
+ * $Id: METS.java,v 1.8 2005/07/20 13:23:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
 import javax.swing.JFrame;
 
@@ -47,7 +48,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/19 13:21:42 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/20 13:23:26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -84,8 +85,9 @@ public class METS {
 		}
 		for(Iterator iter = scheme.getSchemeCableLinks().iterator(); iter.hasNext();) {
 			SchemeCableLink element = (SchemeCableLink )iter.next();
-			for (final CableChannelingItem cableChannelingItem : element.getCableChannelingItems()) {
-				cableChannelingItem.setParentSchemeCableLink(null);
+			final SortedSet<CableChannelingItem> cableChannelingItems = element.getCableChannelingItems();
+			if (!cableChannelingItems.isEmpty()) {
+				cableChannelingItems.first().setParentSchemeCableLink(null, true);
 			}
 		}
 	}
