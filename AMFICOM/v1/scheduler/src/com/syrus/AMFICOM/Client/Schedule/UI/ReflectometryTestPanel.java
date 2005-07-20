@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/07/20 07:28:43 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/20 11:02:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -1170,21 +1170,48 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			public void actionPerformed(ActionEvent e) {
 				synchronized (ReflectometryTestPanel.this) {
 					JComboBox comboBox = (JComboBox) e.getSource();
-					/* 1000 m is 1 km */
 					Object selectedItem = comboBox.getSelectedItem();
-					if (selectedItem == null)
+					if (selectedItem == null) {
 						return;
+					}
+					/* 1000 m is 1 km */
 					double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());
+					String resolutionItem = (String) ReflectometryTestPanel.this.resolutionComboBox.getSelectedItem();
+					double resolutionOld = Double.parseDouble(resolutionItem);
+					boolean found = false;
+					boolean firstItem = true;
+					boolean firstItemGreater = false;
 					ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
 					for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
 						String res = (String) it.next();
 						double resolution = Double.parseDouble(res);
 						if (maxDistance / resolution < ReflectometryTestPanel.this.maxPoints) {
+							if (res.equals(resolutionItem)) {
+								found = true;
+							} else {
+								if (firstItem) {
+									if (resolutionOld < resolution) {
+										firstItemGreater = true;
+									}
+								}
+							}
+							
+							firstItem = false;
+							
 							ReflectometryTestPanel.this.resolutionComboBox.addItem(res);
 						}
 					}
+					
+					if (found) {
+						ReflectometryTestPanel.this.resolutionComboBox.setSelectedItem(resolutionItem);
+					} else {
+						if (firstItemGreater) {
+							ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(0);
+						} else {
+							ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(comboBox.getItemCount() - 1);
+						}
+					}
 				}
-
 			}
 		});
 
@@ -1266,18 +1293,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(this.resolutionLabel, gbc);
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.weightx = 0.0;
-		this.add(this.resolutionComboBox, gbc);
-
-		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		this.add(this.maxDistanceLabel, gbc);
 		gbc.weightx = 0.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(this.maxDistanceComboBox, gbc);
 
+		gbc.weightx = 1.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		add(this.resolutionLabel, gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 0.0;
+		this.add(this.resolutionComboBox, gbc);
+		
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		this.add(new JLabel(LangModelSchedule.getString("Text.GainSplice")), gbc); //$NON-NLS-1$
