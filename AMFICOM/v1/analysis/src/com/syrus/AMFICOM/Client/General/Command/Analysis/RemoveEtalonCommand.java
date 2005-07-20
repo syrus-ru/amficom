@@ -11,7 +11,7 @@ public class RemoveEtalonCommand extends AbstractCommand
 
 	public void execute()
 	{
-		Heap.notifyBsHashRemove(Heap.ETALON_TRACE_KEY);
+		Heap.traceClosed(Heap.ETALON_TRACE_KEY);
 		// FIXME: кажется, тут еще неплохо бы кидать CLOSE_ETALON_EVENT
 	}
 }

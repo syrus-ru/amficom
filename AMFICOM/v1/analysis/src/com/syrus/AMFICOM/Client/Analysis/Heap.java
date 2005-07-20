@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.82 2005/07/20 12:09:54 saa Exp $
+ * $Id: Heap.java,v 1.83 2005/07/20 13:05:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,7 +89,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.82 $, $Date: 2005/07/20 12:09:54 $
+ * @version $Revision: 1.83 $, $Date: 2005/07/20 13:05:06 $
  * @module
  */
 public class Heap
@@ -448,16 +448,6 @@ public class Heap
         // Pool.put("activecontext", "activepathid", "");
     }
 
-    public static boolean hasEventParamsForPrimaryTrace()
-    {
-        return getMTAEPrimary() != null; // XXX
-    }
-
-    public static boolean hasEventParamsForEtalonTrace()
-    {
-        return getMTMEtalon() != null; // XXX
-    }
-
     public static ModelTraceManager getMTMBackupEtalon() {
         try {
             return (ModelTraceManager)backupEtalonMTM.clone();
@@ -493,21 +483,18 @@ public class Heap
 
     // dispatcher stuff
 
-    // XXX: change each notify method to private as soon as bsHash will become
-    // private
-
     // NB: if the primary trace is opened, then there are
     // two events generated:
     // notifyBsHashAdd -> bsHashAdded() and
     // notifyPrimaryTraceChanged -> primaryTraceCUpdated()
-    public static void notifyBsHashAdd(String key, BellcoreStructure bs) {
+    private static void notifyBsHashAdd(String key, BellcoreStructure bs) {
         Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Level.FINEST);
         for (BsHashChangeListener listener: bsHashChangedListeners)
             listener.bsHashAdded(key, bs);
     }
 
-    //  primary trace всегда останется
-    public static void notifyBsHashRemove(String key) {
+    //  primary trace всегда останется, пока есть другие
+    private static void notifyBsHashRemove(String key) {
         Log.debugMessage("Heap.notifyBsHashRemove | key " + key, Level.FINEST);
         for (BsHashChangeListener listener: bsHashChangedListeners)
             listener.bsHashRemoved(key);
@@ -693,8 +680,8 @@ public class Heap
         removeListener(refMismatchListeners, listener);
     }
 
-    public static void primaryTraceOpened(BellcoreStructure bs) { // FIXME: remove arg
-        notifyBsHashAdd(PRIMARY_TRACE_KEY, bs);
+    public static void primaryTraceOpened() {
+        notifyBsHashAdd(PRIMARY_TRACE_KEY, getBSPrimaryTrace());
         notifyPrimaryTraceOpened();
     }
 
@@ -986,7 +973,7 @@ public class Heap
 
 	public static void makePrimaryAnalysis() {
 		new AnalysisCommand().execute();
-		primaryTraceOpened(getBSPrimaryTrace());
+		primaryTraceOpened();
         if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
             currentEvent.toEvent(0); // (1)
         notifyCurrentEventChanged(); // (2)
