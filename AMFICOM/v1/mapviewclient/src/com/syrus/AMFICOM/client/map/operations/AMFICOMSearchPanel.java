@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.18 2005/07/19 13:13:14 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.19 2005/07/20 17:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client.map.operations;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.SystemColor;
 import java.awt.Toolkit;
@@ -31,7 +30,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
@@ -52,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.18 $, $Date: 2005/07/19 13:13:14 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/20 17:58:30 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
