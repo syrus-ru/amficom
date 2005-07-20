@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.4 2005/07/11 13:16:41 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.5 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -95,7 +95,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 2);
 		cciList.remove(cci1);
 		CableChannelingItem cci2 = (CableChannelingItem )cciList.iterator().next();
@@ -184,7 +184,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 2);
 		assertTrue(cciSet.contains(cci1));
 		assertTrue(cciSet.contains(cci2));
@@ -274,7 +274,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 3);
 		cciList.remove(cci1);
 		cciList.remove(cci3);
@@ -372,7 +372,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 3);
 		assertTrue(cciSet.contains(cci1));
 		assertTrue(cciSet.contains(cci2));
@@ -487,7 +487,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink2.getNodeLinks().contains(unboundNodeLink2));
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 4);
 		cciList.remove(cci1);
 		cciList.remove(cci3);
@@ -613,7 +613,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink2.getNodeLinks().contains(unboundNodeLink2));
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 3);
 		cciList.remove(cci2);
 		cciList.remove(cci3);
@@ -714,7 +714,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 		
-		Set<CableChannelingItem> cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set<CableChannelingItem> cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 4);
 		cciList.remove(cci2);
 		cciList.remove(cci3);
@@ -812,7 +812,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink2.getNodeLinks().contains(unboundNodeLink2));
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 2);
 		cciList.remove(cci1);
 		CableChannelingItem cci2 = (CableChannelingItem )cciList.iterator().next();
@@ -941,7 +941,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(unboundLink3.getNodeLinks().contains(unboundNodeLink3));
 		assertSame(unboundNodeLink3.getPhysicalLink(), unboundLink3);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 3);
 		cciList.remove(cci1);
 		cciList.remove(cci3);

@@ -85,7 +85,7 @@ public final class PathElementsPanel extends AnalysisPanel
 			if (this.startPathElement == null || this.endPathElement == null)
 				setGraphBounds(this.start, this.end);
 
-			for (final Iterator pathElementIterator = this.path.getPathElements().tailSet(this.startPathElement).iterator(); pathElementIterator.hasNext();) {
+			for (final Iterator pathElementIterator = this.path.getPathMembers().tailSet(this.startPathElement).iterator(); pathElementIterator.hasNext();) {
 				final PathElement pathElement = (PathElement) pathElementIterator.next();
 				if (pathElement == this.endPathElement)
 					break;

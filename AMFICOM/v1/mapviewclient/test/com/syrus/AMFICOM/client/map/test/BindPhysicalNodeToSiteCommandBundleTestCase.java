@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.2 2005/07/18 08:38:16 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.3 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -138,7 +138,7 @@ public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTe
 		assertTrue(unboundLink2.getNodeLinks().contains(unboundNodeLink2));
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 2);
 
 		Iterator cciIterator = cciList.iterator();

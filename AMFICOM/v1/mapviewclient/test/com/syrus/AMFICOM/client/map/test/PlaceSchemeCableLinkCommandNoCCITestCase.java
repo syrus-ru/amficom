@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.4 2005/07/20 13:23:26 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.5 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertEquals(cablePaths.size(), 0);
 
 		assertSame(this.building1, SchemeSampleData.scheme1element0.getSiteNode());
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 0);
 	}
 
@@ -78,7 +78,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertEquals(cablePaths.size(), 0);
 
 		assertNull(SchemeSampleData.scheme1element0.getSiteNode());
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 0);
 	}
 
@@ -137,7 +137,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 
@@ -223,7 +223,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 
@@ -309,7 +309,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 
@@ -410,7 +410,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 

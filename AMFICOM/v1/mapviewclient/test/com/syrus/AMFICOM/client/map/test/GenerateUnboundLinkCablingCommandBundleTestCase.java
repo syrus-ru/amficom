@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.2 2005/07/11 13:16:41 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.3 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -291,7 +291,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertSame(greneratedLink.getStartNode(), this.building1);
 		assertSame(greneratedLink.getEndNode(), this.well1);
 
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 2);
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
@@ -389,7 +389,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertTrue(generatedLink.getNodeLinks().contains(generatedNodeLink));
 		assertSame(generatedNodeLink.getPhysicalLink(), generatedLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 
@@ -492,7 +492,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertTrue(generatedLink.getNodeLinks().contains(generatedNodeLink));
 		assertSame(generatedNodeLink.getPhysicalLink(), generatedLink);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 3);
 		cciList.remove(cci1);
 		cciList.remove(cci3);

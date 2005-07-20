@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.5 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeResource.java,v 1.6 2005/07/20 15:01:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/15 13:07:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/20 15:01:32 $
  * @module schemeclient_v1
  */
 
@@ -138,7 +138,7 @@ public class SchemeResource {
 	public Object[] getPathElements(SchemePath path) {
 		Object[] cells = graph.getAll();
 		ArrayList new_cells = new ArrayList();
-		Set pes = path.getPathElements();
+		Set pes = path.getPathMembers();
 		ArrayList links = new ArrayList(pes.size());
 		for (Iterator it = pes.iterator(); it.hasNext();)
 			links.add(((PathElement)it.next()).getAbstractSchemeElement());

@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.21 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.22 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/07/20 13:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/07/20 15:01:33 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -47,9 +47,9 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 		try {
 			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
-			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getCableChannelingItems();
+			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getPathMembers();
 			if (!cableChannelingItems.isEmpty()) {
-				cableChannelingItems.first().setParentSchemeCableLink(null, true);
+				cableChannelingItems.first().setParentPathOwner(null, true);
 			}
 
 			List ccis = new LinkedList();

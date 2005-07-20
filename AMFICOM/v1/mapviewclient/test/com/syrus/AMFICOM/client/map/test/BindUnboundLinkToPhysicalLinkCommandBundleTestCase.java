@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.1 2005/07/07 11:43:20 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.2 2005/07/20 15:01:32 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		Set cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciList.iterator().next();
 
@@ -154,7 +154,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		Set cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciList.iterator().next();
 
@@ -223,7 +223,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		Set cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciList.iterator().next();
 
@@ -300,7 +300,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 		
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		Set cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciList.iterator().next();
 
@@ -365,7 +365,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		Set cciList = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciList = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciList.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciList.iterator().next();
 
@@ -497,7 +497,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 		assertTrue(unboundLink.getNodeLinks().contains(nodeLink));
 		assertSame(nodeLink.getPhysicalLink(), unboundLink);
 		
-		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getCableChannelingItems());
+		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
 		assertEquals(cciList.size(), 2);
 
 		Iterator cciIterator = cciList.iterator();

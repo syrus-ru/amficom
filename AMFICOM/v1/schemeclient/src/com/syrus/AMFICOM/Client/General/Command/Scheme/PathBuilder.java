@@ -46,12 +46,12 @@ public class PathBuilder
 
 	private boolean exploreScheme(SchemePath path, Scheme scheme)
 	{
-		if (path.getPathElements().isEmpty())
+		if (path.getPathMembers().isEmpty())
 			return false;
 
 		while(true)
 		{
-			PathElement pe = (PathElement)path.getPathElements().last();
+			PathElement pe = (PathElement)path.getPathMembers().last();
 			if (pe.getEndAbstractSchemePort() == null)
 			{
 				if (state == PathBuilder.MULTIPLE_PORTS)
@@ -105,12 +105,12 @@ public class PathBuilder
 
 	private boolean exploreSchemeElement(SchemePath path, SchemeElement scheme_element)
 	{
-		if (path.getPathElements().isEmpty())
+		if (path.getPathMembers().isEmpty())
 			return false;
 
 		while(true)
 		{
-			PathElement pe = (PathElement)path.getPathElements().last();
+			PathElement pe = (PathElement)path.getPathMembers().last();
 			if (pe.getEndAbstractSchemePort() == null)
 				return false;
 
@@ -156,7 +156,7 @@ public class PathBuilder
 
 	public boolean explore(Scheme scheme, SchemePath path)
 	{
-		if (path.getPathElements().isEmpty())
+		if (path.getPathMembers().isEmpty())
 		{
 			if (path.getStartSchemeElement() == null)
 				return false;
@@ -168,7 +168,7 @@ public class PathBuilder
 
 		while(true)
 		{
-			PathElement pe = (PathElement)path.getPathElements().last();
+			PathElement pe = (PathElement)path.getPathMembers().last();
 			if (pe.getAbstractSchemeElement().equals(path.getEndSchemeElement()))
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -231,21 +231,21 @@ public class PathBuilder
 	public PathElement addSchemeElement(SchemePath path, SchemeElement se)
 	{
 		PathElement newPE = null;
-		Object last = path.getPathElements().last();
+		Object last = path.getPathMembers().last();
 		if (last != null)
 		{
 			if (se.getScheme() != null)
 			{
 				Scheme scheme = se.getScheme();
 				exploreScheme(path, scheme);
-				return (PathElement)path.getPathElements().last();
+				return (PathElement)path.getPathMembers().last();
 			} else if (!se.getSchemeElements().isEmpty())
 			{
 				exploreSchemeElement(path, se);
-				return (PathElement)path.getPathElements().last();
+				return (PathElement)path.getPathMembers().last();
 			}
 
-			PathElement pe = (PathElement)path.getPathElements().last();
+			PathElement pe = (PathElement)path.getPathMembers().last();
 
 			try {
 				newPE = PathElement.createInstance(creatorId, path, pe.getEndAbstractSchemePort(), null);
@@ -370,7 +370,7 @@ public class PathBuilder
 
 	public PathElement addLink(SchemePath path, SchemeLink link)
 	{
-		Object last = path.getPathElements().last();
+		Object last = path.getPathMembers().last();
 		if (last != null)
 		{
 			PathElement pe = (PathElement)last;
@@ -431,7 +431,7 @@ public class PathBuilder
 
 	public PathElement addCableLink(SchemePath path, SchemeCableLink link)
 	{
-		Object last = path.getPathElements().last();
+		Object last = path.getPathMembers().last();
 		if (last != null)
 		{
 			PathElement pe = (PathElement)last;
@@ -479,7 +479,7 @@ public class PathBuilder
 	{
 		if (thread == null)
 		{
-			PathElement pe = (PathElement)path.getPathElements().last();
+			PathElement pe = (PathElement)path.getPathMembers().last();
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 							"Пожалуйста, проверьте коммутацию в элементе " + pe.getName(),
 							"Ошибка", JOptionPane.OK_OPTION);

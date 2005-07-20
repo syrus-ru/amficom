@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.31 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.32 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/07/20 13:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/07/20 15:01:33 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -91,7 +91,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
 			Identifier userId = LoginManager.getUserId();
-			for(Iterator iter = this.schemeCableLink.getCableChannelingItems().iterator(); iter.hasNext();) {
+			for(Iterator iter = this.schemeCableLink.getPathMembers().iterator(); iter.hasNext();) {
 				CableChannelingItem cci = (CableChannelingItem )iter.next();
 				SiteNode currentStartNode = cci.getStartSiteNode();
 				SiteNode currentEndNode = cci.getEndSiteNode();

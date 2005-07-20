@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.26 2005/06/23 08:27:18 krupenn Exp $
+ * $Id: MarkerController.java,v 1.27 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * Контроллер маркера.
- * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/06/23 08:27:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/20 15:01:33 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController {
@@ -331,7 +331,7 @@ public class MarkerController extends AbstractNodeController {
 		MeasurementPathController pathController = (MeasurementPathController )
 			this.logicalNetLayer.getMapViewController().getController(measurementPath);
 
-		SortedSet pathElements = measurementPath.getSchemePath().getPathElements();
+		SortedSet pathElements = measurementPath.getSchemePath().getPathMembers();
 		for(Iterator iterator = pathElements.iterator(); iterator.hasNext();) {
 			PathElement pathElement = (PathElement )iterator.next();
 			double d = SchemeUtils.getPhysicalLength(pathElement);

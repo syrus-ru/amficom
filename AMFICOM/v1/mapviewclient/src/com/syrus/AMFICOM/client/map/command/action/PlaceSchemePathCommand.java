@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.32 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.33 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
  * –азместить элемент типа mpe на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/07/20 13:34:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/07/20 15:01:33 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -78,7 +78,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 			else
 			// если путь уже есть, все его составл€ющие нанос€тс€ заново
 				super.removeMeasurementPathCables(this.measurementPath);
-			for(Iterator iter = this.schemePath.getPathElements().iterator(); iter.hasNext();) {
+			for(Iterator iter = this.schemePath.getPathMembers().iterator(); iter.hasNext();) {
 				PathElement pe = (PathElement )iter.next();
 				switch(pe.getKind().value())
 				{

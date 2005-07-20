@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.1 2005/07/08 06:39:03 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.2 2005/07/20 15:01:33 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -161,7 +161,7 @@ public class BindUnboundNodeToSiteCommandBundleTestCase extends SchemeBindingTes
 		assertTrue(unboundLink.getNodeLinks().contains(unboundNodeLink));
 		assertSame(unboundNodeLink.getPhysicalLink(), unboundLink);
 		
-		Set cciSet = SchemeSampleData.scheme1clink0.getCableChannelingItems();
+		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
 
