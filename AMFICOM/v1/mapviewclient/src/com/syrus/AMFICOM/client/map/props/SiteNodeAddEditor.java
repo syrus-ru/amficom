@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.client.map.props;
 
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -11,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -23,6 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
@@ -55,6 +59,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	
 	private SiteCrossingPanel crossingPanel = new SiteCrossingPanel();
 	private JScrollPane crossingScrollPane = new JScrollPane();
+//			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, 
+//			JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
 	private UgoTabbedPane schemePane = new UgoTabbedPane();
 
@@ -69,6 +75,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private LogicalNetLayer logicalNetLayer;
 
 	private NetMapViewer netMapViewer;
+
+	private static Dimension buttonSize = new Dimension(24, 24);
 
 	public SiteNodeAddEditor() {
 		this.root.add(this.elementsBranch);
@@ -121,7 +129,11 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 //					bind(or);
 				}
 			});
-		this.unbindButton.setText("Отвязать");
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
+		this.unbindButton.setToolTipText("Убрать привязку");
+		this.unbindButton.setPreferredSize(buttonSize);
+		this.unbindButton.setMaximumSize(buttonSize);
+		this.unbindButton.setMinimumSize(buttonSize);
 		this.unbindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -137,6 +149,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.treeScrollPane.getViewport().add(this.elementsTree);
 		this.crossingScrollPane.getViewport().add(this.crossingPanel);
 		this.schemePane.getGraph().setGraphEditable(false);
+		
+//		this.crossingScrollPane.setMinimumSize(new Dimension(50, 100));
+		this.crossingPanel.setPreferredSize(new Dimension(50, 100));
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -233,6 +248,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				break;
 			}
 		}
+		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		
 		this.unboundElements.add(se);
 
