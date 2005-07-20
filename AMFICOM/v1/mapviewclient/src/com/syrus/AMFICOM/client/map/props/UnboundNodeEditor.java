@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.client.map.props;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -194,6 +195,19 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.elementComboBox, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 5;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(Box.createVerticalBox(), constraints);
 
 		this.nameTextField.setEnabled(false);
 		this.typeComboBox.setEnabled(false);
