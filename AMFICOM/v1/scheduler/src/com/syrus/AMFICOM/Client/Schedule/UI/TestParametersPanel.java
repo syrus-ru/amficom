@@ -260,7 +260,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					final WrapperedList objList = (WrapperedList) e.getSource();
 					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
-					final JMenuItem deleteTestMenuItem = new JMenuItem("Show Measurement setup summary info");
+					final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));
 					final JPopupMenu popup = new JPopupMenu();
 					popup.add(deleteTestMenuItem);
 					popup.show(objList, e.getX(), e.getY());
@@ -271,7 +271,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
 							String info = (String) wrapper.getValue(measurementSetup1,
 								MeasurementSetupWrapper.SUMMARY_INFO);
-							JOptionPane.showConfirmDialog(objList, info, "Measurement setup summary info",
+							JOptionPane.showConfirmDialog(objList, info, LangModelSchedule.getString("Measurement setup summary info"),
 								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 						}
@@ -357,6 +357,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 				.getString("Use parameters"));
 
 		this.tabbedPane.setSelectedIndex(0);
+		
+		if (this.parametersTestPanel == null) {
+			this.tabbedPane.setEnabledAt(1, false);
+		}
 	}
 
 	public Identifier getAnalysisTypeId() {
@@ -581,6 +585,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 					this.switchPanel.add(this.parametersTestPanel, "");
 					// */
 					this.tabbedPane.revalidate();
+					this.tabbedPane.setEnabledAt(1, true);
 				}
 			} catch (ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(this.tabbedPane, e);
