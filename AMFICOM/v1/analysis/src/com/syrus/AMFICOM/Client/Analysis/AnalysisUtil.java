@@ -54,7 +54,6 @@ public class AnalysisUtil
 	/**
 	 * достаем собственно рефлектограмму из параметры результатов.
 	 * @throws SimpleApplicationException, если рефлектограммы в указанном результате нет
-	 * null, если таковой не нашлось
 	 */
 	public static BellcoreStructure getBellcoreStructureFromResult(
 			Result result1)
