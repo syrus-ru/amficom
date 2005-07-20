@@ -1108,7 +1108,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		void setPeriodEnabled(boolean enable) {		
 			this.startTimeButton.setVisible(false);
 			this.endTimeButton.setVisible(false);
-			this.endingLabel.setVisible(false);
+			this.endingLabel.setVisible(true);
 			this.endTimeSpinner.setVisible(enable);
 			this.endDateSpinner.setVisible(enable);
 			this.endDateButton.setVisible(enable);
