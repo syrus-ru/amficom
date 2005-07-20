@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.10 2005/07/19 14:31:13 bob Exp $
+ * $Id: JGraphText.java,v 1.11 2005/07/20 14:51:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/19 14:31:13 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/20 14:51:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -417,14 +417,30 @@ public class JGraphText implements GraphSelectionListener {
 			if (model.isPort(cell)) {
 				DefaultPort port = (DefaultPort)cell;
 				Object userObject = port.getUserObject();
-				graphLayoutCache.setVisibleImpl(new Object[] {cell.getParent(), cell}, false);
+				boolean hide = true;
+				
 				if (userObject instanceof AbstractBean) {
 					AbstractBean bean = (AbstractBean)userObject;
+					String codeName = bean.getCodeName();
+					for (String name : names) {
+						if (name.equals(codeName)) {
+							hide = false;
+							break;
+						}
+					}
 					System.out.println("JGraphText.showOnly() | bean " + bean.getCodeName());
+				} 
+				if (hide) {
+					graphLayoutCache.setVisible(cell.getParent(), false);
 				}
+				
 				System.out.println("JGraphText.showOnly() | " + cell);
 			}
 		}
+		
+		this.graph.repaint();
+		this.undoManager.discardAllEdits();
+		this.updateHistoryButtons();
 	}
 	
 	private JToolBar createToolBar() {
@@ -1080,17 +1096,10 @@ public class JGraphText implements GraphSelectionListener {
 					Object userObject = port.getUserObject();
 					if (userObject instanceof AbstractBean) {
 						AbstractBean bean = (AbstractBean)userObject;
-						JPopupMenu menu = bean.getMenu(JGraphText.this.graph, cell);
+						JPopupMenu menu = bean.getMenu(JGraphText.this, cell);
 						if (menu != null) {
-							menu.show(graph, e.getX(), e.getY());
-						} else {
-							Action enterAction = bean.getEnterAction(JGraphText.this);
-							if (enterAction != null) {
-								menu = new JPopupMenu();
-								menu.add(enterAction);
-								menu.show(graph, e.getX(), e.getY());
-							}
-						}
+							menu.show(JGraphText.this.graph, e.getX(), e.getY());
+						} 
 					}
 				}
 				
@@ -1247,4 +1256,9 @@ public class JGraphText implements GraphSelectionListener {
 		}
 
 	} // End of Editor.MyMarqueeHandler
+
+	
+	public final JGraph getGraph() {
+		return this.graph;
+	}
 }

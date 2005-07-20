@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.1 2005/07/19 09:49:00 bob Exp $
+ * $Id: UserBean.java,v 1.2 2005/07/20 14:51:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultPort;
@@ -30,9 +29,10 @@ import org.jgraph.graph.GraphConstants;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/20 14:51:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -64,7 +64,7 @@ public class UserBean extends AbstractBean {
 	}
 
 	@Override
-	public JPopupMenu getMenu(	final JGraph graph,
+	public JPopupMenu getMenu(	final JGraphText graphText,
 								final Object cell) {
 
 		if (cell != null) {
@@ -80,7 +80,7 @@ public class UserBean extends AbstractBean {
 							GraphConstants.setValue(attributeMap, name1);
 							Map viewMap = new Hashtable();
 							viewMap.put(cell, attributeMap);
-							graph.getModel().edit(viewMap, null, null, null);
+							graphText.getGraph().getModel().edit(viewMap, null, null, null);
 						}
 					});
 				} else {
@@ -110,7 +110,7 @@ public class UserBean extends AbstractBean {
 					GraphConstants.setValue(attributeMap, string);
 					Map viewMap = new Hashtable();
 					viewMap.put(cell, attributeMap);
-					graph.getModel().edit(viewMap, null, null, null);
+					graphText.getGraph().getModel().edit(viewMap, null, null, null);
 				}
 			});
 			return popupMenu;

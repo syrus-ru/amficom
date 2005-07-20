@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.6 2005/07/19 14:31:13 bob Exp $
+ * $Id: AbstractBean.java,v 1.7 2005/07/20 14:51:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/19 14:31:13 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/20 14:51:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -61,7 +61,7 @@ public abstract class AbstractBean {
 		return this.propertyPanel;
 	}
 
-	public JPopupMenu getMenu(	final JGraph graph,
+	public JPopupMenu getMenu(	final JGraphText graph,
 								final Object cell) {
 		return null;
 	}
@@ -103,8 +103,5 @@ public abstract class AbstractBean {
 	public String toString() {
 		return this.getClass().getName() + " is " + this.codeName + '/' + this.name + '/';
 	}
-	
-	public Action getEnterAction(JGraphText graph) {
-		return null;
-	}
+
 }

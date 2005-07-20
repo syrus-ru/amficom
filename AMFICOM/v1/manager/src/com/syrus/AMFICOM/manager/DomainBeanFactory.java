@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.1 2005/07/19 14:31:13 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.2 2005/07/20 14:51:07 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,24 @@
 package com.syrus.AMFICOM.manager;
 
 import java.awt.event.ActionEvent;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 import org.jgraph.JGraph;
+import org.jgraph.graph.AttributeMap;
+import org.jgraph.graph.GraphConstants;
 
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/19 14:31:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/20 14:51:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -54,30 +60,41 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 		AbstractBean bean = new AbstractBean() {
 			
 			@Override
-			public Action getEnterAction(final JGraphText graph) {
-				return new AbstractAction("Enter to domain") {
+			public JPopupMenu getMenu(	final JGraphText graph,
+										final Object cell) {
 
-					public void actionPerformed(ActionEvent e) {
-						
-						graph.domainButton.setEnabled(false);
-						graph.netButton.setEnabled(true);
-						
-						graph.userButton.setEnabled(true);
+				if (cell != null) {
+					JPopupMenu popupMenu = new JPopupMenu();
+					String lastName = null;					
 
-						graph.armButton.setEnabled(true);
+					popupMenu.add(new AbstractAction("Enter to domain") {
 
-						graph.rtuButton.setEnabled(true);
+						public void actionPerformed(ActionEvent e) {
+							
+							graph.domainButton.setEnabled(false);
+							graph.netButton.setEnabled(true);
+							
+							graph.userButton.setEnabled(true);
 
-						graph.serverButton.setEnabled(true);
+							graph.armButton.setEnabled(true);
 
-						graph.mcmButton.setEnabled(true);
-						
-						graph.showOnly(null);
-						
-						System.out.println("DomainBeanFactory | entered");
-					};
-				};
-			}
+							graph.rtuButton.setEnabled(true);
+
+							graph.serverButton.setEnabled(true);
+
+							graph.mcmButton.setEnabled(true);
+							
+							graph.showOnly(new String[] {"Domain"});
+							
+							System.out.println("DomainBeanFactory | entered");
+						};
+					});
+					return popupMenu;
+				}
+
+				return null;
+			}			
+			
 
 		};
 		bean.setCodeName("Domain");
