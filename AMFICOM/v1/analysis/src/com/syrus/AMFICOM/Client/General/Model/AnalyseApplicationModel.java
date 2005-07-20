@@ -145,8 +145,10 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 			"images/events.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_MODELED, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/modeled.gif")));
-		
+		"images/modeled.gif")));
+		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_TRACE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/original_trace.gif")));
+
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_GAIN, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/gain.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_SPLICE_GAIN, new ImageIcon(Toolkit.getDefaultToolkit()

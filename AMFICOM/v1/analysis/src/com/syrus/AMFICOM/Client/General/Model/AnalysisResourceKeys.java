@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.20 2005/07/05 15:40:05 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.21 2005/07/20 07:08:20 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/07/05 15:40:05 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/20 07:08:20 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -85,6 +85,7 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 	String	ICON_ANALYSIS_THRESHOLD_DECREASE		= "com.syrus.AMFICOM.icon.analisys.thresholdDecrease";
 	String	ICON_ANALYSIS_EVENTS					= "com.syrus.AMFICOM.icon.analisys.events";
 	String	ICON_ANALYSIS_MODELED					= "com.syrus.AMFICOM.icon.analisys.modeled";
+	String	ICON_ANALYSIS_TRACE						= "com.syrus.AMFICOM.icon.analisys.trace";
 
 	String	ICON_ANALYSIS_GAIN					= "com.syrus.AMFICOM.icon.analisys.gain";
 	String	ICON_ANALYSIS_SPLICE_GAIN					= "com.syrus.AMFICOM.icon.analisys.splicegain";
