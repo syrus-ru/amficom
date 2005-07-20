@@ -90,11 +90,8 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
 
 		// закрываем все открытые рефлектограммы
-		if (!Heap.hasEmptyAllBSMap())
-		{
-			if (Heap.getBSPrimaryTrace() != null)
-				new FileCloseCommand(this.aContext).execute();
-		}
+		if (Heap.getBSPrimaryTrace() != null)
+			new FileCloseCommand(this.aContext).execute();
 
 		// открываем загруженную рефлектограмму как первичную
 		Heap.setBSPrimaryTrace(bs);
