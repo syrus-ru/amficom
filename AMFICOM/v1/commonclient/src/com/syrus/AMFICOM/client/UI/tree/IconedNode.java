@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedNode.java,v 1.3 2005/07/11 12:38:10 bob Exp $
+ * $Id: IconedNode.java,v 1.4 2005/07/20 06:04:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.logic.AbstractItem;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/20 06:04:43 $
  * @module generalclient_v1
  */
 
@@ -24,6 +24,7 @@ public class IconedNode extends AbstractItem implements Namable {
 	private String name;
 	private Icon icon;
 	private boolean allowsChildren = true;
+	private boolean nameSet = false;
 
 	public IconedNode() {
 		// default empty constructor
@@ -43,14 +44,17 @@ public class IconedNode extends AbstractItem implements Namable {
 	
 	public IconedNode(Object object, String name, boolean allowsChildren) {
 		this(object, name, null, allowsChildren);
+		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name) {
 		this(object, name, null, true);
+		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name, Icon icon) {
 		this(object, name, icon, true);
+		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name, Icon icon, boolean allowsChildren) {
@@ -78,10 +82,11 @@ public class IconedNode extends AbstractItem implements Namable {
 
 	public void setName(String name) {
 		this.name = name;
+		this.nameSet = true;
 	}
 	
 	public String getName() {
-		if (this.object instanceof Namable)
+		if (!this.nameSet && this.object instanceof Namable)
 			return ((Namable)this.object).getName();
 		return this.name;
 	}

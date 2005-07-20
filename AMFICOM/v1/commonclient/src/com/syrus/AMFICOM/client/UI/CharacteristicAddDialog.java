@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.12 2005/07/13 16:08:34 arseniy Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.13 2005/07/20 06:04:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/07/13 16:08:34 $
+ * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/07/20 06:04:43 $
  * @module commonclient_v1
  */
 
@@ -104,7 +104,7 @@ public class CharacteristicAddDialog {
 		this.description = new JLabel(LangModelGeneral.getString(ResourceKeys.I18N_DESCRIPTION));
 		
 		this.characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper.getInstance(),
-			StorableObjectWrapper.COLUMN_DESCRIPTION,
+			StorableObjectWrapper.COLUMN_NAME,
 			StorableObjectWrapper.COLUMN_ID);
 
 	}

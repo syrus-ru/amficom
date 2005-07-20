@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.13 2005/07/17 05:24:52 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.14 2005/07/20 06:04:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/07/17 05:24:52 $
+ * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/07/20 06:04:43 $
  * @module commonclient_v1
  */
 
@@ -427,7 +427,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 							try {
 								Characteristic ch = Characteristic.createInstance(userId, type,
-										type.getDescription(), "", "", characterizable, true,
+										type.getName(), type.getDescription(), "", characterizable, true,
 										true);
 								List added = (List) CharacteristicsPanel.this.addedCharacteristics.get(object);
 								if (added == null) {
