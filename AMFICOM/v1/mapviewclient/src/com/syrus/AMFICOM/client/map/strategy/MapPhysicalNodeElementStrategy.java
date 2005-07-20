@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.26 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.27 2005/07/20 13:31:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.client.map.strategy;
 import java.awt.Point;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/20 13:31:54 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -201,6 +202,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 								super.logicalNetLayer.getCommandList().add(this.command);
 								super.logicalNetLayer.getCommandList().execute();
 								this.command = null;
+								this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 								break;
 							}
 					}
