@@ -165,7 +165,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		removeOneTrace(Heap.ETALON_TRACE_KEY);
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{
 		addTrace (key);
 		setVisible(true);

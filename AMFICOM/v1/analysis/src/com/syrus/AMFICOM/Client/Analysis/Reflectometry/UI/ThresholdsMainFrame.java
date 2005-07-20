@@ -43,7 +43,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
-import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
@@ -336,8 +335,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashAdded(java.lang.String,
 	 *      com.syrus.io.BellcoreStructure)
 	 */
-	public void bsHashAdded(String key,
-							BellcoreStructure bs) {
+	public void bsHashAdded(String key) {
 		String id = key;
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {

@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 
 /**
  * Отображает:
@@ -423,7 +422,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		}
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{ // ignore (?)
 	}
 

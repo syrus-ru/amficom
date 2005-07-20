@@ -162,7 +162,7 @@ implements PropertyChangeListener, BsHashChangeListener
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs1)
+	public void bsHashAdded(String key)
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{

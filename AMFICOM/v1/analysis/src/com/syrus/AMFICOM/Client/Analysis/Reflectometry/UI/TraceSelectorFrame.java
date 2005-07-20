@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.analysis.*;
 import com.syrus.AMFICOM.client.UI.*;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
 public class TraceSelectorFrame extends JInternalFrame
@@ -123,7 +122,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		scrollPane.getViewport().add(jTable);
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{
 		String id = key;
 		if (traces.contains(id))

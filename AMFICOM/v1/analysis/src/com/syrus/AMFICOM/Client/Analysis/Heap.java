@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.84 2005/07/20 14:06:45 saa Exp $
+ * $Id: Heap.java,v 1.85 2005/07/20 14:32:36 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,7 +89,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.84 $, $Date: 2005/07/20 14:06:45 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/20 14:32:36 $
  * @module
  */
 public class Heap
@@ -491,7 +491,7 @@ public class Heap
     private static void notifyBsHashAdd(String key, BellcoreStructure bs) {
         Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Level.FINEST);
         for (BsHashChangeListener listener: bsHashChangedListeners)
-            listener.bsHashAdded(key, bs);
+            listener.bsHashAdded(key);
     }
 
     //  primary trace всегда останется, пока есть другие

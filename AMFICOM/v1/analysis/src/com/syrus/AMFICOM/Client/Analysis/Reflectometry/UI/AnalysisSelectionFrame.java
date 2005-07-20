@@ -211,7 +211,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		setValues(ap);
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{
 		String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))

@@ -102,7 +102,7 @@ implements BsHashChangeListener, CurrentTraceChangeListener, ReportTable
 		jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{
 		if (key.equals(Heap.PRIMARY_TRACE_KEY))
 		{

@@ -115,7 +115,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		}
 	}
 
-	public void bsHashAdded(String key, BellcoreStructure bs)
+	public void bsHashAdded(String key)
 	{
 		addTrace (key);
 		setVisible(true);

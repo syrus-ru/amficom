@@ -466,8 +466,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		super.processWindowEvent(e);
 	}
 
-	public void bsHashAdded(String key,
-							BellcoreStructure bs) {
+	public void bsHashAdded(String key) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		String id = key;
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
