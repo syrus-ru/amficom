@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemePathCommand.java,v 1.13 2005/07/11 13:18:04 bass Exp $
+ * $Id: UnPlaceSchemePathCommand.java,v 1.14 2005/07/20 13:34:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * убрать привязку измерительного пути с карты
  * 
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/07/20 13:34:10 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemePathCommand extends MapActionCommandBundle
@@ -43,8 +43,6 @@ public class UnPlaceSchemePathCommand extends MapActionCommandBundle
 
 		try {
 			super.removeMeasurementPath(this.path);
-			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

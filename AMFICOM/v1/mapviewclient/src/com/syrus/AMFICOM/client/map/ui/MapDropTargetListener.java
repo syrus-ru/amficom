@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.30 2005/07/19 07:53:10 peskovsky Exp $
+ * $Id: MapDropTargetListener.java,v 1.31 2005/07/20 13:32:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.30 $, $Date: 2005/07/19 07:53:10 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.31 $, $Date: 2005/07/20 13:32:41 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public final class MapDropTargetListener implements DropTargetListener
@@ -157,7 +157,7 @@ public final class MapDropTargetListener implements DropTargetListener
 					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 					logicalNetLayer.getCommandList().add(cmd);
 					logicalNetLayer.getCommandList().execute();
-					this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+					logicalNetLayer.sendSelectionChangeEvent();
 				} catch(MapConnectionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -169,7 +169,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			else
 			{
 				map.setSelected(site, true);
-				this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+				logicalNetLayer.sendSelectionChangeEvent();
 			}
 		}
 		else
@@ -178,6 +178,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
+			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
@@ -190,6 +191,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		if(cablePath != null)
 		{
 			map.setSelected(cablePath, true);
+			logicalNetLayer.sendSelectionChangeEvent();
 		}
 		else
 		{
@@ -210,6 +212,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
+			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 /*					

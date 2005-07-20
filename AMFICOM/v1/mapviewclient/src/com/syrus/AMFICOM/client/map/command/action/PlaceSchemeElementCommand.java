@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.23 2005/07/15 17:06:07 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.24 2005/07/20 13:34:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * или по координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/07/15 17:06:07 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/20 13:34:10 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -113,10 +113,8 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.getParentScheme());
 			}
 			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
-			this.logicalNetLayer.sendSelectionChangeEvent();
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

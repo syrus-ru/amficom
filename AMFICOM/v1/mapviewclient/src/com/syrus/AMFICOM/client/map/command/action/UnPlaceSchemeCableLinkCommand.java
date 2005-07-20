@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.20 2005/07/19 13:11:11 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.21 2005/07/20 13:34:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -29,7 +28,7 @@ import com.syrus.util.Log;
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/07/19 13:11:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/20 13:34:10 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -48,15 +47,9 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 
 		try {
 			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
-			// OLD
-//			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getCableChannelingItems();
-//			if (!cableChannelingItems.isEmpty()) {
-//				cableChannelingItems.first().setParentSchemeCableLink(null);
-//			}
-			// NEW
-			for (final CableChannelingItem cableChannelingItem : scl.getCableChannelingItems()) {
-				cableChannelingItem.setParentSchemeCableLink(null);
-//				scl.removeCableChannelingItem(cableChannelingItem);
+			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getCableChannelingItems();
+			if (!cableChannelingItems.isEmpty()) {
+				cableChannelingItems.first().setParentSchemeCableLink(null, true);
 			}
 
 			List ccis = new LinkedList();
@@ -70,8 +63,6 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			}
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
-			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
