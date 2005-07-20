@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.27 2005/06/22 07:32:22 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.28 2005/07/20 13:23:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.27 $, $Date: 2005/06/22 07:32:22 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/20 13:23:17 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -67,6 +67,9 @@ public final class MapToolBar extends JPanel
 	private JToggleButton showPhysicalToggleButton = new JToggleButton();
 	private JToggleButton showCablePathToggleButton = new JToggleButton();
 	private JToggleButton showTransPathToggleButton = new JToggleButton();
+
+	private JToggleButton undoButton = new JToggleButton();
+	private JToggleButton redoButton = new JToggleButton();
 
 	private JButton optionsButton = new JButton();
 	private JButton layersButton = new JButton();
@@ -199,6 +202,32 @@ public final class MapToolBar extends JPanel
 		this.showTransPathToggleButton.setMaximumSize(buttonSize);
 		this.showTransPathToggleButton.setMinimumSize(buttonSize);
 		this.showTransPathToggleButton.setName(MapApplicationModel.MODE_PATH);
+
+		this.undoButton.setIcon(new ImageIcon("images/undo.gif"));
+		this.undoButton.addActionListener(new ActionListener() {
+		
+			public void actionPerformed(ActionEvent e) {
+				MapToolBar.this.netMapViewer.getLogicalNetLayer().undo();
+			}
+		
+		});
+		this.undoButton.setToolTipText(LangModelMap.getString("Undo"));
+		this.undoButton.setPreferredSize(buttonSize);
+		this.undoButton.setMaximumSize(buttonSize);
+		this.undoButton.setMinimumSize(buttonSize);
+
+		this.redoButton.setIcon(new ImageIcon("images/redo.gif"));
+		this.redoButton.addActionListener(new ActionListener() {
+			
+				public void actionPerformed(ActionEvent e) {
+					MapToolBar.this.netMapViewer.getLogicalNetLayer().redo();
+				}
+			
+			});
+		this.redoButton.setToolTipText(LangModelMap.getString("Redo"));
+		this.redoButton.setPreferredSize(buttonSize);
+		this.redoButton.setMaximumSize(buttonSize);
+		this.redoButton.setMinimumSize(buttonSize);
 
 		this.centerObjectButton.setIcon(new ImageIcon("images/fit.gif"));
 		this.centerObjectButton.addActionListener(actionAdapter);
