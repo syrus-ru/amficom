@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.41 2005/07/19 13:32:56 max Exp $
+ * $Id: CableChannelingItem.java,v 1.42 2005/07/20 10:58:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -50,8 +51,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.41 $, $Date: 2005/07/19 13:32:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/07/20 10:58:33 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject implements Comparable<CableChannelingItem> {
@@ -433,17 +434,25 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 	}
 
 	/**
-	 * If the old <code>SchemeCableLink</code> is non-null; removes itself
-	 * and all subsequent <code>CableChannelingItem</code>s from the old
-	 * <code>SchemeCableLink</code>. If the new <code>SchemeCableLink</code>
-	 * is non-null, adds itself to the end of the new
-	 * <code>SchemeCableLink</code>, accordingly adjusting own sequential
-	 * number, otherwise deletes itself from the pool.
+	 * <p><em>Removes</em> itself from the old {@code SchemeCableLink}
+	 * and <em>adds</em> to the end of the new {@code SchemeCableLink}
+	 * if it&apos;s non-{@code null} (accordingly adjusting own
+	 * {@link #sequentialNumber sequential number}), otherwise
+	 * <em>deletes</em> itself from the pool.</p>
+	 *
+	 * <p>If {@code processSubsequentSiblings} is {@code true}, the same
+	 * operation is undertaken with respect to {@code CableChannelingItem}s
+	 * following this one within the old {@code SchemeCableLink}, in order;
+	 * otherwise subsequent {@code CableChannelingItem}s are only shifted by
+	 * {@code -1}, their parent {@code SchemeCableLink} remaining
+	 * unchanged.</p>
 	 *
 	 * @param parentSchemeCableLink
-	 * @see PathElement#setParentSchemePath(SchemePath)
+	 * @param processSubsequentSiblings
+	 * @see PathElement#setParentSchemePath(SchemePath, boolean)
 	 */
-	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
+	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink,
+			final boolean processSubsequentSiblings) {
 		assert this.parentSchemeCableLinkId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeCableLinkId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Identifier newParentSchemeCableLinkId = Identifier.possiblyVoid(parentSchemeCableLink);
@@ -452,16 +461,54 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject i
 			return;
 		}
 
-		final boolean parentSchemeCableLinkIsNull = parentSchemeCableLink == null;
-		int newSequentialNumber = parentSchemeCableLinkIsNull ? -1 : parentSchemeCableLink.getCableChannelingItems().size();
-		for (final CableChannelingItem cableChannelingItem : this.getParentSchemeCableLink().getCableChannelingItems().tailSet(this)) {
-			cableChannelingItem.parentSchemeCableLinkId = newParentSchemeCableLinkId;
-			cableChannelingItem.markAsChanged();
-			cableChannelingItem.sequentialNumber = parentSchemeCableLinkIsNull ? -1 : newSequentialNumber++;
-			if (parentSchemeCableLinkIsNull) {
-				StorableObjectPool.delete(cableChannelingItem.id);
+		int newSequentialNumber = parentSchemeCableLink == null
+				? -1
+				: parentSchemeCableLink.getCableChannelingItems().size();
+		final Iterator<CableChannelingItem> cableChannelingItemIterator =
+				this.getParentSchemeCableLink().getCableChannelingItems().tailSet(this).iterator();
+		if (processSubsequentSiblings) {
+			while (cableChannelingItemIterator.hasNext()) {
+				cableChannelingItemIterator.next().setParentSchemeCableLink(newParentSchemeCableLinkId,
+						newSequentialNumber++);
+			}
+		} else {
+			assert cableChannelingItemIterator.hasNext();
+			final CableChannelingItem cableChannelingItem = cableChannelingItemIterator.next();
+			assert cableChannelingItem == this;
+
+			cableChannelingItem.setParentSchemeCableLink(newParentSchemeCableLinkId,
+					newSequentialNumber++);
+
+			while (cableChannelingItemIterator.hasNext()) {
+				cableChannelingItemIterator.next().shiftLeft();
 			}
 		}
+	}
+
+	private void setParentSchemeCableLink(final Identifier newParentSchemeCableLinkId,
+			final int newSequentialNumber) {
+		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
+		super.markAsChanged();
+		if (newParentSchemeCableLinkId.isVoid()) {
+			this.sequentialNumber = -1;
+			StorableObjectPool.delete(super.id);
+		} else {
+			this.sequentialNumber = newSequentialNumber;
+		}
+	}
+
+	private void shiftLeft() {
+		this.sequentialNumber--;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @todo Remove {@code SuppressWarnings} annotation.
+	 */
+	@SuppressWarnings("unused")
+	private void shiftRight() {
+		this.sequentialNumber++;
+		super.markAsChanged();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.3 2005/07/18 16:58:43 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.4 2005/07/20 10:58:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,14 @@ package com.syrus.AMFICOM.scheme;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.logging.Level;
 
 import junit.awtui.TestRunner;
+import junit.extensions.TestSetup;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -33,20 +38,61 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.util.Log;
+import com.syrus.util.Logger;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/07/18 16:58:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/20 10:58:33 $
  * @module scheme_v1
  */
 public final class SchemePathTestCase extends TestCase {
+	public SchemePathTestCase(final String method) {
+		super(method);
+	}
+
 	public static void main(String[] args) {
 		TestRunner.run(SchemePathTestCase.class);
 	}
 
-	@Override
-	protected void setUp() {
+	public static Test suite() {
+		final TestSuite testSuite = new TestSuite();
+		testSuite.addTest(new SchemePathTestCase("testAssertionStatus"));
+		testSuite.addTest(new SchemePathTestCase("testSchemePathSiblings"));
+		testSuite.addTest(new SchemePathTestCase("testSchemePathNoSiblings"));
+		testSuite.addTest(new SchemePathTestCase("testSetSchemePaths"));
+		return new TestSetup(testSuite) {
+			@Override
+			protected void setUp() {
+				oneTimeSetUp();
+			}
+
+			@Override
+			protected void tearDown() {
+				oneTimeTearDown();
+			}
+		};
+	}
+
+	public static void oneTimeSetUp() {
+		Log.initialize(new Logger() {
+			@SuppressWarnings("all")
+			public void debugMessage(final String message, final Level debugLevel) {
+			}
+
+			public void debugException(final Throwable t, final Level debugLevel) {
+				t.printStackTrace();
+			}
+
+			@SuppressWarnings("all")
+			public void errorMessage(final String message) {
+			}
+
+			public void errorException(final Throwable t) {
+				t.printStackTrace();
+			}
+		});
 		ConfigurationStorableObjectPool.init(new EmptyConfigurationObjectLoader());
 		SchemeStorableObjectPool.init(new EmptySchemeObjectLoader());
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
@@ -73,6 +119,10 @@ public final class SchemePathTestCase extends TestCase {
 		});
 	}
 
+	public static void oneTimeTearDown() {
+		// empty
+	}
+
 	public void testAssertionStatus() {
 		try {
 			assert false;
@@ -82,7 +132,15 @@ public final class SchemePathTestCase extends TestCase {
 		}
 	}
 
-	public void testSchemePath() throws ApplicationException {
+	public void testSchemePathSiblings() throws ApplicationException {
+		this.testSchemePath(true);
+	}
+
+	public void testSchemePathNoSiblings() throws ApplicationException {
+		this.testSchemePath(false);
+	}
+
+	public void testSchemePath(final boolean processSubsequentSiblings) throws ApplicationException {
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 		final Identifier imageId = new Identifier("ImageResource_0");
@@ -91,42 +149,66 @@ public final class SchemePathTestCase extends TestCase {
 		final CableLinkType cableLinkType = CableLinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_GSM, "manufactirer", "manufactirer code", imageId);
 		final CableThreadType cableThreadType = CableThreadType.createInstance(userId, "codename", "description", "name", 0, linkType, cableLinkType);
 
-		final Scheme scheme = Scheme.createInstance(userId, "a scheme", Kind.BAY, domainId);
-		final SchemePath schemePath = SchemePath.createInstance(userId, "a scheme path", scheme);
-		System.out.println(schemePath.getParentScheme().getName());
-		for (final SchemePath schemePath2 : scheme.getSchemePaths()) {
-			System.out.println(schemePath2.getName());
-		}
+		final String schemeName = "a scheme";
+		final Scheme scheme = Scheme.createInstance(userId, schemeName, Kind.BAY, domainId);
+		final String schemePathName = "a scheme path";
+		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
+		assertEquals(schemeName, schemePath.getParentScheme().getName());
+		final Set<SchemePath> schemePaths = scheme.getSchemePaths();
+		assertEquals(1, schemePaths.size());
+		assertEquals(schemePathName, schemePaths.iterator().next().getName());
 
-		final SchemeLink schemeLink = SchemeLink.createInstance(domainId, "a scheme link", scheme);
-		final SchemeCableLink schemeCableLink = SchemeCableLink.createInstance(domainId, "a scheme cable link", scheme); 
-		final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(domainId, "a scheme cable thread", cableThreadType, schemeCableLink);
+		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "a scheme link", scheme);
+		final SchemeCableLink schemeCableLink = SchemeCableLink.createInstance(userId, "a scheme cable link", scheme); 
+		final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(userId, "a scheme cable thread", cableThreadType, schemeCableLink);
 		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "a scheme element", scheme);
 		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "a scheme device", schemeElement);
 		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", DirectionType._IN, schemeDevice);
 		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", DirectionType._OUT, schemeDevice);
 
-		final PathElement pathElement1 = PathElement.createInstance(domainId, schemePath, schemeLink);
-		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath, schemeCableThread);
-		final PathElement pathElement3 = PathElement.createInstance(userId, schemePath, startSchemePort, endSchemePort);
+		final AbstractSchemeElement abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
 
+		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathElements().isEmpty() ? null : startSchemePort, endSchemePort);
+		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeCableThread);
+		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath, schemeLink);
+
+		@SuppressWarnings("unused")
+		final Identifier pathElementId0 = pathElement0.getId();
 		final Identifier pathElementId1 = pathElement1.getId();
 		final Identifier pathElementId2 = pathElement2.getId();
-		final Identifier pathElementId3 = pathElement3.getId();
 
-		for (final PathElement pathElement : schemePath.getPathElements()) {
-			System.out.println("Sequential number: " + pathElement.getSequentialNumber() + ";\t parent scheme path: " + pathElement.getParentSchemePath().getName() + ";\t abstract scheme element: " + pathElement.getAbstractSchemeElement().getName() + ";\t kind: " + pathElement.getKind().value());
+		SortedSet<PathElement> pathElements = schemePath.getPathElements();
+		assertEquals(3, pathElements.size());
+		int i = 0;
+		for (final PathElement pathElement : pathElements) {
+			assertEquals(i, pathElement.getSequentialNumber());
+			assertEquals(schemePathName, pathElement.getParentSchemePath().getName());
+			assertEquals(abstractSchemeElements[i].getName(), pathElement.getAbstractSchemeElement().getName());
+			assertEquals(i++, pathElement.getKind().value());
 		}
 
-		schemePath.removePathElement(pathElement2);
+		schemePath.removePathElement(pathElement1, processSubsequentSiblings);
 
-		for (final PathElement pathElement : schemePath.getPathElements()) {
-			System.out.println("Sequential number: " + pathElement.getSequentialNumber() + ";\t parent scheme path: " + pathElement.getParentSchemePath().getName() + ";\t abstract scheme element: " + pathElement.getAbstractSchemeElement().getName() + ";\t kind: " + pathElement.getKind().value());
+		pathElements = schemePath.getPathElements();
+		final int size = pathElements.size();
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+
+		assertEquals(-1, pathElement1.sequentialNumber);
+		assertEquals(Identifier.VOID_IDENTIFIER, pathElement1.parentSchemePathId);
+		assertNull(StorableObjectPool.getStorableObject(pathElementId1, true));
+
+		if (processSubsequentSiblings) {
+			assertEquals(1, size);
+			assertEquals(-1, pathElement2.sequentialNumber);
+			assertEquals(Identifier.VOID_IDENTIFIER, pathElement2.parentSchemePathId);
+			assertNull(StorableObjectPool.getStorableObject(pathElementId2, true));
+		} else {
+			assertEquals(2, size);
+			assertEquals(1, pathElement2.getSequentialNumber());
+			assertEquals(schemePath.getId(), pathElement2.getParentSchemePathId());
+			assertNotNull(StorableObjectPool.getStorableObject(pathElementId2, true));
 		}
-
-		System.out.println(StorableObjectPool.getStorableObject(pathElementId1, true));
-		System.out.println(StorableObjectPool.getStorableObject(pathElementId2, true));
-		System.out.println(StorableObjectPool.getStorableObject(pathElementId3, true));
 	}
 
 	/**

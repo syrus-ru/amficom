@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.48 2005/07/19 12:04:46 bass Exp $
+ * $Id: PathElement.java,v 1.49 2005/07/20 10:58:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -67,7 +68,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/19 12:04:46 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/20 10:58:33 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -805,35 +806,80 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	}
 
 	/**
-	 * If the old <code>SchemePath</code> is non-null; removes itself and
-	 * all subsequent <code>PathElement</code>s from the old
-	 * <code>SchemePath</code>. If the new <code>SchemePath</code> is
-	 * non-null, adds itself to the end of the new <code>SchemePath</code>,
-	 * accordingly adjusting own sequential number, otherwise deletes itself
-	 * from the pool.
+	 * <p><em>Removes</em> itself from the old {@code SchemePath} and
+	 * <em>adds</em> to the end of the new {@code SchemePath} if it&apos;s
+	 * non-{@code null} (accordingly adjusting own
+	 * {@link #sequentialNumber sequential number}), otherwise
+	 * <em>deletes</em> itself from the pool.</p>
+	 *
+	 * <p>If {@code processSubsequentSiblings} is {@code true}, the same
+	 * operation is undertaken with respect to {@code PathElement}s
+	 * following this one within the old {@code SchemePath}, in order;
+	 * otherwise subsequent {@code PathElement}s are only shifted by
+	 * {@code -1}, their parent {@code SchemePath} remaining unchanged.</p>
 	 *
 	 * @param parentSchemePath
-	 * @see CableChannelingItem#setParentSchemeCableLink(SchemeCableLink)
+	 * @param processSubsequentSiblings
+	 * @see CableChannelingItem#setParentSchemeCableLink(SchemeCableLink, boolean)
 	 */
-	public void setParentSchemePath(final SchemePath parentSchemePath) {
+	public void setParentSchemePath(final SchemePath parentSchemePath,
+			final boolean processSubsequentSiblings) {
 		assert this.parentSchemePathId != null : OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemePathId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
+		assert !this.parentSchemePathId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Identifier newParentSchemePathId = Identifier.possiblyVoid(parentSchemePath);
 		
 		if (this.parentSchemePathId.equals(newParentSchemePathId)) {
 			return;
 		}
 
-		final boolean parentSchemePathIsNull = parentSchemePath == null;
-		int newSequentialNumber = parentSchemePathIsNull ? -1 : parentSchemePath.getPathElements().size();
-		for (final PathElement pathElement : this.getParentSchemePath().getPathElements().tailSet(this)) {
-			pathElement.parentSchemePathId = newParentSchemePathId;
-			pathElement.markAsChanged();
-			pathElement.sequentialNumber = parentSchemePathIsNull ? -1 : newSequentialNumber++;
-			if (parentSchemePathIsNull) {
-				StorableObjectPool.delete(pathElement.id);
+		int newSequentialNumber = parentSchemePath == null
+				? -1
+				: parentSchemePath.getPathElements().size();
+		final Iterator<PathElement> pathElementIterator =
+				this.getParentSchemePath().getPathElements().tailSet(this).iterator();
+		if (processSubsequentSiblings) {
+			while (pathElementIterator.hasNext()) {
+				pathElementIterator.next().setParentSchemePath(newParentSchemePathId,
+						newSequentialNumber++);
+			}
+		} else {
+			assert pathElementIterator.hasNext();
+			final PathElement pathElement = pathElementIterator.next();
+			assert pathElement == this;
+
+			pathElement.setParentSchemePath(newParentSchemePathId,
+					newSequentialNumber++);
+
+			while (pathElementIterator.hasNext()) {
+				pathElementIterator.next().shiftLeft();
 			}
 		}
+	}
+
+	private void setParentSchemePath(final Identifier newParentSchemePathId,
+			final int newSequentialNumber) {
+		this.parentSchemePathId = newParentSchemePathId;
+		super.markAsChanged();
+		if (newParentSchemePathId.isVoid()) {
+			this.sequentialNumber = -1;
+			StorableObjectPool.delete(super.id);
+		} else {
+			this.sequentialNumber = newSequentialNumber;
+		}
+	}
+
+	private void shiftLeft() {
+		this.sequentialNumber--;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @todo Remove {@code SuppressWarnings} annotation.
+	 */
+	@SuppressWarnings("unused")
+	private void shiftRight() {
+		this.sequentialNumber++;
+		super.markAsChanged();
 	}
 
 	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {

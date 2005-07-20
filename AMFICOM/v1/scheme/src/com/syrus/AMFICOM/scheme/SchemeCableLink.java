@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.52 2005/07/19 12:04:46 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.53 2005/07/20 10:58:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/19 12:04:46 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/20 10:58:33 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
@@ -181,11 +181,12 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * <code>sequentialNumber</code> accordingly.
 	 *
 	 * @param cableChannelingItem
-	 * @see SchemePath#addPathElement(PathElement)
+	 * @param processSubsequentSiblings
+	 * @see SchemePath#addPathElement(PathElement, boolean)
 	 */
-	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
+	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		cableChannelingItem.setParentSchemeCableLink(this);
+		cableChannelingItem.setParentSchemeCableLink(this, processSubsequentSiblings);
 	}
 
 	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
@@ -355,12 +356,13 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 	 * its subsequent <code>CableChannelingItem</code>s.
 	 *
 	 * @param cableChannelingItem
-	 * @see SchemePath#removePathElement(PathElement)
+	 * @param processSubsequentSiblings
+	 * @see SchemePath#removePathElement(PathElement, boolean)
 	 */
-	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
+	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
 		assert cableChannelingItem.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		cableChannelingItem.setParentSchemeCableLink(null);
+		cableChannelingItem.setParentSchemeCableLink(null, processSubsequentSiblings);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {

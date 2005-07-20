@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.53 2005/07/19 12:04:46 bass Exp $
+ * $Id: SchemePath.java,v 1.54 2005/07/20 10:58:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/19 12:04:46 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/20 10:58:33 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
@@ -194,11 +194,12 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * <code>sequentialNumber</code> accordingly.
 	 *
 	 * @param pathElement
-	 * @see SchemeCableLink#addCableChannelingItem(CableChannelingItem)
+	 * @param processSubsequentSiblings
+	 * @see SchemeCableLink#addCableChannelingItem(CableChannelingItem, boolean)
 	 */
-	public void addPathElement(final PathElement pathElement) {
+	public void addPathElement(final PathElement pathElement, final boolean processSubsequentSiblings) {
 		assert pathElement != null: NON_NULL_EXPECTED;
-		pathElement.setParentSchemePath(this);
+		pathElement.setParentSchemePath(this, processSubsequentSiblings);
 	}
 
 	@Override
@@ -348,12 +349,13 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	 * its subsequent <code>PathElement</code>s.
 	 *
 	 * @param pathElement
-	 * @see SchemeCableLink#removeCableChannelingItem(CableChannelingItem)
+	 * @param processSubsequentSiblings
+	 * @see SchemeCableLink#removeCableChannelingItem(CableChannelingItem, boolean)
 	 */
-	public void removePathElement(final PathElement pathElement) {
+	public void removePathElement(final PathElement pathElement, final boolean processSubsequentSiblings) {
 		assert pathElement != null: NON_NULL_EXPECTED;
 		assert pathElement.getParentSchemePathId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		pathElement.setParentSchemePath(null);
+		pathElement.setParentSchemePath(null, processSubsequentSiblings);
 	}
 
 	/**
