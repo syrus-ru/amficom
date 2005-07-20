@@ -111,7 +111,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		updateElements();
 	}
 
-	private void setDimension(int m, int n) {
+	public void setDimension(int m, int n) {
 		this.m = m;
 		this.n = n;
 
