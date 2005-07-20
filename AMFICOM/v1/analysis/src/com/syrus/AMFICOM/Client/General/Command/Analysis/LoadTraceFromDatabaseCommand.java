@@ -58,70 +58,64 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 	@Override
 	public void execute()
 	{
-//		ReflectogrammLoadDialog dialog;
+		// Получаем набор результатов, которые надо загрузить
 		JFrame parent = Environment.getActiveWindow();
-
-//		if(Heap.getRLDialogByKey(parent.getName()) != null)
-//		{
-//			dialog = Heap.getRLDialogByKey(parent.getName());
-//		}
-//		else
-//		{
-//			dialog = new ReflectogrammLoadDialog (aContext);
-//			Heap.setRLDialogByKey(parent.getName(), dialog);
-//		}
-
-		//Environment.getActiveWindow()
-
 		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
 			return;
-			
-		
 		Set<Result> results = TraceLoadDialog.getResults();
+
+		// XXX: Если набор результатов пуст, ничего не делаем
 		if (results.isEmpty())
 			return;
 
+		// Выбираем первую рефлектограмму
+		// @todo загружать все рефлектограммы: самую типичную - как первичную, остальные - как вторичные
+
 		Result result1 = results.iterator().next();
 		BellcoreStructure bs = null;
-		
 
-		Parameter[] parameters = result1.getParameters();
-		for (int i = 0; i < parameters.length; i++)
+		// достаем собственно рефлектограмму из параметры результатов
 		{
-			Parameter param = parameters[i];
-			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
-				bs = new BellcoreReader().getData(param.getValue());
+			Parameter[] parameters = result1.getParameters();
+			for (int i = 0; i < parameters.length; i++) {
+				Parameter param = parameters[i];
+				ParameterType type = (ParameterType)param.getType();
+				if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
+					bs = new BellcoreReader().getData(param.getValue());
+			}
 		}
+
+		// ошибка - в результатах анализа нет рефлектограммы
 		if (bs == null)
 			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
 
+		// закрываем все открытые рефлектограммы
 		if (!Heap.hasEmptyAllBSMap())
 		{
 			if (Heap.getBSPrimaryTrace() != null)
 				new FileCloseCommand(this.aContext).execute();
 		}
+
+		// открываем загруженную рефлектограмму как первичную
 		Heap.setBSPrimaryTrace(bs);
 
+		// если загружаемый результат получен в результате измерения,
+		// то устанавливаем заголовок, meId, measId, ms и, если есть, эталон,
+		// согласно этому измерению
 		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
 			Measurement m = (Measurement)result1.getAction();
-//			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
-	
 			bs.measurementId = m.getId().getIdentifierString();
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 
             try {
     			AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
-    
     			if (ms.getEtalon() != null)
     				AnalysisUtil.load_Etalon(ms);
     			else
-    			{
     				Heap.unSetEtalonPair();
-    			}
     			Heap.makePrimaryAnalysis();
             } catch (DataFormatException e) {
                 GUIUtil.showDataFormatError();
