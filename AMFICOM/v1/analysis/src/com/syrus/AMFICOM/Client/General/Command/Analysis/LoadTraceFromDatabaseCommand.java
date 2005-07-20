@@ -70,10 +70,6 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		Result result1 = results.iterator().next();
 
 		try {
-			// закрываем все открытые рефлектограммы
-			if (Heap.getBSPrimaryTrace() != null)
-				new FileCloseCommand(this.aContext).execute();
-
 			// открываем загруженную рефлектограмму как первичную
 			Heap.openPrimaryTraceFromResult(result1);
 		} catch (SimpleApplicationException e1) {
