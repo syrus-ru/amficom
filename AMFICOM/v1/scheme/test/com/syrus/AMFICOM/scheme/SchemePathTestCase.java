@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.4 2005/07/20 10:58:33 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.5 2005/07/20 12:39:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -44,7 +45,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/20 10:58:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/20 12:39:39 $
  * @module scheme_v1
  */
 public final class SchemePathTestCase extends TestCase {
@@ -61,6 +62,8 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testAssertionStatus"));
 		testSuite.addTest(new SchemePathTestCase("testSchemePathSiblings"));
 		testSuite.addTest(new SchemePathTestCase("testSchemePathNoSiblings"));
+		testSuite.addTest(new SchemePathTestCase("testShiftLeft"));
+		testSuite.addTest(new SchemePathTestCase("testShiftRight"));
 		testSuite.addTest(new SchemePathTestCase("testSetSchemePaths"));
 		return new TestSetup(testSuite) {
 			@Override
@@ -93,8 +96,8 @@ public final class SchemePathTestCase extends TestCase {
 				t.printStackTrace();
 			}
 		});
-		ConfigurationStorableObjectPool.init(new EmptyConfigurationObjectLoader());
-		SchemeStorableObjectPool.init(new EmptySchemeObjectLoader());
+		ConfigurationStorableObjectPool.init(new EmptyConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
+		SchemeStorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
 			private static final long serialVersionUID = -9123341768454319489L;
@@ -209,6 +212,65 @@ public final class SchemePathTestCase extends TestCase {
 			assertEquals(schemePath.getId(), pathElement2.getParentSchemePathId());
 			assertNotNull(StorableObjectPool.getStorableObject(pathElementId2, true));
 		}
+	}
+
+	public void testShiftLeft() throws ApplicationException {
+		final Identifier userId = new Identifier("User_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final String schemeName = "a scheme";
+		final Scheme scheme = Scheme.createInstance(userId, schemeName, Kind.BAY, domainId);
+		final String schemePathName = "a scheme path";
+		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
+		assertEquals(schemeName, schemePath.getParentScheme().getName());
+		final Set<SchemePath> schemePaths = scheme.getSchemePaths();
+		assertEquals(1, schemePaths.size());
+		assertEquals(schemePathName, schemePaths.iterator().next().getName());
+
+		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "a scheme link", scheme);
+		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "a scheme element", scheme);
+		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "a scheme device", schemeElement);
+		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", DirectionType._IN, schemeDevice);
+		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", DirectionType._OUT, schemeDevice);
+
+		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathElements().isEmpty() ? null : startSchemePort, endSchemePort);
+		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement3 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement4 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement5 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement6 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement7 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement8 = PathElement.createInstance(userId, schemePath, schemeLink);
+		final PathElement pathElement9 = PathElement.createInstance(userId, schemePath, schemeLink);
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement2.getSequentialNumber());
+		assertEquals(3, pathElement3.getSequentialNumber());
+		assertEquals(4, pathElement4.getSequentialNumber());
+		assertEquals(5, pathElement5.getSequentialNumber());
+		assertEquals(6, pathElement6.getSequentialNumber());
+		assertEquals(7, pathElement7.getSequentialNumber());
+		assertEquals(8, pathElement8.getSequentialNumber());
+		assertEquals(9, pathElement9.getSequentialNumber());
+
+		pathElement5.setParentSchemePath(null, false);
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement2.getSequentialNumber());
+		assertEquals(3, pathElement3.getSequentialNumber());
+		assertEquals(4, pathElement4.getSequentialNumber());
+		assertEquals(-1, pathElement5.sequentialNumber);
+		assertEquals(5, pathElement6.getSequentialNumber());
+		assertEquals(6, pathElement7.getSequentialNumber());
+		assertEquals(7, pathElement8.getSequentialNumber());
+		assertEquals(8, pathElement9.getSequentialNumber());
+	}
+
+	public void testShiftRight() {
+		// empty
 	}
 
 	/**
