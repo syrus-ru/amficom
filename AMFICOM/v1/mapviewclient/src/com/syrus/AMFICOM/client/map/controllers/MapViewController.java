@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.34 2005/07/08 14:34:31 peskovsky Exp $
+ * $Id: MapViewController.java,v 1.35 2005/07/20 17:56:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: peskovsky $
- * @version $Revision: 1.34 $, $Date: 2005/07/08 14:34:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/07/20 17:56:56 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -279,7 +279,7 @@ public final class MapViewController {
 		MonitoredElement me = (MonitoredElement )
 			StorableObjectPool.getStorableObject(meId, true);
 		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().iterator().next());
+			Identifier tpId = me.getMonitoredDomainMemberIds().iterator().next();
 			TransmissionPath tp = (TransmissionPath )
 				StorableObjectPool.getStorableObject(tpId, true);
 			if(tp != null) {
@@ -335,7 +335,7 @@ public final class MapViewController {
 	 */
 	public void removeSchemes() {
 		while(!this.mapView.getSchemes().isEmpty()) {
-			Scheme sch = (Scheme )this.mapView.getSchemes().iterator().next();
+			Scheme sch = this.mapView.getSchemes().iterator().next();
 			removeScheme(sch);
 		}
 	}

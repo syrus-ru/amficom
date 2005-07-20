@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.26 2005/07/20 13:34:10 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.27 2005/07/20 17:54:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.util.Iterator;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -34,7 +33,7 @@ import com.syrus.util.Log;
  *  непривязанному кабелю, к элементу узла. При этом линия, которой 
  *  принадлежит данный узел, делится на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/20 13:34:10 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/20 17:54:50 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -114,7 +113,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			UnboundLink newLink = super.createUnboundLink(link.getStartNode(), this.site);
 			newLink.setType(link.getType());
 			// single cpath, as long as link is UnboundLink
-			CablePath cpath = (CablePath)(this.mapView.getCablePaths(link).get(0));
+			CablePath cpath = this.mapView.getCablePaths(link).get(0);
 			// новая линия добавляется в кабельный путь
 			cpath.addLink(newLink, CableController.generateCCI(cpath, newLink, LoginManager.getUserId()));
 			newLink.setCablePath(cpath);
