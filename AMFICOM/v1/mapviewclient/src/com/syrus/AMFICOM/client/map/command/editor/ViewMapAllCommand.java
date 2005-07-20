@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.14 2005/06/22 08:43:47 krupenn Exp $ Syrus
+ * $Id: ViewMapAllCommand.java,v 1.15 2005/07/20 13:20:44 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
  * отобразить стандартный набор окон модуля "Редактор топологических схем"
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/20 13:20:44 $
  * @module mapviewclient_v1
  */
 public class ViewMapAllCommand extends AbstractCommand {
@@ -45,7 +45,7 @@ public class ViewMapAllCommand extends AbstractCommand {
 		new ViewMapControlsCommand(this.desktop, this.aContext).execute();
 		new ViewGeneralPropertiesCommand(this.desktop, this.aContext).execute();
 		new ViewAdditionalPropertiesCommand(this.desktop, this.aContext).execute();
-		new ViewCharacteristicsCommand(this.desktop, this.aContext).execute();
+//		new ViewCharacteristicsCommand(this.desktop, this.aContext).execute();
 		new ViewMapWindowCommand(this.desktop, this.aContext, this.factory).execute();
 
 		this.aContext.getDispatcher().firePropertyChange(
