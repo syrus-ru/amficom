@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.Etalon;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
@@ -26,6 +27,7 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
@@ -47,6 +49,27 @@ public class AnalysisUtil
 
 	private AnalysisUtil()
 	{ // non-instantiable
+	}
+
+	/**
+	 * достаем собственно рефлектограмму из параметры результатов.
+	 * @throws SimpleApplicationException, если рефлектограммы в указанном результате нет
+	 * null, если таковой не нашлось
+	 */
+	public static BellcoreStructure getBellcoreStructureFromResult(
+			Result result1)
+	throws SimpleApplicationException {
+		BellcoreStructure bs = null;
+		Parameter[] parameters = result1.getParameters();
+		for (int i = 0; i < parameters.length; i++) {
+			Parameter param = parameters[i];
+			ParameterType type = (ParameterType)param.getType();
+			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
+				bs = new BellcoreReader().getData(param.getValue());
+		}
+		if (bs == null)
+			throw new SimpleApplicationException(SimpleApplicationException.KEY_NULL_REFLECTOGRAMMA);
+		return bs;
 	}
 
 	public static ParameterType getParameterType(String codename, DataType dataType) throws ApplicationException {
