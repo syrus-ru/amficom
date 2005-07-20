@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.31 2005/07/20 13:32:41 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.32 2005/07/20 18:04:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.31 $, $Date: 2005/07/20 13:32:41 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/20 18:04:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -78,47 +78,43 @@ public final class MapDropTargetListener implements DropTargetListener
 			for(int i = 0; i < df.length; i++) {
 				try
 				{
-				if (df[i].getHumanPresentableName().equals("ElementLabel"))
-				{
-//					SiteNodeType mpe = (SiteNodeType)transferable.getTransferData(df[(0)]);
-					Identifier id = (Identifier )transferable.getTransferData(df[(i)]);
-					SiteNodeType mpe = (SiteNodeType)StorableObjectPool.getStorableObject(id, false);
-
-					mapElementDropped(mpe, point);
-				}
-				else
-				if (df[i].getHumanPresentableName().equals("IconedTreeUI.object"))
-				{
-					ArrayList items = (ArrayList)transferable.getTransferData(df[i]);
-					for(Iterator iter = items.iterator(); iter.hasNext();) {
-						or = iter.next();
-						
-						if(or instanceof SchemeElement) {
-							SchemeElement se = (SchemeElement )or;
-							Identifier id = se.getId();
-							SchemeElement sereal = (SchemeElement )StorableObjectPool.getStorableObject(id, false);
-							schemeElementDropped(sereal, point);
-						}
-						else
-						if(or instanceof SchemeCableLink) {
-							SchemeCableLink scl = (SchemeCableLink )or;
-							Identifier id = scl.getId();
-							SchemeCableLink sclreal = (SchemeCableLink )StorableObjectPool.getStorableObject(id, false);
-							schemeCableLinkDropped(sclreal);
+					if (df[i].getHumanPresentableName().equals("ElementLabel"))
+					{
+						Identifier id = (Identifier )transferable.getTransferData(df[(i)]);
+						SiteNodeType mpe = (SiteNodeType)StorableObjectPool.getStorableObject(id, false);
+	
+						mapElementDropped(mpe, point);
+					}
+					else
+					if (df[i].getHumanPresentableName().equals("IconedTreeUI.object"))
+					{
+						ArrayList items = (ArrayList)transferable.getTransferData(df[i]);
+						for(Iterator iter = items.iterator(); iter.hasNext();) {
+							or = iter.next();
+							
+							if(or instanceof SchemeElement) {
+								SchemeElement se = (SchemeElement )or;
+								Identifier id = se.getId();
+								SchemeElement sereal = (SchemeElement )StorableObjectPool.getStorableObject(id, false);
+								schemeElementDropped(sereal, point);
+							}
+							else
+							if(or instanceof SchemeCableLink) {
+								SchemeCableLink scl = (SchemeCableLink )or;
+								Identifier id = scl.getId();
+								SchemeCableLink sclreal = (SchemeCableLink )StorableObjectPool.getStorableObject(id, false);
+								schemeCableLinkDropped(sclreal);
+							}
 						}
 					}
-				}
-				else
-				{
-					dtde.rejectDrop();
-					return;
-				}
-
-				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
-				dtde.getDropTargetContext().dropComplete(true);
-				logicalNetLayer.sendMapEvent(MapEvent.NEED_REPAINT);
-
-//				this.logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));
+					else
+					{
+						dtde.rejectDrop();
+						return;
+					}
+	
+					dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+					dtde.getDropTargetContext().dropComplete(true);
 				}
 				catch(Exception e)
 				{
