@@ -109,13 +109,6 @@ public class SimpleGraphPanel extends JPanel
         }
     }
 
-    // FIXME: arg color seemes to be is misused
-	public SimpleGraphPanel (double[] y, double deltaX, Color color)
-	{
-		init (y, deltaX);
-		setDefaultScales();
-	}
-
 	public SimpleGraphPanel (double[] y, double deltaX)
 	{
 		init (y, deltaX);
