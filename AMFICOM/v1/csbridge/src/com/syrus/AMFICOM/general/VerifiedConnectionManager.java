@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.10 2005/07/07 19:38:17 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.11 2005/07/21 16:28:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/07 19:38:17 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/21 16:28:34 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -112,6 +112,7 @@ public class VerifiedConnectionManager {
 		}
 		catch (CommunicationException ce) {
 			Log.errorException(ce);
+			this.referencesMap.put(servantName, null);
 			this.disconnectedServants.add(servantName);
 			this.onLoseConnection(servantName);
 		}
