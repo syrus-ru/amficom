@@ -116,7 +116,7 @@ public class TraceEventsPanel extends ScaledGraphPanel
 			return;
 		}
 		g.setColor(correctColor(baseColor, isTraceColor));
-		draw_y_curve(g, y1, rB + i0 - x0, rB - start, rE - rB);
+		drawYCurve(g, y1, rB + i0 - x0, rB, rE - rB);
 	}
 
 	// performs clipping

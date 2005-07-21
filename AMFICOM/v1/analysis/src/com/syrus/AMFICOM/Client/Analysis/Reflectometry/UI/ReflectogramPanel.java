@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramPanel.java,v 1.4 2005/07/20 12:09:54 saa Exp $
+ * $Id: ReflectogramPanel.java,v 1.5 2005/07/21 14:16:03 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 /**
  * Отрисовывает рефлектограмму (исходную и модельную, с учетом расцветки)
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/20 12:09:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/21 14:16:03 $
  * @module
  */
 public class ReflectogramPanel extends TraceEventsPanel {
@@ -85,7 +85,7 @@ public class ReflectogramPanel extends TraceEventsPanel {
             if (iTo - iFrom >= 0)
             {
                 double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
-                draw_y_curve(g, vArr, 0, iFrom - start, iTo - iFrom);
+                drawYCurve(g, vArr, 0, iFrom, iTo - iFrom);
             }
         }
     }

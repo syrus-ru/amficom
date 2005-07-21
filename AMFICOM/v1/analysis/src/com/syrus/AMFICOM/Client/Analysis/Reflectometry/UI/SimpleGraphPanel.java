@@ -199,12 +199,10 @@ public class SimpleGraphPanel extends JPanel
     }
 	/**
      * plots array data from y[i0] to y[i0+N] <b>inclusively</b>
-     * to graph's (xScreen/scaleX==xTrace-start) ranging from x0 to x0+N <b>inclusively</b>.
+     * to graph's (xTrace == xScreen/scaleX-start) ranging from xT0 to xT0+N <b>inclusively</b>.
      * Does not perform clipping
-     * FIXME: find all callers of draw_y_curve and make sure they are aware that y length is N+1, not N
-     * XXX: it's better to take x0 ~ xTrace, not x0 ~ xTrace-start
 	 */
-	protected void draw_y_curve(Graphics g, double[] y1, int i0, int x0, int N)
+	protected void drawYCurve(Graphics g, double[] y1, int i0, int xT0, int N)
 	{
 		if (N < 0)
 			return;
@@ -212,10 +210,10 @@ public class SimpleGraphPanel extends JPanel
 		int[] yArr = new int[N + 1];
 		for (int j = 0; j <= N; j++)
 		{
-			xArr[j] = (int )((j + x0) * scaleX + 1);
+			xArr[j] = (int )((j + xT0 - start) * scaleX + 1);
 			yArr[j] = (int )((maxY - y1[j + i0] - top) * scaleY);
 			// XXX: to avoid rounding errors, we could use smth like this:
-			//double vx = (j + x0) * scaleX + 1;
+			//double vx = (j + xT0 - start) * scaleX + 1;
 			//double vy = (maxY - y[j + i0] - top) * scaleY;
 			//xArr[j] = Math.round((float )vx);
 			//yArr[j] = Math.round((float )vy);
@@ -228,9 +226,9 @@ public class SimpleGraphPanel extends JPanel
 			return;
 		}
 		g.setColor(correctColor(color, true));
-		int iFrom = Math.max(0, -start);
-		int iTo = Math.min(end + 1, y.length) - start - 1;
-		draw_y_curve(g, y, iFrom + start, iFrom, iTo - iFrom);
+		int iFromP = Math.max(start, 0);
+		int iToP = Math.min(end + 1, y.length) - 1;
+		drawYCurve(g, y, iFromP, iFromP, iToP - iFromP);
 	}
 
 	public void paint(Graphics g)
