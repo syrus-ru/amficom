@@ -257,9 +257,8 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 			}
 
-            // We must update numerical info in windows, so we send messages
-            // But, we get working very slow if Histogram is in 'tied to markers' mode.
-            // @todo: Histogram should update only on mouse release, not on every drag (?)
+            // We send messages to update numerical info in windows.
+            // Note: Histogram will update only on mouse release. 
 			updAnalysisMarkerInfo();
 			
 /*		if (markers_pair_moving)
