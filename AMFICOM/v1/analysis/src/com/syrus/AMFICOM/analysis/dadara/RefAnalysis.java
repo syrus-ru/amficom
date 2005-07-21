@@ -99,7 +99,8 @@ public class RefAnalysis
 			if(b && maxNoise < y[i])
 				maxNoise = y[i];
 		}
-		overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
+		//overallStats = new TraceEvent(TraceEvent.OVERALL_STATS, 0, lastPoint);
+		overallStats = new TraceEvent(lastPoint);
         {
     		double[] data = new double[5];
 
