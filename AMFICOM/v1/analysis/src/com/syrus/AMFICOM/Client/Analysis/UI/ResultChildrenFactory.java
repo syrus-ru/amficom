@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.1 2005/07/19 13:21:52 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.2 2005/07/21 11:24:23 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.filterclient.MonitoredElementConditionWrapper;
 import com.syrus.AMFICOM.filterclient.TestConditionWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
+import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -57,13 +59,14 @@ import com.syrus.AMFICOM.measurement.ResultWrapper;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.newFilter.ConditionKey;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/19 13:21:52 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/21 11:24:23 $
  * @module analysis_v1
  */
 
@@ -73,11 +76,11 @@ public class ResultChildrenFactory implements ChildrenFactory {
 	private static final String	MONITOREDELEMENTS	= "monitoredelements";
 	private static final String	MEASUREMENTSETUPS	= "measurementsetups";
 	private static final String	DATES	= "dates";
-	private static final String	TODAY	= "today";
-	private static final String	YESTERDAY	= "yesterday";
-	private static final String	LASTWEEK	= "lastweek";
-	private static final String	LASTMONTH	= "lastmonth";
-	private static final String	ARBITRARYDATE	= "arbitrarydate";
+//	private static final String	TODAY	= "today";
+//	private static final String	YESTERDAY	= "yesterday";
+//	private static final String	LASTWEEK	= "lastweek";
+//	private static final String	LASTMONTH	= "lastmonth";
+//	private static final String	ARBITRARYDATE	= "arbitrarydate";
 	
 	static SimpleDateFormat shortDate = new SimpleDateFormat("dd.MM"); 
 	
@@ -124,7 +127,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 	
 	public void populate(Item item) {
 		Object nodeObject = item.getObject();
-		Collection contents = CommonUIUtilities.getChildObjects(item);
+		Collection<Item> items = item.getChildren();
+		Collection<Object> objects = CommonUIUtilities.getChildObjects(item);
 		
 		if (nodeObject instanceof String) {
 			String s = (String) nodeObject;
@@ -144,8 +148,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 					Set<StorableObject> meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 										
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSet, contents);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSet, contents);
+					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSet, items);
+					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSet, objects);
 					for (Iterator it = toRemove.iterator(); it.hasNext();) {
 						Item child = (Item)it.next();
 						child.setParent(null);
@@ -212,6 +216,14 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					item.addChild(item2);
 
 				}*/
+				
+				List<Item> children = new LinkedList<Item>(item.getChildren());
+				for (Iterator it = children.iterator(); it.hasNext();) {
+					Item child = (Item)it.next();
+					child.setParent(null);
+				}
+			
+				
 				Date startDate;
 				Date endDate;
 								
@@ -262,9 +274,20 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					this.calendar.setTime(endDate);
 					this.calendar.add(Calendar.MINUTE, -30);
 					startDate = this.calendar.getTime();
-					FiltrableIconedNode item6 = createDateItem(startDate, endDate, "По фильтру", condition);
-					item6.setDefaultOperation(CompoundConditionSort.OR);
-					item6.setFilter(new Filter(new TestConditionWrapper(), null));
+
+					TypicalCondition timeCondition = new TypicalCondition(startDate,
+							endDate, OperationSort.OPERATION_IN_RANGE,
+							ObjectEntities.TEST_CODE, TestWrapper.COLUMN_START_TIME);
+					FiltrableIconedNode item6 = new FiltrableIconedNode();
+					item6.setObject(startDate);
+					item6.setName("По фильтру");
+					item6.setChildrenFactory(this);
+					item6.setDefaultCondition(condition);
+					
+//					item6.setDefaultOperation(CompoundConditionSort.OR);
+					Filter f = new Filter(new TestConditionWrapper(), null);
+					f.addCondition(timeCondition, new ConditionKey(TestWrapper.COLUMN_START_TIME, "Start time", ConditionWrapper.DATE));
+					item6.setFilter(f);
 					item.addChild(item6);
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -274,8 +297,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 					Set<StorableObject> meSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSetups, contents);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSetups, contents);
+					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSetups, items);
+					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSetups, objects);
 					for (Iterator it = toRemove.iterator(); it.hasNext();) {
 						Item child = (Item)it.next();
 						child.setParent(null);
@@ -331,8 +354,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				Set<StorableObject> testSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 									
-				List<Item> toRemove = CommonUIUtilities.getItemsToRemove(testSet, contents);
-				List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(testSet, contents);
+				List<Item> toRemove = CommonUIUtilities.getItemsToRemove(testSet, items);
+				List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(testSet, objects);
 				for (Iterator it = toRemove.iterator(); it.hasNext();) {
 					Item child = (Item)it.next();
 					child.setParent(null);
@@ -371,8 +394,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition2 = new LinkedIdsCondition(measurementIds, ObjectEntities.RESULT_CODE);
 					Set<StorableObject> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 					
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(resultSet, contents);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(resultSet, contents);
+					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(resultSet, items);
+					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(resultSet, objects);
 					for (Iterator it = toRemove.iterator(); it.hasNext();) {
 						Item child = (Item)it.next();
 						child.setParent(null);
