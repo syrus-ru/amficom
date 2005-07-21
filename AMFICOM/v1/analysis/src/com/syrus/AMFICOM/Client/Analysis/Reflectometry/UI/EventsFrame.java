@@ -373,10 +373,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
         // подгоняем текущее выделение к тому месту в таблице,
         // которое должно соответствовать текущей паре событий
         // XXX: если текущего выделения не должно быть, надо бы его убрать.
-		int nEvent = view.currentRow2();
-		if (nEvent != -1 && nEvent < this.jTable.getRowCount())
+		int nRow = view.currentRow2();
+		if (nRow != -1 && nRow < this.jTable.getRowCount())
 		{
-			this.jTable.setRowSelectionInterval(nEvent, nEvent);
+			this.jTable.setRowSelectionInterval(nRow, nRow);
 			this.jTable.scrollRectToVisible(this.jTable.getCellRect(
                     this.jTable.getSelectedRow(),
                     this.jTable.getSelectedColumn(),
