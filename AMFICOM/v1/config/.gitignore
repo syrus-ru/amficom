@@ -19,3 +19,4 @@ Makefile.inc
 .idl
 .settings
 .#*
+test
