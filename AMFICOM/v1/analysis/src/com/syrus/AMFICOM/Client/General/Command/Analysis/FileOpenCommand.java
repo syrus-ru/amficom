@@ -93,7 +93,7 @@ public class FileOpenCommand extends AbstractCommand
     }
 
     private static BellcoreStructure loadBS(File selectedFile) {
-		System.out.println("DEBUG: the user is opening file " + selectedFile.getAbsolutePath()); // FIXME: debugging purpose only
+		//System.out.println("DEBUG: the user is opening file " + selectedFile.getAbsolutePath()); // FIX//ME: debugging purpose only
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		BellcoreStructure bs = readTraceFromFile(selectedFile);
 		if (bs != null) {

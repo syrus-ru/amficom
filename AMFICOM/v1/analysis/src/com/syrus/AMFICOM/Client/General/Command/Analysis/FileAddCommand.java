@@ -49,7 +49,7 @@ public class FileAddCommand extends AbstractCommand
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIXME: debugging purpose only
+			//System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIX//ME: debugging purpose only
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			if (Heap.hasSecondaryBSKey(id))
 			{
