@@ -186,14 +186,12 @@ public class SimpleGraphPanel extends JPanel
 			: color1;
 	}
 
-    // XXX: it's better to take x0 ~ xTrace, not x0 ~ xTrace-start
-    protected void update_range_by_y_curve(
-            GraphRange r, double[] y1, int i0, int x0, int N)
-    {
+    protected void updateRangeByYCurve(
+            GraphRange r, double[] y1, int i0, int xT0, int N) {
         if (N < 0)
             return;
-        r.coverX(x0 + start);
-        r.coverX(x0 + N + start);
+        r.coverX(xT0);
+        r.coverX(xT0 + N);
         r.coverY(y1[ReflectogramMath.getArrayMaxIndex(y1, i0, i0 + N)]); // i0+N is included
         r.coverY(y1[ReflectogramMath.getArrayMinIndex(y1, i0, i0 + N)]);
     }
