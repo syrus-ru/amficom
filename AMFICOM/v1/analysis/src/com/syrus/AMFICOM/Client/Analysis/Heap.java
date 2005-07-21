@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.89 2005/07/21 10:37:39 saa Exp $
+ * $Id: Heap.java,v 1.90 2005/07/21 17:13:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.89 $, $Date: 2005/07/21 10:37:39 $
+ * @version $Revision: 1.90 $, $Date: 2005/07/21 17:13:15 $
  * @module
  */
 public class Heap
@@ -643,7 +643,7 @@ public class Heap
     }
 
     private static void notifyCurrentTraceChanged() {
-        Log.debugMessage("Heap.notifyCurrentTraceChanged | ", Level.FINEST);
+        Log.debugMessage("Heap.notifyCurrentTraceChanged | currentTrace = " + currentTrace, Level.FINEST);
         for (CurrentTraceChangeListener listener: currentTraceChangeListeners)
             listener.currentTraceChanged(currentTrace);
     }
