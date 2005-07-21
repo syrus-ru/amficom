@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.3 2005/07/20 14:48:31 saa Exp $
+ * $Id: Trace.java,v 1.4 2005/07/21 12:31:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/20 14:48:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/21 12:31:00 $
  * @module
  */
 public class Trace {
@@ -94,5 +94,8 @@ public class Trace {
 	}
 	public double getDeltaX() {
 		return this.bs.getResolution();
+	}
+	public Result getResult() {
+		return result;
 	}
 }
