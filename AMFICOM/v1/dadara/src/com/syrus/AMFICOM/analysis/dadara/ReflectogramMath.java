@@ -106,51 +106,6 @@ public class ReflectogramMath
 	    }
 	    return ret;
 	}
-/*
-// XXX: alignment: some old code
-  // ?: the same thing is made inside ReflectogramComparer.doIt()... //saa
-	public static void align(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
-	{
-		double maxData = 0;
-		double maxEtalon = 0;
-
-		for(int i = etalon[0].getBegin(); i < etalon[0].getEnd(); i++)
-			if(etalon[0].refAmplitude(i) > maxEtalon)
-				maxEtalon = etalon[0].refAmplitude(i);
-
-		for(int i = y[0].getBegin(); i < y[0].getEnd(); i++)
-			if(maxData < y[0].refAmplitude(i))
-				maxData = y[0].refAmplitude(i);
-
-		double dA = maxEtalon - maxData;
-		if (dA != 0)
-			for(int i = 0; i < y.length; i++)
-			{
-				y[i].shiftY(dA);
-			}
-	}
-
-	public static void align(double[] y, ReflectogramEvent[] etalon)
-	{
-		double maxData = 0;
-		double maxEtalon = 0;
-
-		for(int i = etalon[0].getBegin(); i < etalon[0].getEnd(); i++)
-			if(etalon[0].refAmplitude(i) > maxEtalon)
-				maxEtalon = etalon[0].refAmplitude(i);
-
-		for(int i = 0; i < y.length; i++)
-			if(maxData < y[i])
-				maxData = y[i];
-
-		double dA = maxEtalon - maxData;
-		if (dA != 0)
-		{
-			for(int i = 0; i < etalon.length; i++)
-				etalon[i].shiftY(dA);
-		}
-	}
-*/
 	public static void alignArrayToEtalon(double[] y, final ModelTrace etalon)
 	{
 		int len = Math.min(y.length, etalon.getLength());
