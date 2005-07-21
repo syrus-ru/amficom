@@ -64,11 +64,6 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		if (results.isEmpty())
 			return;
 
-		// Выбираем первую рефлектограмму
-		// @todo загружать все рефлектограммы: самую типичную - как первичную, остальные - как вторичные
-
-		Result result1 = results.iterator().next();
-
 		try {
 //			// открываем загруженную рефлектограмму как первичную
 //			Heap.openPrimaryTraceFromResult(result1);
@@ -80,11 +75,13 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
 		}
 
-		// если загружаемый результат получен в результате измерения,
+		// если результат выбранного primaryTrace получен в результате измерения,
 		// то устанавливаем ms и, если есть, эталон
 		// согласно этому измерению
-		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)result1.getAction();
+		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
+		if (primaryTraceResult != null
+				&& primaryTraceResult.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			Measurement m = (Measurement)primaryTraceResult.getAction();
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 
