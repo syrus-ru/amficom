@@ -101,6 +101,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		final JMenuItem					menuTraceCloseEtalon			= new JMenuItem();
 		final JMenuItem					menuTraceClose					= new JMenuItem();
 
+		final JMenuItem					menuMakeCurrentTracePrimary		= new JMenuItem();
+
 		final JMenu						menuTestSetup					= new JMenu();
 		final JMenuItem					menuCreateTestSetup				= new JMenuItem();
 		final JMenuItem					menuSaveTestSetup				= new JMenuItem();
@@ -194,12 +196,18 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTraceDownloadEtalon.setText(LangModelAnalyse.getString("menuTraceDownloadEtalon"));
 		menuTraceDownloadEtalon.setName("menuTraceDownloadEtalon");
 		menuTraceDownloadEtalon.addActionListener(this.actionAdapter);
+
+		menuMakeCurrentTracePrimary.setText(LangModelAnalyse.getString("menuMakeCurrentTracePrimary"));
+		menuMakeCurrentTracePrimary.setName("menuMakeCurrentTracePrimary");
+		menuMakeCurrentTracePrimary.addActionListener(this.actionAdapter);
+		
 		menuTraceClose.setText(LangModelAnalyse.getString("menuFileClose"));
 		menuTraceClose.setName("menuFileClose");
 		menuTraceClose.addActionListener(this.actionAdapter);
 		menuTraceCloseEtalon.setText(LangModelAnalyse.getString("menuTraceCloseEtalon"));
 		menuTraceCloseEtalon.setName("menuTraceCloseEtalon");
 		menuTraceCloseEtalon.addActionListener(this.actionAdapter);
+
 		menuTrace.add(menuTraceDownload);
 		menuTrace.add(menuTraceDownloadEtalon);
 		menuTrace.add(menuTraceAddCompare);
@@ -210,6 +218,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 		menuTrace.addSeparator();
 		menuTrace.add(menuAnalyseUpload);
 		menuTrace.add(menuNetStudy);
+		menuTrace.addSeparator();
+		menuTrace.add(menuMakeCurrentTracePrimary);
 
 		menuTestSetup.setText(LangModelAnalyse.getString("menuTestSetup"));
 		menuTestSetup.setName("menuTestSetup");
@@ -376,6 +386,8 @@ public class AnalyseMainMenuBar extends AbstractMainMenuBar {
 				menuTraceDownload.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownload"));
 				menuTraceDownloadEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceDownloadEtalon"));
 				menuTraceDownloadEtalon.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceDownloadEtalon"));
+				menuMakeCurrentTracePrimary.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuMakeCurrentTracePrimary"));
+				menuMakeCurrentTracePrimary.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuMakeCurrentTracePrimary"));
 				menuTraceClose.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceClose"));
 				menuTraceClose.setEnabled(AnalyseMainMenuBar.this.getApplicationModel().isEnabled("menuTraceClose"));
 				menuTraceCloseEtalon.setVisible(AnalyseMainMenuBar.this.getApplicationModel().isVisible("menuTraceCloseEtalon"));

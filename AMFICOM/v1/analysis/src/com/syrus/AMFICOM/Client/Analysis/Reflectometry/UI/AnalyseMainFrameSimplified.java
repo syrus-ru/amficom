@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.TraceMakeCurrentCommand;
@@ -185,6 +186,8 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+
+		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
 		if (this.tables == null) {
 			this.tables = new LinkedList();
@@ -404,15 +407,16 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 
 	public void currentTraceChanged(String id) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
+
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 		} else {
 			aModel.setEnabled("menuFileRemoveCompare", true);
 			aModel.setEnabled("menuTraceRemoveCompare", true);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 			setActiveRefId(id);
 		}
+		aModel.setEnabled("menuMakeCurrentTracePrimary", Heap.isTraceSecondary(id));
+		aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare", "menuMakeCurrentTracePrimary"});
 	}
 }

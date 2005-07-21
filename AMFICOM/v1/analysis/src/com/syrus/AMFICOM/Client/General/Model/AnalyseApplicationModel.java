@@ -82,6 +82,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("reflectometryFrame");
 
 		add("commandCheckMismatch");
+		add("menuMakeCurrentTracePrimary");
 		this.initUIConstats();
 	}
 

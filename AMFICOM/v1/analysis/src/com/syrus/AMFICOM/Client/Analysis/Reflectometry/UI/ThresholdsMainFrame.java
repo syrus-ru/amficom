@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTestSetupCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadTraceFromDatabaseCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.MakeCurrentTracePrimaryCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.OptionsSetColorsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.RemoveEtalonCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.SaveTestSetupAsCommand;
@@ -230,6 +231,8 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+
+		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
 		// rc.setParameter(CreateAnalysisReportCommand.TYPE,
 		// ReportTemplate.rtt_Evaluation);
@@ -471,12 +474,12 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 		} else {
 			aModel.setEnabled("menuFileRemoveCompare", true);
 			aModel.setEnabled("menuTraceRemoveCompare", true);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 			setActiveRefId(id);
 		}
+		aModel.setEnabled("menuMakeCurrentTracePrimary", Heap.isTraceSecondary(id));
+		aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare", "menuMakeCurrentTracePrimary"});
 	}
 }

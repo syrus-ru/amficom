@@ -324,6 +324,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
 
+		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
+
 		this.analysisReportCommand = new CreateAnalysisReportCommand(this.aContext);
 		// analysisReportCommand.setParameter(CreateAnalysisReportCommand.TYPE,
 		// ReportTemplate.rtt_Survey);
@@ -629,15 +631,16 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 
 	public void currentTraceChanged(String id) {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
+
 		if (id.equals(Heap.PRIMARY_TRACE_KEY)) {
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 		} else {
 			aModel.setEnabled("menuFileRemoveCompare", true);
 			aModel.setEnabled("menuTraceRemoveCompare", true);
-			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare"});
 			setActiveRefId(id);
 		}
+		aModel.setEnabled("menuMakeCurrentTracePrimary", Heap.isTraceSecondary(id));
+		aModel.fireModelChanged(new String[] { "menuFileRemoveCompare", "menuTraceRemoveCompare", "menuMakeCurrentTracePrimary"});
 	}
 }

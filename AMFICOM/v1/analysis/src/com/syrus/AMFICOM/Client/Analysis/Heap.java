@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.88 2005/07/21 07:49:17 saa Exp $
+ * $Id: Heap.java,v 1.89 2005/07/21 10:37:39 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.88 $, $Date: 2005/07/21 07:49:17 $
+ * @version $Revision: 1.89 $, $Date: 2005/07/21 10:37:39 $
  * @module
  */
 public class Heap
@@ -773,6 +773,10 @@ public class Heap
         traceClosed(key);
         setCurrentTracePrimary();
         //updateCurrentTraceWhenBSRemoved();
+//    	System.err.println("Heap.closeTrace: " + key + "; now there are " + traces.size() + " traces left");
+//    	for (String k: traces.keySet()) {
+//    		System.err.println("  Key: " + k);
+//    	}
     }
 
     public static void setCurrentTrace(String id) {
@@ -783,6 +787,10 @@ public class Heap
     public static void setCurrentTracePrimary() {
         currentTrace = PRIMARY_TRACE_KEY;
         notifyCurrentTraceChanged();
+    }
+
+    public static String getCurrentTrace() {
+    	return currentTrace;
     }
 
     // value of -1 means 'no event selected'
@@ -1087,20 +1095,29 @@ public class Heap
 		Heap.setMTMEtalon(etalonObj.getMTM());
 	}
 
+	public static boolean isTraceSecondary(String key) {
+		// первичная и эталон - не вторичные
+		if (ETALON_TRACE_KEY.equals(key) || PRIMARY_TRACE_KEY.equals(key))
+			return false;
+		// дополнительная проверка (сейчас не обязательная) - чтобы key совпадал с trace.getKey()
+		Trace trace = Heap.getAnyTraceByKey(key);
+		return trace != null && key.equals(trace.getKey());
+	}
+
 	/**
 	 * Делает указанную вторичную рефлектограму первичной,
 	 * а старую первичную рефлектограмму - вторичной.
 	 * @throws IllegalArgumentException если указанной вторичной рефлектограммы нет
 	 */ 
-	public static void setSecondaryTraceAsPrimary(Trace tr) {
-		String oldSKey = tr.getKey();
-		if (traces.get(oldSKey) != tr)
-			throw new IllegalArgumentException("There is no such secondary trace: " + tr);
+	public static void setSecondaryTraceAsPrimary(String key) {
+		Trace trace = Heap.getAnyTraceByKey(key);
+		if (! isTraceSecondary(key))
+			throw new IllegalArgumentException("There is no such secondary trace: " + key);
 		Trace oldPrimary = getPrimaryTrace();
 
 		// убираем вторичную из вторичных с оповещениями
-		removeAnyTraceByKey(oldSKey);
-		notifyBsHashRemove(oldSKey);
+		removeAnyTraceByKey(key);
+		notifyBsHashRemove(key);
 
 		// убираем первичную с оповещениями
 		setAnyTraceByKey(PRIMARY_TRACE_KEY, null);
@@ -1111,7 +1128,7 @@ public class Heap
 		// во избежание проблем, в этот момент ничего не отрисовываем
 
 		// устанавливаем первичную
-		setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
+		setAnyTraceByKey(PRIMARY_TRACE_KEY, trace);
 
 		// проводим анализ первичной с оповещениеями
 		makePrimaryAnalysis();
