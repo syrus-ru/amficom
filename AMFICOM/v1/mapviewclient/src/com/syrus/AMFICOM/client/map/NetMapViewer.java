@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.31 2005/07/21 14:37:27 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.32 2005/07/21 14:53:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/07/21 14:37:27 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/21 14:53:59 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -514,8 +514,11 @@ public abstract class NetMapViewer {
 			{
 				Collection elements = (Collection )pce.getNewValue();
 				for(Iterator iter = elements.iterator(); iter.hasNext();) {
-					MapElement element = (MapElement )iter.next();
-					mapView.getMap().setSelected(element, false);
+					Object element = iter.next();
+					if(element instanceof MapElement) {
+						MapElement mapElement = (MapElement )element;
+						mapView.getMap().setSelected(mapElement, false);
+					}
 				}
 				updateSelectedElements();
 				this.logicalNetLayer.sendSelectionChangeEvent();
