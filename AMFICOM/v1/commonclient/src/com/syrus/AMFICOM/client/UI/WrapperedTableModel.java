@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/20 11:34:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/21 10:46:13 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -204,7 +204,11 @@ public class WrapperedTableModel extends AbstractTableModel {
 	}
 
 	public int addObject(Object object) {
-		this.list.add(object);
+		return this.addObject(this.list.size(), object);
+	}
+	
+	public int addObject(int index, Object object) {
+		this.list.add(index, object);
 		this.fireTableDataChanged();
 		return this.list.indexOf(object);
 	}
