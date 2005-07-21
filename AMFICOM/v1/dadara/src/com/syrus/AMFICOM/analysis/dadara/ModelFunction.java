@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.26 $, $Date: 2005/07/06 08:42:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/21 13:10:21 $
  * @author $Author: saa $
  * @author saa
  * @module dadara
@@ -352,25 +352,6 @@ public class ModelFunction {
 		nFit2(y, begin, end, FITMODE_VARY_ALL,
 			linkFlags, linkData0,
 			errorR, errorA, maxPoints);
-	}
-
-	/**
-	 * Performs fitting
-     * // XXX: unused?
-	 *
-	 * @param y      real r/g data array
-	 * @param begin  starting fitting array index
-	 * @param end    ending fitting array index (length is end - begin + 1)
-	 * @param linkFlags флажки для связывания с соседними событиями (пока только LINK_FIXLEFT)
-	 * @param linkData0 данные для флажка LINK_FIXLEFT
-	 * @param noise рекомендуемый уровень ошибки
-	 */
-	public void fit(double y[], int begin, int end, int linkFlags, double linkData0,
-			double[] noise)
-	{
-	    //System.out.println("fit-3: linkFlags " + linkFlags);
-		nFit4(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
-			noise, null);
 	}
 
     public static ModelFunction createFitedAsBreakL(double[] y,
