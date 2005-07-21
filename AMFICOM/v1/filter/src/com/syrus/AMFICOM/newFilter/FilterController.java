@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.16 2005/06/21 12:44:28 bass Exp $
+ * $Id: FilterController.java,v 1.17 2005/07/21 14:11:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/21 12:44:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/21 14:11:13 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
@@ -55,34 +55,8 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 	
 	public FilterController(Filter filter, FilterView filterView) {
 		
-		this.model = filter;
 		this.view = filterView;
-		this.model.addView(this.view);
-		for (Iterator it = this.model.getKeys().iterator(); it.hasNext();) {
-			ConditionKey conditionKey = (ConditionKey) it.next();
-			byte type = conditionKey.getType();
-			switch (type) {
-			case ConditionWrapper.INT:
-			case ConditionWrapper.FLOAT:
-			case ConditionWrapper.DOUBLE:
-				this.keyTempCondition.put(conditionKey, new NumberCondition());
-				break;
-			case ConditionWrapper.STRING:
-				this.keyTempCondition.put(conditionKey, new StringCondition());
-				break;
-			case ConditionWrapper.CONSTRAINT:
-				this.keyTempCondition.put(conditionKey, new ListCondition(conditionKey.getConstraintNames()));
-				break;
-			case ConditionWrapper.LIST:
-				this.keyTempCondition.put(conditionKey, new ListCondition());
-				break;
-			case ConditionWrapper.DATE:
-				this.keyTempCondition.put(conditionKey, new DateCondition());
-				break;
-			default:
-				Log.errorMessage("FilterController.<init> | Unsupported condition type");
-			}
-		}		
+		setFilter(filter);
 	}
 	
 	public void setFilter(Filter filter) {
@@ -111,7 +85,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				this.keyTempCondition.put(conditionKey, new DateCondition());
 				break;
 			default:
-				Log.errorMessage("FilterController.<init> | Unsupported condition type");
+				Log.errorMessage("FilterController.setFilter | Unsupported condition type");
 			}
 		}
 	}
