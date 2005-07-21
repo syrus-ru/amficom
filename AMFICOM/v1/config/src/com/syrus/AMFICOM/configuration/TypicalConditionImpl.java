@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.16 2005/07/06 13:16:35 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.17 2005/07/21 10:02:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/06 13:16:35 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/21 10:02:17 $
  * @author $Author: max $
  * @module config_v1
  */
@@ -107,6 +107,8 @@ final class TypicalConditionImpl extends TypicalCondition {
 			wrapper = PortTypeWrapper.getInstance();
 		} else if (storableObject instanceof EquipmentType) {
 			wrapper = EquipmentTypeWrapper.getInstance();
+		} else if (storableObject instanceof MonitoredElement) {
+			wrapper = MonitoredElementWrapper.getInstance();
 		} else {
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
