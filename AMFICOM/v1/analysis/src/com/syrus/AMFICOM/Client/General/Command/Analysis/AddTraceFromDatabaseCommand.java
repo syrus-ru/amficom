@@ -1,21 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.util.Set;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
+import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodename;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.io.BellcoreReader;
-import com.syrus.io.BellcoreStructure;
 
 public class AddTraceFromDatabaseCommand extends AbstractCommand
 {
@@ -47,40 +44,51 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 	@Override
 	public void execute()
 	{
-		ReflectogrammLoadDialog dialog;
+		// @todo: ReflectogramLoadDialog, Heap.setRLDialogByKey seem to be unused
+//		ReflectogrammLoadDialog dialog;
+//		JFrame parent = Environment.getActiveWindow();
+//		if(Heap.getRLDialogByKey(parent.getName()) != null)
+//		{
+//			dialog = Heap.getRLDialogByKey(parent.getName());
+//		} else
+//		{
+//			dialog = new ReflectogrammLoadDialog (this.aContext);
+//			Heap.setRLDialogByKey(parent.getName(), dialog);
+//		}
+//		
+//		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
+//			return;
+//		
+//		Result result1 = dialog.getResult();
+//		if (result1 == null)
+//			return;
+
+		// Получаем набор результатов, которые надо загрузить
 		JFrame parent = Environment.getActiveWindow();
-		if(Heap.getRLDialogByKey(parent.getName()) != null)
-		{
-			dialog = Heap.getRLDialogByKey(parent.getName());
-		} else
-		{
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Heap.setRLDialogByKey(parent.getName(), dialog);
+		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
+			return;
+		Set<Result> results = TraceLoadDialog.getResults();
+
+//		int totalCounter = 0;
+//		int failureCounter = 0;
+//		boolean hasLoadProblems = false;
+//		boolean hasAlreadyLoadedProblem = false;
+		for (Result result1: results) {
+			Trace tr;
+			try {
+				tr = new Trace(result1, Heap.getMinuitAnalysisParams());
+			} catch (SimpleApplicationException e) {
+				// ошибка - в результатах анализа нет рефлектограммы
+				continue; // FIXME: exceptions/error handling: считать число ошибок, выдавать собщение об ошибке
+			}
+	
+			if (Heap.hasSecondaryBSKey(tr.getKey())
+					|| Heap.getPrimaryTrace().getKey().equals(tr.getKey())) {
+				continue; // FIXME: exceptions/error handling: считать число ошибок, выдавать сообщения "некоторые или все рефлектограммы уже загружены"
+			}
+	
+			Heap.putSecondaryTrace(tr);
+			Heap.setCurrentTrace(tr.getKey());
 		}
-		
-		if(dialog.showDialog() == JOptionPane.CANCEL_OPTION)
-			return;
-		
-		Result result1 = dialog.getResult();
-		if (result1 == null)
-			return;
-
-		BellcoreStructure bs = null;
-
-		Parameter[] parameters = result1.getParameters();
-		for (int i = 0; i < parameters.length; i++)
-		{
-			Parameter param = parameters[i];
-			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
-				bs = new BellcoreReader().getData(param.getValue());
-		}
-		if (bs == null)
-			return;
-
-		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
-			bs.title = ((Measurement)result1.getAction()).getName();
-		Heap.putSecondaryTraceByKey(bs.title, bs);
-		Heap.setCurrentTrace(bs.title);
 	}
 }
