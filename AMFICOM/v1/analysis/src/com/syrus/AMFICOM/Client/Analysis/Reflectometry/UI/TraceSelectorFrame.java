@@ -145,8 +145,6 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		if (traces.contains(id))
 			return;
 
-		traces.add(id);
-
 		Log.debugMessage("TraceSelectorFrame.traceAdded | id is '" + id + '\'', Level.FINEST);
 
 		TraceResource tr = new TraceResource(id);
@@ -159,12 +157,16 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		else
 			tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
 
-		if (Heap.PRIMARY_TRACE_KEY.equals(key))
+		if (Heap.PRIMARY_TRACE_KEY.equals(key)) {
 			tModel.addObject(0, tr);
-		else if (Heap.ETALON_TRACE_KEY.equals(key))
+			traces.add(0, id);
+		} else if (Heap.ETALON_TRACE_KEY.equals(key)) {
 			tModel.addObject(1, tr);
-		else
+			traces.add(1, id);
+		} else {
 			tModel.addObject(tr);
+			traces.add(id);
+		}
 		setVisible(true);
 	}
 
