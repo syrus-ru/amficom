@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.30 2005/07/20 13:20:06 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.31 2005/07/21 14:37:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/07/20 13:20:06 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/21 14:37:27 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -481,8 +481,29 @@ public abstract class NetMapViewer {
 			{
 				Collection elements = (Collection )pce.getNewValue();
 				for(Iterator iter = elements.iterator(); iter.hasNext();) {
-					MapElement element = (MapElement )iter.next();
-					mapView.getMap().setSelected(element, true);
+					Object element = iter.next();
+					if(element instanceof MapElement) {
+						MapElement mapElement = (MapElement )element;
+						mapView.getMap().setSelected(mapElement, true);
+					}
+					else if(element instanceof SchemeElement) {
+						SchemeElement schemeElement = (SchemeElement)element;
+						MapElement mapElement = mapView.findElement(schemeElement);
+						if(mapElement != null)
+							mapView.getMap().setSelected(mapElement, true);
+					}
+					else if(element instanceof SchemeCableLink) {
+						SchemeCableLink schemeCableLink = (SchemeCableLink)element;
+						MapElement mapElement = mapView.findCablePath(schemeCableLink);
+						if(mapElement != null)
+							mapView.getMap().setSelected(mapElement, true);
+					}
+					else if(element instanceof SchemePath) {
+						SchemePath schemePath = (SchemePath)element;
+						MapElement mapElement = mapView.findMeasurementPath(schemePath);
+						if(mapElement != null)
+							mapView.getMap().setSelected(mapElement, true);
+					}
 				}
 				updateSelectedElements();
 				this.logicalNetLayer.sendSelectionChangeEvent();
