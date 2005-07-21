@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.TraceResource;
-import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
@@ -22,7 +21,8 @@ public class AnalysisFrame extends ScalableFrame
 implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 {
 	protected Dispatcher dispatcher;
-	public HashMap traces = new HashMap();
+	public HashMap<String,SimpleGraphPanel> traces =
+			new HashMap<String,SimpleGraphPanel>();
 
 	protected AnalysisFrame(Dispatcher dispatcher, AnalysisLayeredPanel panel)
 	{
@@ -48,6 +48,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		setTitle(LangModelAnalyse.getString("analysisTitle"));
 		addComponentListener(new java.awt.event.ComponentAdapter()
 		{
+			@Override
 			public void componentShown(ComponentEvent e)
 			{
 				this_componentShown();
@@ -55,6 +56,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		});
 	}
 
+	@Override
 	public String getReportTitle()
 	{
 		return LangModelAnalyse.getString("analysisTitle");
@@ -118,7 +120,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 
 	private void removeOneTrace(String id)
 	{
-		SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
+		SimpleGraphPanel p = traces.get(id);
 		if (p != null)
 		{
 			panel.removeGraphPanel(p);
@@ -130,7 +132,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 	private void removeAllTraces()
 	{
 		((ScalableLayeredPanel)panel).removeAllGraphPanels();
-		traces = new HashMap();
+		traces = new HashMap<String, SimpleGraphPanel>();
 	}
 
 //	private void addEtalon()
@@ -198,7 +200,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 			RefUpdateEvent ev = (RefUpdateEvent)evt;
 			if (ev.traceChanged()) {
 				TraceResource tr = (TraceResource)evt.getNewValue();
-				SimpleGraphPanel p = (SimpleGraphPanel)traces.get(tr.getId());
+				SimpleGraphPanel p = traces.get(tr.getId());
 				if (p != null) {
 					p.setShowAll(tr.isShown());
 					panel.repaint();
