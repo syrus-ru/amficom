@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.104 2005/07/18 12:30:34 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.105 2005/07/21 13:03:41 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.104 $, $Date: 2005/07/18 12:30:34 $
+ * @version $Revision: 1.105 $, $Date: 2005/07/21 13:03:41 $
  * @module
  */
 
@@ -385,10 +385,13 @@ public class CoreAnalysisManager
 
 //        long t3 = System.nanoTime();
 
-        double[] yTypical = tpa.y; // FIXME: надо брать одну, самую типовую р/г, а не усредненную, т.к. потом по этим данным будет считаться rms
-
+        // XXX: надо знать не только усредненную р/г, но и самую типовую,
+        // чтобы по типовой определять rmsDev,maxDev и т.п.
+        // На данный момент это не критично, т.к. результаты анализа
+        // многих р/г используются только для эталона, а у него maxDev/rmsDev
+        // не используются.
         ModelTraceAndEventsImpl mtae =
-            new ModelTraceAndEventsImpl(rse, mf, yTypical, tpa.deltaX);
+            new ModelTraceAndEventsImpl(rse, mf, tpa.y, tpa.deltaX);
 
 //        long t4 = System.nanoTime();
 
