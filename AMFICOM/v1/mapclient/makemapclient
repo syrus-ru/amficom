@@ -6,9 +6,10 @@ TARGET=$(LIB)\mapclient.jar
 TARGET_SRC=$(LIBSRC)\mapclientsource.zip
 TARGET_DOC=$(LIBDOC)\mapclientdoc.zip
 
-CLIENTCP=$(LIB)\commonclient.jar;$(LIB)\general.jar
+SERVERCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\event.jar;$(LIB)\admin.jar;$(LIB)\filter.jar;$(LIB)\config.jar;$(LIB)\measurement.jar;$(LIB)\resource.jar;$(LIB)\scheme.jar;$(LIB)\map.jar;$(LIB)\mapview.jar
+CLIENTCP=$(LIB)\commonclient.jar
 
-CLASSPATH=$(CLIENTCP)
+CLASSPATH=$(SERVERCP);$(CLIENTCP)
 
 .PHONY:	$(TARGET)
 
