@@ -172,7 +172,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(super.dispatcher, this.aContext));
 		aModel.setCommand("menuFileSave", new FileSaveCommand(this.aContext));
 		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(this.aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand(this.aContext));
+		aModel.setCommand("menuFileClose", new FileCloseCommand());
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
 
@@ -181,7 +181,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand());
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(this.aContext));
 		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(null, this.aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand(this.aContext));
+		aModel.setCommand("menuTraceClose", new FileCloseCommand());
 		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand());
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
