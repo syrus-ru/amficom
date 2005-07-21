@@ -489,7 +489,6 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
 			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent"});
 		}
-		Heap.updateCurrentTraceWhenBSRemoved();
 		if (!Heap.hasSecondaryBS()) {
 			aModel.setEnabled("menuFileRemoveCompare", false);
 			aModel.setEnabled("menuTraceRemoveCompare", false);

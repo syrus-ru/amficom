@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.87 2005/07/20 14:48:31 saa Exp $
+ * $Id: Heap.java,v 1.88 2005/07/21 07:49:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,7 +92,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.87 $, $Date: 2005/07/20 14:48:31 $
+ * @version $Revision: 1.88 $, $Date: 2005/07/21 07:49:17 $
  * @module
  */
 public class Heap
@@ -186,7 +186,7 @@ public class Heap
     private static void setAnyTraceByKey(String key, Trace trace) {
     	traces.put(key, trace);
     }
-    private static void removeAnyTamBykey(String key) {
+    private static void removeAnyTraceByKey(String key) {
     	traces.remove(key);
     }
 
@@ -321,11 +321,15 @@ public class Heap
         			ETALON_TRACE_KEY,
         			getMinuitAnalysisParams()));
         else
-        	removeAnyTamBykey(ETALON_TRACE_KEY);
+        	removeAnyTraceByKey(ETALON_TRACE_KEY);
     }
 
     public static Trace getReferenceTrace() {
         return getAnyTraceByKey(REFERENCE_TRACE_KEY);
+    }
+
+    public static Trace getPrimaryTrace() {
+        return getAnyTraceByKey(PRIMARY_TRACE_KEY);
     }
 
     public static boolean hasSecondaryBSKey(String id) {
@@ -405,7 +409,7 @@ public class Heap
         return null;
     }
 
-    public static void updateCurrentTraceWhenBSRemoved() {
+    private static void updateCurrentTraceWhenBSRemoved() {
         if (!traces.containsKey(currentTrace))
             currentTrace = getFirstSecondaryBSKey();
         if (currentTrace == null)
@@ -495,7 +499,7 @@ public class Heap
     }
 
     public static void removeAnyBSByName(String id) {
-    	removeAnyTamBykey(id);
+    	removeAnyTraceByKey(id);
     }
 
     public static void setEtalonEtalonMetas(ParameterSet metas) {
@@ -745,7 +749,7 @@ public class Heap
         notifyPrimaryTraceOpened();
     }
 
-    public static void traceClosed(String key) {
+    private static void traceClosed(String key) {
         notifyBsHashRemove(key);
         if (key.equals(PRIMARY_TRACE_KEY))
             notifyPrimaryTraceClosed();
@@ -756,6 +760,20 @@ public class Heap
      * methods that both make changed and notify appropriate listeners
      * =============================================================== 
      */
+
+    /**
+     *  годится для закрытия любой рефлектограммы, кроме первичной
+     */
+    public static void closeTrace(String key) {
+        if (ETALON_TRACE_KEY.equals(key)) {
+            unSetEtalonPair();
+        } else {
+            removeAnyBSByName(key);
+        }
+        traceClosed(key);
+        setCurrentTracePrimary();
+        //updateCurrentTraceWhenBSRemoved();
+    }
 
     public static void setCurrentTrace(String id) {
         currentTrace = id;
@@ -1067,5 +1085,38 @@ public class Heap
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());
+	}
+
+	/**
+	 * Делает указанную вторичную рефлектограму первичной,
+	 * а старую первичную рефлектограмму - вторичной.
+	 * @throws IllegalArgumentException если указанной вторичной рефлектограммы нет
+	 */ 
+	public static void setSecondaryTraceAsPrimary(Trace tr) {
+		String oldSKey = tr.getKey();
+		if (traces.get(oldSKey) != tr)
+			throw new IllegalArgumentException("There is no such secondary trace: " + tr);
+		Trace oldPrimary = getPrimaryTrace();
+
+		// убираем вторичную из вторичных с оповещениями
+		removeAnyTraceByKey(oldSKey);
+		notifyBsHashRemove(oldSKey);
+
+		// убираем первичную с оповещениями
+		setAnyTraceByKey(PRIMARY_TRACE_KEY, null);
+		notifyBsHashRemove(PRIMARY_TRACE_KEY);
+		notifyPrimaryTraceClosed();
+
+		// внимание - в этот момент нет первичной рефлектограммы
+		// во избежание проблем, в этот момент ничего не отрисовываем
+
+		// устанавливаем первичную
+		setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
+
+		// проводим анализ первичной с оповещениеями
+		makePrimaryAnalysis();
+
+		// устанавливаем вторичную
+		putSecondaryTrace(oldPrimary);
 	}
 }

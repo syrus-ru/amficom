@@ -32,11 +32,6 @@ public class FileRemoveCommand extends AbstractCommand
 	{
         // FIXME: activerefId can be null?
 
-        if (Heap.ETALON_TRACE_KEY.equals(activeRefId))
-            Heap.unSetEtalonPair();
-        else
-            Heap.removeAnyBSByName(activeRefId);
-		Heap.traceClosed(activeRefId);
-		Heap.setCurrentTracePrimary();
+		Heap.closeTrace(activeRefId);
 	}
 }
