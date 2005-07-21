@@ -102,9 +102,18 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		jLayeredPane.repaint();
 	}
 
+	/**
+	 * ƒобавл€ет SimpleGraphPanel на LayeredPanel. ≈сли добавл€ема€ панель
+	 * instanceof ActiveReflectogramPanel, то она добавл€етс€ на самый верх,
+	 * чтобы первой получать событи€ от мыши.
+	 * @param panel
+	 */
 	public void addGraphPanel (SimpleGraphPanel panel)
 	{
-		jLayeredPane.add(panel);
+		if (panel instanceof ActiveReflectogramPanel)
+			jLayeredPane.add(panel, 0);
+		else
+			jLayeredPane.add(panel);
 		if (panel instanceof ScaledGraphPanel)
 			((ScaledGraphPanel)panel).select_by_mouse = true;
 	}
