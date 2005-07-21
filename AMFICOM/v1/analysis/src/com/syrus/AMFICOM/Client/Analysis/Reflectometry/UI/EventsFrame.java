@@ -424,15 +424,16 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		updateTableModel();
 		jTable.updateUI();
 	}
-	
+
 	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer
 	{
-		public Component getTableCellRendererComponent(	JTable table1,
-														Object value,
-														boolean isSelected1,
-														boolean hasFocus,
-														int row,
-														int column) {
+		@Override
+		public Component getTableCellRendererComponent(JTable table1,
+				Object value,
+				boolean isSelected1,
+				boolean hasFocus,
+				int row,
+				int column) {
 			Component c = super.getTableCellRendererComponent(table1, value,
                     isSelected1, hasFocus, row, column);
 
@@ -469,9 +470,6 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	                : AnalysisResourceKeys.COLOR_EVENTS_NEW;
 	                break chooseColor; // probe-only event
 	            }
-	            // event changed?
-                //System.err.println("row " + row + " column " + column);
-                // FIXME: add MTAE.getComplexEvent(int) or add caching of output CE[] in MTAE
                 DetailedEvent pri =
                     Heap.getMTAEPrimary().getDetailedEvent(nPrimary);
                 DetailedEvent et =
