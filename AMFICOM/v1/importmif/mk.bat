@@ -1,1 +1,0 @@
-nmake /f makeimportmif %1
