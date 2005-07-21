@@ -28,6 +28,9 @@ import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 public final class MapViewTreePanel extends JPanel 
 		implements PropertyChangeListener, TreeSelectionListener {
@@ -201,11 +204,15 @@ public final class MapViewTreePanel extends JPanel
 			TreePath paths[] = e.getPaths();
 			Collection toSelect = new LinkedList();
 			Collection toDeSelect = new LinkedList();
+			boolean sendSelectionEvent = true;
 			for (int i = 0; i < paths.length; i++) 
 			{
 				Item node = (Item )paths[i].getLastPathComponent();
-				if(node.getObject() instanceof MapElement) {
-					MapElement mapElement = (MapElement )node.getObject();
+				if(node.getObject() instanceof MapElement
+						|| node.getObject() instanceof SchemeElement
+						|| node.getObject() instanceof SchemeCableLink
+						|| node.getObject() instanceof SchemePath) {
+					Object mapElement = node.getObject();
 					if(e.isAddedPath(paths[i]))
 						toSelect.add(mapElement);
 					else
@@ -213,19 +220,23 @@ public final class MapViewTreePanel extends JPanel
 				}
 				else if(node.getObject() instanceof Map) {
 					Map map = (Map )node.getObject();
-					if(e.isAddedPath(paths[i]))
+					if(e.isAddedPath(paths[i])) {
 						dispatcher.firePropertyChange(new MapEvent(map, MapEvent.MAP_SELECTED));
+						sendSelectionEvent = false;
+					}
 				}
 				else if(node.getObject() instanceof MapView) {
 					MapView mapView = (MapView )node.getObject();
-					if(e.isAddedPath(paths[i]))
+					if(e.isAddedPath(paths[i])) {
 						dispatcher.firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
+						sendSelectionEvent = false;
+					}
 				}
 			}
-			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_SELECT, toSelect));
-			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_DESELECT, toDeSelect));
-//			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED, toSelect));
-//			dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_CHANGED));
+			if(sendSelectionEvent) {
+				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_SELECT, toSelect));
+				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_DESELECT, toDeSelect));
+			}
 			this.performProcessing = true;
 		}
 	}
