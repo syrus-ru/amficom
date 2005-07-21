@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeGraph.java,v 1.5 2005/07/21 14:53:23 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/21 14:53:23 $
  * @module schemeclient_v1
  */
 
@@ -291,27 +290,27 @@ public class SchemeGraph extends GPGraph {
 		return Collections.EMPTY_MAP;
 	}
 	
-	public Map copyFromArchivedState(Object s, Point p) {
+	public Map<DefaultGraphCell, DefaultGraphCell> copyFromArchivedState(Object s, Point p) {
 		if (s instanceof List) {
 			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
 			Map viewAttributes = (Map) v.get(1);
 			ConnectionSet cs = (ConnectionSet) v.get(2);
 
-			ArrayList new_cells = new ArrayList();
+			List<DeviceGroup> newGroups = new ArrayList<DeviceGroup>();
 			for (int i = 0; i < cells.length; i++) {
 				if (cells[i] instanceof DeviceGroup)
-					new_cells.add(cells[i]);
+					newGroups.add((DeviceGroup)cells[i]);
 			}
-			DeviceGroup[] groups = (DeviceGroup[]) new_cells.toArray(new DeviceGroup[new_cells.size()]);
+			DeviceGroup[] groups = newGroups.toArray(new DeviceGroup[newGroups.size()]);
 
 			if (groups.length == 0) {
 				getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
-				return new HashMap();
+				return Collections.emptyMap();
 			}
 
 			// клонируем селлы
-			Map clones = cloneCells(cells);
+			Map<DefaultGraphCell, DefaultGraphCell> clones = cloneCells(cells);
 			// клонируем аттрубуты
 			Map cell_attr = GraphConstants.createAttributes(cells,
 					getGraphLayoutCache());
@@ -390,5 +389,8 @@ public class SchemeGraph extends GPGraph {
 	}
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+	public void setMakeNotifications(boolean make_notifications) {
+		this.make_notifications = make_notifications;
 	}
 }
