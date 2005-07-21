@@ -143,7 +143,7 @@ implements CurrentEventChangeListener,
     }
 
     public void primaryRefAnalysisRemoved() {
-        // @todo Auto-generated method stub
+        // do nothing. AnalysisPanel will be removed when bsHashRemoved comes
     }
 
 	private void updRefMismatch() {
