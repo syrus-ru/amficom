@@ -12,5 +12,8 @@ lib
 .corba
 .client
 Makefile.inc
+.project
+.classpath
+.settings
 .idl
 test
