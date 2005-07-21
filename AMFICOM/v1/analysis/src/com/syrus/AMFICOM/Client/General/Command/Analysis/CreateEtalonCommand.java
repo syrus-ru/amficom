@@ -56,7 +56,6 @@ public class CreateEtalonCommand extends AbstractCommand
 			Heap.setMTMEtalon(mtm);
 		} catch (IncompatibleTracesException e){
 			GUIUtil.showErrorMessage("incompatibleTraces");
-			return;
 		}
 
 		Environment.getActiveWindow().setCursor(
