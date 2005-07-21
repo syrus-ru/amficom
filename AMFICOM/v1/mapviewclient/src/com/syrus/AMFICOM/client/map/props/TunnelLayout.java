@@ -41,6 +41,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		this.ugoTabbedPane = new UgoTabbedPane(this.internalContext);
 		this.ugoTabbedPane.getGraph().setGraphEditable(false);
 		this.ugoTabbedPane.getGraph().setAntiAliased(true);
+		this.ugoTabbedPane.getGraph().setMakeNotifications(true);
 
 		this.internalContext.getDispatcher().addPropertyChangeListener(
 				ObjectSelectedEvent.TYPE,
