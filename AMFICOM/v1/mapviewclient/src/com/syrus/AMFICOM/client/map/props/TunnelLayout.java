@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public class TunnelLayout implements PropertyChangeListener {
 	private ApplicationContext internalContext = new ApplicationContext();
-	private UgoTabbedPane panel;
+	private UgoTabbedPane ugoTabbedPane;
 	private static final int RADIUS = 15;
 	private static final int SPACE = 2;
 	private int m, n;
@@ -38,9 +38,9 @@ public class TunnelLayout implements PropertyChangeListener {
 
 		this.internalContext.setDispatcher(new Dispatcher());
 
-		this.panel = new UgoTabbedPane(this.internalContext);
-		this.panel.getGraph().setGraphEditable(false);
-		this.panel.getGraph().setAntiAliased(true);
+		this.ugoTabbedPane = new UgoTabbedPane(this.internalContext);
+		this.ugoTabbedPane.getGraph().setGraphEditable(false);
+		this.ugoTabbedPane.getGraph().setAntiAliased(true);
 
 		this.internalContext.getDispatcher().addPropertyChangeListener(
 				ObjectSelectedEvent.TYPE,
@@ -48,16 +48,16 @@ public class TunnelLayout implements PropertyChangeListener {
 	}
 
 	public UgoTabbedPane getUgoPanel() {
-		return this.panel;
+		return this.ugoTabbedPane;
 	}
 
 	protected void removeSelection() {
-		this.panel.getGraph().clearSelection();
+		this.ugoTabbedPane.getGraph().clearSelection();
 
 		for(int i = 0; i < this.m; i++) {
 			for(int j = 0; j < this.n; j++) {
 				GraphActions.setObjectBackColor(
-						this.panel.getGraph(),
+						this.ugoTabbedPane.getGraph(),
 						this.cells[i][j],
 						Color.WHITE);
 			}
@@ -75,10 +75,10 @@ public class TunnelLayout implements PropertyChangeListener {
 				if(obj instanceof EllipseCell) {
 					EllipseCell cell = (EllipseCell )obj;
 					GraphActions.setObjectBackColor(
-							this.panel.getGraph(),
+							this.ugoTabbedPane.getGraph(),
 							cell,
 							Color.YELLOW);
-					this.panel.getGraph().setSelectionCell(cell);
+					this.ugoTabbedPane.getGraph().setSelectionCell(cell);
 
 					boolean found = false;
 					for(int i = 0; i < this.m && !found; i++) {
@@ -115,7 +115,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		this.m = m;
 		this.n = n;
 
-		this.panel.getGraph().removeAll();
+		this.ugoTabbedPane.getGraph().removeAll();
 
 		this.cells = new EllipseCell[m][n];
 
@@ -126,7 +126,7 @@ public class TunnelLayout implements PropertyChangeListener {
 						(j + 1) * SPACE + 2 * j * RADIUS,
 						2 * RADIUS,
 						2 * RADIUS);
-				this.cells[i][j] = addCell(this.panel.getGraph(), "", bounds);
+				this.cells[i][j] = addCell(this.ugoTabbedPane.getGraph(), "", bounds);
 			}
 	}
 
@@ -140,13 +140,13 @@ public class TunnelLayout implements PropertyChangeListener {
 		//
 
 		if(this.activeCoordinates != null)
-			this.panel.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
+			this.ugoTabbedPane.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
 	}
 	
 	public void setActiveCoordinates(IntPoint activeCoordinates) {
 		removeSelection();
 		this.activeCoordinates = activeCoordinates;
-		this.panel.getGraph().setSelectionCell(this.cells[activeCoordinates.x][activeCoordinates.y]);
+		this.ugoTabbedPane.getGraph().setSelectionCell(this.cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 
 	public IntPoint getActiveCoordinates() {
@@ -170,7 +170,7 @@ public class TunnelLayout implements PropertyChangeListener {
 		int j = jstart;
 
 		while(counter <= limit) {
-			GraphActions.setText(this.panel.getGraph(),this.cells[i][j], String.valueOf(counter++));
+			GraphActions.setText(this.ugoTabbedPane.getGraph(),this.cells[i][j], String.valueOf(counter++));
 			if(counter > limit)
 				break;
 			if(this.binding.isHorizontalVertical()) {
