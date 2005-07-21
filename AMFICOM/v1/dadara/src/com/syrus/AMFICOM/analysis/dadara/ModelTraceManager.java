@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.89 2005/07/14 14:28:39 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.90 2005/07/21 13:14:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.89 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.90 $, $Date: 2005/07/21 13:14:17 $
  * @module
  */
 public class ModelTraceManager
@@ -1038,7 +1038,7 @@ implements DataStreamable, Cloneable
     		if (tDX[i].xMin + dxMin <= x && tDX[i].xMax + dxMax >= x) {
     			// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
     			int nEv = tDX[i].eventId0;
-    			//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
     			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
     			int curPref = getEventAlarmPref(eventType);
     			if (curPref > pref) {
@@ -1052,7 +1052,7 @@ implements DataStreamable, Cloneable
     	for (int nEv = 0; nEv < nEvents; nEv++) {
     		SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
     		if (ev.getBegin() <= x && ev.getEnd() >= x) {
-    			//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIXME: debug sysout
+    			//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
     			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
     			int curPref = getEventAlarmPref(eventType);
     			if (curPref > pref) {
