@@ -41,7 +41,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		PropertyChangeListener, RefMismatchListener
 {
 	Dispatcher dispatcher;
-	protected static List traces = new LinkedList();
+	protected static List<String> traces = new LinkedList<String>();
 	private WrapperedTable jTable;
 	private WrapperedTableModel tModel;
 
@@ -128,7 +128,7 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 				{
 					int selectedRow = lsm.getMinSelectionIndex();
 					//selectedRow is selected
-					Heap.setCurrentTrace((String)traces.get(selectedRow));
+					Heap.setCurrentTrace(traces.get(selectedRow));
 				}
 			}
 		}
@@ -190,9 +190,9 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 	}
 
 	public void bsHashRemovedAll() {
-		List values = tModel.getValues();
-		for (Iterator it = values.iterator(); it.hasNext();) {
-			TraceResource tr = (TraceResource)it.next();	
+		List<TraceResource> values = tModel.getValues();
+		for (Iterator<TraceResource> it = values.iterator(); it.hasNext();) {
+			TraceResource tr = it.next();	
 			tr.removePropertyChangeListener(this);
 			it.remove();
 		}
