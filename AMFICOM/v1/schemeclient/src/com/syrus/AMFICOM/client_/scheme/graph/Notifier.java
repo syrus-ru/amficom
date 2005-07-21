@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.5 2005/07/11 12:31:38 stas Exp $
+ * $Id: Notifier.java,v 1.6 2005/07/21 13:57:31 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.util.logging.Level;
 
+import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/21 13:57:31 $
  * @module schemeclient_v1
  */
 
@@ -166,9 +167,7 @@ public class Notifier {
 				}
 			}
 			if (selectedType == 0) {
-				Log.debugMessage(Notifier.class.getSimpleName() + "| unsupported object selection: " + object, Level.WARNING); //$NON-NLS-1$
-				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, null, null,
-						ObjectSelectedEvent.ALL_DESELECTED));
+				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, ObjectSelectedEvent.OTHER_OBJECT));
 			} else {
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, selectedObject, manager,
 						selectedType));
