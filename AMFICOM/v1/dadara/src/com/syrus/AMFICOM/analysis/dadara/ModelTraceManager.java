@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.90 2005/07/21 13:14:17 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.91 2005/07/21 13:20:11 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.90 $, $Date: 2005/07/21 13:14:17 $
+ * @version $Revision: 1.91 $, $Date: 2005/07/21 13:20:11 $
  * @module
  */
 public class ModelTraceManager
@@ -417,7 +417,7 @@ implements DataStreamable, Cloneable
 
 	/**
 	 * Выдает модельную кривую порога заданного уровня.
-	 * XXX: не кэширует.
+	 * не кэширует.
 	 * @param isUpper true - нужен верхний порог, false - нижний
 	 * @param level уровень порога, от 0.0 до 1.0 включительно
 	 * @return запрошенная модельная кривая

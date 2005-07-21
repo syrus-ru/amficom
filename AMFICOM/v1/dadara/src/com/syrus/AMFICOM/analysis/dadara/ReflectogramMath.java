@@ -105,7 +105,6 @@ public class ReflectogramMath
 			if(re[i].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
 				return re[i].getBegin();
 		// если нет - считаем, что трассы совсем нет
-		// XXX: м б тогда лучше начало м.з.?
 		return 0;
 	}
 
