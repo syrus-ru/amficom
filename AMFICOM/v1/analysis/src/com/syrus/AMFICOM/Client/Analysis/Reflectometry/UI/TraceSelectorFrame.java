@@ -1,19 +1,37 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.beans.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
-import javax.swing.*;
-import javax.swing.event.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.RefMismatchListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.*;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.analysis.TraceResource;
+import com.syrus.AMFICOM.analysis.TraceResourceWrapper;
+import com.syrus.AMFICOM.client.UI.WrapperedTable;
+import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
@@ -131,14 +149,17 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		traces.add(id);
 
 		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Level.FINEST);
-		
+
 		TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);
 		tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
 		tr.setColor(GUIUtil.getColor(id));
 		tr.setShown(true);
-		
-		tModel.addObject(tr);
+
+		if (Heap.PRIMARY_TRACE_KEY.equals(key))
+			tModel.addObject(0, tr);
+		else
+			tModel.addObject(tr);
 		setVisible(true);
 	}
 
