@@ -140,31 +140,35 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		scrollPane.getViewport().add(jTable);
 	}
 
-	public void bsHashAdded(String key)
-	{
+	private void traceAdded(String key) {
 		String id = key;
 		if (traces.contains(id))
 			return;
 
 		traces.add(id);
 
-		Log.debugMessage("TraceSelectorFrame.bsHashAdded | id is '" + id + '\'', Level.FINEST);
+		Log.debugMessage("TraceSelectorFrame.traceAdded | id is '" + id + '\'', Level.FINEST);
 
 		TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);
-		tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
 		tr.setColor(GUIUtil.getColor(id));
 		tr.setShown(true);
 
+		if (Heap.ETALON_TRACE_KEY.equals(key))
+			tr.setTitle(LangModelAnalyse.getString("etalon"));
+		else
+			tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
+
 		if (Heap.PRIMARY_TRACE_KEY.equals(key))
 			tModel.addObject(0, tr);
+		else if (Heap.ETALON_TRACE_KEY.equals(key))
+			tModel.addObject(1, tr);
 		else
 			tModel.addObject(tr);
 		setVisible(true);
 	}
 
-	public void bsHashRemoved(String key)
-	{
+	private void traceRemoved(String key) {
 		int index = traces.indexOf(key);
 		if (index != -1)
 		{
@@ -175,8 +179,15 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		}
 	}
 
-	public void bsHashRemovedAll()
-	{
+	public void bsHashAdded(String key) {
+		traceAdded(key);
+	}
+
+	public void bsHashRemoved(String key) {
+		traceRemoved(key);
+	}
+
+	public void bsHashRemovedAll() {
 		List values = tModel.getValues();
 		for (Iterator it = values.iterator(); it.hasNext();) {
 			TraceResource tr = (TraceResource)it.next();	
@@ -187,32 +198,12 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		setVisible(false);
 	}
 
-	public void etalonMTMCUpdated()
-	{
-		// @todo: implement this idea correctly (here and in etalonMTMRemoved)
-		String id = Heap.ETALON_TRACE_KEY;
-		if (traces.contains(id))
-			return;
-
-		traces.add(id);
-
-    String name = LangModelAnalyse.getString("etalon");
-
-		Log.debugMessage("TraceSelectorFrame.etalonMTMCUpdated | id is '" + id + "'; name = '" + name + "'", Level.FINEST);
-		
-		TraceResource tr = new TraceResource(id);
-		tr.addPropertyChangeListener(this);
-		tr.setTitle(name);
-		tr.setColor(GUIUtil.getColor(id));
-		tr.setShown(true);
-		
-		tModel.addObject(tr);
-		
-		setVisible(true);
+	public void etalonMTMCUpdated() {
+		traceAdded(Heap.ETALON_TRACE_KEY);
 	}
 
-	public void etalonMTMRemoved()
-	{
+	public void etalonMTMRemoved() {
+		traceRemoved(Heap.ETALON_TRACE_KEY);
 	}
 
 	public void currentTraceChanged(String id)
