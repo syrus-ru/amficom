@@ -52,45 +52,6 @@ public class ReflectogramMath
 				acc[i] = arg[i];
 		}
 	}
-/*
-	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)
-	{
-		correctEvents(re);
-
-		if (arrayLength <= 0)
-			arrayLength = re[re.length-1].getEnd();
-		double[] y = new double[arrayLength];
-
-		for(int i = 0; i < re.length; i++)
-			for(int j = re[i].getBegin(); j < Math.min(re[i].getEnd() + 1, y.length); j++)
-				y[j] = re[i].refAmplitude(j);
-
-		for(int i = re[re.length-1].getEnd(); i < y.length; i++)
-			y[i] = 0.;
-
-		return y;
-	}
-
-	public static ReflectogramEvent[] getThreshold(ReflectogramEvent[] re, int threshold)
-	{
-		ReflectogramEvent[] thresholds = new ReflectogramEvent[re.length];
-		for(int i=0; i < re.length; i++)
-			thresholds[i] = re[i].getThresholdReflectogramEvent(threshold);
-
-		correctEvents(thresholds);
-		return thresholds;
-	}
-
-	public static double getMaximum(ReflectogramEvent[] re)
-	{
-		double ret = 0;
-		for(int i = 0; i < re.length; i++)
-			for(int j = re[i].getBegin(); j < re[i].getEnd(); j++)
-				if(re[i].refAmplitude(j) > ret)
-					ret = re[i].refAmplitude(j);
-		return ret;
-	}
-*/
 	public static double[] getMaxDifPM(double[] y, ModelFunction mf, int begin, int end)
 	{
 	    double[] ret = new double[2];
@@ -124,47 +85,6 @@ public class ReflectogramMath
 		alignArrayToEtalon(y, etalon);
 		return new ArrayModelTrace(y);
 	}
-/*
-	public static ReflectogramEvent[] alignClone(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
-	{
-		ReflectogramEvent[] ret = new ReflectogramEvent[y.length];
-		for(int i = 0; i < y.length; i++)
-			ret[i] = y[i].copy();
-
-		align(ret, etalon);
-		return ret;
-	}
-
-	public static void correctEvents(ReflectogramEvent[] re)
-	{
-		for(int i = 0; i < re.length; i++)
-			if(re[i].getEventType() == ReflectogramEvent.CONNECTOR)
-			{
-				if(re[i].getBegin() < 0)
-					re[i].setBegin(0);
-
-				if(i > 0)
-					re[i-1].setEnd(re[i].getBegin());
-				if(i < re.length-1)
-					re[i+1].setBegin(re[i].getEnd());
-			}
-			// refit is necessary?? // solution depends on IA
-	}
-
-	public static ReflectogramEvent getEvent(int coord, ReflectogramEvent[] re)
-	{
-		if(re == null)
-			return null;
-
-		// ищем справа налево, чтобы отдать предпочтение [i].begin перед [i-1].end
-		for(int i = re.length - 1; i >= 0; i--)
-		{
-			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
-				return re[i];
-		}
-		return null;
-	}
-*/
 	public static SimpleReflectogramEvent getEvent(int coord, SimpleReflectogramEvent[] re)
 	{
 		if(re == null)
@@ -178,37 +98,6 @@ public class ReflectogramMath
 		}
 		return null;
 	}
-/*
-	// takes amplitude with protection against for NullPointer //saa, 2004-10
-	public static double getEventAmplitudeAt(int coord, ReflectogramEvent[] re)
-	{
-		ReflectogramEvent ev = getEvent(coord, re);
-		if (ev == null)
-			return 0;
-		else
-			return ev.refAmplitude(coord);
-	}
-
-	public static int getEventType(int coord, ReflectogramEvent[] re)
-	{
-		for(int i = 0; i < re.length; i++)
-		{
-			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
-				return re[i].getEventType();
-		}
-		return -1;
-	}
-
-	public static int getEventNumber(int coord, ReflectogramEvent[] re)
-	{
-		for(int i = 0; i < re.length; i++)
-		{
-			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
-				return i;
-		}
-		return -1;
-	}
-*/
 	public static int getEndOfTraceBegin(SimpleReflectogramEvent[] re)
 	{
 		// если есть событие "конец трассы", возвращаем его начало
@@ -272,10 +161,6 @@ public class ReflectogramMath
 			}
 		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
         double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
-//        System.out.println("fp " + firstPoint + " sp " + secondPoint
-//                + " d[0] " + d[0] + " d[1] " + d[1]);
-//        System.out.println("refraction " + refraction + ", pulsewidth " + pulsewidth + ", resolution " + resolution);
-//        System.out.println("eventSize = " + (- 3d / d[0]) + " + " + (150d / refraction * pulsewidth / 1000d / resolution));
         */
         if (pulsewidth <= 0)
             return 50; // XXX: default wavelet width when pulsewidth is unknown
