@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.4 2005/07/21 12:31:00 saa Exp $
+ * $Id: Trace.java,v 1.5 2005/07/21 12:50:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/21 12:31:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/21 12:50:00 $
  * @module
  */
 public class Trace {
@@ -46,7 +46,6 @@ public class Trace {
 	private ModelTraceAndEventsImpl mtae = null;
 
 	/**
-	 * 
 	 * @param result
 	 * @param ap
 	 * @throws SimpleApplicationException если попытались открыть
@@ -56,7 +55,7 @@ public class Trace {
 	throws SimpleApplicationException {
 		this.bs = AnalysisUtil.getBellcoreStructureFromResult(result);
 		this.ap = ap;
-		this.key = result.getAction().getId().getIdentifierString();
+		this.key = result.getId().getIdentifierString();
 		this.result = result;
 		// @todo - автоматически загружать и mtae, если имеются результаты анализа
 	}
