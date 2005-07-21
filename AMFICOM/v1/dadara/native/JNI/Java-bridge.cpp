@@ -1139,8 +1139,6 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nGetNor
 	double ret = wavelet->normStep(scale);
 	delete wavelet;
 	prf_e();
-	fprintf(stderr, "nGetNormStep: type %d scale %d ret %g\n", (int )type, (int )scale, ret);
-	fflush(stderr);
 	return ret;
 }
 
@@ -1157,7 +1155,5 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nGetNor
 	double ret = wavelet->normMx(scale);
 	delete wavelet;
 	prf_e();
-	fprintf(stderr, "nGetNormMx: type %d scale %d ret %g\n", (int )type, (int )scale, ret);
-	fflush(stderr);
 	return ret;
 }
