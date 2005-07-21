@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundl
 import com.syrus.AMFICOM.client.map.command.action.RemoveUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -68,6 +69,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode("Элементы");
 	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode("Кабели");
 	
+	private JButton commitButton = new JButton();
+
 	private List unboundElements = new LinkedList();
 
 	private SiteNode site;
@@ -143,8 +146,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					unbindElement(node.getUserObject());
 				}
 			});
-//		jPanel1.add(bindButton, null);
-		this.buttonsPanel.add(this.unbindButton, null);
+		this.buttonsPanel.setLayout(new GridBagLayout());
 
 		this.treeScrollPane.getViewport().add(this.elementsTree);
 		this.crossingScrollPane.getViewport().add(this.crossingPanel);
@@ -153,7 +155,43 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 //		this.crossingScrollPane.setMinimumSize(new Dimension(50, 100));
 		this.crossingPanel.setPreferredSize(new Dimension(50, 100));
 
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
+
 		GridBagConstraints constraints = new GridBagConstraints();
+
+		constraints.gridx =  0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.commitButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.unbindButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -434,7 +472,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				for(Iterator it = schemeElements.iterator(); it.hasNext();) {
 					SchemeElement se = (SchemeElement )it.next();
 					SiteNode elementSiteNode = se.getSiteNode();
-					if(elementSiteNode != null && elementSiteNode.equals(siteNode.getId())) {
+					if(elementSiteNode != null && elementSiteNode.equals(siteNode)) {
 						elementNode = new DefaultMutableTreeNode(se);
 						this.elementsBranch.add(elementNode);
 						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {

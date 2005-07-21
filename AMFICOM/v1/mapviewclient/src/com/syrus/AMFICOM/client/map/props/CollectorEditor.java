@@ -3,10 +3,13 @@ package com.syrus.AMFICOM.client.map.props;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,7 +34,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -50,6 +53,8 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 	private JScrollPane piquetsScrollPane = new JScrollPane();
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
+
+	private JButton commitButton = new JButton();
 
 	public CollectorEditor()
 	{
@@ -84,6 +89,16 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.piquetsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.getViewport().add(this.piquetsList);
 
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -112,6 +127,19 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
 
+		constraints.gridx =  2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.commitButton, constraints);
+
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -127,7 +155,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 1;
 		constraints.gridy = 1;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -153,7 +181,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 0;
 		constraints.gridy = 3;
-		constraints.gridwidth = 2;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -166,7 +194,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 0;
 		constraints.gridy = 4;
-		constraints.gridwidth = 2;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -193,7 +221,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 0;
 		constraints.gridy = 6;
-		constraints.gridwidth = 2;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;

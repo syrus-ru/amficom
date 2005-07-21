@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -67,6 +70,8 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	
 	private JLabel styleLabel = new JLabel();
 
+	private JButton commitButton = new JButton();
+
 	private NetMapViewer netMapViewer;
 //	private LineStyleComboBox styleComboBox = new LineStyleComboBox(); 
 
@@ -103,6 +108,16 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.colorLabel.setText(LangModelMap.getString("Color"));
 		this.thicknessLabel.setText(LangModelMap.getString("Thickness"));
 		this.styleLabel.setText(LangModelMap.getString("Style"));
+
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -174,6 +189,19 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
 
+		constraints.gridx = 3;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.commitButton, constraints);
+
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 2;
@@ -189,7 +217,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 1;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -215,7 +243,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 2;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -241,7 +269,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 3;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -267,7 +295,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 4;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -306,7 +334,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 5;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -332,7 +360,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 6;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -361,7 +389,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 9;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -387,7 +415,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 10;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -413,7 +441,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 //		constraints.gridx = 2;
 //		constraints.gridy = 11;
-//		constraints.gridwidth = 1;
+//		constraints.gridwidth = 2;
 //		constraints.gridheight = 1;
 //		constraints.weightx = 1.0;
 //		constraints.weighty = 0.0;
@@ -439,7 +467,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 0;
 		constraints.gridy = 13;
-		constraints.gridwidth = 3;
+		constraints.gridwidth = 4;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 1.0;

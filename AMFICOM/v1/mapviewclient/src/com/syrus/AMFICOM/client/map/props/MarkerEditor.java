@@ -2,7 +2,10 @@ package com.syrus.AMFICOM.client.map.props;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,6 +42,8 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 	private JLabel distanceLabel = new JLabel();
 	private JTextField distanceTextField = new JTextField();
 
+	private JButton commitButton = new JButton();
+
 	Marker marker;
 
 	private LogicalNetLayer logicalNetLayer;
@@ -68,6 +73,16 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.longLabel.setText(LangModelMap.getString("Longitude"));
 		this.latLabel.setText(LangModelMap.getString("Latitude"));
 
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -96,6 +111,19 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.nameTextField, constraints);
 
+		constraints.gridx =  2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.commitButton, constraints);
+
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.gridwidth = 1;
@@ -111,7 +139,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 1;
 		constraints.gridy = 1;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -137,7 +165,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -163,7 +191,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 1;
 		constraints.gridy = 3;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
@@ -189,7 +217,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 1;
 		constraints.gridy = 4;
-		constraints.gridwidth = 1;
+		constraints.gridwidth = 2;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;

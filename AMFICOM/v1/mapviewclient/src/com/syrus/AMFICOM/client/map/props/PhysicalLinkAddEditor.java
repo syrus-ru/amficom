@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -70,6 +71,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	JLabel leftRightLabel = new JLabel();
 	private JPanel directionPanel = new JPanel();
 	
+	private JButton commitButton = new JButton();
+
 	private List unboundElements = new LinkedList();
 
 	PhysicalLink physicalLink;
@@ -214,10 +217,33 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.xLabel.setText("X");
 		this.dimensionPanel.setLayout(this.gridBagLayout2);
 
+		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+		this.commitButton.setFocusPainted(false);
+		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+		this.commitButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				commitChanges();
+			}
+		});
+
 		GridBagConstraints constraints = new GridBagConstraints();
 
-		constraints.gridx = 0;
+		constraints.gridx =  0;
 		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTH;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.commitButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
@@ -230,7 +256,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.buttonsPanel.add(this.bindButton, constraints);
 
 		constraints.gridx = 0;
-		constraints.gridy = 1;
+		constraints.gridy = 2;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
