@@ -177,7 +177,7 @@ public class AnalysisUtil
             else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
             {
                 etalonBS = new BellcoreReader().getData(params[i].getValue());
-                etalonBS.title = "etalon (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // FIXME: generated etalon name some other way
+                etalonBS.title = "etalon (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // FIXME: generate etalon name some other way
             }
 		}
 		if (etalonObj == null || etalonBS == null) {
