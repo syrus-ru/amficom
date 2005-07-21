@@ -54,7 +54,7 @@ public class FileOpenCommand extends AbstractCommand
                 return bs;
         } catch (UnsatisfiedLinkError e)
         {
-            // XXX: exceptions: UnsatisfiedLinkError thrown while reading BS 
+            // FIXME: exceptions: UnsatisfiedLinkError thrown while reading BS 
         }
         if (true && AnalyseMainFrameSimplified.DEBUG)
         {
