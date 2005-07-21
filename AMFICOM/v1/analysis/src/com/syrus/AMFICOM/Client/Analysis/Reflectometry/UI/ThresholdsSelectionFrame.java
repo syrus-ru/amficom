@@ -320,7 +320,8 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			case ModelTraceManager.ThreshEditor.TYPE_DXT:
 				key = "thresholdsDXT";
 				break;
-			// default... - @todo
+			default:
+				assert false;
 			}
 			pData[i][0] = LangModelAnalyse.getString(key);
 			for (int j = 1; j < 5; j++)
