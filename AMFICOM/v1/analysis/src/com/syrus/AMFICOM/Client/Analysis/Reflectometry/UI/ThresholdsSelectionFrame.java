@@ -140,11 +140,6 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			public void actionPerformed(ActionEvent e)
 			{
 				new CreateEtalonCommand().execute();
-				analysisInitialButton.setEnabled(true);
-				increaseThreshButton.setEnabled(true);
-				decreaseThreshButton.setEnabled(true);
-				previuosEventButton.setEnabled(true);
-				nextEventButton.setEnabled(true);
 			}
 		});
 
@@ -444,6 +439,11 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 	public void etalonMTMCUpdated()
 	{
 		updateThresholds();
+		analysisInitialButton.setEnabled(true);
+		increaseThreshButton.setEnabled(true);
+		decreaseThreshButton.setEnabled(true);
+		previuosEventButton.setEnabled(true);
+		nextEventButton.setEnabled(true);
 	}
 
 	public void etalonMTMRemoved()
