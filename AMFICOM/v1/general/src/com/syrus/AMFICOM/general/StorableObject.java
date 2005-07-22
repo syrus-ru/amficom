@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.77 2005/07/14 13:29:40 arseniy Exp $
+ * $Id: StorableObject.java,v 1.78 2005/07/22 15:09:39 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.77 $, $Date: 2005/07/14 13:29:40 $
+ * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/07/22 15:09:39 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -313,8 +313,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		final StorableObject clone = (StorableObject) super.clone();
 		try {
 			clone.id = IdentifierPool.getGeneratedIdentifier(this.id.getMajor());
-		} catch (IdentifierGenerationException ige) {
-			// @todo Maybe throw CloneNotSupportedException
+		} catch (final IdentifierGenerationException ige) {
 			throw new RuntimeException("Cannot generate identifier", ige);
 		}
 
@@ -335,7 +334,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * objects.
 		 */
 		clone.version = 0L;
-		clone.changed = true;
+		clone.markAsChanged();
 		return clone;
 	}
 

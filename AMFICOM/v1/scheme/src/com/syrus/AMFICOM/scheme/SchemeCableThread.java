@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.50 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.51 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Link;
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -50,6 +49,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
@@ -59,12 +59,12 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2005/07/17 05:20:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemeCableThread extends AbstractCloneableStorableObject
-		implements Describable, Characterizable {
+public final class SchemeCableThread extends StorableObject
+		implements Describable, Characterizable, Cloneable {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -194,9 +194,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemeCableThread clone() {
-		final SchemeCableThread schemeCableThread = (SchemeCableThread) super
-				.clone();
+	public SchemeCableThread clone() throws CloneNotSupportedException {
+		final SchemeCableThread schemeCableThread = (SchemeCableThread) super.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */

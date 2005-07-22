@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.49 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.50 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -42,6 +41,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
@@ -57,11 +57,11 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
-public final class SchemeProtoGroup extends AbstractCloneableStorableObject
+public final class SchemeProtoGroup extends StorableObject
 		implements Describable, SchemeSymbolContainer, Library {
 	private static final long serialVersionUID = 3256721788422862901L;
 
@@ -247,26 +247,6 @@ public final class SchemeProtoGroup extends AbstractCloneableStorableObject
 	 */
 	public boolean canHaveParent() {
 		return true;
-	}
-
-	/**
-	 * @see Object#clone()
-	 * @bug If a parent <code>schemeProtoGroup</code> is <code>null</code>
-	 *      for <em>this</em> object, that doesn't mean it'll be
-	 *      <code>null</code> for its clone (since there can't be
-	 *      <em>two</em> roots of hierarchy).
-	 * @todo Decide whether it's necessary to clone child
-	 *       <code>schemeProtoGroup</code>s and
-	 *       <code>schemeProtoElement</code>s.
-	 */
-	@Override
-	public SchemeProtoGroup clone() {
-		final SchemeProtoGroup clone = (SchemeProtoGroup) super.clone();
-		clone.name = this.name;
-		clone.description = this.description;
-		clone.symbolId = this.symbolId;
-		clone.parentSchemeProtoGroupId = this.parentSchemeProtoGroupId;
-		return clone;
 	}
 
 	/**

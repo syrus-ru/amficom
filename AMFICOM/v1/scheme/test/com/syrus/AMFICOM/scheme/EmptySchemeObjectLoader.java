@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptySchemeObjectLoader.java,v 1.1 2005/07/15 08:47:17 bass Exp $
+ * $Id: EmptySchemeObjectLoader.java,v 1.2 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/15 08:47:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 final class EmptySchemeObjectLoader implements SchemeObjectLoader {
@@ -162,7 +162,7 @@ final class EmptySchemeObjectLoader implements SchemeObjectLoader {
 	public Set<SchemeDevice> loadSchemeDevicesButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set<Identifier> ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+		return Collections.emptySet();
 	}
 
 	/**
@@ -206,7 +206,7 @@ final class EmptySchemeObjectLoader implements SchemeObjectLoader {
 	public Set<SchemeLink> loadSchemeLinksButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set<Identifier> ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+		return Collections.emptySet();
 	}
 
 	/**
@@ -360,7 +360,7 @@ final class EmptySchemeObjectLoader implements SchemeObjectLoader {
 	public Set<SchemeProtoElement> loadSchemeProtoElementsButIds(
 			StorableObjectCondition storableObjectCondition,
 			Set<Identifier> ids) throws ApplicationException {
-		throw new UnsupportedOperationException();
+		return Collections.emptySet();
 	}
 
 	/**

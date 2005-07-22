@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCellContainer.java,v 1.3 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeCellContainer.java,v 1.4 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,14 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Map;
+
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/07/12 08:40:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 public interface SchemeCellContainer extends SchemeSymbolContainer {
@@ -37,4 +40,6 @@ public interface SchemeCellContainer extends SchemeSymbolContainer {
 	 * @param ugoCell can be <code>null</code>.
 	 */
 	void setUgoCell(final SchemeImageResource ugoCell);
+
+	Map<Identifier, Identifier> getIdMap();
 }

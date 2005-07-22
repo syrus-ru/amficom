@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.54 2005/07/19 11:59:57 bass Exp $
+ * $Id: Scheme.java,v 1.55 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -848,5 +848,13 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		for (final SchemePath schemePath : schemePaths) {
 			this.addSchemePath(schemePath);
 		}
+	}
+
+	/**
+	 * @see SchemeCellContainer#getIdMap()
+	 * @todo Implement.
+	 */
+	public java.util.Map<Identifier, Identifier> getIdMap() {
+		return Collections.emptyMap();
 	}
 }

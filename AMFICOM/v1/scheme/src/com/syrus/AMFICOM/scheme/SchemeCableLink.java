@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.54 2005/07/20 14:49:49 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.55 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -194,7 +194,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	}
 
 	@Override
-	public SchemeCableLink clone() {
+	public SchemeCableLink clone() throws CloneNotSupportedException {
 		final SchemeCableLink schemeCableLink = (SchemeCableLink) super
 				.clone();
 		/**

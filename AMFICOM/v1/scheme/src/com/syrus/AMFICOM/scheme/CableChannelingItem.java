@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.43 2005/07/20 14:49:49 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.44 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -40,6 +39,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -52,11 +52,12 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class CableChannelingItem extends AbstractCloneableStorableObject
-		implements Comparable<CableChannelingItem>, PathMember<SchemeCableLink, CableChannelingItem> {
+public final class CableChannelingItem
+		extends StorableObject
+		implements Cloneable, Comparable<CableChannelingItem>, PathMember<SchemeCableLink, CableChannelingItem> {
 	private static final long serialVersionUID = 3256437027796038705L;
 
 	private double startSpare;
@@ -208,9 +209,8 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public CableChannelingItem clone() {
-		final CableChannelingItem cableChannelingItem = (CableChannelingItem) super
-				.clone();
+	public CableChannelingItem clone() throws CloneNotSupportedException {
+		final CableChannelingItem cableChannelingItem = (CableChannelingItem) super.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.57 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.58 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,15 +35,16 @@ import static java.util.logging.Level.WARNING;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -59,6 +60,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
@@ -75,13 +77,13 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
-public final class SchemeProtoElement extends AbstractCloneableStorableObject
+public final class SchemeProtoElement extends StorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		LibraryEntry {
+		Cloneable, LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -105,6 +107,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	private boolean parentSet = false;
 
 	private ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
+
+	private Map<Identifier, Identifier> idMap;
 
 	/**
 	 * @param id
@@ -415,13 +419,41 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemeProtoElement clone() {
-		final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeProtoElement;
+	public SchemeProtoElement clone() throws CloneNotSupportedException {
+		try {
+			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
+			final SchemeImageResource ugoCell = this.getUgoCell0();
+			final SchemeImageResource schemeCell = this.getSchemeCell0();
+			clone.ugoCellId = ugoCell == null ? VOID_IDENTIFIER : ugoCell.clone().getId();
+			clone.schemeCellId = schemeCell == null ? VOID_IDENTIFIER : schemeCell.clone().getId();
+
+			if (clone.idMap == null) {
+				clone.idMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.idMap.put(this.id, clone.id);
+
+			for (final SchemeDevice schemeDevice : this.getSchemeDevices()) {
+				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
+				clone.idMap.putAll(schemeDeviceClone.getIdMap());
+				clone.addSchemeDevice(schemeDeviceClone);
+			}
+			for (final SchemeLink schemeLink : this.getSchemeLinks()) {
+				final SchemeLink schemeLinkClone = schemeLink.clone();
+				clone.idMap.putAll(schemeLinkClone.getIdMap());
+				clone.addSchemeLink(schemeLinkClone);
+			}
+			for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements()) {
+				final SchemeProtoElement schemeProtoElementClone = schemeProtoElement.clone();
+				clone.idMap.putAll(schemeProtoElementClone.getIdMap());
+				clone.addSchemeProtoElement(schemeProtoElementClone);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	/**
@@ -612,17 +644,26 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #getSchemeCellId()}.
+	 * A wrapper around {@link #getSchemeCell0()}.
 	 *
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
+			return this.getSchemeCell0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getSchemeCellId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	private SchemeImageResource getSchemeCell0() throws ApplicationException {
+		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
 	/**
@@ -724,17 +765,26 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #getUgoCellId()}.
+	 * A wrapper around {@link #getUgoCell0()}.
 	 *
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
+			return this.getUgoCell0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getUgoCellId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	private SchemeImageResource getUgoCell0() throws ApplicationException {
+		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
 	/**
@@ -1176,5 +1226,19 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		for (; schemeDeviceIterator.hasNext();)
 			schemePorts.addAll(schemeDeviceIterator.next().getSchemePorts());
 		return Collections.unmodifiableSet(schemePorts);
+	}
+
+	/**
+	 * @see SchemeCellContainer#getIdMap()
+	 */
+	public Map<Identifier, Identifier> getIdMap() {
+		if (this.idMap == null || this.idMap.isEmpty()) {
+			return Collections.emptyMap();
+		}
+		try {
+			return new HashMap<Identifier, Identifier>(this.idMap);
+		} finally {
+			this.idMap.clear();
+		}
 	}
 }

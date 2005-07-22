@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.55 2005/07/20 14:49:49 bass Exp $
+ * $Id: SchemePath.java,v 1.56 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,6 @@ import java.util.TreeSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -53,6 +52,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
@@ -64,11 +64,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemePath extends AbstractCloneableStorableObject
-		implements Describable, Characterizable, PathOwner<PathElement> {
+public final class SchemePath extends StorableObject
+		implements Describable, Characterizable, Cloneable, PathOwner<PathElement> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -202,7 +202,7 @@ public final class SchemePath extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemePath clone() {
+	public SchemePath clone() throws CloneNotSupportedException {
 		final SchemePath schemePath = (SchemePath) super.clone();
 		/**
 		 * @todo Update the newly created object.

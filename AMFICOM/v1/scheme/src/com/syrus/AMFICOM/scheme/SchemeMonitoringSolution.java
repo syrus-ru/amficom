@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.50 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.51 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -39,6 +38,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
@@ -49,11 +49,12 @@ import com.syrus.util.Log;
  * #06 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemeMonitoringSolution extends
-		AbstractCloneableStorableObject implements Describable {
+public final class SchemeMonitoringSolution
+		extends StorableObject
+		implements Describable, Cloneable {
 	private static final long serialVersionUID = 3906364939487949361L;
 
 	private String name;
@@ -174,9 +175,8 @@ public final class SchemeMonitoringSolution extends
 	}
 
 	@Override
-	public SchemeMonitoringSolution clone() {
-		final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) super
-				.clone();
+	public SchemeMonitoringSolution clone() throws CloneNotSupportedException {
+		final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) super.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */

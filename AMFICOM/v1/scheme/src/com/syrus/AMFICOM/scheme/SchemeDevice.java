@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.52 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemeDevice.java,v 1.53 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,11 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDevice;
@@ -61,11 +62,11 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemeDevice extends AbstractCloneableStorableObject
-		implements Describable, Characterizable {
+public final class SchemeDevice extends StorableObject
+		implements Describable, Characterizable, Cloneable {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -289,7 +290,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemeDevice clone() {
+	public SchemeDevice clone() throws CloneNotSupportedException {
 		final SchemeDevice schemeDevice = (SchemeDevice) super.clone();
 		/**
 		 * @todo Update the newly created object.
@@ -673,5 +674,12 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		return this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
+	}
+
+	/**
+	 * @todo Implement.
+	 */
+	Map<Identifier, Identifier> getIdMap() {
+		return Collections.emptyMap();
 	}
 }

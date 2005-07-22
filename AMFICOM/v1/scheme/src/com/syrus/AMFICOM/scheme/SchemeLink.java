@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.47 2005/07/19 13:32:56 max Exp $
+ * $Id: SchemeLink.java,v 1.48 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -61,8 +62,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.47 $, $Date: 2005/07/19 13:32:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -403,7 +404,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	@Override
-	public SchemeLink clone() {
+	public SchemeLink clone() throws CloneNotSupportedException {
 		final SchemeLink schemeLink = (SchemeLink) super.clone();
 		/**
 		 * @todo Update the newly created object.
@@ -886,5 +887,12 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.siteNodeId = new Identifier(schemeLink.siteNodeId);
 		this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
 		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
+	}
+
+	/**
+	 * @todo Implement.
+	 */
+	Map<Identifier, Identifier> getIdMap() {
+		return Collections.emptyMap();
 	}
 }

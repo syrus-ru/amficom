@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.6 2005/07/20 14:49:49 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.7 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.logging.Level;
@@ -37,6 +38,9 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.resource.EmptyResourceObjectLoader;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
 import com.syrus.util.Log;
@@ -45,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 public final class SchemePathTestCase extends TestCase {
@@ -65,6 +69,7 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testShiftLeft"));
 		testSuite.addTest(new SchemePathTestCase("testShiftRight"));
 		testSuite.addTest(new SchemePathTestCase("testSetSchemePaths"));
+		testSuite.addTest(new SchemePathTestCase("testSchemeProtoElementClone"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -97,6 +102,7 @@ public final class SchemePathTestCase extends TestCase {
 			}
 		});
 		ConfigurationStorableObjectPool.init(new EmptyConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
+		ResourceStorableObjectPool.init(new EmptyResourceObjectLoader(), StorableObjectResizableLRUMap.class);
 		SchemeStorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
@@ -321,5 +327,60 @@ public final class SchemePathTestCase extends TestCase {
 		for (final SchemePath schemePath : scheme1.getSchemePaths()) {
 			System.out.println(scheme1.getName() + ": " + schemePath.getName());
 		}
+	}
+
+	/**
+	 * @throws CreateObjectException 
+	 * @see SchemeProtoElement#clone()
+	 */
+	public void testSchemeProtoElementClone() throws CreateObjectException, CloneNotSupportedException {
+		final Identifier userId = new Identifier("User_0");
+		final SchemeProtoGroup schemeProtoGroup = SchemeProtoGroup.createInstance(userId, "a scheme proto group");
+		final SchemeProtoElement schemeProtoElement0 = SchemeProtoElement.createInstance(userId, "parent scheme proto element", schemeProtoGroup);
+		final SchemeImageResource ugoCell = SchemeImageResource.createInstance(userId);
+		final SchemeImageResource schemeCell = SchemeImageResource.createInstance(userId);
+		schemeProtoElement0.setUgoCell(ugoCell);
+		schemeProtoElement0.setSchemeCell(schemeCell);
+		@SuppressWarnings("unused")
+		final SchemeProtoElement schemeProtoElement1 = SchemeProtoElement.createInstance(userId, "child scheme proto element", schemeProtoElement0);
+
+		final SchemeProtoElement schemeProtoElement2 = schemeProtoElement0.clone();
+
+		System.out.println(schemeProtoElement0.getId());
+		System.out.println("\t\t" + schemeProtoElement0.getName());
+		System.out.println("\t\t" + schemeProtoElement0.getDescription());
+		System.out.println("\t\t" + schemeProtoElement0.getLabel());
+		System.out.println("\t\t" + schemeProtoElement0.getEquipmentTypeId());
+		System.out.println("\t\t" + schemeProtoElement0.getSymbolId());
+		System.out.println("\t\t" + schemeProtoElement0.getUgoCellId());
+		System.out.println("\t\t" + schemeProtoElement0.getSchemeCellId());
+		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoGroupId());
+		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoElementId());
+		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement0.getSchemeProtoElements()) {
+			assertTrue(schemeProtoElement.getIdMap().isEmpty());
+			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
+		}
+		System.out.println(schemeProtoElement2.getId());
+		System.out.println("\t\t" + schemeProtoElement2.getName());
+		System.out.println("\t\t" + schemeProtoElement2.getDescription());
+		System.out.println("\t\t" + schemeProtoElement2.getLabel());
+		System.out.println("\t\t" + schemeProtoElement2.getEquipmentTypeId());
+		System.out.println("\t\t" + schemeProtoElement2.getSymbolId());		
+		System.out.println("\t\t" + schemeProtoElement2.getUgoCellId());
+		System.out.println("\t\t" + schemeProtoElement2.getSchemeCellId());
+		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoGroupId());
+		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoElementId());
+		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement2.getSchemeProtoElements()) {
+			assertTrue(schemeProtoElement.getIdMap().isEmpty());
+			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
+		}
+		assertTrue(schemeProtoElement0.getIdMap().isEmpty());
+		assertTrue(schemeProtoElement0.getIdMap().isEmpty());
+		final Map<Identifier, Identifier> idMap = schemeProtoElement2.getIdMap();
+		for (final Identifier key : idMap.keySet()) {
+			System.out.println(key + ":\t" + idMap.get(key));
+		}
+		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
+		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
 	}
 }

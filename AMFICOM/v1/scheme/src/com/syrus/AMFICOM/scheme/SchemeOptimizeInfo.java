@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.47 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.48 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -44,6 +43,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
@@ -54,11 +54,11 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
-		implements Describable {
+public final class SchemeOptimizeInfo extends StorableObject
+		implements Describable, Cloneable {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -253,9 +253,8 @@ public final class SchemeOptimizeInfo extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemeOptimizeInfo clone() {
-		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super
-				.clone();
+	public SchemeOptimizeInfo clone() throws CloneNotSupportedException {
+		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */

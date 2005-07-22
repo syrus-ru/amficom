@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.46 2005/07/19 11:59:57 bass Exp $
+ * $Id: SchemePort.java,v 1.47 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/19 11:59:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -171,7 +171,7 @@ public final class SchemePort extends AbstractSchemePort {
 	}
 
 	@Override
-	public SchemePort clone() {
+	public SchemePort clone() throws CloneNotSupportedException {
 		final SchemePort schemePort = (SchemePort) super.clone();
 		/**
 		 * @todo Update the newly created object.

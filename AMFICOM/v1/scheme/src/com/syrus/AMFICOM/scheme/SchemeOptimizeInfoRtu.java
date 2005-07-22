@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.9 2005/07/14 19:25:47 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.10 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,19 +12,19 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/14 19:25:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public final class SchemeOptimizeInfoRtu extends AbstractCloneableStorableObject {
+public final class SchemeOptimizeInfoRtu extends StorableObject implements Cloneable {
 	private static final long serialVersionUID = 6687067380421014690L;
 
 	@SuppressWarnings("unused")
@@ -59,7 +59,7 @@ public final class SchemeOptimizeInfoRtu extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public SchemeOptimizeInfoRtu clone() {
+	public SchemeOptimizeInfoRtu clone() throws CloneNotSupportedException {
 		final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (SchemeOptimizeInfoRtu) super.clone();
 		/**
 		 * @todo Update the newly created object.

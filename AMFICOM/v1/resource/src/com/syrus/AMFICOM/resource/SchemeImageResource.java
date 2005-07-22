@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.27 2005/07/15 09:02:48 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.28 2005/07/22 15:09:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,10 +39,10 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/15 09:02:48 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/22 15:09:42 $
  * @module resource_v1
  */
-public final class SchemeImageResource extends AbstractImageResource {
+public final class SchemeImageResource extends AbstractImageResource implements Cloneable {
 	private static final long serialVersionUID = -5633433107083921318L;
 
 	private byte image[];
@@ -165,6 +165,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 	}
 
 	protected void setImage0(final byte image[]) {
+		assert image != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.image = image;
 	}
 
@@ -240,5 +241,20 @@ public final class SchemeImageResource extends AbstractImageResource {
 		final ImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
 		this.image = imageResourceData.image();
+	}
+
+	@Override
+	public SchemeImageResource clone() {
+		try {
+			final SchemeImageResource clone = (SchemeImageResource) super.clone();
+			clone.image = this.image.clone();
+			return clone;
+		} catch (final CloneNotSupportedException cnse) {
+			/*
+			 * Never.
+			 */
+			assert false;
+			return null;
+		}
 	}
 }

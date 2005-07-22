@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.50 2005/07/20 14:49:49 bass Exp $
+ * $Id: PathElement.java,v 1.51 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -51,6 +50,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
@@ -68,15 +68,15 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/20 14:49:49 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
-public final class PathElement extends AbstractCloneableStorableObject
-		implements Describable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
+public final class PathElement extends StorableObject
+		implements Describable, Cloneable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -390,7 +390,7 @@ public final class PathElement extends AbstractCloneableStorableObject
 	}
 
 	@Override
-	public PathElement clone() {
+	public PathElement clone() throws CloneNotSupportedException {
 		final PathElement pathElement = (PathElement) super.clone();
 		/**
 		 * @todo Update the newly created object.

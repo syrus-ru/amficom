@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.38 2005/07/18 16:32:56 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.39 2005/07/22 15:09:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -43,6 +42,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -51,12 +51,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/18 16:32:56 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/22 15:09:40 $
  * @module scheme_v1
  */
-public abstract class AbstractSchemePort extends
-		AbstractCloneableStorableObject implements Describable,
-		Characterizable {
+public abstract class AbstractSchemePort
+		extends StorableObject
+		implements Describable, Characterizable, Cloneable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
 	private String name;
