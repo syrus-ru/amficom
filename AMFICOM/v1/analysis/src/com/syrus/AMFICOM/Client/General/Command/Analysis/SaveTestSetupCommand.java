@@ -59,38 +59,41 @@ public class SaveTestSetupCommand extends AbstractCommand
 			msTest.setDescription(s); // FIXME: этак делать не велено(?)
 		}
 
+		// если понадобится эталон, проверяем его наличие
+		if ((type & ETALON) != 0) {
+			if (! Heap.hasEtalon()) {
+				GUIUtil.showErrorMessage("noEtalonError");
+				return false;
+			}
+		}
+
 		// создаем новый MS
 
 		ParameterSet criteriaSet = null;
-		try
-		{
-			if ((type & CRITERIA) != 0)
+		try {
+			if ((type & CRITERIA) != 0) {
 				criteriaSet = AnalysisUtil.createCriteriaSet(LoginManager.getUserId(), msTest.getMonitoredElementIds());
-			else
-				criteriaSet = msTest.getCriteriaSet();
-		} catch (ApplicationException e)
-		{
+			} else {
+				// эта ветвь не используется
+				criteriaSet = null;//msTest.getCriteriaSet();
+			}
+		} catch (ApplicationException e) {
 			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
 			GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
 
 		ParameterSet etalonSet = null;
-		try
-		{
-			if ((type & ETALON) != 0)
-			{
-				if (! Heap.hasEtalon())
-				{
-					// @todo: в этом случае (а тж в сл. ApplicationException) надо бы удалить созданный бесхозный criteriaSet)
-					GUIUtil.showErrorMessage("noEtalonError");
-					return false;
-				}
+		try {
+			if ((type & ETALON) != 0) {
+				// запрошено сохранение эталона
+				// ранее мы уже убедились, что эталонный MTM есть
 				etalonSet = AnalysisUtil.createEtalon(LoginManager.getUserId(), msTest.getMonitoredElementIds());
-			} else
-				etalonSet = msTest.getEtalon();
-		} catch (ApplicationException e1)
-		{
+			} else {
+				// если сохранение эталона не запрошено, его надо удалить даже если он есть
+				etalonSet = null;
+			}
+		} catch (ApplicationException e1) {
 			System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
 			GUIUtil.showCreateObjectProblemError();
 			return false;
