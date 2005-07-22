@@ -47,14 +47,9 @@ public class FileOpenCommand extends AbstractCommand
 		TraceReader tr = new TraceReader();
 		BellcoreStructure bs = null;
 		//System.out.println("FileName: " + file.getName());
-		try {
-			bs = tr.getData(file);
-			if (bs != null)
-				return bs;
-		} catch (UnsatisfiedLinkError e)
-		{
-			// FIXME: exceptions: UnsatisfiedLinkError thrown while reading BS 
-		}
+		bs = tr.getData(file); // note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
+		if (bs != null)
+			return bs;
 		if (true && AnalyseMainFrameSimplified.DEBUG)
 		{
 			// FIXME: debug-only code

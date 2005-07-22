@@ -37,8 +37,7 @@ public class CreateTestSetupCommand extends AbstractCommand
 		}
 
 		if (Heap.getContextMeasurementSetup() == null) {
-			// FIXME: exceptions: вывести сообщение, что-де нет исходного шаблона; а сообщение по bs.monitoredElementId == null, наверное, можно и не выводить(?)
-			System.err.println("no testSetup");
+			GUIUtil.showErrorMessage("noContextMeasurementSetupError");
 			return null;
 		}
 

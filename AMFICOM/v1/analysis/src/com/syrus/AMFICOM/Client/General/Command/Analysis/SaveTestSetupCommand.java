@@ -97,8 +97,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		}
 
 		MeasurementSetup measurementSetup;
-		try
-		{
+		try {
 			measurementSetup = MeasurementSetup.createInstance(
 					LoginManager.getUserId(),
 					msTest.getParameterSet(),
@@ -110,16 +109,12 @@ public class SaveTestSetupCommand extends AbstractCommand
 					msTest.getMonitoredElementIds(),
 					msTest.getMeasurementTypeIds());
 			StorableObjectPool.putStorableObject(measurementSetup);
-		} catch (CreateObjectException e)
-		{
+		} catch (CreateObjectException e) {
 			GUIUtil.showCreateObjectProblemError();
 			return false;
-		} catch(IllegalObjectEntityException e)
-		{
-			// FIXME: exceptions: IllegalObjectEntityException
-			System.err.println("CreateTestSetupCommand: IllegalObjectEntityException.");
-			e.printStackTrace();
-			return false;
+		} catch(IllegalObjectEntityException e) {
+			//e.printStackTrace();
+			throw new InternalError("IllegalObjectEntityException while trying to create MS instance: " +  e);
 		}
 
 		/**
