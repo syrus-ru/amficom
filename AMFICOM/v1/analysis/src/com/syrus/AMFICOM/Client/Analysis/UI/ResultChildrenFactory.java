@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.2 2005/07/21 11:24:23 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.3 2005/07/22 13:14:43 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -66,7 +67,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/21 11:24:23 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/22 13:14:43 $
  * @module analysis_v1
  */
 
@@ -137,7 +138,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					FiltrableIconedNode item2 = new FiltrableIconedNode();
 					item2.setObject(MONITOREDELEMENTS);
 //					item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-					item2.setName("Измерительные устройства");
+					item2.setName(LangModelAnalyse.getString("monitoredElements"));
 					item2.setChildrenFactory(this);
 					item2.setDefaultCondition(new LinkedIdsCondition(this.domainId, ObjectEntities.MONITOREDELEMENT_CODE));
 					item2.setFilter(new Filter(new MonitoredElementConditionWrapper(), null));
@@ -239,7 +240,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					this.calendar.add(Calendar.DAY_OF_MONTH, 1);
 					this.calendar.add(Calendar.SECOND, -1);
 					endDate = new Date(System.currentTimeMillis());					
-					Item item2 = createDateItem(startDate, endDate, "Сегодня (" + shortDate.format(startDate) + ")", condition);
+					Item item2 = createDateItem(startDate, endDate, LangModelAnalyse.getString("today") + " (" + shortDate.format(startDate) + ")", condition);
 					item.addChild(item2);
 					
 					//yesterday
@@ -248,7 +249,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					this.calendar.add(Calendar.DAY_OF_MONTH, -1);
 					this.calendar.add(Calendar.SECOND, 1);
 					startDate = this.calendar.getTime();					
-					Item item3 = createDateItem(startDate, endDate, "Вчера (" + shortDate.format(startDate) + ")", condition);
+					Item item3 = createDateItem(startDate, endDate, LangModelAnalyse.getString("yesterday") + " (" + shortDate.format(startDate) + ")", condition);
 					item.addChild(item3);
 					
 					//last week
@@ -259,14 +260,14 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					this.calendar.add(Calendar.DAY_OF_MONTH, 1);
 					this.calendar.add(Calendar.SECOND, 1);
 					startDate = this.calendar.getTime();
-					Item item4 = createDateItem(startDate, endDate, "За неделю (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", condition);
+					Item item4 = createDateItem(startDate, endDate, LangModelAnalyse.getString("last_week") + " (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", condition);
 					item.addChild(item4);
 					
 					//last month
 					this.calendar.add(Calendar.WEEK_OF_MONTH, 1);
 					this.calendar.add(Calendar.MONTH, -1);
 					startDate = this.calendar.getTime();
-					Item item5 = createDateItem(startDate, endDate, "За месяц (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", condition);
+					Item item5 = createDateItem(startDate, endDate, LangModelAnalyse.getString("last_month") + " (" + shortDate.format(startDate) + "-" + shortDate.format(endDate) + ")", condition);
 					item.addChild(item5);
 					
 					endDate = new Date(System.currentTimeMillis());
@@ -280,7 +281,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 							ObjectEntities.TEST_CODE, TestWrapper.COLUMN_START_TIME);
 					FiltrableIconedNode item6 = new FiltrableIconedNode();
 					item6.setObject(startDate);
-					item6.setName("По фильтру");
+					item6.setName(LangModelAnalyse.getString("by_filter"));
 					item6.setChildrenFactory(this);
 					item6.setDefaultCondition(condition);
 					
