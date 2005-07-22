@@ -47,8 +47,7 @@ public class FileOpenCommand extends AbstractCommand
 		TraceReader tr = new TraceReader();
 		BellcoreStructure bs = null;
 		//System.out.println("FileName: " + file.getName());
-		try
-		{
+		try {
 			bs = tr.getData(file);
 			if (bs != null)
 				return bs;
@@ -82,7 +81,7 @@ public class FileOpenCommand extends AbstractCommand
 				}
 			} catch (IOException e1)
 			{
-				// FIXME: exceptions: Auto-generated catch block
+				// FIXME: exceptions: (debug only) could not load text mode trace
 				e1.printStackTrace();
 			}
 		} else
