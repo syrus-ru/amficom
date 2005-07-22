@@ -47,15 +47,15 @@ public class CreateTestSetupCommand extends AbstractCommand
 				LangModelAnalyse.getString("testsetup"),
 				JOptionPane.QUESTION_MESSAGE);
 
+		// если ввод отменен
+		if (name == null)
+			return null;
+
 		// если введен пустое имя
 		if (name.equals("")) {
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_EMPTY_NAME_ENTERED);
 			return null; // и ничего не делаем
 		}
-
-		// если ввод отменен
-		if (name == null)
-			return null;
 
 		// если введено непустое имя - задаем имя для нового шаблона
 		return name;
