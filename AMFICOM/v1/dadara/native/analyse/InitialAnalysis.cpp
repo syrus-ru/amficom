@@ -1057,7 +1057,7 @@ void InitialAnalysis::addLinearPartsBetweenEvents()
 //------------------------------------------------------------------------------------------------------------
 // удалить небольшие линейные участки между двумя последовательными коннекорами, сдвинув конец первого коннектора
 void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int sz)
-{   sz = sz>4 ? (sz+0.5)/4 : 1; // берём четверть ширины вейвлета
+{   sz = sz>4 ? (int)((sz/4)+0.5) : 1; // берём четверть ширины вейвлета
 	if(events->getLength()<2)
 return;
 	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
@@ -1089,6 +1089,7 @@ return;
 void InitialAnalysis::excludeShortLinesBetweenLossAndConnectors(double* arr, int sz)
 {   if(events->getLength()<2)
 return;
+    sz = sz>4 ? (int)((sz/4)+0.5) : 1; // берём четверть ширины вейвлета
 	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
 	{   // пока не дойдём до падения
         EventParams* ev1 = (EventParams*)(*events)[n1];
