@@ -73,8 +73,11 @@ struct MF_MD
 
 extern struct MF_MD funcs[]; // будет ниже
 
+// FIXME: разобраться, как и когда нужно делать инициализацию
+void MF_init_if_need();
+
 inline const char *i_entry2sig(int n) { return funcs[n].psig; }
-inline int i_ID2entry(int ID) { return (unsigned )ID < MF_MAX_ID ? ID_to_entry[ID] : -1; }
+inline int i_ID2entry(int ID) { MF_init_if_need(); return (unsigned )ID < MF_MAX_ID ? ID_to_entry[ID] : -1; }
 inline int i_entry2ID(int n) { return funcs[n].ID; }
 inline int i_entry2npars(int n) { return funcs[n].npars; }
 
@@ -112,6 +115,14 @@ void MF_do_init()
 		// заполняем таблицу обратного отображения
 		ID_to_entry[funcs[i].ID] = i;
 	}
+}
+
+void MF_init_if_need() {
+	static int initialized;
+	if (initialized)
+		return;
+	initialized++;
+	MF_do_init();
 }
 
 void ModelF::initStatic()
