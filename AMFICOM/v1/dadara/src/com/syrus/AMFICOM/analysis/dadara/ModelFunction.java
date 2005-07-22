@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.28 $, $Date: 2005/07/22 06:39:51 $
- * @author $Author: saa $
+ * @version $Revision: 1.29 $, $Date: 2005/07/22 13:51:58 $
+ * @author $Author: arseniy $
  * @author saa
  * @module dadara
  */
@@ -464,7 +464,7 @@ public class ModelFunction {
 		boolean useNativeStreaming = dis.readBoolean();
 		if (useNativeStreaming) {
 			if (! nIsNativeStreamingPossible(shapeID))
-				throw new InternalError("native streaming not supported"); // XXX: maybe a SignatureMismatchException would be better
+				throw new InternalError("native streaming not supported for " + shapeID); // XXX: maybe a SignatureMismatchException would be better
 			// native-преобразование
 			int len = dis.readInt();
 			byte[] bar = new byte[len];
