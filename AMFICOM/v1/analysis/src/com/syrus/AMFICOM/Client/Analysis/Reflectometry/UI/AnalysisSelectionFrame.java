@@ -265,11 +265,9 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 						: LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN)
 								+ ':' + ms.getDescription()) + ')');
 
-			if (ms.getCriteriaSet() != null)
-			{
-				AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-				setValues(ap);
-			}
+			// вместе с первичной р/г может быть загружен и набор параметров
+			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+			setValues(ap);
 		}
 	}
 
