@@ -135,7 +135,7 @@ public class AnalysisUtil
 	 * @throws DataFormatException 
 	 */
 
-	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms)
+	public static void loadCriteriaSet(Identifier userId, MeasurementSetup ms)
 	throws DataFormatException
 	{
 		/*
@@ -163,7 +163,7 @@ public class AnalysisUtil
 	 * @param ms MeasurementSetup
 	 * @throws DataFormatException 
 	 */
-	public static void load_Etalon(MeasurementSetup ms)
+	public static void loadEtalon(MeasurementSetup ms)
 	throws DataFormatException
 	{
 		ParameterSet etalonSet = ms.getEtalon();

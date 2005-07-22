@@ -99,9 +99,9 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			Heap.setContextMeasurementSetup(ms);
 
 			try {
-				AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
+				AnalysisUtil.loadCriteriaSet(LoginManager.getUserId(), ms);
 				if (ms.getEtalon() != null)
-					AnalysisUtil.load_Etalon(ms);
+					AnalysisUtil.loadEtalon(ms);
 				else
 					Heap.unSetEtalonPair();
 				Heap.makePrimaryAnalysis();
