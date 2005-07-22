@@ -75,9 +75,9 @@ public class MathRef
 		return res;
 	}
 
-    private static final double MINF_DESIGNATION = -99; // XXX: отражение менее -99 отображаем как -99 дЅ
+	private static final double MINF_DESIGNATION = -99; // XXX: отражение менее -99 отображаем как -99 дЅ
 
-    // значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION 
+	// значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION 
 	public static double calcORL (double y1, double y2)
 	{
 		if (y1 == y2)
@@ -85,10 +85,10 @@ public class MathRef
 		double s = 0.001;
 		double loss = y1 - y2;
 		double ret = (-10*Math.log(s/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
-        if (ret < MINF_DESIGNATION)
-            return MINF_DESIGNATION;
-        else
-            return ret;
+		if (ret < MINF_DESIGNATION)
+			return MINF_DESIGNATION;
+		else
+			return ret;
 	}
 
 	// вычислить сигму дл€ отражени€

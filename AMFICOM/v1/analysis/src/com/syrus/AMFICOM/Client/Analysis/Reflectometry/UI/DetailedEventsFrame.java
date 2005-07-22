@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class DetailedEventsFrame extends JInternalFrame
 implements EtalonMTMListener,
-    CurrentEventChangeListener, PrimaryRefAnalysisListener
+		CurrentEventChangeListener, PrimaryRefAnalysisListener
 {
 	private ModelTrace alignedDataMT;
 
@@ -104,7 +104,7 @@ implements EtalonMTMListener,
 	{
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
-    Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
 	}
 
 	private void makeAlignedDataMT()
@@ -187,19 +187,19 @@ implements EtalonMTMListener,
 //		ComplexReflectogramEvent etalonEvent = nEtalon != -1
 //				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
 //				: null;
-        DetailedEvent dataEvent = nEvent != -1
-            ? Heap.getMTAEPrimary().getDetailedEvent(nEvent)
-            : null;
-        DetailedEvent etalonEvent = nEtalon != -1
-                ? Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon)
-                : null;
-                
+		DetailedEvent dataEvent = nEvent != -1
+				? Heap.getMTAEPrimary().getDetailedEvent(nEvent)
+				: null;
+		DetailedEvent etalonEvent = nEtalon != -1
+				? Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon)
+				: null;
+
 		int dataType = dataEvent != null
-                    ? dataEvent.getEventType()
-                    : SimpleReflectogramEvent.RESERVED; // 'no event'
+				? dataEvent.getEventType()
+				: SimpleReflectogramEvent.RESERVED; // 'no event'
 		int etalonType = etalonEvent != null
-			        ? etalonEvent.getEventType()
-					: SimpleReflectogramEvent.RESERVED; // 'no event'
+				? etalonEvent.getEventType()
+				: SimpleReflectogramEvent.RESERVED; // 'no event'
 
 		((CompareTableRenderer)comparativeTable.getDefaultRenderer(Object.class))
 			.setSameType(dataType == etalonType && dataType != SimpleReflectogramEvent.RESERVED);
@@ -251,7 +251,7 @@ implements EtalonMTMListener,
 
 	public void etalonMTMCUpdated()
 	{
-        makeAlignedDataMT();
+		makeAlignedDataMT();
 		this.clearCTModelValues();
 		if(Heap.getRefAnalysisPrimary() != null) {
 			tabbedPane.setEnabledAt(1, true);
@@ -274,21 +274,21 @@ implements EtalonMTMListener,
 		this.updateTableModel();
 	}
 
-    public void primaryRefAnalysisCUpdated() {
-        makeAlignedDataMT();
-        if (Heap.getMTMEtalon() != null)
-            tabbedPane.setEnabledAt(1, true);
-        this.updateTableModel();
-        setVisible(true);
-    }
+	public void primaryRefAnalysisCUpdated() {
+		makeAlignedDataMT();
+		if (Heap.getMTMEtalon() != null)
+			tabbedPane.setEnabledAt(1, true);
+		this.updateTableModel();
+		setVisible(true);
+	}
 
-    public void primaryRefAnalysisRemoved() {
-        alignedDataMT = null;
+	public void primaryRefAnalysisRemoved() {
+		alignedDataMT = null;
 		this.clearCTModelValues();
-        tabbedPane.setSelectedIndex(0);
-        tabbedPane.setEnabledAt(1, false);
-        setVisible(false);
-    }
+		tabbedPane.setSelectedIndex(0);
+		tabbedPane.setEnabledAt(1, false);
+		setVisible(false);
+	}
 	
 	private void clearCTModelValues() {
 		for(int i=0;i<this.ctModel.getRowCount();i++) {

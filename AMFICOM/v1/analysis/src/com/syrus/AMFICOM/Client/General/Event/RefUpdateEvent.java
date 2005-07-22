@@ -12,15 +12,15 @@ public class RefUpdateEvent extends PropertyChangeEvent
 	 */
 	
 	public boolean markerMoved()
-	    { return (flags & MARKER_MOVED_EVENT) != 0; }
+		{ return (flags & MARKER_MOVED_EVENT) != 0; }
 	public boolean markerLocated()
-  { return (flags & MARKER_LOCATED_EVENT) != 0; }
+		{ return (flags & MARKER_LOCATED_EVENT) != 0; }
 	public boolean thresholdChanged()
-	    {return (flags & THRESHOLD_CHANGED_EVENT) != 0; }
+		{return (flags & THRESHOLD_CHANGED_EVENT) != 0; }
 	public boolean traceChanged()
-  		{return (flags & TRACE_CHANGED_EVENT) != 0; }
+		{return (flags & TRACE_CHANGED_EVENT) != 0; }
 	public boolean minTraceLevelChanged()
-	    { return (flags & MIN_TRACE_LEVEL_CHANGED_EVENT) != 0; }
+		{ return (flags & MIN_TRACE_LEVEL_CHANGED_EVENT) != 0; }
 
 	public static final long MARKER_MOVED_EVENT 			= 0x00000001;
 	public static final long MARKER_LOCATED_EVENT 			= 0x00000002;

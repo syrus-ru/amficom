@@ -42,57 +42,57 @@ public class FileOpenCommand extends AbstractCommand
 		return new FileOpenCommand(dispatcher, aContext);
 	}
 
-    // may return null
-    public static BellcoreStructure readTraceFromFile(File file) {
-        TraceReader tr = new TraceReader();
-        BellcoreStructure bs = null;
-        //System.out.println("FileName: " + file.getName());
-        try
-        {
-            bs = tr.getData(file);
-            if (bs != null)
-                return bs;
-        } catch (UnsatisfiedLinkError e)
-        {
-            // FIXME: exceptions: UnsatisfiedLinkError thrown while reading BS 
-        }
-        if (true && AnalyseMainFrameSimplified.DEBUG)
-        {
-            // FIXME: debug-only code
-            // этот код написан для отладочных целей и предназначен для
-            // считывания рефлектограммы из текстового файла,
-            // если не удается считать с помощью известного формата
-            try
-            {
-                {
-                    FileReader fr = new FileReader(file);
-                    BufferedReader br = new BufferedReader(fr);
-                    ArrayList al = new ArrayList();
-                    String s;
-                    while ((s = br.readLine()) != null)
-                        al.add(s);
-                    final int N = al.size();
-                    //System.out.println("reading file: N=" + N);
-                    double[] dl = new double[N];
-                    for (int i = 0; i < N; i++)
-                        dl[i] = Double.parseDouble(((String)al.get(i))
-                        		.replaceFirst("\\S+\\s+", "")); // cut first column if present
-                    bs = new BellcoreCreator(dl).getBS();
-                    br.close();
-                }
-            } catch (IOException e1)
-            {
-                // FIXME: exceptions: Auto-generated catch block
-                e1.printStackTrace();
-            }
-        } else
-        {
-            bs = tr.getData(file); // second attempt
-        }
-        return bs;
-    }
+	// may return null
+	public static BellcoreStructure readTraceFromFile(File file) {
+		TraceReader tr = new TraceReader();
+		BellcoreStructure bs = null;
+		//System.out.println("FileName: " + file.getName());
+		try
+		{
+			bs = tr.getData(file);
+			if (bs != null)
+				return bs;
+		} catch (UnsatisfiedLinkError e)
+		{
+			// FIXME: exceptions: UnsatisfiedLinkError thrown while reading BS 
+		}
+		if (true && AnalyseMainFrameSimplified.DEBUG)
+		{
+			// FIXME: debug-only code
+			// этот код написан для отладочных целей и предназначен для
+			// считывания рефлектограммы из текстового файла,
+			// если не удается считать с помощью известного формата
+			try
+			{
+				{
+					FileReader fr = new FileReader(file);
+					BufferedReader br = new BufferedReader(fr);
+					ArrayList al = new ArrayList();
+					String s;
+					while ((s = br.readLine()) != null)
+						al.add(s);
+					final int N = al.size();
+					//System.out.println("reading file: N=" + N);
+					double[] dl = new double[N];
+					for (int i = 0; i < N; i++)
+						dl[i] = Double.parseDouble(((String)al.get(i))
+								.replaceFirst("\\S+\\s+", "")); // cut first column if present
+					bs = new BellcoreCreator(dl).getBS();
+					br.close();
+				}
+			} catch (IOException e1)
+			{
+				// FIXME: exceptions: Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else
+		{
+			bs = tr.getData(file); // second attempt
+		}
+		return bs;
+	}
 
-    private static BellcoreStructure loadBS(File selectedFile) {
+	private static BellcoreStructure loadBS(File selectedFile) {
 		//System.out.println("DEBUG: the user is opening file " + selectedFile.getAbsolutePath()); // FIX//ME: debugging purpose only
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		BellcoreStructure bs = readTraceFromFile(selectedFile);
@@ -100,9 +100,9 @@ public class FileOpenCommand extends AbstractCommand
 			bs.title = selectedFile.getName();
 		}
 		return bs;
-    }
+	}
 
-    private void processBS(BellcoreStructure bs) {
+	private void processBS(BellcoreStructure bs) {
 		boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Heap.openPrimaryTraceFromBS(bs, bs.title);
@@ -110,9 +110,9 @@ public class FileOpenCommand extends AbstractCommand
 		Heap.makePrimaryAnalysis();
 
 		// FIXME: debug-only code
-        if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
-            Heap.setMTMEtalon(Heap.getMTMEtalon());
-    }
+		if (testBehaviour && Heap.getMTMEtalon() != null) // XXX: наличие необходимости такого кода (пусть даже при отладке) говорит о неправильной подписке или обработке событий
+			Heap.setMTMEtalon(Heap.getMTMEtalon());
+	}
 
 	public void execute()
 	{

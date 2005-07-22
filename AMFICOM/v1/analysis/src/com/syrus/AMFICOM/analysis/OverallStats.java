@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.6 2005/07/06 10:33:20 saa Exp $
+ * $Id: OverallStats.java,v 1.7 2005/07/22 06:56:50 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/07/06 10:33:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/22 06:56:50 $
  * @module analysis_v1
  */
 
@@ -52,8 +52,8 @@ public class OverallStats {
 		double attenuation = loss / range_km;
 		double orl = MathRef.calcORL(ev.overallStatsY0(), ev.overallStatsY1());
 		double noise = ev.overallStatsNoiseLevel98Pct();
-    double DD98 = ev.overallStatsDD98pct();
-    double DDRMS = ev.overallStatsDDRMS();
+		double DD98 = ev.overallStatsDD98pct();
+		double DDRMS = ev.overallStatsDDRMS();
 		int evNum = ev.overallStatsEvNum();
 
 		setTotalLength(MathRef.round_3(range_km) + " " + LangModelAnalyse.getString("km"));

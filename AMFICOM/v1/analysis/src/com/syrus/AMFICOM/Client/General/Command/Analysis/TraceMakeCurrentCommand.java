@@ -22,7 +22,7 @@ public class TraceMakeCurrentCommand extends AbstractCommand
 	public void execute()
 	{
 
-        // FIXME: ерунда?
+		// FIXME: ерунда?
 		Trace tr = Heap.getReferenceTrace();
 		new FileRemoveCommand(Heap.REFERENCE_TRACE_KEY, aContext).execute();
 		new FileRemoveCommand(Heap.PRIMARY_TRACE_KEY, aContext).execute();

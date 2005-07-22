@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogramPanel.java,v 1.6 2005/07/21 14:50:15 saa Exp $
+ * $Id: ReflectogramPanel.java,v 1.7 2005/07/22 06:56:49 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceRange;
 /**
  * Отрисовывает рефлектограмму (исходную и модельную, с учетом расцветки)
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/07/21 14:50:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/22 06:56:49 $
  * @module
  */
 public class ReflectogramPanel extends TraceEventsPanel {
@@ -63,60 +63,60 @@ public class ReflectogramPanel extends TraceEventsPanel {
 	public void updEvents(String id) {
 		super.updEvents(id);
 		ModelTraceAndEvents mtae = Heap.getAnyMTAE(id);
-        this.mt = mtae != null ? mtae.getModelTrace() : null;
+		this.mt = mtae != null ? mtae.getModelTrace() : null;
 	}
 
-    /**
-     * Draw model curve using current graphics plotting settings.
-     * @param g graphics to plot (not null)
-     * @param mtr trace and range to plot
-     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
-     *   false to draw [sre.begin .. sre.end].
-     */
-    protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
-            boolean avoidLastPoint)
-    {
-        int n1 = mtr.getBegin();
-        int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
-        if ((n1 <= end) && (n2 >= start))
-        {
-            int iFrom = Math.max(start, n1);
-            int iTo = Math.min(end, n2);
-            if (iTo - iFrom >= 0)
-            {
-                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
-                drawYCurve(g, vArr, 0, iFrom, iTo - iFrom);
-            }
-        }
-    }
+	/**
+	 * Draw model curve using current graphics plotting settings.
+	 * @param g graphics to plot (not null)
+	 * @param mtr trace and range to plot
+	 * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+	 *   false to draw [sre.begin .. sre.end].
+	 */
+	protected void drawModelCurve(Graphics g, ModelTraceRange mtr,
+			boolean avoidLastPoint)
+	{
+		int n1 = mtr.getBegin();
+		int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+		if ((n1 <= end) && (n2 >= start))
+		{
+			int iFrom = Math.max(start, n1);
+			int iTo = Math.min(end, n2);
+			if (iTo - iFrom >= 0)
+			{
+				double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+				drawYCurve(g, vArr, 0, iFrom, iTo - iFrom);
+			}
+		}
+	}
 
-    /**
-     * Draw model curve using current graphics plotting settings.
-     * @param g graphics to plot, or null if no plotting is required
-     * @param r GraphRange to be updated, or null if update not requied
-     * @param mtr trace and range to plot
-     * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
-     *   false to draw [sre.begin .. sre.end].
-     */
-    protected void drawModelCurve(Graphics g, GraphRange r, ModelTraceRange mtr,
-            boolean avoidLastPoint)
-    {
-        if (g != null)
-            drawModelCurve(g, mtr, avoidLastPoint);
-        if (r != null) {
-            int n1 = mtr.getBegin();
-            int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
-            int iFrom = n1;
-            int iTo = n2;
-            if (iTo - iFrom >= 0)
-            {
-                double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
-                updateRangeByYCurve(r, vArr, 0, iFrom, iTo - iFrom);
-            }
-        }
-    }
+	/**
+	 * Draw model curve using current graphics plotting settings.
+	 * @param g graphics to plot, or null if no plotting is required
+	 * @param r GraphRange to be updated, or null if update not requied
+	 * @param mtr trace and range to plot
+	 * @param avoidLastPoint true to draw [sre.begin .. sre.end-1];
+	 *   false to draw [sre.begin .. sre.end].
+	 */
+	protected void drawModelCurve(Graphics g, GraphRange r, ModelTraceRange mtr,
+			boolean avoidLastPoint)
+	{
+		if (g != null)
+			drawModelCurve(g, mtr, avoidLastPoint);
+		if (r != null) {
+			int n1 = mtr.getBegin();
+			int n2 = mtr.getEnd() - (avoidLastPoint ? 1 : 0);
+			int iFrom = n1;
+			int iTo = n2;
+			if (iTo - iFrom >= 0)
+			{
+				double[] vArr = mtr.getYArray(iFrom, iTo - iFrom + 1);
+				updateRangeByYCurve(r, vArr, 0, iFrom, iTo - iFrom);
+			}
+		}
+	}
 
-    protected void paint_modeled_trace(Graphics g)
+	protected void paint_modeled_trace(Graphics g)
 	{
 		if (mt == null)
 			return;
@@ -128,12 +128,12 @@ public class ReflectogramPanel extends TraceEventsPanel {
 		}
 	}
 
-    @Override
+	@Override
 	protected boolean hasWeakTraceColors() {
-    	// Когда включено отображение модельной кривой, исходная рефлектограмма
-    	// будет отображаться блеклыми цветами
+		// Когда включено отображение модельной кривой, исходная рефлектограмма
+		// будет отображаться блеклыми цветами
 		return isDraw_modeled();
-    }
+	}
 
 	protected boolean isShowGraph() {
 		return ((TraceEventsLayeredPanel)parent).graphsShowDesired();

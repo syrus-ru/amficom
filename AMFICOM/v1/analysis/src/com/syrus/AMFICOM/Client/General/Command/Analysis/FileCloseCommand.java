@@ -16,6 +16,6 @@ public class FileCloseCommand extends AbstractCommand
 
 	public void execute()
 	{
-        Heap.closeAll();
+		Heap.closeAll();
 	}
 }

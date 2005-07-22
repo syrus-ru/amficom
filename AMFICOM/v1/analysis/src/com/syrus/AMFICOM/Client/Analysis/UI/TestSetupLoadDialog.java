@@ -105,7 +105,7 @@ public class TestSetupLoadDialog extends JDialog
 //		    System.out.println("oe instanceof TreeDataSelectionEvent, A1 " + (ev.getDataClass() != null));
 //		    if (ev.getDataClass() != null)
 //		        System.out.println("   A2 " + ev.getDataClass().equals(MeasurementSetup.class) + " A3 " + (ev.getSelectionNumber() != -1));
-		    
+
 			if (ev.getDataClass() != null && ev.getDataClass().equals(MeasurementSetup.class)
 					&& ev.getSelectionNumber() != -1)
 			{

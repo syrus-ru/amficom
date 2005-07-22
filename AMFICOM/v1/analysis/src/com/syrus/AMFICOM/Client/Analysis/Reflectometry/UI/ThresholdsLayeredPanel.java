@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
 implements PropertyChangeListener,
-    CurrentEventChangeListener, EtalonMTMListener
+	CurrentEventChangeListener, EtalonMTMListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -72,15 +72,15 @@ implements PropertyChangeListener,
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
-                if (((ThresholdsPanel)panel).sevents.length > 0)
-                {
-                	int[] startAndEnd = ((ThresholdsPanel)panel).getStartAndEndOfCurrentEvent();
-    				int start = startAndEnd[0];
-    				int end = startAndEnd[1];
-    				updScale2fit(start, end, indent_x, iy);
-    				jLayeredPane.repaint();
-                }
-   				return;
+				if (((ThresholdsPanel)panel).sevents.length > 0)
+				{
+					int[] startAndEnd = ((ThresholdsPanel)panel).getStartAndEndOfCurrentEvent();
+					int start = startAndEnd[0];
+					int end = startAndEnd[1];
+					updScale2fit(start, end, indent_x, iy);
+					jLayeredPane.repaint();
+				}
+				return;
 			}
 		}
 	}

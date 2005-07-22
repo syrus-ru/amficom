@@ -127,7 +127,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-                Heap.setMTMEtalon(Heap.getMTMBackupEtalon());
+				Heap.setMTMEtalon(Heap.getMTMBackupEtalon());
 			}
 		});
 
@@ -141,10 +141,10 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			{
 				new CreateEtalonCommand().execute();
 				analysisInitialButton.setEnabled(true);
-      	increaseThreshButton.setEnabled(true);
-      	decreaseThreshButton.setEnabled(true);
-      	previuosEventButton.setEnabled(true);
-      	nextEventButton.setEnabled(true);
+				increaseThreshButton.setEnabled(true);
+				decreaseThreshButton.setEnabled(true);
+				previuosEventButton.setEnabled(true);
+				nextEventButton.setEnabled(true);
 			}
 		});
 
@@ -189,7 +189,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		previuosEventButton.setText("<");
 		previuosEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                Heap.gotoPreviousEtalonEvent();
+				Heap.gotoPreviousEtalonEvent();
 			}
 		});
 		
@@ -198,17 +198,17 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		nextEventButton.setText(">");
 		nextEventButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-                Heap.gotoNextEtalonEvent();
+				Heap.gotoNextEtalonEvent();
 			}
 		});
 
 		this.setContentPane(mainPanel);
 
 		analysisInitialButton.setEnabled(false);
-  	increaseThreshButton.setEnabled(false);
-  	decreaseThreshButton.setEnabled(false);
-  	previuosEventButton.setEnabled(false);
-  	nextEventButton.setEnabled(false);
+		increaseThreshButton.setEnabled(false);
+		decreaseThreshButton.setEnabled(false);
+		previuosEventButton.setEnabled(false);
+		nextEventButton.setEnabled(false);
 		//jToolBar1.setBorderPainted(true);
 		JToolBar jToolBar = new JToolBar();
 		jToolBar.setFloatable(false);
@@ -239,39 +239,39 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 	}
 
-    // gets all thresholds editors relevant to current event
-    protected ModelTraceManager.ThreshEditorWithDefaultMark[] getTeds()
-    {
-        ModelTraceManager mtm = Heap.getMTMEtalon();
-        if (mtm == null)
-            return null;
-        int etEvent = Heap.getCurrentEtalonEvent2();
-        if (etEvent < 0)
-            return null;
-        return mtm.getThreshEditors(etEvent);
-    }
+	// gets all thresholds editors relevant to current event
+	protected ModelTraceManager.ThreshEditorWithDefaultMark[] getTeds()
+	{
+		ModelTraceManager mtm = Heap.getMTMEtalon();
+		if (mtm == null)
+			return null;
+		int etEvent = Heap.getCurrentEtalonEvent2();
+		if (etEvent < 0)
+			return null;
+		return mtm.getThreshEditors(etEvent);
+	}
 	protected ThreshEditor getCurrentTED()
 	{
-        // XXX - getThreshEditor will generate few unnecessary objects
-        ModelTraceManager.ThreshEditorWithDefaultMark[] teds = getTeds();
+		// XXX - getThreshEditor will generate few unnecessary objects
+		ModelTraceManager.ThreshEditorWithDefaultMark[] teds = getTeds();
 
-        if (teds == null)
-            return null;
+		if (teds == null)
+			return null;
 
-        // сначала пытаемся выбрать редактор для текущей строки
+		// сначала пытаемся выбрать редактор для текущей строки
 		int current_th = this.jTable.getSelectedRow();
-        if (current_th >= 0 && current_th < teds.length)
-                return teds[current_th];
+		if (current_th >= 0 && current_th < teds.length)
+				return teds[current_th];
 
-        // если текущей строки нет, выбираем порог по умолчанию
-        current_th = ModelTraceManager.getDefaultThreshEditorIndex(teds);
-        if (current_th >= 0) {
-            // и делаем его текущим
-            this.jTable.changeSelection(current_th, 0, false, false);
-            return teds[current_th];
-        }
+		// если текущей строки нет, выбираем порог по умолчанию
+		current_th = ModelTraceManager.getDefaultThreshEditorIndex(teds);
+		if (current_th >= 0) {
+			// и делаем его текущим
+			this.jTable.changeSelection(current_th, 0, false, false);
+			return teds[current_th];
+		}
 
-        return null;
+		return null;
 	}
 
 	void init_module(Dispatcher dispatcher1)
@@ -351,7 +351,7 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 			JTextField tf = (JTextField)super.getTableCellEditorComponent(table, value, isSelected, row, column);
 			Color c = UIManager.getColor(Thresh.isKeyHard(column - 1)
 					? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
-          : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD);
+					: AnalysisResourceKeys.COLOR_WARNING_THRESHOLD);
 			tf.setSelectionColor(c);
 			return tf;
 		}
@@ -380,10 +380,10 @@ implements PropertyChangeListener, BsHashChangeListener, ReportTable,
 		}
 
 		public void setValueAt(Object value, int row, int col) {
-            // XXX: create extra objects... it's better to save teds when it is selected and just take them now
+			// XXX: create extra objects... it's better to save teds when it is selected and just take them now
 			ModelTraceManager.ThreshEditor[] te = getTeds();
-            if (te == null)
-                return; // XXX: can it happen?
+			if (te == null)
+				return; // XXX: can it happen?
 			try
 			{
 				te[row].setValue(

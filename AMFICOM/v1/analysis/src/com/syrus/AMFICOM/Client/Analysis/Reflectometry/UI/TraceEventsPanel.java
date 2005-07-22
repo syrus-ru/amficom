@@ -32,8 +32,8 @@ public class TraceEventsPanel extends ScaledGraphPanel
 	public void updEvents(String id)
 	{
 		sevents = Heap.getAnyMTAE(id) != null
-    		? Heap.getAnyMTAE(id).getSimpleEvents()
-    		: null; // XXX: наверное, лучше инкапсулировать sevents, и обращаться к Heap каждый раз, а не отслеживать изменения
+			? Heap.getAnyMTAE(id).getSimpleEvents()
+			: null; // XXX: наверное, лучше инкапсулировать sevents, и обращаться к Heap каждый раз, а не отслеживать изменения
 	}
 
 	protected void updColorModel()
@@ -127,11 +127,11 @@ public class TraceEventsPanel extends ScaledGraphPanel
 		for (int j = 0; j < se.length; j++) {
 			int eB = se[j].getBegin();
 			int eE = se[j].getEnd();
-            Color color = getColorByEventType(se[j].getEventType());
-            clipped_draw(g, y1, i0, x0, N, eB, eE, color, isTraceColor);
+			Color color = getColorByEventType(se[j].getEventType());
+			clipped_draw(g, y1, i0, x0, N, eB, eE, color, isTraceColor);
 		}
-        int lastPoint = se.length > 0 ? se[se.length - 1].getEnd() : 0;
-        clipped_draw(g, y1, i0, x0, N, lastPoint, N, noiseColor, isTraceColor);
+		int lastPoint = se.length > 0 ? se[se.length - 1].getEnd() : 0;
+		clipped_draw(g, y1, i0, x0, N, lastPoint, N, noiseColor, isTraceColor);
 	}
 
 	protected boolean isDraw_events() {

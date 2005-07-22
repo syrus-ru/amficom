@@ -30,7 +30,7 @@ public class FileRemoveCommand extends AbstractCommand
 
 	public void execute()
 	{
-        // FIXME: activerefId can be null?
+		// FIXME: activerefId can be null?
 
 		Heap.closeTrace(activeRefId);
 	}

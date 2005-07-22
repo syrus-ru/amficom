@@ -80,7 +80,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			}
 			public void mouseClicked(MouseEvent e)
 			{
-			    this_mouseClicked(e);
+				this_mouseClicked(e);
 			}
 		});
 	}

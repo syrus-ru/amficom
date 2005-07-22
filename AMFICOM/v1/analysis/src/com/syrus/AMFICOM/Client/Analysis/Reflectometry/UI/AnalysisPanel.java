@@ -75,7 +75,7 @@ public class AnalysisPanel extends MapMarkersPanel
 		MARKER_STROKE = new BasicStroke(marker_w);
 		this.useXORMode = false;
 
-        Heap.setMarkerObject(markerA);
+		Heap.setMarkerObject(markerA);
 	}
 
 	public void updEvents(String id)
@@ -257,8 +257,8 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 			}
 
-            // We send messages to update numerical info in windows.
-            // Note: Histogram will update only on mouse release. 
+			// We send messages to update numerical info in windows.
+			// Note: Histogram will update only on mouse release. 
 			updAnalysisMarkerInfo();
 			
 /*		if (markers_pair_moving)
@@ -465,10 +465,10 @@ public class AnalysisPanel extends MapMarkersPanel
 			_activeEvent = activeEvent;
 			activeEvent = event;
 			if (markerB.pos < sevents[event].getBegin() || markerB.pos >= sevents[event].getEnd())
-                if (sevents[event].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
-                    moveMarker(markerB, sevents[event].getBegin());
-                else
-                    moveMarker(markerB, (sevents[event].getBegin() + sevents[event].getEnd()) / 2);
+				if (sevents[event].getEventType() == SimpleReflectogramEvent.ENDOFTRACE)
+					moveMarker(markerB, sevents[event].getBegin());
+				else
+					moveMarker(markerB, (sevents[event].getBegin() + sevents[event].getEnd()) / 2);
 		}
 		parent.repaint();
 	}

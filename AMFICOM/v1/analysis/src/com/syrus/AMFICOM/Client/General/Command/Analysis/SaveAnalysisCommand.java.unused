@@ -42,8 +42,8 @@ public class SaveAnalysisCommand extends AbstractCommand
 
 	public void execute()
 	{
-        if (true) // FIXME: UnsupportedOperationException
-            throw new UnsupportedOperationException("The current version cannot save RefAnalysis.events");
+		if (true) // FIXME: UnsupportedOperationException
+			throw new UnsupportedOperationException("The current version cannot save RefAnalysis.events");
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.monitoredElementId == null)
 		{
@@ -106,7 +106,7 @@ public class SaveAnalysisCommand extends AbstractCommand
 				"DADARA Analysis", // @todo: give a better name
 				m.getSetup().getCriteriaSet());
 		} catch (CreateObjectException e1) {
-            GUIUtil.showCreateObjectProblemError();
+			GUIUtil.showCreateObjectProblemError();
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class SaveAnalysisCommand extends AbstractCommand
 		} catch (CreateObjectException e)
 		{
 			System.err.println("SaveAnalysisCommand: CreateObjectException.");
-            GUIUtil.showCreateObjectProblemError();
+			GUIUtil.showCreateObjectProblemError();
 			return;
 		}
 

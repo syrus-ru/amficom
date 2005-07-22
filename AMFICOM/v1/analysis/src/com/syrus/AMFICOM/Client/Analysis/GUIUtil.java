@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.7 2005/07/12 16:58:03 saa Exp $
+ * $Id: GUIUtil.java,v 1.8 2005/07/22 06:56:49 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,30 +22,30 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/07/12 16:58:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/22 06:56:49 $
  * @module
  */
 public class GUIUtil
 {
-    private static Map idColorMap = new HashMap();
+	private static Map idColorMap = new HashMap();
 
-    private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
-    private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
+	private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
+	private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
 
-    public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
+	public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
 
-    private GUIUtil () {
+	private GUIUtil () {
 		// non-instantiable
 	}
 
-    public static void showCreateObjectProblemError() {
-        showErrorMessage(MSG_CREATE_OBJECT_PROBLEM);
-    }
-    public static void showDataFormatError() {
-        showErrorMessage(MSG_ERROR_DATA_FORMAT);
-    }
+	public static void showCreateObjectProblemError() {
+		showErrorMessage(MSG_CREATE_OBJECT_PROBLEM);
+	}
+	public static void showDataFormatError() {
+		showErrorMessage(MSG_ERROR_DATA_FORMAT);
+	}
 
-    public static void showErrorMessage(String codestring)
+	public static void showErrorMessage(String codestring)
 	{
 		JOptionPane.showMessageDialog(
 			Environment.getActiveWindow(),
@@ -54,41 +54,41 @@ public class GUIUtil
 			JOptionPane.OK_OPTION);
 	}
 
-    public static Color getColor(String id) {
-        Color color = null;
-        // System.out.println("id is '" + id + "'");
-        color = (Color) idColorMap.get(id);
-        if (color == null) {
-            color = UIManager.getColor(id);
-            if (color != null) {
-                idColorMap.put(id, color);
-            }
-        }
-        if (color == null) {
-            int i = 0;
-            String id1 = null;
-            while (id1 == null) {
-                id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
-                // System.out.println("search by " + id1);
-                color = (Color) idColorMap.get(id1);
-                if (color != null)
-                    id1 = null;
-            }
-            // System.out.println("by id:" + id1);
-            color = UIManager.getColor(id1);
-            if (color == null) {
-                Random random = new Random();
-                // System.out.println("by random");
-                color = new Color(Math.abs(random.nextInt()) % 256,
-                        Math.abs(random.nextInt()) % 256,
-                        Math.abs(random.nextInt()) % 256);
-            }
-            idColorMap.put(id1, color);
-            if (!id1.equals(id))
-                idColorMap.put(id, color);
-        }
-        // System.out.println(color);
-        // System.out.println();
-        return color;
-    }
+	public static Color getColor(String id) {
+		Color color = null;
+		// System.out.println("id is '" + id + "'");
+		color = (Color) idColorMap.get(id);
+		if (color == null) {
+			color = UIManager.getColor(id);
+			if (color != null) {
+				idColorMap.put(id, color);
+			}
+		}
+		if (color == null) {
+			int i = 0;
+			String id1 = null;
+			while (id1 == null) {
+				id1 = AnalysisResourceKeys.COLOR_TRACE_PREFIX + i++;
+				// System.out.println("search by " + id1);
+				color = (Color) idColorMap.get(id1);
+				if (color != null)
+					id1 = null;
+			}
+			// System.out.println("by id:" + id1);
+			color = UIManager.getColor(id1);
+			if (color == null) {
+				Random random = new Random();
+				// System.out.println("by random");
+				color = new Color(Math.abs(random.nextInt()) % 256,
+						Math.abs(random.nextInt()) % 256,
+						Math.abs(random.nextInt()) % 256);
+			}
+			idColorMap.put(id1, color);
+			if (!id1.equals(id))
+				idColorMap.put(id, color);
+		}
+		// System.out.println(color);
+		// System.out.println();
+		return color;
+	}
 }

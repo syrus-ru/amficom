@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.9 2005/07/01 18:02:38 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.10 2005/07/22 06:56:50 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/07/01 18:02:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/22 06:56:50 $
  * @module analysis_v1
  */
 
@@ -157,11 +157,11 @@ public class DetailedEventResource {
 		case SimpleReflectogramEvent.GAIN:
 		case SimpleReflectogramEvent.LOSS:
 			setStartLevel(-MathRef.round_2(((SpliceDetailedEvent)ev).getY0()) + sDB);
-      setEndLevel(-MathRef.round_2(((SpliceDetailedEvent)ev).getY1()) + sDB);
+			setEndLevel(-MathRef.round_2(((SpliceDetailedEvent)ev).getY1()) + sDB);
 			break;
 		case SimpleReflectogramEvent.ENDOFTRACE:
 			setStartLevel(-MathRef.round_2(((EndOfTraceDetailedEvent)ev).getY0()) + sDB);
-      setReflectionLevel(-MathRef.round_2(((EndOfTraceDetailedEvent)ev).getY2()) + sDB);
+			setReflectionLevel(-MathRef.round_2(((EndOfTraceDetailedEvent)ev).getY2()) + sDB);
 			break;
 		}			
 	}

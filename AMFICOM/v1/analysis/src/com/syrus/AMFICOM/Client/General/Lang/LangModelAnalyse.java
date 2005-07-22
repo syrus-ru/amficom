@@ -65,7 +65,7 @@ public class LangModelAnalyse
 		// чтобы умел сохранять ключи с пустыми строками.
 		// //saa, 2004-12
 		if (string.equals("__EMPTY__"))
-		    string = "";
+			string = "";
 		return string;
 	}
 }

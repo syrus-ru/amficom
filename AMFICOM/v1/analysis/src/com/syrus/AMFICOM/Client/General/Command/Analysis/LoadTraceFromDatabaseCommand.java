@@ -85,17 +85,17 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 
-            try {
-    			AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
-    			if (ms.getEtalon() != null)
-    				AnalysisUtil.load_Etalon(ms);
-    			else
-    				Heap.unSetEtalonPair();
-    			Heap.makePrimaryAnalysis();
-            } catch (DataFormatException e) {
-                GUIUtil.showDataFormatError();
-                return;
-            }
+			try {
+				AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
+				if (ms.getEtalon() != null)
+					AnalysisUtil.load_Etalon(ms);
+				else
+					Heap.unSetEtalonPair();
+				Heap.makePrimaryAnalysis();
+			} catch (DataFormatException e) {
+				GUIUtil.showDataFormatError();
+				return;
+			}
 		}
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}

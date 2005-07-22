@@ -75,7 +75,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		double[] y = bs.getTraceData();
 
 		ThresholdsLayeredPanel ppp = (ThresholdsLayeredPanel)panel;
-	    // XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
+		// XXX: MODELED_TRACE_KEY case check removed by saa: we don't know now how to handle MODELED_TRACE_KEY, so take a BS only 
 		if (id.equals(Heap.PRIMARY_TRACE_KEY))
 		{
 			p = new ThresholdsPanel(ppp, dispatcher, y, deltaX);

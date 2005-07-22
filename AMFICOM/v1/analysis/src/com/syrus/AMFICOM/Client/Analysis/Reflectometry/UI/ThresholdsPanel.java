@@ -33,27 +33,27 @@ public class ThresholdsPanel extends MapMarkersPanel
 
 	private ModelTraceManager.ThresholdHandle c_TH = null;
 
-    private static class FPSCounter { // FIXME: debug only: FSPCounter
-        long count = 0;
-        long time = 0;
-        public FPSCounter() {
-            this.time = System.currentTimeMillis();
-        }
-        void inc() {
-            this.count++;
-            long ct = System.currentTimeMillis();
-            final long ONE_SECOND = 1000;
-            final long DT = 1000;
-            if (ct < this.time + DT)
-                return;
-            double fps = count * 1.0 * ONE_SECOND / (ct - this.time);
-            System.out.println("FPSCounter: " + fps + " fps");
-            this.time = ct;
-            this.count = 0;
-        }
-    }
+	private static class FPSCounter { // FIXME: debug only: FSPCounter
+		long count = 0;
+		long time = 0;
+		public FPSCounter() {
+			this.time = System.currentTimeMillis();
+		}
+		void inc() {
+			this.count++;
+			long ct = System.currentTimeMillis();
+			final long ONE_SECOND = 1000;
+			final long DT = 1000;
+			if (ct < this.time + DT)
+				return;
+			double fps = count * 1.0 * ONE_SECOND / (ct - this.time);
+			System.out.println("FPSCounter: " + fps + " fps");
+			this.time = ct;
+			this.count = 0;
+		}
+	}
 
-    private FPSCounter fps = new FPSCounter();
+	private FPSCounter fps = new FPSCounter();
 
 	public ThresholdsPanel(TraceEventsLayeredPanel panel, Dispatcher dispatcher, double y[], double deltaX)
 	{
@@ -102,7 +102,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 	
 	protected void this_mousePressed(MouseEvent mev)
 	{
-        ModelTraceManager etalon = Heap.getMTMEtalon();
+		ModelTraceManager etalon = Heap.getMTMEtalon();
 		if (!edit_thresholds || etalon == null)
 		{
 			super.this_mousePressed(mev);
@@ -124,7 +124,7 @@ public class ThresholdsPanel extends MapMarkersPanel
 			0.5,
 			isRbutton ? 1 : 0,
 			allThresholds ? -1 : Heap.getCurrentEtalonEvent2(),
-                    true);
+					true);
 
 		if (this.c_TH != null) {
 
@@ -213,21 +213,21 @@ public class ThresholdsPanel extends MapMarkersPanel
 
 	protected void this_mouseClicked(MouseEvent e)
 	{
-        // для окна порогов переходим к другому событию,
-        // для окна анализа - не переходим
-        if (edit_thresholds) {
-    	    // если кликнули, но не на текущее событие, переходим к новому событию
-    	    int pos = coord2index(e.getPoint().x);
-            ModelTraceManager etalon = Heap.getMTMEtalon();
-    	    int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
-    		if (evId != -1 && evId != Heap.getCurrentEtalonEvent2())
-    		{
-    	    	Heap.setCurrentEtalonEvent(evId);
-    		    return;
-    		}
-        } else {
-            super.this_mouseClicked(e);
-        }
+		// для окна порогов переходим к другому событию,
+		// для окна анализа - не переходим
+		if (edit_thresholds) {
+			// если кликнули, но не на текущее событие, переходим к новому событию
+			int pos = coord2index(e.getPoint().x);
+			ModelTraceManager etalon = Heap.getMTMEtalon();
+			int evId = etalon != null ? etalon.getMTAE().getEventByCoord(pos) : -1;
+			if (evId != -1 && evId != Heap.getCurrentEtalonEvent2())
+			{
+				Heap.setCurrentEtalonEvent(evId);
+				return;
+			}
+		} else {
+			super.this_mouseClicked(e);
+		}
 	}
 
 	public void paint (Graphics g)
@@ -268,112 +268,112 @@ public class ThresholdsPanel extends MapMarkersPanel
 		}
 	}
 
-    /**
-     * Extends GraphRange to cover all thresholds curves.
-     * (see {@link GraphRange})
-     * @param r GraphRange to update
-     */
-    public void updateGraphRangeByThresholds(GraphRange r) {
-        if (paint_thresholds) {
-          paintOneThreshold(null, r);
-        }
-    }
+	/**
+	 * Extends GraphRange to cover all thresholds curves.
+	 * (see {@link GraphRange})
+	 * @param r GraphRange to update
+	 */
+	public void updateGraphRangeByThresholds(GraphRange r) {
+		if (paint_thresholds) {
+			paintOneThreshold(null, r);
+		}
+	}
 
 	/**
 	 * Paints one threshold or all thresholds.
 	 * @param g graphics, may be null if no painting is actually required
-     * @param r range to be updated to cover curves painted 
+	 * @param r range to be updated to cover curves painted 
 	 * @param nEvent event number >= 0 to paint or -1 to paint all thresholds.
 	 */
 	private void paintThresholdsEx(Graphics g, GraphRange r, int nEvent)
 	{
-        ModelTraceManager etalon = Heap.getMTMEtalon();
+		ModelTraceManager etalon = Heap.getMTMEtalon();
 		if (etalon == null)
 			return;
 
 		for (int key = 0; key < 4; key++)
 		{
-            // определяем цвет
-            if (g != null)
-                g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
-                        ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
-                        : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
+			// определяем цвет
+			if (g != null)
+				g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
+						? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+						: AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 
-            // определяем, какую кривую рисовать
+			// определяем, какую кривую рисовать
 			ModelTrace thresholdMT = etalon.getThresholdMT(key);
 
-            // Определяем диапазон отрисовки
+			// Определяем диапазон отрисовки
 			if (nEvent >= 0) {
-                SimpleReflectogramEvent sre =
-                    etalon.getEventRangeOnThresholdCurve(nEvent, key);
+				SimpleReflectogramEvent sre =
+					etalon.getEventRangeOnThresholdCurve(nEvent, key);
 				if (sre == null)
 					continue; // if no region, then do not draw at all
-                // When we draw thresholds for one event only, avoid drawing thresholds at the end point.
-                // This is because sometimes (n/id event type) threshold curve can break.
-                ModelTraceRange subrange = new ModelTraceRangeImplMTRSubrange(
-                        thresholdMT, sre.getBegin(), sre.getEnd(), false);
-            	// последнее событие рисуем вместе с конечной точкой
-                drawModelCurve(g, r, subrange,
-                		nEvent != etalon.getMTAE().getNEvents() - 1);
+				// When we draw thresholds for one event only, avoid drawing thresholds at the end point.
+				// This is because sometimes (n/id event type) threshold curve can break.
+				ModelTraceRange subrange = new ModelTraceRangeImplMTRSubrange(
+						thresholdMT, sre.getBegin(), sre.getEnd(), false);
+				// последнее событие рисуем вместе с конечной точкой
+				drawModelCurve(g, r, subrange,
+						nEvent != etalon.getMTAE().getNEvents() - 1);
 			} else {
-                drawModelCurve(g, r, thresholdMT, false);
-            }
+				drawModelCurve(g, r, thresholdMT, false);
+			}
 		}
 	}
 
-    /**
-     * Paints secondary line for one threshold or all thresholds.
-     * @param g graphics, null if no actual plotting is required
-     * @param r GraphRange to update, null if no range update is required
-     * @param nEvent event number, must be >= 0.
-     */
-    private void paintThresholdsSec(Graphics g, GraphRange r, int nEvent, boolean dashStroke)
-    {
-        ModelTraceManager etalon = Heap.getMTMEtalon();
-        if (etalon == null)
-            return;
+	/**
+	 * Paints secondary line for one threshold or all thresholds.
+	 * @param g graphics, null if no actual plotting is required
+	 * @param r GraphRange to update, null if no range update is required
+	 * @param nEvent event number, must be >= 0.
+	 */
+	private void paintThresholdsSec(Graphics g, GraphRange r, int nEvent, boolean dashStroke)
+	{
+		ModelTraceManager etalon = Heap.getMTMEtalon();
+		if (etalon == null)
+			return;
 
-        ModelTraceRange[] curves = etalon.getEventThresholdMTR(nEvent);
-        
-        if (g != null) { // draw actually
-            if (dashStroke)
-                ((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
-            for (int key = 0; key < 4; key++) {
-            	if (curves[key] == null)
-            		continue;
-                // определяем цвет
-                g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
-                        ? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
-                        : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
-            	// последнее событие рисуем вместе с конечной точкой
-                drawModelCurve(g, r, curves[key],
-                		nEvent != etalon.getMTAE().getNEvents() - 1);
-            }
-            if (dashStroke)
-                ((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
-            //this.fps.inc();
-        } else { // update range only
-            for (int key = 0; key < 4; key++) {
-            	if (curves[key] == null)
-            		continue;
-            	// последнее событие рисуем вместе с конечной точкой
-                drawModelCurve(g, r, curves[key],
-                		nEvent != etalon.getMTAE().getNEvents() - 1);
-            }
-        }
-    }
+		ModelTraceRange[] curves = etalon.getEventThresholdMTR(nEvent);
+		
+		if (g != null) { // draw actually
+			if (dashStroke)
+				((Graphics2D)g).setStroke(ScaledGraphPanel.DASHED_STROKE);
+			for (int key = 0; key < 4; key++) {
+				if (curves[key] == null)
+					continue;
+				// определяем цвет
+				g.setColor(UIManager.getColor(Thresh.isKeyHard(key)
+						? AnalysisResourceKeys.COLOR_ALARM_THRESHOLD
+						: AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
+				// последнее событие рисуем вместе с конечной точкой
+				drawModelCurve(g, r, curves[key],
+						nEvent != etalon.getMTAE().getNEvents() - 1);
+			}
+			if (dashStroke)
+				((Graphics2D)g).setStroke(ScaledGraphPanel.DEFAULT_STROKE);
+			//this.fps.inc();
+		} else { // update range only
+			for (int key = 0; key < 4; key++) {
+				if (curves[key] == null)
+					continue;
+				// последнее событие рисуем вместе с конечной точкой
+				drawModelCurve(g, r, curves[key],
+						nEvent != etalon.getMTAE().getNEvents() - 1);
+			}
+		}
+	}
 
 	private void paintOneThreshold(Graphics g, GraphRange r)
 	{
-        int cEvent = Heap.getCurrentEtalonEvent2();
+		int cEvent = Heap.getCurrentEtalonEvent2();
 		if (cEvent >= 0)
-        {
-            // Note: эти два метода иногда могут давать заметно несовпадающие кривые.
-            // Note: пунктирная линия - paintThresholdsSec(..., true) - очень медленно прорисовывается
-            paintThresholdsSec(g, r, cEvent, false);
-            // Note: при рисовании пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
-            //paintThresholdsEx(g, c_event);
-        }
+		{
+			// Note: эти два метода иногда могут давать заметно несовпадающие кривые.
+			// Note: пунктирная линия - paintThresholdsSec(..., true) - очень медленно прорисовывается
+			paintThresholdsSec(g, r, cEvent, false);
+			// Note: при рисовании пунктир и сплошная кривая могут совпадать неточно, что приводит к "мохнатости" линии
+			//paintThresholdsEx(g, c_event);
+		}
 	}
 	private void paintAllThresholds(Graphics g, GraphRange r)
 	{

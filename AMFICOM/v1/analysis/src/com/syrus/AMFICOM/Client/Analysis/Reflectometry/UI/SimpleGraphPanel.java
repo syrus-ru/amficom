@@ -27,87 +27,87 @@ public class SimpleGraphPanel extends JPanel
 
 	protected boolean showAll = true;
 
-    /**
-     * Диапазон на графике рефлектограммы
-     */
-    public static class GraphRange {
-        private int xMin;
-        private int xMax;
-        private double yMin;
-        private double yMax;
-        /**
-         * Создает пустой диапазон
-         */
-        public GraphRange() {
-            xMin = 1;
-            xMax = 0;
-            yMin = 1;
-            yMax = 0;
-        }
-        /**
-         * проверяет, пуст ли диапазон
-         * @return true, если диапазон пуст, либо false, если не пуст
-         */
-        public boolean isEmpty() {
-            return xMin > xMax || yMin > yMax;
-        }
-        /**
-         * расширяет диапазон так, чтобы он захватил указанную X-координату
-         * @param x
-         */
-        public void coverX(int x) {
-            if (xMin > xMax) {
-                xMin = x;
-                xMax = x;
-            } else if (x < xMin) {
-                xMin = x;
-            } else if (x > xMax) {
-                xMax = x;
-            }
-        }
-        /**
-         * расширяет диапазон так, чтобы он захватил указанную Y-координату
-         * @param y
-         */
-        public void coverY(double y) {
-            if (yMin > yMax) {
-                yMin = y;
-                yMax = y;
-            } else if (y < yMin) {
-                yMin = y;
-            } else if (y > yMax) {
-                yMax = y;
-            }
-        }
-        /**
-         * @return Левый край диапазона (включительно).
-         * Не определен для пустого диапазона.
-         */
-        public int getXMin() {
-            return xMin;
-        }
-        /**
-         * @return Правый край диапазона (включительно).
-         * Не определен для пустого диапазона.
-         */
-        public int getXMax() {
-            return xMax;
-        }
-        /**
-         * @return Минимальное значение Y диапазона.
-         * Не определено для пустого диапазона.
-         */
-        public double getYMin() {
-            return yMin;
-        }
-        /**
-         * @return Максимальное значение Y диапазона.
-         * Не определено для пустого диапазона.
-         */
-        public double getYMax() {
-            return yMax;
-        }
-    }
+	/**
+	 * Диапазон на графике рефлектограммы
+	 */
+	public static class GraphRange {
+		private int xMin;
+		private int xMax;
+		private double yMin;
+		private double yMax;
+		/**
+		 * Создает пустой диапазон
+		 */
+		public GraphRange() {
+			xMin = 1;
+			xMax = 0;
+			yMin = 1;
+			yMax = 0;
+		}
+		/**
+		 * проверяет, пуст ли диапазон
+		 * @return true, если диапазон пуст, либо false, если не пуст
+		 */
+		public boolean isEmpty() {
+			return xMin > xMax || yMin > yMax;
+		}
+		/**
+		 * расширяет диапазон так, чтобы он захватил указанную X-координату
+		 * @param x
+		 */
+		public void coverX(int x) {
+			if (xMin > xMax) {
+				xMin = x;
+				xMax = x;
+			} else if (x < xMin) {
+				xMin = x;
+			} else if (x > xMax) {
+				xMax = x;
+			}
+		}
+		/**
+		 * расширяет диапазон так, чтобы он захватил указанную Y-координату
+		 * @param y
+		 */
+		public void coverY(double y) {
+			if (yMin > yMax) {
+				yMin = y;
+				yMax = y;
+			} else if (y < yMin) {
+				yMin = y;
+			} else if (y > yMax) {
+				yMax = y;
+			}
+		}
+		/**
+		 * @return Левый край диапазона (включительно).
+		 * Не определен для пустого диапазона.
+		 */
+		public int getXMin() {
+			return xMin;
+		}
+		/**
+		 * @return Правый край диапазона (включительно).
+		 * Не определен для пустого диапазона.
+		 */
+		public int getXMax() {
+			return xMax;
+		}
+		/**
+		 * @return Минимальное значение Y диапазона.
+		 * Не определено для пустого диапазона.
+		 */
+		public double getYMin() {
+			return yMin;
+		}
+		/**
+		 * @return Максимальное значение Y диапазона.
+		 * Не определено для пустого диапазона.
+		 */
+		public double getYMax() {
+			return yMax;
+		}
+	}
 
 	public SimpleGraphPanel (double[] y, double deltaX)
 	{
@@ -175,10 +175,10 @@ public class SimpleGraphPanel extends JPanel
 
 	protected Color correctColor(Color color1, boolean isTraceColor)
 	{
-	    double weight = 0.3; // XXX: color soften factor
-	    double a = weight;
-	    double b = 255 * (1.0 - weight);
-	    return isTraceColor && hasWeakTraceColors() ?
+		double weight = 0.3; // XXX: color soften factor
+		double a = weight;
+		double b = 255 * (1.0 - weight);
+		return isTraceColor && hasWeakTraceColors() ?
 			new Color( // XXX: каждый раз создается новый объект цвета
 				(int )(color1.getRed() * a + b),
 				(int )(color1.getGreen() * a + b),
@@ -186,19 +186,19 @@ public class SimpleGraphPanel extends JPanel
 			: color1;
 	}
 
-    protected void updateRangeByYCurve(
-            GraphRange r, double[] y1, int i0, int xT0, int N) {
-        if (N < 0)
-            return;
-        r.coverX(xT0);
-        r.coverX(xT0 + N);
-        r.coverY(y1[ReflectogramMath.getArrayMaxIndex(y1, i0, i0 + N)]); // i0+N is included
-        r.coverY(y1[ReflectogramMath.getArrayMinIndex(y1, i0, i0 + N)]);
-    }
+	protected void updateRangeByYCurve(
+			GraphRange r, double[] y1, int i0, int xT0, int N) {
+		if (N < 0)
+			return;
+		r.coverX(xT0);
+		r.coverX(xT0 + N);
+		r.coverY(y1[ReflectogramMath.getArrayMaxIndex(y1, i0, i0 + N)]); // i0+N is included
+		r.coverY(y1[ReflectogramMath.getArrayMinIndex(y1, i0, i0 + N)]);
+	}
 	/**
-     * plots array data from y[i0] to y[i0+N] <b>inclusively</b>
-     * to graph's (xTrace == xScreen/scaleX-start) ranging from xT0 to xT0+N <b>inclusively</b>.
-     * Does not perform clipping
+	 * plots array data from y[i0] to y[i0+N] <b>inclusively</b>
+	 * to graph's (xTrace == xScreen/scaleX-start) ranging from xT0 to xT0+N <b>inclusively</b>.
+	 * Does not perform clipping
 	 */
 	protected void drawYCurve(Graphics g, double[] y1, int i0, int xT0, int N)
 	{

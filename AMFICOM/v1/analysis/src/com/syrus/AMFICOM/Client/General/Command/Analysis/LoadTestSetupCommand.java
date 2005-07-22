@@ -61,19 +61,19 @@ public class LoadTestSetupCommand extends AbstractCommand
 			Heap.setCurrentTracePrimary();
 		}
 
-        try {
-    		AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
-    
-    		if (ms.getEtalon() != null)
-    			AnalysisUtil.load_Etalon(ms);
-        } catch (DataFormatException e) {
-            GUIUtil.showDataFormatError();
-        }
+		try {
+			AnalysisUtil.load_CriteriaSet(LoginManager.getUserId(), ms);
+	
+			if (ms.getEtalon() != null)
+				AnalysisUtil.load_Etalon(ms);
+		} catch (DataFormatException e) {
+			GUIUtil.showDataFormatError();
+		}
 //
 //		if (ms.getThresholdSet() != null)
 //			AnalysisUtil.load_Thresholds(userId, ms);
 
-        // XXX: are these notifications needed?
+		// XXX: are these notifications needed?
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
 		Heap.setCurrentTracePrimary();*/

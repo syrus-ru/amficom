@@ -55,7 +55,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	private JScrollPane scrollPaneWholeComp = new JScrollPane();
 	private JViewport viewportWholeComp = new JViewport();
 
-    public OverallStatsFrame()
+	public OverallStatsFrame()
 	{
 		this(new Dispatcher());
 	}
@@ -78,8 +78,8 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 	void init_module(Dispatcher dispatcher)
 	{
 		Heap.addEtalonMTMListener(this);
-        Heap.addPrimaryRefAnalysisListener(this);
-        Heap.addRefMismatchListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addRefMismatchListener(this);
 	}
 
 	public String getReportTitle()
@@ -211,21 +211,21 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		tabbedPane.setEnabledAt(1, false);
 	}
 
-    public void primaryRefAnalysisCUpdated() {
-        updTableModel();
-        setVisible(true);
-        if(Heap.getMTMEtalon() != null)
-        {
-            setWholeData();
-            tabbedPane.setEnabledAt(1, true);
-        }
-    }
+	public void primaryRefAnalysisCUpdated() {
+		updTableModel();
+		setVisible(true);
+		if(Heap.getMTMEtalon() != null)
+		{
+			setWholeData();
+			tabbedPane.setEnabledAt(1, true);
+		}
+	}
 
-    public void primaryRefAnalysisRemoved() {
-        tabbedPane.setSelectedIndex(0);
-        tabbedPane.setEnabledAt(1, false);
-        setVisible(false);
-    }
+	public void primaryRefAnalysisRemoved() {
+		tabbedPane.setSelectedIndex(0);
+		tabbedPane.setEnabledAt(1, false);
+		setVisible(false);
+	}
 
 	public void refMismatchCUpdated() {
 		setWholeData();

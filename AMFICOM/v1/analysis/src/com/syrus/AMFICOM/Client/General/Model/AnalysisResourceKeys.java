@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisResourceKeys.java,v 1.21 2005/07/20 07:08:20 saa Exp $
+ * $Id: AnalysisResourceKeys.java,v 1.22 2005/07/22 06:56:50 saa Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/20 07:08:20 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/22 06:56:50 $
  * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -28,22 +28,22 @@ public interface AnalysisResourceKeys extends ResourceKeys {
 
 	// цвета событий
 	String	COLOR_EVENTS							= "com.syrus.AMFICOM.color.analisys.events";
-    String  COLOR_EVENTS_LOST                       = "com.syrus.AMFICOM.color.analisys.events.lost";
-    String  COLOR_EVENTS_NEW                        = "com.syrus.AMFICOM.color.analisys.events.new";
+	String  COLOR_EVENTS_LOST                       = "com.syrus.AMFICOM.color.analisys.events.lost";
+	String  COLOR_EVENTS_NEW                        = "com.syrus.AMFICOM.color.analisys.events.new";
 	String	COLOR_EVENTS_LOSS_CHANGED				= "com.syrus.AMFICOM.color.analisys.events.losschanged";
 	String	COLOR_EVENTS_AMPLITUDE_CHANGED			= "com.syrus.AMFICOM.color.analisys.events.amplitudechanged";
 	// цвет для события, на которое пришлось несоответствие или аларм (при этом не учитывается, новое ли оно)
-    String  COLOR_EVENTS_ALARM						= "com.syrus.AMFICOM.color.analisys.events.alarm";
+	String  COLOR_EVENTS_ALARM						= "com.syrus.AMFICOM.color.analisys.events.alarm";
 
-    // цвета выделенных событий
+	// цвета выделенных событий
 	String	COLOR_EVENTS_SELECTED					= "com.syrus.AMFICOM.color.analisys.eventsSelected";
-    String  COLOR_EVENTS_LOST_SELECTED				= "com.syrus.AMFICOM.color.analisys.events.lostSelected";
-    String  COLOR_EVENTS_NEW_SELECTED               = "com.syrus.AMFICOM.color.analisys.events.newSelected";
+	String  COLOR_EVENTS_LOST_SELECTED				= "com.syrus.AMFICOM.color.analisys.events.lostSelected";
+	String  COLOR_EVENTS_NEW_SELECTED               = "com.syrus.AMFICOM.color.analisys.events.newSelected";
 	String	COLOR_EVENTS_LOSS_CHANGED_SELECTED		= "com.syrus.AMFICOM.color.analisys.events.losschangedSelected";
 	String	COLOR_EVENTS_AMPLITUDE_CHANGED_SELECTED	= "com.syrus.AMFICOM.color.analisys.events.amplitudechangedSelected";
-    String  COLOR_EVENTS_ALARM_SELECTED				= "com.syrus.AMFICOM.color.analisys.events.alarmSelected";
+	String  COLOR_EVENTS_ALARM_SELECTED				= "com.syrus.AMFICOM.color.analisys.events.alarmSelected";
 
-    String	COLOR_CONNECTOR							= "connectColor";
+	String	COLOR_CONNECTOR							= "connectColor";
 	String	COLOR_END								= "endColor";
 	String	COLOR_MARKER							= "analysisMarkerColor";
 	String	COLOR_TRACE_PREFIX						= "trace";

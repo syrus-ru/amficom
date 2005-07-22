@@ -41,7 +41,7 @@ implements BsHashChangeListener, AnalysisParametersListener
 	{
 		this.dispatcher = dispatcher;
 		Heap.addBsHashListener(this);
-        Heap.addAnalysisParametersListener(this);
+		Heap.addAnalysisParametersListener(this);
 	}
 
 	public void addTrace (String id)
@@ -82,15 +82,15 @@ implements BsHashChangeListener, AnalysisParametersListener
 		setVisible (false);
 	}
 
-    public void analysisParametersUpdated() {
-        JLayeredPane slp = ((ScalableLayeredPanel)panel).jLayeredPane;
-        for(int i=0; i<slp.getComponentCount(); i++)
-        {
-            JPanel panel1 = (JPanel)slp.getComponent(i);
-            if (panel1 instanceof HistogrammPanel)
-            {
-                ((HistogrammPanel)panel1).updAnalysisParameters();
-            }
-        }
-    }
+	public void analysisParametersUpdated() {
+		JLayeredPane slp = ((ScalableLayeredPanel)panel).jLayeredPane;
+		for(int i=0; i<slp.getComponentCount(); i++)
+		{
+			JPanel panel1 = (JPanel)slp.getComponent(i);
+			if (panel1 instanceof HistogrammPanel)
+			{
+				((HistogrammPanel)panel1).updAnalysisParameters();
+			}
+		}
+	}
 }

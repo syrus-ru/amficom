@@ -31,16 +31,16 @@ public class HistogrammPanel extends ScaledGraphPanel
 	//private static int waveletType = Wavelet.TYPE_ABSXSINX;
 	private static int waveletType = Wavelet.TYPE_SINX;
 
-    private static final float GAUSS_W = 1.6f; // width of gaussian in pixels
-    private static final Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
-    private static final Stroke THRESHOLD_STROKE = new BasicStroke(1);
+	private static final float GAUSS_W = 1.6f; // width of gaussian in pixels
+	private static final Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
+	private static final Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
-    private double level = 0.2;
+	private double level = 0.2;
 
-    // transfer coefficient dB/km to dB 
+	// transfer coefficient dB/km to dB 
 	private double alpha = 0.0;
 
-    private int gaussI0 = 0; // при отображении массив gauss будет смещаться на эту величину
+	private int gaussI0 = 0; // при отображении массив gauss будет смещаться на эту величину
 	private double[] derivative;
 	private double[] gauss;
 	private double[] threshold;
@@ -49,7 +49,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private Color thresholdColor;
 
 	private boolean moveLevel = false;
-    private boolean movedHere = false;
+	private boolean movedHere = false;
 
 	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
@@ -68,10 +68,10 @@ public class HistogrammPanel extends ScaledGraphPanel
 	public void init()
 	{
 		int event_size = ReflectogramMath.getReflectiveEventSize(y, 0.1);
-        double normMx = Wavelet.getNormMx(waveletType, event_size);
-        double normS = Wavelet.getNormStep(waveletType, event_size);
-        derivative = Wavelet.makeTransform(
-                waveletType, event_size, y, 0, y.length - 1, normMx);
+		double normMx = Wavelet.getNormMx(waveletType, event_size);
+		double normS = Wavelet.getNormStep(waveletType, event_size);
+		derivative = Wavelet.makeTransform(
+				waveletType, event_size, y, 0, y.length - 1, normMx);
 
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = -derivative[i];
@@ -81,8 +81,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		for (int i = 0; i < derivative.length; i++)
 			derivative[i] = derivative[i]*tmp;
 
-        this.alpha = normMx / normS / tmp;
-    }
+		this.alpha = normMx / normS / tmp;
+	}
 
 	protected void updColorModel()
 	{
@@ -125,7 +125,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.setColor(gaussColor);
 		((Graphics2D) g).setStroke(GAUSS_STROKE);
 
-        for (int i= Math.max(0, gaussI0-start); i < Math.min (end + 1, gauss.length + gaussI0) - start - 1; i++)
+		for (int i= Math.max(0, gaussI0-start); i < Math.min (end + 1, gauss.length + gaussI0) - start - 1; i++)
 			g.drawLine((int)(i*scaleX+1), (int)((maxY - gauss[i+start - gaussI0] - top) * scaleY - 1),
 								 (int)((i+1)*scaleX+1), (int)((maxY - gauss[i+start+1 - gaussI0] - top) * scaleY - 1));
 
@@ -187,8 +187,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		{
 			moveLevel = true;
 			level = coord2value(currpos.y);
-            levelUpdated();
-            setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+			levelUpdated();
+			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 			parent.repaint();
 			return;
 		}
@@ -203,7 +203,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			upd_currpos(e);
 
 			level = coord2value(currpos.y);
-            levelUpdated();
+			levelUpdated();
 			parent.repaint();
 			return;
 		}
@@ -222,96 +222,96 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mouseReleased(e);
 	}
 
-    private double level2thresh(double level1) {
-        double thresh = 0.0;
-        for (int i = 0; i < threshold.length; i++) {
-            if (threshold[i] < level1) {
-                thresh = i * Kx * alpha;
-                break;
-            }
-        }
-        return thresh;
-    }
-    private double thresh2level(double thresh) {
-        double fIndex = Math.round(thresh / alpha / Kx);
-        if (fIndex < 0)
-            return threshold[0];
-        else if (fIndex > threshold.length - 1)
-            return threshold[threshold.length - 1];
-        else
-        return threshold[(int)fIndex];
-    }
-    private double getHeapThreshold() {
-        AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-        return ap.getMinSplice();
-    }
-    private void setHeapThreshold(double vThresh) {
-        AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-        ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
-        movedHere = true;
-        Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
-        movedHere = false;
-    }
+	private double level2thresh(double level1) {
+		double thresh = 0.0;
+		for (int i = 0; i < threshold.length; i++) {
+			if (threshold[i] < level1) {
+				thresh = i * Kx * alpha;
+				break;
+			}
+		}
+		return thresh;
+	}
+	private double thresh2level(double thresh) {
+		double fIndex = Math.round(thresh / alpha / Kx);
+		if (fIndex < 0)
+			return threshold[0];
+		else if (fIndex > threshold.length - 1)
+			return threshold[threshold.length - 1];
+		else
+		return threshold[(int)fIndex];
+	}
+	private double getHeapThreshold() {
+		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+		return ap.getMinSplice();
+	}
+	private void setHeapThreshold(double vThresh) {
+		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+		ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
+		movedHere = true;
+		Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
+		movedHere = false;
+	}
 
-    protected void levelUpdated() {
-        double vThresh = level2thresh(this.level);
-        // округляем
-        // XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
-        vThresh = MathRef.round_4(vThresh);
-        if (vThresh > 0) {
-            setHeapThreshold(vThresh);
-        }
-    }
+	protected void levelUpdated() {
+		double vThresh = level2thresh(this.level);
+		// округляем
+		// XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
+		vThresh = MathRef.round_4(vThresh);
+		if (vThresh > 0) {
+			setHeapThreshold(vThresh);
+		}
+	}
 
-    public void updAnalysisParameters() {
-        if (movedHere)
-            return;
-        double level1 = thresh2level(getHeapThreshold());
-        if (level1 == this.level)
-            return;
-        this.level = level1;
-        parent.repaint();
-    }
+	public void updAnalysisParameters() {
+		if (movedHere)
+			return;
+		double level1 = thresh2level(getHeapThreshold());
+		if (level1 == this.level)
+			return;
+		this.level = level1;
+		parent.repaint();
+	}
 
 	public void updateHistogrammData(int start1, int end1)
 	{
-        int nBins = 4000;
-        // '1' for total histogram
-        double downLimit1 = -4;
-        double upLimit1 = 8;
-        // '2' for gauss histogram
-        double downLimit2 = -0.1;
-        double upLimit2 = 0.5;
+		int nBins = 4000;
+		// '1' for total histogram
+		double downLimit1 = -4;
+		double upLimit1 = 8;
+		// '2' for gauss histogram
+		double downLimit2 = -0.1;
+		double upLimit2 = 0.5;
 
-        Histogramm histo1 = new Histogramm(downLimit1, upLimit1, nBins);
+		Histogramm histo1 = new Histogramm(downLimit1, upLimit1, nBins);
 		double[] y1 = histo1.init(derivative, start1, end1);
-        int i0 = (int)Math.round((downLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
-        int i1 = (int)Math.round((upLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
-        gaussI0 = i0;
-        double[] y2 = new double[i1 - i0];
-        System.arraycopy(y1, i0, y2, 0, i1 - i0);
-        int maxIndex2 = ReflectogramMath.getArrayMaxIndex(y2, 0, y2.length - 1);
-        double yMax = y2[maxIndex2];
+		int i0 = (int)Math.round((downLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
+		int i1 = (int)Math.round((upLimit2 - downLimit1) / (upLimit1 - downLimit1) * nBins);
+		gaussI0 = i0;
+		double[] y2 = new double[i1 - i0];
+		System.arraycopy(y1, i0, y2, 0, i1 - i0);
+		int maxIndex2 = ReflectogramMath.getArrayMaxIndex(y2, 0, y2.length - 1);
+		double yMax = y2[maxIndex2];
 
-        grid_shift_x = downLimit1;
-        Kx = (upLimit1 - downLimit1) / nBins;
-        Ky = 1;
+		grid_shift_x = downLimit1;
+		Kx = (upLimit1 - downLimit1) / nBins;
+		Ky = 1;
 
 		init(y1, deltaX);
 //        long t0 = System.currentTimeMillis();
-        double[] fitResultingParams = new double[3];
+		double[] fitResultingParams = new double[3];
 		gauss = CoreAnalysisManager.calcGaussian(y2, maxIndex2, fitResultingParams); // XXX: takes about 98% of updateHistogrammData execution time
 //        long t1 = System.currentTimeMillis();
-        int maxIndexFitted = (int)Math.round(fitResultingParams[0]);
+		int maxIndexFitted = (int)Math.round(fitResultingParams[0]);
 		threshold = CoreAnalysisManager.calcThresholdCurve(y1,
-                maxIndexFitted + i0);
+				maxIndexFitted + i0);
 //        long t2 = System.currentTimeMillis();
 //        System.out.println("dt hist: gauss " + (t1-t0) + ", thr " + (t2-t1));
 		for (int i = 0; i < y1.length; i++)
 			y1[i] /= yMax;
-        for (int i = 0; i < y2.length; i++)
+		for (int i = 0; i < y2.length; i++)
 			gauss[i] /= yMax;
-        maxY = 1;
-        minY = 0;
+		maxY = 1;
+		minY = 0;
 	}
 }

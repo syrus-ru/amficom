@@ -172,16 +172,16 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 
 		defaults.put(AnalysisResourceKeys.COLOR_PRIMARY_TRACE, Color.BLUE);
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED, Color.MAGENTA);
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW, Color.RED);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW_SELECTED, Color.MAGENTA);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_NEW, Color.RED);
 
 		Color alarm = new Color(255,120,120);
 		Color alarmSelection = new Color(255,0,0);
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_ALARM, alarm);
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED, alarmSelection);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_ALARM, alarm);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_ALARM_SELECTED, alarmSelection);
 
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED, Color.GREEN); // @todo: find a better color
-        defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOST, Color.GREEN);
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOST_SELECTED, Color.GREEN); // @todo: find a better color
+		defaults.put(AnalysisResourceKeys.COLOR_EVENTS_LOST, Color.GREEN);
 
 		Color lossChanged = new Color(224,120,40);
 		Color lossChangedSelection = new Color(160,96,0);

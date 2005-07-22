@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.16 2005/06/30 10:58:00 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.17 2005/07/22 06:56:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/06/30 10:58:00 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/22 06:56:50 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -36,9 +36,9 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 			1.3 //коэфф. запаса для шума
 	);
 
-    public static AnalysisParameters getDefaultAPClone() {
-        return (AnalysisParameters)defaultAP.clone();
-    }
+	public static AnalysisParameters getDefaultAPClone() {
+		return (AnalysisParameters)defaultAP.clone();
+	}
 
 	public ClientAnalysisManager() {
 		AnalysisParameters minuitParams = null;
@@ -59,7 +59,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
 		Heap.setMinuitInitialParams((AnalysisParameters)minuitParams.clone());
-        Heap.notifyAnalysisParametersUpdated();
+		Heap.notifyAnalysisParametersUpdated();
 	}
 
 	public void saveIni() {

@@ -44,7 +44,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	ApplicationContext aContext;
-    private boolean analysisParametersUpdatedHere = false;
+	private boolean analysisParametersUpdatedHere = false;
 
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
@@ -66,7 +66,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 	{
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
-        Heap.addAnalysisParametersListener(this);
+		Heap.addAnalysisParametersListener(this);
 	}
 
 	public String getReportTitle()
@@ -284,9 +284,9 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 	}
 
-    public void analysisParametersUpdated() {
-        if (analysisParametersUpdatedHere)
-            return;
-        setValues(Heap.getMinuitAnalysisParams());
-    }
+	public void analysisParametersUpdated() {
+		if (analysisParametersUpdatedHere)
+			return;
+		setValues(Heap.getMinuitAnalysisParams());
+	}
 }

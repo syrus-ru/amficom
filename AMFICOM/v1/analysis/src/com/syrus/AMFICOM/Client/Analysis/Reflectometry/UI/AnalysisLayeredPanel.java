@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 public class AnalysisLayeredPanel
 extends TraceEventsLayeredPanel
 implements CurrentEventChangeListener,
-    	PrimaryRefAnalysisListener, RefMismatchListener
+		PrimaryRefAnalysisListener, RefMismatchListener
 {
 	public static final long LOSS_ANALYSIS = 0x00000001;
 	public static final long REFLECTION_ANALYSIS = 0x00000010;
@@ -34,7 +34,7 @@ implements CurrentEventChangeListener,
 	{
 		super(dispatcher);
 		Heap.addCurrentEventChangeListener(this);
-        Heap.addPrimaryRefAnalysisListener(this);
+		Heap.addPrimaryRefAnalysisListener(this);
 		Heap.addRefMismatchListener(this);
 	}
 
@@ -127,24 +127,24 @@ implements CurrentEventChangeListener,
 		}
 	}
 
-    public void primaryRefAnalysisCUpdated() {
-        for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-        {
-            SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-            if (panel instanceof AnalysisPanel)
-            {
-                {
-                    ((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
-                    ((AnalysisPanel)panel).updMarkers();
-                    jLayeredPane.repaint();
-                }
-            }
-        }
-    }
+	public void primaryRefAnalysisCUpdated() {
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				{
+					((AnalysisPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+					((AnalysisPanel)panel).updMarkers();
+					jLayeredPane.repaint();
+				}
+			}
+		}
+	}
 
-    public void primaryRefAnalysisRemoved() {
-        // do nothing. AnalysisPanel will be removed when bsHashRemoved comes
-    }
+	public void primaryRefAnalysisRemoved() {
+		// do nothing. AnalysisPanel will be removed when bsHashRemoved comes
+	}
 
 	private void updRefMismatch() {
 		ReflectogramMismatch alarm = Heap.getRefMismatch();

@@ -139,10 +139,9 @@ public class AnalysisUtil
 		 */
 
 		ParameterSet criteriaSet = ms.getCriteriaSet();
-		if (criteriaSet != null)
-        {
-		    setParamsFromCriteriaSet(criteriaSet);
-        }
+		if (criteriaSet != null) {
+			setParamsFromCriteriaSet(criteriaSet);
+		}
 //      else
 //      {
 //          criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
@@ -174,11 +173,11 @@ public class AnalysisUtil
 					readDataStreamableFromBA(params[i].getValue(),
 							Etalon.getDSReader());
 			}
-            else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
-            {
-                etalonBS = new BellcoreReader().getData(params[i].getValue());
-                etalonBS.title = "etalon (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // FIXME: generate etalon name some other way
-            }
+			else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
+			{
+				etalonBS = new BellcoreReader().getData(params[i].getValue());
+				etalonBS.title = "etalon (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // FIXME: generate etalon name some other way
+			}
 		}
 		if (etalonObj == null || etalonBS == null) {
 			System.err.println("Malformed etalon: "
@@ -193,13 +192,13 @@ public class AnalysisUtil
 
 	public static ParameterSet createCriteriaSet(Identifier userId,
 			java.util.Set<Identifier> meIds)
-    throws ApplicationException
+	throws ApplicationException
 	{
 		AnalysisParameters analysisParams = Heap.getMinuitAnalysisParams();
 		if (analysisParams == null)
 			analysisParams = Heap.getMinuitDefaultParams();
 
-        Parameter[] params = new Parameter[1];
+		Parameter[] params = new Parameter[1];
 
 		{
 			ParameterType ptype = getParameterType(
@@ -247,26 +246,26 @@ public class AnalysisUtil
 	}
 
 	public static void setParamsFromCriteriaSet(ParameterSet criteriaSet)
-    throws DataFormatException
+	throws DataFormatException
 	{
 		AnalysisParameters analysisParams = null;
-        Parameter[] params = criteriaSet.getParameters();
-        for (int i = 0; i < params.length; i++)
-        {
-            ParameterType p = (ParameterType)params[i].getType();
-            if (p.getCodename().equals(DADARA_CRITERIA))
-        analysisParams = (AnalysisParameters)
-        	DataStreamableUtil.readDataStreamableFromBA(
-        		params[i].getValue(),
-        		AnalysisParameters.getReader());
-        }
-        if (analysisParams == null)
-        throw new DataFormatException(
-                "No" + DADARA_CRITERIA);
+		Parameter[] params = criteriaSet.getParameters();
+		for (int i = 0; i < params.length; i++)
+		{
+			ParameterType p = (ParameterType)params[i].getType();
+			if (p.getCodename().equals(DADARA_CRITERIA))
+				analysisParams = (AnalysisParameters)
+					DataStreamableUtil.readDataStreamableFromBA(
+							params[i].getValue(),
+							AnalysisParameters.getReader());
+		}
+		if (analysisParams == null)
+		throw new DataFormatException(
+				"No" + DADARA_CRITERIA);
 		Heap.setMinuitAnalysisParams(
 			(AnalysisParameters)analysisParams.clone());
 		Heap.setMinuitInitialParams(analysisParams);
-        Heap.notifyAnalysisParametersUpdated();
+		Heap.notifyAnalysisParametersUpdated();
 	}
 
 	/**
@@ -304,13 +303,13 @@ public class AnalysisUtil
 		switch(eventType)
 		{
 		case SimpleReflectogramEvent.CONNECTOR:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
+			eventTypeName = LangModelAnalyse.getString("eventTypeReflective");
 			break;
 		case SimpleReflectogramEvent.DEADZONE:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeInitiate");
+			eventTypeName = LangModelAnalyse.getString("eventTypeInitiate");
 			break;
 		case SimpleReflectogramEvent.ENDOFTRACE:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeTerminate");
+			eventTypeName = LangModelAnalyse.getString("eventTypeTerminate");
 			break;
 		case SimpleReflectogramEvent.GAIN:
 			eventTypeName = LangModelAnalyse.getString("eventTypeGain");
@@ -319,14 +318,14 @@ public class AnalysisUtil
 			eventTypeName = LangModelAnalyse.getString("eventTypeLoss");
 			break;
 		case SimpleReflectogramEvent.LINEAR:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeLinear");
+			eventTypeName = LangModelAnalyse.getString("eventTypeLinear");
 			break;
 		case SimpleReflectogramEvent.NOTIDENTIFIED:
-		    eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
+			eventTypeName = LangModelAnalyse.getString("eventTypeNonIdentified");
 			break;
 		//case SimpleReflectogramEvent.RESERVED:
 		default:
-		    eventTypeName = LangModelAnalyse.getString("dash");
+			eventTypeName = LangModelAnalyse.getString("dash");
 			break;
 		}
 		return eventTypeName;

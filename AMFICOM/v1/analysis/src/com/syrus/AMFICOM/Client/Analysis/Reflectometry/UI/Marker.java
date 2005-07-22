@@ -27,10 +27,10 @@ public class Marker
 		}
 	}
 
-    public int getPos()
-    {
-        return pos;
-    }
+	public int getPos()
+	{
+		return pos;
+	}
 	public Identifier getId()
 	{
 		return id;

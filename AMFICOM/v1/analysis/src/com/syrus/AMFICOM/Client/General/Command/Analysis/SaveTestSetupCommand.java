@@ -108,11 +108,11 @@ public class SaveTestSetupCommand extends AbstractCommand
 					name,
 					msTest.getMeasurementDuration(),
 					msTest.getMonitoredElementIds(),
-                    msTest.getMeasurementTypeIds());
+					msTest.getMeasurementTypeIds());
 			StorableObjectPool.putStorableObject(measurementSetup);
 		} catch (CreateObjectException e)
 		{
-            GUIUtil.showCreateObjectProblemError();
+			GUIUtil.showCreateObjectProblemError();
 			return false;
 		} catch(IllegalObjectEntityException e)
 		{
@@ -128,8 +128,8 @@ public class SaveTestSetupCommand extends AbstractCommand
 		try
 		{
 			StorableObjectPool.flushGroup(
-                    ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
-                    true);
+					ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
+					true);
 		} catch(ApplicationException ex)
 		{ // FIXME: exceptions: process exception
 		}
