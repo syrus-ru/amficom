@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.8 2005/07/22 06:56:49 saa Exp $
+ * $Id: GUIUtil.java,v 1.9 2005/07/22 08:33:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/07/22 06:56:49 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/22 08:33:30 $
  * @module
  */
 public class GUIUtil
@@ -33,6 +33,12 @@ public class GUIUtil
 	private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
 
 	public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
+
+	public static final String MSG_ERROR_NO_ONE_RESULT_HAS_TRACE = "errorResultHasNoTrace";
+	public static final String MSG_WARNING_SOME_RESULTS_HAVE_NO_TRACE = "warningSomeResultsHaveNoTrace";
+
+	public static final String MSG_ERROR_TRACE_ALREADY_LOADED = "errorTraceAlreadyLoaded";
+	public static final String MSG_WARNING_SOME_TRACES_ARE_ALREADY_LOADED = "warningSomeTracesAlreadyLoaded";
 
 	private GUIUtil () {
 		// non-instantiable
@@ -51,6 +57,15 @@ public class GUIUtil
 			Environment.getActiveWindow(),
 			LangModelAnalyse.getString(codestring),
 			LangModelAnalyse.getString("error"),
+			JOptionPane.OK_OPTION);
+	}
+
+	public static void showWarningMessage(String codestring)
+	{
+		JOptionPane.showMessageDialog(
+			Environment.getActiveWindow(),
+			LangModelAnalyse.getString(codestring),
+			LangModelAnalyse.getString("warning"),
 			JOptionPane.OK_OPTION);
 	}
 
