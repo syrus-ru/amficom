@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.102 2005/07/19 08:20:46 peskovsky Exp $
+ * $Id: LogicalNetLayer.java,v 1.103 2005/07/22 09:05:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -73,8 +73,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.102 $, $Date: 2005/07/19 08:20:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.103 $, $Date: 2005/07/22 09:05:33 $
  * @module mapviewclient_v2
  */
 public class LogicalNetLayer
@@ -1127,8 +1127,8 @@ public class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.102 $, $Date: 2005/07/19 08:20:46 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.103 $, $Date: 2005/07/22 09:05:33 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1242,7 +1242,7 @@ public class LogicalNetLayer
 				fillOptimizationSets(cablePath, allNodeLinks, nodes, nodeLinks);
 				
 				CableController controller = (CableController )
-				getMapViewController().getController(cablePath);
+						getMapViewController().getController(cablePath);
 				calculateVisualElements(
 						nodes, 
 						nodeLinks,
@@ -1376,7 +1376,7 @@ public class LogicalNetLayer
 
 			while(startRecursionNode != null) {
 				if (! nodesCalculated.get(startRecursionNode).booleanValue()) {
-						pullVisualLinksFromNode1(
+						pullVisualLinksFromNode(
 								startRecursionNode, 
 								startRecursionNode,
 								null, 
@@ -1414,7 +1414,7 @@ public class LogicalNetLayer
 	 * @param stroke 
 	 * @param color 
 	 */
-	private void pullVisualLinksFromNode1(
+	private void pullVisualLinksFromNode(
 			AbstractNode nodeToPullFrom,
 			AbstractNode lastNode, 
 			NodeLink incomingLink,
@@ -1431,10 +1431,8 @@ public class LogicalNetLayer
 
 		if (incomingLink == null)
 			nodeProcessed = lastNode;
-		else if (incomingLink.getStartNode().equals(lastNode))
-			nodeProcessed = incomingLink.getEndNode();
-		else if (incomingLink.getEndNode().equals(lastNode))
-			nodeProcessed = incomingLink.getStartNode();
+		else
+			nodeProcessed = incomingLink.getOtherNode(lastNode);
 
 		if (nodeProcessed == null)
 			throw new AssertionError(
@@ -1447,15 +1445,23 @@ public class LogicalNetLayer
 				|| allLinksForNodeProcessed.size() == 0) {
 			//Это одиночный узел (без связей). Он отображается всегда.
 			this.visualElements.add(nodeProcessed);
+			//Отмечаем в таблице, что узел обработан. 
+			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
 			return;
 		}
 
-		if (	nodesCalculated.get(nodeProcessed).booleanValue()
-			||	((allLinksForNodeProcessed.size() == 1 && incomingLink != null))) {
+		if (nodesCalculated.get(nodeProcessed).booleanValue()
+			||	(allLinksForNodeProcessed.size() == 1 
+					&& allLinksForNodeProcessed.contains(incomingLink)) ) {
 			long t1 = System.currentTimeMillis();
 			//Первое условие останова - данный узел уже рассматривался или
 			//является конечным в цепочке.
 			//Создаём элемент отображения и выходим.
+
+			//Отмечаем в таблице, что узел обработан - для случая конечного
+			//узла в цепочке.			
+			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
+			
 			VisualMapElement visualMapElement;
 			if (lastNode == nodeToPullFrom) {
 				//Если последний "натягиваемый" отображаемый элемент состоит из одного
@@ -1491,28 +1497,17 @@ public class LogicalNetLayer
 		long t6 = System.currentTimeMillis();
 		MapViewController.addTime5(t6 - t5);
 
-		SiteNodeType nodeType = null;
-		if (nodeProcessed instanceof SiteNode)
+		if (distance >= MINIMUM_SCREEN_LENGTH)
 		{
-			SiteNode sNode = (SiteNode)nodeProcessed;
-			nodeType = (SiteNodeType)sNode.getType();
-		}
-		
-		if (	(distance >= MINIMUM_SCREEN_LENGTH)
-			||	((allLinksForNodeProcessed.size() > 2) && incomingLink != null)
-			||	(	(nodeType != null)
-				&&	(nodeType.equals(SiteNodeTypeSort._BUILDING)
-					||	nodeType.equals(SiteNodeTypeSort._UNBOUND)
-					||	nodeType.equals(SiteNodeTypeSort._ATS)))) {
-			//Второе условие останова - рекурсия останавливается, но последний
-			//узел цепочки ставится во фронт волны. Это происходит если мы
-			//получили достаточно длинный сегмент, наткнулись на узел с развилкой или
-			//узел типа, не подлежащего оптимизации.
+			//Второе условие останова - получили цепочку длиннее критической
+			//длины - рекурсия останавливается, но ПРЕДПОСЛЕДНИЙ
+			//узел цепочки ставится во фронт волны.
 			long t1 = System.currentTimeMillis();
 			
 			VisualMapElement visualMapElement;
+			AbstractNode lastVMENode;
 			if (lastNode == nodeToPullFrom) {
-				//Если последний "натягиваемый" отображаемый элемент состоит из одного
+				//Если "натягиваемый" отображаемый элемент состоит из одного
 				//линка - его и отображаем
 				if(pullAttributesFromController) {
 					NodeLinkController controller = (NodeLinkController )getMapViewController().getController(incomingLink);
@@ -1520,41 +1515,119 @@ public class LogicalNetLayer
 				}
 				else
 					visualMapElement = new VisualMapElement(incomingLink, color, stroke);
+				lastVMENode = nodeProcessed;
 			}
 			else {
-				visualMapElement = new VisualMapElement(nodeToPullFrom, nodeProcessed, color, stroke);
+				//В обратном случае - создаём отображаемый элемент до
+				//предыдущего узла
+				
+				//Если в основе этого элемента отображения таки один элемент - на основе его и создаём
+				NodeLink linkBetween = null; 
+				for (NodeLink outLink : this.linksForNodes.get(nodeToPullFrom))
+				{
+					if (!nodeLinksCalculated.get(outLink))
+						continue;
+					
+					if (	outLink.getStartNode().equals(lastNode)
+						||	outLink.getEndNode().equals(lastNode))
+						linkBetween = outLink;
+				}
+				
+				if (linkBetween != null)
+				{
+					if(pullAttributesFromController) {
+						NodeLinkController controller = (NodeLinkController )getMapViewController().getController(linkBetween);
+						visualMapElement = new VisualMapElement(linkBetween, controller.getColor(linkBetween), controller.getStroke(linkBetween));
+					}
+					else
+						visualMapElement = new VisualMapElement(linkBetween, color, stroke);
+				}
+				else
+					visualMapElement = new VisualMapElement(nodeToPullFrom, lastNode, color, stroke);
+				lastVMENode = lastNode;	
+
+				//Помечаем в таблице предыдущий узел и линк, по которому
+				// мы пришли от него к текущему узлу, как необработанные. 
+				nodesCalculated.put(lastVMENode, Boolean.FALSE);
+				nodeLinksCalculated.put(incomingLink, Boolean.FALSE);			
 			}
+			
 			this.visualElements.add(visualMapElement);
 			this.visualElements.add(nodeToPullFrom);
-			this.visualElements.add(nodeProcessed);
+			this.visualElements.add(lastVMENode);
 			long t2 = System.currentTimeMillis();
 			MapViewController.addTime4(t2 - t1);
-			frontedge.add(nodeProcessed);
-		} else {
-			//Тянем элемент отображения дальше. В случае ветвления - на более поздних
-			//этапах для каждой ветви будет создан отдельный элемент отображения (довольно
-			//длинный), начинающийся в том узле из которого мы пришли на этот уровень
-			//рекурсии
-			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
-				//Исключаем из списка линк, по которому мы пришли в данный узел
-				if (!outgoingLink.equals(incomingLink))		
-					if (! nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-						nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
-						pullVisualLinksFromNode1(
-								nodeToPullFrom, 
-								nodeProcessed,
-								outgoingLink, 
-								nodesCalculated, 
-								nodeLinksCalculated,
-								frontedge,
-								map,
-								color,
-								stroke,
-								pullAttributesFromController);
+			
+			frontedge.add(lastVMENode);
+			return;
+		}
+
+		//Определяем тип - если мы имеем дело с SiteNode
+		SiteNodeType nodeType = null;
+		if (nodeProcessed instanceof SiteNode)
+		{
+			SiteNode sNode = (SiteNode)nodeProcessed;
+			nodeType = (SiteNodeType)sNode.getType();
+		}
+		
+		if (	(incomingLink != null)
+				&&	(	(allLinksForNodeProcessed.size() > 2)
+					||	(	(nodeType != null)
+						&&	(nodeType.equals(SiteNodeTypeSort._BUILDING)
+							||	nodeType.equals(SiteNodeTypeSort._UNBOUND)
+							||	nodeType.equals(SiteNodeTypeSort._ATS))))) {
+				//Третье условие останова - наткнулись на узел с развилкой или
+				//узел типа, не подлежащего оптимизации, - рекурсия останавливается,
+				//но ПОСЛЕДНИЙ узел цепочки ставится во фронт волны.
+				
+				long t1 = System.currentTimeMillis();
+				
+				VisualMapElement visualMapElement;
+				if (lastNode == nodeToPullFrom) {
+					//Если последний "натягиваемый" отображаемый элемент состоит из одного
+					//линка - его и отображаем
+					if(pullAttributesFromController) {
+						NodeLinkController controller = (NodeLinkController )getMapViewController().getController(incomingLink);
+						visualMapElement = new VisualMapElement(incomingLink, controller.getColor(incomingLink), controller.getStroke(incomingLink));
+					}
+					else
+						visualMapElement = new VisualMapElement(incomingLink, color, stroke);
 				}
+				else {
+					visualMapElement = new VisualMapElement(nodeToPullFrom, nodeProcessed, color, stroke);
+				}
+				this.visualElements.add(visualMapElement);
+				this.visualElements.add(nodeToPullFrom);
+				this.visualElements.add(nodeProcessed);
+				long t2 = System.currentTimeMillis();
+				MapViewController.addTime4(t2 - t1);
+				frontedge.add(nodeProcessed);
+				return;
+		}
+
+		//Отмечаем в таблице, что узел обработан. 
+		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
+		
+		//Тянем элемент отображения дальше. Случай ветвления рассмотрен выше
+		//(третье условие останова). Поэтому вызов рекурсивного метода из этого
+		//цикла произойдёт единожды.
+		for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+			//Исключаем из списка линк, по которому мы пришли в данный узел
+			if (!outgoingLink.equals(incomingLink)
+					&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+				nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
+				pullVisualLinksFromNode(
+						nodeToPullFrom, 
+						nodeProcessed,
+						outgoingLink, 
+						nodesCalculated, 
+						nodeLinksCalculated,
+						frontedge,
+						map,
+						color,
+						stroke,
+						pullAttributesFromController);
 			}
-			//Отмечаем в таблице, что узел обработан. 
-			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
 		}
 	}
 
