@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.10 2005/07/18 11:29:31 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.11 2005/07/22 06:39:50 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/07/18 11:29:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/22 06:39:50 $
  * @module
  */
 public class AnalysisParameters
@@ -37,45 +37,45 @@ implements DataStreamable, Cloneable
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
 		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
 
-    /**
-     * Определяет допустимость набора параметров.
-     * @return true, если набор допустим, false, если недопустим
-     */
-    public boolean isCorrect() {
-    	// проверяем основные параметры
-        final double MIN_MIN_THRESHOLD = 0.0001; // FIXME: debug: MIN_MIN_THRESHOLD should be >= 0.001
+	/**
+	 * Определяет допустимость набора параметров.
+	 * @return true, если набор допустим, false, если недопустим
+	 */
+	public boolean isCorrect() {
+		// проверяем основные параметры
+		final double MIN_MIN_THRESHOLD = 0.0001; // FIXME: debug: MIN_MIN_THRESHOLD should be >= 0.001
 		if (getMinThreshold() < MIN_MIN_THRESHOLD)
 			return false;
 		if (getMinSplice() < getMinThreshold())
 			return false;
 		if (getMinConnector() < getMinSplice())
 			return false;
-        if (getMinEnd() < getMinConnector())
-            return false;
+		if (getMinEnd() < getMinConnector())
+			return false;
 
-        // проверяем дополнительные параметры
-        if (tau2nrs < 0)
-        	return false;
-        if (nrsMin < 0)
-        	return false;
-        if (tau2nrs == 0 && nrsMin == 0)
-        	return false;
-        if (rsaCrit < 0)
-        	return false;
-        if (nrs2rsaSmall <= 0)
-        	return false;
-        if (nrs2rsaBig < nrs2rsaSmall)
-        	return false;
-        if (l2rsaBig < 0)
-        	return false;
+		// проверяем дополнительные параметры
+		if (tau2nrs < 0)
+			return false;
+		if (nrsMin < 0)
+			return false;
+		if (tau2nrs == 0 && nrsMin == 0)
+			return false;
+		if (rsaCrit < 0)
+			return false;
+		if (nrs2rsaSmall <= 0)
+			return false;
+		if (nrs2rsaBig < nrs2rsaSmall)
+			return false;
+		if (l2rsaBig < 0)
+			return false;
 
-        if (scaleFactor < 1.0)
-        	return false;
-        if (scaleFactor > 10) // XXX
-        	return false;
+		if (scaleFactor < 1.0)
+			return false;
+		if (scaleFactor > 10) // XXX
+			return false;
 
-        return true;
-    }
+		return true;
+	}
 
 	public double getMinThreshold() {
 		return param[0];
@@ -113,12 +113,12 @@ implements DataStreamable, Cloneable
 		param[4] = v;
 	}
 
-    /**
-     * @return список рекомендуемых значений noiseFactor
-     */
-    public static double[] getRecommendedNoiseFactors() {
-        return RECOMMENDED_NOISE_FACTORS.clone();
-    }
+	/**
+	 * @return список рекомендуемых значений noiseFactor
+	 */
+	public static double[] getRecommendedNoiseFactors() {
+		return RECOMMENDED_NOISE_FACTORS.clone();
+	}
 
 	public AnalysisParameters(double minThreshold,
 			double minSplice,
@@ -145,41 +145,41 @@ implements DataStreamable, Cloneable
 		param[4] = dis.readDouble();
 	}
 
-    // returns true if all fields were initialized,
-    // false otherwise.
-    private boolean setParamsFromString(String val) {
-        int i = 0;
-        int bind = -1;
-        int ind = val.indexOf(";");
-        while ((ind != -1) && (i < param.length)) {
-            param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
-            bind = ind;
-            ind = val.indexOf(";", bind + 1);
-        }
-        return i == param.length;
-    }
-
-    /**
-     * creates via string of parameters using the default values
-     * @param val text representation of parameters
-     * @param defaults default values
-     */
-	public AnalysisParameters(String val, AnalysisParameters defaults) {
-		param = defaults.param.clone();
-        setParamsFromString(val);
+	// returns true if all fields were initialized,
+	// false otherwise.
+	private boolean setParamsFromString(String val) {
+		int i = 0;
+		int bind = -1;
+		int ind = val.indexOf(";");
+		while ((ind != -1) && (i < param.length)) {
+			param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
+			bind = ind;
+			ind = val.indexOf(";", bind + 1);
+		}
+		return i == param.length;
 	}
 
-    /**
-     * creates via string of parameters
-     * @param val text representation of parameters
-     * @throws IllegalArgumentException if input string is malformed
-     */
-    public AnalysisParameters(String val) {
-        param = new double[5];
-        if (!setParamsFromString(val))
-            throw new IllegalArgumentException(
-                    "couldn't parse analysis parameters string");
-    }
+	/**
+	 * creates via string of parameters using the default values
+	 * @param val text representation of parameters
+	 * @param defaults default values
+	 */
+	public AnalysisParameters(String val, AnalysisParameters defaults) {
+		param = defaults.param.clone();
+		setParamsFromString(val);
+	}
+
+	/**
+	 * creates via string of parameters
+	 * @param val text representation of parameters
+	 * @throws IllegalArgumentException if input string is malformed
+	 */
+	public AnalysisParameters(String val) {
+		param = new double[5];
+		if (!setParamsFromString(val))
+			throw new IllegalArgumentException(
+					"couldn't parse analysis parameters string");
+	}
 
 	@Override
 	public String toString() {

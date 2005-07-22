@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.91 2005/07/21 13:20:11 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.92 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.91 $, $Date: 2005/07/21 13:20:11 $
+ * @version $Revision: 1.92 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class ModelTraceManager
@@ -36,61 +36,61 @@ implements DataStreamable, Cloneable
 	protected ThreshDX[] tDX; // список DX-порогов
 	protected ThreshDY[] tDY; // список DY-порогов
 
-    // threshold curves cache
-    // cache for thresholds curves, cached objects are arary elements
-    private ModelTrace[] thMTCache = null;
+	// threshold curves cache
+	// cache for thresholds curves, cached objects are arary elements
+	private ModelTrace[] thMTCache = null;
 
-    // threshold event cache for getEventRangeOnThresholdCurve
-    // cached objects are array elements
-    protected int thSRECacheEventId;
-    protected SimpleReflectogramEvent[] thSRECache = null;
+	// threshold event cache for getEventRangeOnThresholdCurve
+	// cached objects are array elements
+	protected int thSRECacheEventId;
+	protected SimpleReflectogramEvent[] thSRECache = null;
 
-    // 'single threshold mode' curve cache for getEventThresholdMTR
-    // cached object is whole array
-    protected int thSingleMTRCacheEventId;
-    protected ModelTraceRange[] thSingleMTRCache = null; 
+	// 'single threshold mode' curve cache for getEventThresholdMTR
+	// cached object is whole array
+	protected int thSingleMTRCacheEventId;
+	protected ModelTraceRange[] thSingleMTRCache = null; 
 
 	private static DataStreamable.Reader dsReader;
 
-    @Override
+	@Override
 	public Object clone()
-    throws CloneNotSupportedException
-    {
-        ModelTraceManager ret = (ModelTraceManager)super.clone();
-        // remove cache data
-        ret.thMTCache = null;
-        // copy thresholds
-        Thresh[] tLout = this.tL.clone(); // clone the holder
-        for (int i = 0; i < tLout.length; i++)
-            tLout[i] = (Thresh)tLout[i].clone(); // clone each threshold in array
-        ret.setTL(tLout);
-        // no need to clone mtae
-        return ret;
-    }
+	throws CloneNotSupportedException
+	{
+		ModelTraceManager ret = (ModelTraceManager)super.clone();
+		// remove cache data
+		ret.thMTCache = null;
+		// copy thresholds
+		Thresh[] tLout = this.tL.clone(); // clone the holder
+		for (int i = 0; i < tLout.length; i++)
+			tLout[i] = (Thresh)tLout[i].clone(); // clone each threshold in array
+		ret.setTL(tLout);
+		// no need to clone mtae
+		return ret;
+	}
 
-    // очищает все записи кэша
+	// очищает все записи кэша
 	protected void invalidateCache()
 	{
 		thMTCache = null;
-        thSingleMTRCache = null;
-        thSRECache = null;
+		thSingleMTRCache = null;
+		thSRECache = null;
 	}
 
-    // очищает записи кэша, зависящие от ключа key,
-    // а также подготавливает кэш пороговых кривых
+	// очищает записи кэша, зависящие от ключа key,
+	// а также подготавливает кэш пороговых кривых
 	protected void emptyCacheEntryByKey(int key)
 	{
-        // это надо обязательно создать
+		// это надо обязательно создать
 		if (thMTCache == null)
 			thMTCache = new ModelTrace[] { null, null, null, null };
 		thMTCache[key] = null;
 
-        // это создавать не обязательно (достаточно просто очистить)
-        if (thSRECache != null)
-            thSRECache[key] = null;
+		// это создавать не обязательно (достаточно просто очистить)
+		if (thSRECache != null)
+			thSRECache[key] = null;
 
-        // а эта штука нужна только целиком - удаляем весь массив
-        thSingleMTRCache = null;
+		// а эта штука нужна только целиком - удаляем весь массив
+		thSingleMTRCache = null;
 	}
 
 	// очищает записи кэша, зависящие от ключа key в порогах
@@ -193,16 +193,16 @@ implements DataStreamable, Cloneable
 		return mtae.getMF();
 	}
 
-    /**
-     * @return etalon's simple events
-     */
+	/**
+	 * @return etalon's simple events
+	 */
 	protected SimpleReflectogramEventImpl[] getSE()
 	{
 		return mtae.getRSE();
 	}
 
-    // is 'protected' to be accessible from DSReader
-    protected void setTL(Thresh tl[])
+	// is 'protected' to be accessible from DSReader
+	protected void setTL(Thresh tl[])
 	{
 		tL = tl;
 		// формируем отдельно списки tDX и tDY
@@ -234,14 +234,14 @@ implements DataStreamable, Cloneable
 	public ModelTraceManager(ModelTraceAndEventsImpl mtae)
 	{
 		this.mtae = mtae;
-        setTL(createTH());
+		setTL(createTH());
 	}
 
-    protected ModelTraceManager(ModelTraceAndEventsImpl mtae, Thresh[] tl)
-    {
-        this.mtae = mtae;
-        setTL(tl);
-    }
+	protected ModelTraceManager(ModelTraceAndEventsImpl mtae, Thresh[] tl)
+	{
+		this.mtae = mtae;
+		setTL(tl);
+	}
 
 	/**
 	 * Определяет значение порога в данной точке.
@@ -288,17 +288,17 @@ implements DataStreamable, Cloneable
 			ModelTraceManager.this.invalidateCacheByKey(key);
 			if (type == TYPE_DXF || type == TYPE_DXT)
 			{
-                // convert meters to samples
-                if (mtae.getDeltaX() > 0)
-                    value /= mtae.getDeltaX();
-                // round in some (user-convenient?) way
-                if (value > 0 && value < 1)
-                    value = 1;
-                if (value < 0 && value > -1)
-                    value = -1;
-                value = Math.round(value);
+				// convert meters to samples
+				if (mtae.getDeltaX() > 0)
+					value /= mtae.getDeltaX();
+				// round in some (user-convenient?) way
+				if (value > 0 && value < 1)
+					value = 1;
+				if (value < 0 && value > -1)
+					value = -1;
+				value = Math.round(value);
 				// convert to int, limit and set
-                int val = (int)value;
+				int val = (int)value;
 				if (val > MAX_DX)
 					val = MAX_DX;
 				if (val < MIN_DX)
@@ -336,27 +336,27 @@ implements DataStreamable, Cloneable
 		}
 	}
 
-    public class ThreshEditorWithDefaultMark
-    extends ThreshEditor {
-        public boolean isMarked;
-        protected ThreshEditorWithDefaultMark(int type, Thresh th,
-                boolean isMarked) {
-            super(type, th);
-            this.isMarked = isMarked;
-        }
-    }
+	public class ThreshEditorWithDefaultMark
+	extends ThreshEditor {
+		public boolean isMarked;
+		protected ThreshEditorWithDefaultMark(int type, Thresh th,
+				boolean isMarked) {
+			super(type, th);
+			this.isMarked = isMarked;
+		}
+	}
 
-    /**
-     * @param nEvent номер события
-     * @return массив редакторов всех порогов для данного события
-     */
+	/**
+	 * @param nEvent номер события
+	 * @return массив редакторов всех порогов для данного события
+	 */
 	public ThreshEditorWithDefaultMark[] getThreshEditors(int nEvent)
 	{
 		//return re[nEvents].getThreshold();
 
 		Thresh[] tlist = getAllThreshByNEvent(nEvent);
 		ArrayList<ThreshEditorWithDefaultMark> ret = new ArrayList<ThreshEditorWithDefaultMark>();
-        Thresh defaultTh = getDefaultThreshByNEvent(nEvent);
+		Thresh defaultTh = getDefaultThreshByNEvent(nEvent);
 
 		for (int i = 0; i < tlist.length; i++)
 		{
@@ -368,28 +368,28 @@ implements DataStreamable, Cloneable
 						? ThreshEditor.TYPE_DXF
 						: ThreshEditor.TYPE_DXT,
 					th,
-                    th == defaultTh)); // mark if thesh object is same
+					th == defaultTh)); // mark if thesh object is same
 			}
 			if (th instanceof ThreshDY)
 			{
-                ret.add(new ThreshEditorWithDefaultMark(
-				    ((ThreshDY )th).getTypeL()
-                        ? ThreshEditor.TYPE_L
-                        : ThreshEditor.TYPE_A,
-                    th,
-                    th == defaultTh)); // mark if thesh object is same
+				ret.add(new ThreshEditorWithDefaultMark(
+					((ThreshDY )th).getTypeL()
+						? ThreshEditor.TYPE_L
+						: ThreshEditor.TYPE_A,
+					th,
+					th == defaultTh)); // mark if thesh object is same
 			}
 		}
-        return ret.toArray(new ThreshEditorWithDefaultMark[ret.size()]);
+		return ret.toArray(new ThreshEditorWithDefaultMark[ret.size()]);
 	}
 
-    // may return -1
-    public static int getDefaultThreshEditorIndex(ThreshEditorWithDefaultMark[] teds) {
-        for (int i = 0; i < teds.length; i++)
-            if (teds[i].isMarked)
-                return i;
-        return -1;
-    }
+	// may return -1
+	public static int getDefaultThreshEditorIndex(ThreshEditorWithDefaultMark[] teds) {
+		for (int i = 0; i < teds.length; i++)
+			if (teds[i].isMarked)
+				return i;
+		return -1;
+	}
 
 	/**
 	 * Выдает модельную кривую указанного порога.
@@ -461,83 +461,83 @@ implements DataStreamable, Cloneable
 		return mtae.getTraceLength();
 	}
 
-    /**
-     * Создает набор DX-порогов, в котором "все пороги нулевые кроме порогов
-     * заданного события"
-     * @param nEvent номер заданного события
-     * @return набор DY-порогов
-     */
-    private ThreshDX[] getSingleEventThreshDX(int nEvent) {
-        ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
-        for (int i = 0; i < tmpTDX.length; i++) {
-            tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
-                ? tDX[i]
-                : tDX[i].makeZeroedCopy();
-        }
-        return tmpTDX;
-    }
-    /**
-     * Создает набор DY-порогов аналогично
-     * {@link #getSingleEventThreshDX(int)}
-     */
-    private ThreshDY[] getSingleEventThreshDY(int nEvent) {
-        ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
-        for (int i = 0; i < tmpTDY.length; i++) {
-            tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
-                ? tDY[i]
-                : tDY[i].makeZeroedCopy();
-        }
-        return tmpTDY;
-    }
+	/**
+	 * Создает набор DX-порогов, в котором "все пороги нулевые кроме порогов
+	 * заданного события"
+	 * @param nEvent номер заданного события
+	 * @return набор DY-порогов
+	 */
+	private ThreshDX[] getSingleEventThreshDX(int nEvent) {
+		ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
+		for (int i = 0; i < tmpTDX.length; i++) {
+			tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
+				? tDX[i]
+				: tDX[i].makeZeroedCopy();
+		}
+		return tmpTDX;
+	}
+	/**
+	 * Создает набор DY-порогов аналогично
+	 * {@link #getSingleEventThreshDX(int)}
+	 */
+	private ThreshDY[] getSingleEventThreshDY(int nEvent) {
+		ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
+		for (int i = 0; i < tmpTDY.length; i++) {
+			tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
+				? tDY[i]
+				: tDY[i].makeZeroedCopy();
+		}
+		return tmpTDY;
+	}
 
-    /**
-     * Определяет все четыре пороговые кривые данного события
-     *   "как если бы не не было других порогов".
-     * <p>
-     * Note: Вычисляется довольно долго, зато кэширует результат
-     *   в пределах одного события.
-     * @param nEvent Номер события
-     * @return четыре пороговые кривые в формате ModelTraceRange,
-     *   в виде массива. В массиве возможны значения null, если соотв. порог
-     *   не проявляется.
-     */
-    public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
-        // check if the answer is already present
-        if (thSingleMTRCacheEventId == nEvent
-                && thSingleMTRCache != null)
-        {
-            //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
-            return thSingleMTRCache;
-        }
+	/**
+	 * Определяет все четыре пороговые кривые данного события
+	 *   "как если бы не не было других порогов".
+	 * <p>
+	 * Note: Вычисляется довольно долго, зато кэширует результат
+	 *   в пределах одного события.
+	 * @param nEvent Номер события
+	 * @return четыре пороговые кривые в формате ModelTraceRange,
+	 *   в виде массива. В массиве возможны значения null, если соотв. порог
+	 *   не проявляется.
+	 */
+	public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
+		// check if the answer is already present
+		if (thSingleMTRCacheEventId == nEvent
+				&& thSingleMTRCache != null)
+		{
+			//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
+			return thSingleMTRCache;
+		}
 
-        // make thresholds for 'this event only'
-        ThreshDX[] tmpTDX = getSingleEventThreshDX(nEvent);
-        ThreshDY[] tmpTDY = getSingleEventThreshDY(nEvent);
+		// make thresholds for 'this event only'
+		ThreshDX[] tmpTDX = getSingleEventThreshDX(nEvent);
+		ThreshDY[] tmpTDY = getSingleEventThreshDY(nEvent);
 
-        // init cache
-        thSingleMTRCacheEventId = nEvent;
-        thSingleMTRCache = new ModelTraceRange[] { null, null, null, null };
+		// init cache
+		thSingleMTRCacheEventId = nEvent;
+		thSingleMTRCache = new ModelTraceRange[] { null, null, null, null };
 
-        // find ranges and curves, fill cache
-        for (int key = 0; key < 4; key++)
-        {
-            SimpleReflectogramEvent sre =
-                getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY);
-            if (sre != null) {
-	            ModelFunction tmp = getMF().copy();
-	            tmp.changeByThresh(tmpTDX, tmpTDY, key);
-	            thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
-	                    sre.getBegin(),
-	                    sre.getEnd());
-            } else {
-            	thSingleMTRCache[key] = null;
-            }
-        }
+		// find ranges and curves, fill cache
+		for (int key = 0; key < 4; key++)
+		{
+			SimpleReflectogramEvent sre =
+				getEventRangeOnThresholdCurve(nEvent, key, tmpTDX, tmpTDY);
+			if (sre != null) {
+				ModelFunction tmp = getMF().copy();
+				tmp.changeByThresh(tmpTDX, tmpTDY, key);
+				thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
+						sre.getBegin(),
+						sre.getEnd());
+			} else {
+				thSingleMTRCache[key] = null;
+			}
+		}
 
-        // make a copy of resulting array for client
-        //System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
-        return thSingleMTRCache.clone();
-    }
+		// make a copy of resulting array for client
+		//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
+		return thSingleMTRCache.clone();
+	}
 
 	/**
 	 * Расширяет пороги так, чтобы покрыть указанные кривые с указанным
@@ -712,48 +712,48 @@ implements DataStreamable, Cloneable
 		
 	}
 
-    private Thresh[] getAllThreshByNEvent(int nEvent)
-    {
-        ArrayList<Thresh> al = new ArrayList<Thresh>();
-        for (int i = 0; i < this.tL.length; i++)
-        {
-            if (this.tL[i].isRelevantToNEvent(nEvent))
-                al.add(this.tL[i]);
-        }
-        return al.toArray(new Thresh[al.size()]);
-    }
-    // определяет 'порог по умолчанию' для данного события
-    // may return null
-    private Thresh getDefaultThreshByNEvent(int nEvent)
-    {
-        // пытаемся вернуть DL-порог -- для коннекторов
-        for (int i = 0; i < this.tDY.length; i++) {
-            if (this.tDY[i].isRelevantToNEvent(nEvent) && this.tDY[i].getTypeL())
-                return this.tDY[i];
-        }
-        // возвращаем любой DY-порог (самый же первый) -- для не-коннекторов  
-        for (int i = 0; i < this.tDY.length; i++) {
-            if (this.tDY[i].isRelevantToNEvent(nEvent))
-                return this.tDY[i];
-        }
-        // DY-порогов для этого события нет совсем
-        return null;
-    }
+	private Thresh[] getAllThreshByNEvent(int nEvent)
+	{
+		ArrayList<Thresh> al = new ArrayList<Thresh>();
+		for (int i = 0; i < this.tL.length; i++)
+		{
+			if (this.tL[i].isRelevantToNEvent(nEvent))
+				al.add(this.tL[i]);
+		}
+		return al.toArray(new Thresh[al.size()]);
+	}
+	// определяет 'порог по умолчанию' для данного события
+	// may return null
+	private Thresh getDefaultThreshByNEvent(int nEvent)
+	{
+		// пытаемся вернуть DL-порог -- для коннекторов
+		for (int i = 0; i < this.tDY.length; i++) {
+			if (this.tDY[i].isRelevantToNEvent(nEvent) && this.tDY[i].getTypeL())
+				return this.tDY[i];
+		}
+		// возвращаем любой DY-порог (самый же первый) -- для не-коннекторов  
+		for (int i = 0; i < this.tDY.length; i++) {
+			if (this.tDY[i].isRelevantToNEvent(nEvent))
+				return this.tDY[i];
+		}
+		// DY-порогов для этого события нет совсем
+		return null;
+	}
 
 	/**
 	 * Выдает handle для изменения значения порогов мышью на основе кооординат
-     * точки, куда "ткнул" пользователь.
+	 * точки, куда "ткнул" пользователь.
 	 * Само определяет, какой порог какого события будет изменяться.
 	 * Данная реализации содержит некоторые подстроечные параметры,
 	 * специфичные для рефлектометрии.
-     * <p>
-     * Алгоритм определения handle:
-     * <ul>
-     * <li> определяем, какие участки пороговых кривых допустимы для захвата
-     * <li> определяем ближайшую к мыши пороговую кривую и ближайшую к мыши
-     *   точку на этой кривой
-     * <li> определяем порог, соответствующей найденной точке найденной кривой
-     * </ul>
+	 * <p>
+	 * Алгоритм определения handle:
+	 * <ul>
+	 * <li> определяем, какие участки пороговых кривых допустимы для захвата
+	 * <li> определяем ближайшую к мыши пороговую кривую и ближайшую к мыши
+	 *   точку на этой кривой
+	 * <li> определяем порог, соответствующей найденной точке найденной кривой
+	 * </ul>
 	 * @param x0 модельная x-координата мыши (разверности индекса, но вещ.)
 	 * @param y0 модельная y-координата мыши (дБ)
 	 * @param xCapture радиус захвата кривой мышью по горизонтали
@@ -763,18 +763,18 @@ implements DataStreamable, Cloneable
 	 * @param button номер кнопки мыши, 0=LMB, 1=RMB.
 	 * @param nEvent номер события, которым надо ограничить захват,
 	 *    либо -1, если ограничивать не надо
-     * @param singleEventCurveMode true, если захватываются пороги,
-     *    отображенные "как если бы других порогов не было" (игнорируется
-     *    при nEvent < 0).
+	 * @param singleEventCurveMode true, если захватываются пороги,
+	 *    отображенные "как если бы других порогов не было" (игнорируется
+	 *    при nEvent < 0).
 	 * @return handle либо null
 	 */
 	public ThresholdHandle getThresholdHandle(double x0, double y0,
 			double xCapture, double yCapture, double prioFactor, int button,
 			int nEvent, boolean singleEventCurveMode)
 	{
-        // если событий нет - будем работать с полным набором порогов
-        if (nEvent < 0)
-            singleEventCurveMode = false;
+		// если событий нет - будем работать с полным набором порогов
+		if (nEvent < 0)
+			singleEventCurveMode = false;
 
 		if (xCapture <= 0.1)
 			xCapture = 0.1;  // XXX: xCapture range: min
@@ -785,47 +785,47 @@ implements DataStreamable, Cloneable
 
 		int xRange = (int )(xCapture + 1);
 
-        // определяем пороговые кривые и участки на них, в которых проводится
-        // поиск точки захвата
-        ModelTraceRange[] mtrs = null;
-        if (singleEventCurveMode)
-            mtrs = getEventThresholdMTR(nEvent);
-        else
-        {
-            mtrs = new ModelTraceRange[] { null, null, null, null };
-            for (int key = 0; key < mtrs.length; key++)
-            {
-                if (nEvent < 0)
-                    mtrs[key] = getThresholdMT(key);
-                else {
-                    SimpleReflectogramEvent range =
-                        getEventRangeOnThresholdCurve(nEvent, key);
-                    mtrs[key] =
-                        new ModelTraceRangeImplMTRSubrange(getThresholdMT(key),
-                            range.getBegin(), range.getEnd(), false);
-                }
-            }
-        }
+		// определяем пороговые кривые и участки на них, в которых проводится
+		// поиск точки захвата
+		ModelTraceRange[] mtrs = null;
+		if (singleEventCurveMode)
+			mtrs = getEventThresholdMTR(nEvent);
+		else
+		{
+			mtrs = new ModelTraceRange[] { null, null, null, null };
+			for (int key = 0; key < mtrs.length; key++)
+			{
+				if (nEvent < 0)
+					mtrs[key] = getThresholdMT(key);
+				else {
+					SimpleReflectogramEvent range =
+						getEventRangeOnThresholdCurve(nEvent, key);
+					mtrs[key] =
+						new ModelTraceRangeImplMTRSubrange(getThresholdMT(key),
+							range.getBegin(), range.getEnd(), false);
+				}
+			}
+		}
 
-        // Определяем ближайшую пороговую кривую и ближайшую точку на этой кривой
+		// Определяем ближайшую пороговую кривую и ближайшую точку на этой кривой
 		// UP2/DOWN2 takes precedence over UP1/DOWN1
 		double bestDR = 2; // наибольшее расстояние=1; 2 => еще не найдено  
 		int bestKey = 0;
 		int bestX = 0;
-        double bestY = 0;
+		double bestY = 0;
 		int[] keys = new int[] { // порядок перебора порогов
-		        Thresh.SOFT_UP, Thresh.SOFT_DOWN,
-                Thresh.HARD_UP, Thresh.HARD_DOWN }; 
+				Thresh.SOFT_UP, Thresh.SOFT_DOWN,
+				Thresh.HARD_UP, Thresh.HARD_DOWN }; 
 		for (int k = 0; k < 4; k++)
 		{
-            ModelTraceRange cmtr = mtrs[keys[k]];
-            if (cmtr == null)
-            	continue; // этой кривой нет (порог не проявляется)
-            int xL = Math.max((int)x0 - xRange, cmtr.getBegin());
-            int xR = Math.min((int)x0 + xRange, cmtr.getEnd());
-            if (xR < xL)
-                continue; // запрошенный участок не пересекается с этой пороговой кривой
-            double[] yArr = cmtr.getYArray(xL, xR - xL + 1);
+			ModelTraceRange cmtr = mtrs[keys[k]];
+			if (cmtr == null)
+				continue; // этой кривой нет (порог не проявляется)
+			int xL = Math.max((int)x0 - xRange, cmtr.getBegin());
+			int xR = Math.min((int)x0 + xRange, cmtr.getEnd());
+			if (xR < xL)
+				continue; // запрошенный участок не пересекается с этой пороговой кривой
+			double[] yArr = cmtr.getYArray(xL, xR - xL + 1);
 
 			double xScale = xCapture;
 			double yScale = yCapture;
@@ -875,125 +875,125 @@ implements DataStreamable, Cloneable
 				bestKey = keys[k];
 				bestDR = curBestDR;
 				bestX = curBestX;
-                bestY = yArr[curBestX - xL];
+				bestY = yArr[curBestX - xL];
 			}
 		}
 
 		if (bestDR > 1)
 			return null;
 
-        // теперь надо определить порог, соответствующей точке захвата
-        // для этого сначала надо определить, с каким набором порогов
-        // мы работаем - с полным, или с "как если бы были пороги только
-        // одного события".
-        ThreshDX[] tmpTDX = singleEventCurveMode
-            ? getSingleEventThreshDX(nEvent)
-            : tDX;
-        ThreshDY[] tmpTDY = singleEventCurveMode
-            ? getSingleEventThreshDY(nEvent)
-            : tDY;
+		// теперь надо определить порог, соответствующей точке захвата
+		// для этого сначала надо определить, с каким набором порогов
+		// мы работаем - с полным, или с "как если бы были пороги только
+		// одного события".
+		ThreshDX[] tmpTDX = singleEventCurveMode
+			? getSingleEventThreshDX(nEvent)
+			: tDX;
+		ThreshDY[] tmpTDY = singleEventCurveMode
+			? getSingleEventThreshDY(nEvent)
+			: tDY;
 		if (button == 0)
 		{
 			int thId = getMF().
-                findResponsibleThreshDYID(tmpTDX, tmpTDY, bestKey, bestX);
+				findResponsibleThreshDYID(tmpTDX, tmpTDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
 			ThresholdHandleDY handle =
-                new ThresholdHandleDY(thId, bestKey, bestX, bestY);
+				new ThresholdHandleDY(thId, bestKey, bestX, bestY);
 			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
 		else
 		{
 			int thId = getMF().
-                findResponsibleThreshDXID(tmpTDX, tmpTDY, bestKey, bestX);
+				findResponsibleThreshDXID(tmpTDX, tmpTDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
 			ThresholdHandleDX handle =
-                new ThresholdHandleDX(thId, bestKey, bestX, bestY);
+				new ThresholdHandleDX(thId, bestKey, bestX, bestY);
 			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
 	}
 
-    // допускает указание иных порогов, нежели текущие
+	// допускает указание иных порогов, нежели текущие
 	// возвращает null, если диапазон пуст
-    private SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent,
-            int key, ThreshDX[] threshDX, ThreshDY[] threshDY)
-    {
-        int begin = -1;
-        int end = -1;
-        int[] aX = getMF().findResponsibleThreshDXArray(threshDX, threshDY,
-                key, 0, getTraceLength() - 1);
-        int eventBegin = getSE()[nEvent].getBegin();
-        int eventEnd = getSE()[nEvent].getEnd();
-
-        // XXX: rather slow loop
-        // so, we try to increase its performance with traceLength and cache
-        int traceLength = getTraceLength();
-        boolean prevRelevant = false; // caching
-        int prevNT = -1; // caching
-        for (int i = 0; i < traceLength; i++)
-        {
-            boolean belongs;
-            if (aX[i] >= 0)
-            {
-                if (prevNT != aX[i]) // caching
-                {
-                    prevNT = aX[i];
-                    prevRelevant = tDX[prevNT].isRelevantToNEvent(nEvent);
-                }
-                belongs = prevRelevant;
-            }
-            else
-                belongs = i >= eventBegin && i <= eventEnd;
-            if (belongs)
-            {
-                end = i;
-                if (begin < 0)
-                    begin = i;
-            }
-        }
-        if (begin < 0)
-            return null;
-        return new SimpleReflectogramEventImpl(begin, end,
-                getSE()[nEvent].getEventType());
-    }
-
-    /**
-     * Хитрый алгоритм определения участка, соответствующего данному событию.
-     *   Работает относительно медленно, зато кэширует результат в пределах
-     *   одного события.
-     * @param nEvent номер события
-     * @param key номер пороговой кривой
-     * @return участок р/г в виде SimpleReflectogramEvent
-     *   с определенными begin и end.
-     */
-    public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
+	private SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent,
+			int key, ThreshDX[] threshDX, ThreshDY[] threshDY)
 	{
-        // пытаемся взять из кэша
-        if (thSRECacheEventId == nEvent && thSRECache != null
-                && thSRECache[key] != null)
-        {
-            //System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit");
-            return thSRECache[key];
-        }
-        
-        SimpleReflectogramEvent sre =
-            getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+		int begin = -1;
+		int end = -1;
+		int[] aX = getMF().findResponsibleThreshDXArray(threshDX, threshDY,
+				key, 0, getTraceLength() - 1);
+		int eventBegin = getSE()[nEvent].getBegin();
+		int eventEnd = getSE()[nEvent].getEnd();
 
-        // кладем в кэш
-        if (thSRECacheEventId != nEvent)
-            thSRECache = null;
-        if (thSRECache == null)
-            thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
-        thSRECacheEventId = nEvent;
-        thSRECache[key] = sre;
-        //System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss");
-        return sre;
-    }
+		// XXX: rather slow loop
+		// so, we try to increase its performance with traceLength and cache
+		int traceLength = getTraceLength();
+		boolean prevRelevant = false; // caching
+		int prevNT = -1; // caching
+		for (int i = 0; i < traceLength; i++)
+		{
+			boolean belongs;
+			if (aX[i] >= 0)
+			{
+				if (prevNT != aX[i]) // caching
+				{
+					prevNT = aX[i];
+					prevRelevant = tDX[prevNT].isRelevantToNEvent(nEvent);
+				}
+				belongs = prevRelevant;
+			}
+			else
+				belongs = i >= eventBegin && i <= eventEnd;
+			if (belongs)
+			{
+				end = i;
+				if (begin < 0)
+					begin = i;
+			}
+		}
+		if (begin < 0)
+			return null;
+		return new SimpleReflectogramEventImpl(begin, end,
+				getSE()[nEvent].getEventType());
+	}
 
-    private int getEventAlarmPref(int eventType) {
+	/**
+	 * Хитрый алгоритм определения участка, соответствующего данному событию.
+	 *   Работает относительно медленно, зато кэширует результат в пределах
+	 *   одного события.
+	 * @param nEvent номер события
+	 * @param key номер пороговой кривой
+	 * @return участок р/г в виде SimpleReflectogramEvent
+	 *   с определенными begin и end.
+	 */
+	public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
+	{
+		// пытаемся взять из кэша
+		if (thSRECacheEventId == nEvent && thSRECache != null
+				&& thSRECache[key] != null)
+		{
+			//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit");
+			return thSRECache[key];
+		}
+		
+		SimpleReflectogramEvent sre =
+			getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+
+		// кладем в кэш
+		if (thSRECacheEventId != nEvent)
+			thSRECache = null;
+		if (thSRECache == null)
+			thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
+		thSRECacheEventId = nEvent;
+		thSRECache[key] = sre;
+		//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss");
+		return sre;
+	}
+
+	private int getEventAlarmPref(int eventType) {
 		switch (eventType) {
 		case SimpleReflectogramEvent.DEADZONE:   // fall through
 		case SimpleReflectogramEvent.ENDOFTRACE: // fall through
@@ -1007,81 +1007,81 @@ implements DataStreamable, Cloneable
 		default:
 			return 0;
 		}
-    }
+	}
 
-    /**
-     * Определяет, какому событию скорее всего соответствует данная
-     * точка возникновения аларма.
-     * Не использует анализа пороговых кривых, а опирается только на
-     * границы события и значения его HARD DX-порогов.
-     * Отдает предпочтение отражательным событиям и сваркам, затем
-     * неид., и только потом уже линейным.
-     * @param x координата точки аларма
-     * @param oneMorePoint увеличить диапазон захвата еще на 1 точку.
-     * Полезен, когда событие только-только вышло за пределы DX-маски, чтобы
-     * привязать точку выхода к этому эталона.
-     * @return номер события, либо -1, если не удалось.
-     */
-    private int findSupposedAlarmEventByPos(int x, boolean oneMorePoint) {
-    	int pref = -1; // предпочтительность (высший - для конн. и сварок, низший - для лин.)
-    	int found = -1; // номер найденного события
+	/**
+	 * Определяет, какому событию скорее всего соответствует данная
+	 * точка возникновения аларма.
+	 * Не использует анализа пороговых кривых, а опирается только на
+	 * границы события и значения его HARD DX-порогов.
+	 * Отдает предпочтение отражательным событиям и сваркам, затем
+	 * неид., и только потом уже линейным.
+	 * @param x координата точки аларма
+	 * @param oneMorePoint увеличить диапазон захвата еще на 1 точку.
+	 * Полезен, когда событие только-только вышло за пределы DX-маски, чтобы
+	 * привязать точку выхода к этому эталона.
+	 * @return номер события, либо -1, если не удалось.
+	 */
+	private int findSupposedAlarmEventByPos(int x, boolean oneMorePoint) {
+		int pref = -1; // предпочтительность (высший - для конн. и сварок, низший - для лин.)
+		int found = -1; // номер найденного события
 
-    	int addOne = oneMorePoint ? 1 : 0;
+		int addOne = oneMorePoint ? 1 : 0;
 
-    	// сначала проверяем все DX-пороги с учетом ширин этих порогов,
-    	// а затем - просто все события (на случай отсутствия DX-порогов).
-    	for (int i = 0; i < tDX.length; i++) {
-    		int keyU = Thresh.HARD_UP;
-    		int keyD = Thresh.HARD_DOWN;
-    		int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) - addOne; // negative
-    		int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) + addOne; // positive
-    		if (tDX[i].xMin + dxMin <= x && tDX[i].xMax + dxMax >= x) {
-    			// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
-    			int nEv = tDX[i].eventId0;
-    			//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
-    			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
-    			int curPref = getEventAlarmPref(eventType);
-    			if (curPref > pref) {
-    				pref = curPref;
-    				found = nEv;
-    			}
-    		}
-    	}
+		// сначала проверяем все DX-пороги с учетом ширин этих порогов,
+		// а затем - просто все события (на случай отсутствия DX-порогов).
+		for (int i = 0; i < tDX.length; i++) {
+			int keyU = Thresh.HARD_UP;
+			int keyD = Thresh.HARD_DOWN;
+			int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) - addOne; // negative
+			int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) + addOne; // positive
+			if (tDX[i].xMin + dxMin <= x && tDX[i].xMax + dxMax >= x) {
+				// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
+				int nEv = tDX[i].eventId0;
+				//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
+				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
+				int curPref = getEventAlarmPref(eventType);
+				if (curPref > pref) {
+					pref = curPref;
+					found = nEv;
+				}
+			}
+		}
 
-    	int nEvents = this.mtae.getNEvents();
-    	for (int nEv = 0; nEv < nEvents; nEv++) {
-    		SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
-    		if (ev.getBegin() <= x && ev.getEnd() >= x) {
-    			//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
-    			int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
-    			int curPref = getEventAlarmPref(eventType);
-    			if (curPref > pref) {
-    				pref = curPref;
-    				found = nEv;
-    			}
-    		}
-    	}
+		int nEvents = this.mtae.getNEvents();
+		for (int nEv = 0; nEv < nEvents; nEv++) {
+			SimpleReflectogramEvent ev = getMTAE().getSimpleEvent(nEv);
+			if (ev.getBegin() <= x && ev.getEnd() >= x) {
+				//System.out.println("findSupposedAlarmEventByPos: nEv: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
+				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
+				int curPref = getEventAlarmPref(eventType);
+				if (curPref > pref) {
+					pref = curPref;
+					found = nEv;
+				}
+			}
+		}
 
-    	return found;
-    }
+		return found;
+	}
 
-    /**
-     * корректирует дистанцию аларма, привязывая его к началу события,
-     * если это событие - отражательное или сварка.
-     * Для лин. и неид. событий привязка не производится.
-     * После вызова этого метода, надо скорректировать конец аларма
-     * на тот случай, если она окажется меньше скорректированной дистанции.
-     * @param x дистанция;
-     * @param oneMorePoint расширение диапазона захвата на 1 точку сверх порогов
-     *  (see {@link #findSupposedAlarmEventByPos}).
-     * @return скорректированная дистанция
-     */
-    public int fixAlarmPos(int x, boolean oneMorePoint) {
-    	int nEv = findSupposedAlarmEventByPos(x, oneMorePoint);
-    	if (nEv < 0)
-    		return x;
-    	SimpleReflectogramEvent ev = this.mtae.getSimpleEvent(nEv);
-    	int eventType = ev.getEventType();
+	/**
+	 * корректирует дистанцию аларма, привязывая его к началу события,
+	 * если это событие - отражательное или сварка.
+	 * Для лин. и неид. событий привязка не производится.
+	 * После вызова этого метода, надо скорректировать конец аларма
+	 * на тот случай, если она окажется меньше скорректированной дистанции.
+	 * @param x дистанция;
+	 * @param oneMorePoint расширение диапазона захвата на 1 точку сверх порогов
+	 *  (see {@link #findSupposedAlarmEventByPos}).
+	 * @return скорректированная дистанция
+	 */
+	public int fixAlarmPos(int x, boolean oneMorePoint) {
+		int nEv = findSupposedAlarmEventByPos(x, oneMorePoint);
+		if (nEv < 0)
+			return x;
+		SimpleReflectogramEvent ev = this.mtae.getSimpleEvent(nEv);
+		int eventType = ev.getEventType();
 		switch (eventType) {
 		case SimpleReflectogramEvent.DEADZONE:   // fall through
 		case SimpleReflectogramEvent.ENDOFTRACE: // fall through
@@ -1092,7 +1092,7 @@ implements DataStreamable, Cloneable
 		default:
 			return x;
 		}
-    }
+	}
 
 	/**
 	 * Создает MTM по эталонной паре события+м.ф., считанной из ByteArray
@@ -1101,11 +1101,11 @@ implements DataStreamable, Cloneable
 	 * @throws DataFormatException 
 	 */
 	public static ModelTraceManager eventsAndTraceFromByteArray(byte[] bar)
-    throws DataFormatException
+	throws DataFormatException
 	{
 		ModelTraceAndEventsImpl mtae =(ModelTraceAndEventsImpl)
-            DataStreamableUtil.readDataStreamableFromBA(bar,
-                ModelTraceAndEventsImpl.getReader()); 
+			DataStreamableUtil.readDataStreamableFromBA(bar,
+				ModelTraceAndEventsImpl.getReader()); 
 		return new ModelTraceManager(mtae);
 	}
 
@@ -1120,7 +1120,7 @@ implements DataStreamable, Cloneable
 	 */
 	public ModelTraceAndEventsImpl getMTAE()
 	{
-        // мы знаем, что MTAEI - неизменяемый (unmodifiable)
+		// мы знаем, что MTAEI - неизменяемый (unmodifiable)
 		return mtae;
 	}
 
@@ -1151,18 +1151,18 @@ implements DataStreamable, Cloneable
 	private static class DSReader implements DataStreamable.Reader
 	{
 		public DataStreamable readFromDIS(DataInputStream dis)
-        throws IOException, SignatureMismatchException
+		throws IOException, SignatureMismatchException
 		{
 			ModelTraceAndEventsImpl mtae =
-                (ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.
-                    getReader().readFromDIS(dis);
+				(ModelTraceAndEventsImpl)ModelTraceAndEventsImpl.
+					getReader().readFromDIS(dis);
 
-            long signature = dis.readLong();
+			long signature = dis.readLong();
 			if (signature != SIGNATURE_THRESH)
 				throw new SignatureMismatchException();
 
-            return new ModelTraceManager(mtae,
-                    Thresh.readArrayFromDIS(dis));
+			return new ModelTraceManager(mtae,
+					Thresh.readArrayFromDIS(dis));
 		}
 	}
 

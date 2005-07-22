@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDX.java,v 1.19 2005/07/14 14:28:39 saa Exp $
+ * $Id: ThreshDX.java,v 1.20 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class ThreshDX extends Thresh
@@ -55,13 +55,13 @@ public class ThreshDX extends Thresh
 		return ret;
 	}
 
-    @Override
+	@Override
 	public Object clone() throws CloneNotSupportedException
-    {
-        ThreshDX ret = (ThreshDX)super.clone();
-        ret.dX = this.dX.clone();
-        return ret;
-    }
+	{
+		ThreshDX ret = (ThreshDX)super.clone();
+		ret.dX = this.dX.clone();
+		return ret;
+	}
 
 	private int goodSign(int key)
 	{
@@ -79,7 +79,7 @@ public class ThreshDX extends Thresh
 	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException
 	{
-        this.dX = new int[4];
+		this.dX = new int[4];
 		for (int k = 0; k < 4; k++)
 			this.dX[k] = dis.readInt();
 	}
@@ -139,18 +139,18 @@ public class ThreshDX extends Thresh
 	{ // empty: we do not anything
 	}
 
-    /**
-     * @return a threshold with same begin/end/type, but zero DX
-     */
-    public ThreshDX makeZeroedCopy()
-    {
-        try {
-            ThreshDX ret = (ThreshDX)this.clone();
-            for (int i = 0; i < ret.dX.length; i++)
-                ret.dX[i] = 0;
-            return ret;
-        } catch (CloneNotSupportedException e) {
-            throw new InternalError (e.toString());
-        }
-    }
+	/**
+	 * @return a threshold with same begin/end/type, but zero DX
+	 */
+	public ThreshDX makeZeroedCopy()
+	{
+		try {
+			ThreshDX ret = (ThreshDX)this.clone();
+			for (int i = 0; i < ret.dX.length; i++)
+				ret.dX[i] = 0;
+			return ret;
+		} catch (CloneNotSupportedException e) {
+			throw new InternalError (e.toString());
+		}
+	}
 }

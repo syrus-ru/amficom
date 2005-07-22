@@ -5,56 +5,56 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace или заданные в виде массива.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.23 $, $Date: 2005/05/06 08:25:16 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/22 06:39:51 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
 {
-    private ReflectogramComparer() {
-        // non-instantible
-    }
+	private ReflectogramComparer() {
+		// non-instantible
+	}
 
-    public static double getMaxDeviation(double[] y1, double[] y2, int N)
-    {
-        double ret = 0.;
-        for (int i = 0; i < N; i++)
-        {
-            double diff = Math.abs(y1[i] - y2[i]);
-            if (diff > ret)
-                ret = diff;
-        }
-        return ret;
-    }
+	public static double getMaxDeviation(double[] y1, double[] y2, int N)
+	{
+		double ret = 0.;
+		for (int i = 0; i < N; i++)
+		{
+			double diff = Math.abs(y1[i] - y2[i]);
+			if (diff > ret)
+				ret = diff;
+		}
+		return ret;
+	}
 
-    public static double getMeanDeviation(double[] y1, double[] y2, int N)
-    {
-        double sum = 0.;
-        for (int i = 0; i < N; i++)
-        {
-                sum += Math.abs(y1[i] - y2[i]);
-        }
-        return N > 0 ? sum / N : 0.0;
-    }
+	public static double getMeanDeviation(double[] y1, double[] y2, int N)
+	{
+		double sum = 0.;
+		for (int i = 0; i < N; i++)
+		{
+				sum += Math.abs(y1[i] - y2[i]);
+		}
+		return N > 0 ? sum / N : 0.0;
+	}
 
-    public static double getRMSDeviation(double[] y1, double[] y2, int N)
-    {
-        double sum = 0.;
-        for (int i = 0; i < N; i++)
-        {
-                double diff = y1[i] - y2[i];
-                sum += diff * diff;
-        }
-        return N > 0 ? Math.sqrt(sum / N) : 0.0;
-    }
+	public static double getRMSDeviation(double[] y1, double[] y2, int N)
+	{
+		double sum = 0.;
+		for (int i = 0; i < N; i++)
+		{
+				double diff = y1[i] - y2[i];
+				sum += diff * diff;
+		}
+		return N > 0 ? Math.sqrt(sum / N) : 0.0;
+	}
 
-    private static double getMaxDeviation(ModelTrace mt1,
-            ModelTrace mt2, int iFrom, int iToEx)
-    {
-        final int N = iToEx - iFrom;
-        double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
-        double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-        return getMaxDeviation(y1, y2, N);
-    }
+	private static double getMaxDeviation(ModelTrace mt1,
+			ModelTrace mt2, int iFrom, int iToEx)
+	{
+		final int N = iToEx - iFrom;
+		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
+		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
+		return getMaxDeviation(y1, y2, N);
+	}
 
 	private static double getMeanDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
@@ -62,7 +62,7 @@ public class ReflectogramComparer
 		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-        return getMeanDeviation(y1, y2, N);
+		return getMeanDeviation(y1, y2, N);
 	}
 
 	private static double getRMSDeviation(ModelTrace mt1,
@@ -71,48 +71,48 @@ public class ReflectogramComparer
 		final int N = iToEx - iFrom;
 		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
 		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
-        return getRMSDeviation(y1, y2, N);
+		return getRMSDeviation(y1, y2, N);
 	}
 
-    public static double getMaxDeviation(ModelTraceAndEvents data,
-            ModelTrace etalon, int nEvent)
-    {
-        SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
-        int iFrom = dataSE.getBegin();
-        int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
-        ModelTrace dataMT = data.getModelTrace();
-        return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
-    }
+	public static double getMaxDeviation(ModelTraceAndEvents data,
+			ModelTrace etalon, int nEvent)
+	{
+		SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
+		int iFrom = dataSE.getBegin();
+		int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
+		ModelTrace dataMT = data.getModelTrace();
+		return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
+	}
 
-    public static double getMeanDeviation(ModelTraceAndEvents data,
-            ModelTrace etalon, int nEvent)
-    {
-        SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
-        int iFrom = dataSE.getBegin();
-        int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
-        ModelTrace dataMT = data.getModelTrace();
-        return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
-    }
-    public static double getMaxDeviation(ModelTraceAndEvents data,
-            ModelTrace etalon, SimpleReflectogramEvent ev)
-    {
-        int iFrom = ev.getBegin();
-        int iToEx = Math.min(ev.getEnd() + 1,
-                Math.min(data.getModelTrace().getLength(), etalon.getLength()));
-        ModelTrace dataMT = data.getModelTrace();
-        return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
-    }
+	public static double getMeanDeviation(ModelTraceAndEvents data,
+			ModelTrace etalon, int nEvent)
+	{
+		SimpleReflectogramEvent dataSE = data.getSimpleEvent(nEvent);
+		int iFrom = dataSE.getBegin();
+		int iToEx = Math.min(dataSE.getEnd() + 1, etalon.getLength());
+		ModelTrace dataMT = data.getModelTrace();
+		return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
+	}
+	public static double getMaxDeviation(ModelTraceAndEvents data,
+			ModelTrace etalon, SimpleReflectogramEvent ev)
+	{
+		int iFrom = ev.getBegin();
+		int iToEx = Math.min(ev.getEnd() + 1,
+				Math.min(data.getModelTrace().getLength(), etalon.getLength()));
+		ModelTrace dataMT = data.getModelTrace();
+		return getMaxDeviation(dataMT, etalon, iFrom, iToEx);
+	}
 
-    // @todo: разобраться и убрать лишние методы
-    public static double getMeanDeviation(ModelTraceAndEvents data,
-            ModelTrace etalon, SimpleReflectogramEvent ev)
-    {
-        int iFrom = ev.getBegin();
-        int iToEx = Math.min(ev.getEnd() + 1,
-                Math.min(data.getModelTrace().getLength(), etalon.getLength()));
-        ModelTrace dataMT = data.getModelTrace();
-        return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
-    }
+	// @todo: разобраться и убрать лишние методы
+	public static double getMeanDeviation(ModelTraceAndEvents data,
+			ModelTrace etalon, SimpleReflectogramEvent ev)
+	{
+		int iFrom = ev.getBegin();
+		int iToEx = Math.min(ev.getEnd() + 1,
+				Math.min(data.getModelTrace().getLength(), etalon.getLength()));
+		ModelTrace dataMT = data.getModelTrace();
+		return getMeanDeviation(dataMT, etalon, iFrom, iToEx);
+	}
 
 	public static double getMaxDeviation(ModelTrace data, ModelTrace etalon)
 	{

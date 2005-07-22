@@ -1,5 +1,5 @@
 /*-
- * $Id: ReliabilityModelTraceAndEvents.java,v 1.2 2005/07/18 12:41:10 saa Exp $
+ * $Id: ReliabilityModelTraceAndEvents.java,v 1.3 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/07/18 12:41:10 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public interface ReliabilityModelTraceAndEvents extends ModelTraceAndEvents {
-    // ReliabilitySimpleReflectogramEvent[] getSimpleEvents();
-    // ReliabilitySimpleReflectogramEvent getSimpleEvent(int nEvent);
+	// ReliabilitySimpleReflectogramEvent[] getSimpleEvents();
+	// ReliabilitySimpleReflectogramEvent getSimpleEvent(int nEvent);
 }

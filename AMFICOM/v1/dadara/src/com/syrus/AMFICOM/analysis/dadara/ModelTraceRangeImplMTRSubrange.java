@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceRangeImplMTRSubrange.java,v 1.3 2005/07/14 14:28:39 saa Exp $
+ * $Id: ModelTraceRangeImplMTRSubrange.java,v 1.4 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,69 +15,69 @@ package com.syrus.AMFICOM.analysis.dadara;
  * 
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class ModelTraceRangeImplMTRSubrange extends ModelTraceRange {
-    private ModelTraceRange mtr;
-    private int begin;
-    private int end;
-    private boolean zeroPad;
+	private ModelTraceRange mtr;
+	private int begin;
+	private int end;
+	private boolean zeroPad;
 
-    /**
-     * Creates sub-range ModelTraceRange
-     * @param mtr base MTR
-     * @param begin beginning position, inclisively
-     * @param end ending position, inclusevely
-     * @param zeroPad true, if base MTR should be treated as zero-padded
-     * @throws IllegalArgumentException input mtr is null 
-     * @throws IllegalArgumentException input begin is > input end
-     * @throws IllegalArgumentException input begin or end is outside
-     *   [mtr.getBegin(),mtr.getEnd()], but zeroPad is false  
-     */
-    public ModelTraceRangeImplMTRSubrange(ModelTrace mtr, int begin, int end, boolean zeroPad) {
-        if (mtr == null)
-            throw new IllegalArgumentException("null ModelTrace");
-        if (!zeroPad) {
-            if (begin < mtr.getBegin())
-                throw new IllegalArgumentException("begin out of range");
-            if (end > mtr.getEnd())
-                throw new IllegalArgumentException("end out of range");
-        }
-        if (begin > end)
-            throw new IllegalArgumentException("begin > end");
-        this.mtr = mtr;
-        this.begin = begin;
-        this.end = end;
-        this.zeroPad = zeroPad;
-    }
+	/**
+	 * Creates sub-range ModelTraceRange
+	 * @param mtr base MTR
+	 * @param begin beginning position, inclisively
+	 * @param end ending position, inclusevely
+	 * @param zeroPad true, if base MTR should be treated as zero-padded
+	 * @throws IllegalArgumentException input mtr is null 
+	 * @throws IllegalArgumentException input begin is > input end
+	 * @throws IllegalArgumentException input begin or end is outside
+	 *   [mtr.getBegin(),mtr.getEnd()], but zeroPad is false  
+	 */
+	public ModelTraceRangeImplMTRSubrange(ModelTrace mtr, int begin, int end, boolean zeroPad) {
+		if (mtr == null)
+			throw new IllegalArgumentException("null ModelTrace");
+		if (!zeroPad) {
+			if (begin < mtr.getBegin())
+				throw new IllegalArgumentException("begin out of range");
+			if (end > mtr.getEnd())
+				throw new IllegalArgumentException("end out of range");
+		}
+		if (begin > end)
+			throw new IllegalArgumentException("begin > end");
+		this.mtr = mtr;
+		this.begin = begin;
+		this.end = end;
+		this.zeroPad = zeroPad;
+	}
 
-    @Override
+	@Override
 	public int getBegin() {
-        return begin;
-    }
+		return begin;
+	}
 
-    @Override
+	@Override
 	public int getEnd() {
-        return end;
-    }
+		return end;
+	}
 
-    @Override
+	@Override
 	public double getY(int x) {
-        // if zeroPad, we need to perform zero padding because there is no
-        // underlying getYZeroPad().
-        // Note, we do not check if x is within [this.begin,this.end] range. 
-        if (zeroPad && (x < mtr.getBegin() || x > mtr.getEnd()))
-            return 0.0;
-        else
-            return mtr.getY(x);
-    }
+		// if zeroPad, we need to perform zero padding because there is no
+		// underlying getYZeroPad().
+		// Note, we do not check if x is within [this.begin,this.end] range. 
+		if (zeroPad && (x < mtr.getBegin() || x > mtr.getEnd()))
+			return 0.0;
+		else
+			return mtr.getY(x);
+	}
 
-    @Override
+	@Override
 	public double[] getYArray(int x0, int N) {
-        if (zeroPad)
-            return mtr.getYArrayZeroPad(x0, N);
-        else
-            return mtr.getYArray(x0, N);
-    }
+		if (zeroPad)
+			return mtr.getYArrayZeroPad(x0, N);
+		else
+			return mtr.getYArray(x0, N);
+	}
 }

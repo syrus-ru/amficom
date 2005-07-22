@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.105 2005/07/21 13:03:41 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.106 2005/07/22 06:39:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.105 $, $Date: 2005/07/21 13:03:41 $
+ * @version $Revision: 1.106 $, $Date: 2005/07/22 06:39:50 $
  * @module
  */
 
@@ -73,13 +73,13 @@ public class CoreAnalysisManager
 	 *   (1.0 - макс. чувствительность, по уровню 3 сигма; рекомендованы
 	 *   значения порядка 1.5 .. 3.0)
 	 * @param nReflSize хар. размер неотраж. события (в точках),
-     *   фактически нач. ширина вейвлета
-     * @param rSACrit критическая амплитуда (дБ), выше которой возможно
-     *    сильное увеличение протяженности отражательного события
-     * @param rSSmall макс. длина (в точках) отражательного события
-     *    с амплитудой менее rSACrit
-     * @param rSBig макс. длина (в точках) отражательного события
-     *    с амплитудой более rSACrit (должно быть больше rSSmall)
+	 *   фактически нач. ширина вейвлета
+	 * @param rSACrit критическая амплитуда (дБ), выше которой возможно
+	 *    сильное увеличение протяженности отражательного события
+	 * @param rSSmall макс. длина (в точках) отражательного события
+	 *    с амплитудой менее rSACrit
+	 * @param rSBig макс. длина (в точках) отражательного события
+	 *    с амплитудой более rSACrit (должно быть больше rSSmall)
 	 * @param traceLength длина рефлектограммы до конца волокна,
 	 * может быть 0, тогда будет найдена автоматически
 	 * @param noiseDB уровень шума по 3 сигма, в абс. дБ;
@@ -96,9 +96,9 @@ public class CoreAnalysisManager
 			double minEnd,
 			double noiseFactor,
 			int nReflSize,
-            double rSACrit,
-            int rSSmall,
-            int rSBig,
+			double rSACrit,
+			int rSSmall,
+			int rSBig,
 			int traceLength,
 			double[] noiseDB,
 			double scaleFactor);
@@ -181,35 +181,35 @@ public class CoreAnalysisManager
 		loadDLL();
 	}
 
-    /**
-     * фитирует кривую гауссианой y = amplitude * exp(-(x-center)**2 / sigma**2)
-     * @param y входная кривая
-     * @param maxIndex начальное значение положения максимума
-     * @param outParams если не null, то заполняется результатами фитировки
-     *   outParams[0] = center
-     *   outParams[1] = amplitude
-     *   outParams[2] = sigma (в sqrt(2) раз большая, чем стандартная)
-     * @return фирирующая кривая
-     */
+	/**
+	 * фитирует кривую гауссианой y = amplitude * exp(-(x-center)**2 / sigma**2)
+	 * @param y входная кривая
+	 * @param maxIndex начальное значение положения максимума
+	 * @param outParams если не null, то заполняется результатами фитировки
+	 *   outParams[0] = center
+	 *   outParams[1] = amplitude
+	 *   outParams[2] = sigma (в sqrt(2) раз большая, чем стандартная)
+	 * @return фирирующая кривая
+	 */
 	public static double[] calcGaussian(double[] y, int maxIndex, double[] outParams) {
 		double[] gauss = new double[y.length];
 
 		double maxValue = y[maxIndex];
 
-        int width = 0;
+		int width = 0;
 		for (int i = 0; i < y.length; i++)
 			if (y[i] > maxValue * 0.6)
 				width++;
 
-        double[] d = gauss(y, maxIndex, maxValue, width);
+		double[] d = gauss(y, maxIndex, maxValue, width);
 
-        if (outParams != null) {
-            outParams[0] = d[0];
-            outParams[1] = d[1];
-            outParams[2] = d[2];
-        }
+		if (outParams != null) {
+			outParams[0] = d[0];
+			outParams[1] = d[1];
+			outParams[2] = d[2];
+		}
 
-        double center = d[0];
+		double center = d[0];
 		maxValue = d[1];
 		double sigmaSquared = d[2] * d[2];
 
@@ -269,7 +269,7 @@ public class CoreAnalysisManager
 	 * @param traceLength длина, которую надо профитировать
 	 * @param noiseArray шум (1 sigma?), заданный на длине traceLength (not null)
 	 * @param sre список событий, полученный в рез. IA,
-     *   используемый для более точной расстановки позиций узлов при фитировке
+	 *   используемый для более точной расстановки позиций узлов при фитировке
 	 * @return mf фитированной кривой
 	 */
 	protected static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
@@ -286,150 +286,150 @@ public class CoreAnalysisManager
 		return ap.isCorrect();
 	}
 
-    /**
-     * Проводит пред-анализ для одной рефлектограммы: <ul>
-     *   <li> сохраняет traceData рефлектограммы
-     *   <li> выделяет из р/г параметры тестирования, необходимые для анализа
-     *     (разрешение, длина импульса, показатель преломления)
-     *   <li> определяет длину рефлектограммы до "ухода в ноль"
-     *   <li> если запрошено, определяет также уровень шума
-     * @param bs Входная рефлектограмма
-     * @param needNoise true, если нужено также вычислить уровень шума 
-     * @return результаты, приемлемые для анализа
-     *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
-     */
-    protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
-            boolean needNoise) {
-        TracePreAnalysis res = new TracePreAnalysis();
-        // данные рефлектограммы
-        double[] y = bs.getTraceData(); // rather slow
-        res.y = y;
-        res.deltaX = bs.getResolution();
-        res.ior = bs.getIOR();
-        res.pulseWidth = bs.getPulsewidth();
-        // данные анализа
-        res.traceLength = calcTraceLength(y);
-        if (needNoise) {
-            double[] noise = calcNoiseArray(y, res.traceLength); // slow
-            res.setNoise(noise);
-        } else {
-            res.setNoise(null);
-        }
-        return res;
-    }
+	/**
+	 * Проводит пред-анализ для одной рефлектограммы: <ul>
+	 *   <li> сохраняет traceData рефлектограммы
+	 *   <li> выделяет из р/г параметры тестирования, необходимые для анализа
+	 *     (разрешение, длина импульса, показатель преломления)
+	 *   <li> определяет длину рефлектограммы до "ухода в ноль"
+	 *   <li> если запрошено, определяет также уровень шума
+	 * @param bs Входная рефлектограмма
+	 * @param needNoise true, если нужено также вычислить уровень шума 
+	 * @return результаты, приемлемые для анализа
+	 *   {@link #makeAnalysis(TracePreAnalysis, AnalysisParameters)}
+	 */
+	protected static TracePreAnalysis makePreAnalysis(BellcoreStructure bs,
+			boolean needNoise) {
+		TracePreAnalysis res = new TracePreAnalysis();
+		// данные рефлектограммы
+		double[] y = bs.getTraceData(); // rather slow
+		res.y = y;
+		res.deltaX = bs.getResolution();
+		res.ior = bs.getIOR();
+		res.pulseWidth = bs.getPulsewidth();
+		// данные анализа
+		res.traceLength = calcTraceLength(y);
+		if (needNoise) {
+			double[] noise = calcNoiseArray(y, res.traceLength); // slow
+			res.setNoise(noise);
+		} else {
+			res.setNoise(null);
+		}
+		return res;
+	}
 
-    /**
-     * Проводит анализ и фитировку на основании результатов пред-анализа.
-     * @param tpa результаты пред-анализа
-     *   {@link #makePreAnalysis(BellcoreStructure, boolean)}
-     * @param ap набор параметров для IA
-     * @return результат анализа в виде mtae
-     */
-    protected static ModelTraceAndEventsImpl makeAnalysis(
-            TracePreAnalysis tpa,
-            AnalysisParameters ap)
-    {
-//        long t0 = System.nanoTime();
+	/**
+	 * Проводит анализ и фитировку на основании результатов пред-анализа.
+	 * @param tpa результаты пред-анализа
+	 *   {@link #makePreAnalysis(BellcoreStructure, boolean)}
+	 * @param ap набор параметров для IA
+	 * @return результат анализа в виде mtae
+	 */
+	protected static ModelTraceAndEventsImpl makeAnalysis(
+			TracePreAnalysis tpa,
+			AnalysisParameters ap)
+	{
+//		long t0 = System.nanoTime();
 
-        // определяем reflSize и nReflSize
-        // FIXME: привести reflSize и nReflSize в порядок
+		// определяем reflSize и nReflSize
+		// FIXME: привести reflSize и nReflSize в порядок
 
-        //int reflSize = ReflectogramMath.getReflectiveEventSize(tpa.y, 0.5);
-        int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
-                tpa.y,
-                tpa.pulseWidth,
-                tpa.ior,
-                tpa.deltaX);
+		//int reflSize = ReflectogramMath.getReflectiveEventSize(tpa.y, 0.5);
+		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
+				tpa.y,
+				tpa.pulseWidth,
+				tpa.ior,
+				tpa.deltaX);
 
-        int rsBig = (int) (tpa.traceLength * ap.getL2rsaBig());
-        if (rsBig < nReflSize * ap.getNrs2rsaBig())
-            rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
+		int rsBig = (int) (tpa.traceLength * ap.getL2rsaBig());
+		if (rsBig < nReflSize * ap.getNrs2rsaBig())
+			rsBig = (int) (nReflSize * ap.getNrs2rsaBig());
 
-//        long t1 = System.nanoTime();
+//		long t1 = System.nanoTime();
 
-        // формирование событий по усредненной кривой
+		// формирование событий по усредненной кривой
 
-        ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
-                tpa.y,
-                tpa.deltaX,
-                ap.getMinThreshold(),
-                ap.getMinSplice(),
-                ap.getMinConnector(),
-                ap.getMinEnd(),
-                ap.getNoiseFactor(),
-                nReflSize,
-                ap.getRsaCrit(),
-                (int)(nReflSize * ap.getNrs2rsaSmall()),
-                rsBig,
-                tpa.traceLength,
-                tpa.avNoise,
-                ap.getScaleFactor());
+		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
+				tpa.y,
+				tpa.deltaX,
+				ap.getMinThreshold(),
+				ap.getMinSplice(),
+				ap.getMinConnector(),
+				ap.getMinEnd(),
+				ap.getNoiseFactor(),
+				nReflSize,
+				ap.getRsaCrit(),
+				(int)(nReflSize * ap.getNrs2rsaSmall()),
+				rsBig,
+				tpa.traceLength,
+				tpa.avNoise,
+				ap.getScaleFactor());
 
-        // FIX//ME: debug output of IA results
-//      for (int i = 0; i < rse.length; i++)
-//          System.out.println("rse[" + i + "]:"
-//              + " " + rse[i].toString());
+		// FIX//ME: debug output of IA results
+//	  for (int i = 0; i < rse.length; i++)
+//		  System.out.println("rse[" + i + "]:"
+//			  + " " + rse[i].toString());
 
-        // теперь уточняем длину рефлектограммы по концу последнего события
-        // (длина может уменьшиться)
+		// теперь уточняем длину рефлектограммы по концу последнего события
+		// (длина может уменьшиться)
 
-        int traceLength = rse.length > 0
-            ? rse[rse.length - 1].getEnd() + 1
-            : 0;
+		int traceLength = rse.length > 0
+			? rse[rse.length - 1].getEnd() + 1
+			: 0;
 
-//        long t2 = System.nanoTime();
+//		long t2 = System.nanoTime();
 
-        // фитируем
+		// фитируем
 
-        ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
+		ModelFunction mf = fitTrace(tpa.y, traceLength, tpa.noiseAv, rse);
 
-//        long t3 = System.nanoTime();
+//		long t3 = System.nanoTime();
 
-        // XXX: надо знать не только усредненную р/г, но и самую типовую,
-        // чтобы по типовой определять rmsDev,maxDev и т.п.
-        // На данный момент это не критично, т.к. результаты анализа
-        // многих р/г используются только для эталона, а у него maxDev/rmsDev
-        // не используются.
-        ModelTraceAndEventsImpl mtae =
-            new ModelTraceAndEventsImpl(rse, mf, tpa.y, tpa.deltaX);
+		// XXX: надо знать не только усредненную р/г, но и самую типовую,
+		// чтобы по типовой определять rmsDev,maxDev и т.п.
+		// На данный момент это не критично, т.к. результаты анализа
+		// многих р/г используются только для эталона, а у него maxDev/rmsDev
+		// не используются.
+		ModelTraceAndEventsImpl mtae =
+			new ModelTraceAndEventsImpl(rse, mf, tpa.y, tpa.deltaX);
 
-//        long t4 = System.nanoTime();
+//		long t4 = System.nanoTime();
 
-        // FIX//ME: debug output of analysis timing
-//      System.out.println("makeAnalysis: "
-//          + "getDataAndLengthAndNoise: " + (t1-t0)/1e6
-//          + "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
-//          + "; makeMTAE: " + (t4-t3)/1e6
-//          );
+		// FIX//ME: debug output of analysis timing
+//	  System.out.println("makeAnalysis: "
+//		  + "getDataAndLengthAndNoise: " + (t1-t0)/1e6
+//		  + "; IA: " + (t2-t1)/1e6 + "; fit: " + (t3-t2)/1e6
+//		  + "; makeMTAE: " + (t4-t3)/1e6
+//		  );
 
-        return mtae;
-    }
+		return mtae;
+	}
 
 	/**
 	 * Собирает информацию о совокупности рефлектограмм, достаточную
-     * для формирования эталона.
+	 * для формирования эталона.
 	 * see {@link TracesAverages}
 	 * @param bsColl входная совокупность р/г ({@link BellcoreStructure})
 	 * @param needNoiseInfo нужна ли информация о шуме
 	 * @param needMFInfo нужны ли кривые мин./макс. фитированных кривых
-     * @param ap Параметры анализа, либо null если needMFInfo==false
+	 * @param ap Параметры анализа, либо null если needMFInfo==false
 	 * @return TracesAverages, в которой: <ul>
-     *   <li>поля av.avNoise, av.noiseAv заполнены, если needNoiseInfo
-     *   <li>поля maxYMF, minYMF заполнены, если needMFInfo
-     *        (в таком случае проводит анализ и фитировку каждой р/г
-     *         и определяет maxYMF, minYMF на основе раброса этих
-     *         фитированных кривых)
-     *   <li>все остальные поля заполнены в любом случае
-     * </ul>
+	 *   <li>поля av.avNoise, av.noiseAv заполнены, если needNoiseInfo
+	 *   <li>поля maxYMF, minYMF заполнены, если needMFInfo
+	 *		(в таком случае проводит анализ и фитировку каждой р/г
+	 *		 и определяет maxYMF, minYMF на основе раброса этих
+	 *		 фитированных кривых)
+	 *   <li>все остальные поля заполнены в любом случае
+	 * </ul>
 	 * @throws IncompatibleTracesException если
-     *   параметры входных bs, необходимые для проведения анализа, различаются
+	 *   параметры входных bs, необходимые для проведения анализа, различаются
 	 * @throws IllegalArgumentException если входная совокупность р/г пуста
 	 */
 	protected static TracesAverages findTracesAverages(
 			Collection<BellcoreStructure> bsColl,
 			boolean needNoiseInfo,
 			boolean needMFInfo,
-            AnalysisParameters ap)
+			AnalysisParameters ap)
 	throws IncompatibleTracesException
 	{
 		// определяем число входных р/г
@@ -446,47 +446,47 @@ public class CoreAnalysisManager
 		TracesAverages res = new TracesAverages();
 		res.nTraces = N_TRACES;
 
-        double[] noiseAcc = null; // needs no initialization
+		double[] noiseAcc = null; // needs no initialization
 
 		for (Iterator<BellcoreStructure> it = bsColl.iterator(); it.hasNext(); isFirst = false)
 		{
-            TracePreAnalysis tpa =
-                makePreAnalysis(it.next(), needNoiseInfo);
+			TracePreAnalysis tpa =
+				makePreAnalysis(it.next(), needNoiseInfo);
 
-		    if (isFirst) {
-                double[] y = tpa.y.clone(); // double[] array copying
-                res.av = new TracePreAnalysis(tpa, y);
-		    }
-		    else {
+			if (isFirst) {
+				double[] y = tpa.y.clone(); // double[] array copying
+				res.av = new TracePreAnalysis(tpa, y);
+			}
+			else {
 				res.av.setMinLength(tpa.traceLength);
 				addDoubleArray(res.av.y, tpa.y, res.av.traceLength);
-                res.av.checkTracesCompatibility(tpa);
-		    }
+				res.av.checkTracesCompatibility(tpa);
+			}
 
-	    	if (needNoiseInfo) {
-			    if (isFirst)
-			    	noiseAcc = tpa.getNoise(); // клонирование необязательно, т.к. можно усреднять прямо в этом массиве 
-			    else
+			if (needNoiseInfo) {
+				if (isFirst)
+					noiseAcc = tpa.getNoise(); // клонирование необязательно, т.к. можно усреднять прямо в этом массиве 
+				else
 					addDoubleArray(noiseAcc, tpa.getNoise(), res.av.traceLength);
-		    }
+			}
 
-		    if (needMFInfo) {
-                // проводим анализ и берем из него модельную кривую
-		    	ModelTrace mt = makeAnalysis(tpa, ap).getModelTrace();
-		    	double[] yMF = mt.getYArray();
-                res.av.setMinLength(mt.getLength()); // возможно, что длина модельной кривой будет меньше, чем начальное tracelength
-		    	if (isFirst) {
-		    		// need to make one more copy, so cloning once only
-		    		res.minYMF = yMF;
-		    		res.maxYMF = yMF.clone();
-		    	}
-		    	else {
-                    // элементы массивов res.(min|max)YMF, выходящие за пределы
-                    // res.av.tracelength, не будут обрабатываться (там останется мусор)
+			if (needMFInfo) {
+				// проводим анализ и берем из него модельную кривую
+				ModelTrace mt = makeAnalysis(tpa, ap).getModelTrace();
+				double[] yMF = mt.getYArray();
+				res.av.setMinLength(mt.getLength()); // возможно, что длина модельной кривой будет меньше, чем начальное tracelength
+				if (isFirst) {
+					// need to make one more copy, so cloning once only
+					res.minYMF = yMF;
+					res.maxYMF = yMF.clone();
+				}
+				else {
+					// элементы массивов res.(min|max)YMF, выходящие за пределы
+					// res.av.tracelength, не будут обрабатываться (там останется мусор)
 					ReflectogramMath.updateMinArray(res.minYMF, yMF);
 					ReflectogramMath.updateMaxArray(res.maxYMF, yMF);
-		    	}
-		    }
+				}
+			}
 		}
 
 		// convert sum to average for avY
@@ -498,22 +498,22 @@ public class CoreAnalysisManager
 			for (int i = 0; i < res.av.traceLength; i++)
 				noiseAcc[i] /= N_TRACES;
 
-            res.av.avNoise = noiseAcc;
+			res.av.avNoise = noiseAcc;
 
-            // make noiseAv
+			// make noiseAv
 			res.av.noiseAv = N_TRACES == 1
-			    ? (double[])noiseAcc.clone() // XXX: нужно ли клонирование? если да, то, возможно, оно делается не везде где надо
-			    : calcNoiseArray(res.av.y, res.av.traceLength);
+				? (double[])noiseAcc.clone() // XXX: нужно ли клонирование? если да, то, возможно, оно делается не везде где надо
+				: calcNoiseArray(res.av.y, res.av.traceLength);
 		}
 
-        // XXX: в принципе, здесь бы неплохо провести усечение тех массивов
-        // res, которые длиннее res.av.traceLength, для того, чтобы
-        // не сбивать с толку пользователя этих данных. Однако, поскольку
-        // это требует несколько лишних копирований, а
-        // использование этих данных предполагается только в этом модуле,
-        // мы этого не делаем.
+		// XXX: в принципе, здесь бы неплохо провести усечение тех массивов
+		// res, которые длиннее res.av.traceLength, для того, чтобы
+		// не сбивать с толку пользователя этих данных. Однако, поскольку
+		// это требует несколько лишних копирований, а
+		// использование этих данных предполагается только в этом модуле,
+		// мы этого не делаем.
 
-        return res;
+		return res;
 	}
 
 	/**
@@ -534,9 +534,9 @@ public class CoreAnalysisManager
 	public static AnalysisResult performAnalysis(
 			BellcoreStructure bs,
 			AnalysisParameters ap) {
-        TracePreAnalysis tpa = makePreAnalysis(bs, true);
-        ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
-        return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
+		TracePreAnalysis tpa = makePreAnalysis(bs, true);
+		ModelTraceAndEventsImpl mtae = makeAnalysis(tpa, ap);
+		return new AnalysisResult(tpa.y.length, tpa.traceLength, mtae);
 	}
 
 	/**
@@ -550,11 +550,11 @@ public class CoreAnalysisManager
 	 * </ul>
 	 * @param bsColl коллекция входных р/г.
 	 *   Должна быть непуста, а р/г должны иметь одинаковые параметры
-     *   регистрации, используемые в анализе
+	 *   регистрации, используемые в анализе
 	 * @param ap параметры анализа
 	 * @return MTM созданного эталона
 	 * @throws IllegalArgumentException если bsColl пуст
-     *   ({@link #findTracesAverages})
+	 *   ({@link #findTracesAverages})
 	 * @throws IncompatibleTracesException если bsColl содержит р/г
 	 *   с разными длинами, разрешением, длительностью импульса или
 	 *   показателем преломления ({@link #findTracesAverages})
@@ -578,67 +578,67 @@ public class CoreAnalysisManager
 		return mtm;
 	}
 
-    /**
-     * Находит в коллекции рефлектограмму, ближайшую к усредненному по
-     * коллекции значению. Входные р/г должны быть совместны, т.е.
-     * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
-     * @param bsColl непустая входная коллекция рефлектограмм
-     * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
-     * @return самую среднюю рефлектограмму среди входных
-     */
-    protected static BellcoreStructure getMostTypicalTrace(
-    		Collection<BellcoreStructure> bsColl,
-    		TracesAverages av) {
-        BellcoreStructure nearest = null;
-        double bestDistance = 0;
-        for (BellcoreStructure bs: bsColl) {
-            double[] yBS = bs.getTraceData();
-            double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
-                    yBS,
-                    av.av.traceLength);
-            if (nearest == null || distance < bestDistance) {
-                nearest = bs;
-                bestDistance = distance;
-            }
-        }
-        return nearest;
-    }
+	/**
+	 * Находит в коллекции рефлектограмму, ближайшую к усредненному по
+	 * коллекции значению. Входные р/г должны быть совместны, т.е.
+	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
+	 * @param bsColl непустая входная коллекция рефлектограмм
+	 * @param av заранее найденное значение по этой коллекции TracesAverages (в нем не нужны ни noiseInfo, ни MFInfo)
+	 * @return самую среднюю рефлектограмму среди входных
+	 */
+	protected static BellcoreStructure getMostTypicalTrace(
+			Collection<BellcoreStructure> bsColl,
+			TracesAverages av) {
+		BellcoreStructure nearest = null;
+		double bestDistance = 0;
+		for (BellcoreStructure bs: bsColl) {
+			double[] yBS = bs.getTraceData();
+			double distance = ReflectogramComparer.getMaxDeviation(av.av.y,
+					yBS,
+					av.av.traceLength);
+			if (nearest == null || distance < bestDistance) {
+				nearest = bs;
+				bestDistance = distance;
+			}
+		}
+		return nearest;
+	}
 
-    /**
-     * Находит в коллекции рефлектограмму, ближайшую к усредненному по
-     * коллекции значению. Входные р/г должны быть совместны, т.е.
-     * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
-     * @param bsColl входная коллекция рефлектограмм
-     * @return самую среднюю рефлектограмму среди входных
-     * @throws IncompatibleTracesException Если входные рефлектограммы
-     * несовместны
-     * @throws IllegalArgumentException Если входная совокупность р/г пуста
-     */
-    public static BellcoreStructure getMostTypicalTrace(
-    		Collection<BellcoreStructure> bsColl)
-    throws IncompatibleTracesException {
-        // если входная коллекция пуста, то к этому моменту уже будет
-        // выброшено исключение IllegalArgumentException,
-        // т.ч. return null не произойдет.
-        TracesAverages av = findTracesAverages(bsColl, false, false, null);
-        return getMostTypicalTrace(bsColl, av);
-    }
+	/**
+	 * Находит в коллекции рефлектограмму, ближайшую к усредненному по
+	 * коллекции значению. Входные р/г должны быть совместны, т.е.
+	 * иметь одни и те же режимы регистрации (разрешение, длина импульса и пр.)
+	 * @param bsColl входная коллекция рефлектограмм
+	 * @return самую среднюю рефлектограмму среди входных
+	 * @throws IncompatibleTracesException Если входные рефлектограммы
+	 * несовместны
+	 * @throws IllegalArgumentException Если входная совокупность р/г пуста
+	 */
+	public static BellcoreStructure getMostTypicalTrace(
+			Collection<BellcoreStructure> bsColl)
+	throws IncompatibleTracesException {
+		// если входная коллекция пуста, то к этому моменту уже будет
+		// выброшено исключение IllegalArgumentException,
+		// т.ч. return null не произойдет.
+		TracesAverages av = findTracesAverages(bsColl, false, false, null);
+		return getMostTypicalTrace(bsColl, av);
+	}
 
 	public static double getMedian(double[] y, int pos)
 	{
-        if (pos < 0 || pos >= y.length)
-            throw new IllegalArgumentException("Invalid pos for getMedian");
+		if (pos < 0 || pos >= y.length)
+			throw new IllegalArgumentException("Invalid pos for getMedian");
 		return nMedian(y, pos);
 	}
-    /**
-     * @throws IllegalArgumentException is possible if ratio is outside [0,1]
-     */
-    public static double getMedian(double[] y, int iFrom, int iToEx, double ratio)
-    {
-        double[] temp = new double[iToEx - iFrom];
-        System.arraycopy(y, iFrom, temp, 0, temp.length);
-        return nMedian(temp, (int)(temp.length * ratio));
-    }
+	/**
+	 * @throws IllegalArgumentException is possible if ratio is outside [0,1]
+	 */
+	public static double getMedian(double[] y, int iFrom, int iToEx, double ratio)
+	{
+		double[] temp = new double[iToEx - iFrom];
+		System.arraycopy(y, iFrom, temp, 0, temp.length);
+		return nMedian(temp, (int)(temp.length * ratio));
+	}
 	public static double getMedian(double[] y)
 	{
 		return nMedian(y, y.length / 2);
@@ -677,8 +677,8 @@ public class CoreAnalysisManager
 	}
 
 	/**
-     * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(BellcoreStructure, AnalysisParameters)},
-     * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
+	 * Проводит анализ рефлектограммы вызовом {@link #performAnalysis(BellcoreStructure, AnalysisParameters)},
+	 * затем сравнивает ее с помощью {@link #compareAndMakeAlarms(AnalysisResult, Etalon)}
 	 * @param bs рефлектограмма
 	 * @param ap параметры анализа
 	 * @param breakThresh
@@ -686,90 +686,90 @@ public class CoreAnalysisManager
 	 * @param anchorer
 	 * @return список алармов
 	 */
-    public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
-    		AnalysisParameters ap,
-            double breakThresh,
-            ModelTraceManager etMTM,
-            EventAnchorer anchorer) {
-    	AnalysisResult ar = performAnalysis(bs, ap);
-    	Etalon etalon = new Etalon(etMTM, breakThresh, anchorer);
-    	return compareAndMakeAlarms(ar, etalon);
-    }
+	public static List analyseCompareAndMakeAlarms(BellcoreStructure bs,
+			AnalysisParameters ap,
+			double breakThresh,
+			ModelTraceManager etMTM,
+			EventAnchorer anchorer) {
+		AnalysisResult ar = performAnalysis(bs, ap);
+		Etalon etalon = new Etalon(etMTM, breakThresh, anchorer);
+		return compareAndMakeAlarms(ar, etalon);
+	}
 
-    /**
-     * Сравнивает результаты анализа с порогом обнаружения
-     * обрыва и эталонным MTM, формирует список алармов.
-     * Текущая версия возвращает 0 или 1 алармов.
-     * <p>
-     * Кроме того, если в эталоне определен EventAnchorer,
-     * а при сравнении не обнаружено обрыва,
-     * результаты анализа дополняются привязкой EventAnchorer на основе эталона.
-     * @param ar Результаты анализа
-     * @param etalon параметры эталона
-     */
-    public static List<ReflectogramMismatch> compareAndMakeAlarms(AnalysisResult ar,
-            Etalon etalon) {
-        // формируем выходной список
-        List<ReflectogramMismatch> alarmList = new ArrayList<ReflectogramMismatch>();
+	/**
+	 * Сравнивает результаты анализа с порогом обнаружения
+	 * обрыва и эталонным MTM, формирует список алармов.
+	 * Текущая версия возвращает 0 или 1 алармов.
+	 * <p>
+	 * Кроме того, если в эталоне определен EventAnchorer,
+	 * а при сравнении не обнаружено обрыва,
+	 * результаты анализа дополняются привязкой EventAnchorer на основе эталона.
+	 * @param ar Результаты анализа
+	 * @param etalon параметры эталона
+	 */
+	public static List<ReflectogramMismatch> compareAndMakeAlarms(AnalysisResult ar,
+			Etalon etalon) {
+		// формируем выходной список
+		List<ReflectogramMismatch> alarmList = new ArrayList<ReflectogramMismatch>();
 
-        // получаем параметры эталона
-        ModelTraceManager etMTM = etalon.getMTM();
-        double breakThresh = etalon.getMinTraceLevel();
+		// получаем параметры эталона
+		ModelTraceManager etMTM = etalon.getMTM();
+		double breakThresh = etalon.getMinTraceLevel();
 
-        ModelTrace mt = ar.getMTAE().getModelTrace();
+		ModelTrace mt = ar.getMTAE().getModelTrace();
 
-        // начало конца волокна по эталону 
-        int etMinLength = etMTM.getMTAE().getSimpleEvent(
-                etMTM.getMTAE().getNEvents() - 1).getBegin();
+		// начало конца волокна по эталону 
+		int etMinLength = etMTM.getMTAE().getSimpleEvent(
+				etMTM.getMTAE().getNEvents() - 1).getBegin();
 
-        // НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
-//      outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
-//      outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
+		// НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
+//	  outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
+//	  outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
 
-        // пытаемся обнаружить обрыв волокна:
-        // (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
-        // XXX - надо ли было предварительно смещать р/г по вертикали?
-        int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
-        // (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала EOT ?
-        if (breakPos < 0 && ar.getTraceLength() < etMinLength)
-            breakPos = ar.getTraceLength();
+		// пытаемся обнаружить обрыв волокна:
+		// (1) на участке до ухода в шум (x < traceLength) - по уходу м.ф. ниже уровня breakThresh
+		// XXX - надо ли было предварительно смещать р/г по вертикали?
+		int breakPos = ModelTraceComparer.compareToMinLevel(mt, breakThresh);
+		// (2) на участке шума (x >= traceLength) - не ушли ли в шум до начала EOT ?
+		if (breakPos < 0 && ar.getTraceLength() < etMinLength)
+			breakPos = ar.getTraceLength();
 
-        // проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
-        if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
-        {
-            ReflectogramMismatch alarm = new ReflectogramMismatch();
-            alarm.setSeverity(ReflectogramMismatch.SEVERITY_HARD);
-            alarm.setAlarmType(ReflectogramMismatch.TYPE_LINEBREAK);
-            alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
-            alarm.setDeltaX(etMTM.getMTAE().getDeltaX());
-            // конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
-            alarm.setEndCoord(Math.min(ar.getDataLength(), etMinLength));
+		// проблема - breakPos случится при первом же уходе ниже minTraceLevel, что очень вероятно на последних километрах абс. нормальной р/г при работе на пределе динамического дипазона (see traces #38, #65)
+		if (breakPos >= 0 && breakPos < etMinLength) // если был обнаружен обрыв до начала EOT
+		{
+			ReflectogramMismatch alarm = new ReflectogramMismatch();
+			alarm.setSeverity(ReflectogramMismatch.SEVERITY_HARD);
+			alarm.setAlarmType(ReflectogramMismatch.TYPE_LINEBREAK);
+			alarm.setCoord(etMTM.fixAlarmPos(breakPos, false)); // корректируем с учетом событий
+			alarm.setDeltaX(etMTM.getMTAE().getDeltaX());
+			// конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
+			alarm.setEndCoord(Math.min(ar.getDataLength(), etMinLength));
 
-            // устанавливаем привязку аларма к событиям
-            ModelTraceComparer.setAlarmAnchors(alarm, etalon);
+			// устанавливаем привязку аларма к событиям
+			ModelTraceComparer.setAlarmAnchors(alarm, etalon);
 
-            // XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
-            // мб, в таком случае не надо игнорировать HARD алармы?
+			// XXX - если на обрыве есть заметное отражение, то дистанция будет завышена
+			// мб, в таком случае не надо игнорировать HARD алармы?
 
-            alarmList.add(alarm);
-        }
-        else // обрыв не обнаружен
-        {
-            ReflectogramMismatch alarm =
-            		ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
+			alarmList.add(alarm);
+		}
+		else // обрыв не обнаружен
+		{
+			ReflectogramMismatch alarm =
+					ModelTraceComparer.compareMTAEToMTM(ar.getMTAE(), etMTM);
 
-            // обеспечиваем EventAnchorer-привязку результатов анализа
-            ModelTraceComparer.createEventAnchor(ar, etalon);
+			// обеспечиваем EventAnchorer-привязку результатов анализа
+			ModelTraceComparer.createEventAnchor(ar, etalon);
 
-            // устанавливаем привязку аларма к событиям
-            if (alarm != null) {
-            	ModelTraceComparer.setAlarmAnchors(alarm, etalon);
-            }
+			// устанавливаем привязку аларма к событиям
+			if (alarm != null) {
+				ModelTraceComparer.setAlarmAnchors(alarm, etalon);
+			}
 
-            if (alarm != null) {
-                alarmList.add(alarm);
-            }
-        }
-        return alarmList;
-    }
+			if (alarm != null) {
+				alarmList.add(alarm);
+			}
+		}
+		return alarmList;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.18 2005/07/14 14:28:39 saa Exp $
+ * $Id: Thresh.java,v 1.19 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 
@@ -23,13 +23,13 @@ implements Cloneable
 {
 	protected static final boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false };
 	protected static final boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
-    protected static final int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key для данного
+	protected static final int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key для данного
 //    protected static final int[] LIMIT_KEY = new int[] { 1, 1, 3, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
 //    protected static final int[] FORCEMOVE_KEY = new int[] { 0, 0, 2, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
-    protected static final int[] LIMIT_KEY = new int[] { 0, 1, 2, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
-    protected static final int[] FORCEMOVE_KEY = new int[] { 1, 0, 3, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
+	protected static final int[] LIMIT_KEY = new int[] { 0, 1, 2, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
+	protected static final int[] FORCEMOVE_KEY = new int[] { 1, 0, 3, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
 
-    public static final int SOFT_UP = 0;
+	public static final int SOFT_UP = 0;
 	public static final int HARD_UP = 1;
 	public static final int SOFT_DOWN = 2;
 	public static final int HARD_DOWN = 3;
@@ -57,11 +57,11 @@ implements Cloneable
 		this.xMax = xMax;
 	}
 
-    @Override
+	@Override
 	public Object clone() throws CloneNotSupportedException
-    {
-        return super.clone();
-    }
+	{
+		return super.clone();
+	}
 
 	public static Thresh readFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException
@@ -87,10 +87,10 @@ implements Cloneable
 	}
 
 	protected abstract void readSpecificFromDIS(DataInputStream dis)
-    throws IOException;
+	throws IOException;
 
-    protected abstract void writeSpecificToDOS(DataOutputStream dos)
-    throws IOException;
+	protected abstract void writeSpecificToDOS(DataOutputStream dos)
+	throws IOException;
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException
@@ -145,11 +145,11 @@ implements Cloneable
 	// используется в native-коде
 	protected abstract void roundUp(int key);
 
-    public static boolean isKeyUpper(int key) {
-        return IS_KEY_UPPER[key];
-    }
+	public static boolean isKeyUpper(int key) {
+		return IS_KEY_UPPER[key];
+	}
 
-    public static boolean isKeyHard(int key) {
-        return IS_KEY_HARD[key];
-    }
+	public static boolean isKeyHard(int key) {
+		return IS_KEY_HARD[key];
+	}
 }

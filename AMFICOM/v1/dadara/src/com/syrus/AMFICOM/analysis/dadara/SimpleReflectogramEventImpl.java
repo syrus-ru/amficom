@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.9 2005/06/28 14:38:23 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.10 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import java.io.IOException;
  * there is no need of streaming this (super-)class itself by now.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/06/28 14:38:23 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class SimpleReflectogramEventImpl
@@ -75,13 +75,13 @@ implements SimpleReflectogramEvent
 	/**
 	 * reads from stream base object state
 	 */
-    protected void readBaseFromDIS(DataInputStream dis)
-    throws IOException
-    {
-        this.begin = dis.readInt();
-        this.end = dis.readInt();
-        this.eventType = dis.readInt();
-    }
+	protected void readBaseFromDIS(DataInputStream dis)
+	throws IOException
+	{
+		this.begin = dis.readInt();
+		this.end = dis.readInt();
+		this.eventType = dis.readInt();
+	}
 
 	/**
 	 * writes to stream base state of objects of an array

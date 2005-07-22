@@ -54,18 +54,18 @@ public class ReflectogramMath
 	}
 	public static double[] getMaxDifPM(double[] y, ModelFunction mf, int begin, int end)
 	{
-	    double[] ret = new double[2];
-	    ret[0] = 0;
-	    ret[1] = 0;
-	    for (int i = begin; i < end; i++)
-	    {
-	        double dif = y[i] - mf.fun(i);
-	        if (dif < ret[0])
-	            ret[0] = dif;
-	        if (dif > ret[1])
-	            ret[1] = dif;
-	    }
-	    return ret;
+		double[] ret = new double[2];
+		ret[0] = 0;
+		ret[1] = 0;
+		for (int i = begin; i < end; i++)
+		{
+			double dif = y[i] - mf.fun(i);
+			if (dif < ret[0])
+				ret[0] = dif;
+			if (dif > ret[1])
+				ret[1] = dif;
+		}
+		return ret;
 	}
 	public static void alignArrayToEtalon(double[] y, final ModelTrace etalon)
 	{
@@ -134,7 +134,7 @@ public class ReflectogramMath
 
 	public static int getNonReflectiveEventSize(double[] data, double pulsewidth, double refraction, double resolution)
 	{
-        /*
+		/*
 		double firstLevel = 0.25;
 		double secondLevel = 1.75;
 		int firstPoint = 0;
@@ -159,14 +159,14 @@ public class ReflectogramMath
 				break;
 			}
 		double[] d = ReflectogramMath.linearize2point(data, firstPoint, secondPoint);
-        double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
-        */
-        if (pulsewidth <= 0)
-            return 50; // XXX: default wavelet width when pulsewidth is unknown
-        double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
-        // ширина вейвлета меньше 2 не допустимо быть в принципе
-        // значения меньше 5 не рекомендуются как приводящие к неустойчивому анализу
-        // 15 (5..20) - на проведенных тестах близко к оптимальному
+		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
+		*/
+		if (pulsewidth <= 0)
+			return 50; // XXX: default wavelet width when pulsewidth is unknown
+		double eventSize = 150d / refraction * pulsewidth / 1000d / resolution;
+		// ширина вейвлета меньше 2 не допустимо быть в принципе
+		// значения меньше 5 не рекомендуются как приводящие к неустойчивому анализу
+		// 15 (5..20) - на проведенных тестах близко к оптимальному
 		if(eventSize < 15)
 			eventSize = 15;
 		return (int)eventSize;
@@ -197,74 +197,74 @@ public class ReflectogramMath
 		return res;
 	}
 
-    public static double getPo(SimpleReflectogramEvent[] se,
-            int i, ModelTrace mt) {
-        if (se[i].getEventType() == SimpleReflectogramEvent.DEADZONE)
-        {
-            for (int j = i + 1; j < se.length; j++) {
-                if (se[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
-                    int x1 = se[j].getBegin() + 1;
-                    int x2 = se[j].getEnd() - 1;
-                    if (x1 >= x2)
-                    {
-                        return mt.getY(x1);
-                    }
-                    else
-                    {
-                        double y1 = mt.getY(x1);
-                        double y2 = mt.getY(x2);
-                        return (x1 * y2 - x2 * y1) / (x1 - x2);
-                    }
-                }
-            }
-        }
-        return mt.getY(se[i].getBegin());
-    }
-    public static int[] getEdzAdz(double po,
-            SimpleReflectogramEvent sre, ModelTrace mt) {
-        int adz = 0;
-        int edz = 0;
-        final int N = sre.getEnd() - sre.getBegin();
-        double[] yarr = mt.getYArrayZeroPad(sre.getBegin(), N);
-        // find max
-        double vmax = po;
-        for (int k = 0; k < N; k++) {
-            if (vmax < yarr[k])
-                vmax = yarr[k];
-        }
-        // find width
-        for (int k = 0; k < N; k++) {
-            if (yarr[k] > vmax - 1.5)
-                edz++;
-            if (yarr[k] > po + .5)
-                adz++;
-        }
-        return new int[] { edz, adz };
-    }
-    public static double getMaxDev(double[] y,
-            SimpleReflectogramEvent se, ModelTrace mt) {
-        ModelTrace yMT = new ArrayModelTrace(y);
-        return ReflectogramComparer.getMaxDeviation(mt, yMT, se);
-    }
-    public static double getRmsDev(double[] y,
-            SimpleReflectogramEvent se, ModelTrace mt) {
-        ModelTrace yMT = new ArrayModelTrace(y);
-        return ReflectogramComparer.getRMSDeviation(mt, yMT, se);
-    }
-    public static double getYMin(SimpleReflectogramEvent ev, ModelTrace mt) {
-        return getArrayMin(mt.getYRE(ev));
-    }
-    public static double getYMax(SimpleReflectogramEvent ev, ModelTrace mt) {
-        return getArrayMax(mt.getYRE(ev));
-    }
-    /**
-     * used to find RMS Value of noise
-     */
-    public static double getRMSValue(double[]y, int iFrom, int iToEx, double y0) {
-        double acc = 0;
-        for (int i = iFrom; i < iToEx; i++) {
-            acc += (y[i] - y0) * (y[i] - y0);
-        }
-        return y0 + Math.sqrt(acc / (iToEx - iFrom));
-    }
+	public static double getPo(SimpleReflectogramEvent[] se,
+			int i, ModelTrace mt) {
+		if (se[i].getEventType() == SimpleReflectogramEvent.DEADZONE)
+		{
+			for (int j = i + 1; j < se.length; j++) {
+				if (se[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
+					int x1 = se[j].getBegin() + 1;
+					int x2 = se[j].getEnd() - 1;
+					if (x1 >= x2)
+					{
+						return mt.getY(x1);
+					}
+					else
+					{
+						double y1 = mt.getY(x1);
+						double y2 = mt.getY(x2);
+						return (x1 * y2 - x2 * y1) / (x1 - x2);
+					}
+				}
+			}
+		}
+		return mt.getY(se[i].getBegin());
+	}
+	public static int[] getEdzAdz(double po,
+			SimpleReflectogramEvent sre, ModelTrace mt) {
+		int adz = 0;
+		int edz = 0;
+		final int N = sre.getEnd() - sre.getBegin();
+		double[] yarr = mt.getYArrayZeroPad(sre.getBegin(), N);
+		// find max
+		double vmax = po;
+		for (int k = 0; k < N; k++) {
+			if (vmax < yarr[k])
+				vmax = yarr[k];
+		}
+		// find width
+		for (int k = 0; k < N; k++) {
+			if (yarr[k] > vmax - 1.5)
+				edz++;
+			if (yarr[k] > po + .5)
+				adz++;
+		}
+		return new int[] { edz, adz };
+	}
+	public static double getMaxDev(double[] y,
+			SimpleReflectogramEvent se, ModelTrace mt) {
+		ModelTrace yMT = new ArrayModelTrace(y);
+		return ReflectogramComparer.getMaxDeviation(mt, yMT, se);
+	}
+	public static double getRmsDev(double[] y,
+			SimpleReflectogramEvent se, ModelTrace mt) {
+		ModelTrace yMT = new ArrayModelTrace(y);
+		return ReflectogramComparer.getRMSDeviation(mt, yMT, se);
+	}
+	public static double getYMin(SimpleReflectogramEvent ev, ModelTrace mt) {
+		return getArrayMin(mt.getYRE(ev));
+	}
+	public static double getYMax(SimpleReflectogramEvent ev, ModelTrace mt) {
+		return getArrayMax(mt.getYRE(ev));
+	}
+	/**
+	 * used to find RMS Value of noise
+	 */
+	public static double getRMSValue(double[]y, int iFrom, int iToEx, double y0) {
+		double acc = 0;
+		for (int i = iFrom; i < iToEx; i++) {
+			acc += (y[i] - y0) * (y[i] - y0);
+		}
+		return y0 + Math.sqrt(acc / (iToEx - iFrom));
+	}
 }

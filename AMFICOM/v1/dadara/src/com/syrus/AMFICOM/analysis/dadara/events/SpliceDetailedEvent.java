@@ -1,5 +1,5 @@
 /*-
- * $Id: SpliceDetailedEvent.java,v 1.3 2005/07/18 14:24:42 saa Exp $
+ * $Id: SpliceDetailedEvent.java,v 1.4 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,45 +20,45 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
  * y1 - уровень конца события, дБ (отрицательное значение)
  * loss - уровень потерь на событии (это не совсем то же, что и разница уровня на конце и в начале)
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/18 14:24:42 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class SpliceDetailedEvent extends DetailedEvent {
-    double y0;
-    double y1;
-    double loss;
+	double y0;
+	double y1;
+	double loss;
 
-    public SpliceDetailedEvent(SimpleReflectogramEvent sre, double y0,
-            double y1, double loss) {
-        super(sre);
-        this.y0 = y0;
-        this.y1 = y1;
-        this.loss = loss;
-    }
-    public SpliceDetailedEvent() {
-        // empty, for dis reading
-    }
+	public SpliceDetailedEvent(SimpleReflectogramEvent sre, double y0,
+			double y1, double loss) {
+		super(sre);
+		this.y0 = y0;
+		this.y1 = y1;
+		this.loss = loss;
+	}
+	public SpliceDetailedEvent() {
+		// empty, for dis reading
+	}
 
-    public double getLoss() {
-        return loss;
-    }
-    public double getY0() {
-        return y0;
-    }
-    public double getY1() {
-        return y1;
-    }
-    @Override
+	public double getLoss() {
+		return loss;
+	}
+	public double getY0() {
+		return y0;
+	}
+	public double getY1() {
+		return y1;
+	}
+	@Override
 	protected void writeSpecificToDOS(DataOutputStream dos) throws IOException {
-        dos.writeDouble(y0);
-        dos.writeDouble(y1);
-        dos.writeDouble(loss);
-    }
+		dos.writeDouble(y0);
+		dos.writeDouble(y1);
+		dos.writeDouble(loss);
+	}
 
-    @Override
+	@Override
 	protected void readSpecificFromDIS(DataInputStream dis) throws IOException {
-        y0 = dis.readDouble();
-        y1 = dis.readDouble();
-        loss = dis.readDouble();
-    }
+		y0 = dis.readDouble();
+		y1 = dis.readDouble();
+		loss = dis.readDouble();
+	}
 }

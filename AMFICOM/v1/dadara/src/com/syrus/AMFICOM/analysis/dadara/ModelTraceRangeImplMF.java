@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceRangeImplMF.java,v 1.3 2005/07/14 14:28:39 saa Exp $
+ * $Id: ModelTraceRangeImplMF.java,v 1.4 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,45 +12,45 @@ package com.syrus.AMFICOM.analysis.dadara;
  * Может быть полезен для описания участка модельной кривой
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class ModelTraceRangeImplMF extends ModelTraceRange {
-    private int begin;
-    private int end;
-    private ModelFunction mf;
-    private double[] cache = null;
+	private int begin;
+	private int end;
+	private ModelFunction mf;
+	private double[] cache = null;
 
-    public ModelTraceRangeImplMF(ModelFunction mf, int begin, int end) {
-        this.begin = begin;
-        this.end = end;
-        this.mf = mf;
-    }
+	public ModelTraceRangeImplMF(ModelFunction mf, int begin, int end) {
+		this.begin = begin;
+		this.end = end;
+		this.mf = mf;
+	}
 
-    @Override
+	@Override
 	public int getBegin() {
-        return begin;
-    }
+		return begin;
+	}
 
-    @Override
+	@Override
 	public int getEnd() {
-        return end;
-    }
+		return end;
+	}
 
-    @Override
+	@Override
 	public double getY(int x) {
-        return mf.fun(x);
-    }
+		return mf.fun(x);
+	}
 
-    @Override
+	@Override
 	public double[] getYArray(int x0, int N) {
-        if (cache == null) {
-            cache = mf.funFillArray(begin, 1.0, end - begin + 1); 
-        }
-        double[] yRet = new double[N];
-        // possible exceptions during arraycopy will just mean
-        // that input x0 and N are out of range
-        System.arraycopy(cache, x0 - begin, yRet, 0, N);
-        return yRet;
-    }
+		if (cache == null) {
+			cache = mf.funFillArray(begin, 1.0, end - begin + 1); 
+		}
+		double[] yRet = new double[N];
+		// possible exceptions during arraycopy will just mean
+		// that input x0 and N are out of range
+		System.arraycopy(cache, x0 - begin, yRet, 0, N);
+		return yRet;
+	}
 }

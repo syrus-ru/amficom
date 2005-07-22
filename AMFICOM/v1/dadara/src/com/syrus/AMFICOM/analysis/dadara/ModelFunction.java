@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.27 $, $Date: 2005/07/21 13:10:21 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/22 06:39:51 $
  * @author $Author: saa $
  * @author saa
  * @module dadara
@@ -131,7 +131,7 @@ public class ModelFunction {
 	/**
 	 * Процедура фитировки. Описание остальных параметров см. в nFit1)
 	 * @param error желаемая точность фитировки вдоль кривой
-     * @param xStops точки, в которых рекомендуется сделать изломы (для ломаной)
+	 * @param xStops точки, в которых рекомендуется сделать изломы (для ломаной)
 	 */
 	private native void nFit4(double y[], int begin, int end, int fitMode,
 			int linkFlags, double linkData0,
@@ -234,7 +234,7 @@ public class ModelFunction {
 	
 	public double getEstimatedNoiseSuppressionLength()
 	{
-	    return nGetAttr("noiseSuppressionLength", 1.0);
+		return nGetAttr("noiseSuppressionLength", 1.0);
 	}
 	
 	public boolean allowsLeftLinking()
@@ -328,7 +328,7 @@ public class ModelFunction {
 	 */
 	public void fit(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
-	    //System.out.println("fit-3: linkFlags " + linkFlags);
+		//System.out.println("fit-3: linkFlags " + linkFlags);
 		nFit1(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0);
 	}
 
@@ -348,22 +348,22 @@ public class ModelFunction {
 			int linkFlags, double linkData0,
 			double errorR, double errorA, int maxPoints)
 	{
-	    //System.out.println("fit-2: linkFlags " + linkFlags);
+		//System.out.println("fit-2: linkFlags " + linkFlags);
 		nFit2(y, begin, end, FITMODE_VARY_ALL,
 			linkFlags, linkData0,
 			errorR, errorA, maxPoints);
 	}
 
-    public static ModelFunction createFitedAsBreakL(double[] y,
-            int begin, int end,
-            double[] noise,
-            SimpleReflectogramEvent[] re)
+	public static ModelFunction createFitedAsBreakL(double[] y,
+			int begin, int end,
+			double[] noise,
+			SimpleReflectogramEvent[] re)
 	{
-        int[] stops = re != null ? new int[re.length] : null;
-        if (re != null) {
-            for (int i = 0; i < re.length; i++)
-                stops[i] = re[i].getBegin();
-        }
+		int[] stops = re != null ? new int[re.length] : null;
+		if (re != null) {
+			for (int i = 0; i < re.length; i++)
+				stops[i] = re[i].getBegin();
+		}
 		ModelFunction mf = createLinear();
 		mf.nFit4(y, begin, end, FITMODE_SET_BREAKL, 0, 0,
 			noise, stops);
@@ -381,7 +381,7 @@ public class ModelFunction {
 	 */
 	public void fitLinearOnly(double y[], int begin, int end, int linkFlags, double linkData0)
 	{
-	    //System.out.println("fit-1(Lin): linkFlags " + linkFlags);
+		//System.out.println("fit-1(Lin): linkFlags " + linkFlags);
 		nFit1(y, begin, end, FITMODE_VARY_LIN, linkFlags, linkData0);
 	}
 
@@ -448,14 +448,14 @@ public class ModelFunction {
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
-            throw new InternalError("Unexpected exception" + e.toString());
+			throw new InternalError("Unexpected exception" + e.toString());
 		}
 	}
 
 	public static ModelFunction createFromDIS(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
-	    ModelFunction mf = new ModelFunction();
-	    mf.readFromDIS(dis);
+		ModelFunction mf = new ModelFunction();
+		mf.readFromDIS(dis);
 		return mf;
 	}
 

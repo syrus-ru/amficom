@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.29 2005/07/11 08:24:11 bass Exp $
+ * $Id: ModelTraceComparer.java,v 1.30 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,123 +30,123 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/07/11 08:24:11 $
+ * @author $Author: saa $
+ * @version $Revision: 1.30 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class ModelTraceComparer
 {
-    private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
-        ReflectogramMismatch.SEVERITY_SOFT;
-    
-    private ModelTraceComparer() {
-        // non-instantiable
-    }
+	private static final int ALARM_LEVEL_FOR_EVENT_CHANGE =
+		ReflectogramMismatch.SEVERITY_SOFT;
+	
+	private ModelTraceComparer() {
+		// non-instantiable
+	}
 
-    /**
-     * Сравнивает по маскам и по событиям. Выбирает доминирующий аларм.
-     * Обеспечивает корректную дистанцию аларма (соответствующему
-     * началу события в эталоне). Не проводит SOAnchor-привязку.
-     * @param mtae сравниваемая текущая "а/к с событиями"
-     * @param mtm эталонная "а/к с событиями" с порогами
-     * @return аларм либо null
-     */
-    public static ReflectogramMismatch compareMTAEToMTM(
-            ReliabilityModelTraceAndEvents mtae,
-            ModelTraceManager mtm)
-    {
-        ReflectogramMismatch alarmTrace =
-            compareTraceToMTM(mtae.getModelTrace(), mtm);
-        ReflectogramMismatch alarmEvents =
-            compareEventsToMTM(
-                (ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
-                mtm);
-        // FIXME: debug sysout
-        System.out.println(
-        		"ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
-        System.out.println(
-        		"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
-        System.out.println(
-        		"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
-        if (alarmTrace != null)
-            return alarmTrace;
-        else
-            return alarmEvents;
-    }
+	/**
+	 * Сравнивает по маскам и по событиям. Выбирает доминирующий аларм.
+	 * Обеспечивает корректную дистанцию аларма (соответствующему
+	 * началу события в эталоне). Не проводит SOAnchor-привязку.
+	 * @param mtae сравниваемая текущая "а/к с событиями"
+	 * @param mtm эталонная "а/к с событиями" с порогами
+	 * @return аларм либо null
+	 */
+	public static ReflectogramMismatch compareMTAEToMTM(
+			ReliabilityModelTraceAndEvents mtae,
+			ModelTraceManager mtm)
+	{
+		ReflectogramMismatch alarmTrace =
+			compareTraceToMTM(mtae.getModelTrace(), mtm);
+		ReflectogramMismatch alarmEvents =
+			compareEventsToMTM(
+				(ReliabilitySimpleReflectogramEvent[])mtae.getSimpleEvents(),
+				mtm);
+		// FIXME: debug sysout
+		System.out.println(
+				"ModelTraceComparer.compareToMTM: comparing mtae to mtm:");
+		System.out.println(
+				"ModelTraceComparer.compareToMTM: trace alarm: " + alarmTrace);
+		System.out.println(
+				"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
+		if (alarmTrace != null)
+			return alarmTrace;
+		else
+			return alarmEvents;
+	}
 
-    /**
-     * Сравнивает события ReliabilitySimpleReflectogramEvent[] с эталоном.
-     * Выходной аларм имеет дистанцию начала отличающегося события.
-     * @param events сравниваемый список событий
-     * @param mtm эталон
-     * @return soft type ReflectogramMismatch, если найдены значимые
-     * отличия в списке событий, либо null, если значимых различий не найдено.
-     */
-    public static ReflectogramMismatch compareEventsToMTM(
-            ReliabilitySimpleReflectogramEvent[] events,
-            ModelTraceManager mtm)
-    {
-        ReliabilitySimpleReflectogramEvent[] etEvents =
-            (ReliabilitySimpleReflectogramEvent[])mtm.getMTAE().getSimpleEvents();
-        SimpleReflectogramEventComparer rc = new SimpleReflectogramEventComparer(events, etEvents);
-        ReflectogramMismatch out = new ReflectogramMismatch();
-        ReflectogramMismatch cur = new ReflectogramMismatch();
-        cur.setAlarmType(ReflectogramMismatch.TYPE_EVENTLISTCHANGED);
-        cur.setSeverity(ALARM_LEVEL_FOR_EVENT_CHANGE);
-        cur.setDeltaX(mtm.getMTAE().getDeltaX());
-        int i;
-        for (i = 0; i < etEvents.length; i++)
-        {
-        	// в принципе, проверка "событие не лин." не нужна, т.к. потеря лин. события все равно достоверным не считается
-            if (rc.isEtalonEventReliablyLost(i)
-            	&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR)
-            {
-                cur.setCoord(etEvents[i].getBegin());
-                cur.setEndCoord(etEvents[i].getEnd());
-                System.out.println("MTC: compareEventsToMTM: etalon event #"
-                        + i + " ( " + cur.getCoord() + " .. "
-                        + cur.getEndCoord() + ") is reliably lost");
-                out.toHardest(cur);
-            }
-        }
-        for (i = 0; i < events.length; i++)
-        {
-        	// в принципе, проверка "событие не лин." не нужна, т.к. появление лин. события все равно достоверным не считается
-            if (rc.isProbeEventReliablyNew(i)
-            	&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR)
-            {
-                cur.setCoord(events[i].getBegin());
-                cur.setEndCoord(events[i].getEnd());
-                System.out.println("MTC: compareEventsToMTM: probe event #"
-                        + i + " ( " + cur.getCoord() + " .. "
-                        + cur.getEndCoord() + ") is reliably new");
-                out.toHardest(cur);
-            }
-        }
-        return out.getAlarmType() > ReflectogramMismatch.SEVERITY_NONE
-            ? out
-            : null;
-    }
+	/**
+	 * Сравнивает события ReliabilitySimpleReflectogramEvent[] с эталоном.
+	 * Выходной аларм имеет дистанцию начала отличающегося события.
+	 * @param events сравниваемый список событий
+	 * @param mtm эталон
+	 * @return soft type ReflectogramMismatch, если найдены значимые
+	 * отличия в списке событий, либо null, если значимых различий не найдено.
+	 */
+	public static ReflectogramMismatch compareEventsToMTM(
+			ReliabilitySimpleReflectogramEvent[] events,
+			ModelTraceManager mtm)
+	{
+		ReliabilitySimpleReflectogramEvent[] etEvents =
+			(ReliabilitySimpleReflectogramEvent[])mtm.getMTAE().getSimpleEvents();
+		SimpleReflectogramEventComparer rc = new SimpleReflectogramEventComparer(events, etEvents);
+		ReflectogramMismatch out = new ReflectogramMismatch();
+		ReflectogramMismatch cur = new ReflectogramMismatch();
+		cur.setAlarmType(ReflectogramMismatch.TYPE_EVENTLISTCHANGED);
+		cur.setSeverity(ALARM_LEVEL_FOR_EVENT_CHANGE);
+		cur.setDeltaX(mtm.getMTAE().getDeltaX());
+		int i;
+		for (i = 0; i < etEvents.length; i++)
+		{
+			// в принципе, проверка "событие не лин." не нужна, т.к. потеря лин. события все равно достоверным не считается
+			if (rc.isEtalonEventReliablyLost(i)
+				&& etEvents[i].getEventType() != SimpleReflectogramEvent.LINEAR)
+			{
+				cur.setCoord(etEvents[i].getBegin());
+				cur.setEndCoord(etEvents[i].getEnd());
+				System.out.println("MTC: compareEventsToMTM: etalon event #"
+						+ i + " ( " + cur.getCoord() + " .. "
+						+ cur.getEndCoord() + ") is reliably lost");
+				out.toHardest(cur);
+			}
+		}
+		for (i = 0; i < events.length; i++)
+		{
+			// в принципе, проверка "событие не лин." не нужна, т.к. появление лин. события все равно достоверным не считается
+			if (rc.isProbeEventReliablyNew(i)
+				&& events[i].getEventType() != SimpleReflectogramEvent.LINEAR)
+			{
+				cur.setCoord(events[i].getBegin());
+				cur.setEndCoord(events[i].getEnd());
+				System.out.println("MTC: compareEventsToMTM: probe event #"
+						+ i + " ( " + cur.getCoord() + " .. "
+						+ cur.getEndCoord() + ") is reliably new");
+				out.toHardest(cur);
+			}
+		}
+		return out.getAlarmType() > ReflectogramMismatch.SEVERITY_NONE
+			? out
+			: null;
+	}
 
-    /**
-     * Сравнивает кривую с порогами заданного уровня.
-     * @param yProbe сравниваемая кривая
-     * @param mtm эталонный mtm, по которому определяются пороги
-     * @param level уровень сравнения (0.0 - SOFT, 1.0 - HARD)
-     * @param alarm хранилище выходных параметров начала и конца аларма.
-     *   Модифицируется, если обнаружено превышение порогов.
-     * @return true, если обнаружено превышение порогов,
-     *   false, если превышения порогов заданного уровня нет.
-     */
-    private static boolean compareTraceToMTMAtLevel(double[] yProbe,
-    		ModelTraceManager mtm, double level, ReflectogramMismatch alarm)
-    {
-    	ModelTrace thMTU = mtm.getThresholdMTUpperByLevel(level);
-    	ModelTrace thMTL = mtm.getThresholdMTLowerByLevel(level);
-    	int alarmBegin = -1;
-    	int alarmEnd = -1;
-    	// compare to upper MT
-    	{
+	/**
+	 * Сравнивает кривую с порогами заданного уровня.
+	 * @param yProbe сравниваемая кривая
+	 * @param mtm эталонный mtm, по которому определяются пороги
+	 * @param level уровень сравнения (0.0 - SOFT, 1.0 - HARD)
+	 * @param alarm хранилище выходных параметров начала и конца аларма.
+	 *   Модифицируется, если обнаружено превышение порогов.
+	 * @return true, если обнаружено превышение порогов,
+	 *   false, если превышения порогов заданного уровня нет.
+	 */
+	private static boolean compareTraceToMTMAtLevel(double[] yProbe,
+			ModelTraceManager mtm, double level, ReflectogramMismatch alarm)
+	{
+		ModelTrace thMTU = mtm.getThresholdMTUpperByLevel(level);
+		ModelTrace thMTL = mtm.getThresholdMTLowerByLevel(level);
+		int alarmBegin = -1;
+		int alarmEnd = -1;
+		// compare to upper MT
+		{
 			double[] yTh = thMTU.getYArray();
 			final int sign = 1;
 			int len = Math.min(yProbe.length, yTh.length);
@@ -165,9 +165,9 @@ public class ModelTraceComparer
 				alarmBegin = beg2;
 				alarmEnd = end2;
 			}
-    	}
-    	// compare to lower MT
-    	{
+		}
+		// compare to lower MT
+		{
 			double[] yTh = thMTL.getYArray();
 			final int sign = -1;
 			int len = Math.min(yProbe.length, yTh.length);
@@ -186,27 +186,27 @@ public class ModelTraceComparer
 				alarmBegin = beg2;
 				alarmEnd = end2;
 			}
-    	}
-    	// apply results
-    	if (alarmBegin < 0)
-    		return false;
-    	alarm.setCoord(mtm.fixAlarmPos(alarmBegin, true)); // XXX: кажется, эта дистанция не используется
+		}
+		// apply results
+		if (alarmBegin < 0)
+			return false;
+		alarm.setCoord(mtm.fixAlarmPos(alarmBegin, true)); // XXX: кажется, эта дистанция не используется
 		if (alarmEnd < alarm.getCoord())
 			alarmEnd = alarm.getCoord();
-    	alarm.setEndCoord(alarmEnd);
-    	return true;
-    }
+		alarm.setEndCoord(alarmEnd);
+		return true;
+	}
 
-    /**
-     * Определяет степень превышения кривой порогов
-     * @param y кривая
-     * @param mtm пороги
-     * @param alarm аларм, в котором будет вписана степень превышения
-     *   порогов  
-     */
-    private static void fillAlarmMismatch(double[] y,
-    		ModelTraceManager mtm, ReflectogramMismatch alarm)
-    {
+	/**
+	 * Определяет степень превышения кривой порогов
+	 * @param y кривая
+	 * @param mtm пороги
+	 * @param alarm аларм, в котором будет вписана степень превышения
+	 *   порогов  
+	 */
+	private static void fillAlarmMismatch(double[] y,
+			ModelTraceManager mtm, ReflectogramMismatch alarm)
+	{
 		ReflectogramMismatch tmpAlarm = new ReflectogramMismatch();
 		final int N = 10;
 		for (int i = 0; i <= N; i++) {
@@ -216,12 +216,12 @@ public class ModelTraceComparer
 				alarm.setMismatch(level, levelNext);
 			}
 		}
-    }
+	}
 
-    public static ReflectogramMismatch compareTraceToMTM(ModelTrace mt,
-            ModelTraceManager mtm)
+	public static ReflectogramMismatch compareTraceToMTM(ModelTrace mt,
+			ModelTraceManager mtm)
 	{
-        // create initial 'no alarm' alarm
+		// create initial 'no alarm' alarm
 		ReflectogramMismatch alarm = new ReflectogramMismatch();
 		double[] y = mt.getYArray();
 		for (int key = 0; key < 4; key++)
@@ -259,7 +259,7 @@ public class ModelTraceComparer
 					alarm.setCoord(alarmCoord);
 					alarm.setEndCoord(alarmEnd);
 					alarm.setAlarmType(ReflectogramMismatch.TYPE_OUTOFMASK);
-                    alarm.setDeltaX(mtm.getMTAE().getDeltaX());
+					alarm.setDeltaX(mtm.getMTAE().getDeltaX());
 				}
 			}
 		}
@@ -291,16 +291,16 @@ public class ModelTraceComparer
 	 * 
 	 * @param mt модельная кривая
 	 * @param th пороговое значение Y, отсчитанное от уровня абс. максимума.
-     *   Значение меньше нуля.
-     * @return дистанция обрыва либо -1
+	 *   Значение меньше нуля.
+	 * @return дистанция обрыва либо -1
 	 */
 	public static int compareToMinLevel(ModelTrace mt, double th)
 	{
 		// XXX: проводим выравнивание, которое, вероятно, более не нужно
 		double[] y = mt.getYArray();
-        double yMax = ReflectogramMath.getArrayMax(y);
-        int i;
-        // ищем первую точку выше порога
+		double yMax = ReflectogramMath.getArrayMax(y);
+		int i;
+		// ищем первую точку выше порога
 		for (i = 0; i < y.length; i++) {
 			if (y[i] >= yMax + th)
 				break;

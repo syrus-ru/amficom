@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.5 2005/05/01 06:12:58 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.6 2005/07/22 06:39:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,17 +16,17 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/05/01 06:12:58 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/22 06:39:51 $
  * @module
  */
 public class DataStreamableUtil
 {
-    private DataStreamableUtil() {
-        // non-instantiable
-    }
+	private DataStreamableUtil() {
+		// non-instantiable
+	}
 
 	public static DataStreamable readDataStreamableFromBA(byte[] bar,
-            DataStreamable.Reader reader) throws DataFormatException
+			DataStreamable.Reader reader) throws DataFormatException
 	{
 		try
 		{
@@ -36,7 +36,7 @@ public class DataStreamableUtil
 		}
 		catch (IOException e)
 		{
-            throw new DataFormatException(e.toString());
+			throw new DataFormatException(e.toString());
 		}
 		// do not catch (SignatureMismatchException e)
 	}
@@ -51,7 +51,7 @@ public class DataStreamableUtil
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
-            throw new InternalError("Unexpected exception: " + e.getMessage());
+			throw new InternalError("Unexpected exception: " + e.getMessage());
 		}
 	}
 }

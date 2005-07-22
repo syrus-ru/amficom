@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/07/14 14:28:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/22 06:39:51 $
  * @module dadara
  */
 public class ReflectogramMismatch {
@@ -80,126 +80,126 @@ public class ReflectogramMismatch {
 	private int coord = 0;
 	private int endCoord = 0; // для отображения
 	private int alarmType = TYPE_UNDEFINED;
-    private double deltaX = 0.0;
+	private double deltaX = 0.0;
 
-    // информация о (максимум двух) ближайших привязанных объектах
-    private SOAnchor ref1Id = null; // null, если привязка #1 не определена
-    private int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
-    private SOAnchor ref2Id = null; // null, если привязка #2 не определена
-    private int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
+	// информация о (максимум двух) ближайших привязанных объектах
+	private SOAnchor ref1Id = null; // null, если привязка #1 не определена
+	private int ref1Coord = 0; // оптическая дистанция обьъекта #1, не определено, если ref1Id == null
+	private SOAnchor ref2Id = null; // null, если привязка #2 не определена
+	private int ref2Coord = 0; // оптическая дистанция обьъекта #2, не определено, если ref2Id == null
 
-    // оценка степени превышения предупр. порога по сравнению с тревожным
-    // состояние "не определено" - если min > max
-    // начальное состояние - "не определено"
-    private double minMismatch = 1.0; // оценка снизу (состояние не определено)
-    private double maxMismatch = 0.0; // оценка сверху (состояние не определено)
+	// оценка степени превышения предупр. порога по сравнению с тревожным
+	// состояние "не определено" - если min > max
+	// начальное состояние - "не определено"
+	private double minMismatch = 1.0; // оценка снизу (состояние не определено)
+	private double maxMismatch = 0.0; // оценка сверху (состояние не определено)
 
-    /**
-     * Устанавливает степень превышения предупр. порога в состояние
-     * "определено" с диапазоном от min до max.
-     * min должен быть не более max
-     */
-    public void setMismatch(double min, double max) {
-    	if (min > max)
-    		throw new IllegalArgumentException("minMismatch > maxMismatch");
-    	this.minMismatch = min;
-    	this.maxMismatch = max;
-    }
+	/**
+	 * Устанавливает степень превышения предупр. порога в состояние
+	 * "определено" с диапазоном от min до max.
+	 * min должен быть не более max
+	 */
+	public void setMismatch(double min, double max) {
+		if (min > max)
+			throw new IllegalArgumentException("minMismatch > maxMismatch");
+		this.minMismatch = min;
+		this.maxMismatch = max;
+	}
 
-    /**
-     * Устанавливает степень превышения предупр. порога в состояние "не определено" 
-     */
-    public void unsetMismatch() {
-    	this.minMismatch = 1.0;
-    	this.maxMismatch = 0.0;
-    }
+	/**
+	 * Устанавливает степень превышения предупр. порога в состояние "не определено" 
+	 */
+	public void unsetMismatch() {
+		this.minMismatch = 1.0;
+		this.maxMismatch = 0.0;
+	}
 
-    /**
-     * @return true, если степень превышения предупр. порога определена
-     */
-    public boolean hasMismatch() {
-    	return minMismatch <= maxMismatch;
-    }
-    /**
-     * @return нижняя оценка степени превышения предупредительного порога,
-     *   если степень превышения определена
-     *   ({@link #hasMismatch() возвращает true})
-     * @throws IllegalArgumentException, если степень превышения не определена
-     */
-    public double getMinMismatch() {
-    	if (hasMismatch())
-    		return minMismatch;
-    	else
-    		throw new IllegalArgumentException();
-    }
-    /**
-     * @return верхняя оценка степени превышения предупредительного порога,
-     *   если степень превышения определена
-     *   ({@link #hasMismatch() возвращает true})
-     * @throws IllegalArgumentException, если степень превышения не определена
-     */
-    public double getMaxMismatch() {
-    	if (hasMismatch())
-    		return maxMismatch;
-    	else
-    		throw new IllegalArgumentException();
-    }
+	/**
+	 * @return true, если степень превышения предупр. порога определена
+	 */
+	public boolean hasMismatch() {
+		return minMismatch <= maxMismatch;
+	}
+	/**
+	 * @return нижняя оценка степени превышения предупредительного порога,
+	 *   если степень превышения определена
+	 *   ({@link #hasMismatch() возвращает true})
+	 * @throws IllegalArgumentException, если степень превышения не определена
+	 */
+	public double getMinMismatch() {
+		if (hasMismatch())
+			return minMismatch;
+		else
+			throw new IllegalArgumentException();
+	}
+	/**
+	 * @return верхняя оценка степени превышения предупредительного порога,
+	 *   если степень превышения определена
+	 *   ({@link #hasMismatch() возвращает true})
+	 * @throws IllegalArgumentException, если степень превышения не определена
+	 */
+	public double getMaxMismatch() {
+		if (hasMismatch())
+			return maxMismatch;
+		else
+			throw new IllegalArgumentException();
+	}
 
-    public int getSeverity() {
-        return severity;
-    }
-    public void setSeverity(int severity) {
-        this.severity = severity;
-    }
+	public int getSeverity() {
+		return severity;
+	}
+	public void setSeverity(int severity) {
+		this.severity = severity;
+	}
 	public int getSpecificType() {
 		return getAlarmType();
 	}
-    public double getDistance() {
-        return getDeltaX() * getCoord();
-    }
-    public void setAnchors(SOAnchor anchor1, int coord1,
-    		SOAnchor anchor2, int coord2) {
-    	if (anchor1 == null || anchor2 == null) {
-    		throw new IllegalArgumentException("null anchor in setAnchor");
-    	}
-    	ref1Id = anchor1;
-    	ref1Coord = coord1;
-    	ref2Id = anchor2;
-    	ref2Coord = coord2;
-    }
-    public void unSetAnchors() {
-    	ref1Id = null;
-    	ref1Coord = 0;
-    	ref2Id = null;
-    	ref2Coord = 0;
-    }
-    public boolean hasAnchors() {
-    	return ref1Id != null && ref2Id != null;
-    }
-    public SOAnchor getAnchor1Id() {
-    	if (! hasAnchors()) {
-    		throw new IllegalStateException();
-    	}
-    	return ref1Id;
-    }
-    public SOAnchor getAnchor2Id() {
-    	if (! hasAnchors()) {
-    		throw new IllegalStateException();
-    	}
-    	return ref2Id;
-    }
-    public int getAnchor1Coord() {
-    	if (! hasAnchors()) {
-    		throw new IllegalStateException();
-    	}
-    	return ref1Coord;
-    }
-    public int getAnchor2Coord() {
-    	if (! hasAnchors()) {
-    		throw new IllegalStateException();
-    	}
-    	return ref2Coord;
-    }
+	public double getDistance() {
+		return getDeltaX() * getCoord();
+	}
+	public void setAnchors(SOAnchor anchor1, int coord1,
+			SOAnchor anchor2, int coord2) {
+		if (anchor1 == null || anchor2 == null) {
+			throw new IllegalArgumentException("null anchor in setAnchor");
+		}
+		ref1Id = anchor1;
+		ref1Coord = coord1;
+		ref2Id = anchor2;
+		ref2Coord = coord2;
+	}
+	public void unSetAnchors() {
+		ref1Id = null;
+		ref1Coord = 0;
+		ref2Id = null;
+		ref2Coord = 0;
+	}
+	public boolean hasAnchors() {
+		return ref1Id != null && ref2Id != null;
+	}
+	public SOAnchor getAnchor1Id() {
+		if (! hasAnchors()) {
+			throw new IllegalStateException();
+		}
+		return ref1Id;
+	}
+	public SOAnchor getAnchor2Id() {
+		if (! hasAnchors()) {
+			throw new IllegalStateException();
+		}
+		return ref2Id;
+	}
+	public int getAnchor1Coord() {
+		if (! hasAnchors()) {
+			throw new IllegalStateException();
+		}
+		return ref1Coord;
+	}
+	public int getAnchor2Coord() {
+		if (! hasAnchors()) {
+			throw new IllegalStateException();
+		}
+		return ref2Coord;
+	}
 
 	/**
 	 * Creates an empty 'no alarm' alarm
@@ -217,25 +217,25 @@ public class ReflectogramMismatch {
 		ret.setCoord(dis.readInt());
 		ret.setEndCoord(dis.readInt());
 		ret.setAlarmType(dis.readInt());
-        ret.setDeltaX(dis.readDouble());
-        if (dis.readBoolean()) {
-        	ret.minMismatch = dis.readDouble(); // XXX: неплохо бы покомпактнее
-        	ret.maxMismatch = dis.readDouble();
-        } else {
-        	ret.minMismatch = 1.0;
-        	ret.maxMismatch = 0.0;
-        }
-        if(dis.readBoolean()) {
-        	ret.ref1Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
-        	ret.ref2Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
-        	ret.ref1Coord = dis.readInt();
-        	ret.ref2Coord = dis.readInt();
-        } else {
-        	ret.ref1Id = null;
-        	ret.ref1Id = null;
-        	ret.ref1Coord = 0;
-        	ret.ref2Coord = 0;
-        }
+		ret.setDeltaX(dis.readDouble());
+		if (dis.readBoolean()) {
+			ret.minMismatch = dis.readDouble(); // XXX: неплохо бы покомпактнее
+			ret.maxMismatch = dis.readDouble();
+		} else {
+			ret.minMismatch = 1.0;
+			ret.maxMismatch = 0.0;
+		}
+		if(dis.readBoolean()) {
+			ret.ref1Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
+			ret.ref2Id = (SOAnchor) SOAnchor.getDSReader().readFromDIS(dis);
+			ret.ref1Coord = dis.readInt();
+			ret.ref2Coord = dis.readInt();
+		} else {
+			ret.ref1Id = null;
+			ret.ref1Id = null;
+			ret.ref1Coord = 0;
+			ret.ref2Coord = 0;
+		}
 		return ret;
 	}
  
@@ -247,36 +247,36 @@ public class ReflectogramMismatch {
 		dos.writeInt(this.getCoord());
 		dos.writeInt(this.getEndCoord());
 		dos.writeInt(this.getAlarmType());
-        dos.writeDouble(this.getDeltaX());
-        if (hasMismatch()) {
-        	dos.writeBoolean(true);
-        	dos.writeDouble(this.minMismatch);
-        	dos.writeDouble(this.maxMismatch);
-        } else {
-        	dos.writeBoolean(false);
-        }
-        if (ref1Id != null && ref2Id != null) {
-        	dos.writeBoolean(true);
-        	ref1Id.writeToDOS(dos);
-        	ref2Id.writeToDOS(dos);
-        	dos.writeInt(ref1Coord);
-        	dos.writeInt(ref2Coord);
-        } else {
-        	dos.writeBoolean(false);
-        }
+		dos.writeDouble(this.getDeltaX());
+		if (hasMismatch()) {
+			dos.writeBoolean(true);
+			dos.writeDouble(this.minMismatch);
+			dos.writeDouble(this.maxMismatch);
+		} else {
+			dos.writeBoolean(false);
+		}
+		if (ref1Id != null && ref2Id != null) {
+			dos.writeBoolean(true);
+			ref1Id.writeToDOS(dos);
+			ref2Id.writeToDOS(dos);
+			dos.writeInt(ref1Coord);
+			dos.writeInt(ref2Coord);
+		} else {
+			dos.writeBoolean(false);
+		}
 	}
 
 	public static ReflectogramMismatch createFromByteArray(byte[] bar) throws DataFormatException
 	{
-            try {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
-                ReflectogramMismatch ret;
-                ret = createFromDIS(dis);
-                dis.close();
-                return ret;
-            } catch (IOException e) {
-                throw new DataFormatException(e.toString());
-            }
+			try {
+				DataInputStream dis = new DataInputStream(new ByteArrayInputStream(bar));
+				ReflectogramMismatch ret;
+				ret = createFromDIS(dis);
+				dis.close();
+				return ret;
+			} catch (IOException e) {
+				throw new DataFormatException(e.toString());
+			}
 	}
 
 	public byte[] toByteArray() {
@@ -288,7 +288,7 @@ public class ReflectogramMismatch {
 			return baos.toByteArray();
 		}
 		catch (IOException ioe) {
-            throw new InternalError("Unexpected exception" + ioe.toString());
+			throw new InternalError("Unexpected exception" + ioe.toString());
 		}
 	}
 
@@ -304,14 +304,14 @@ public class ReflectogramMismatch {
 			}
 		}
 		catch (IOException ioe) {
-            throw new InternalError("Unexpected exception" + ioe.toString());
+			throw new InternalError("Unexpected exception" + ioe.toString());
 		}
 		return baos.toByteArray();
 	}
 
-    // seem to be unused
+	// seem to be unused
 	public static ReflectogramMismatch[] alarmsFromByteArray(byte[] bar)
-    throws DataFormatException
+	throws DataFormatException
 	{
 		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
 		DataInputStream dis = new DataInputStream(bais);
@@ -326,48 +326,48 @@ public class ReflectogramMismatch {
 		}
 		catch(IOException ioe)
 		{
-            throw new DataFormatException(ioe.toString());
+			throw new DataFormatException(ioe.toString());
 		}
 	}
 
-    /**
-     * Если аларм that более приоритетен, чем this,
-     * загружает параметры that в this.
-     * <p>Приоритет определяется в таком порядке:
-     * <ol>
-     * <li> бОльший level
-     * <li> меньший pointCoord
-     * <li> сравнение остальных параметров пока не определено 
-     * </ol>
-     * 
-     * @param that
-     */
-    public void toHardest(ReflectogramMismatch that)
-    {
-        if (that.severity > this.severity
-                || that.severity == this.severity && that.getCoord() < this.getCoord())
-        {
-            this.severity = that.severity;
-            this.setCoord(that.getCoord());
-            this.setEndCoord(that.getEndCoord());
-            this.setAlarmType(that.getAlarmType());
-            this.setDeltaX(that.getDeltaX());
-        }
-    }
-    
-    @Override
+	/**
+	 * Если аларм that более приоритетен, чем this,
+	 * загружает параметры that в this.
+	 * <p>Приоритет определяется в таком порядке:
+	 * <ol>
+	 * <li> бОльший level
+	 * <li> меньший pointCoord
+	 * <li> сравнение остальных параметров пока не определено 
+	 * </ol>
+	 * 
+	 * @param that
+	 */
+	public void toHardest(ReflectogramMismatch that)
+	{
+		if (that.severity > this.severity
+				|| that.severity == this.severity && that.getCoord() < this.getCoord())
+		{
+			this.severity = that.severity;
+			this.setCoord(that.getCoord());
+			this.setEndCoord(that.getEndCoord());
+			this.setAlarmType(that.getAlarmType());
+			this.setDeltaX(that.getDeltaX());
+		}
+	}
+	
+	@Override
 	public String toString()
-    {
-        return "ReflectogramMismatch(level=" + severity
-        + ",type=" + getAlarmType()
-        + ",begin=" + getCoord()
-        + ",end=" + getEndCoord()
-        + ",distance=" + getDistance()
-        + (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
-        + (ref1Id != null ?  ",anc1=" + ref1Id + "@" + ref1Coord : "")
-        + (ref2Id != null ?  ",anc2=" + ref2Id + "@" + ref2Coord : "")
-        + ")";
-    }
+	{
+		return "ReflectogramMismatch(level=" + severity
+		+ ",type=" + getAlarmType()
+		+ ",begin=" + getCoord()
+		+ ",end=" + getEndCoord()
+		+ ",distance=" + getDistance()
+		+ (hasMismatch() ? ",mismatch=" + getMinMismatch() + "-" + getMaxMismatch() : "")
+		+ (ref1Id != null ?  ",anc1=" + ref1Id + "@" + ref1Coord : "")
+		+ (ref2Id != null ?  ",anc2=" + ref2Id + "@" + ref2Coord : "")
+		+ ")";
+	}
 
 	public void setCoord(int coord) {
 		this.coord = coord;
