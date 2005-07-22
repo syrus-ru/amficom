@@ -161,8 +161,9 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 			tModel.addObject(0, tr);
 			traces.add(0, id);
 		} else if (Heap.ETALON_TRACE_KEY.equals(key)) {
-			tModel.addObject(1, tr);
-			traces.add(1, id);
+			int index = traces.isEmpty() ? 0 : 1;
+			tModel.addObject(index, tr);
+			traces.add(index, id);
 		} else {
 			tModel.addObject(tr);
 			traces.add(id);
