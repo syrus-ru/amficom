@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.29 2005/06/25 17:07:46 bass Exp $
+ * $Id: CompoundCondition.java,v 1.30 2005/07/22 15:07:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.29 $, $Date: 2005/06/25 17:07:46 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/22 15:07:24 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -134,12 +134,11 @@ public final class CompoundCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public boolean isNeedMore(final Set storableObjects) {
+	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 		boolean firstItem = true;
 		boolean result = false;
 
-		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
-			StorableObjectCondition condition = (StorableObjectCondition) it.next();
+		for (final StorableObjectCondition condition : this.conditions) {
 			if (firstItem) {
 				result = condition.isNeedMore(storableObjects);
 				firstItem = false;
