@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2005/07/19 17:53:59 arseniy Exp $
+# $Id: Makefile,v 1.10 2005/07/22 14:24:53 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -19,6 +19,8 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/dadara.jar:$(LIBDIR)/general.jar:$(
 SOURCES := $(shell find $(SRCDIR) -name *.java)
 
 $(LIBNAME): .mach
+	$(CP) $(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/analysis_ru.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
