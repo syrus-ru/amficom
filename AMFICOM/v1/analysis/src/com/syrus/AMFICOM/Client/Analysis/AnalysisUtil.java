@@ -40,7 +40,6 @@ import com.syrus.io.BellcoreWriter;
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Company: Syrus Systems</p>
  * @author Stanislav Kholshin
- * @version 1.0
  */
 
 public class AnalysisUtil
@@ -67,8 +66,10 @@ public class AnalysisUtil
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter param = parameters[i];
 			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
+			if (type.getCodename().equals(
+					ParameterTypeCodename.REFLECTOGRAMMA.stringValue())) {
 				bs = new BellcoreReader().getData(param.getValue());
+			}
 		}
 		if (bs == null)
 			throw new SimpleApplicationException(SimpleApplicationException.KEY_NULL_REFLECTOGRAMMA);
@@ -83,14 +84,18 @@ public class AnalysisUtil
 		return bs;
 	}
 
-	public static ParameterType getParameterType(String codename, DataType dataType) throws ApplicationException {
+	public static ParameterType getParameterType(String codename,
+			DataType dataType)
+	throws ApplicationException {
 		TypicalCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETER_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-			java.util.Set<ParameterType> parameterTypeSet = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			java.util.Set<ParameterType> parameterTypeSet =
+					StorableObjectPool.getStorableObjectsByCondition(
+							pTypeCondition, true);
 			if (parameterTypeSet.isEmpty())
 				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
 
@@ -101,7 +106,8 @@ public class AnalysisUtil
 			return ret;
 	}
 
-	public static AnalysisType getAnalysisType(String codename) throws ApplicationException
+	public static AnalysisType getAnalysisType(String codename)
+	throws ApplicationException
 	{
 		StorableObjectCondition aTypeCondition =
 			new TypicalCondition(
@@ -110,7 +116,8 @@ public class AnalysisUtil
 				ObjectEntities.ANALYSIS_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);			
 
-		Collection<AnalysisType> aTypes = StorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+		Collection<AnalysisType> aTypes = StorableObjectPool.
+				getStorableObjectsByCondition(aTypeCondition, true);
 		for (AnalysisType type: aTypes)
 		{
 			if (type.getCodename().equals(codename))
@@ -120,15 +127,16 @@ public class AnalysisUtil
 	}
 
 	/**
-	 * Method for loading CriteriaSet for certain TestSetup to Pool. If there is no
-	 * CriteriaSet attached to TestSetup new CriteriaSet created by call method
-	 * createDefaultCriteriaSet(ms);
+	 * Method for loading CriteriaSet for certain TestSetup to Pool.
+	 * If there is no CriteriaSet attached to TestSetup new CriteriaSet
+	 * created by call method createDefaultCriteriaSet(ms);
 	 *
 	 * @param ms MeasurementSetup
 	 * @throws DataFormatException 
 	 */
 
-	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms) throws DataFormatException
+	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms)
+	throws DataFormatException
 	{
 		/*
 		 * <ul>
@@ -155,7 +163,8 @@ public class AnalysisUtil
 	 * @param ms MeasurementSetup
 	 * @throws DataFormatException 
 	 */
-	public static void load_Etalon(MeasurementSetup ms) throws DataFormatException
+	public static void load_Etalon(MeasurementSetup ms)
+	throws DataFormatException
 	{
 		ParameterSet etalonSet = ms.getEtalon();
 		ParameterSet metas = ms.getParameterSet();
@@ -176,7 +185,10 @@ public class AnalysisUtil
 			else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
 			{
 				etalonBS = new BellcoreReader().getData(params[i].getValue());
-				etalonBS.title = "etalon (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")"; // FIXME: generate etalon name some other way
+				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
+							? ms.getId().getIdentifierString()
+							: ms.getDescription())
+						+ ")"; // FIXME: generate etalon name some other way
 			}
 		}
 		if (etalonObj == null || etalonBS == null) {
