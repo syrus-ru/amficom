@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.9 2005/07/22 08:33:30 saa Exp $
+ * $Id: GUIUtil.java,v 1.10 2005/07/22 08:49:35 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/07/22 08:33:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/22 08:49:35 $
  * @module
  */
 public class GUIUtil
@@ -33,6 +33,7 @@ public class GUIUtil
 	private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
 
 	public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
+	public static final String MSG_ERROR_EMPTY_NAME_ENTERED = "errorEmptyNameEntered";
 
 	public static final String MSG_ERROR_NO_ONE_RESULT_HAS_TRACE = "errorResultHasNoTrace";
 	public static final String MSG_WARNING_SOME_RESULTS_HAVE_NO_TRACE = "warningSomeResultsHaveNoTrace";

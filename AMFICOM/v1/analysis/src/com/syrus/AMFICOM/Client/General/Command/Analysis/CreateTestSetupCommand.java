@@ -50,8 +50,8 @@ public class CreateTestSetupCommand extends AbstractCommand
 
 		// если введен пустое имя
 		if (name.equals("")) {
-			// FIXME: exceptions/error handling: вывести сообщение об ошибке, что введено пустое имя
-			return null; // и в любом случае ничего не делаем
+			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_EMPTY_NAME_ENTERED);
+			return null; // и ничего не делаем
 		}
 
 		// если ввод отменен
