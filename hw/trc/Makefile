@@ -26,7 +26,7 @@ $(OUT):		$(OBJS)
 	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
 
 $(OUTSO):	$(OBJS)
-	$(CPP) $(CFLAGS) -shared -o $(OUTSO) $(OBJS)
+	$(CXX) -shared -o $(OUTSO) $(OBJS)
 
 TraceReader.o:	NTTraceData.h TraceReader.h T5.h util.h
 T5.o:		NTTraceData.h DCL.h T5.h crc32.h util.h
@@ -38,16 +38,10 @@ BellcoreStructure.o:		BellcoreStructure.h
 BellcoreWriter.o:		BellcoreStructure.h IntelDataOutputStream.h BellcoreWriter.h
 IntelDataOutputStream.o:	IntelDataOutputStream.h
 
-#.cpp.o:
-#	$(CPP) -c $(CFLAGS) -o $@ $<
-
-#.c.o:
-#	$(CPP) -c $(CFLAGS) -o $@ $<
-
-.PHONY:	clean arch
-
+.PHONY:	clean
 clean:
 	rm -f $(OBJS) $(OUT) $(OUTSO)
 
+.PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) *.cpp *.h Makefile
