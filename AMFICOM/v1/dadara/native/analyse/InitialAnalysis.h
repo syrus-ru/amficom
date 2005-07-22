@@ -138,7 +138,8 @@ private:
 	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
-    void excludeShortLinesBetweenConnectors(double* data, int evSizeC);
+    void excludeShortLinesBetweenConnectors(double* data, int szc);
+    void excludeShortLinesBetweenLossAndConnectors(double* arr, int szc);// удалить небольшие линейные участки , возникающие вследствие неточностей анализа между потерями пред коннекторами
     void trimAllEvents(); // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
     void verifyResults();
 };

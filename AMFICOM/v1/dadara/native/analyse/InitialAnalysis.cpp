@@ -313,13 +313,9 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 			fflush(stderr);
 		}
 #endif
-	}
-	//performTransformationAndCenter(data, 0, lastPoint + 1, TEMP, scaleB, getWLetNorma(scaleB));
-	//findAllWletSplashes(TEMP, scaleB, accSpl);
-
+	} //for (scaleIndex ... 
 	if(accSpl.getLength() == 0){
 return;}
-
 	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
 	processEventsBeginsEnds(TEMP); // уточнить границы событий (может использовать accSpl через ссылки из EventParams)
@@ -328,9 +324,10 @@ return;}
 
 	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
-    excludeShortLinesBetweenConnectors(data, scaleB);
     addLinearPartsBetweenEvents();
-	trimAllEvents(); // поскольку мы искусственно расширячет на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
+    excludeShortLinesBetweenConnectors(data, scaleB);
+    excludeShortLinesBetweenLossAndConnectors(data, scaleB); // scaleB  - масштаб вейвлета
+	trimAllEvents(); // поскольку мы искусственно расширяем на одну точку влево и вправо события, то они могут наползать друг на друга на пару точек - это нормально, но мы их подравниваем для красоты и коректности работы программы в яве 
 	verifyResults(); // проверяем ошибки
 #ifdef DEBUG_INITIAL_ANALYSIS
 	fprintf(logf, "performAnalysis: done\n");
@@ -379,46 +376,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 	//minimalConnector,	//минимальный уровень отражательного события
 	double minimal_threshold_noise_factor = 0.4;  // XXX - надо бы это снаружи задавать
     for(int i=1; i <= lastPoint-1; i++)// 1 т.к. i-1 // цикл (1)
-    {
-/*
-		if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) )
-     continue;
-		Splash& spl = (Splash&)(*(new Splash(wlet_width)));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
-        spl.begin_thr = i; // saa: i-1?
-        spl.f_extr = f_wlet[i];
-		int sign, sign_cur;
-		sign = xsign(f_wlet[i]);
-        for(  ; i<lastPoint-1; i++)
-        {   sign_cur = xsign(f_wlet[i]);
-        	// минимальные на рост
-        	if( fabs(f_wlet[i])>= calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) && spl.begin_thr == -1){
-				spl.begin_thr = i-1;
-            }
-            if( fabs(f_wlet[i])>= calcThresh(minimalWeld, noise[i]) && spl.begin_weld == -1)
-            {	spl.begin_weld = i-1;
-            }
-            //if( spl.begin_weld_n != -1 && spl.end_weld_n == -1 && (fabs(f_wlet[i])<= calcThresh(minimalThreshold, noise[i]*noise_factor) || sign_cur!=sign || i==lastPoint-1) )
-            if( fabs(f_wlet[i])>calcThresh(minimalWeld, noise[i]) && sign_cur==sign)
-            {	spl.end_weld = i+1;
-            }
-            if( fabs(f_wlet[i])>= calcThresh(minimalConnector, noise[i]) && spl.begin_conn == -1)
-            {	spl.begin_conn= i-1;
-            }
-            //if( spl.begin_conn_n != -1 && spl.end_conn_n == -1 && (fabs(f_wlet[i])<= calcThresh(minimalConnector,noise[i]) || sign_cur!=sign || i==lastPoint-1))
-            if( fabs(f_wlet[i]) > calcThresh(minimalConnector,noise[i]) && sign_cur==sign)
-            {	spl.end_conn = i+1;
-            }
-			// минимальные на спад
-            if( fabs(f_wlet[i])<=calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor) || sign_cur!=sign )
-        	{	spl.end_thr = i;
-     	break;
-     		}
-            if(fabs(spl.f_extr)<fabs(f_wlet[i])){ spl.f_extr = f_wlet[i];}
-        }
-		spl.end_thr = i; // на случай выхода из цикла не по break а по условию в for   
-		spl.sign = sign;
-/*/
-		if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor))
+    {	if (fabs(f_wlet[i]) < calcThresh(minimalThreshold,noise[i]*minimal_threshold_noise_factor))
 	continue;
 		int bt = i - 1;
 		int bw = -1;
@@ -460,7 +418,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, int wlet_width, ArrLis
 		spl.end_weld = ew;
 		spl.begin_conn = bc;
 		spl.end_conn = ec;
-//*/
+
 		fillSplashRParameters(spl, f_wlet, wlet_width);
         if( spl.begin_thr < spl.end_thr // begin>end только если образ так и не пересёк ни разу верхний порог
 	        && spl.begin_weld != -1 // !!!  добавляем только существенные всплески ( если эту проверку убрать, то распознавание коннекторов надо изменить, так как если между двумя коннекторными всплесками вдруг окажется случайный незначимый всплеск вверх, то конннектор распознан НЕ БУДЕТ ! )
@@ -1076,33 +1034,6 @@ void InitialAnalysis::processEndOfTrace()
     }
 }
 //------------------------------------------------------------------------------------------------------------
-void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int szc)
-{   if(events->getLength()<2)
-return;
-	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
-	{   // пока не дойдём до коннектора
-        EventParams* ev1 = (EventParams*)(*events)[n1];
-    	if(ev1->type != EventParams::CONNECTOR)
-    continue;
-        n2 = n1+1;
-        if(n2 >= events->getLength())
-    break;
-		EventParams* ev2 = (EventParams*)(*events)[n2];
-        if(ev2->type != EventParams::LINEAR)
-    continue;
-        n3 = n2+1;
-        if(n3 >= events->getLength())
-    break;
-	    EventParams* ev3 = (EventParams*)(*events)[n3];
-        if(ev3->type != EventParams::CONNECTOR)
-    continue;
-    	if(ev2->end - ev2->begin < szc)
-        { ev1->end = ev3->begin;
-          events->slowRemove(n2); 
-        }
-    }//for
-}
-//------------------------------------------------------------------------------------------------------------
 // ВАЖНО: предполагаем что линейных событий ещё нет ВООБЩЕ ! (иначе будет неправильно работать)
 void InitialAnalysis::addLinearPartsBetweenEvents()
 {   ArrList* events_new = new ArrList();
@@ -1122,6 +1053,64 @@ void InitialAnalysis::addLinearPartsBetweenEvents()
     }
     delete events;
     events = events_new;
+}
+//------------------------------------------------------------------------------------------------------------
+// удалить небольшие линейные участки между двумя последовательными коннекорами, сдвинув конец первого коннектора
+void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int sz)
+{   sz = sz>4 ? (sz+0.5)/4 : 1; // берём четверть ширины вейвлета
+	if(events->getLength()<2)
+return;
+	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
+	{   // пока не дойдём до коннектора
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+    	if(ev1->type != EventParams::CONNECTOR)
+    continue;
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+		EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+	    EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev3->type != EventParams::CONNECTOR)
+    continue;
+    	if(ev2->end - ev2->begin < sz)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2);
+        }
+    }//for
+}
+//------------------------------------------------------------------------------------------------------------
+// удалить небольшие линейные участки , возникающие вследствие неточностей анализа между потерями пред коннекторами
+// sz - масштаб вейвлета
+void InitialAnalysis::excludeShortLinesBetweenLossAndConnectors(double* arr, int sz)
+{   if(events->getLength()<2)
+return;
+	for(int n1=0, n2, n3; n1<events->getLength(); n1++)
+	{   // пока не дойдём до падения
+        EventParams* ev1 = (EventParams*)(*events)[n1];
+    	if(ev1->type != EventParams::LOSS)
+    continue;
+        n2 = n1+1;
+        if(n2 >= events->getLength())
+    break;
+		EventParams* ev2 = (EventParams*)(*events)[n2];
+        if(ev2->type != EventParams::LINEAR)
+    continue;
+        n3 = n2+1;
+        if(n3 >= events->getLength())
+    break;
+	    EventParams* ev3 = (EventParams*)(*events)[n3];
+        if(ev3->type != EventParams::CONNECTOR)
+    continue;
+    	if(ev2->end - ev2->begin <= sz)
+        { ev1->end = ev3->begin;
+          events->slowRemove(n2);
+        }
+    }//for
 }
 //------------------------------------------------------------------------------------------------------------
 // из-за расширения всплесков события могу немного наползать друг на друга, выравниваем их
