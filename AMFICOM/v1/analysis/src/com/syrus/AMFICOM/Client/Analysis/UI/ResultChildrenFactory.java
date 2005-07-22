@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.3 2005/07/22 13:14:43 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.4 2005/07/22 14:00:47 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/22 13:14:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/22 14:00:47 $
  * @module analysis_v1
  */
 
@@ -334,7 +334,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				FiltrableIconedNode item2 = new FiltrableIconedNode();
 				item2.setObject(DATES);
 //				item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-				item2.setName("По дате");
+				item2.setName(LangModelAnalyse.getString("on_date"));
 				item2.setChildrenFactory(this);
 				item2.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.TEST_CODE));
 				item.addChild(item2);
@@ -342,7 +342,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				FiltrableIconedNode item3 = new FiltrableIconedNode();
 				item3.setObject(MEASUREMENTSETUPS);
 //				item3.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-				item3.setName("По шаблону");
+				item3.setName(LangModelAnalyse.getString("on_setup"));
 				item3.setChildrenFactory(this);
 				item3.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENTSETUP_CODE));
 				item3.setFilter(new Filter(new MeasurementSetupConditionWrapper(), null));
