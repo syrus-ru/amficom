@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.128 2005/07/15 11:44:22 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.129 2005/07/22 11:00:38 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/07/15 11:44:22 $
+ * @version $Revision: 1.129 $, $Date: 2005/07/22 11:00:38 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -902,10 +902,12 @@ public abstract class StorableObjectPool {
 				final short groupCode = ObjectGroupEntities.getGroupCode(entityKey);
 				assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE + ": " + groupCode;
 				final StorableObjectPool pool = (StorableObjectPool) GROUP_CODE_POOL_MAP.get(groupCode);
-				if (pool != null)
+				if (pool != null) {
 					pool.saveStorableObjects(levelEntitySavingObjects, force);
-				else
+				}
+				else {
 					Log.errorMessage("The pool for group: " + ObjectGroupEntities.codeToString(groupCode) + " is not initialized");
+				}
 			}
 		}
 	}
@@ -917,8 +919,7 @@ public abstract class StorableObjectPool {
 	 * @param force
 	 * @throws ApplicationException
 	 */
-	protected abstract void saveStorableObjects(final Set<? extends StorableObject> storableObjects,
-			final boolean force)
+	protected abstract void saveStorableObjects(final Set<? extends StorableObject> storableObjects, final boolean force)
 			throws ApplicationException;
 
 
@@ -926,8 +927,7 @@ public abstract class StorableObjectPool {
 
 	public static Set fromTransferables(final short entityCode,
 			final IdlStorableObject transferables[],
-			final boolean continueOnError)
-			throws ApplicationException {
+			final boolean continueOnError) throws ApplicationException {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
 		final int length = transferables.length;
@@ -1033,7 +1033,7 @@ public abstract class StorableObjectPool {
 	 *
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: arseniy $
-	 * @version $Revision: 1.128 $, $Date: 2005/07/15 11:44:22 $
+	 * @version $Revision: 1.129 $, $Date: 2005/07/22 11:00:38 $
 	 * @module general_v1
 	 */
 	private static final class RefreshProcedure implements TObjectProcedure {
