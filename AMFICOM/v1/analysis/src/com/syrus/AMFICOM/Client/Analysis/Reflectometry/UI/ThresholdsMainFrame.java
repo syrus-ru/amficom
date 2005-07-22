@@ -213,12 +213,10 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(null, this.aContext));
 
 		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
-		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.CRITERIA
-				+ SaveTestSetupCommand.ETALON));// +
-												// SaveTestSetupCommand.THRESHOLDS));
-		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(this.aContext, SaveTestSetupCommand.CRITERIA
-				+ SaveTestSetupCommand.ETALON));// +
-												// SaveTestSetupCommand.THRESHOLDS));
+		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext,
+				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
+		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(this.aContext,
+				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON));
 		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(this.aContext));
 		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(this.aContext));
 

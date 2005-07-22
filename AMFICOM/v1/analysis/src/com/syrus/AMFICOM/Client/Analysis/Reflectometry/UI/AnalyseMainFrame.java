@@ -308,10 +308,10 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		//aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(this.aContext));
 		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(this.aContext));
 		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(this.aContext));
-		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext, SaveTestSetupCommand.ETALON
-				+ SaveTestSetupCommand.CRITERIA));
-		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(this.aContext, SaveTestSetupCommand.ETALON
-				+ SaveTestSetupCommand.CRITERIA));
+		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(this.aContext,
+				SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
+		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(this.aContext,
+				SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
 		aModel.setCommand("menuNetStudy", new NetStudyCommand());
 
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(this.dispatcher, this.aContext));
