@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryMTAEListener.java,v 1.1 2005/04/29 06:41:05 saa Exp $
+ * $Id: PrimaryMTAEListener.java,v 1.2 2005/07/22 08:51:57 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/04/29 06:41:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/22 08:51:57 $
  * @module
  */
 public interface PrimaryMTAEListener
 {
-	void primaryMTMCUpdated(); // created or changed 
-	void primaryMTMRemoved(); // removed
+	void primaryMTAECUpdated(); // created or changed 
+	void primaryMTAERemoved(); // removed
 }

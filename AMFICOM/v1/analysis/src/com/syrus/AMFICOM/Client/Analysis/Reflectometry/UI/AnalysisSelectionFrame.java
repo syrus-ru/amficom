@@ -247,7 +247,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		setVisible(false);
 	}
 
-	public void primaryMTMCUpdated()
+	public void primaryMTAECUpdated()
 	{
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.measurementId == null)
@@ -276,7 +276,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
 	 */
-	public void primaryMTMRemoved()
+	public void primaryMTAERemoved()
 	{
 		// @todo Auto-generated method stub
 
