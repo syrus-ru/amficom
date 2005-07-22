@@ -120,13 +120,12 @@ public class SaveTestSetupCommand extends AbstractCommand
 		/**
 		 * @todo use flush(false) to non forced saving
 		 */
-		try
-		{
+		try {
 			StorableObjectPool.flushGroup(
 					ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
 					true);
-		} catch(ApplicationException ex)
-		{ // FIXME: exceptions: process exception
+		} catch(ApplicationException ex) {
+			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_DATABASE_FLUSH_ERROR);
 		}
 
 		return true;
@@ -162,8 +161,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		String name = Heap.getNewMSName();
 		if (name == null)
 		{
-			System.err.println("no name for creating new TestSetup");
-			// FIXME: exceptions/error handling: process newMSName == null -- saa
+			GUIUtil.showErrorMessage("noTestSetupNameError");
 			return;
 		}
 

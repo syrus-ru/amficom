@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.10 2005/07/22 08:49:35 saa Exp $
+ * $Id: GUIUtil.java,v 1.11 2005/07/22 10:22:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/07/22 08:49:35 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/22 10:22:28 $
  * @module
  */
 public class GUIUtil
@@ -31,6 +31,7 @@ public class GUIUtil
 
 	private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
 	private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
+	public static final String MSG_ERROR_DATABASE_FLUSH_ERROR = "errorDataBaseFlush";
 
 	public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
 	public static final String MSG_ERROR_EMPTY_NAME_ENTERED = "errorEmptyNameEntered";
