@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.91 2005/07/22 06:56:49 saa Exp $
+ * $Id: Heap.java,v 1.92 2005/07/22 08:34:38 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
@@ -92,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.91 $, $Date: 2005/07/22 06:56:49 $
+ * @version $Revision: 1.92 $, $Date: 2005/07/22 08:34:38 $
  * @module
  */
 public class Heap
@@ -243,19 +242,10 @@ public class Heap
 				getMinuitAnalysisParams()));
 	}
 
-	public static void openManyTracesFromResult(Set<Result> results)
-	throws SimpleApplicationException {
-		// проверяем, что входной список непуст
-		if (results.isEmpty()) {
-			throw new IllegalArgumentException("empty set of results");
-		}
-
+	public static void openManyTraces(Collection<Trace> traceColl) {
 		// Создаем Trace и Bellcore по каждому входному результату
-		Collection<Trace> traceColl = new ArrayList<Trace>(results.size());
-		Collection<BellcoreStructure> bsColl = new ArrayList<BellcoreStructure>(results.size());
-		for (Result res: results) {
-			Trace tr = new Trace(res, getMinuitAnalysisParams());
-			traceColl.add(tr);
+		Collection<BellcoreStructure> bsColl = new ArrayList<BellcoreStructure>(traceColl.size());
+		for (Trace tr: traceColl) {
 			bsColl.add(tr.getBS());
 		}
 

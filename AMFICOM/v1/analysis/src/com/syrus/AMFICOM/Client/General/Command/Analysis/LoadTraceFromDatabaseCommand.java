@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
+import java.util.Collection;
 import java.util.Set;
 
 import javax.swing.JFrame;
@@ -9,8 +10,8 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
-import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -64,20 +65,32 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		if (results.isEmpty())
 			return;
 
-		try {
-//			// открываем загруженную рефлектограмму как первичную
-//			Heap.openPrimaryTraceFromResult(result1);
-
-			// открываем выбранный набор рефлектограмм
-			Heap.openManyTracesFromResult(results);
-		} catch (SimpleApplicationException e1) {
-			// ошибка - в результатах анализа нет рефлектограммы
-			return; // FIXME: exceptions/error handling: выдавать собщение об ошибке
-		}
+		// преобразуем выбранный набор результатов в набор рефлектограмм
+		Collection<Trace> traces =
+				AddTraceFromDatabaseCommand.getTracesFromResults(results);
+		// открываем выбранный набор рефлектограмм
+		Heap.openManyTraces(traces);
 
 		// если результат выбранного primaryTrace получен в результате измерения,
 		// то устанавливаем ms и, если есть, эталон
 		// согласно этому измерению
+		// XXX: так, как сделано сейчас, позволяет пользователю загрузить
+		// одновременно рефлектограммы с разными MS или даже путями тестирования
+		// (при этом одна из них будет выбрана первичной, и в качестве MS
+		// будет выбран ее MS), затем переназначить первичной р/грамму
+		// с другого пути (при этом MS останется от старой первичной),
+		// а затем сохранить шаблон. При этом будет создан шаблон с
+		// MS старой первичной р/г, но на основе новой первичной р/г.
+		// Видимо, это надо исправить, например, одним из таких способов:
+		// 1. Проверять все загружаемые р/г (как в OPEN, так и в ADD).
+		//    Если они от разных MS,
+		//    то ставить MS:=null (с предупреждением либо без него);
+		// 2. При смене первичной р/г обнулять MS (самое простое и надежное?);
+		// 3. Использовать MS первичной р/г, а не сохраненный отдельно MS
+		//    первой загруженной;
+		// 4. При создании (или сохранении) шаблона предупреждать пользователя,
+		//    что есть несколько MS, и предупреждать,
+		//    что будет взят MS первичной.
 		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
 		if (primaryTraceResult != null
 				&& primaryTraceResult.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
