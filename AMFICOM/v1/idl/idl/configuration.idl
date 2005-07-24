@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.101 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: configuration.idl,v 1.102 2005/07/24 18:07:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -134,20 +134,6 @@ module configuration {
 			public general::corba::WString128 manufacturer;
 			public general::corba::WString32 manufacturerCode;
 			public general::corba::IdlIdentifier imageId;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description,
-					in general::corba::WString128 name,
-					in LinkTypeSort sort,
-					in general::corba::WString128 manufacturer,
-					in general::corba::WString32 manufacturerCode,
-					in general::corba::IdlIdentifier imageId);
 		};
 
 		valuetype IdlLinkType : IdlAbstractLinkType {
@@ -394,22 +380,6 @@ module configuration {
 
 			public long color;
 			public general::corba::WString32 mark;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::IdlIdentifier domainId,
-					in general::corba::WString128 name,
-					in general::corba::WString256 description,
-					in general::corba::IdlIdentifier _typeId,
-					in wstring inventoryNo,
-					in general::corba::WString128 supplier,
-					in general::corba::WString32 supplierCode,
-					in long color,
-					in general::corba::WString32 mark);
 		};
 
 		valuetype IdlLink : IdlAbstractLink {

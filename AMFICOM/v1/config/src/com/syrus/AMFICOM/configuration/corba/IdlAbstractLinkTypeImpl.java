@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAbstractLinkTypeImpl.java,v 1.2 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: IdlAbstractLinkTypeImpl.java,v 1.3 2005/07/24 18:08:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,11 @@
 package com.syrus.AMFICOM.configuration.corba;
 
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
-import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/07/17 05:19:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 18:08:38 $
  * @module config_v1
  */
 final class IdlAbstractLinkTypeImpl extends IdlAbstractLinkType {
@@ -23,34 +21,6 @@ final class IdlAbstractLinkTypeImpl extends IdlAbstractLinkType {
 
 	IdlAbstractLinkTypeImpl() {
 		// empty
-	}
-
-	IdlAbstractLinkTypeImpl(final IdlIdentifier id,
-			final long created,
-			final long modified,
-			final IdlIdentifier creatorId,
-			final IdlIdentifier modifierId,
-			final long version,
-			final String codename,
-			final String description,
-			final String name,
-			final LinkTypeSort sort,
-			final String manufacturer,
-			final String manufacturerCode,
-			final IdlIdentifier imageId) {
-		this.id = id;
-		this.created = created;
-		this.modified = modified;
-		this.creatorId = creatorId;
-		this.modifierId = modifierId;
-		this.version = version;
-		this.codename = codename;
-		this.description = description;
-		this.name = name;
-		this.sort = sort;
-		this.manufacturer = manufacturer;
-		this.manufacturerCode = manufacturerCode;
-		this.imageId = imageId;
 	}
 
 	/**

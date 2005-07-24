@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.26 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: map.idl,v 1.27 2005/07/24 18:07:44 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,12 +77,6 @@ module map {
 /////////////////////// AbstractNode - SiteNode, TopologicalNode ////////////////////////
 
 		valuetype IdlAbstractNode : general::corba::IdlStorableObject {
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version);
 		};
 
 		valuetype IdlSiteNode : IdlAbstractNode {
