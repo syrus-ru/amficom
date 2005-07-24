@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.6 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.7 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,12 +51,12 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -65,9 +65,9 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	protected Scheme scheme;
 	private Identifier imageId;
 	private static final Item[] schemeKinds = new IconedNode[] { 
-		new IconedNode(Kind.NETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK)),
-		new IconedNode(Kind.BUILDING, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_BUILDING)),
-		new IconedNode(Kind.CABLE_SUBNETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_CABLE))
+		new IconedNode(IdlKind.NETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK)),
+		new IconedNode(IdlKind.BUILDING, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_BUILDING)),
+		new IconedNode(IdlKind.CABLE_SUBNETWORK, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_CABLE))
 	};
 	
 	JPanel pnPanel0 = new JPanel();
@@ -430,7 +430,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			}
 			Item item = (Item)cmbKindCombo.getSelectedItem();
-			scheme.setKind((Kind)item.getObject());
+			scheme.setKind((IdlKind)item.getObject());
 			scheme.setWidth(((Long)this.tfWidthText.getValue()).intValue() * 4);
 			scheme.setHeight(((Long)this.tfHeightText.getValue()).intValue() * 4);
 			

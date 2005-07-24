@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 public class PathBuilder
@@ -64,7 +64,7 @@ public class PathBuilder
 				return false;
 			}
 
-			if (pe.getKind() == Kind.SCHEME_ELEMENT)
+			if (pe.getKind() == IdlKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -114,7 +114,7 @@ public class PathBuilder
 			if (pe.getEndAbstractSchemePort() == null)
 				return false;
 
-			if (pe.getKind() == Kind.SCHEME_ELEMENT)
+			if (pe.getKind() == IdlKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -189,7 +189,7 @@ public class PathBuilder
 			}
 
 
-			if (pe.getKind() == Kind.SCHEME_ELEMENT)
+			if (pe.getKind() == IdlKind.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
@@ -255,7 +255,7 @@ public class PathBuilder
 				return null;
 			}
 
-			if (pe.getKind() == Kind.SCHEME_LINK)
+			if (pe.getKind() == IdlKind.SCHEME_LINK)
 			{
 //				SchemeLink link = (SchemeLink)pe.abstractSchemeElement();
 				SchemePort startPort = (SchemePort)pe.getEndAbstractSchemePort();
@@ -265,14 +265,14 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getDirectionType().equals(DirectionType._IN))
+				if (startPort.getDirectionType().equals(IdlDirectionType._IN))
 				{
-					cports = findCablePorts(dev, DirectionType._OUT);
-					ports = findPorts(dev, DirectionType._OUT);
+					cports = findCablePorts(dev, IdlDirectionType._OUT);
+					ports = findPorts(dev, IdlDirectionType._OUT);
 				} else
 				{
-					cports = findCablePorts(dev, DirectionType._IN);
-					ports = findPorts(dev, DirectionType._IN);
+					cports = findCablePorts(dev, IdlDirectionType._IN);
+					ports = findPorts(dev, IdlDirectionType._IN);
 				}
 				if (ports.size() == 0)
 				{
@@ -295,7 +295,7 @@ public class PathBuilder
 				else if (ports.size() > 1)
 					state = MULTIPLE_PORTS;
 				// else we couldn't go further
-			} else if (pe.getKind() == Kind.SCHEME_CABLE_LINK)
+			} else if (pe.getKind() == IdlKind.SCHEME_CABLE_LINK)
 			{
 //				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
 				SchemeCablePort startPort = (SchemeCablePort)pe.getEndAbstractSchemePort();
@@ -305,14 +305,14 @@ public class PathBuilder
 				List ports;
 				List cports;
 				SchemeDevice dev = startPort.getParentSchemeDevice();
-				if (startPort.getDirectionType().equals(DirectionType._IN))
+				if (startPort.getDirectionType().equals(IdlDirectionType._IN))
 				{
-					cports = findCablePorts(dev, DirectionType._OUT);
-					ports = findPorts(dev, DirectionType._OUT);
+					cports = findCablePorts(dev, IdlDirectionType._OUT);
+					ports = findPorts(dev, IdlDirectionType._OUT);
 				} else
 				{
-					cports = findCablePorts(dev, DirectionType._IN);
-					ports = findPorts(dev, DirectionType._IN);
+					cports = findCablePorts(dev, IdlDirectionType._IN);
+					ports = findPorts(dev, IdlDirectionType._IN);
 				}
 				// must be the only cable port with opposite direction
 				if (ports.size() == 0 && cports.size() == 1)
@@ -374,7 +374,7 @@ public class PathBuilder
 		if (last != null)
 		{
 			PathElement pe = (PathElement)last;
-			if (pe.getKind() == Kind.SCHEME_ELEMENT)
+			if (pe.getKind() == IdlKind.SCHEME_ELEMENT)
 			{
 				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 
@@ -435,7 +435,7 @@ public class PathBuilder
 		if (last != null)
 		{
 			PathElement pe = (PathElement)last;
-			if (pe.getKind() == Kind.SCHEME_ELEMENT)
+			if (pe.getKind() == IdlKind.SCHEME_ELEMENT)
 			{
 				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
@@ -524,7 +524,7 @@ public class PathBuilder
 	}
 
 
-	private List findPorts(SchemeDevice dev, DirectionType direction)
+	private List findPorts(SchemeDevice dev, IdlDirectionType direction)
 	{
 		List ports = new ArrayList();
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)
@@ -536,7 +536,7 @@ public class PathBuilder
 		return ports;
 	}
 
-	private List findCablePorts(SchemeDevice dev, DirectionType direction)
+	private List findCablePorts(SchemeDevice dev, IdlDirectionType direction)
 	{
 		List ports = new ArrayList();
 		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();)

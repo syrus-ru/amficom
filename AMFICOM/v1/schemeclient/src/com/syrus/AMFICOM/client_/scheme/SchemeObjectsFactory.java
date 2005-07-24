@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.13 2005/07/19 12:49:22 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.14 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,13 +63,13 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/07/19 12:49:22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -362,7 +362,7 @@ public class SchemeObjectsFactory {
 	
 	public static Scheme createScheme() throws CreateObjectException {
 		Scheme scheme = Scheme.createInstance(LoginManager.getUserId(), LangModelScheme.getString(SchemeResourceKeys.NEW_SCHEME)
-				+ (schemeCounter == 1 ? "" : "(" + schemeCounter + ")"), Kind.NETWORK, LoginManager.getDomainId());
+				+ (schemeCounter == 1 ? "" : "(" + schemeCounter + ")"), IdlKind.NETWORK, LoginManager.getDomainId());
 		schemeCounter++;
 //		try {
 //			StorableObjectPool.putStorableObject(scheme);
@@ -384,7 +384,7 @@ public class SchemeObjectsFactory {
 		return schemeDevice;
 	}
 	
-	public static SchemePort createSchemePort(String name, DirectionType directionType, SchemeDevice parent) throws CreateObjectException {
+	public static SchemePort createSchemePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
 		SchemePort schemePort = SchemePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
 //		try {
 //			StorableObjectPool.putStorableObject(schemePort);
@@ -395,7 +395,7 @@ public class SchemeObjectsFactory {
 		return schemePort;
 	}
 	
-	public static SchemeCablePort createSchemeCablePort(String name, DirectionType directionType, SchemeDevice parent) throws CreateObjectException {
+	public static SchemeCablePort createSchemeCablePort(String name, IdlDirectionType directionType, SchemeDevice parent) throws CreateObjectException {
 		SchemeCablePort schemePort = SchemeCablePort.createInstance(LoginManager.getUserId(), name, directionType, parent);
 //		try {
 //			StorableObjectPool.putStorableObject(schemePort);

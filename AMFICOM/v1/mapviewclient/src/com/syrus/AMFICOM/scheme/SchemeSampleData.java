@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.22 2005/07/19 07:07:03 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.23 2005/07/24 18:12:44 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.22 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -71,7 +71,7 @@ public final class SchemeSampleData {
 		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt); 
 		
-		scheme1 = Scheme.createInstance(userId, "Схемка (бол)", Kind.NETWORK, domainId);
+		scheme1 = Scheme.createInstance(userId, "Схемка (бол)", IdlKind.NETWORK, domainId);
 		scheme1element0 = SchemeElement.createInstance(userId, "Один элемент", scheme1);
 		scheme1element0.setDescription("Описалово");
 		scheme1element0.setEquipmentType(equipmentType);
@@ -98,19 +98,19 @@ public final class SchemeSampleData {
 		SchemeDevice scheme1dev30 = SchemeDevice.createInstance(userId, "Девайс4", scheme1element3);
 		SchemeDevice scheme1dev40 = SchemeDevice.createInstance(userId, "Девайс5", scheme1element4);
 		
-		SchemePort scheme1dev00port00 = SchemePort.createInstance(userId, "Порт раз", DirectionType._OUT, scheme1dev00);
-		SchemePort scheme1dev00port01 = SchemePort.createInstance(userId, "Порт два", DirectionType._IN, scheme1dev00);
+		SchemePort scheme1dev00port00 = SchemePort.createInstance(userId, "Порт раз", IdlDirectionType._OUT, scheme1dev00);
+		SchemePort scheme1dev00port01 = SchemePort.createInstance(userId, "Порт два", IdlDirectionType._IN, scheme1dev00);
 
-		SchemeCablePort scheme1dev00cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", DirectionType._IN, scheme1dev00);
-		SchemeCablePort scheme1dev10cport10 = SchemeCablePort.createInstance(userId, "Каборт два", DirectionType._OUT, scheme1dev10);
-		SchemeCablePort scheme1dev10cport11 = SchemeCablePort.createInstance(userId, "Каборт три", DirectionType._OUT, scheme1dev10);
-		SchemeCablePort scheme1dev20cport20 = SchemeCablePort.createInstance(userId, "Каборт четыре", DirectionType._OUT, scheme1dev20);
-		SchemeCablePort scheme1dev20cport21 = SchemeCablePort.createInstance(userId, "Каборт пять", DirectionType._OUT, scheme1dev20);
-		SchemeCablePort scheme1dev20cport22 = SchemeCablePort.createInstance(userId, "Каборт шесть", DirectionType._OUT, scheme1dev20);
-		SchemeCablePort scheme1dev30cport30 = SchemeCablePort.createInstance(userId, "Каборт сем", DirectionType._OUT, scheme1dev30);
-		SchemeCablePort scheme1dev30cport31 = SchemeCablePort.createInstance(userId, "Каборт восем", DirectionType._OUT, scheme1dev30);
-		SchemeCablePort scheme1dev40cport40 = SchemeCablePort.createInstance(userId, "Каборт дэвят", DirectionType._OUT, scheme1dev40);
-		SchemeCablePort scheme1dev40cport41 = SchemeCablePort.createInstance(userId, "Каборт дэсят", DirectionType._OUT, scheme1dev40);
+		SchemeCablePort scheme1dev00cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", IdlDirectionType._IN, scheme1dev00);
+		SchemeCablePort scheme1dev10cport10 = SchemeCablePort.createInstance(userId, "Каборт два", IdlDirectionType._OUT, scheme1dev10);
+		SchemeCablePort scheme1dev10cport11 = SchemeCablePort.createInstance(userId, "Каборт три", IdlDirectionType._OUT, scheme1dev10);
+		SchemeCablePort scheme1dev20cport20 = SchemeCablePort.createInstance(userId, "Каборт четыре", IdlDirectionType._OUT, scheme1dev20);
+		SchemeCablePort scheme1dev20cport21 = SchemeCablePort.createInstance(userId, "Каборт пять", IdlDirectionType._OUT, scheme1dev20);
+		SchemeCablePort scheme1dev20cport22 = SchemeCablePort.createInstance(userId, "Каборт шесть", IdlDirectionType._OUT, scheme1dev20);
+		SchemeCablePort scheme1dev30cport30 = SchemeCablePort.createInstance(userId, "Каборт сем", IdlDirectionType._OUT, scheme1dev30);
+		SchemeCablePort scheme1dev30cport31 = SchemeCablePort.createInstance(userId, "Каборт восем", IdlDirectionType._OUT, scheme1dev30);
+		SchemeCablePort scheme1dev40cport40 = SchemeCablePort.createInstance(userId, "Каборт дэвят", IdlDirectionType._OUT, scheme1dev40);
+		SchemeCablePort scheme1dev40cport41 = SchemeCablePort.createInstance(userId, "Каборт дэсят", IdlDirectionType._OUT, scheme1dev40);
 
 		scheme1link0 = SchemeLink.createInstance(userId, "Патчкорд", scheme1);
 		scheme1link0.setOpticalLength(3.0D);
@@ -193,7 +193,7 @@ public final class SchemeSampleData {
 		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
 
-		scheme2 = Scheme.createInstance(userId, "Схемочка (мал)", Kind.NETWORK, domainId);
+		scheme2 = Scheme.createInstance(userId, "Схемочка (мал)", IdlKind.NETWORK, domainId);
 		SchemeElement scheme2el0 = SchemeElement.createInstance(userId, "Один элемент", scheme2);
 		scheme2el0.setDescription("Описалово");
 		scheme2el0.setEquipmentType(equipmentType);
@@ -205,11 +205,11 @@ public final class SchemeSampleData {
 		SchemeDevice scheme2dev00 = SchemeDevice.createInstance(userId, "Девайс1", scheme2el0);
 		SchemeDevice scheme2dev10 = SchemeDevice.createInstance(userId, "Девайс2", scheme2element1);
 
-		SchemePort scheme2dev00port00 = SchemePort.createInstance(userId, "Порт раз", DirectionType._OUT, scheme2dev00);
-		SchemePort scheme2dev10port10 = SchemePort.createInstance(userId, "Порт два", DirectionType._IN, scheme2dev10);
+		SchemePort scheme2dev00port00 = SchemePort.createInstance(userId, "Порт раз", IdlDirectionType._OUT, scheme2dev00);
+		SchemePort scheme2dev10port10 = SchemePort.createInstance(userId, "Порт два", IdlDirectionType._IN, scheme2dev10);
 
-		SchemeCablePort scheme2dev00cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", DirectionType._IN, scheme2dev00);
-		SchemeCablePort scheme2dev10cport10 = SchemeCablePort.createInstance(userId, "Каборт два", DirectionType._OUT, scheme2dev10);
+		SchemeCablePort scheme2dev00cport00 = SchemeCablePort.createInstance(userId, "Каборт раз", IdlDirectionType._IN, scheme2dev00);
+		SchemeCablePort scheme2dev10cport10 = SchemeCablePort.createInstance(userId, "Каборт два", IdlDirectionType._OUT, scheme2dev10);
 
 		scheme2link0 = SchemeLink.createInstance(userId, "Патчкорд");
 		scheme2link0.setOpticalLength(1000.0D);

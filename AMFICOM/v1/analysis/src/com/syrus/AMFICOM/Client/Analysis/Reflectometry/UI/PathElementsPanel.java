@@ -8,7 +8,7 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 
 public final class PathElementsPanel extends AnalysisPanel
 {
@@ -92,7 +92,7 @@ public final class PathElementsPanel extends AnalysisPanel
 
 				if (pathElement == this.activePathElement)
 					g.setColor(Color.RED);
-				else if (pathElement.getKind().value() == Kind._SCHEME_CABLE_LINK)
+				else if (pathElement.getKind().value() == IdlKind._SCHEME_CABLE_LINK)
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(Color.BLUE);

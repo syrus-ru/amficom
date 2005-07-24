@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.7 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.8 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,11 +40,11 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/15 13:07:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -138,7 +138,7 @@ public class SchemeTreeUI extends IconedTreeUI implements PropertyChangeListener
 			type = ObjectSelectedEvent.SCHEME_PROTOGROUP;
 		else if (object instanceof SchemeProtoElement)
 			type = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
-		else if (object instanceof String || object instanceof Kind) {
+		else if (object instanceof String || object instanceof IdlKind) {
 			type = ObjectSelectedEvent.OTHER_OBJECT;
 			if (manager != null)
 				object = null; 

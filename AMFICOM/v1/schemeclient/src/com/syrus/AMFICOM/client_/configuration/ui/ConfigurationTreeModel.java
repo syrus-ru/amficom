@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.1 2005/07/11 12:31:37 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.2 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,11 +37,11 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/11 12:31:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -94,7 +94,7 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			return MeasurementPortTypePropertiesManager.getInstance(aContext);
 		if (object instanceof MeasurementType)
 			return MeasurementTypePropertiesManager.getInstance(aContext);
-		if (object instanceof Kind)
+		if (object instanceof IdlKind)
 				return null;
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}

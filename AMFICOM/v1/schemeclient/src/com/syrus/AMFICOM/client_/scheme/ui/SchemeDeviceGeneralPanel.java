@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.4 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.5 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,12 +32,12 @@ import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemePortWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -118,9 +118,9 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 				if (port != null) {
 					data[i][1] = port;
 					if (port.equals(thread.getSourceSchemePort()))
-						portDirection = DirectionType.__OUT;
+						portDirection = IdlDirectionType.__OUT;
 					else
-						portDirection = DirectionType.__IN;
+						portDirection = IdlDirectionType.__IN;
 				} else
 					data[i][1] = NULL_PORT;
 			}
@@ -171,7 +171,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	public void commitChanges() {
 		for (int i = 0; i < size; i++) {
 			if (!data[i][1].equals(NULL_PORT)) {
-				if (portDirection == DirectionType.__OUT)
+				if (portDirection == IdlDirectionType.__OUT)
 					((SchemeCableThread)data[i][0]).setSourceSchemePort((SchemePort)data[i][1]);
 				else
 					((SchemeCableThread)data[i][0]).setTargetSchemePort((SchemePort)data[i][1]);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.24 2005/07/01 16:21:33 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.25 2005/07/24 18:12:44 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 
 /**
@@ -80,8 +80,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.24 $, $Date: 2005/07/01 16:21:33 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/07/24 18:12:44 $
+ * @author $Author: bass $
  * @module mapviewclient_v1
  */
 public class MapSchemeTreeModel 
@@ -245,7 +245,7 @@ public class MapSchemeTreeModel
 				SchemeElement schemeElement = (SchemeElement )it.next();
 				Scheme internalScheme = schemeElement.getScheme();
 
-				if(	internalScheme.getKind().value() != Kind._CABLE_SUBNETWORK) {
+				if(	internalScheme.getKind().value() != IdlKind._CABLE_SUBNETWORK) {
 					if(isTopological)
 						childNode = buildSchemeTree(internalScheme, true, false);
 					else
@@ -278,7 +278,7 @@ public class MapSchemeTreeModel
 				if(internalScheme != null) {
 					childNode = buildSchemeTree(
 							internalScheme, 
-							internalScheme.getKind().equals(Kind.CABLE_SUBNETWORK), 
+							internalScheme.getKind().equals(IdlKind.CABLE_SUBNETWORK), 
 							isTopological); 
 				}
 				else if(element.getScheme() == null && isTopological) {

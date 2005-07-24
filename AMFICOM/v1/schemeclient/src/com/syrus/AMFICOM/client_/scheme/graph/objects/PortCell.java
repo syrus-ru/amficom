@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.5 2005/07/20 11:12:53 stas Exp $
+ * $Id: PortCell.java,v 1.6 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -34,7 +34,7 @@ public class PortCell extends EllipseCell {
 	private Identifier schemePortId;
 
 	public static PortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, DirectionType direction, Color color) {
+			Rectangle bounds, Map viewMap, IdlDirectionType direction, Color color) {
 
 		PortCell cell = new PortCell(userObject);
 		
@@ -50,7 +50,7 @@ public class PortCell extends EllipseCell {
 		int u = GraphConstants.PERCENT;
 		DefaultPort dp = new DefaultPort("Center"); //$NON-NLS-1$
 		map = GraphConstants.createMap();
-		GraphConstants.setOffset(map, new Point(direction.equals(DirectionType._IN) ? 0 : u, u / 2));
+		GraphConstants.setOffset(map, new Point(direction.equals(IdlDirectionType._IN) ? 0 : u, u / 2));
 		viewMap.put(dp, map);
 		cell.add(dp);
 		

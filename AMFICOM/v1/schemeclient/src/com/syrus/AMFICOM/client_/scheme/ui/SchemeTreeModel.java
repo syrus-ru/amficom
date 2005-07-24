@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.26 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.27 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/07/15 13:07:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -39,15 +39,15 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
 	ConfigurationTreeModel configurationTreeModel;
 	ProtoGroupTreeModel protoTreeModel;
 
-	private static Kind[] schemeTypes = new Kind[] { Kind.NETWORK, Kind.BUILDING,
-			Kind.CABLE_SUBNETWORK };
+	private static IdlKind[] schemeTypes = new IdlKind[] { IdlKind.NETWORK, IdlKind.BUILDING,
+			IdlKind.CABLE_SUBNETWORK };
 
 	private static String[] schemeTypeNames = new String[] {
 			LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE_NETWORK),
@@ -83,7 +83,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			// for any other strings return null Manager
 			return null;
 		}
-		if (object instanceof Kind)
+		if (object instanceof IdlKind)
 				return null;
 //		if (object instanceof Kind)
 //			return SchemeController.getInstance();
@@ -205,8 +205,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			}*/
 		} 
 		else {
-			if (node.getObject() instanceof Kind) {
-				Kind type = (Kind) node.getObject();
+			if (node.getObject() instanceof IdlKind) {
+				IdlKind type = (IdlKind) node.getObject();
 				TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
 						OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
 						StorableObjectWrapper.COLUMN_TYPE_ID);

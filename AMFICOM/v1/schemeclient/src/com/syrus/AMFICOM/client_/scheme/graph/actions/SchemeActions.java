@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.13 2005/07/14 14:25:14 bass Exp $
+ * $Id: SchemeActions.java,v 1.14 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,12 +52,12 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/14 14:25:14 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -168,7 +168,7 @@ public class SchemeActions {
 	{
 		if (group.getScheme() == null)
 			return false;
-		if (group.getScheme().getKind().equals(Kind.CABLE_SUBNETWORK))
+		if (group.getScheme().getKind().equals(IdlKind.CABLE_SUBNETWORK))
 			return true;
 		return false;
 	}
@@ -221,17 +221,17 @@ public class SchemeActions {
 		return cell;
 	}
 
-	public static PortCell createPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, Color color, Identifier portId) {
+	public static PortCell createPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, IdlDirectionType direction, Color color, Identifier portId) {
 		DefaultGraphCell port = createAbstractPort(graph, deviceCell, p, name, direction, false, color, portId);
 		return (PortCell)port;
 	}
 	
-	public static CablePortCell createCablePort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, Color color, Identifier portId) {
+	public static CablePortCell createCablePort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, IdlDirectionType direction, Color color, Identifier portId) {
 		DefaultGraphCell port = createAbstractPort(graph, deviceCell, p, name, direction, true, color, portId);
 		return (CablePortCell)port;
 	}
 	
-	private static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, DirectionType direction, boolean isCable, Color color, Identifier portId) {
+	private static DefaultGraphCell createAbstractPort(SchemeGraph graph, DeviceCell deviceCell, Point p, String name, IdlDirectionType direction, boolean isCable, Color color, Identifier portId) {
 		DefaultGraphCell visualPort;
 		DefaultPort ellipsePort;
 		Port devPort;
@@ -240,19 +240,19 @@ public class SchemeActions {
 		Rectangle dev_bounds = GraphConstants.getBounds(m);
 		
 		int u = GraphConstants.PERCENT;
-		int distance = (direction.equals(DirectionType._OUT) ?
+		int distance = (direction.equals(IdlDirectionType._OUT) ?
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
-		Point labelPosition = (direction.equals(DirectionType._OUT) ? 
+		Point labelPosition = (direction.equals(IdlDirectionType._OUT) ? 
 				new Point (-u / distance, 0) : 
 				new Point (u + (u / distance), 0));
-		Rectangle portCellBounds = (direction.equals(DirectionType._OUT) ? 
+		Rectangle portCellBounds = (direction.equals(IdlDirectionType._OUT) ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
-		Point devportPos = (direction.equals(DirectionType._OUT) ?
+		Point devportPos = (direction.equals(IdlDirectionType._OUT) ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
-		Point ellipseportPos = (direction.equals(DirectionType._OUT) ?
+		Point ellipseportPos = (direction.equals(IdlDirectionType._OUT) ?
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		

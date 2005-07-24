@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.14 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.15 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,12 +66,12 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/07/15 13:07:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 
@@ -304,12 +304,12 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		return deviceCell;
 	}
 	
-	private DirectionType getDirectionType(Rectangle dev_bounds, Point p) {
+	private IdlDirectionType getDirectionType(Rectangle dev_bounds, Point p) {
 		if (p.y > dev_bounds.y && p.y < dev_bounds.y + dev_bounds.height) {
 			if (p.x < dev_bounds.x )
-				return DirectionType._IN;
+				return IdlDirectionType._IN;
 			else if (p.x > dev_bounds.x + dev_bounds.width)
-				return DirectionType._OUT;
+				return IdlDirectionType._OUT;
 			else {
 				Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell"); //$NON-NLS-1$
 				return null;
@@ -338,7 +338,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			
 			Map m = graph.getModel().getAttributes(deviceCell);
 			Rectangle dev_bounds = GraphConstants.getBounds(m);	
-			DirectionType directionType = getDirectionType(dev_bounds, p);
+			IdlDirectionType directionType = getDirectionType(dev_bounds, p);
 			if (directionType == null)
 				return;
 			

@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.3 2005/07/20 11:12:53 stas Exp $
+ * $Id: PortEdge.java,v 1.4 2005/07/24 18:13:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
  * used just for identification of link between PortCell and DeviceCell
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/20 11:12:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/07/24 18:13:40 $
  * @module schemeclient_v1
  */
 

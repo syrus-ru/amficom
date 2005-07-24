@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.27 2005/07/14 15:36:36 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.28 2005/07/24 18:12:44 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,12 +38,12 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/14 15:36:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/07/24 18:12:44 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -220,14 +220,14 @@ public final class MeasurementPathController extends AbstractLinkController {
 		MapElement me = null;
 		MapView mapView = this.logicalNetLayer.getMapView();
 		switch(pe.getKind().value()) {
-			case Kind._SCHEME_ELEMENT:
+			case IdlKind._SCHEME_ELEMENT:
 				SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();
 				SiteNode site = mapView.findElement(se);
 				if(site != null) {
 					me = site;
 				}
 				break;
-			case Kind._SCHEME_LINK:
+			case IdlKind._SCHEME_LINK:
 				SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
 				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentScheme(), link.getSourceAbstractSchemePort().getParentSchemeDevice());
 				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentScheme(), link.getTargetAbstractSchemePort().getParentSchemeDevice());
@@ -237,7 +237,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 					me = ssite;
 				}
 				break;
-			case Kind._SCHEME_CABLE_LINK:
+			case IdlKind._SCHEME_CABLE_LINK:
 				SchemeCableLink clink = (SchemeCableLink )pe.getAbstractSchemeElement();
 				CablePath cp = mapView.findCablePath(clink);
 				if(cp != null)
