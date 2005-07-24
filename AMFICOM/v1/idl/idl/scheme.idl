@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.32 2005/07/24 17:57:20 bass Exp $
+ * $Id: scheme.idl,v 1.33 2005/07/24 18:06:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -137,16 +137,6 @@ module scheme {
 			public general::corba::WString256 description;
 
 			public general::corba::IdlIdentifier parentSchemeId;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 name,
-					in general::corba::WString256 description,
-					in general::corba::IdlIdentifier parentSchemeId);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -338,18 +328,6 @@ module scheme {
 
 			public general::corba::IdlIdentifier measurementPortId;
 			public general::corba::IdlIdentifier parentSchemeDeviceId;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 name,
-					in general::corba::WString256 description,
-					in IdlDirectionType directionType,
-					in general::corba::IdlIdentifier measurementPortId,
-					in general::corba::IdlIdentifier parentSchemeDeviceId);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -400,18 +378,6 @@ module scheme {
 		valuetype IdlAbstractSchemeLink : IdlAbstractSchemeElement {
 			public double physicalLength;
 			public double opticalLength;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 name,
-					in general::corba::WString256 description,
-					in double physicalLength,
-					in double opticalLength,
-					in general::corba::IdlIdentifier parentSchemeId);
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
