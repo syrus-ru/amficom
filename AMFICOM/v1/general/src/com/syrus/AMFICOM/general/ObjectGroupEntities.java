@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.18 2005/06/17 11:00:57 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.19 2005/07/24 18:42:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/06/17 11:00:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/07/24 18:42:49 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -47,7 +47,6 @@ public final class ObjectGroupEntities {
 	public static final short MAPVIEW_GROUP_CODE = 0x0009;
 
 	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();
-
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
 
 	private ObjectGroupEntities() {
@@ -94,7 +93,7 @@ public final class ObjectGroupEntities {
 	 * entity name.
 	 */
 	public static boolean isInGeneralGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.GENERAL_MIN_CODE
 			&& entityCode <= ObjectEntities.GENERAL_MAX_CODE;
 	}
@@ -104,7 +103,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInEventGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.EVENT_MIN_CODE
 			&& entityCode <= ObjectEntities.EVENT_MAX_CODE;
 	}
@@ -114,7 +113,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInAdministrationGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.ADMINISTRATION_MIN_CODE
 			&& entityCode <= ObjectEntities.ADMINISTRATION_MAX_CODE;
 	}
@@ -124,7 +123,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInConfigurationGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.CONFIGURATION_MIN_CODE
 			&& entityCode <= ObjectEntities.CONFIGURATION_MAX_CODE;
 	}
@@ -134,7 +133,7 @@ public final class ObjectGroupEntities {
 	}
 	
 	public static boolean isInMeasurementGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MEASUREMENT_MIN_CODE
 			&& entityCode <= ObjectEntities.MEASUREMENT_MAX_CODE;
 	}
@@ -144,7 +143,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInSchemeGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.SCHEME_MIN_CODE
 			&& entityCode <= ObjectEntities.SCHEME_MAX_CODE;
 	}
@@ -154,7 +153,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInMapGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MAP_MIN_CODE
 			&& entityCode <= ObjectEntities.MAP_MAX_CODE;
 	}
@@ -164,7 +163,7 @@ public final class ObjectGroupEntities {
 	}
 
 	public static boolean isInResourceGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.RESOURCE_MIN_CODE
 			&& entityCode <= ObjectEntities.RESOURCE_MAX_CODE;
 	}
@@ -174,7 +173,7 @@ public final class ObjectGroupEntities {
 	}
 	
 	public static boolean isInMapViewGroup(final short entityCode) {
-		assert ObjectEntities.codeToString(entityCode) != null;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.MAPVIEW_MIN_CODE
 			&& entityCode <= ObjectEntities.MAPVIEW_MAX_CODE;
 	}
