@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPathElementImpl.java,v 1.2 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: IdlPathElementImpl.java,v 1.3 2005/07/24 17:40:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 17:40:35 $
+ * @module scheme
  */
 final class IdlPathElementImpl extends IdlPathElement {
 	private static final long serialVersionUID = -7371044684847182096L;

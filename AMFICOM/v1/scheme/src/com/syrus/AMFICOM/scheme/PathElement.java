@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.52 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: PathElement.java,v 1.53 2005/07/24 17:40:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,15 +61,15 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSc
 import com.syrus.util.Log;
 
 /**
- * #15 in hierarchy.
+ * #17 in hierarchy.
  *
  * PathElement has no associated <code>name</code> field:
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/24 17:40:35 $
+ * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
@@ -87,24 +87,24 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * May reference either {@link SchemePort} or {@link SchemeCablePort}.
-	 * Empty if type is other than {@link Kind#SCHEME_ELEMENT}.
+	 * Empty if type is other than {@link IdlKind#SCHEME_ELEMENT}.
 	 */
 	private Identifier startAbstractSchemePortId;
 
 	/**
 	 * May reference either {@link SchemePort} or {@link SchemeCablePort}.
-	 * Empty if type is other than {@link Kind#SCHEME_ELEMENT}.
+	 * Empty if type is other than {@link IdlKind#SCHEME_ELEMENT}.
 	 */
 	private Identifier endAbstractSchemePortId;
 
 	/**
 	 * Empty if type is other than
-	 * {@link Kind#SCHEME_CABLE_LINK}.
+	 * {@link IdlKind#SCHEME_CABLE_LINK}.
 	 */
 	private Identifier schemeCableThreadId;
 
 	/**
-	 * Empty if type is other than {@link Kind#SCHEME_LINK}.
+	 * Empty if type is other than {@link IdlKind#SCHEME_LINK}.
 	 */
 	private Identifier schemeLinkId;
 
@@ -145,7 +145,7 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * Client-side constructor; creates an instance of type
-	 * {@link Kind#SCHEME_ELEMENT}.
+	 * {@link IdlKind#SCHEME_ELEMENT}.
 	 *
 	 * @param id
 	 * @param created
@@ -184,7 +184,7 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * Client-side constructor; creates an instance of type
-	 * {@link Kind#SCHEME_CABLE_LINK}.
+	 * {@link IdlKind#SCHEME_CABLE_LINK}.
 	 *
 	 * @param id
 	 * @param created
@@ -217,7 +217,7 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * Client-side constructor; creates an instance of type
-	 * {@link Kind#SCHEME_LINK}.
+	 * {@link IdlKind#SCHEME_LINK}.
 	 *
 	 * @param id
 	 * @param created
@@ -297,7 +297,7 @@ public final class PathElement extends StorableObject
 	 * @param startAbstractSchemePort
 	 * @param endAbstractSchemePort
 	 * @return a newly-created instance of type
-	 *         {@link Kind#SCHEME_ELEMENT}.
+	 *         {@link IdlKind#SCHEME_ELEMENT}.
 	 * @throws CreateObjectException
 	 */
 	public static PathElement createInstance(final Identifier creatorId,
@@ -338,7 +338,7 @@ public final class PathElement extends StorableObject
 	 * @param parentSchemePath
 	 * @param schemeCableThread
 	 * @return a newly-created instance of type
-	 *         {@link Kind#SCHEME_CABLE_LINK}.
+	 *         {@link IdlKind#SCHEME_CABLE_LINK}.
 	 * @throws CreateObjectException
 	 */
 	public static PathElement createInstance(final Identifier creatorId,
@@ -366,7 +366,7 @@ public final class PathElement extends StorableObject
 	 * @param parentSchemePath
 	 * @param schemeLink
 	 * @return a newly-created instance of type
-	 *         {@link Kind#SCHEME_LINK}.
+	 *         {@link IdlKind#SCHEME_LINK}.
 	 * @throws CreateObjectException
 	 */
 	public static PathElement createInstance(final Identifier creatorId,

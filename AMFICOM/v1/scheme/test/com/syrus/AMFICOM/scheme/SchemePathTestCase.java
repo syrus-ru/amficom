@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.8 2005/07/24 17:07:45 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.9 2005/07/24 17:40:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,15 +41,15 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.resource.EmptyResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 import com.syrus.util.Logger;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/24 17:07:45 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:40:35 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -159,7 +159,7 @@ public final class SchemePathTestCase extends TestCase {
 		final CableThreadType cableThreadType = CableThreadType.createInstance(userId, "codename", "description", "name", 0, linkType, cableLinkType);
 
 		final String schemeName = "a scheme";
-		final Scheme scheme = Scheme.createInstance(userId, schemeName, Kind.BAY, domainId);
+		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
 		final String schemePathName = "a scheme path";
 		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
 		assertEquals(schemeName, schemePath.getParentScheme().getName());
@@ -172,8 +172,8 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(userId, "a scheme cable thread", cableThreadType, schemeCableLink);
 		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "a scheme element", scheme);
 		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "a scheme device", schemeElement);
-		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", DirectionType._IN, schemeDevice);
-		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", DirectionType._OUT, schemeDevice);
+		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", IdlDirectionType._IN, schemeDevice);
+		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", IdlDirectionType._OUT, schemeDevice);
 
 		final AbstractSchemeElement abstractSchemeElements[] = new AbstractSchemeElement[] {schemeElement, schemeCableLink, schemeLink};
 
@@ -225,7 +225,7 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier domainId = new Identifier("Domain_0");
 
 		final String schemeName = "a scheme";
-		final Scheme scheme = Scheme.createInstance(userId, schemeName, Kind.BAY, domainId);
+		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
 		final String schemePathName = "a scheme path";
 		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
 		assertEquals(schemeName, schemePath.getParentScheme().getName());
@@ -236,8 +236,8 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "a scheme link", scheme);
 		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "a scheme element", scheme);
 		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "a scheme device", schemeElement);
-		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", DirectionType._IN, schemeDevice);
-		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", DirectionType._OUT, schemeDevice);
+		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", IdlDirectionType._IN, schemeDevice);
+		final SchemePort endSchemePort = SchemePort.createInstance(userId, "ending scheme port", IdlDirectionType._OUT, schemeDevice);
 
 		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath, schemePath.getPathMembers().isEmpty() ? null : startSchemePort, endSchemePort);
 		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath, schemeLink);
@@ -286,8 +286,8 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
-		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", Kind.BAY, domainId);
-		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", Kind.BAY, domainId);
+		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
 
 		@SuppressWarnings("unused")
 		final SchemePath schemePath0 = SchemePath.createInstance(userId, "0", scheme0);

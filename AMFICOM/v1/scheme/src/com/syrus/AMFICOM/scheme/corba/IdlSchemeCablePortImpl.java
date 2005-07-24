@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeCablePortImpl.java,v 1.4 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: IdlSchemeCablePortImpl.java,v 1.5 2005/07/24 17:40:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/24 17:40:35 $
+ * @module scheme
  */
 final class IdlSchemeCablePortImpl extends IdlSchemeCablePort {
 	private static final long serialVersionUID = 4363812351650218787L;

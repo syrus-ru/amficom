@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.8 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: SchemePortWrapper.java,v 1.9 2005/07/24 17:40:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/24 16:58:44 $
- * @author $Author: arseniy $
- * @module scheme_v1
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:40:34 $
+ * @author $Author: bass $
+ * @module scheme
  */
 public final class SchemePortWrapper extends StorableObjectWrapper {
 

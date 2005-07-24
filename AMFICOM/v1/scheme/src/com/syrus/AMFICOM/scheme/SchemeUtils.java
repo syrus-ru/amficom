@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.30 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: SchemeUtils.java,v 1.31 2005/07/24 17:40:35 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.Identifier;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:40:35 $
+ * @module scheme
  */
 public class SchemeUtils {
 	private static final char SEPARATOR = ':';

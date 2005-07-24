@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.56 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: Scheme.java,v 1.57 2005/07/24 17:40:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,9 +57,9 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/07/24 17:40:34 $
+ * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember implements Describable, SchemeCellContainer {
@@ -159,7 +159,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, String, int, int, Kind, Identifier, Map, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
+	 * {@link #createInstance(Identifier, String, String, String, int, int, IdlKind, Identifier, Map, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
 	 *
 	 * @param creatorId
 	 * @param name
