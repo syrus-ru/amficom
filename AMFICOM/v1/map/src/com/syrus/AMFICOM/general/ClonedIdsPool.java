@@ -1,5 +1,5 @@
 /**
- * $Id: ClonedIdsPool.java,v 1.1 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: ClonedIdsPool.java,v 1.2 2005/07/24 16:27:05 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,28 +11,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/30 14:50:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 16:27:05 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class ClonedIdsPool {
 
-	private Map clonedIds = new HashMap();
+	private Map<String, Identifier> clonedIds = new HashMap<String, Identifier>();
 
 	public final Identifier getClonedId(short entityCode, String id)
 		throws IdentifierGenerationException
 	{
-		Identifier clonedId = (Identifier )this.clonedIds.get(id);
+		Identifier clonedId = this.clonedIds.get(id);
 		if(clonedId == null)
 			clonedId = cloneId(entityCode, id);
 		return clonedId;
 	}
 	
-	public final Identifier cloneId(short entityCode, String id)
+	public final Identifier cloneId(short entityCode, final String id)
 		throws IdentifierGenerationException
 	{
-		Identifier clonedId;
-		clonedId = IdentifierPool.getGeneratedIdentifier(entityCode);
+		final Identifier clonedId = IdentifierPool.getGeneratedIdentifier(entityCode);
 		this.clonedIds.put(id, clonedId);
 		return clonedId;
 	}
