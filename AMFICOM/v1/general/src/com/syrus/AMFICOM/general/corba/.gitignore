@@ -4,6 +4,7 @@
 *Factory.java
 _*Stub.java
 AMFICOMRemoteException.java
+IdVersion.java
 CommonServer.java
 IdlDataType.java
 IdentifierGeneratorServer.java
