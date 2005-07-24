@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.59 2005/07/24 12:29:34 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.60 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,8 +77,8 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/07/24 12:29:34 $
- * @module scheme_v1
+ * @version $Revision: 1.60 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends StorableObject

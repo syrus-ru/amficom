@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSymbolContainer.java,v 1.2 2005/03/18 19:21:26 bass Exp $
+ * $Id: SchemeSymbolContainer.java,v 1.3 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/18 19:21:26 $
- * @module scheme_v1
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public interface SchemeSymbolContainer {
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.10 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.11 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 
 /**
+ * #07 in hierarchy.
+ *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/22 15:09:40 $
- * @module scheme_v1
+ * @version $Revision: 1.11 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject implements Cloneable {
 	private static final long serialVersionUID = 6687067380421014690L;

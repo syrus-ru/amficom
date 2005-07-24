@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/07/19 13:34:34 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.29 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,9 +39,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.28 $, $Date: 2005/07/19 13:34:34 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@SuppressWarnings("unused")

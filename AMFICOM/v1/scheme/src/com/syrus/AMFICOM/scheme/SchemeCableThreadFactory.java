@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadFactory.java,v 1.6 2005/07/04 13:00:50 bass Exp $
+ * $Id: SchemeCableThreadFactory.java,v 1.7 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/04 13:00:50 $
- * @module scheme_v1
+ * @version $Revision: 1.7 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 final class SchemeCableThreadFactory extends StorableObjectFactory {
 	/**

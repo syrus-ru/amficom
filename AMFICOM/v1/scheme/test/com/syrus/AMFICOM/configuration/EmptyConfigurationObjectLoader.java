@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyConfigurationObjectLoader.java,v 1.1 2005/07/15 08:47:17 bass Exp $
+ * $Id: EmptyConfigurationObjectLoader.java,v 1.2 2005/07/24 17:07:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/15 08:47:17 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 17:07:45 $
+ * @module scheme
  */
 public final class EmptyConfigurationObjectLoader implements
 		ConfigurationObjectLoader {

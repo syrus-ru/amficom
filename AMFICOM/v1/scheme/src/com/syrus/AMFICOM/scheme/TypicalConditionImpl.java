@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.7 2005/07/06 13:26:34 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.8 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/07/06 13:26:34 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 final class TypicalConditionImpl extends TypicalCondition {
 	

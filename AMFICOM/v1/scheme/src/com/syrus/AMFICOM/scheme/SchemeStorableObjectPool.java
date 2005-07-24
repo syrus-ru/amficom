@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.30 2005/07/12 11:07:57 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.31 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/07/12 11:07:57 $
- * @module scheme_v1
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public final class SchemeStorableObjectPool extends StorableObjectPool {
 	/**

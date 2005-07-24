@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.8 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.9 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:26 $
- * @author $Author: arseniy $
- * @module scheme_v1
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: bass $
+ * @module scheme
  */
 public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 

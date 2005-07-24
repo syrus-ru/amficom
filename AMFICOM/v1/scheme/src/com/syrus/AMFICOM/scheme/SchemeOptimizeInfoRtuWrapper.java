@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.3 2005/07/12 08:40:55 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.4 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/07/12 08:40:55 $
- * @module scheme_v1
+ * @version $Revision: 1.4 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper {
 	private static SchemeOptimizeInfoRtuWrapper instance;

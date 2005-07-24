@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.25 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: AbstractSchemeLink.java,v 1.26 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,9 +38,9 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/07/17 05:20:25 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	private static final long serialVersionUID = 1423195997939538835L;

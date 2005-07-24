@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.51 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.52 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,11 +57,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.util.Log;
 
 /**
- * #12 in hierarchy.
+ * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
- * @module scheme_v1
+ * @version $Revision: 1.52 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public final class SchemeCableThread extends StorableObject
 		implements Describable, Characterizable, Cloneable {

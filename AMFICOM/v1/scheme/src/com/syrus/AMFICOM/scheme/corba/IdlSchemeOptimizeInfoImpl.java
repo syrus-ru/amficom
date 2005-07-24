@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeOptimizeInfoImpl.java,v 1.1 2005/07/07 15:52:11 bass Exp $
+ * $Id: IdlSchemeOptimizeInfoImpl.java,v 1.2 2005/07/24 17:08:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.scheme.SchemeOptimizeInfo;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:11 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 17:08:16 $
+ * @module scheme
  */
 final class IdlSchemeOptimizeInfoImpl extends IdlSchemeOptimizeInfo {
 	private static final long serialVersionUID = -9084236419408389263L;

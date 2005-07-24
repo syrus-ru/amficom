@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.7 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.8 2005/07/24 17:07:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/22 15:09:40 $
- * @module scheme_v1
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 17:07:45 $
+ * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
 	public SchemePathTestCase(final String method) {

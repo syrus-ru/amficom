@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeOptimizeInfoSwitchImpl.java,v 1.2 2005/07/11 08:19:03 bass Exp $
+ * $Id: IdlSchemeOptimizeInfoSwitchImpl.java,v 1.3 2005/07/24 17:08:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:19:03 $
- * @module scheme_v1
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 17:08:16 $
+ * @module scheme
  */
 final class IdlSchemeOptimizeInfoSwitchImpl extends IdlSchemeOptimizeInfoSwitch {
 	private static final long serialVersionUID = -2026585260915595730L;

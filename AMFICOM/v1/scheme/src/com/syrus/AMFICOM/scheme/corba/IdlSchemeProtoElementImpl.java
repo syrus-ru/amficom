@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeProtoElementImpl.java,v 1.3 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: IdlSchemeProtoElementImpl.java,v 1.4 2005/07/24 17:08:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:26 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/07/24 17:08:16 $
+ * @module scheme
  */
 final class IdlSchemeProtoElementImpl extends IdlSchemeProtoElement {
 	private static final long serialVersionUID = -1014317040348772308L;

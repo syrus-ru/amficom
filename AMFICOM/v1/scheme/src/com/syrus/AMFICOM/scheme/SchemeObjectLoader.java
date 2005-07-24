@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectLoader.java,v 1.8 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeObjectLoader.java,v 1.9 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/12 08:40:54 $
- * @module scheme_v1
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:10:19 $
+ * @module scheme
  */
 public interface SchemeObjectLoader {
 	void delete(final Set<? extends Identifiable> objects);

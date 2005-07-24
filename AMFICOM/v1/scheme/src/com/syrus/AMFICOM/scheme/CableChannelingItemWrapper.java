@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.7 2005/07/12 11:49:38 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.8 2005/07/24 17:10:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/12 11:49:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 17:10:19 $
  * @author $Author: bass $
- * @module scheme_v1
+ * @module scheme
  */
 public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 	

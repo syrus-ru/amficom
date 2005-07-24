@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeProtoGroupImpl.java,v 1.1 2005/07/07 15:52:10 bass Exp $
+ * $Id: IdlSchemeProtoGroupImpl.java,v 1.2 2005/07/24 17:08:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:10 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 17:08:16 $
+ * @module scheme
  */
 final class IdlSchemeProtoGroupImpl extends IdlSchemeProtoGroup {
 	private static final long serialVersionUID = 5920689360142390043L;

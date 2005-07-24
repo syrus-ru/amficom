@@ -1,5 +1,5 @@
 /*-
- * $Id: Library.java,v 1.1 2005/03/24 09:40:15 bass Exp $
+ * $Id: Library.java,v 1.2 2005/07/24 17:07:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.logic.Item;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/03/24 09:40:15 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 17:07:45 $
+ * @module scheme
  */
 public interface Library extends Item {
 	void addChild(final Library library);
