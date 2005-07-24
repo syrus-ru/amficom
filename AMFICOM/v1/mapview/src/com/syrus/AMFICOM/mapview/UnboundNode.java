@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.24 2005/06/25 17:50:49 bass Exp $
+ * $Id: UnboundNode.java,v 1.25 2005/07/24 17:13:34 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/06/25 17:50:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/07/24 17:13:34 $
  * @module mapviewclient_v1
  */
 public final class UnboundNode extends SiteNode
@@ -202,10 +202,12 @@ public final class UnboundNode extends SiteNode
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
 	public String getName() {
 		return this.schemeElement.getName();
 	}
 
+	@Override
 	public void setName(String name) {
 		throw new UnsupportedOperationException("Use SchemeElement.setName(String)");
 	}
