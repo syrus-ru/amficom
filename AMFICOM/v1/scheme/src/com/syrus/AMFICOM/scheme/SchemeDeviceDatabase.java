@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceDatabase.java,v 1.11 2005/07/24 17:39:15 arseniy Exp $
+ * $Id: SchemeDeviceDatabase.java,v 1.12 2005/07/24 17:54:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,9 +25,9 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/07/24 17:39:15 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/24 17:54:41 $
+ * @module scheme
  */
 public final class SchemeDeviceDatabase extends StorableObjectDatabase {
 	

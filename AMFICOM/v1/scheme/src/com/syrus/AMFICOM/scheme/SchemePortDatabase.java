@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.14 2005/07/24 17:39:16 arseniy Exp $
+ * $Id: SchemePortDatabase.java,v 1.15 2005/07/24 17:54:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,9 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/07/24 17:39:16 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/24 17:54:41 $
+ * @module scheme
  */
 public final class SchemePortDatabase extends StorableObjectDatabase {
 	

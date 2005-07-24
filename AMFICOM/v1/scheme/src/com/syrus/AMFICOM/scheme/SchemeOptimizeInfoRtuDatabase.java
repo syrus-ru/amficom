@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.8 2005/07/24 17:39:16 arseniy Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.9 2005/07/24 17:54:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/07/24 17:39:16 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:54:41 $
+ * @module scheme
  */
 public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase {
 	/**
@@ -94,5 +94,4 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 			SQLException {
 		throw new UnsupportedOperationException();
 	}
-
 }

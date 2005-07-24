@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.13 2005/07/24 17:39:15 arseniy Exp $
+ * $Id: PathElementDatabase.java,v 1.14 2005/07/24 17:54:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,9 +25,9 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/07/24 17:39:15 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/07/24 17:54:41 $
+ * @module scheme
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
 	
@@ -39,7 +39,7 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 			return (PathElement) storableObject;
 		throw new IllegalDataException("PathElementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-	
+
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
