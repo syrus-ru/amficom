@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.52 2005/07/14 17:50:44 arseniy Exp $
+ * $Id: Identifier.java,v 1.53 2005/07/24 19:46:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.52 $, $Date: 2005/07/14 17:50:44 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/24 19:46:38 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -143,7 +143,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	public static final Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
-		Set<String> idStrings = new HashSet<String>(identifiables.size());
+		final Set<String> idStrings = new HashSet<String>(identifiables.size());
 		for (final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext();)
 			idStrings.add(identifiableIterator.next().getId().toString());
 		return idStrings;
