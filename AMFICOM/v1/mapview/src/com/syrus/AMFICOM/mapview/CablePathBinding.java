@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathBinding.java,v 1.5 2005/07/19 07:02:17 krupenn Exp $
+ * $Id: CablePathBinding.java,v 1.6 2005/07/24 12:40:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,109 +11,107 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.map.AbstractNode;
+import java.util.HashMap;
+
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
-
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * Класс хранит данные о привязке кабеля к линиям.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/07/19 07:02:17 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/24 12:40:09 $
  * @module mapviewclient_v1
  */
-public final class CablePathBinding extends HashMap
+public final class CablePathBinding extends HashMap<CableChannelingItem, PhysicalLink>
 {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long serialVersionUID = 3257291309759868982L;
+//	private static final long serialVersionUID = 3257291309759868982L;
 	/**
 	 * кабель.
 	 */
-	private CablePath cablePath;
+//	private CablePath cablePath;
 	
 	/**
 	 * Конструктор.
 	 * @param cablePath кабель
 	 */
-	public CablePathBinding(CablePath cablePath)
-	{
-		this.cablePath = cablePath;
-	}
+//	public CablePathBinding(CablePath cablePath)
+//	{
+//		this.cablePath = cablePath;
+//	}
 
 	/**
 	 * Конструктор.
 	 * @param binding привязка
 	 */
-	public CablePathBinding(CablePathBinding binding)
-	{
-		super(binding);
-		this.cablePath = binding.getCablePath();
-	}
+//	public CablePathBinding(CablePathBinding binding)
+//	{
+//		super(binding);
+//		this.cablePath = binding.getCablePath();
+//	}
 
 	/**
 	 * Найти объект привязки кабеля, начинающийся на заданном узле.
 	 * @param node узел
 	 * @return объект привязки, или <code>null</code>, если не найден
 	 */
-	public CableChannelingItem getCCI(AbstractNode node)
-	{
-		for(Iterator it = super.values().iterator(); it.hasNext();)
-		{
-			CableChannelingItem cci = (CableChannelingItem )it.next();
-			if(cci.getStartSiteNode().equals(node))
-				return cci;
-		}
-		return null;
-	}
+//	public CableChannelingItem getCCI(AbstractNode node)
+//	{
+//		for(Iterator it = super.values().iterator(); it.hasNext();)
+//		{
+//			CableChannelingItem cci = (CableChannelingItem )it.next();
+//			if(cci.getStartSiteNode().equals(node))
+//				return cci;
+//		}
+//		return null;
+//	}
 	
 	/**
 	 * Найти объект привязки кабеля к заданной линии.
 	 * @param link линия
 	 * @return объект привязки, или <code>null</code>, если не найден
 	 */
-	public CableChannelingItem getCCI(PhysicalLink link)
-	{
-		return (CableChannelingItem )(super.get(link));
-	}
+//	public CableChannelingItem getCCI(PhysicalLink link)
+//	{
+//		return (CableChannelingItem )(super.get(link));
+//	}
 	
 	/**
 	 * Получить объект привязки к элементу.
 	 * @param key элемент
 	 * @return объект привязки, или <code>null</code>, если не найден
 	 */
-	public Object get(Object key)
-	{
-		Object entry = null;
-		if(key instanceof PhysicalLink)
-			entry = super.get(key);
-		else
-		if(key instanceof AbstractNode)
-			entry = this.getCCI((AbstractNode)key);
-		return entry;
-	}
+//	public Object get(Object key)
+//	{
+//		Object entry = null;
+//		if(key instanceof PhysicalLink)
+//			entry = super.get(key);
+//		else
+//		if(key instanceof AbstractNode)
+//			entry = this.getCCI((AbstractNode)key);
+//		return entry;
+//	}
 
 
 	/**
 	 * Установить кабель.
 	 * @param cablePath кабель
 	 */
-	public void setCablePath(CablePath cablePath)
-	{
-		this.cablePath = cablePath;
-	}
+//	public void setCablePath(CablePath cablePath)
+//	{
+//		this.cablePath = cablePath;
+//	}
 
 	/**
 	 * Получить кабель.
 	 * @return кабель
 	 */
-	public CablePath getCablePath()
-	{
-		return this.cablePath;
-	}
+//	public CablePath getCablePath()
+//	{
+//		return this.cablePath;
+//	}
 
 //	public MapNodeElement getStartUnbound(MapNodeElement pathStart)
 //	{
