@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.40 2005/07/24 16:58:44 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.41 2005/07/24 17:32:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,9 +50,9 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/07/24 16:58:44 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/07/24 17:32:36 $
+ * @module scheme
  */
 public abstract class AbstractSchemePort
 		extends StorableObject
