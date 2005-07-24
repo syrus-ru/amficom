@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.28 2005/07/12 09:39:24 arseniy Exp $
+# $Id: Makefile.inc,v 1.29 2005/07/24 17:58:56 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -169,17 +169,17 @@ IDLJFLAGS = -fallTIE -i $(IDLDIR) -td $(SRCDIR)
 # Borland VisiBroker for Java idl2java
 # Do not modify!
 VBJ_IDL2JAVA = $(VBROKER_HOME)/bin/idl2java
-VBJ_IDL2JAVAFLAGS = -DSTRICT -DNO_ALIASES -DMY_COMPILER_IS_NOT_BRAINDEAD -package com.syrus.AMFICOM
+VBJ_IDL2JAVAFLAGS = -DMY_COMPILER_IS_NOT_BRAINDEAD -package com.syrus.AMFICOM
 
 # The Community OpenORB idl2java
 # Do not modify!
 TCOO_IDL2JAVA = $(TCOO_HOME)/OpenORB/bin/idl2java
-TCOO_IDL2JAVAFLAGS = -DNO_DEFAULT_FACTORIES -DNO_STRUCT_RECURSION -DMY_COMPILER_IS_NOT_BRAINDEAD
+TCOO_IDL2JAVAFLAGS = -DNO_STRUCT_RECURSION -DMY_COMPILER_IS_NOT_BRAINDEAD
 
 # IONA ORBacus jidl
 # Do not modify!
 ORBACUS_JIDL = jidl
-ORBACUS_JIDLFLAGS = -I. -DSTRICT -DNO_ALIASES -DMY_COMPILER_IS_NOT_BRAINDEAD --auto-package
+ORBACUS_JIDLFLAGS = -I. -DMY_COMPILER_IS_NOT_BRAINDEAD --auto-package
 
 # Figuring out what flags to use based on user's choice.
 # Do not modify!
