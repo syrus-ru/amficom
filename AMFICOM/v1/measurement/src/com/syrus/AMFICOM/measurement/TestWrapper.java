@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.14 2005/06/23 18:45:08 bass Exp $
+ * $Id: TestWrapper.java,v 1.15 2005/07/24 15:34:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,12 @@ import java.util.Set;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/06/23 18:45:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/24 15:34:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TestWrapper extends StorableObjectWrapper {
@@ -33,7 +32,6 @@ public class TestWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
 	public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String COLUMN_RETURN_TYPE = "return_type";
 	public static final String COLUMN_START_TIME = "start_time";
 	public static final String COLUMN_STATUS = "status";
 	public static final String COLUMN_GROUP_TEST_ID = "group_test_id";
@@ -59,7 +57,6 @@ public class TestWrapper extends StorableObjectWrapper {
 				COLUMN_GROUP_TEST_ID,
 				COLUMN_STATUS,
 				COLUMN_MONITORED_ELEMENT_ID,
-				COLUMN_RETURN_TYPE,
 				COLUMN_DESCRIPTION,
 				COLUMN_NUMBER_OF_MEASUREMENTS,
 				LINK_COLUMN_MEASUREMENT_SETUP_ID};
@@ -82,6 +79,7 @@ public class TestWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof Test) {
@@ -108,8 +106,6 @@ public class TestWrapper extends StorableObjectWrapper {
 				return new Integer(test.getStatus().value());
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
 				return test.getMonitoredElement();
-			if (key.equals(COLUMN_RETURN_TYPE))
-				return new Integer(test.getReturnType().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return test.getDescription();
 			if (key.equals(COLUMN_NUMBER_OF_MEASUREMENTS))
@@ -147,8 +143,6 @@ public class TestWrapper extends StorableObjectWrapper {
 				test.setStatus(TestStatus.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
 				test.setMonitoredElement((MonitoredElement) value);
-			else if (key.equals(COLUMN_RETURN_TYPE))
-				test.setReturnType(TestReturnType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DESCRIPTION))
 				test.setDescription((String) value);
 			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
@@ -169,6 +163,7 @@ public class TestWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
@@ -177,9 +172,7 @@ public class TestWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
 		}
-		if (key.equals(COLUMN_TEMPORAL_TYPE)
-				|| key.equals(COLUMN_RETURN_TYPE)
-				|| key.equals(COLUMN_STATUS)) {
+		if (key.equals(COLUMN_TEMPORAL_TYPE) || key.equals(COLUMN_STATUS)) {
 			return Integer.class;
 		}
 		if (key.equals(COLUMN_START_TIME)

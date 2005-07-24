@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.2 2005/07/11 08:20:01 bass Exp $
+ * $Id: IdlTestImpl.java,v 1.3 2005/07/24 15:34:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,13 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:20:01 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 15:34:54 $
  * @module measurement_v1
  */
 final class IdlTestImpl extends IdlTest {
@@ -45,7 +44,6 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier groupTestId,
 			final TestStatus status,
 			final IdlIdentifier monitoredElementId,
-			final TestReturnType returnType,
 			final String description,
 			final int numberOfMeasurements,
 			final IdlIdentifier measurementSetupIds[]) {
@@ -62,7 +60,6 @@ final class IdlTestImpl extends IdlTest {
 		this.groupTestId = groupTestId;
 		this.status = status;
 		this.monitoredElementId = monitoredElementId;
-		this.returnType = returnType;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
 		this.measurementSetupIds = measurementSetupIds;

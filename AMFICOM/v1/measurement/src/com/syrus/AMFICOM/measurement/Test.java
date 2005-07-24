@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.137 2005/07/13 10:36:31 arseniy Exp $
+ * $Id: Test.java,v 1.138 2005/07/24 15:34:21 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,9 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
@@ -51,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.137 $, $Date: 2005/07/13 10:36:31 $
+ * @version $Revision: 1.138 $, $Date: 2005/07/24 15:34:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -70,7 +67,6 @@ public final class Test extends StorableObject {
 	private Identifier evaluationTypeId;
 	private int status;
 	private MonitoredElement monitoredElement;
-	private int	returnType;
 	private String description;
 	private int numberOfMeasurements;
 	private Set<Identifier> measurementSetupIds;
@@ -145,7 +141,6 @@ public final class Test extends StorableObject {
 			final Identifier evaluationTypeId,
 			final Identifier groupTestId,
 			final MonitoredElement monitoredElement,
-			final int returnType,
 			final String description,
 			final Set<Identifier> measurementSetupIds) {
 		super(id,
@@ -163,7 +158,6 @@ public final class Test extends StorableObject {
 		this.evaluationTypeId = evaluationTypeId;
 		this.groupTestId = groupTestId;
 		this.monitoredElement = monitoredElement;
-		this.returnType = returnType;
 		this.description = description;
 		this.measurementSetupIds = new HashSet<Identifier>();
 		this.setMeasurementSetupIds0(measurementSetupIds);
@@ -197,11 +191,10 @@ public final class Test extends StorableObject {
 			final Identifier evaluationTypeId,
 			final Identifier groupTestId,
 			final MonitoredElement monitoredElement,
-			final TestReturnType returnType,
 			final String description,
 			final Set<Identifier> measurementSetupIds) throws CreateObjectException {
 		try {
-			Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
+			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
 					0L,
 					startTime,
@@ -213,7 +206,6 @@ public final class Test extends StorableObject {
 					evaluationTypeId,
 					groupTestId,
 					monitoredElement,
-					returnType.value(),
 					description,
 					measurementSetupIds);
 
@@ -257,7 +249,6 @@ public final class Test extends StorableObject {
 
 		this.monitoredElement = (MonitoredElement) StorableObjectPool.getStorableObject(new Identifier(tt.monitoredElementId), true);
 
-		this.returnType = tt.returnType.value();
 		this.description = tt.description;
 		this.numberOfMeasurements = tt.numberOfMeasurements;
 
@@ -338,10 +329,6 @@ public final class Test extends StorableObject {
 		return this.timeStamps.temporalPatternId;
 	}
 
-	public TestReturnType getReturnType() {
-		return TestReturnType.from_int(this.returnType);
-	}
-
 	public Date getStartTime() {
 		return this.timeStamps.startTime;
 	}
@@ -383,34 +370,9 @@ public final class Test extends StorableObject {
 				this.groupTestId.getTransferable(),
 				TestStatus.from_int(this.status),
 				this.monitoredElement.getId().getTransferable(),
-				TestReturnType.from_int(this.returnType),
 				this.description,
 				this.numberOfMeasurements,
 				msIdsT);
-	}
-
-	public Measurement retrieveLastMeasurement() throws RetrieveObjectException, ObjectNotFoundException {
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
-		try {
-			final Measurement measurement = (Measurement) database.retrieveObject(this, RETRIEVE_LAST_MEASUREMENT, null);
-			try {
-				StorableObjectPool.putStorableObject(measurement);
-			} catch (IllegalObjectEntityException ioee) {
-				Log.errorException(ioee);
-			}
-			return measurement;
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
-
-	public int retrieveNumberOfResults(final ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
-		try {
-			return ((Integer) database.retrieveObject(this, RETRIEVE_NUMBER_OF_RESULTS, resultSort)).intValue();
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
 	}
 
 	/**
@@ -448,14 +410,6 @@ public final class Test extends StorableObject {
 	 */
 	public void setMonitoredElement(final MonitoredElement monitoredElement) {
 		this.monitoredElement = monitoredElement;
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param returnType The returnType to set.
-	 */
-	public void setReturnType(final TestReturnType returnType) {
-		this.returnType = returnType.value();
 		super.markAsChanged();
 	}
 
@@ -513,7 +467,6 @@ public final class Test extends StorableObject {
 			final Identifier groupTestId,
 			final int status,
 			final MonitoredElement monitoredElement,
-			final int returnType,
 			final String description,
 			final int numberOfMeasurements) {
 		super.setAttributes(created,
@@ -533,7 +486,6 @@ public final class Test extends StorableObject {
 		this.groupTestId = groupTestId;
 		this.status = status;
 		this.monitoredElement = monitoredElement;
-		this.returnType = returnType;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
 	}
