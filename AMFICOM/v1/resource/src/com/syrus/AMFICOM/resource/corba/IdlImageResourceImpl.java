@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlImageResourceImpl.java,v 1.2 2005/07/11 08:18:57 bass Exp $
+ * $Id: IdlImageResourceImpl.java,v 1.3 2005/07/24 16:08:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.resource.corba;
 
-import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._BITMAP;
-import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._FILE;
-import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort._SCHEME;
+import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort._BITMAP;
+import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort._FILE;
+import static com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort._SCHEME;
 import static java.util.logging.Level.SEVERE;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -20,13 +20,13 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 16:08:07 $
  * @module resource_v1
  */
 final class IdlImageResourceImpl extends IdlImageResource {
@@ -42,7 +42,7 @@ final class IdlImageResourceImpl extends IdlImageResource {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final ImageResourceData data) {
+			final IdlImageResourceData data) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;

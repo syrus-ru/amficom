@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.16 2005/07/03 19:16:18 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.17 2005/07/24 16:08:06 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/03 19:16:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/07/24 16:08:06 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {

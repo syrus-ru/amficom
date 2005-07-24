@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.9 2005/07/12 13:06:31 bass Exp $
+ * $Id: ImageResourceWrapper.java,v 1.10 2005/07/24 16:08:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,26 +13,26 @@ import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/12 13:06:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/24 16:08:07 $
+ * @author $Author: arseniy $
  * @module resource_v1
  */
 public class ImageResourceWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_SORT	= "sort";
+	public static final String COLUMN_SORT = "sort";
 
-	public static final String				COLUMN_DATA	= "data";
+	public static final String COLUMN_DATA = "data";
 
-	protected static ImageResourceWrapper	instance;
+	protected static ImageResourceWrapper instance;
 
-	protected List							keys;
+	protected List keys;
 
 	private ImageResourceWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_CODENAME, COLUMN_DATA};
+		final String[] keysArray = new String[] { COLUMN_SORT, COLUMN_CODENAME, COLUMN_DATA };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -48,41 +48,41 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
 		if (key.equals(COLUMN_CODENAME)) {
 			return String.class;
 		} else if (key.equals(COLUMN_SORT)) {
-			return Integer.class;			
-		} else if (key.equals(COLUMN_DATA)){
+			return Integer.class;
+		} else if (key.equals(COLUMN_DATA)) {
 			return byte[].class;
 		}
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
-		Object value = super.getValue(object, key);
+	public Object getValue(final Object object, final String key) {
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof AbstractImageResource) {
-			AbstractImageResource abstractImageResource = (AbstractImageResource) object;
+			final AbstractImageResource abstractImageResource = (AbstractImageResource) object;
 			if (key.equals(COLUMN_SORT))
 				return new Integer(abstractImageResource.getSort().value());
 			if (key.equals(COLUMN_CODENAME)) {
@@ -107,13 +107,13 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof AbstractImageResource) {
-			AbstractImageResource abstractImageResource = (AbstractImageResource) object;
+			final AbstractImageResource abstractImageResource = (AbstractImageResource) object;
 			if (key.equals(COLUMN_CODENAME)) {
 				switch (abstractImageResource.getSort().value()) {
 					case ImageResourceSort._BITMAP:

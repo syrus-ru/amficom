@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.28 2005/07/22 15:09:42 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.29 2005/07/24 16:08:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,13 +33,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceData;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/22 15:09:42 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/07/24 16:08:07 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource implements Cloneable {
@@ -120,7 +120,7 @@ public final class SchemeImageResource extends AbstractImageResource implements 
 	 */
 	@Override
 	public IdlImageResource getTransferable(final ORB orb) {
-		final ImageResourceData imageResourceData = new ImageResourceData();
+		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, this.image);
 		return IdlImageResourceHelper.init(orb,
 				this.id.getTransferable(),
@@ -238,7 +238,7 @@ public final class SchemeImageResource extends AbstractImageResource implements 
 		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
 		super.fromTransferable(idlImageResource);
 
-		final ImageResourceData imageResourceData = idlImageResource.data;
+		final IdlImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
 		this.image = imageResourceData.image();
 	}
