@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.25 2005/07/17 05:23:21 arseniy Exp $
+ * $Id: map.idl,v 1.26 2005/07/24 17:17:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,45 +21,38 @@ module AMFICOM {
 
 module map {
 	module corba {
-#ifdef NO_ALIASES
-		valuetype IdlSiteNodeType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlSiteNodeType: general::corba::StorableObject {
-#endif // NO_ALIASES
+
+
+/////////////////////// SiteNodeType ////////////////////////
+
+		valuetype IdlSiteNodeType : general::corba::IdlStorableObject {
 			public wstring codename;
 			public wstring name;
 			public wstring description;
 
-			public general::corba::Identifier imageId;
+			public general::corba::IdlIdentifier imageId;
 			public boolean topological;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring codename,
 					in wstring name,
 					in wstring description,
-					in general::corba::Identifier imageId,
+					in general::corba::IdlIdentifier imageId,
 					in boolean topological);
 		};
 
-		typedef IdlSiteNodeType SiteNodeType;
-		typedef sequence<SiteNodeType> SiteNodeTypeSeq;
+
+/////////////////////// PhysicalLinkType ////////////////////////
 
 		/**
 		 * Physical line type such as tunnel, subway, etc.
 		 */
-#ifdef NO_ALIASES
-		valuetype IdlPhysicalLinkType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlPhysicalLinkType: general::corba::StorableObject {
-#endif // NO_ALIASES
+		valuetype IdlPhysicalLinkType : general::corba::IdlStorableObject {
 			public wstring codename;
 			public wstring name;
 			public wstring description;
@@ -67,14 +60,11 @@ module map {
 			public long dimensionX;
 			public long dimensionY;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring codename,
 					in wstring name,
@@ -83,157 +73,116 @@ module map {
 					in long dimensionY);
 		};
 
-		typedef IdlPhysicalLinkType PhysicalLinkType;
-		typedef sequence<PhysicalLinkType> PhysicalLinkTypeSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlAbstractNode: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlAbstractNode: general::corba::StorableObject {
-#endif // NO_ALIASES
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+/////////////////////// AbstractNode - SiteNode, TopologicalNode ////////////////////////
+
+		valuetype IdlAbstractNode : general::corba::IdlStorableObject {
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version);
 		};
 
-		typedef IdlAbstractNode AbstractNode;
-		typedef sequence<AbstractNode> AbstractNodeSeq;
-
-		/**
-		 * Node.
-		 */
-#ifdef NO_ALIASES
-		valuetype IdlSiteNode: IdlAbstractNode {
-#else // NO_ALIASES
-		valuetype IdlSiteNode: AbstractNode {
-#endif // NO_ALIASES
+		valuetype IdlSiteNode : IdlAbstractNode {
 			public wstring name;
 			public wstring description;
 
 			public double longitude;	// anchor
 			public double latitude;		// anchor
 
-			public general::corba::Identifier imageId;
-			public general::corba::Identifier siteNodeTypeId;
+			public general::corba::IdlIdentifier imageId;
+			public general::corba::IdlIdentifier siteNodeTypeId;
 
 			public wstring city;
 			public wstring street;
 			public wstring building;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
 					in wstring description,
 					in double  longitude,
 					in double latitude,
-					in general::corba::Identifier imageId,
-					in general::corba::Identifier siteNodeTypeId,
+					in general::corba::IdlIdentifier imageId,
+					in general::corba::IdlIdentifier siteNodeTypeId,
 					in wstring city,
 					in wstring street,
 					in wstring building);
 		};
 
-		typedef IdlSiteNode SiteNode;
-		typedef sequence<SiteNode> SiteNodeSeq;
-
-#ifdef NO_ALIASES
-		valuetype IdlTopologicalNode: IdlAbstractNode {
-#else // NO_ALIASES
-		valuetype IdlTopologicalNode: AbstractNode {
-#endif // NO_ALIASES
+		valuetype IdlTopologicalNode : IdlAbstractNode {
 			public wstring name;
 			public wstring description;
 
 			public double longitude;	// anchor
 			public double latitude;		// anchor
 
-			public general::corba::Identifier physicalLinkId;
+			public general::corba::IdlIdentifier physicalLinkId;
 
 			public boolean active;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
 					in wstring description,
 					in double  longitude,
 					in double latitude,
-					in general::corba::Identifier physicalLinkId,
+					in general::corba::IdlIdentifier physicalLinkId,
 					in boolean active);
 		};
 
-		typedef IdlTopologicalNode TopologicalNode;
-		typedef sequence<TopologicalNode> TopologicalNodeSeq;
+
+/////////////////////// NodeLink ////////////////////////
 
 		/**
 		 * Map item, line fragment.
 		 */
-#ifdef NO_ALIASES
-		valuetype IdlNodeLink: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlNodeLink: general::corba::StorableObject {
-#endif // NO_ALIASES
+		valuetype IdlNodeLink : general::corba::IdlStorableObject {
 			public wstring name;
 
-			public general::corba::Identifier physicalLinkId;
+			public general::corba::IdlIdentifier physicalLinkId;
 
-			public general::corba::Identifier startNodeId;
-			public general::corba::Identifier endNodeId;
+			public general::corba::IdlIdentifier startNodeId;
+			public general::corba::IdlIdentifier endNodeId;
 
 			public double length;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
-					in general::corba::Identifier physicalLinkId,
-					in general::corba::Identifier startNodeId,
-					in general::corba::Identifier endNodeId,
+					in general::corba::IdlIdentifier physicalLinkId,
+					in general::corba::IdlIdentifier startNodeId,
+					in general::corba::IdlIdentifier endNodeId,
 					in double length);
 		};
 
-		typedef IdlNodeLink NodeLink;
-		typedef sequence<NodeLink> NodeLinkSeq;
+
+/////////////////////// Mark ////////////////////////
 
 		/**
 		 * Mark which has coordinates and is bound to a subway (MapLink) by distance.
 		 */
-#ifdef NO_ALIASES
-		valuetype IdlMark: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlMark: general::corba::StorableObject {
-#endif // NO_ALIASES
+		valuetype IdlMark : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
 			public double longitude;	// anchor
 			public double latitude;		// anchor
 
-			public general::corba::Identifier physicalLinkId;
+			public general::corba::IdlIdentifier physicalLinkId;
 
 			public double distance;
 
@@ -241,44 +190,37 @@ module map {
 			public wstring street;
 			public wstring building;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
 					in wstring description,
 					in double  longitude,
 					in double latitude,
-					in general::corba::Identifier physicalLinkId,
+					in general::corba::IdlIdentifier physicalLinkId,
 					in double distance,
 					in wstring city,
 					in wstring street,
 					in wstring building);
 		};
 
-		typedef IdlMark Mark;
-		typedef sequence<Mark> MarkSeq;
+
+/////////////////////// PhysicalLink ////////////////////////
 
 		/**
 		 * Line item.
 		 */
-#ifdef NO_ALIASES
-		valuetype IdlPhysicalLink: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlPhysicalLink: general::corba::StorableObject {
-#endif // NO_ALIASES
+		valuetype IdlPhysicalLink : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
 
-			public general::corba::Identifier physicalLinkTypeId;
+			public general::corba::IdlIdentifier physicalLinkTypeId;
 
-			public general::corba::Identifier startNodeId;
-			public general::corba::Identifier endNodeId;
+			public general::corba::IdlIdentifier startNodeId;
+			public general::corba::IdlIdentifier endNodeId;
 
 			public wstring city;
 			public wstring street;
@@ -290,22 +232,19 @@ module map {
 			public boolean leftToRight;
 			public boolean topToBottom;
 
-			public general::corba::IdentifierSeq nodeLinkIds;
+			public general::corba::IdlIdentifierSeq nodeLinkIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
 					in wstring description,
-					in general::corba::Identifier physicalLinkTypeId,
-					in general::corba::Identifier startNodeId,
-					in general::corba::Identifier endNodeId,
+					in general::corba::IdlIdentifier physicalLinkTypeId,
+					in general::corba::IdlIdentifier startNodeId,
+					in general::corba::IdlIdentifier endNodeId,
 					in wstring city,
 					in wstring street,
 					in wstring building,
@@ -313,78 +252,64 @@ module map {
 					in long dimensionY,
 					in boolean leftToRight,
 					in boolean topToBottom,
-					in general::corba::IdentifierSeq nodeLinkIds);
+					in general::corba::IdlIdentifierSeq nodeLinkIds);
 		};
 
-		typedef IdlPhysicalLink PhysicalLink;
-		typedef sequence<PhysicalLink> PhysicalLinkSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlCollector: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlCollector: general::corba::StorableObject {
-#endif // NO_ALIASES
+/////////////////////// Collector ////////////////////////
+
+		valuetype IdlCollector : general::corba::IdlStorableObject {
 			public wstring name;
 			public wstring description;
 
-			public general::corba::IdentifierSeq physicalLinkIds;
+			public general::corba::IdlIdentifierSeq physicalLinkIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in wstring name,
 					in wstring description,
-					in general::corba::IdentifierSeq physicalLinkIds);
+					in general::corba::IdlIdentifierSeq physicalLinkIds);
 		};
 
-		typedef IdlCollector Collector;
-		typedef sequence<Collector> CollectorSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlMap: ::administration::corba::IdlDomainMember {
-#else // NO_ALIASES
-		valuetype IdlMap: administration::corba::DomainMember {
-#endif // NO_ALIASES
+/////////////////////// Map ////////////////////////
+
+		valuetype IdlMap : administration::corba::IdlDomainMember {
 			public wstring name;
 			public wstring description;
 
-			public general::corba::IdentifierSeq siteNodeIds;
-			public general::corba::IdentifierSeq topologicalNodeIds;
-			public general::corba::IdentifierSeq nodeLinkIds;
-			public general::corba::IdentifierSeq physicalLinkIds;
-			public general::corba::IdentifierSeq markIds;
-			public general::corba::IdentifierSeq collectorIds;
+			public general::corba::IdlIdentifierSeq siteNodeIds;
+			public general::corba::IdlIdentifierSeq topologicalNodeIds;
+			public general::corba::IdlIdentifierSeq nodeLinkIds;
+			public general::corba::IdlIdentifierSeq physicalLinkIds;
+			public general::corba::IdlIdentifierSeq markIds;
+			public general::corba::IdlIdentifierSeq collectorIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::Identifier domainId,
+					in general::corba::IdlIdentifier domainId,
 					in wstring name,
 					in wstring description,
-					in general::corba::IdentifierSeq siteNodeIds,
-					in general::corba::IdentifierSeq topologicalNodeIds,
-					in general::corba::IdentifierSeq nodeLinkIds,
-					in general::corba::IdentifierSeq physicalLinkIds,
-					in general::corba::IdentifierSeq markIds,
-					in general::corba::IdentifierSeq collectorIds);
+					in general::corba::IdlIdentifierSeq siteNodeIds,
+					in general::corba::IdlIdentifierSeq topologicalNodeIds,
+					in general::corba::IdlIdentifierSeq nodeLinkIds,
+					in general::corba::IdlIdentifierSeq physicalLinkIds,
+					in general::corba::IdlIdentifierSeq markIds,
+					in general::corba::IdlIdentifierSeq collectorIds);
 		};
 
-		typedef IdlMap Map;
-		typedef sequence<Map> MapSeq;
 
-		typedef struct IdlTopologicalImageQuery {
+/////////////////////// /// ////////////////////////
+
+		struct IdlTopologicalImageQuery {
 			long mapImageWidth;
 			long mapImageHeight;
 
@@ -394,20 +319,21 @@ module map {
 
 			::CORBA::BooleanSeq layerVisibilities;
 			::CORBA::BooleanSeq labelVisibilities;
-		} TopologicalImageQuery;
+		};
 
-		typedef struct IdlRenderedImage {
+		struct IdlRenderedImage {
 			::CORBA::OctetSeq image;
-		} RenderedImage;
+		};
 
-		typedef struct IdlMapFeature {
+		struct IdlMapFeature {
 			double centerX;
 			double centerY;
 
 			wstring name;
-		} MapFeature;
+		};
+		typedef sequence<IdlMapFeature> IdlMapFeatureSeq;
 
-		typedef sequence<MapFeature> MapFeatureSeq;
+
 	};
 };
 

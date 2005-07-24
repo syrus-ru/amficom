@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.71 2005/07/10 13:49:37 bass Exp $
+ * $Id: measurement.idl,v 1.72 2005/07/24 17:17:46 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,155 +22,297 @@ module AMFICOM {
 module measurement {
 	module corba {
 
-////////////////////////// Type ///////////////////////////	
 
-#ifdef NO_ALIASES
-		valuetype IdlMeasurementType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlMeasurementType: general::corba::StorableObject {
-#endif // NO_ALIASES
+////////////////////////// MeasurementType ///////////////////////////	
+
+		valuetype IdlMeasurementType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdentifierSeq inParameterTypeIds;
-			public general::corba::IdentifierSeq outParameterTypeIds;
-			public general::corba::IdentifierSeq measurementPortTypeIds;
+			public general::corba::IdlIdentifierSeq inParameterTypeIds;
+			public general::corba::IdlIdentifierSeq outParameterTypeIds;
+			public general::corba::IdlIdentifierSeq measurementPortTypeIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq inParameterTypeIds,
-					in general::corba::IdentifierSeq outParameterTypeIds,
-					in general::corba::IdentifierSeq measurementPortTypeIds);
+					in general::corba::IdlIdentifierSeq inParameterTypeIds,
+					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlIdentifierSeq measurementPortTypeIds);
 		};
 
-		typedef IdlMeasurementType MeasurementType;
-		typedef sequence<MeasurementType> MeasurementTypeSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlAnalysisType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlAnalysisType: general::corba::StorableObject {
-#endif // NO_ALIASES
+////////////////////////// AnalysisType ///////////////////////////
+
+		valuetype IdlAnalysisType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdentifierSeq inParameterTypeIds;
-			public general::corba::IdentifierSeq criteriaParameterTypeIds;
-			public general::corba::IdentifierSeq etalonParameterTypeIds;
-			public general::corba::IdentifierSeq outParameterTypeIds;
+			public general::corba::IdlIdentifierSeq inParameterTypeIds;
+			public general::corba::IdlIdentifierSeq criteriaParameterTypeIds;
+			public general::corba::IdlIdentifierSeq etalonParameterTypeIds;
+			public general::corba::IdlIdentifierSeq outParameterTypeIds;
 
-			public general::corba::IdentifierSeq measurementTypeIds;
+			public general::corba::IdlIdentifierSeq measurementTypeIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq inParameterTypeIds,
-					in general::corba::IdentifierSeq criteriaParameterTypeIds,
-					in general::corba::IdentifierSeq etalonParameterTypeIds,
-					in general::corba::IdentifierSeq outParameterTypeIds,
-					in general::corba::IdentifierSeq measurementTypeIds);
+					in general::corba::IdlIdentifierSeq inParameterTypeIds,
+					in general::corba::IdlIdentifierSeq criteriaParameterTypeIds,
+					in general::corba::IdlIdentifierSeq etalonParameterTypeIds,
+					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlIdentifierSeq measurementTypeIds);
 		};
 
-		typedef IdlAnalysisType AnalysisType;
-		typedef sequence<AnalysisType> AnalysisTypeSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlEvaluationType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlEvaluationType: general::corba::StorableObject {
-#endif // NO_ALIASES
+////////////////////////// EvaluationType ///////////////////////////
+
+		valuetype IdlEvaluationType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdentifierSeq inParameterTypeIds;
-			public general::corba::IdentifierSeq thresholdParameterTypeIds;
-			public general::corba::IdentifierSeq etalonParameterTypeIds;
-			public general::corba::IdentifierSeq outParameterTypeIds;
+			public general::corba::IdlIdentifierSeq inParameterTypeIds;
+			public general::corba::IdlIdentifierSeq thresholdParameterTypeIds;
+			public general::corba::IdlIdentifierSeq etalonParameterTypeIds;
+			public general::corba::IdlIdentifierSeq outParameterTypeIds;
 
-			public general::corba::IdentifierSeq measurementTypeIds;
+			public general::corba::IdlIdentifierSeq measurementTypeIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq inParameterTypeIds,
-					in general::corba::IdentifierSeq thresholdParameterTypeIds,
-					in general::corba::IdentifierSeq etalonParameterTypeIds,
-					in general::corba::IdentifierSeq outParameterTypeIds,
-					in general::corba::IdentifierSeq measurementTypeIds);
+					in general::corba::IdlIdentifierSeq inParameterTypeIds,
+					in general::corba::IdlIdentifierSeq thresholdParameterTypeIds,
+					in general::corba::IdlIdentifierSeq etalonParameterTypeIds,
+					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlIdentifierSeq measurementTypeIds);
 		};
 
-		typedef IdlEvaluationType EvaluationType;
-		typedef sequence<EvaluationType> EvaluationTypeSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlModelingType: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlModelingType: general::corba::StorableObject {
-#endif // NO_ALIASES
+////////////////////////// ModelingType ///////////////////////////
+
+		valuetype IdlModelingType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdentifierSeq inParameterTypeIds;
-			public general::corba::IdentifierSeq outParameterTypeIds;
+			public general::corba::IdlIdentifierSeq inParameterTypeIds;
+			public general::corba::IdlIdentifierSeq outParameterTypeIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdentifierSeq inParameterTypeIds,
-					in general::corba::IdentifierSeq outParameterTypeIds);
+					in general::corba::IdlIdentifierSeq inParameterTypeIds,
+					in general::corba::IdlIdentifierSeq outParameterTypeIds);
 		};
 
-		typedef IdlModelingType ModelingType;
-		typedef sequence<ModelingType> ModelingTypeSeq;
 
-/////////////////// Parameter and Set /////////////////////
+/////////////////// Measurement /////////////////////
 
-		typedef struct IdlParameter {
-			general::corba::Identifier id;
-			general::corba::Identifier _typeId;
+		valuetype IdlMeasurement : general::corba::IdlStorableObject {
+			enum MeasurementStatus {
+				MEASUREMENT_STATUS_SCHEDULED,
+				MEASUREMENT_STATUS_ACQUIRING,
+				MEASUREMENT_STATUS_ACQUIRED,
+				MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
+				MEASUREMENT_STATUS_COMPLETED,
+				MEASUREMENT_STATUS_ABORTED
+			};
+
+			public general::corba::IdlIdentifier _typeId;
+			public general::corba::IdlIdentifier monitoredElementId;
+
+			public general::corba::WString128 name;
+
+			public general::corba::IdlIdentifier setupId;
+			public long long startTime;
+			public long long duration;
+			public MeasurementStatus status;
+			public general::corba::WString64 localAddress;
+			public general::corba::IdlIdentifier testId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier _typeId,
+					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::WString128 name,
+					in general::corba::IdlIdentifier setupId,
+					in long long startTime,
+					in long long duration,
+					in MeasurementStatus status,
+					in general::corba::WString64 localAddress,
+					in general::corba::IdlIdentifier testId);
+		};
+
+
+//////////////////// Analysis ///////////////////////
+
+		valuetype IdlAnalysis : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier _typeId;
+			public general::corba::IdlIdentifier monitoredElementId;
+			public general::corba::IdlIdentifier measurementId;
+
+			public general::corba::WString128 name;
+
+			public general::corba::IdlIdentifier criteriaSetId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier _typeId,
+					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::IdlIdentifier measurementId,
+					in general::corba::WString128 name,
+					in general::corba::IdlIdentifier criteriaSetId);
+		};
+
+
+//////////////////// Evaluation /////////////////////
+
+		valuetype IdlEvaluation : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier _typeId;
+			public general::corba::IdlIdentifier monitoredElementId;
+			public general::corba::IdlIdentifier measurementId;
+
+			public general::corba::IdlIdentifier thresholdSetId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier _typeId,
+					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::IdlIdentifier measurementId,
+					in general::corba::IdlIdentifier thresholdSetId);
+		};
+
+
+/////////////////// Modeling /////////////////////
+
+		valuetype IdlModeling : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier _typeId;
+			public general::corba::IdlIdentifier monitoredElementId;
+
+			public general::corba::WString128 name;
+
+			public general::corba::IdlIdentifier argumentSetId;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier _typeId,
+					in general::corba::IdlIdentifier monitoredElementId,
+					in general::corba::WString128 name,
+					in general::corba::IdlIdentifier argumentSetId);
+		};
+
+
+/////////////////// MeasurementSetup /////////////////////
+
+		valuetype IdlMeasurementSetup : general::corba::IdlStorableObject {
+			public general::corba::IdlIdentifier parameterSetId;
+			public general::corba::IdlIdentifier criteriaSetId;
+			public general::corba::IdlIdentifier thresholdSetId;
+			public general::corba::IdlIdentifier etalonId;
+			public general::corba::WString256 description;
+			public long long measurementDuration;
+			public general::corba::IdlIdentifierSeq monitoredElementIds;
+			public general::corba::IdlIdentifierSeq measurementTypeIds;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier parameterSetId,
+					in general::corba::IdlIdentifier criteriaSetId,
+					in general::corba::IdlIdentifier thresholdSetId,
+					in general::corba::IdlIdentifier etalonId,
+					in general::corba::WString256 description,
+					in long long measurementDuration,
+					in general::corba::IdlIdentifierSeq monitoredElementIds,
+					in general::corba::IdlIdentifierSeq measurementTypeIds);
+		};
+
+
+/////////////////// Parameter /////////////////////
+
+		struct IdlParameter {
+			general::corba::IdlIdentifier id;
+			general::corba::IdlIdentifier _typeId;
 			::CORBA::OctetSeq value;
-		} Parameter;
+		};
+		typedef sequence<IdlParameter> IdlParameterSeq;
 
-		typedef sequence<Parameter> ParameterSeq;
 
-#ifdef NO_ALIASES
-		valuetype IdlParameterSet: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlParameterSet: general::corba::StorableObject {
-#endif // NO_ALIASES
+////////////////////// Result ///////////////////////
+
+		valuetype IdlResult : general::corba::IdlStorableObject {
+			enum ResultSort {
+				RESULT_SORT_MEASUREMENT,
+				RESULT_SORT_ANALYSIS,
+				RESULT_SORT_EVALUATION,
+				RESULT_SORT_MODELING
+			};
+
+			public general::corba::IdlIdentifier measurementId;
+			public general::corba::IdlIdentifier analysisId;
+			public general::corba::IdlIdentifier evaluationId;
+			public general::corba::IdlIdentifier modelingId;
+			public ResultSort sort;
+			public IdlParameterSeq parameters;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in general::corba::IdlIdentifier measurementId,
+					in general::corba::IdlIdentifier analysisId,
+					in general::corba::IdlIdentifier evaluationId,
+					in general::corba::IdlIdentifier modelingId,
+					in ResultSort sort,
+					in IdlParameterSeq parameters);
+		};
+
+
+/////////////////// ParameterSet /////////////////////
+
+		valuetype IdlParameterSet : general::corba::IdlStorableObject {
 			enum ParameterSetSort {
 				SET_SORT_MEASUREMENT_PARAMETERS,
 				SET_SORT_ANALYSIS_CRITERIA,
@@ -182,239 +324,25 @@ module measurement {
 
 			public ParameterSetSort sort;
 			public general::corba::WString256 description;
-			public ParameterSeq parameters;
-			public general::corba::IdentifierSeq monitoredElementIds;
+			public IdlParameterSeq parameters;
+			public general::corba::IdlIdentifierSeq monitoredElementIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in ParameterSetSort sort,
 					in general::corba::WString256 description,
-					in ParameterSeq parameters,
-					in general::corba::IdentifierSeq monitoredElementIds);
+					in IdlParameterSeq parameters,
+					in general::corba::IdlIdentifierSeq monitoredElementIds);
 		};
 
-		typedef IdlParameterSet ParameterSet;
-		typedef sequence<ParameterSet> ParameterSetSeq;
-
-/////////////////// Modeling /////////////////////
-
-#ifdef NO_ALIASES
-		valuetype IdlModeling: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlModeling: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public general::corba::Identifier _typeId;
-			public general::corba::Identifier monitoredElementId;
-
-			public general::corba::WString128 name;
-
-			public general::corba::Identifier argumentSetId;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in general::corba::Identifier _typeId,
-					in general::corba::Identifier monitoredElementId,
-					in general::corba::WString128 name,
-					in general::corba::Identifier argumentSetId);
-		};
-
-		typedef IdlModeling Modeling;
-		typedef sequence<Modeling> ModelingSeq;
-
-/////////////////// Measurement /////////////////////
-
-#ifdef NO_ALIASES
-		valuetype IdlMeasurementSetup: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlMeasurementSetup: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public general::corba::Identifier parameterSetId;
-			public general::corba::Identifier criteriaSetId;
-			public general::corba::Identifier thresholdSetId;
-			public general::corba::Identifier etalonId;
-			public general::corba::WString256 description;
-			public long long measurementDuration;
-			public general::corba::IdentifierSeq monitoredElementIds;
-			public general::corba::IdentifierSeq measurementTypeIds;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in general::corba::Identifier parameterSetId,
-					in general::corba::Identifier criteriaSetId,
-					in general::corba::Identifier thresholdSetId,
-					in general::corba::Identifier etalonId,
-					in general::corba::WString256 description,
-					in long long measurementDuration,
-					in general::corba::IdentifierSeq monitoredElementIds,
-					in general::corba::IdentifierSeq measurementTypeIds);
-		};
-
-		typedef IdlMeasurementSetup MeasurementSetup;
-		typedef sequence<MeasurementSetup> MeasurementSetupSeq;
-
-#ifdef NO_ALIASES
-		valuetype IdlMeasurement: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlMeasurement: general::corba::StorableObject {
-#endif // NO_ALIASES
-			enum MeasurementStatus {
-				MEASUREMENT_STATUS_SCHEDULED,
-				MEASUREMENT_STATUS_ACQUIRING,
-				MEASUREMENT_STATUS_ACQUIRED,
-				MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
-				MEASUREMENT_STATUS_COMPLETED,
-				MEASUREMENT_STATUS_ABORTED
-			};
-
-			public general::corba::Identifier _typeId;
-			public general::corba::Identifier monitoredElementId;
-
-			public general::corba::WString128 name;
-
-			public general::corba::Identifier setupId;
-			public long long startTime;
-			public long long duration;
-			public MeasurementStatus status;
-			public general::corba::WString64 localAddress;
-			public general::corba::Identifier testId;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in general::corba::Identifier _typeId,
-					in general::corba::Identifier monitoredElementId,
-					in general::corba::WString128 name,
-					in general::corba::Identifier setupId,
-					in long long startTime,
-					in long long duration,
-					in MeasurementStatus status,
-					in general::corba::WString64 localAddress,
-					in general::corba::Identifier testId);
-		};
-
-		typedef IdlMeasurement Measurement;
-		typedef sequence<Measurement> MeasurementSeq;
-
-/////////////////////// Temporal Pattern ////////////////////////
-
-#ifdef NO_ALIASES
-		valuetype IdlCronTemporalPattern: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlCronTemporalPattern: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public general::corba::WString256 description;
-			public general::corba::WString64Seq cronStrings;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in general::corba::WString256 description,
-					in general::corba::WString64Seq cronStrings);
-		};
-
-		typedef IdlCronTemporalPattern CronTemporalPattern;
-		typedef sequence<CronTemporalPattern> CronTemporalPatternSeq;
-
-#ifdef NO_ALIASES
-		valuetype IdlIntervalsTemporalPattern: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlIntervalsTemporalPattern: general::corba::StorableObject {
-#endif // NO_ALIASES
-			struct IntervalTemporalPatternId {
-				long long ms;
-				general::corba::Identifier temporalPatternId;
-			};
-
-			typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
-
-			struct IntervalDuration {
-				long long ms;
-				long long duration;
-			};
-
-			typedef sequence<IntervalDuration> IntervalDurationSeq;
-
-			public IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
-			public IntervalDurationSeq intervalsDuration;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in IntervalTemporalPatternIdSeq intervalsTemporalPatternId,
-					in IntervalDurationSeq intervalsDuration);
-		};
-
-		typedef IdlIntervalsTemporalPattern IntervalsTemporalPattern;
-		typedef sequence<IntervalsTemporalPattern> IntervalsTemporalPatternSeq;
-
-#ifdef NO_ALIASES
-		valuetype IdlPeriodicalTemporalPattern: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlPeriodicalTemporalPattern: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public long long period;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in long long period);
-		};
-
-		typedef IdlPeriodicalTemporalPattern PeriodicalTemporalPattern;
-		typedef sequence<PeriodicalTemporalPattern> PeriodicalTemporalPatternSeq;
 
 /////////////////////// Test ////////////////////////
 
-#ifdef NO_ALIASES
-		valuetype IdlTest: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlTest: general::corba::StorableObject {
-#endif // NO_ALIASES
+		valuetype IdlTest : general::corba::IdlStorableObject {
 			union IdlTestTimeStamps switch (enum TestTemporalType {
 					TEST_TEMPORAL_TYPE_ONETIME,
 					TEST_TEMPORAL_TYPE_PERIODICAL,
@@ -425,7 +353,7 @@ module measurement {
 					struct PeriodicalTestTimeStamps {
 						long long startTime;
 						long long endTime;
-						general::corba::Identifier temporalPatternId;
+						general::corba::IdlIdentifier temporalPatternId;
 					} ptts;
 				case TEST_TEMPORAL_TYPE_CONTINUOUS:
 					struct ContinuousTestTimeStamps {
@@ -437,160 +365,99 @@ module measurement {
 			enum TestStatus {
 				TEST_STATUS_NEW,	//Сохранён в БД на сервере
 				TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
-//				TEST_STATUS_QUEUED,	//Поставлен МУИ в очередь
 				TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
 				TEST_STATUS_COMPLETED,	//Последнее измерение завершено
 				TEST_STATUS_ABORTED	//Прерван
 			};
 
-			enum TestReturnType {
-				TEST_RETURN_TYPE_WHOLE,
-				TEST_RETURN_TYPE_EVENTS,
-				TEST_RETURN_TYPE_REFERENCE
-			};
-
 			public IdlTestTimeStamps timeStamps;
-			public general::corba::Identifier measurementTypeId;
-			public general::corba::Identifier analysisTypeId;
-			public general::corba::Identifier evaluationTypeId;
-			public general::corba::Identifier groupTestId;
+			public general::corba::IdlIdentifier measurementTypeId;
+			public general::corba::IdlIdentifier analysisTypeId;
+			public general::corba::IdlIdentifier evaluationTypeId;
+			public general::corba::IdlIdentifier groupTestId;
 			public TestStatus status;
-			public general::corba::Identifier monitoredElementId;
-			public TestReturnType returnType;
+			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::WString256 description;
 			public long numberOfMeasurements;
-			public general::corba::IdentifierSeq measurementSetupIds;
+			public general::corba::IdlIdentifierSeq measurementSetupIds;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in IdlTestTimeStamps timeStamps,
-					in general::corba::Identifier measurementTypeId,
-					in general::corba::Identifier analysisTypeId,
-					in general::corba::Identifier evaluationTypeId,
-					in general::corba::Identifier groupTestId,
+					in general::corba::IdlIdentifier measurementTypeId,
+					in general::corba::IdlIdentifier analysisTypeId,
+					in general::corba::IdlIdentifier evaluationTypeId,
+					in general::corba::IdlIdentifier groupTestId,
 					in TestStatus status,
-					in general::corba::Identifier monitoredElementId,
-					in TestReturnType returnType,
+					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::WString256 description,
 					in long numberOfMeasurements,
-					in general::corba::IdentifierSeq measurementSetupIds);
+					in general::corba::IdlIdentifierSeq measurementSetupIds);
 		};
 
-		typedef IdlTest Test;
-		typedef sequence<Test> TestSeq;
+		typedef sequence<IdlTest> IdlTestSeq;
 
-//////////////////// Analysis ///////////////////////
 
-#ifdef NO_ALIASES
-		valuetype IdlAnalysis: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlAnalysis: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public general::corba::Identifier _typeId;
-			public general::corba::Identifier monitoredElementId;
-			public general::corba::Identifier measurementId;
+/////////////////////// Temporal Pattern ////////////////////////
 
-			public general::corba::WString128 name;
+		valuetype IdlCronTemporalPattern : general::corba::IdlStorableObject {
+			public general::corba::WString256 description;
+			public general::corba::WString64Seq cronStrings;
 
-			public general::corba::Identifier criteriaSetId;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::Identifier _typeId,
-					in general::corba::Identifier monitoredElementId,
-					in general::corba::Identifier measurementId,
-					in general::corba::WString128 name,
-					in general::corba::Identifier criteriaSetId);
+					in general::corba::WString256 description,
+					in general::corba::WString64Seq cronStrings);
 		};
 
-		typedef IdlAnalysis Analysis;
-		typedef sequence<Analysis> AnalysisSeq;
-
-//////////////////// Evaluation /////////////////////
-
-#ifdef NO_ALIASES
-		valuetype IdlEvaluation: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlEvaluation: general::corba::StorableObject {
-#endif // NO_ALIASES
-			public general::corba::Identifier _typeId;
-			public general::corba::Identifier monitoredElementId;
-			public general::corba::Identifier measurementId;
-
-			public general::corba::Identifier thresholdSetId;
-
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
-					in long long version,
-					in general::corba::Identifier _typeId,
-					in general::corba::Identifier monitoredElementId,
-					in general::corba::Identifier measurementId,
-					in general::corba::Identifier thresholdSetId);
-		};
-
-		typedef IdlEvaluation Evaluation;
-		typedef sequence<Evaluation> EvaluationSeq;
-
-////////////////////// Result ///////////////////////
-
-#ifdef NO_ALIASES
-		valuetype IdlResult: general::corba::IdlStorableObject {
-#else // NO_ALIASES
-		valuetype IdlResult: general::corba::StorableObject {
-#endif // NO_ALIASES
-			enum ResultSort {
-				RESULT_SORT_MEASUREMENT,
-				RESULT_SORT_ANALYSIS,
-				RESULT_SORT_EVALUATION,
-				RESULT_SORT_MODELING
+		valuetype IdlIntervalsTemporalPattern : general::corba::IdlStorableObject {
+			struct IntervalTemporalPatternId {
+				long long ms;
+				general::corba::IdlIdentifier temporalPatternId;
 			};
+			typedef sequence<IntervalTemporalPatternId> IntervalTemporalPatternIdSeq;
 
-			public general::corba::Identifier measurementId;
-			public general::corba::Identifier analysisId;
-			public general::corba::Identifier evaluationId;
-			public general::corba::Identifier modelingId;
-			public ResultSort sort;
-			public ParameterSeq parameters;
+			struct IntervalDuration {
+				long long ms;
+				long long duration;
+			};
+			typedef sequence<IntervalDuration> IntervalDurationSeq;
 
-#ifndef NO_DEFAULT_FACTORIES
-			factory defaultInit();
-#endif // NO_DEFAULT_FACTORIES
-			factory init(in general::corba::Identifier id,
+			public IntervalTemporalPatternIdSeq intervalsTemporalPatternId;
+			public IntervalDurationSeq intervalsDuration;
+
+			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
 					in long long modified,
-					in general::corba::Identifier creatorId,
-					in general::corba::Identifier modifierId,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::Identifier measurementId,
-					in general::corba::Identifier analysisId,
-					in general::corba::Identifier evaluationId,
-					in general::corba::Identifier modelingId,
-					in ResultSort sort,
-					in ParameterSeq parameters);
+					in IntervalTemporalPatternIdSeq intervalsTemporalPatternId,
+					in IntervalDurationSeq intervalsDuration);
 		};
 
-		typedef IdlResult Result;
-		typedef sequence<Result> ResultSeq;
+
+		valuetype IdlPeriodicalTemporalPattern : general::corba::IdlStorableObject {
+			public long long period;
+
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in long long period);
+		};
+
+
 	};
 };
 
