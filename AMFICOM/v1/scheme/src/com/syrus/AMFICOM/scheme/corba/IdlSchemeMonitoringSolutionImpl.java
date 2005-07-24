@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeMonitoringSolutionImpl.java,v 1.1 2005/07/07 15:52:11 bass Exp $
+ * $Id: IdlSchemeMonitoringSolutionImpl.java,v 1.2 2005/07/24 17:06:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:11 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 17:06:27 $
+ * @module scheme
  */
 final class IdlSchemeMonitoringSolutionImpl extends IdlSchemeMonitoringSolution {
 	private static final long serialVersionUID = -2973281910873931261L;
@@ -34,6 +34,7 @@ final class IdlSchemeMonitoringSolutionImpl extends IdlSchemeMonitoringSolution 
 			final String description,
 			final int priceUsd,
 			final boolean active,
+			final IdlIdentifier parentSchemeId,
 			final IdlIdentifier parentSchemeOptimizeInfoId) {
 		this.id = id;
 		this.created = created;
@@ -45,6 +46,7 @@ final class IdlSchemeMonitoringSolutionImpl extends IdlSchemeMonitoringSolution 
 		this.description = description;
 		this.priceUsd = priceUsd;
 		this.active = active;
+		this.parentSchemeId = parentSchemeId;
 		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 	}
 
