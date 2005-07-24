@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.78 2005/07/22 15:09:39 bass Exp $
+ * $Id: StorableObject.java,v 1.79 2005/07/24 14:59:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,14 +31,14 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/07/22 15:09:39 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.79 $, $Date: 2005/07/24 14:59:46 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
-	private static final long VERSION_ILLEGAL = -1L;
+	static final long VERSION_ILLEGAL = -1L;
 
 	protected Identifier id;
 	protected Date created;
