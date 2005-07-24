@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.8 2005/07/17 05:07:55 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.9 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,19 +19,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:07:55 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
-
 	private static String columns;
-
 	private static String updateMultipleSQLValues;
 
 	private PeriodicalTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
@@ -93,16 +90,6 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				resultSet.getLong(PeriodicalTemporalPatternWrapper.COLUMN_PERIOD));
 		return periodicalTemporalPattern;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  periodicalTemporalPattern.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

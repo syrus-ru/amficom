@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchDatabase.java,v 1.7 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeOptimizeInfoSwitchDatabase.java,v 1.8 2005/07/24 17:39:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 17:39:16 $
  * @module scheme_v1
  */
 public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDatabase {
@@ -93,23 +92,6 @@ public final class SchemeOptimizeInfoSwitchDatabase extends StorableObjectDataba
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
 		throw new UnsupportedOperationException();
 	}
 

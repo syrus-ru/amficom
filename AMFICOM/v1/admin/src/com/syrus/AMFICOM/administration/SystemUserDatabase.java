@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.10 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.11 2005/07/24 17:37:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,20 +21,20 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/24 17:37:58 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class SystemUserDatabase extends StorableObjectDatabase {
+	static final int SIZE_LOGIN_COLUMN = 32;
+
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	static final int SIZE_LOGIN_COLUMN = 32;
 
 	private SystemUser fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof SystemUser)
@@ -120,17 +120,6 @@ public final class SystemUserDatabase extends StorableObjectDatabase {
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
-		}
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final SystemUser user = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  user.getId() + "'; argument: " + arg);
-				return null;
 		}
 	}
 

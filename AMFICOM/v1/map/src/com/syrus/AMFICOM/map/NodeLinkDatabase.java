@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.28 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: NodeLinkDatabase.java,v 1.29 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,13 +20,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -132,16 +131,5 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 				resultSet.getDouble(NodeLinkWrapper.COLUMN_LENGTH));
 		return nodeLink;
 	}
-
-	
-	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		NodeLink nodeLink = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {			
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  nodeLink.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}	
 
 }

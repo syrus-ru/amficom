@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.34 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.35 2005/07/24 17:38:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,14 +34,13 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.35 $, $Date: 2005/07/24 17:38:28 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -57,14 +56,6 @@ public final class EventDatabase extends StorableObjectDatabase {
 			return (Event) storableObject;
 		throw new IllegalDataException("EventDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
-
-	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Event event = this.fromStorableObject(storableObject);
-		this.retrieveEntity(event);
-		this.retrieveEventParametersByOneQuery(Collections.singleton(event));
-		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(event));
-	}	
 
 	@Override
 	protected short getEntityCode() {		
@@ -134,6 +125,14 @@ public final class EventDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return event;
 	}
+
+	@Override
+	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		final Event event = this.fromStorableObject(storableObject);
+		this.retrieveEntity(event);
+		this.retrieveEventParametersByOneQuery(Collections.singleton(event));
+		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(event));
+	}	
 
 	private void retrieveEventParametersByOneQuery(final Set<Event> events) throws RetrieveObjectException {
     if ((events == null) || (events.isEmpty()))
@@ -226,38 +225,10 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final Event event = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + event.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		final Event event = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(event);
-			this.insertEventParameters(event);
-			this.updateEventSources(Collections.singleton(event));
-		}
-		catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-		catch (CreateObjectException coe) {
-			this.delete(event);
-			throw coe;
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
 			final Event event = this.fromStorableObject((StorableObject) it.next());
 			this.insertEventParameters(event);
 		}
@@ -327,31 +298,12 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			final Event event = this.fromStorableObject(storableObject);
-			this.updateEventSources(Collections.singleton(event));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
+		this.updateEventSources(storableObjects);
 	}
 
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
-		try {
-			this.updateEventSources(storableObjects);
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	private void updateEventSources(final Set<Event> events) throws IllegalDataException, UpdateObjectException {
+	private void updateEventSources(final Set<Event> events) throws UpdateObjectException {
 		if (events == null || events.isEmpty())
 			return;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.36 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.37 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -136,16 +136,6 @@ public final class CableLinkTypeDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, CableLinkTypeWrapper.COLUMN_IMAGE_ID));
 
 		return cableLinkType;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  cableLinkType.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

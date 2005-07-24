@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.60 2005/07/17 05:07:55 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.61 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,31 +11,26 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/07/17 05:07:55 $
+ * @version $Revision: 1.61 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class EvaluationDatabase extends StorableObjectDatabase {
-
 	private static String columns;	
 	private static String updateMultipleSQLValues;
 
@@ -130,17 +125,6 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 				measurement,
 				thresholdSet);
 		return evaluation;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final Evaluation evaluation = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  evaluation.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: PortDatabase.java,v 1.67 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.68 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,18 +22,15 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.68 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public final class PortDatabase extends StorableObjectDatabase {
-	// table :: Port
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -120,16 +117,6 @@ public final class PortDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
 		return startParameterNumber;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final Port port = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  port.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

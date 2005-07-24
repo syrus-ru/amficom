@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.41 2005/07/17 05:12:07 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.42 2005/07/24 17:34:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,12 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/17 05:12:07 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/24 17:34:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -142,19 +141,6 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 				(resultSet.getInt(CharacteristicWrapper.COLUMN_EDITABLE) == 0) ? false : true,
 				(resultSet.getInt(CharacteristicWrapper.COLUMN_VISIBLE) == 0) ? false : true);
 		return characteristic;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final Characteristic characteristic = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind
-						+ " for " + this.getEntityName() + " '" + characteristic.getId()
-						+ "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

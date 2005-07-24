@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.13 2005/07/18 16:31:26 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.14 2005/07/24 17:39:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/18 16:31:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/07/24 17:39:15 $
  * @module scheme_v1
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -38,25 +37,6 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		if(storableObject instanceof CableChannelingItem)
 			return (CableChannelingItem) storableObject;
 		throw new IllegalDataException("CableChannelingItemDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException {
-		CableChannelingItem cableChannelingItem = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + cableChannelingItem.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 	@Override

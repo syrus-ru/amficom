@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.35 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.36 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -41,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -112,6 +110,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		final Map map = this.fromStorableObject(storableObject);
 		this.retrieveEntity(map);
@@ -283,34 +282,6 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException {
-		final Map map = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + map.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		super.insertEntity(storableObject);
-		final Set maps = Collections.singleton(storableObject);
-		try {
-			this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
-			this.updateLinkedObjectIds(maps, _MAP_MARK);
-			this.updateLinkedObjectIds(maps, _MAP_NODE_LINK);
-			this.updateLinkedObjectIds(maps, _MAP_PHYSICAL_LINK);
-			this.updateLinkedObjectIds(maps, _MAP_SITE_NODE);
-			this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	@Override
 	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
@@ -326,22 +297,8 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		final Set<? extends StorableObject> maps = Collections.singleton(storableObject);
-		this.updateLinkedObjectIds(maps, _MAP_COLLECTOR);
-		this.updateLinkedObjectIds(maps, _MAP_MARK);
-		this.updateLinkedObjectIds(maps, _MAP_NODE_LINK);
-		this.updateLinkedObjectIds(maps, _MAP_PHYSICAL_LINK);
-		this.updateLinkedObjectIds(maps, _MAP_SITE_NODE);
-		this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
-	}
-
-	@Override
-	public void update(Set<? extends StorableObject> storableObjects, Identifier modifierId, UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
 		this.updateLinkedObjectIds(storableObjects, _MAP_MARK);
 		this.updateLinkedObjectIds(storableObjects, _MAP_NODE_LINK);

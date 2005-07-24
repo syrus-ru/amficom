@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.67 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.68 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,24 +22,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.68 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class TransmissionPathDatabase extends StorableObjectDatabase {
-
-	// table :: TransmissionPathMELink
-	// monitored_element_id Identifier,
-//	public static final String	LINK_COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	// transmission_path_id Identifier,
-//	public static final String	LINK_COLUMN_TRANSMISSION_PATH_ID	= "transmission_path_id";
-
 	private static String		columns;
 	private static String		updateMultipleSQLValues;
 
@@ -135,17 +127,6 @@ public final class TransmissionPathDatabase extends StorableObjectDatabase {
 			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_START_PORT_ID),
 			DatabaseIdentifier.getIdentifier(resultSet,	TransmissionPathWrapper.COLUMN_FINISH_PORT_ID));
 		return transmissionPath;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  transmissionPath.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.91 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.92 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,20 +28,18 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.92 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class EvaluationTypeDatabase extends ActionTypeDatabase {
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -148,30 +146,6 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + evaluationType.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		super.insertEntity(evaluationType);
-		try {
-			super.updateParameterTypeIds(Collections.singleton(evaluationType));
-			this.updateMeasurementTypeIds(Collections.singleton(evaluationType));
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
@@ -183,22 +157,8 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-			super.updateParameterTypeIds(Collections.singleton(evaluationType));
-			this.updateMeasurementTypeIds(Collections.singleton(evaluationType));
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.updateEntities(storableObjects);
 		super.updateParameterTypeIds(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
 	}

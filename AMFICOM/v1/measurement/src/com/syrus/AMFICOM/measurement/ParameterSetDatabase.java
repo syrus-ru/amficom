@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.7 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.8 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
@@ -42,15 +41,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class ParameterSetDatabase extends StorableObjectDatabase {
-
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -218,39 +214,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final ParameterSet set = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  set.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		Log.debugMessage("ParameterSetDatabase.insert | 1 ", Log.DEBUGLEVEL01);
-		final ParameterSet set = this.fromStorableObject(storableObject);
-		try {
-			Log.debugMessage("ParameterSetDatabase.insert | before insertEntity ", Log.DEBUGLEVEL01);
-			super.insertEntity(set);
-			Log.debugMessage("ParameterSetDatabase.insert | before insertSetParameters ", Log.DEBUGLEVEL01);
-			this.insertSetParameters(set);
-			Log.debugMessage("ParameterSetDatabase.insert | after insertSetParameters ", Log.DEBUGLEVEL01);
-			this.updateSetMELinks(Collections.singleton(set));
-		} catch (CreateObjectException coe) {
-			this.delete(set);
-			throw coe;
-		} catch (UpdateObjectException uoe) {
-			this.delete(set);
-			throw new CreateObjectException(uoe);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
-		Log.debugMessage("ParameterSetDatabase.insert | many ", Log.DEBUGLEVEL01);
 		super.insertEntities(storableObjects);
 		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
 			final ParameterSet set = this.fromStorableObject((StorableObject) it.next());
@@ -323,20 +287,8 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			this.updateSetMELinks(Collections.singleton(this.fromStorableObject(storableObject)));
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updateSetMELinks(storableObjects);
 	}
 

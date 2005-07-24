@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.12 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.13 2005/07/24 17:39:16 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/07/17 05:20:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/24 17:39:16 $
  * @module scheme_v1
  */
 public final class SchemeProtoElementDatabase extends StorableObjectDatabase {
@@ -39,24 +38,6 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof SchemeProtoElement)
 			return (SchemeProtoElement) storableObject;			
 		throw new IllegalDataException("SchemeProtoElement.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,	int retrieveKind, Object arg)
-			throws IllegalDataException {
-		SchemeProtoElement spe = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + spe.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 	@Override

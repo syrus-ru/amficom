@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.15 2005/07/18 16:31:26 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.16 2005/07/24 17:39:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,15 +20,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/18 16:31:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/07/24 17:39:15 $
  * @module scheme_v1
  */
 public final class SchemeDatabase extends StorableObjectDatabase {
@@ -40,25 +39,6 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 		if (storableObject instanceof Scheme)
 			return (Scheme) storableObject;			
 		throw new IllegalDataException("Scheme.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException {
-		Scheme scheme = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + scheme.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 	@Override
@@ -185,7 +165,7 @@ public final class SchemeDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(SchemeWrapper.COLUMN_LABEL)),
 				resultSet.getInt(SchemeWrapper.COLUMN_WIDTH),
 				resultSet.getInt(SchemeWrapper.COLUMN_HEIGHT),
-				Kind.from_int(resultSet.getInt(SchemeWrapper.COLUMN_KIND)),
+				IdlKind.from_int(resultSet.getInt(SchemeWrapper.COLUMN_KIND)),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_MAP_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SYMBOL_ID),

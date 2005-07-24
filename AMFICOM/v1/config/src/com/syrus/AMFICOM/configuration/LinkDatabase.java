@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.46 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.47 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,23 +22,19 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class LinkDatabase extends StorableObjectDatabase {
 	private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
-
 	private static final int SIZE_SUPPLIER_COLUMN  = 128;
-
 	private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
-
 	private static final int SIZE_MARK_COLUMN  = 32;
 
 	private static String columns;
@@ -169,16 +165,6 @@ public final class LinkDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_MARK)));
 
 		return link;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final Link link = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  link.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

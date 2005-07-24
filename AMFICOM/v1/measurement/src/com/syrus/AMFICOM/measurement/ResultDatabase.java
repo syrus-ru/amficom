@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.95 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.96 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,13 +40,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.96 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class ResultDatabase extends StorableObjectDatabase {
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -325,29 +324,6 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				result.setParameters0(new Parameter[0]);
 		}
 
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final Result result = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  result.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final Result result = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(result);
-			this.insertResultParameters(result);
-		} catch (CreateObjectException e) {
-			this.delete(result);
-			throw e;
-		}
 	}
 
 	@Override

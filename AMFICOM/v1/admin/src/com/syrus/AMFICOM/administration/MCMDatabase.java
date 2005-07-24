@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.33 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.34 2005/07/24 17:37:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,18 +21,16 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/24 17:37:58 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class MCMDatabase extends StorableObjectDatabase {
-
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
 	private static String columns;
@@ -137,14 +135,4 @@ public final class MCMDatabase extends StorableObjectDatabase {
 		return this.retrieveByCondition(condition);
   }
 
-  @Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final MCM mcm = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mcm.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
 }

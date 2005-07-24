@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.12 2005/07/17 05:07:55 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.13 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,25 +33,21 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/17 05:07:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
+	private static final int	TEMPORAL_PATTERN_ID_ROW	= 0;
+	private static final int	DURATION_ROW	= 1;
 
 	private static String columns;
-
 	private static String updateMultipleSQLValues;
-
-	private static final int	TEMPORAL_PATTERN_ID_ROW	= 0;
-
-	private static final int	DURATION_ROW	= 1;
 
 	private IntervalsTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof IntervalsTemporalPattern)
@@ -178,36 +174,15 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  intervalsTemporalPattern.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			this.updateLinkedTable(storableObject);
-		} catch (IllegalDataException e) {
-			throw new UpdateObjectException(e.getMessage());
-		}
-	}
-
-	@Override
-	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+	public void update(final Set<? extends StorableObject> storableObjects)
+			throws UpdateObjectException {
+		super.update(storableObjects);
+		for (final StorableObject storableObject : storableObjects) {
 			try {
-				updateLinkedTable((StorableObject)it.next());
+				updateLinkedTable(storableObject);
 			} catch (IllegalDataException e) {
 				throw new UpdateObjectException(e.getMessage(),e);
-			}			
+			}
 		}
 	}
 
@@ -403,14 +378,6 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject)
-			throws IllegalDataException, CreateObjectException {
-		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		super.insertEntity(intervalsTemporalPattern);
-		this.insertInLinkedTable(intervalsTemporalPattern);
 	}
 
 	@Override

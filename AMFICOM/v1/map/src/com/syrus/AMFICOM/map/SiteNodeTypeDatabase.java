@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.26 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.27 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -107,16 +106,6 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, SiteNodeTypeWrapper.COLUMN_IMAGE_ID),
 							   resultSet.getInt(SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL) == 1);		
 		return siteNodeType;
-	}
-
-	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		final SiteNodeType siteNodeType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  siteNodeType.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

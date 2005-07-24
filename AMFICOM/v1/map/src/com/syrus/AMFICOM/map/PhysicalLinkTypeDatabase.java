@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.27 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.28 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,13 +17,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -108,17 +107,6 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 							   resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_X),
 							   resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_Y));		
 		return physicalLinkType;
-	}
-
-	
-	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		final PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  physicalLinkType.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

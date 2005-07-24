@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.32 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.33 2005/07/24 17:38:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,14 +33,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/24 17:38:28 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -219,29 +218,6 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final EventType eventType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventType.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		final EventType eventType = this.fromStorableObject(storableObject);
-		super.insertEntity(eventType);
-		try {
-			this.updateParameterTypeIds(Collections.singleton(eventType));
-			this.updateUserAlertKinds(Collections.singleton(eventType));
-		}
-		catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
@@ -258,27 +234,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	 * Do not updates parameter types.
 	 */
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			final EventType eventType = this.fromStorableObject(storableObject);
-			this.updateParameterTypeIds(Collections.singleton(eventType));
-			this.updateUserAlertKinds(Collections.singleton(eventType));
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	/**
-	 * NOTE: Updates event type itself and identifiers of users, attached to it
-	 * Do not updates parameter types.
-	 */
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		try {
 			this.updateParameterTypeIds(storableObjects);
 		}

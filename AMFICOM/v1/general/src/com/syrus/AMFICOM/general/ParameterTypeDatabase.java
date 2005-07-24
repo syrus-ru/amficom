@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.30 2005/07/17 05:17:13 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.31 2005/07/24 17:34:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,17 +12,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/17 05:17:13 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:34:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ParameterTypeDatabase extends StorableObjectDatabase  {
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -102,15 +100,5 @@ public final class ParameterTypeDatabase extends StorableObjectDatabase  {
 		preparedStatement.setInt(++startParameterNumber, parameterType.getDataType().getCode());
 		return startParameterNumber;
 	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final ParameterType parameterType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  parameterType.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}	
 
 }

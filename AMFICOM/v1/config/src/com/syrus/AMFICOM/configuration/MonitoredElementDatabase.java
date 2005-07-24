@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.77 2005/07/14 18:32:31 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.78 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,26 +32,22 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/14 18:32:31 $
+ * @version $Revision: 1.78 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class MonitoredElementDatabase extends StorableObjectDatabase {
+	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 
-	public static final int		CHARACTER_NUMBER_OF_RECORDS	= 1;
-
-	private static String		columns;
-	private static String		updateMultipleSQLValues;
-
-	private static final int	SIZE_LOCAL_ADDRESS_COLUMN	= 64;
+	private static String columns;
+	private static String updateMultipleSQLValues;
 
 	private MonitoredElement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MonitoredElement)
@@ -269,29 +264,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  monitoredElement.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		try {
-			super.insertEntity(monitoredElement);
-			this.insertMonitoredDomainMemberIds(monitoredElement);
-		} catch (CreateObjectException coe) {
-			this.delete(monitoredElement.getId());
-			throw coe;
-		}
-	}
-
-	@Override
 	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		for (final Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -379,17 +351,8 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		
-		this.updateMonitoredDomainMemberIds(Collections.singleton( storableObject));
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+		super.updateEntities(storableObjects);
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
 

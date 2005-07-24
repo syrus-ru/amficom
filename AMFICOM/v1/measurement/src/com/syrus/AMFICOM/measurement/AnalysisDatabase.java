@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.66 2005/07/17 05:07:55 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.67 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,20 +22,17 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/07/17 05:07:55 $
+ * @version $Revision: 1.67 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class AnalysisDatabase extends StorableObjectDatabase {
-
 	private static String columns;
-
 	private static String updateMultipleSQLValues;
 
 	private Analysis fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
@@ -134,16 +131,6 @@ public final class AnalysisDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				criteriaSet);
 		return analysis;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final Analysis analysis = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  analysis.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

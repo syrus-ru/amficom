@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.30 2005/07/17 05:20:55 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.31 2005/07/24 17:39:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -42,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/17 05:20:55 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:39:22 $
  * @author $Author: arseniy $
  * @module mapview_v1
  */
@@ -204,27 +203,6 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		MapView mapView = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  mapView.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
-		super.insert(storableObject);
-		try {
-			final MapView mapView = this.fromStorableObject(storableObject);
-			this.updateSchemeIds(Collections.singleton(mapView));
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
@@ -235,19 +213,8 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(StorableObject storableObject, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			final MapView mapView = this.fromStorableObject(storableObject);
-			this.updateSchemeIds(Collections.singleton(mapView));
-		} catch (IllegalDataException ide) {
-			throw new UpdateObjectException(ide);
-		}
-	}
-
-	@Override
-	public void update(Set storableObjects, Identifier modifierId, UpdateKind updateKind) throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updateSchemeIds(storableObjects);
 	}	
 

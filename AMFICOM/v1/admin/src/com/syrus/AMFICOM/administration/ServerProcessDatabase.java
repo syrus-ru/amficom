@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessDatabase.java,v 1.11 2005/07/17 05:17:48 arseniy Exp $
+ * $Id: ServerProcessDatabase.java,v 1.12 2005/07/24 17:37:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,12 +21,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:17:48 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/24 17:37:58 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -95,14 +94,15 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
 		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  serverProcess.getId() + "'; argument: " + arg);
-				return null;
-		}
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getServerId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getUserId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		return startParameterNumber;
 	}
 
 	public ServerProcess retrieveForServerAndCodename(final Identifier serverId, final String codename)
@@ -115,18 +115,6 @@ public final class ServerProcessDatabase extends StorableObjectDatabase {
 		if (!objects.isEmpty())
 			return (ServerProcess) objects.iterator().next();
 		throw new ObjectNotFoundException("Cannot find server process '" + codename + "'");
-	}
-
-	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
-			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		final ServerProcess serverProcess = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getServerId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, serverProcess.getUserId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, serverProcess.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		return startParameterNumber;
 	}
 
 }

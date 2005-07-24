@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.98 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.99 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,22 +29,16 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class MeasurementSetupDatabase extends StorableObjectDatabase {
-
-	public static final String  PARAMETER_TYPE_ID                   = "parameter_type_id";
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;	
-
 	private static String columns;	
 	private static String updateMultipleSQLValues;	
 
@@ -178,7 +172,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		this.retrieveEntity(measurementSetup);
+		super.retrieveEntity(measurementSetup);
 		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(measurementSetup));
 		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(measurementSetup));
 	}
@@ -219,29 +213,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementSetup.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		super.insertEntity(measurementSetup);
-		try {
-			this.updateMeasurementSetupMELinks(Collections.singleton(measurementSetup));
-			this.updateMeasurementTypeIds(Collections.singleton(measurementSetup));
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
@@ -253,21 +224,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			this.updateMeasurementSetupMELinks(Collections.singleton(this.fromStorableObject(storableObject)));
-			this.updateMeasurementTypeIds(Collections.singleton(this.fromStorableObject(storableObject)));
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.updateEntities(storableObjects);
 		this.updateMeasurementSetupMELinks(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
 	}

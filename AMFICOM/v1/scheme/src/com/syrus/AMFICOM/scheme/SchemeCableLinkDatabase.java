@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.12 2005/07/18 16:31:26 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.13 2005/07/24 17:39:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/18 16:31:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/07/24 17:39:15 $
  * @module scheme_v1
  */
 public final class SchemeCableLinkDatabase extends StorableObjectDatabase {
@@ -158,25 +157,6 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID));
 		return schemeCableLink;
-	}
-
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException {
-		SchemeCableLink schemeCableLink = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + schemeCableLink.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

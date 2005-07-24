@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.13 2005/07/18 16:31:26 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.14 2005/07/24 17:39:15 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,15 +20,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
-import com.syrus.util.Log;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/18 16:31:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/07/24 17:39:15 $
  * @module scheme_v1
  */
 public final class SchemeCablePortDatabase extends StorableObjectDatabase {
@@ -40,26 +39,6 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase {
 		if(storableObject instanceof SchemeCablePort)
 			return (SchemeCablePort) storableObject;
 		throw new IllegalDataException("SchemeCablePortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
-	/**
-	 * @param storableObject
-	 * @param retrieveKind
-	 * @param arg
-	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveObject(com.syrus.AMFICOM.general.StorableObject, int, java.lang.Object)
-	 */
-	@Override
-	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg)
-			throws IllegalDataException {
-		SchemeCablePort schemeCablePort = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + schemeCablePort.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 	@Override
@@ -164,7 +143,7 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase {
 				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DirectionType.from_int(resultSet.getInt(SchemeCablePortWrapper.COLUMN_DIRECTION_TYPE)),
+				IdlDirectionType.from_int(resultSet.getInt(SchemeCablePortWrapper.COLUMN_DIRECTION_TYPE)),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_CABLE_PORT_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_CABLE_PORT_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID),

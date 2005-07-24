@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.30 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.31 2005/07/24 17:37:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,18 +18,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:37:58 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public final class ServerDatabase extends StorableObjectDatabase {
-
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
   private static String columns;
@@ -111,17 +109,6 @@ public final class ServerDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, server.getHostName(), SIZE_HOSTNAME_COLUMN);
 		return startParameterNumber;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final Server server = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  server.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.103 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.104 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,20 +28,18 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.104 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -57,7 +55,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 
 	private MeasurementType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
-			return (MeasurementType)storableObject;
+			return (MeasurementType) storableObject;
 		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: "
 				+ storableObject.getClass().getName());
 	}	
@@ -154,30 +152,6 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final MeasurementType measurementType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + measurementType.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final MeasurementType measurementType = this.fromStorableObject(storableObject);
-		super.insertEntity(measurementType);
-		try {
-			super.updateParameterTypeIds(Collections.singleton(measurementType));
-			this.updateMeasurementPortTypeIds(Collections.singleton(measurementType));
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
@@ -189,22 +163,8 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			final MeasurementType measurementType = this.fromStorableObject(storableObject);
-			super.updateParameterTypeIds(Collections.singleton(measurementType));
-			this.updateMeasurementPortTypeIds(Collections.singleton(measurementType));
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.updateEntities(storableObjects);
 		super.updateParameterTypeIds(storableObjects);
 		this.updateMeasurementPortTypeIds(storableObjects);
 	}

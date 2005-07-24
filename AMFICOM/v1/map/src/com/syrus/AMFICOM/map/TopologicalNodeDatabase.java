@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.30 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.31 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -50,6 +50,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
+	@Override
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
 		this.retrieveEntity(topologicalNode);		
@@ -297,16 +298,6 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase {
 							   resultSet.getDouble(TopologicalNodeWrapper.COLUMN_LATIUDE),
 							   resultSet.getInt(TopologicalNodeWrapper.COLUMN_ACTIVE) == 1);		
 		return topologicalNode;
-	}
-
-	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException {
-		TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  topologicalNode.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 	@Override

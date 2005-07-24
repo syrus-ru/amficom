@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.48 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.49 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,18 +18,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 public final class MeasurementPortTypeDatabase extends StorableObjectDatabase {
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -105,16 +102,6 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
 		return measurementPortType;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurementPortType.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

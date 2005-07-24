@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.105 2005/07/14 19:02:39 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.106 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/07/14 19:02:39 $
+ * @version $Revision: 1.106 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -74,7 +73,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 				+ TestWrapper.COLUMN_GROUP_TEST_ID + COMMA
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ TestWrapper.COLUMN_RETURN_TYPE + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS;
 		}
@@ -85,7 +83,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -121,7 +118,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 			+ ((groupTestId != null) ? DatabaseIdentifier.toSQLString(groupTestId) : SQL_NULL) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
-			+ test.getReturnType().value() + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ test.getNumberOfMeasurements();
 	}
@@ -156,7 +152,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (groupTestId != null) ? groupTestId : null);
 		preparedStatement.setInt(++startParameterNumber, test.getStatus().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMonitoredElement().getId());
-		preparedStatement.setInt(++startParameterNumber, test.getReturnType().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, test.getNumberOfMeasurements());
 		return startParameterNumber;
@@ -178,7 +173,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 				null,
 				null,
 				null,
-				0,
 				null,
 				null) : this.fromStorableObject(storableObject);
 
@@ -205,7 +199,6 @@ public final class TestDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_GROUP_TEST_ID),
 				resultSet.getInt(TestWrapper.COLUMN_STATUS),
 				monitoredElement,
-				resultSet.getInt(TestWrapper.COLUMN_RETURN_TYPE),
 				(description != null) ? description : "",
 				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS));
 
@@ -243,24 +236,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Test test = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			case Test.RETRIEVE_MEASUREMENTS:
-				return this.retrieveMeasurementsOrderByStartTime(test, (MeasurementStatus)arg);
-			case Test.RETRIEVE_LAST_MEASUREMENT:
-				return this.retrieveLastMeasurement(test);
-			case Test.RETRIEVE_NUMBER_OF_RESULTS:
-				return this.retrieveNumberOfResults(test, (ResultSort)arg);
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  test.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	private Set<Measurement> retrieveMeasurementsOrderByStartTime(final Test test, final MeasurementStatus measurementStatus)
+	public Set<Measurement> retrieveMeasurementsOrderByStartTime(final Test test, final MeasurementStatus measurementStatus)
 			throws RetrieveObjectException {
 		final Set<Measurement> measurements = new HashSet<Measurement>();
 
@@ -306,7 +282,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return measurements;
 	}
 
-	private Measurement retrieveLastMeasurement(final Test test) throws RetrieveObjectException, ObjectNotFoundException {
+	public Measurement retrieveLastMeasurement(final Test test) throws RetrieveObjectException, ObjectNotFoundException {
 		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
@@ -354,8 +330,9 @@ public final class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Integer retrieveNumberOfResults(final Test test, final ResultSort resultSort)
-			throws RetrieveObjectException, ObjectNotFoundException {
+	public Integer retrieveNumberOfResults(final Test test, final ResultSort resultSort)
+			throws RetrieveObjectException,
+				ObjectNotFoundException {
 		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		final String sql = SQL_SELECT
 			+ SQL_COUNT + " count "
@@ -398,22 +375,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		final Test test = this.fromStorableObject(storableObject);
-		super.insertEntity(test);
-		try {
-			this.updateMeasurementSetupIds(Collections.singleton(test));
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
-		
-	}
-
-	@Override
 	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
-		if ((storableObjects == null) || (storableObjects.size() == 0))
-			return;
-
 		super.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupIds(storableObjects);
@@ -423,20 +385,8 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		try {
-			this.updateMeasurementSetupIds(Collections.singleton(this.fromStorableObject(storableObject)));
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-		}
-	}
-
-	@Override
-	public void update(final Set storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updateMeasurementSetupIds(storableObjects);
 	}
 

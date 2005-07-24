@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.90 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.91 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,39 +22,23 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.91 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public final class EquipmentDatabase extends StorableObjectDatabase {
 	private static final int SIZE_SUPPLIER_COLUMN   = 128;
-
 	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
-
 	private static final int SIZE_HW_SERIAL_COLUMN  = 64;
-
 	private static final int SIZE_HW_VERSION_COLUMN = 64;
-
 	private static final int SIZE_SW_SERIAL_COLUMN  = 64;
-
 	private static final int SIZE_SW_VERSION_COLUMN = 64;
-
 	private static final int SIZE_INVENTOY_NUMBER_COLUMN = 64;
-
-
-	// table :: EquipmentMELink
-	// equipment_id Identifier,
-//	public static final String LINK_COLUMN_EQUIPMENT_ID  = "equipment_id";
-	// monitored_element_id Identifier,
-//	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID  = "monitored_element_id";
-
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
@@ -210,16 +194,6 @@ public final class EquipmentDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_INVENTORY_NUMBER)));
 
 		return equipment;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final Equipment equipment = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  equipment.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

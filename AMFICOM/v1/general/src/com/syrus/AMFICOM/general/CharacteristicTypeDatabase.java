@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.31 2005/07/17 05:12:07 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.32 2005/07/24 17:34:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,19 +12,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/17 05:12:07 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/24 17:34:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -115,19 +112,6 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 				resultSet.getInt(CharacteristicTypeWrapper.COLUMN_SORT));
 
 		return characteristicType;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind
-						+ " for " + this.getEntityName() + " '" + characteristicType.getId()
-						+ "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

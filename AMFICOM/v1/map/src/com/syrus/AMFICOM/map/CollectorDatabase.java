@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.36 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.37 2005/07/24 17:38:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -41,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/24 17:38:43 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -143,29 +141,6 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
-			throws IllegalDataException {
-		final Collector collector = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName()
-						+ " '" + collector.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	@Override
-	public void insert(final StorableObject storableObject) throws CreateObjectException, IllegalDataException {
-		super.insert(storableObject);
-		try {
-			this.updatePhysicalLinks(Collections.singleton(storableObject));
-		} catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-
-	}
-
-	@Override
 	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
@@ -176,18 +151,8 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final StorableObject storableObject, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException,
-				UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
-		this.updatePhysicalLinks(Collections.singleton(storableObject));
-	}
-
-	@Override
-	public void update(final Set<? extends StorableObject> storableObjects, final Identifier modifierId, final UpdateKind updateKind)
-			throws VersionCollisionException,
-				UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+		super.update(storableObjects);
 		this.updatePhysicalLinks(storableObjects);
 	}	
 

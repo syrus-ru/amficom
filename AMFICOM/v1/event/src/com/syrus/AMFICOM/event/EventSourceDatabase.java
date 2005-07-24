@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.20 2005/07/17 05:09:11 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.21 2005/07/24 17:38:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/07/17 05:09:11 $
+ * @version $Revision: 1.21 $, $Date: 2005/07/24 17:38:28 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -229,17 +228,6 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				 sourceEntityId);
 
 		return eventSource;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException {
-		final EventSource eventSource = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  eventSource.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

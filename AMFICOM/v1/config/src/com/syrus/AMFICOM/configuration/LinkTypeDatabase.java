@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.39 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.40 2005/07/24 17:38:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,12 +18,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.40 $, $Date: 2005/07/24 17:38:08 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -133,16 +132,6 @@ public final class LinkTypeDatabase extends StorableObjectDatabase {
 				DatabaseIdentifier.getIdentifier(resultSet, LinkTypeWrapper.COLUMN_IMAGE_ID));
 
 		return linkType;
-	}
-
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg) throws IllegalDataException {
-		final LinkType linkType = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  linkType.getId() + "'; argument: " + arg);
-				return null;
-		}
 	}
 
 }

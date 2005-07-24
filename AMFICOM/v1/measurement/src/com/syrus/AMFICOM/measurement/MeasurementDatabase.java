@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.85 2005/07/17 05:07:55 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.86 2005/07/24 17:38:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,15 +32,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/07/17 05:07:55 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/24 17:38:21 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class MeasurementDatabase extends StorableObjectDatabase {
-	public static final String LINK_COLUMN_MEASUREMENT_ID = "measurement_id";
-	public static final String LINK_SORT = "sort";
-
 	private static String columns;	
 	private static String updateMultipleSQLValues;
 
@@ -170,28 +167,15 @@ public final class MeasurementDatabase extends StorableObjectDatabase {
 		return query;
 	}
 
-	@Override
-	public Object retrieveObject(final StorableObject storableObject, final int retrieveKind, final Object arg)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Measurement measurement = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
-			case Measurement.RETRIEVE_RESULT:
-				return this.retrieveResult(measurement, (ResultSort)arg);
-			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEntityName() + " '" +  measurement.getId() + "'; argument: " + arg);
-				return null;
-		}
-	}
-
-	private Result retrieveResult(final Measurement measurement, final ResultSort resultSort)
+	public Result retrieveResult(final Measurement measurement, final ResultSort resultSort)
 			throws ObjectNotFoundException, RetrieveObjectException {
 		final String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
 		final int resultSortNum = resultSort.value();
 		final String sql = SQL_SELECT
 			+ StorableObjectWrapper.COLUMN_ID
 			+ SQL_FROM + ObjectEntities.RESULT
-			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
-			+ SQL_AND + LINK_SORT + EQUALS + Integer.toString(resultSortNum);
+			+ SQL_WHERE + ResultWrapper.COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
+			+ SQL_AND + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSortNum);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
