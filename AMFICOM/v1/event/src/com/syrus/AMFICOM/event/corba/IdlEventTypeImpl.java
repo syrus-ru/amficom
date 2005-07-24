@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventTypeImpl.java,v 1.2 2005/07/11 08:18:57 bass Exp $
+ * $Id: IdlEventTypeImpl.java,v 1.3 2005/07/24 15:48:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.event.corba;
 import static java.util.logging.Level.SEVERE;
 
 import com.syrus.AMFICOM.event.EventType;
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.UserAlertKinds;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/07/24 15:48:54 $
  * @module event_v1
  */
 final class IdlEventTypeImpl extends IdlEventType {
@@ -38,8 +38,8 @@ final class IdlEventTypeImpl extends IdlEventType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlIdentifier parameterTypeIds[],
-			final UserAlertKinds userAlertKinds[]) {
+			final IdlIdentifier[] parameterTypeIds,
+			final IdlUserAlertKinds[] userAlertKinds) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;

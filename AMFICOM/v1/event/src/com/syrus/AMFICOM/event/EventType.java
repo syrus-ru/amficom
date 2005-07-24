@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.37 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventType.java,v 1.38 2005/07/24 15:48:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.event.corba.IdlEventType;
 import com.syrus.AMFICOM.event.corba.IdlEventTypeHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
-import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.UserAlertKinds;
+import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/24 15:48:54 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -150,7 +150,7 @@ public final class EventType extends StorableObjectType {
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>(ett.userAlertKinds.length);
 		for (int i = 0; i < ett.userAlertKinds.length; i++) {
-			final UserAlertKinds userAlertKindsT = ett.userAlertKinds[i];
+			final IdlUserAlertKinds userAlertKindsT = ett.userAlertKinds[i];
 			final Identifier userId = new Identifier(userAlertKindsT.userId);
 			final Set<AlertKind> userAlertKinds = new HashSet<AlertKind>(userAlertKindsT.alertKinds.length);
 			for (int j = 0; j < userAlertKindsT.alertKinds.length; j++) {
@@ -172,7 +172,7 @@ public final class EventType extends StorableObjectType {
 
 		final IdlIdentifier[] parTypeIdsT = Identifier.createTransferables(this.parameterTypeIds);
 
-		final UserAlertKinds[] userAlertKindsT = new UserAlertKinds[this.userAlertKindsMap.size()];
+		final IdlUserAlertKinds[] userAlertKindsT = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
 		i = 0;
 		for (final Identifier userId : this.userAlertKindsMap.keySet()) {
@@ -182,7 +182,7 @@ public final class EventType extends StorableObjectType {
 			for (final AlertKind alertKind : userAlertKinds) {
 				alertKindsT[j] = alertKind;
 			}
-			userAlertKindsT[i] = new UserAlertKinds(userId.getTransferable(), alertKindsT);
+			userAlertKindsT[i] = new IdlUserAlertKinds(userId.getTransferable(), alertKindsT);
 		}
 
 		return IdlEventTypeHelper.init(orb,
