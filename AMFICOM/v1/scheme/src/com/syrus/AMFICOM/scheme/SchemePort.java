@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.47 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemePort.java,v 1.48 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,14 +41,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/22 15:09:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -88,7 +88,7 @@ public final class SchemePort extends AbstractSchemePort {
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final DirectionType directionType,
+			final IdlDirectionType directionType,
 			final PortType portType, final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
@@ -120,7 +120,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name,
-			final DirectionType directionType,
+			final IdlDirectionType directionType,
 			final SchemeDevice parentSchemeDevice)
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", directionType, null,
@@ -140,7 +140,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 */
 	public static SchemePort createInstance(final Identifier creatorId,
 			final String name, final String description,
-			final DirectionType directionType,
+			final IdlDirectionType directionType,
 			final PortType portType, final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice)

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.55 2005/07/22 15:09:40 bass Exp $
+ * $Id: Scheme.java,v 1.56 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,14 +51,14 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlScheme;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeHelper;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/22 15:09:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -79,7 +79,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 	private int height;
 
-	private Kind kind;
+	private IdlKind kind;
 
 	private Identifier mapId;
 
@@ -131,7 +131,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final long version, final Identifier domainId,
 			final String name, final String description,
 			final String label, final int width, final int height,
-			final Kind kind, final Map map,
+			final IdlKind kind, final Map map,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -168,7 +168,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws CreateObjectException
 	 */
 	public static Scheme createInstance(final Identifier creatorId,
-			final String name, final Kind kind,
+			final String name, final IdlKind kind,
 			final Identifier domainId)
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", "", DEFAULT_WIDTH,
@@ -195,7 +195,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	public static Scheme createInstance(final Identifier creatorId,
 			final String name, final String description,
 			final String label, final int width, final int height,
-			final Kind kind, final Identifier domainId,
+			final IdlKind kind, final Identifier domainId,
 			final Map map, final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -403,7 +403,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	public Kind getKind() {
+	public IdlKind getKind() {
 		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		return this.kind;
 	}
@@ -576,7 +576,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final String label, final int width, final int height,
-			final Kind kind, final Identifier domainId,
+			final IdlKind kind, final Identifier domainId,
 			final Identifier mapId, final Identifier symbolId,
 			final Identifier ugoCellId,
 			final Identifier schemeCellId,
@@ -717,7 +717,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	/**
 	 * @param kind
 	 */
-	public void setKind(final Kind kind) {
+	public void setKind(final IdlKind kind) {
 		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		assert kind != null: NON_NULL_EXPECTED;
 		if (this.kind.value() == kind.value())

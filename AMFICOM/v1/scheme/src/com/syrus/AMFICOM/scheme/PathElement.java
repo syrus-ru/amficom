@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.51 2005/07/22 15:09:40 bass Exp $
+ * $Id: PathElement.java,v 1.52 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,12 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_CABLE_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_ELEMENT;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind.SCHEME_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_CABLE_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_ELEMENT;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_CABLE_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_ELEMENT;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind.SCHEME_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_CABLE_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_ELEMENT;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -55,9 +55,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.Data;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.SchemeElementData;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
 import com.syrus.util.Log;
 
 /**
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -83,7 +83,7 @@ public final class PathElement extends StorableObject
 
 	int sequentialNumber;
 
-	private Kind kind;
+	private IdlKind kind;
 
 	/**
 	 * May reference either {@link SchemePort} or {@link SchemeCablePort}.
@@ -270,7 +270,7 @@ public final class PathElement extends StorableObject
 			final Identifier modifierId, final long version,
 			final SchemePath parentSchemePath,
 			final int sequentialNumber,
-			final Kind kind,
+			final IdlKind kind,
 			final AbstractSchemePort startAbstractSchemePort,
 			final AbstractSchemePort endAbstractSchemePort,
 			final SchemeCableThread schemeCableThread,
@@ -535,7 +535,7 @@ public final class PathElement extends StorableObject
 		}
 	}
 
-	public Kind getKind() {
+	public IdlKind getKind() {
 		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		return this.kind;
 	}
@@ -661,10 +661,10 @@ public final class PathElement extends StorableObject
 	 */
 	@Override
 	public IdlPathElement getTransferable(final ORB orb) {
-		final Data data = new Data();
+		final IdlData data = new IdlData();
 		switch (this.kind.value()) {
 			case _SCHEME_ELEMENT:
-				data.schemeElementData(this.kind, new SchemeElementData(
+				data.schemeElementData(this.kind, new IdlSchemeElementData(
 						this.startAbstractSchemePortId.getTransferable(),
 						this.endAbstractSchemePortId.getTransferable()));
 				break;
@@ -722,7 +722,7 @@ public final class PathElement extends StorableObject
 			final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final Identifier parentSchemePathId,
-			final int sequentialNumber, final Kind kind,
+			final int sequentialNumber, final IdlKind kind,
 			final Identifier startAbstractSchemePortId,
 			final Identifier endAbstractSchemePortId,
 			final Identifier schemeCableThreadId,
@@ -954,11 +954,11 @@ public final class PathElement extends StorableObject
 		}
 		this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
 		this.sequentialNumber = pathElement.sequentialNumber;
-		final Data data = pathElement.data;
+		final IdlData data = pathElement.data;
 		this.kind = data.discriminator();
 		switch (this.kind.value()) {
 			case _SCHEME_ELEMENT:
-				final SchemeElementData schemeElementData = data.schemeElementData();
+				final IdlSchemeElementData schemeElementData = data.schemeElementData();
 				this.startAbstractSchemePortId = new Identifier(schemeElementData.startAbstractSchemePortId);
 				this.endAbstractSchemePortId = new Identifier(schemeElementData.endAbstractSchemePortId);
 				this.schemeCableThreadId = VOID_IDENTIFIER;

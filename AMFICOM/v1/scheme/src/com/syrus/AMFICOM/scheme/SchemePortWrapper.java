@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.7 2005/07/17 05:20:26 arseniy Exp $
+ * $Id: SchemePortWrapper.java,v 1.8 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:26 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 16:58:44 $
  * @author $Author: arseniy $
  * @module scheme_v1
  */
@@ -130,7 +130,7 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				schemePort.setDescription((String) value);
 			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
-				schemePort.setDirectionType(DirectionType.from_int(((Integer) value).intValue()));
+				schemePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
 			} else if (key.equals(COLUMN_PORT_TYPE_ID)) {
 				/**
 				 * @bug changed status is not updated.

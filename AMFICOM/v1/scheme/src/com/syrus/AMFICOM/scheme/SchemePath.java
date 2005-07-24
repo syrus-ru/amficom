@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.56 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemePath.java,v 1.57 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,14 +57,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/22 15:09:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 public final class SchemePath extends StorableObject
@@ -481,7 +481,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement startPathElement = pathElements.first();
-		assert startPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
+		assert startPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return startPathElement.getSchemeElement();
 	}
 
@@ -493,7 +493,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement endPathElement = pathElements.last();
-		assert endPathElement.getKind().value() == Kind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
+		assert endPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return endPathElement.getSchemeElement();
 	}
 
@@ -506,7 +506,7 @@ public final class SchemePath extends StorableObject
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		for (final PathElement pathElement1 : getPathMembers().tailSet(pathElement)) {
-			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
+			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				return pathElement1;
 			}
 		}
@@ -656,12 +656,12 @@ public final class SchemePath extends StorableObject
 	public PathElement getPreviousNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		if (pathElement.getKind().value() == Kind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
+		if (pathElement.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
 			return pathElement;
 
 		PathElement previousNode = null;
 		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
-			if (pathElement1.getKind().value() == Kind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
+			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
 				previousNode = pathElement1;
 			}
 		}

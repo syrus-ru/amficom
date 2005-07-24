@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.29 2005/07/20 14:49:49 bass Exp $
+ * $Id: SchemeUtils.java,v 1.30 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_CABLE_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind._SCHEME_LINK;
-import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind.CABLE_SUBNETWORK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_CABLE_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind._SCHEME_LINK;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.Identifier;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/07/20 14:49:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 public class SchemeUtils {

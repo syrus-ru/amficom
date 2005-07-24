@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.39 2005/07/22 15:09:40 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.40 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,12 +46,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/07/22 15:09:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 public abstract class AbstractSchemePort
@@ -63,7 +63,7 @@ public abstract class AbstractSchemePort
 
 	private String description;
 
-	private DirectionType directionType;
+	private IdlDirectionType directionType;
 
 	/**
 	 * Depending on implementation, may reference either
@@ -109,7 +109,7 @@ public abstract class AbstractSchemePort
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final DirectionType directionType,
+			final IdlDirectionType directionType,
 			final PortType portType, final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
@@ -136,7 +136,7 @@ public abstract class AbstractSchemePort
 
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
-	public final DirectionType getDirectionType() {
+	public final IdlDirectionType getDirectionType() {
 		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
 		return this.directionType;
 	}
@@ -278,7 +278,7 @@ public abstract class AbstractSchemePort
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
-			final DirectionType directionType,
+			final IdlDirectionType directionType,
 			final Identifier portTypeId, final Identifier portId,
 			final Identifier measurementPortId,
 			final Identifier parentSchemeDeviceId) {
@@ -307,7 +307,7 @@ public abstract class AbstractSchemePort
 	/**
 	 * @param directionType
 	 */
-	public final void setDirectionType(final DirectionType directionType) {
+	public final void setDirectionType(final IdlDirectionType directionType) {
 		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
 		assert directionType != null: NON_NULL_EXPECTED;
 		if (this.directionType.value() == directionType.value())
@@ -434,7 +434,7 @@ public abstract class AbstractSchemePort
 	 */
 	void fromTransferable(final IdlStorableObject header,
 			final String name1, final String description1,
-			final DirectionType directionType1,
+			final IdlDirectionType directionType1,
 			final IdlIdentifier portTypeId1,
 			final IdlIdentifier portId1,
 			final IdlIdentifier measurementPortId1,

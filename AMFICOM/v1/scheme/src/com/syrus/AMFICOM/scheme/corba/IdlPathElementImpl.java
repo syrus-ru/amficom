@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPathElementImpl.java,v 1.1 2005/07/07 15:52:11 bass Exp $
+ * $Id: IdlPathElementImpl.java,v 1.2 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.PathElement;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.Data;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 final class IdlPathElementImpl extends IdlPathElement {
@@ -33,7 +33,7 @@ final class IdlPathElementImpl extends IdlPathElement {
 			final long version,
 			final IdlIdentifier parentSchemePathId,
 			final int sequentialNumber,
-			final Data data) {
+			final IdlData data) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeImpl.java,v 1.1 2005/07/07 15:52:11 bass Exp $
+ * $Id: IdlSchemeImpl.java,v 1.2 2005/07/24 16:58:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ package com.syrus.AMFICOM.scheme.corba;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/07 15:52:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/24 16:58:44 $
  * @module scheme_v1
  */
 final class IdlSchemeImpl extends IdlScheme {
@@ -37,7 +37,7 @@ final class IdlSchemeImpl extends IdlScheme {
 			final String label,
 			final int width,
 			final int height,
-			final Kind kind,
+			final IdlKind kind,
 			final IdlIdentifier domainId,
 			final IdlIdentifier mapId,
 			final IdlIdentifier symbolId,
