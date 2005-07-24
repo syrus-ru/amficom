@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.28 2005/07/11 08:18:55 bass Exp $
+ * $Id: TypicalCondition.java,v 1.29 2005/07/24 15:01:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,8 +123,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.28 $, $Date: 2005/07/11 08:18:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/24 15:01:57 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -134,65 +134,65 @@ public class TypicalCondition implements StorableObjectCondition {
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected int				type;
+	protected int type;
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected int				operation;
+	protected int operation;
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected Object			value;
+	protected Object value;
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected Object			otherValue;
+	protected Object otherValue;
 
-	private static final double	PRECISION										= 0.0000000001;
-
-	/**
-	 * Field is used by descendants only, and never directly.
-	 */
-	protected double			firstDouble;
-	/**
-	 * Field is used by descendants only, and never directly.
-	 */
-	protected double			secondDouble;
+	private static final double PRECISION = 0.0000000001;
 
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected long				firstLong;
+	protected double firstDouble;
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected long				secondLong;
+	protected double secondDouble;
 
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected int				firstInt;
+	protected long firstLong;
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected int				secondInt;
+	protected long secondLong;
 
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected Short				entityCode;
+	protected int firstInt;
+	/**
+	 * Field is used by descendants only, and never directly.
+	 */
+	protected int secondInt;
 
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
-	protected String			key;
+	protected Short entityCode;
 
-	private TypicalCondition	delegate;
+	/**
+	 * Field is used by descendants only, and never directly.
+	 */
+	protected String key;
+
+	private TypicalCondition delegate;
 
 	private static final String TYPICAL_CONDITION_INIT = "TypicalCondition.<init>() | ";
 	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
 	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
-	private static final String TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "StringFieldCondition$1.isConditionTrue() | ";	
+	private static final String TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "StringFieldCondition$1.isConditionTrue() | ";
 	private static final String TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE = "StringFieldCondition$1.isNeedMore() | ";
 
 	/**
@@ -203,28 +203,29 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	public TypicalCondition(final int firstInt,
-	            			final int secondInt,
-	            			final OperationSort operation,
-	            			final short entityCode,
-	            			final String key) {
+			final int secondInt,
+			final OperationSort operation,
+			final short entityCode,
+			final String key) {
 		this(firstInt, secondInt, operation, new Short(entityCode), key);
 	}
+
 	/**
 	 * @param firstInt
-	 *            left edge of range or value searching for
+	 *        left edge of range or value searching for
 	 * @param secondInt
-	 *            right edge of range
+	 *        right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort#OPERATION_EQUALS},
-	 *            {@link OperationSort#OPERATION_GREAT},
-	 *            {@link OperationSort#OPERATION_LESS},
-	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort#OPERATION_IN_RANGE}or
-	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_GREAT},
+	 *        {@link OperationSort#OPERATION_LESS},
+	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE}or
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
-	 *            code of searching entity
+	 *        code of searching entity
 	 * @param key
-	 *            key for controller (wrapper)
+	 *        key for controller (wrapper)
 	 */
 	public TypicalCondition(final int firstInt,
 			final int secondInt,
@@ -233,7 +234,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			final String key) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		try {
-			Constructor ctor = Class.forName(className).getDeclaredConstructor(
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { int.class, int.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Integer(firstInt),
@@ -302,28 +303,29 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	public TypicalCondition(final long firstLong,
-	            			final long secondLong,
-	            			final OperationSort operation,
-	            			final short entityCode,
-	            			final String key) {
+			final long secondLong,
+			final OperationSort operation,
+			final short entityCode,
+			final String key) {
 		this(firstLong, secondLong, operation, new Short(entityCode), key);
 	}
+
 	/**
 	 * @param firstLong
-	 *            left edge of range or value searching for
+	 *        left edge of range or value searching for
 	 * @param secondLong
-	 *            right edge of range
+	 *        right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort#OPERATION_EQUALS},
-	 *            {@link OperationSort#OPERATION_GREAT},
-	 *            {@link OperationSort#OPERATION_LESS},
-	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort#OPERATION_IN_RANGE}or
-	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_GREAT},
+	 *        {@link OperationSort#OPERATION_LESS},
+	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE}or
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
-	 *            code of searching entity
+	 *        code of searching entity
 	 * @param key
-	 *            key for controller (wrapper)
+	 *        key for controller (wrapper)
 	 */
 	public TypicalCondition(final long firstLong,
 			final long secondLong,
@@ -332,7 +334,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			final String key) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		try {
-			Constructor ctor = Class.forName(className).getDeclaredConstructor(
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { long.class, long.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Long(firstLong),
@@ -401,28 +403,29 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	public TypicalCondition(final double firstDouble,
-	            			final double secondDouble,
-	            			final OperationSort operation,
-	            			final short entityCode,
-	            			final String key) {
+			final double secondDouble,
+			final OperationSort operation,
+			final short entityCode,
+			final String key) {
 		this(firstDouble, secondDouble, operation, new Short(entityCode), key);
 	}
+
 	/**
 	 * @param firstDouble
-	 *            left edge of range or value searching for
+	 *        left edge of range or value searching for
 	 * @param secondDouble
-	 *            right edge of range
+	 *        right edge of range
 	 * @param operation
-	 *            one of {@link OperationSort#OPERATION_EQUALS},
-	 *            {@link OperationSort#OPERATION_GREAT},
-	 *            {@link OperationSort#OPERATION_LESS},
-	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort#OPERATION_IN_RANGE}or
-	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_GREAT},
+	 *        {@link OperationSort#OPERATION_LESS},
+	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE}or
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
 	 * @param entityCode
-	 *            code of searching entity
+	 *        code of searching entity
 	 * @param key
-	 *            key for controller (wrapper)
+	 *        key for controller (wrapper)
 	 */
 	public TypicalCondition(final double firstDouble,
 			final double secondDouble,
@@ -431,7 +434,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			final String key) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		try {
-			Constructor ctor = Class.forName(className).getDeclaredConstructor(
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { double.class, double.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Double(firstDouble),
@@ -502,6 +505,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	public TypicalCondition(final String value, final OperationSort operation, final short entityCode, final String key) {
 		this(value, operation, new Short(entityCode), key);
 	}
+
 	/**
 	 * @param value
 	 *            value such as substring, regexp
@@ -618,7 +622,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			final String key) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		try {
-			Constructor ctor = Class.forName(className).getDeclaredConstructor(
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { Date.class, Date.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { firstDate, secondDate == null ? firstDate : secondDate, operation,
@@ -687,14 +691,12 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
-	public TypicalCondition(IdlTypicalCondition transferable) {
+	public TypicalCondition(final IdlTypicalCondition transferable) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
-		Log.debugMessage(TYPICAL_CONDITION_INIT
-			+ "Try reflect class " + className ,
-		Level.INFO);
+		Log.debugMessage(TYPICAL_CONDITION_INIT + "Try reflect class " + className, Level.INFO);
 		try {
 			Constructor ctor;
-			switch (transferable.type.value()) {
+			switch (transferable.sort.value()) {
 				case TypicalSort._TYPE_NUMBER_INT:
 					ctor = Class.forName(className).getDeclaredConstructor(
 						new Class[] { int.class, int.class, OperationSort.class, Short.class, String.class});
@@ -907,7 +909,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 		transferable.key = this.delegate.key;
 		transferable.entityCode = this.delegate.entityCode.shortValue();
-		transferable.type = TypicalSort.from_int(this.delegate.type);
+		transferable.sort = TypicalSort.from_int(this.delegate.type);
 		transferable.operation = OperationSort.from_int(this.delegate.operation);
 
 		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
@@ -920,7 +922,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *
 	 * @param object
 	 */
-	protected final boolean parseCondition(Object object) {
+	protected final boolean parseCondition(final Object object) {
 		boolean result = false;
 		switch (this.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
@@ -1119,7 +1121,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.firstDouble;
 	}
 
-	public final void setFirstDouble(double firstDouble) {
+	public final void setFirstDouble(final double firstDouble) {
 		this.delegate.firstDouble = firstDouble;
 	}
 
@@ -1127,7 +1129,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.firstInt;
 	}
 
-	public final void setFirstInt(int firstInt) {
+	public final void setFirstInt(final int firstInt) {
 		this.delegate.firstInt = firstInt;
 	}
 
@@ -1135,7 +1137,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.firstLong;
 	}
 
-	public final void setFirstLong(long firstLong) {
+	public final void setFirstLong(final long firstLong) {
 		this.delegate.firstLong = firstLong;
 	}
 
@@ -1143,7 +1145,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return OperationSort.from_int(this.delegate.operation);
 	}
 
-	public final void setOperation(OperationSort operation) {
+	public final void setOperation(final OperationSort operation) {
 		this.delegate.operation = operation.value();
 	}
 
@@ -1151,7 +1153,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.otherValue;
 	}
 
-	public final void setOtherValue(Object otherValue) {
+	public final void setOtherValue(final Object otherValue) {
 		this.delegate.otherValue = otherValue;
 	}
 
@@ -1159,7 +1161,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.secondDouble;
 	}
 
-	public final void setSecondDouble(double secondDouble) {
+	public final void setSecondDouble(final double secondDouble) {
 		this.delegate.secondDouble = secondDouble;
 	}
 
@@ -1167,7 +1169,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.secondInt;
 	}
 
-	public final void setSecondInt(int secondInt) {
+	public final void setSecondInt(final int secondInt) {
 		this.delegate.secondInt = secondInt;
 	}
 
@@ -1175,7 +1177,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		return this.delegate.secondLong;
 	}
 
-	public final void setSecondLong(long secondLong) {
+	public final void setSecondLong(final long secondLong) {
 		this.delegate.secondLong = secondLong;
 	}
 
@@ -1183,15 +1185,15 @@ public class TypicalCondition implements StorableObjectCondition {
 		return TypicalSort.from_int(this.delegate.type);
 	}
 
-	public final void setType(TypicalSort type) {
-		this.delegate.type = type.value();
+	public final void setType(final TypicalSort sort) {
+		this.delegate.type = sort.value();
 	}
 
 	public final Object getValue() {
 		return this.delegate.value;
 	}
 
-	public final void setValue(Object value) {
+	public final void setValue(final Object value) {
 		this.delegate.value = value;
 	}
 }

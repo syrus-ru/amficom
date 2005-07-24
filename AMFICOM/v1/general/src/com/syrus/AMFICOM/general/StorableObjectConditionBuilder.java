@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.5 2005/06/21 12:43:48 bass Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.6 2005/07/24 15:01:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.StorableObjectConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlStorableObjectConditionSort;
 import com.syrus.util.Log;
 
 public final class StorableObjectConditionBuilder {
@@ -19,20 +19,20 @@ public final class StorableObjectConditionBuilder {
 		assert false;
 	}
 
-	public static StorableObjectCondition restoreCondition(IdlStorableObjectCondition transferable)
+	public static StorableObjectCondition restoreCondition(final IdlStorableObjectCondition transferable)
 			throws IllegalDataException {
 		StorableObjectCondition condition = null;
 		switch (transferable.discriminator().value()) {
-			case StorableObjectConditionSort._COMPOUND:
+			case IdlStorableObjectConditionSort._COMPOUND:
 				condition = new CompoundCondition(transferable.compoundCondition());
 				break;
-			case StorableObjectConditionSort._LINKED_IDS:
+			case IdlStorableObjectConditionSort._LINKED_IDS:
 				condition = new LinkedIdsCondition(transferable.linkedIdsCondition());
 				break;
-			case StorableObjectConditionSort._TYPICAL:
+			case IdlStorableObjectConditionSort._TYPICAL:
 				condition = new TypicalCondition(transferable.typicalCondition());
 				break;
-			case StorableObjectConditionSort._EQUIVALENT:
+			case IdlStorableObjectConditionSort._EQUIVALENT:
 				condition = new EquivalentCondition(transferable.equivalentCondition());
 				break;
 			default:
