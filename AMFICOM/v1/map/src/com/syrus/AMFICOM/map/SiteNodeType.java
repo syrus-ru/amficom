@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.48 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.49 2005/07/24 16:20:19 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.48 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/24 16:20:19 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
