@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.31 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: scheme.idl,v 1.32 2005/07/24 17:57:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -281,6 +281,7 @@ module scheme {
 			public long priceUsd;
 			public boolean active;
 
+			public general::corba::IdlIdentifier parentSchemeId;
 			public general::corba::IdlIdentifier parentSchemeOptimizeInfoId;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -293,6 +294,7 @@ module scheme {
 					in general::corba::WString256 description,
 					in long priceUsd,
 					in boolean active,
+					in general::corba::IdlIdentifier parentSchemeId,
 					in general::corba::IdlIdentifier parentSchemeOptimizeInfoId);
 		};
 
