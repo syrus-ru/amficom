@@ -1,61 +1,67 @@
--- $Id: DROP.sql,v 1.9 2005/06/15 09:28:25 bass Exp $
+-- $Id: DROP.sql,v 1.10 2005/07/24 15:42:19 bass Exp $
 
--- 15. PathElement
-PROMPT 15. Dropping table PathElement...;
+-- 17. PathElement
+PROMPT 17. Dropping table PathElement...;
 DROP TABLE PathElement;
 DROP SEQUENCE PathElement_Seq;
 
--- 14. SchemePath
-PROMPT 14. Dropping table SchemePath...;
+-- 16. SchemePath
+PROMPT 16. Dropping table SchemePath...;
 DROP TABLE SchemePath;
 DROP SEQUENCE SchemePath_Seq;
 
--- 13. CableChannelingItem
-PROMPT 13. Dropping table CableChannelingItem...;
+-- 15. CableChannelingItem
+PROMPT 15. Dropping table CableChannelingItem...;
 DROP TABLE CableChannelingItem;
 DROP SEQUENCE CableChannelingItem_Seq;
 
--- 12. SchemeCableThread
-PROMPT 12. Dropping table SchemeCableThread...;
+-- 14. SchemeCableThread
+PROMPT 14. Dropping table SchemeCableThread...;
 DROP TABLE SchemeCableThread;
 DROP SEQUENCE SchemeCableThread_Seq;
 
--- 11. SchemeCableLink
-PROMPT 11. Dropping table SchemeCableLink...;
+-- 13. SchemeCableLink
+PROMPT 13. Dropping table SchemeCableLink...;
 DROP TABLE SchemeCableLink;
 DROP SEQUENCE SchemeCableLink_Seq;
 
--- 10. SchemeLink
-PROMPT 10. Dropping table SchemeLink...;
+-- 12. SchemeLink
+PROMPT 12. Dropping table SchemeLink...;
 DROP TABLE SchemeLink;
 DROP SEQUENCE SchemeLink_Seq;
 
--- 09. SchemeCablePort
-PROMPT 09. Dropping table SchemeCablePort...;
+-- 11. SchemeCablePort
+PROMPT 11. Dropping table SchemeCablePort...;
 DROP TABLE SchemeCablePort;
 DROP SEQUENCE SchemeCablePort_Seq;
 
--- 08. SchemePort
-PROMPT 08. Dropping table SchemePort...;
+-- 10. SchemePort
+PROMPT 10. Dropping table SchemePort...;
 DROP TABLE SchemePort;
 DROP SEQUENCE SchemePort_Seq;
 
--- 07. SchemeDevice
-PROMPT 07. Dropping table SchemeDevice...;
+-- 09. SchemeDevice
+PROMPT 09. Dropping table SchemeDevice...;
 DROP TABLE SchemeDevice;
 DROP SEQUENCE SchemeDevice_Seq;
 
--- 06. SchemeMonitoringSolution
-PROMPT 06. Dropping table SchemeMonitoringSolution...;
+-- 08. SchemeMonitoringSolution
+PROMPT 08. Dropping table SchemeMonitoringSolution...;
 DROP TABLE SchemeMonitoringSolution;
 DROP SEQUENCE SchemeMonitoringSolution_Seq;
 
--- 05. SchemeOptimizeInfo
-PROMPT 05. Dropping table SchemeOptimizeInfo...;
-DROP TABLE SchemeOptimizeInfoSwitch;
-DROP SEQUENCE SchemeOptimizeInfoSwitch_Seq;
+-- 07. SchemeOptimizeInfoRtu
+PROMPT 07. Dropping table SchemeOptimizeInfoRtu...;
 DROP TABLE SchemeOptimizeInfoRtu;
 DROP SEQUENCE SchemeOptimizeInfoRtu_Seq;
+
+-- 06. SchemeOptimizeInfoSwitch
+PROMPT 06. Dropping table SchemeOptimizeInfoSwitch...;
+DROP TABLE SchemeOptimizeInfoSwitch;
+DROP SEQUENCE SchemeOptimizeInfoSwitch_Seq;
+
+-- 05. SchemeOptimizeInfo
+PROMPT 05. Dropping table SchemeOptimizeInfo...;
 DROP TABLE SchemeOptimizeInfo;
 DROP SEQUENCE SchemeOptimizeInfo_Seq;
 

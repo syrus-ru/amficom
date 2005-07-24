@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.9 2005/06/15 09:28:25 bass Exp $
+-- $Id: CREATE.sql,v 1.10 2005/07/24 15:42:19 bass Exp $
 
 -- 01. SchemeProtoGroup
 PROMPT 01. Creating table SchemeProtoGroup...;
@@ -20,42 +20,50 @@ PROMPT 04. Creating table SchemeElement...;
 PROMPT 05. Creating table SchemeOptimizeInfo...;
 @@schemeoptimizeinfo;
 
--- 06. SchemeMonitoringSolution
-PROMPT 06. Creating table SchemeMonitoringSolution...;
+-- 06. SchemeOptimizeInfoSwitch
+PROMPT 06. Creating table SchemeOptimizeInfoSwitch...;
+@@schemeoptimizeinfoswitch;
+
+-- 07. SchemeOptimizeInfoRtu
+PROMPT 07. Creating table SchemeOptimizeInfoRtu...;
+@@schemeoptimizeinfortu;
+
+-- 08. SchemeMonitoringSolution
+PROMPT 08. Creating table SchemeMonitoringSolution...;
 @@schememonitoringsolution;
 
--- 07. SchemeDevice
-PROMPT 07. Creating table SchemeDevice...;
+-- 09. SchemeDevice
+PROMPT 09. Creating table SchemeDevice...;
 @@schemedevice;
 
--- 08. SchemePort
-PROMPT 08. Creating table SchemePort...;
+-- 10. SchemePort
+PROMPT 10. Creating table SchemePort...;
 @@schemeport;
 
--- 09. SchemeCablePort
-PROMPT 09. Creating table SchemeCablePort...;
+-- 11. SchemeCablePort
+PROMPT 11. Creating table SchemeCablePort...;
 @@schemecableport;
 
--- 10. SchemeLink
-PROMPT 10. Creating table SchemeLink...;
+-- 12. SchemeLink
+PROMPT 12. Creating table SchemeLink...;
 @@schemelink;
 
--- 11. SchemeCableLink
-PROMPT 11. Creating table SchemeCableLink...;
+-- 13. SchemeCableLink
+PROMPT 13. Creating table SchemeCableLink...;
 @@schemecablelink;
 
--- 12. SchemeCableThread
-PROMPT 12. Creating table SchemeCableThread...;
+-- 14. SchemeCableThread
+PROMPT 14. Creating table SchemeCableThread...;
 @@schemecablethread;
 
--- 13. CableChannelingItem
-PROMPT 13. Creating table CableChannelingItem...;
+-- 15. CableChannelingItem
+PROMPT 15. Creating table CableChannelingItem...;
 @@cablechannelingitem;
 
--- 14. SchemePath
-PROMPT 14. Creating table SchemePath...;
+-- 16. SchemePath
+PROMPT 16. Creating table SchemePath...;
 @@schemepath;
 
--- 15. PathElement
-PROMPT 15. Creating table PathElement...;
+-- 17. PathElement
+PROMPT 17. Creating table PathElement...;
 @@pathelement;
