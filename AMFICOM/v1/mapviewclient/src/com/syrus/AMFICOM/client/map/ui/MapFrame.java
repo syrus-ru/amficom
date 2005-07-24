@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.56 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapFrame.java,v 1.57 2005/07/24 12:30:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.56 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/24 12:30:02 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -419,144 +419,183 @@ public class MapFrame extends JInternalFrame
 		setContext(null);
 	}
 
-	public boolean checkCanCloseMap()
+	public boolean checkChangesPresent()
 	{
-		boolean canClose;
+		boolean changesPresent = false;
 		
-		if(getMapView() == null)
-			return true;
-	
-		Map map = getMapView().getMap();
-		
-		if(map == null)
-			return true;
-		
-		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP))
-			return true;
-		
-		if(map.isChanged())
-		{
-			String message = "Объект " + map.getName() 
-				+ " [" + LangModelMap.getString("Map") + "] "
-				+ "изменен. Сохранить?";
-				
-			int ret = JOptionPane.showConfirmDialog(
-					Environment.getActiveWindow(),
-					message,
-					"Сохранение объекта",
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.QUESTION_MESSAGE);
-			if(ret == JOptionPane.CANCEL_OPTION)
-			{
-				canClose = false;
-			}
-			else
-			if(ret == JOptionPane.NO_OPTION)
-			{
-				canClose = true;
-			}
-			else
-			if(ret == JOptionPane.YES_OPTION)
-			{
-				try
-				{
-					StorableObjectPool.putStorableObject(map);
-				}
-				catch (IllegalObjectEntityException e)
-				{
-					e.printStackTrace();
-				}
-				try
-				{
-					StorableObjectPool.flush(map.getId(), true);//save map
-				} catch(ApplicationException e) {
-					e.printStackTrace();
-				}
-				canClose = true;
-			}
-			else
-				canClose = false;
-		}
-		else
-			canClose = true;
-		return canClose;
-	}
-
-	public boolean checkCanCloseMapView()
-	{
-		boolean canClose;
-	
 		MapView mapView = getMapView();
 		
-		if(mapView == null)
-			return true;
-	
-		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW))
-			return true;
-
-		if(mapView.isChanged())
-		{
-			String message = "Объект " + mapView.getName() 
-				+ " [" + LangModelMap.getString("MapView") + "] "
-				+ "изменен. Сохранить?";
-				
+		if(mapView != null) {
+			if(mapView.isChanged()
+				&& getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW)) {
+				changesPresent = true;
+			}
+			else {
+				Map map = getMapView().getMap();
+				if(map != null) {
+					if(map.isChanged()
+						&& getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP)) {
+						changesPresent = true;
+					}
+				}
+			}
+		}
+		if(changesPresent) {
+			String message = "Есть несохраненные измененные объекты. Продолжить?";
+			
 			int ret = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					message,
-					"Сохранение объекта",
-					JOptionPane.YES_NO_CANCEL_OPTION,
+					"Объект изменен",
+					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
-			if(ret == JOptionPane.CANCEL_OPTION)
-			{
-				canClose = false;
-			}
-			else
-			if(ret == JOptionPane.NO_OPTION)
-			{
-				canClose = true;
-			}
-			else
 			if(ret == JOptionPane.YES_OPTION)
 			{
-//				getContext().getDataSource().SaveMapView(mapView.getId());
-				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
-				{
-					Scheme scheme = (Scheme )it.next();
-					if(scheme.isChanged())
-						try
-						{
-							StorableObjectPool.flush(scheme.getId(), true);// save scheme
-						}
-						catch (VersionCollisionException e)
-						{
-							e.printStackTrace();
-						}
-						catch (IllegalDataException e)
-						{
-							e.printStackTrace();
-						}
-						catch (CommunicationException e)
-						{
-							e.printStackTrace();
-						}
-						catch (DatabaseException e)
-						{
-							e.printStackTrace();
-						}
-						catch(ApplicationException aExc)
-						{
-							aExc.printStackTrace();
-						}
-				}
-				canClose = true;
-			}
-			else
-				canClose = false;
+				//TODO cancel changes
+				changesPresent = false;
+			}			
 		}
-		else
-			canClose = true;
-		return canClose;
+		return changesPresent;
 	}
+
+//	public boolean checkCanCloseMap()
+//	{
+//		boolean canClose;
+//		
+//		if(getMapView() == null)
+//			return true;
+//	
+//		Map map = getMapView().getMap();
+//		
+//		if(map == null)
+//			return true;
+//		
+//		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP))
+//			return true;
+//		
+//		if(map.isChanged())
+//		{
+//			String message = "Объект " + map.getName() 
+//				+ " [" + LangModelMap.getString("Map") + "] "
+//				+ "изменен. Сохранить?";
+//				
+//			int ret = JOptionPane.showConfirmDialog(
+//					Environment.getActiveWindow(),
+//					message,
+//					"Сохранение объекта",
+//					JOptionPane.YES_NO_CANCEL_OPTION,
+//					JOptionPane.QUESTION_MESSAGE);
+//			if(ret == JOptionPane.CANCEL_OPTION)
+//			{
+//				canClose = false;
+//			}
+//			else
+//			if(ret == JOptionPane.NO_OPTION)
+//			{
+//				canClose = true;
+//			}
+//			else
+//			if(ret == JOptionPane.YES_OPTION)
+//			{
+//				try
+//				{
+//					StorableObjectPool.putStorableObject(map);
+//				}
+//				catch (IllegalObjectEntityException e)
+//				{
+//					e.printStackTrace();
+//				}
+//				try
+//				{
+//					StorableObjectPool.flush(map.getId(), true);//save map
+//				} catch(ApplicationException e) {
+//					e.printStackTrace();
+//				}
+//				canClose = true;
+//			}
+//			else
+//				canClose = false;
+//		}
+//		else
+//			canClose = true;
+//		return canClose;
+//	}
+//
+//	public boolean checkCanCloseMapView()
+//	{
+//		boolean canClose;
+//	
+//		MapView mapView = getMapView();
+//		
+//		if(mapView == null)
+//			return true;
+//	
+//		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW))
+//			return true;
+//
+//		if(mapView.isChanged())
+//		{
+//			String message = "Объект " + mapView.getName() 
+//				+ " [" + LangModelMap.getString("MapView") + "] "
+//				+ "изменен. Сохранить?";
+//				
+//			int ret = JOptionPane.showConfirmDialog(
+//					Environment.getActiveWindow(),
+//					message,
+//					"Сохранение объекта",
+//					JOptionPane.YES_NO_CANCEL_OPTION,
+//					JOptionPane.QUESTION_MESSAGE);
+//			if(ret == JOptionPane.CANCEL_OPTION)
+//			{
+//				canClose = false;
+//			}
+//			else
+//			if(ret == JOptionPane.NO_OPTION)
+//			{
+//				canClose = true;
+//			}
+//			else
+//			if(ret == JOptionPane.YES_OPTION)
+//			{
+////				getContext().getDataSource().SaveMapView(mapView.getId());
+//				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+//				{
+//					Scheme scheme = (Scheme )it.next();
+//					if(scheme.isChanged())
+//						try
+//						{
+//							StorableObjectPool.flush(scheme.getId(), true);// save scheme
+//						}
+//						catch (VersionCollisionException e)
+//						{
+//							e.printStackTrace();
+//						}
+//						catch (IllegalDataException e)
+//						{
+//							e.printStackTrace();
+//						}
+//						catch (CommunicationException e)
+//						{
+//							e.printStackTrace();
+//						}
+//						catch (DatabaseException e)
+//						{
+//							e.printStackTrace();
+//						}
+//						catch(ApplicationException aExc)
+//						{
+//							aExc.printStackTrace();
+//						}
+//				}
+//				canClose = true;
+//			}
+//			else
+//				canClose = false;
+//		}
+//		else
+//			canClose = true;
+//		return canClose;
+//	}
 
 	public Map getMap()
 	{
