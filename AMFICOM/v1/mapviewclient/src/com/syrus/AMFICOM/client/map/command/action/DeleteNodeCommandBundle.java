@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.32 2005/07/11 13:18:04 bass Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.33 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -35,13 +34,14 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -127,17 +127,26 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					}
 				}
 				
-				// удаляются линии
-				cablePath.removeLink(left);
-				cablePath.removeLink(right);
+				CableChannelingItem leftCableChannelingItem = cablePath.getFirstCCI(left);
+				CableChannelingItem rightCableChannelingItem = cablePath.getFirstCCI(right);
 
+				// удаляются линии
 				// вместо них создается новая непривязанная
 				UnboundLink unbound = 
 					super.createUnboundLinkWithNodeLink(
 						left.getOtherNode(site),
 						right.getOtherNode(site));
 				unbound.setCablePath(cablePath);
-				cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, LoginManager.getUserId()));
+
+				CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
+				newCableChannelingItem.insertSelfBefore(rightCableChannelingItem);
+				leftCableChannelingItem.setParentPathOwner(null, false);
+				rightCableChannelingItem.setParentPathOwner(null, false);
+
+				cablePath.removeLink(leftCableChannelingItem);
+				cablePath.removeLink(rightCableChannelingItem);
+
+				cablePath.addLink(unbound, newCableChannelingItem);
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами

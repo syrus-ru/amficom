@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -104,9 +104,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	AbstractNode startNode;
 	AbstractNode endNode;
 	
-	private PhysicalLink startLastBound;
+	private CableChannelingItem startLastBound;
 	private int startAvailableLinksCount;
-	private PhysicalLink endLastBound;
+	private CableChannelingItem endLastBound;
 	private int endAvailableLinksCount;
 	
 	// holds original list of cable path links
@@ -162,21 +162,21 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					if(!CablePathAddEditor.this.doChanges)
 						return;
 
-					Object mle = CablePathAddEditor.this.startLinkComboBox.getSelectedItem();
-					Object mle2 = CablePathAddEditor.this.endLinkComboBox.getSelectedItem();
-					boolean flag = (mle instanceof PhysicalLink) || (mle2 instanceof PhysicalLink);
+					Object selectedStartLink = CablePathAddEditor.this.startLinkComboBox.getSelectedItem();
+					Object selectedEndLink = CablePathAddEditor.this.endLinkComboBox.getSelectedItem();
+					boolean flag = (selectedStartLink instanceof PhysicalLink) || (selectedEndLink instanceof PhysicalLink);
 					CablePathAddEditor.this.bindButton.setEnabled(flag);
 					CablePathAddEditor.this.bindChainButton.setEnabled(flag);
 					
 					CablePathAddEditor.this.doChanges = false;
-					if(mle instanceof PhysicalLink)
+					if(selectedStartLink instanceof PhysicalLink)
 					{
-						PhysicalLink pl = (PhysicalLink)mle;
+						PhysicalLink pl = (PhysicalLink)selectedStartLink;
 						CablePathAddEditor.this.startNodeToComboBox.setSelectedItem(pl.getOtherNode(CablePathAddEditor.this.startNode));
 					}
-					if(mle2 instanceof PhysicalLink)
+					if(selectedEndLink instanceof PhysicalLink)
 					{
-						PhysicalLink pl = (PhysicalLink)mle2;
+						PhysicalLink pl = (PhysicalLink)selectedEndLink;
 						CablePathAddEditor.this.endNodeToComboBox.setSelectedItem(pl.getOtherNode(CablePathAddEditor.this.endNode));
 					}
 					CablePathAddEditor.this.doChanges = true;
@@ -192,22 +192,22 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					if(!CablePathAddEditor.this.doChanges)
 						return;
 
-					Object mle = CablePathAddEditor.this.startNodeToComboBox.getSelectedItem();
-					Object mle2 = CablePathAddEditor.this.endNodeToComboBox.getSelectedItem();
-					boolean flag = (mle instanceof SiteNode) || (mle2 instanceof SiteNode);
+					Object selectedStartNode = CablePathAddEditor.this.startNodeToComboBox.getSelectedItem();
+					Object selectedEndNode = CablePathAddEditor.this.endNodeToComboBox.getSelectedItem();
+					boolean flag = (selectedStartNode instanceof SiteNode) || (selectedEndNode instanceof SiteNode);
 					CablePathAddEditor.this.bindButton.setEnabled(flag);
 					CablePathAddEditor.this.bindChainButton.setEnabled(flag);
 
 					CablePathAddEditor.this.doChanges = false;
-					if(mle instanceof SiteNode)
+					if(selectedStartNode instanceof SiteNode)
 					{
-						SiteNode s = (SiteNode)mle;
+						SiteNode s = (SiteNode)selectedStartNode;
 						CablePathAddEditor.this.startLinkComboBox.setSelectedItem(
 								CablePathAddEditor.this.logicalNetLayer.getMapView().getMap().getPhysicalLink(CablePathAddEditor.this.startNode, s));
 					}
-					if(mle2 instanceof SiteNode)
+					if(selectedEndNode instanceof SiteNode)
 					{
-						SiteNode s = (SiteNode)mle2;
+						SiteNode s = (SiteNode)selectedEndNode;
 						CablePathAddEditor.this.endLinkComboBox.setSelectedItem(
 								CablePathAddEditor.this.logicalNetLayer.getMapView().getMap().getPhysicalLink(CablePathAddEditor.this.endNode, s));
 					}
@@ -298,10 +298,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.scrollPane.getViewport().setBackground(SystemColor.window);
 		this.table.setBackground(SystemColor.window);
 
-GridBagConstraints constraints = new GridBagConstraints();
-//		this.this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-//		this.this.add(this.bindingPanel, ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		
+		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -595,8 +592,7 @@ GridBagConstraints constraints = new GridBagConstraints();
 		}
 	}
 	
-	private void setBindingPanels()
-	{
+	private void setBindingPanels() {
 		PhysicalLinkType unboundType;
 		try {
 			unboundType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
@@ -609,8 +605,15 @@ GridBagConstraints constraints = new GridBagConstraints();
 		
 		this.endNode = this.cablePath.getEndUnboundNode();
 
-		if(this.startNode == null && this.endNode == null)
-			return;// no unbound elements
+		if(this.startNode.equals(this.cablePath.getEndNode()) 
+				&& this.endNode.equals(this.cablePath.getStartNode())) {
+			// no unbound elements
+			this.startLinkComboBox.setEnabled(false);
+			this.endLinkComboBox.setEnabled(false);
+			this.startNodeToComboBox.setEnabled(false);
+			this.endNodeToComboBox.setEnabled(false);
+			return;
+		}
 
 		this.startNodeTextField.setText(this.startNode.getName());
 		this.endNodeTextField.setText(this.endNode.getName());
@@ -618,80 +621,74 @@ GridBagConstraints constraints = new GridBagConstraints();
 		this.startLastBound = this.cablePath.getStartLastBoundLink();
 		this.endLastBound = this.cablePath.getEndLastBoundLink();
 		
-		Collection smnelinks = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
+		Collection availableLinksFromStart = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
 		if(this.startLastBound != null)
-			smnelinks.remove(this.startLastBound);
+			availableLinksFromStart.remove(this.startLastBound);
 
-		List smnenodes = new LinkedList();
+		List availableNodesFromStart = new LinkedList();
 
-		this.startAvailableLinksCount = smnelinks.size();
-		for(Iterator it = smnelinks.iterator(); it.hasNext();)
-		{
-			PhysicalLink mle = (PhysicalLink)it.next();
-			if(mle.getType().equals(unboundType))
-			{
+		this.startAvailableLinksCount = availableLinksFromStart.size();
+		for(Iterator it = availableLinksFromStart.iterator(); it.hasNext();) {
+			PhysicalLink link = (PhysicalLink)it.next();
+			if(link.getType().equals(unboundType)) {
 				it.remove();
 				this.startAvailableLinksCount--;
 			}
-			else
-			if(mle.getStartNode() instanceof TopologicalNode
-				|| mle.getEndNode() instanceof TopologicalNode)
+			else if(link.getStartNode() instanceof TopologicalNode
+				|| link.getEndNode() instanceof TopologicalNode) {
 					it.remove();
-			else
-			{
-				smnenodes.add(mle.getOtherNode(this.startNode));
+					this.startAvailableLinksCount--;
+			}
+			else {
+				availableNodesFromStart.add(link.getOtherNode(this.startNode));
 			}
 		}
 
-		Collection emnelinks = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.endNode);
+		Collection availableLinksFromEnd = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.endNode);
 		if(this.endLastBound != null)
-			emnelinks.remove(this.endLastBound);
+			availableLinksFromEnd.remove(this.endLastBound);
 
-		List emnenodes = new LinkedList();
+		List availableNodesFromEnd = new LinkedList();
 
-		this.endAvailableLinksCount = emnelinks.size();
-		for(Iterator it = emnelinks.iterator(); it.hasNext();)
-		{
+		this.endAvailableLinksCount = availableLinksFromEnd.size();
+		for(Iterator it = availableLinksFromEnd.iterator(); it.hasNext();) {
 			PhysicalLink mle = (PhysicalLink)it.next();
-			if(mle.getType().equals(unboundType))
-			{
+			if(mle.getType().equals(unboundType)) {
 				it.remove();
 				this.endAvailableLinksCount--;
 			}
-			else
-			if(mle.getStartNode() instanceof TopologicalNode
+			else if(mle.getStartNode() instanceof TopologicalNode
 				|| mle.getEndNode() instanceof TopologicalNode)
 					it.remove();
-			else
-			{
-				emnenodes.add(mle.getOtherNode(this.endNode));
+			else {
+				availableNodesFromEnd.add(mle.getOtherNode(this.endNode));
 			}
 		}
 
 		this.startLinkComboBox.removeAllItems();
 		this.startLinkComboBox.addItem(this.stubObject);
-		this.startLinkComboBox.addElements(smnelinks);
+		this.startLinkComboBox.addElements(availableLinksFromStart);
 		this.startLinkComboBox.setSelectedItem(this.stubObject);
 
 		this.endLinkComboBox.removeAllItems();
 		this.endLinkComboBox.addItem(this.stubObject);
-		this.endLinkComboBox.addElements(emnelinks);
+		this.endLinkComboBox.addElements(availableLinksFromEnd);
 		this.endLinkComboBox.setSelectedItem(this.stubObject);
 
 		this.startNodeToComboBox.removeAllItems();
 		this.startNodeToComboBox.addItem(this.stubObject);
-		this.startNodeToComboBox.addElements(smnenodes);
+		this.startNodeToComboBox.addElements(availableNodesFromStart);
 		this.startNodeToComboBox.setSelectedItem(this.stubObject);
 
 		this.endNodeToComboBox.removeAllItems();
 		this.endNodeToComboBox.addItem(this.stubObject);
-		this.endNodeToComboBox.addElements(emnenodes);
+		this.endNodeToComboBox.addElements(availableNodesFromEnd);
 		this.endNodeToComboBox.setSelectedItem(this.stubObject);
 
-		this.startLinkComboBox.setEnabled(!this.startNode.equals(this.cablePath.getEndNode()));
-		this.endLinkComboBox.setEnabled(!this.endNode.equals(this.cablePath.getStartNode()));
-		this.startNodeToComboBox.setEnabled(this.startLinkComboBox.isEnabled());
-		this.endNodeToComboBox.setEnabled(this.endLinkComboBox.isEnabled());
+		this.startLinkComboBox.setEnabled(false);
+		this.endLinkComboBox.setEnabled(false);
+		this.startNodeToComboBox.setEnabled(false);
+		this.endNodeToComboBox.setEnabled(false);
 	}
 
 	/**
@@ -700,16 +697,22 @@ GridBagConstraints constraints = new GridBagConstraints();
 	void removeBinding()
 	{
 		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
-		PhysicalLink previous = this.cablePath.previousLink(link);
+		CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(link);
 		if(link instanceof UnboundLink)
 		{
-			if(link.getStartNode().equals(link.getEndNode()))
+			UnboundLink unbound = (UnboundLink)link;
+
+			CableChannelingItem previousCbleChannelingItem = this.cablePath.previousLink(cableChannelingItem);
+			PhysicalLink previous = this.cablePath.getBinding().get(previousCbleChannelingItem);
+
+			if(unbound.getStartNode().equals(unbound.getEndNode()))
 			{
-				this.cablePath.removeLink(link);
+				this.cablePath.removeLink(cableChannelingItem);
+				cableChannelingItem.setParentPathOwner(null, false);
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
-							(UnboundLink)link);
+								unbound);
 				command.setNetMapViewer(this.netMapViewer);
 				command.execute();
 			}
@@ -717,30 +720,33 @@ GridBagConstraints constraints = new GridBagConstraints();
 			if(previous != null
 				&& previous instanceof UnboundLink)
 			{
-				CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
-				AbstractNode removedNode = cci.getStartSiteNode();
+				UnboundLink unboundPrevious = (UnboundLink)previous;
+				AbstractNode removedNode = cableChannelingItem.getStartSiteNode();
+				SiteNode newEndNode = cableChannelingItem.getEndSiteNode();
 			
 				if(previous.getEndNode().equals(removedNode))
-					previous.setEndNode(link.getOtherNode(removedNode));
+					previous.setEndNode(newEndNode);
 				else
 				if(previous.getStartNode().equals(removedNode))
-					previous.setStartNode(link.getOtherNode(removedNode));
+					previous.setStartNode(newEndNode);
 					
 				for(Iterator it = previous.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
 				{
 					NodeLink nl = (NodeLink)it.next();
 					if(nl.getEndNode().equals(removedNode))
-						nl.setEndNode(link.getOtherNode(removedNode));
+						nl.setEndNode(newEndNode);
 					else
 					if(nl.getStartNode().equals(removedNode))
-						nl.setStartNode(link.getOtherNode(removedNode));
+						nl.setStartNode(newEndNode);
 				}
 
-				this.cablePath.removeLink(link);
+				previousCbleChannelingItem.setEndSiteNode(newEndNode);
+				this.cablePath.removeLink(cableChannelingItem);
+				cableChannelingItem.setParentPathOwner(null, false);
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
-							(UnboundLink)link);
+								unbound);
 				command.setNetMapViewer(this.netMapViewer);
 				command.execute();
 			}
@@ -748,8 +754,6 @@ GridBagConstraints constraints = new GridBagConstraints();
 		else
 		// replace binding to physical link with unbound link
 		{
-			this.cablePath.removeLink(link);
-
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 					link.getStartNode(),
 					link.getEndNode());
@@ -758,7 +762,14 @@ GridBagConstraints constraints = new GridBagConstraints();
 
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(this.cablePath);
-			this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, LoginManager.getUserId()));
+
+			CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, unbound);
+			newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+			cableChannelingItem.setParentPathOwner(null, false);
+
+			this.cablePath.removeLink(cableChannelingItem);
+			this.cablePath.addLink(unbound, newCableChannelingItem);
+
 			link.getBinding().remove(this.cablePath);
 		}
 		this.model.setValues(this.cablePath.getLinks());
@@ -776,86 +787,82 @@ GridBagConstraints constraints = new GridBagConstraints();
 		command.execute();
 
 		UnboundLink unbound = command.getUnbound();
-		this.cablePath.addLink(unbound, CableController.generateCCI(this.cablePath, unbound, LoginManager.getUserId()));
 		unbound.setCablePath(this.cablePath);
+
+		CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, unbound);
+		this.cablePath.addLink(unbound, newCableChannelingItem);
 
 		this.model.fireTableDataChanged();
 		setBindingPanels();
 	}
 	
 	private void addLinkBinding(
-			PhysicalLink link, 
-			UnboundLink unbound, 
-			AbstractNode fromSite)
-	{
-		if(link.getOtherNode(fromSite).equals(unbound.getOtherNode(fromSite)))
-		{
-			if(unbound != null)
-			{
-				this.cablePath.removeLink(unbound);
+			PhysicalLink link,
+			CableChannelingItem unboundCableChannelingItem,
+			AbstractNode fromSite) {
 
-				RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
-				command.setNetMapViewer(this.netMapViewer);
-				command.execute();
-			}
+		CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, link);
+		newCableChannelingItem.insertSelfBefore(unboundCableChannelingItem);
+		this.cablePath.addLink(link, newCableChannelingItem);
+		link.getBinding().add(this.cablePath);
+
+		UnboundLink unbound = (UnboundLink)this.cablePath.getBinding().get(unboundCableChannelingItem); 
+		SiteNode otherNode = (SiteNode )link.getOtherNode(fromSite);
+		if(otherNode.equals(unbound.getOtherNode(fromSite))) {
+			RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
+			command.setNetMapViewer(this.netMapViewer);
+			command.execute();
+
+			unboundCableChannelingItem.setParentPathOwner(null, false);
+			this.cablePath.removeLink(unboundCableChannelingItem);
 		}
-		else
-		{
-			if(unbound.getStartNode().equals(fromSite))
-			{
-				unbound.setStartNode(link.getOtherNode(fromSite));
+		else {
+			if(unbound.getStartNode().equals(fromSite)) {
+				unbound.setStartNode(otherNode);
 			}
-			else
-			{
-				unbound.setEndNode(link.getOtherNode(fromSite));
+			else {
+				unbound.setEndNode(otherNode);
 			}
 
-			for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();)
-			{
+			for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();) {
 				NodeLink nl = (NodeLink)it.next();
 				if(nl.getStartNode().equals(fromSite))
-					nl.setStartNode(link.getOtherNode(fromSite));
+					nl.setStartNode(otherNode);
 				else
-					nl.setEndNode(link.getOtherNode(fromSite));
+					nl.setEndNode(otherNode);
 			}
+			unboundCableChannelingItem.setStartSiteNode(otherNode);
 		}
-		this.cablePath.addLink(link, CableController.generateCCI(this.cablePath, link, LoginManager.getUserId()));
-		link.getBinding().add(this.cablePath);
 	}
 
-	void addBinding()
-	{
+	void addBinding() {
 		PhysicalLink selectedStartLink;
 		PhysicalLink selectedEndLink;
 		
 		Object selectedItem;
 	
 		selectedItem = this.startLinkComboBox.getSelectedItem();
-		if(selectedItem instanceof PhysicalLink)
-		{
+		if(selectedItem instanceof PhysicalLink) {
 			selectedStartLink = (PhysicalLink )selectedItem;
 			
-			UnboundLink unbound = (UnboundLink)this.cablePath.nextLink(this.startLastBound);
-
-			if(unbound != null)
-				addLinkBinding(selectedStartLink, unbound, this.startNode);
+			CableChannelingItem unboundCableChannelingItem = this.cablePath.nextLink(this.startLastBound);
+			
+			if(unboundCableChannelingItem != null)
+				addLinkBinding(selectedStartLink, unboundCableChannelingItem, this.startNode);
 		}
-		else
-		{
+		else {
 			selectedStartLink = null;
 		}
 
 		selectedItem = this.endLinkComboBox.getSelectedItem();
-		if(selectedItem instanceof PhysicalLink)
-		{
+		if(selectedItem instanceof PhysicalLink) {
 			selectedEndLink = (PhysicalLink )selectedItem;
 			
-			if(!selectedEndLink.equals(selectedStartLink))
-			{
-				UnboundLink unbound = (UnboundLink)this.cablePath.previousLink(this.endLastBound);
-
-				if(unbound != null)
-					addLinkBinding(selectedEndLink, unbound, this.endNode);
+			if(!selectedEndLink.equals(selectedStartLink)) {
+				CableChannelingItem unboundCableChannelingItem = this.cablePath.previousLink(this.endLastBound);
+				
+				if(unboundCableChannelingItem != null)
+					addLinkBinding(selectedEndLink, unboundCableChannelingItem, this.endNode);
 			}
 		}
 		

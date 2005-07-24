@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.26 2005/07/11 13:18:04 bass Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.27 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -341,14 +341,19 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 			{
 				for(Iterator it = mapView.getCablePaths(physicalLink).iterator(); it.hasNext();)
 				{
-					CablePath cpath = (CablePath)it.next();
-					cpath.removeLink(physicalLink);
+					CablePath cablePath = (CablePath)it.next();
 					UnboundLink unbound = 
 						super.createUnboundLinkWithNodeLink(
 							physicalLink.getStartNode(),
 							physicalLink.getEndNode());
-					unbound.setCablePath(cpath);
-					cpath.addLink(unbound, CableController.generateCCI(cpath, unbound, LoginManager.getUserId()));
+					unbound.setCablePath(cablePath);
+
+					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(physicalLink);
+					CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
+					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+					cableChannelingItem.setParentPathOwner(null, false);
+					cablePath.removeLink(cableChannelingItem);
+					cablePath.addLink(unbound, newCableChannelingItem);
 				}
 			}
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);

@@ -37,13 +37,13 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -316,19 +316,23 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		PhysicalLink linkLeft = null;
 
 		for(Iterator it = cablePathLinks.iterator(); it.hasNext();) {
-			PhysicalLink mple = (PhysicalLink )it.next();
-			if(siteLinks.contains(mple)) {
+			PhysicalLink link = (PhysicalLink )it.next();
+			if(siteLinks.contains(link)) {
 				if(linkLeft == null) {
-					linkLeft = mple;
+					linkLeft = link;
 				}
 				else {
-					linkRight = mple;
+					linkRight = link;
 					break;
 				}
 			}
 		}
 
-		cablePath.removeLink(linkRight);
+		CableChannelingItem leftCableChannelingItem = cablePath.getFirstCCI(linkLeft);
+		CableChannelingItem rightCableChannelingItem = cablePath.getFirstCCI(linkRight);
+		
+		rightCableChannelingItem.setParentPathOwner(null, false);
+		cablePath.removeLink(rightCableChannelingItem);
 
 		if(linkRight instanceof UnboundLink) {
 			RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(
@@ -347,7 +351,6 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				linkLeft.setEndNode(linkRight.getOtherNode(this.site));
 		}
 		else {
-			cablePath.removeLink(linkLeft);
 			linkLeft.getBinding().remove(cablePath);
 
 			CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
@@ -359,7 +362,12 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
 
-			cablePath.addLink(unbound, CableController.generateCCI(cablePath, unbound, LoginManager.getUserId()));
+			CableChannelingItem unboundCableChannelingItem = CableController.generateCCI(cablePath, unbound);
+			unboundCableChannelingItem.insertSelfBefore(leftCableChannelingItem);
+			leftCableChannelingItem.setParentPathOwner(null, false);
+			cablePath.removeLink(leftCableChannelingItem);
+
+			cablePath.addLink(unbound, unboundCableChannelingItem);
 		}
 		
 		this.elementsTree.updateUI();

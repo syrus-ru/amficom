@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.22 $
+ * @version $Revision: 1.23 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -81,7 +81,7 @@ public final class CableBindingController implements Wrapper {
 		Object result = null;
 		if (object instanceof PhysicalLink) {
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
+			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
 			if (key.equals(KEY_START_NODE)) {
 //				result = link.getStartNode().getName();
 				AbstractNode mne = cci.getStartSiteNode();
@@ -122,7 +122,7 @@ public final class CableBindingController implements Wrapper {
 	public void setValue(Object object, final String key, final Object value) {
 		if(object instanceof PhysicalLink) {
 			PhysicalLink link = (PhysicalLink)object;
-			CableChannelingItem cci = (CableChannelingItem )this.cablePath.getBinding().get(link);
+			CableChannelingItem cci = this.cablePath.getFirstCCI(link);
 			if (key.equals(KEY_START_SPARE)){
 				if(cci.getPhysicalLink() != null)
 					cci.setStartSpare(Double.parseDouble((String )value));
@@ -158,9 +158,5 @@ public final class CableBindingController implements Wrapper {
 
 	public void setCablePath(CablePath cablePath) {
 		this.cablePath = cablePath;
-	}
-
-	public CablePath getCablePath() {
-		return this.cablePath;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.24 2005/07/20 18:06:51 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.25 2005/07/24 12:41:05 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -25,13 +24,14 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/07/20 18:06:51 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -135,15 +135,18 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 
 				// проверить все кабельные пути, прохидящие по линии,
 				// и добавить новую линию
-				for(
-					Iterator it = mapView.getCablePaths(this.link).iterator(); 
-					it.hasNext();
-					) {
+				for(Iterator it = mapView.getCablePaths(this.link).iterator(); it.hasNext();) {
 					CablePath cablePath = (CablePath )it.next();
 
-					cablePath.addLink(
-							this.newLink, 
-							CableController.generateCCI(cablePath, this.newLink, LoginManager.getUserId()));
+					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
+					CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, this.newLink);
+					if(this.newLink.getStartNode().equals(cableChannelingItem.getStartSiteNode()))
+						newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+					else
+						newCableChannelingItem.insertSelfAfter(cableChannelingItem);
+					// новая линия добавляется в кабельный путь
+					cablePath.addLink(this.newLink, newCableChannelingItem);
+
 					if(this.newLink instanceof UnboundLink)
 						((UnboundLink )this.newLink).setCablePath(cablePath);
 					else

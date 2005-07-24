@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.20 2005/07/11 13:18:03 bass Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.21 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,19 +17,19 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
  * Команда генерации тоннеля по непривязанной линии.
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/07/11 13:18:03 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -37,7 +37,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 	/**
 	 * кабельный путь
 	 */
-	CablePath path;
+	CablePath cablePath;
 	
 	/**
 	 * непривязанная линия
@@ -59,7 +59,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 	public GenerateUnboundLinkCablingCommandBundle(UnboundLink unbound)
 	{
 		this.unbound = unbound;
-		this.path = unbound.getCablePath();
+		this.cablePath = unbound.getCablePath();
 	}
 	
 	public void execute()
@@ -70,7 +70,6 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 		this.map = this.mapView.getMap();
 		
 		try {
-			this.path.removeLink(this.unbound);
 			this.link = super.createPhysicalLink(
 					this.unbound.getStartNode(), 
 					this.unbound.getEndNode());
@@ -80,9 +79,16 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 				NodeLink mnle = (NodeLink)it2.next();
 				mnle.setPhysicalLink(this.link);
 			}
+
+			CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(this.unbound);
+			CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, this.link);
+			newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+			cableChannelingItem.setParentPathOwner(null, false);
+			this.cablePath.removeLink(cableChannelingItem);
+			this.cablePath.addLink(this.link, newCableChannelingItem);
+
 			super.removePhysicalLink(this.unbound);
-			this.path.addLink(this.link, CableController.generateCCI(this.path, this.link, LoginManager.getUserId()));
-			this.link.getBinding().add(this.path);
+			this.link.getBinding().add(this.cablePath);
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setException(e);

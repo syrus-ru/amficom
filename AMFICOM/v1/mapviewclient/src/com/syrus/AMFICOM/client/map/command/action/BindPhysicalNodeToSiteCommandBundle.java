@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.27 2005/07/20 17:54:50 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.28 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,16 +16,15 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
@@ -33,7 +32,7 @@ import com.syrus.util.Log;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/20 17:54:50 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/24 12:41:05 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -84,7 +83,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		{
 			this.mapView = this.logicalNetLayer.getMapView();
 			this.map = this.mapView.getMap();
-			PhysicalLink link = this.node.getPhysicalLink();
+			UnboundLink link = (UnboundLink)this.node.getPhysicalLink();
 			// находим "ливый" и "правый" узлы, одновременно обновл€ем
 			// концевые узлы фрагментов
 			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();)
@@ -113,10 +112,17 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			UnboundLink newLink = super.createUnboundLink(link.getStartNode(), this.site);
 			newLink.setType(link.getType());
 			// single cpath, as long as link is UnboundLink
-			CablePath cpath = this.mapView.getCablePaths(link).get(0);
+			CablePath cablePath = link.getCablePath();
+			
+			CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(link);
+			CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, newLink);
+			if(link.getStartNode().equals(cableChannelingItem.getStartSiteNode()))
+				newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+			else
+				newCableChannelingItem.insertSelfAfter(cableChannelingItem);
 			// нова€ лини€ добавл€етс€ в кабельный путь
-			cpath.addLink(newLink, CableController.generateCCI(cpath, newLink, LoginManager.getUserId()));
-			newLink.setCablePath(cpath);
+			cablePath.addLink(newLink, newCableChannelingItem);
+			newLink.setCablePath(cablePath);
 			// переносим фрагменты в новую линию пока не наткнемс€ на
 			// созданный узел
 			super.moveNodeLinks(
@@ -127,7 +133,6 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 					this.site,
 					null);
 			link.setStartNode(this.site);
-			cpath.sortLinks();
 		}
 		catch(Throwable e)
 		{

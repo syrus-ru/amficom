@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.22 2005/07/20 15:01:33 bass Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.23 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,16 +10,12 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.SortedSet;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.mapview.CablePath;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
@@ -27,8 +23,8 @@ import com.syrus.util.Log;
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/07/20 15:01:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -48,19 +44,11 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		try {
 			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
 			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getPathMembers();
-			if (!cableChannelingItems.isEmpty()) {
-				cableChannelingItems.first().setParentPathOwner(null, true);
+			for(CableChannelingItem cableChannelingItem : new LinkedList<CableChannelingItem>(cableChannelingItems)) {
+				if(cableChannelingItem.getPhysicalLink() == null)
+					cableChannelingItem.setParentPathOwner(null, false);
 			}
 
-			List ccis = new LinkedList();
-			for(Iterator it = this.cablePath.getLinks().iterator(); it.hasNext();)
-			{
-				PhysicalLink link = (PhysicalLink)it.next();
-				if(link instanceof UnboundLink)
-					continue;
-				ccis.add(this.cablePath.getBinding().getCCI(link));
-//			scl.channelingItems.add(cablePath.getBinding().getCCI(link));
-			}
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
 		} catch(Throwable e) {

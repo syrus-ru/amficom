@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -459,10 +458,12 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				if(list != null) {
 					this.cableList.getSelectionModel().clearSelection();
 					for(Iterator it = list.iterator(); it.hasNext();) {
-						CablePath cp = (CablePath )it.next();
-						IntPoint position = cp.getBindingPosition(this.physicalLink);
-						if(position.x == col && position.y == row) {
-							this.cableList.setSelectedValue(cp, true);
+						CablePath cablePath = (CablePath )it.next();
+						CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.physicalLink);
+						int x = cableChannelingItem.getRowX();
+						int y = cableChannelingItem.getPlaceY();
+						if(x == col && y == row) {
+							this.cableList.setSelectedValue(cablePath, true);
 						}
 					}
 				}
@@ -476,8 +477,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
 		if(pt != null) {
 			binding.bind(or, pt.x, pt.y);
-			CablePath cp = (CablePath )or;
-			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(this.physicalLink));
+			CablePath cablePath = (CablePath )or;
+			CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
 			cci.setRowX(pt.x);
 			cci.setPlaceY(pt.y);
 			this.tunnelLayout.updateElements();
@@ -498,8 +499,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	public void unbind(Object or) {
 		CablePath cablePath = (CablePath )or;
 
-		cablePath.removeLink(this.physicalLink);
-
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 				this.physicalLink.getStartNode(),
 				this.physicalLink.getEndNode());
@@ -509,10 +508,12 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(cablePath);
 
-		cablePath.addLink(unbound, CableController.generateCCI(
-				cablePath,
-				unbound,
-				LoginManager.getUserId()));
+		CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
+		CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
+		newCableChannelingItem.insertSelfBefore(cci);
+		cablePath.removeLink(cci);
+		cablePath.addLink(unbound, newCableChannelingItem);
+
 		this.physicalLink.getBinding().remove(cablePath);
 
 		((WrapperedListModel )this.cableList.getModel()).removeElement(cablePath);

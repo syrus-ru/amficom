@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.27 2005/07/20 13:33:53 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.28 2005/07/24 12:41:05 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -29,6 +28,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
  *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/20 13:33:53 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/24 12:41:05 $
  * @module mapviewclient_v1
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -45,7 +45,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	/**
 	 * ”дал€емый узел
 	 */
-	CablePath path;
+	CablePath cablePath;
 	
 	/**
 	 * тип узлов дл€ генерации вместо неприв€занных элементов
@@ -60,10 +60,10 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	Map map;
 
 	public GenerateCablePathCablingCommandBundle(
-			CablePath path, 
+			CablePath cablePath, 
 			SiteNodeType proto)
 	{
-		this.path = path;
+		this.cablePath = cablePath;
 		this.proto = proto;
 	}
 	
@@ -77,14 +77,14 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		try {
 			// дл€ последующего цикла необходима последовательность
 			// узлов от начального к конечному
-			SiteNode startsite = (SiteNode)this.path.getStartNode();
+			SiteNode startsite = (SiteNode)this.cablePath.getStartNode();
 			SiteNode endsite = null;
 			// проверить, что узел €вл€етс€ сетевым узлом (если это неприв€занный
 			// элемент, сгенерировать на его месте сетевой узел)
 			startsite = this.checkSite(startsite);
 			// отдельный список, поскольку используетс€ удаление
 			List list  = new LinkedList();
-			list.addAll(this.path.getLinks());
+			list.addAll(this.cablePath.getLinks());
 			// цикл по всем лини€м, участвующим в кабельном пути
 			// по неприв€занным лини€м генерировать тоннели
 			for(Iterator it = list.iterator(); it.hasNext();)
@@ -104,19 +104,25 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				// если неприв€занна€ лини€, генерировать тоннель
 				if(link instanceof UnboundLink)
 				{
-					this.path.removeLink(link);
-					UnboundLink un = (UnboundLink)link;
+					UnboundLink unbound = (UnboundLink)link;
 
 					link = super.createPhysicalLink(startsite, endsite);
 					// фрагменты перенос€тс€ в новый сгенерированный тоннель
-					for(Iterator it2 = new LinkedList(un.getNodeLinks()).iterator(); it2.hasNext();)
+					for(Iterator it2 = new LinkedList(unbound.getNodeLinks()).iterator(); it2.hasNext();)
 					{
 						NodeLink mnle = (NodeLink)it2.next();
 						mnle.setPhysicalLink(link);
 					}
-					super.removePhysicalLink(un);
-					this.path.addLink(link, CableController.generateCCI(this.path, link, LoginManager.getUserId()));
-					link.getBinding().add(this.path);
+
+					CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(unbound);
+					CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, link);
+					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+					cableChannelingItem.setParentPathOwner(null, false);
+					this.cablePath.removeLink(cableChannelingItem);
+					this.cablePath.addLink(link, newCableChannelingItem);
+
+					super.removePhysicalLink(unbound);
+					link.getBinding().add(this.cablePath);
 				}
 
 				startsite = endsite;
