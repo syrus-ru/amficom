@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.25 2005/07/19 13:11:56 krupenn Exp $
+ * $Id: CableController.java,v 1.26 2005/07/24 12:37:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/07/19 13:11:56 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/24 12:37:08 $
  * @module mapviewclient_v1
  */
 public final class CableController extends AbstractLinkController {
@@ -225,14 +226,13 @@ public final class CableController extends AbstractLinkController {
 	 * Создать новый объект привязки к линии.
 	 * @param cablePath прокладка кабеля
 	 * @param link лниия
-	 * @param creatorId текущий пользователь
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
 	public static CableChannelingItem generateCCI(
 			CablePath cablePath,
-			PhysicalLink link,
-			Identifier creatorId)
+			PhysicalLink link)
 	{
+		Identifier creatorId = LoginManager.getUserId();
 		CableChannelingItem cci = null;
 		try {
 			SiteNode startNode = (SiteNode )link.getStartNode();
