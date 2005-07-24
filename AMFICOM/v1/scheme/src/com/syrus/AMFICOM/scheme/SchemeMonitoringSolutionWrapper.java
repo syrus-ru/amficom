@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionWrapper.java,v 1.5 2005/07/12 08:40:54 bass Exp $
+ * $Id: SchemeMonitoringSolutionWrapper.java,v 1.6 2005/07/24 16:59:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,24 +12,18 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/12 08:40:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/24 16:59:56 $
  * @author $Author: bass $
- * @module scheme_v1
+ * @module scheme
  */
 public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper {
-	
-//	schememonitoringsolution.sql
-//	
-//	name VARCHAR2(32 CHAR) NOT NULL,
-//	description VARCHAR2(256 CHAR),
-//--
-//	price_usd NUMBER(10) NOT NULL,
-//	active NUMBER(1) NUT NULL,
-//	scheme_optimize_info_id VARCHAR2(32 CHAR),
-	
 	public static final String COLUMN_PRICE_USD = "price_usd";
+
 	public static final String COLUMN_ACTIVE = "active";
-	public static final String COLUMN_SCHEME_OPTIMIZE_INFO_ID = "scheme_optimize_info_id";
+
+	public static final String COLUMN_PARENT_SCHEME_ID = "parent_scheme_id";
+
+	public static final String COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID = "parent_scheme_optimize_info_id";
 
 	private static SchemeMonitoringSolutionWrapper instance;
 

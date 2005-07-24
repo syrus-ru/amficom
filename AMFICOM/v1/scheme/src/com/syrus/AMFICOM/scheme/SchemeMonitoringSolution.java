@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.51 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.52 2005/07/24 16:59:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,20 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -46,11 +51,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
 import com.syrus.util.Log;
 
 /**
- * #06 in hierarchy.
+ * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/22 15:09:40 $
- * @module scheme_v1
+ * @version $Revision: 1.52 $, $Date: 2005/07/24 16:59:56 $
+ * @module scheme
  */
 public final class SchemeMonitoringSolution
 		extends StorableObject
@@ -65,9 +70,14 @@ public final class SchemeMonitoringSolution
 
 	private boolean active;
 
+	private Identifier parentSchemeId;
+
 	/**
 	 * May be void, as <code>SchemeMonitoringSolution</code> may be used
-	 * just as a storage for {@link SchemePath}s.
+	 * just as a storage for {@link SchemePath}s. However, in this case we
+	 * do need information about the scheme, so only one of
+	 * {@code parentSchemeOptimizeInfoId} and {@link #parentSchemeId} can be
+	 * void at the same time.
 	 */
 	private Identifier parentSchemeOptimizeInfoId;
 
@@ -97,6 +107,7 @@ public final class SchemeMonitoringSolution
 	 * @param description
 	 * @param price
 	 * @param active
+	 * @param parentScheme
 	 * @param parentSchemeOptimizeInfo
 	 */
 	SchemeMonitoringSolution(final Identifier id, final Date created,
@@ -104,12 +115,16 @@ public final class SchemeMonitoringSolution
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final int price, final boolean active,
+			final Scheme parentScheme,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.active = active;
+		
+		assert parentScheme == null || parentSchemeOptimizeInfo == null : EXACTLY_ONE_PARENT_REQUIRED;
+		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
@@ -126,13 +141,31 @@ public final class SchemeMonitoringSolution
 	 *
 	 * @param creatorId
 	 * @param name
+	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
 	public static SchemeMonitoringSolution createInstance(
-			final Identifier creatorId, final String name)
-			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, false, null);
-	}	
+			final Identifier creatorId, final String name,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
+	throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, false, parentSchemeOptimizeInfo);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, int, boolean, Scheme)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeMonitoringSolution createInstance(
+			final Identifier creatorId, final String name,
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		return createInstance(creatorId, name, "", 0, false, parentScheme);
+	}
 
 	/**
 	 * @param creatorId
@@ -140,7 +173,7 @@ public final class SchemeMonitoringSolution
 	 * @param description
 	 * @param price
 	 * @param active
-	 * @param parentSchemeOptimizeInfo can be <code>null</code>.
+	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
 	public static SchemeMonitoringSolution createInstance(
@@ -148,19 +181,53 @@ public final class SchemeMonitoringSolution
 			final String description, final int price,
 			final boolean active,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeOptimizeInfo != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
+					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created, created, creatorId, creatorId,
 					0L, name, description, price, active,
-					parentSchemeOptimizeInfo);
+					null, parentSchemeOptimizeInfo);
+			schemeMonitoringSolution.markAsChanged();
+			return schemeMonitoringSolution;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param description
+	 * @param price
+	 * @param active
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeMonitoringSolution createInstance(
+			final Identifier creatorId, final String name,
+			final String description, final int price,
+			final boolean active, final Scheme parentScheme)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
+					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
+					created, created, creatorId, creatorId,
+					0L, name, description, price, active,
+					parentScheme, null);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
@@ -190,6 +257,7 @@ public final class SchemeMonitoringSolution
 	public Set<Identifiable> getDependencies() {
 		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.parentSchemeId);
 		dependencies.add(this.parentSchemeOptimizeInfoId);
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
@@ -212,9 +280,33 @@ public final class SchemeMonitoringSolution
 		return this.name;
 	}
 
+	Identifier getParentSchemeId() {
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		final boolean parentSchemeIdIsVoid = this.parentSchemeId.isVoid();
+		assert parentSchemeIdIsVoid ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+		assert parentSchemeIdIsVoid || this.parentSchemeId.getMajor() == SCHEME_CODE;
+		return this.parentSchemeId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeId()}.
+	 */
+	public Scheme getParentScheme() {
+		try {
+			return this.getParentSchemeOptimizeInfoId().isVoid()
+					? (Scheme) StorableObjectPool.getStorableObject(this.getParentSchemeId(), true)
+					: this.getParentSchemeOptimizeInfo().getParentScheme();
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+
 	Identifier getParentSchemeOptimizeInfoId() {
-		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeOptimizeInfoId.isVoid() || this.parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		final boolean parentSchemeOptimizeInfoIdIsVoid = this.parentSchemeOptimizeInfoId.isVoid();
+		assert this.parentSchemeId.isVoid() ^ parentSchemeOptimizeInfoIdIsVoid : OBJECT_BADLY_INITIALIZED;
+		assert parentSchemeOptimizeInfoIdIsVoid || this.parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
 		return this.parentSchemeOptimizeInfoId;
 	}
 
@@ -272,6 +364,7 @@ public final class SchemeMonitoringSolution
 				this.modifierId.getTransferable(),
 				this.version, this.name,
 				this.description, this.price, this.active,
+				this.parentSchemeId.getTransferable(),
 				this.parentSchemeOptimizeInfoId.getTransferable());
 	}
 
@@ -291,6 +384,7 @@ public final class SchemeMonitoringSolution
 	 * @param description
 	 * @param price
 	 * @param active
+	 * @param parentSchemeId
 	 * @param parentSchemeOptimizeInfoId
 	 */
 	synchronized void setAttributes(final Date created,
@@ -298,17 +392,21 @@ public final class SchemeMonitoringSolution
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final int price, final boolean active,
+			final Identifier parentSchemeId,
 			final Identifier parentSchemeOptimizeInfoId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeOptimizeInfoId != null: NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() ^ parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.active = active;
+		this.parentSchemeId = parentSchemeId;
 		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 	}
 
@@ -336,12 +434,57 @@ public final class SchemeMonitoringSolution
 		super.markAsChanged();
 	}
 
+	/**
+	 * @param parentSchemeOptimizeInfo
+	 */
 	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+		
 		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
-		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId))
+		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId)) {
+			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
+		}
+
+		if (this.parentSchemeOptimizeInfoId.isVoid()) {
+			/*
+			 * Erasing old object-type value, setting new object
+			 * value.
+			 */
+			this.parentSchemeId = VOID_IDENTIFIER;
+		} else if (newParentSchemeOptimizeInfoId.isVoid()) {
+			/*
+			 * Erasing old object value, preserving old object-type
+			 * value. This point is not assumed to be reached unless
+			 * initial object value has already been set (i. e.
+			 * there already is object-type value to preserve).
+			 */
+			this.parentSchemeId = this.getParentSchemeOptimizeInfo().getParentScheme().getId();
+		}
 		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @param parentScheme must be non-{@code null}.
+	 */
+	public void setParentScheme(final Scheme parentScheme) {
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
+
+		if (!this.parentSchemeOptimizeInfoId.isVoid()) {
+			this.getParentSchemeOptimizeInfo().setParentScheme(parentScheme);
+		} else {
+			final Identifier newParentSchemeId = parentScheme.getId();
+			if (this.parentSchemeId.equals(newParentSchemeId)) {
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				return;
+			}
+			this.parentSchemeId = newParentSchemeId;
+			super.markAsChanged();
+		}
 	}
 
 	public void setPrice(final int price) {
@@ -396,6 +539,7 @@ public final class SchemeMonitoringSolution
 		this.description = schemeMonitoringSolution.description;
 		this.price = schemeMonitoringSolution.priceUsd;
 		this.active = schemeMonitoringSolution.active;
+		this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 	}
 }

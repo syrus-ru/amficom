@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.11 2005/07/17 05:20:25 arseniy Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.12 2005/07/24 16:59:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,9 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:20:25 $
- * @module scheme_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/07/24 16:59:56 $
+ * @module scheme
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
 	
@@ -67,7 +67,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 					+ SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD + COMMA
 					+ SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_SCHEME_OPTIMIZE_INFO_ID;
+					+ SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID + COMMA
+					+ SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID;
 		}
 		return columns;
 	}
@@ -81,6 +82,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -102,6 +104,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ schemeMonitoringSolution.getPrice() + COMMA
 				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
+				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 		return sql;
 	}
@@ -124,6 +127,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.getPrice());
 		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.isActive() ? 1 : 0);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
 		return startParameterNumber;
 	}
@@ -142,7 +146,7 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		if (storableObject == null) {
 			Date created = new Date();
 			schemeMonitoringSolution = new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, 0, false, null);
+					created, created, null, null, 0L, null, null, 0, false, null, null);
 		} else {
 			schemeMonitoringSolution = fromStorableObject(storableObject);
 		}
@@ -155,7 +159,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD),
 				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) != 0,
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_SCHEME_OPTIMIZE_INFO_ID));
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID));
 		return schemeMonitoringSolution;
 	}
 }
