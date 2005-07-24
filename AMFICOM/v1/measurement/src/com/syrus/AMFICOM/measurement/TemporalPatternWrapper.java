@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.7 2005/06/22 10:22:59 bob Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.8 2005/07/24 15:30:14 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,21 +16,21 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/07/24 15:30:14 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class TemporalPatternWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_VALUE		= "value";
+	public static final String COLUMN_VALUE = "value";
 
-	private static TemporalPatternWrapper	instance;
+	private static TemporalPatternWrapper instance;
 
-	private List							keys;
+	private List keys;
 
 	private TemporalPatternWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_VALUE};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_VALUE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -50,6 +50,7 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
 		Object value = super.getValue(object, key);
 		if (value == null && object instanceof CronTemporalPattern) {
@@ -88,12 +89,13 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	@Override
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
