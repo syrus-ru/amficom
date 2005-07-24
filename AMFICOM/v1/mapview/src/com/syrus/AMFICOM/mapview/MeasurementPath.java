@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.33 2005/07/20 15:01:32 bass Exp $
+ * $Id: MeasurementPath.java,v 1.34 2005/07/24 17:14:09 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,13 +35,13 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.DataPackage.Kind;
+import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 
 /**
  * Элемент пути.
  *
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/07/20 15:01:32 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/07/24 17:14:09 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPath implements MapElement
@@ -382,7 +382,7 @@ public final class MeasurementPath implements MapElement
 			this.unsortedCablePaths.clear();
 			for (final PathElement pathElement : this.schemePath.getPathMembers()) {
 				switch (pathElement.getKind().value()) {
-					case Kind._SCHEME_ELEMENT:
+					case IdlKind._SCHEME_ELEMENT:
 						final SchemeElement schemeElement = (SchemeElement) pathElement.getAbstractSchemeElement();
 						final SiteNode site = this.mapView.findElement(schemeElement);
 						if (site != null) {
@@ -390,7 +390,7 @@ public final class MeasurementPath implements MapElement
 							// mPath.addCablePath(site);
 						}
 						break;
-					case Kind._SCHEME_LINK:
+					case IdlKind._SCHEME_LINK:
 						final SchemeLink schemeLink = (SchemeLink) pathElement.getAbstractSchemeElement();
 						final SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
 								schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
@@ -403,7 +403,7 @@ public final class MeasurementPath implements MapElement
 							// mPath.addCablePath(startSiteNode);
 						}
 						break;
-					case Kind._SCHEME_CABLE_LINK:
+					case IdlKind._SCHEME_CABLE_LINK:
 						final SchemeCableLink schemeCableLink = (SchemeCableLink) pathElement.getAbstractSchemeElement();
 						final CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
 						if (cablePath != null) {
