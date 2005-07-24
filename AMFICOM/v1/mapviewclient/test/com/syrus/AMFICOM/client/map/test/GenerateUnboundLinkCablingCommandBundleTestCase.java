@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.3 2005/07/20 15:01:33 bass Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.4 2005/07/24 12:28:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -296,9 +296,9 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 
-		cci = cablePath.getBinding().getCCI(unboundLink1);
-		CableChannelingItem cci1 = cablePath.getBinding().getCCI(greneratedLink);
-		CableChannelingItem cci2 = cablePath.getBinding().getCCI(unboundLink2);
+		cci = cablePath.getFirstCCI(unboundLink1);
+		CableChannelingItem cci1 = cablePath.getFirstCCI(greneratedLink);
+		CableChannelingItem cci2 = cablePath.getFirstCCI(unboundLink2);
 
 		assertNull(cci);
 		assertTrue(cciList.contains(cci1));
@@ -399,7 +399,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
-		assertSame(cablePath.getBinding().getCCI(generatedLink), cci);
+		assertSame(cablePath.getFirstCCI(generatedLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(generatedLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
@@ -504,9 +504,9 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
-		assertSame(cablePath.getBinding().getCCI(this.link1), cci1);
-		assertSame(cablePath.getBinding().getCCI(generatedLink), cci2);
-		assertSame(cablePath.getBinding().getCCI(this.link4), cci3);
+		assertSame(cablePath.getFirstCCI(this.link1), cci1);
+		assertSame(cablePath.getFirstCCI(generatedLink), cci2);
+		assertSame(cablePath.getFirstCCI(this.link4), cci3);
 		assertEquals(cablePath.getLinks().size(), 3);
 		assertTrue(cablePath.getLinks().contains(generatedLink));
 		assertTrue(cablePath.getLinks().contains(this.link1));

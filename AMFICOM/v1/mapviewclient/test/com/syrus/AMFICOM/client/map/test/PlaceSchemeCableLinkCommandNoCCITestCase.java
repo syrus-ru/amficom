@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.5 2005/07/20 15:01:33 bass Exp $
+ * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.6 2005/07/24 12:28:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -147,7 +147,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
-		assertSame(cablePath.getBinding().getCCI(unboundLink), cci);
+		assertSame(cablePath.getFirstCCI(unboundLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
@@ -233,7 +233,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), unboundSite);
-		assertSame(cablePath.getBinding().getCCI(unboundLink), cci);
+		assertSame(cablePath.getFirstCCI(unboundLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
@@ -319,7 +319,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 		assertSame(cablePath.getStartNode(), unboundSite); 
 		assertSame(cablePath.getEndNode(), this.building2);
-		assertSame(cablePath.getBinding().getCCI(unboundLink), cci);
+		assertSame(cablePath.getFirstCCI(unboundLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
@@ -420,7 +420,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 		assertSame(cablePath.getStartNode(), unboundSite1); 
 		assertSame(cablePath.getEndNode(), unboundSite2);
-		assertSame(cablePath.getBinding().getCCI(unboundLink), cci);
+		assertSame(cablePath.getFirstCCI(unboundLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);

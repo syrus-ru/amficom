@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.3 2005/07/20 15:01:33 bass Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.4 2005/07/24 12:28:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -158,8 +158,8 @@ public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTe
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
-		assertSame(cablePath.getBinding().getCCI(unboundLink1), cci1);
-		assertSame(cablePath.getBinding().getCCI(unboundLink2), cci2);
+		assertSame(cablePath.getFirstCCI(unboundLink1), cci1);
+		assertSame(cablePath.getFirstCCI(unboundLink2), cci2);
 		assertEquals(cablePath.getLinks().size(), 2);
 		assertTrue(cablePath.getLinks().contains(unboundLink1));
 		assertTrue(cablePath.getLinks().contains(unboundLink2));

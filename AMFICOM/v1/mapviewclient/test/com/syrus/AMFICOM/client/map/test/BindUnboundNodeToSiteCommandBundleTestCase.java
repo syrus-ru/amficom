@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.2 2005/07/20 15:01:33 bass Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.3 2005/07/24 12:28:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -171,7 +171,7 @@ public class BindUnboundNodeToSiteCommandBundleTestCase extends SchemeBindingTes
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), unboundSite);
-		assertSame(cablePath.getBinding().getCCI(unboundLink), cci);
+		assertSame(cablePath.getFirstCCI(unboundLink), cci);
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
