@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.107 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: Equipment.java,v 1.108 2005/07/24 14:55:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.108 $, $Date: 2005/07/24 14:55:43 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -413,7 +413,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	/**
 	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
 	 */
-	public Set getMonitoredElementIds() {
+	public Set<Identifier> getMonitoredElementIds() {
 		// TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.78 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.79 2005/07/24 14:55:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.78 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.79 $, $Date: 2005/07/24 14:55:43 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -256,7 +256,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	/**
 	 * @see com.syrus.AMFICOM.configuration.MonitoredDomainMember#getMonitoredElementIds()
 	 */
-	public Set getMonitoredElementIds() {
+	public Set<Identifier> getMonitoredElementIds() {
 		//TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
 	}
