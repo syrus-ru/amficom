@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.58 2005/07/22 15:09:40 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.59 2005/07/24 12:29:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/22 15:09:40 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/24 12:29:34 $
  * @module scheme_v1
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -120,6 +120,7 @@ public final class SchemeProtoElement extends StorableObject
 
 		try {
 			DatabaseContext.getDatabase(SCHEMEPROTOELEMENT_CODE).retrieve(this);
+			this.parentSet = true;
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -889,6 +890,8 @@ public final class SchemeProtoElement extends StorableObject
 		this.schemeCellId = schemeCellId;
 		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
 		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+
+		this.parentSet = true;
 	}
 
 	/**
@@ -1168,6 +1171,8 @@ public final class SchemeProtoElement extends StorableObject
 		this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
 		this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
 		this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
+
+		this.parentSet = true;
 	}
 
 	/*-********************************************************************
