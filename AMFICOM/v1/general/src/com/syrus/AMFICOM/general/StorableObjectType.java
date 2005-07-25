@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.25 2005/07/03 19:16:25 bass Exp $
+ * $Id: StorableObjectType.java,v 1.26 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/07/03 19:16:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/07/25 20:47:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -39,7 +39,7 @@ public abstract class StorableObjectType extends StorableObject {
 			final Date modified,
 			final Identifier creator_id,
 			final Identifier modifier_id,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super(id, created, modified, creator_id, modifier_id, version);
@@ -114,7 +114,7 @@ public abstract class StorableObjectType extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);

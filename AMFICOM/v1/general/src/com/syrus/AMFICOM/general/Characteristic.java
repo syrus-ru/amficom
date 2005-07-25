@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.46 2005/07/03 19:16:25 bass Exp $
+ * $Id: Characteristic.java,v 1.47 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/03 19:16:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/07/25 20:47:00 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -70,7 +70,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 	 */
 	Characteristic(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final CharacteristicType type,
 			final String name,
 			final String description,
@@ -133,7 +133,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 		try {
 			final Characteristic characteristic = new Characteristic(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					type,
 					name,
 					description,
@@ -185,7 +185,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
@@ -308,7 +308,7 @@ public final class Characteristic extends StorableObject implements TypedObject 
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final CharacteristicType type,
 			final String name,
 			final String description,

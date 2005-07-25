@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.32 2005/07/24 17:34:32 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.33 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/24 17:34:32 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -92,19 +92,19 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 		if (characteristicType == null) {
 			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-																	null,
-																	0L,
-																	null,
-																	null,
-																	null,
-																	DataType.RAW,
-																	0);			
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					null,
+					null,
+					null,
+					DataType.RAW,
+					0);
 		}
 		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),

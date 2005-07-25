@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.43 2005/07/17 05:17:13 arseniy Exp $
+ * $Id: ParameterType.java,v 1.44 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/07/17 05:17:13 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -64,7 +64,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 */
 	ParameterType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -98,7 +98,7 @@ public final class ParameterType extends StorableObjectType implements Character
 		try {
 			final ParameterType parameterType = new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name,
@@ -156,7 +156,7 @@ public final class ParameterType extends StorableObjectType implements Character
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
@@ -206,7 +206,7 @@ public final class ParameterType extends StorableObjectType implements Character
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,

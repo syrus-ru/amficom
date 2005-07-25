@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.19 2005/07/24 18:42:49 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.20 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/24 18:42:49 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -88,10 +88,21 @@ public final class ObjectGroupEntities {
 	}
 
 	/**
+	 * @todo Implement
+	 * @param groupCode
+	 * @return
+	 */
+	public static short[] getEntityCodes(final short groupCode) {
+		assert isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
+		return new short[] {1};
+	}
+
+	/**
 	 * Here and below, an assertion is made in order to ensure that entity
 	 * code is not only within the valid range, but also refers to a valid
 	 * entity name.
 	 */
+
 	public static boolean isInGeneralGroup(final short entityCode) {
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		return entityCode >= ObjectEntities.GENERAL_MIN_CODE

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.167 2005/07/24 17:33:48 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.168 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.167 $, $Date: 2005/07/24 17:33:48 $
+ * @version $Revision: 1.168 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -79,9 +79,6 @@ public abstract class StorableObjectDatabase {
 	public static final int SIZE_NAME_COLUMN = 64;
 	public static final int SIZE_DESCRIPTION_COLUMN = 256;
 
-	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
-	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
-
 	/**
 	 * @see "ORA-01795"
 	 */
@@ -91,11 +88,6 @@ public abstract class StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 	private String retrieveQuery;
 
-	private static Set<Identifier> lockedObjectIds;
-
-	static {
-		lockedObjectIds = Collections.synchronizedSet(new HashSet<Identifier>());
-	}
 
 	// //////////////////// common /////////////////////////
 
@@ -164,7 +156,7 @@ public abstract class StorableObjectDatabase {
 				+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getModifierId()) + COMMA
-				+ Long.toString(storableObject.getVersion()) + COMMA
+				+ Long.toString(storableObject.getVersion().longValue()) + COMMA
 				+ this.getUpdateSingleSQLValuesTmpl(storableObject);
 	}
 
@@ -213,7 +205,7 @@ public abstract class StorableObjectDatabase {
 		preparedStatement.setTimestamp(++i, new Timestamp(storableObject.getModified().getTime()));
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getCreatorId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, storableObject.getModifierId());
-		preparedStatement.setLong(++i, storableObject.getVersion());
+		preparedStatement.setLong(++i, storableObject.getVersion().longValue());
 		return this.setEntityForPreparedStatementTmpl(storableObject, preparedStatement, i);
 	}
 
@@ -230,103 +222,6 @@ public abstract class StorableObjectDatabase {
 	 */
 	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
-
-	// ////////////////////refresh /////////////////////////
-
-	/**
-	 *
-	 * @param storableObjects
-	 * @return List&lt;Identifier&gt; of changed storable objects
-	 * @throws RetrieveObjectException
-	 */
-	public final Set<Identifier> refresh(final Set<?  extends StorableObject> storableObjects) throws RetrieveObjectException {
-		if (storableObjects == null || storableObjects.isEmpty())
-			return Collections.emptySet();
-
-		Set<Identifier> changedObjectsIds = new HashSet<Identifier>();
-		StorableObject storableObject;
-		Identifier id;
-		Map<Identifier, StorableObject> storableObjectsMap = new HashMap<Identifier, StorableObject>();
-
-		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_VERSION
-				+ SQL_FROM + this.getEntityName()
-				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
-		Set<Identifier> refreshObjectIds = new HashSet<Identifier>();
-		for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
-			storableObject = it.next();
-			id = storableObject.getId();
-			storableObjectsMap.put(id, storableObject);
-
-			long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
-			while (lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
-				try {
-					Thread.sleep(LOCK_TIME_WAIT);
-				} catch (InterruptedException ie) {
-					Log.errorException(ie);
-				}
-			}
-
-			if (!lockedObjectIds.contains(id)) {
-				lockedObjectIds.add(id);
-				refreshObjectIds.add(id);
-
-				stringBuffer.append(SQL_OR);
-				stringBuffer.append(OPEN_BRACKET);
-				stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
-				stringBuffer.append(EQUALS);
-				stringBuffer.append(DatabaseIdentifier.toSQLString(id));
-				stringBuffer.append(SQL_AND);
-				stringBuffer.append(StorableObjectWrapper.COLUMN_VERSION);
-				stringBuffer.append(NOT_EQUALS);
-				stringBuffer.append(storableObject.getVersion());
-				stringBuffer.append(CLOSE_BRACKET);
-			} else {
-				lockedObjectIds.removeAll(refreshObjectIds);
-				throw new RetrieveObjectException("Cannot obtain lock on object " + this.getEntityName() + " '" + id + "'");
-			}
-		}
-		final String sql = stringBuffer.toString();
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.refresh | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			long dbversion;
-			while (resultSet.next()) {
-				id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
-				storableObject = storableObjectsMap.get(id);
-				dbversion = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
-				// Refresh only objects with older version, then in DB
-				if (storableObject.hasOlderVersion(dbversion))
-					changedObjectsIds.add(id);
-			}
-		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName() + "Database.refresh | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			lockedObjectIds.removeAll(refreshObjectIds);
-
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-
-		return changedObjectsIds;
-	}
 
 	// ////////////////////// retrieve /////////////////////////
 
@@ -556,11 +451,11 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	final Map<Identifier, Long> retrieveVersions(final Set<Identifier> ids) throws RetrieveObjectException {
+	final Map<Identifier, StorableObjectVersion> retrieveVersions(final Set<Identifier> ids) throws RetrieveObjectException {
 		assert StorableObject.hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 		final String tableName = this.getEntityName();
 
-		final Map<Identifier, Long> versionsMap = new HashMap<Identifier, Long>();
+		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>();
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
@@ -577,7 +472,7 @@ public abstract class StorableObjectDatabase {
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
 				final long version = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
-				versionsMap.put(id, new Long(version));
+				versionsMap.put(id, new StorableObjectVersion(version));
 			}
 		}
 		catch (SQLException sqle) {
@@ -602,10 +497,9 @@ public abstract class StorableObjectDatabase {
 		}
 
 		if (versionsMap.size() < ids.size()) {
-			final Long illegalVersion = new Long(StorableObject.VERSION_ILLEGAL);
 			for (final Identifier id : ids) {
 				if (!versionsMap.containsKey(id)) {
-					versionsMap.put(id, illegalVersion);
+					versionsMap.put(id, StorableObjectVersion.ILLEGAL_VERSION);
 				}
 			}
 		}
@@ -1023,6 +917,25 @@ public abstract class StorableObjectDatabase {
 			throw new UpdateObjectException(e);
 		}
 	}
+
+
+	// ////////////////////refresh /////////////////////////
+
+	public final Set<Identifier> getOlderVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
+			throws RetrieveObjectException {
+		final Set<Identifier> ids = versionsMap.keySet();
+		final Map<Identifier, StorableObjectVersion> dbVersionsMap = this.retrieveVersions(ids);
+		final Set<Identifier> olderVersionIds = new HashSet<Identifier>();
+		for (final Identifier id : ids) {
+			final StorableObjectVersion version = versionsMap.get(id);
+			final StorableObjectVersion dbVersion = dbVersionsMap.get(id);
+			if (version.isOlder(dbVersion)) {
+				olderVersionIds.add(id);
+			}
+		}
+		return olderVersionIds;
+	}
+
 
 	// //////////////////// delete /////////////////////////
 

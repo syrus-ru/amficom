@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectLoader.java,v 1.1 2005/07/24 17:35:44 arseniy Exp $
+ * $Id: ObjectLoader.java,v 1.2 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/24 17:35:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -21,11 +21,11 @@ public interface ObjectLoader {
 
 	Set loadStorableObjectsButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition) throws ApplicationException;
 
-	Map<Identifier, Long> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException;
+	Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException;
 
 	void saveStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
 
-	Set refresh(Set<? extends StorableObject> objects) throws ApplicationException;
+	Set<Identifier> refresh(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException;
 
 	void delete(final Set<? extends Identifiable> identifiables);
 

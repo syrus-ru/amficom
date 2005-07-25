@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.41 2005/07/13 16:05:00 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.42 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/13 16:05:00 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/25 20:47:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -60,7 +60,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	 */
 	CharacteristicType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -117,7 +117,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 		try {
 			CharacteristicType characteristicType = new CharacteristicType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CHARACTERISTIC_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name,
@@ -146,7 +146,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
@@ -197,7 +197,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,

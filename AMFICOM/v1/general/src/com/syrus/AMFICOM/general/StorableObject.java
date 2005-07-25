@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.79 2005/07/24 14:59:46 arseniy Exp $
+ * $Id: StorableObject.java,v 1.80 2005/07/25 20:47:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,10 @@ package com.syrus.AMFICOM.general;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -32,7 +33,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.79 $, $Date: 2005/07/24 14:59:46 $
+ * @version $Revision: 1.80 $, $Date: 2005/07/25 20:47:00 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -45,13 +46,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	protected Identifier creatorId;
 	protected Date modified;
 	protected Identifier modifierId;
-	protected long version;
+	protected StorableObjectVersion version;
 
 	private boolean changed;
 
 	private Date savedModified;
 	private Identifier savedModifierId;
-	private long savedVersion;
+	private StorableObjectVersion savedVersion;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -85,7 +86,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version) {
+			final StorableObjectVersion version) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -97,7 +98,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = 0;
+		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
 	}
 	
 	/**
@@ -114,13 +115,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.modified = new Date(transferable.modified);
 		this.creatorId = new Identifier(transferable.creatorId);
 		this.modifierId = new Identifier(transferable.modifierId);
-		this.version = transferable.version;
+		this.version = new StorableObjectVersion(transferable.version);
 
 		this.changed = false;
 
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = 0;		
+		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;		
 	}
 	
 	/**
@@ -147,28 +148,17 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	public abstract Set<Identifiable> getDependencies();
 
 	/**
-	 * Returns structure to be transmitted via CORBA. Should be declared
-	 * final as soon as <code>Marker</code>, <code>UnboundLink</code> and
-	 * <code>UnboundNode</code> stop overriding it.
-	 *
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * @param orb
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
-	public IdlStorableObject getHeaderTransferable(@SuppressWarnings("unused") final ORB orb) {
+	public IdlStorableObject getTransferable(final ORB orb) {
 		return IdlStorableObjectHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version);
-	}
-
-	/**
-	 * @param orb
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
-	 */
-	public IdlStorableObject getTransferable(final ORB orb) {
-		return this.getHeaderTransferable(orb);
+				this.version.longValue());
 	}
 
 	/**
@@ -186,7 +176,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return this.modifierId;
 	}
 
-	public final long getVersion() {
+	public final StorableObjectVersion getVersion() {
 		return this.version;
 	}
 
@@ -215,14 +205,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		}
 	}
 
-	protected final void setUpdated(Identifier modifierId) {
+	protected final void setUpdated(final Identifier modifierId) {
 		this.savedModified = this.modified;
 		this.savedModifierId = this.modifierId;
-		this.savedVersion = this.version;
+		this.savedVersion = this.version.clone();
 
 		this.modified = new Date(System.currentTimeMillis());
 		this.modifierId = modifierId;
-		this.incrementVersion();
+		this.version.increment();
 		this.changed = false;
 	}
 
@@ -232,14 +222,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	protected final void cleanupUpdate() {
 		this.savedModified = null;
 		this.savedModifierId = null;
-		this.savedVersion = VERSION_ILLEGAL;
+		this.savedVersion = StorableObjectVersion.ILLEGAL_VERSION;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected final void rollbackUpdate() {
-		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == VERSION_ILLEGAL) {
+		if (this.savedModified == null || this.savedModifierId == null || this.savedVersion == StorableObjectVersion.ILLEGAL_VERSION) {
 			Log.errorMessage("Cannot rollback update of object: '" + this.id + "', entity: '" + ObjectEntities.codeToString(this.id.getMajor())
 					+ "' -- saved values are in illegal states!");
 			return;
@@ -255,38 +245,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	private final void incrementVersion() {
-		if (this.version < Long.MAX_VALUE) {
-			this.version++;
-			if (this.version == VERSION_ILLEGAL)
-				this.version++;
-		} else
-			this.version = Long.MIN_VALUE;
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public final boolean hasNewerVersion(long version1) {
-		/* due to operate with long we cannot exceed max interval */
-		if (Math.abs(this.version - version1) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
-			return (this.version > version1);
-		return (this.version < version1);
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public final boolean hasOlderVersion(long version1) {
-		/* due to operate with long we cannot exceed max interval */
-		if (Math.abs(this.version - version1) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
-			return (this.version < version1);
-		return (this.version > version1);
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 *
 	 * @param created
 	 * @param modified
@@ -298,7 +256,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version) {
+			final StorableObjectVersion version) {
 		assert created != null && modified != null && creatorId != null
 				&& modifierId != null;
 		this.created = created;
@@ -333,39 +291,28 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * Initialize version vith 0L, like for all newly created
 		 * objects.
 		 */
-		clone.version = 0L;
+		clone.version = StorableObjectVersion.createInitial();
 		clone.markAsChanged();
 		return clone;
 	}
 
-	public static final IdlStorableObject[] createHeadersTransferable(final ORB orb,
-			final Collection< ? extends StorableObject> storableObjects) {
-		assert storableObjects != null: ErrorMessages.NON_NULL_EXPECTED;
+	public static final IdlStorableObject[] createTransferables(final Set<? extends StorableObject> storableObjects, final ORB orb) {
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final IdlStorableObject[] headersT = new IdlStorableObject[storableObjects.size()];
+		final IdlStorableObject[] transferables = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
-		for (final Iterator< ? extends StorableObject> it = storableObjects.iterator(); it.hasNext(); i++) {
-			final StorableObject storableObject = it.next();
-			headersT[i] = storableObject.getHeaderTransferable(orb);
+		for (final StorableObject storableObject : storableObjects) {
+			transferables[i++] = storableObject.getTransferable(orb);
 		}
-
-		return headersT;
+		return transferables;
 	}
 
-	public static final IdlStorableObject[] allocateArrayOfTransferables(
-			final short entityCode,
-			final int length)
-			throws CreateObjectException {
-		final StorableObjectFactory factory
-				= (StorableObjectFactory) StorableObjectPool.ENTITY_CODE_FACTORY_MAP.get(entityCode);
-		if (factory == null) {
-			throw new CreateObjectException(
-					"Unable to allocate an array of transferables for type: "
-					+ ObjectEntities.codeToString(entityCode)
-					+ '(' + entityCode
-					+ ") since the corresponding factory was not found");
+	public static final Map<Identifier, StorableObjectVersion> createVersionsMap(final Set<? extends StorableObject> storableObjects) {
+		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>();
+		for (final StorableObject storableObject : storableObjects) {
+			versionsMap.put(storableObject.id, storableObject.version);
 		}
-		return factory.allocateArrayOfTransferables(length);
+		return versionsMap;
 	}
 
 	/**
@@ -528,41 +475,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		assert hasSingleGroupEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_GROUP;
 
 		return ObjectGroupEntities.getGroupCode(identifiables.iterator().next().getId().getMajor());
-	}
-
-	/**
-	 * Update headers of every StorableObject from supplied set,
-	 * using corresponding header from supplied array.
-	 * NOTE: This method removes updated objects from the supplied set;
-	 * if you are plannig to use the set <code>storableObjects</code> after this method invocation
-	 *  - supply a copy of your set to this method instead of passing your set itself.
-	 * @param storableObjects
-	 * @param headers
-	 */
-	protected static final void updateHeaders(final Set<? extends StorableObject> storableObjects, final IdlStorableObject[] headers) {
-		for (int i = 0; i < headers.length; i++) {
-			final Identifier id = new Identifier(headers[i].id);
-			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = it.next();
-				if (storableObject.getId().equals(id)) {
-					storableObject.updateFromHeaderTransferable(headers[i]);
-					it.remove();
-				}
-			}
-		}
-	}
-
-	/**
-	 * This method called only when client succesfully updated object
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @param sot
-	 */
-	private final void updateFromHeaderTransferable(IdlStorableObject sot) {
-		this.modified = new Date(sot.modified);
-		this.modifierId = new Identifier(sot.modifierId);
-		if (this.version != sot.version || (this.version == 0 && sot.version == 0))
-			this.changed = false;
-		this.version = sot.version;
 	}
 
 }
