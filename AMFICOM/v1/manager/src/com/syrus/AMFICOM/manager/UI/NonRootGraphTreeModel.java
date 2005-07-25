@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.1 2005/07/25 05:58:20 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.2 2005/07/25 11:08:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/25 05:58:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/25 11:08:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,22 +87,24 @@ public class NonRootGraphTreeModel implements TreeModel {
 					if (bean == null || !this.availableCodenames.contains(bean.getCodeName())) {
 						continue;
 					}
-					System.out.println(".refreshFirstLevel() | port:" + port);
+//					System.out.println(".refreshFirstLevel() | port:" + port);
 					
 					List<Port> sources = this.direct ? port.getSources() : port.getTargets(); 
 					for (Port port2 : sources) {
 						
-						System.out.println(".refreshFirstLevel() | source:" + port2 + ", " + rootPort);
+//						System.out.println(".refreshFirstLevel() | source:" + port2 + ", " + rootPort);
 						
 						if (port2 == rootPort) {									
 							this.firstLevel.add(port);
-							System.out.println(".refreshFirstLevel() | add:" + port);
+//							System.out.println(".refreshFirstLevel() | add:" + port);
 						}
 					}
 					
-					if (sources.isEmpty() && this.root == null) {
+					if (sources.isEmpty() 
+//							&& this.root == null
+							) {
 						this.firstLevel.add(port);
-						System.out.println(".refreshFirstLevel() | sources empty, add:" + port);
+//						System.out.println(".refreshFirstLevel() | sources empty, add:" + port);
 					}
 				
 				}

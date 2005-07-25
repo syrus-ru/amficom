@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.12 2005/07/25 05:58:53 bob Exp $
+ * $Id: JGraphText.java,v 1.13 2005/07/25 11:08:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/25 11:08:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -433,9 +433,13 @@ public class JGraphText implements GraphSelectionListener {
 
 					mcmButton.setEnabled(false);
 					
-					treeModel.removeAllAvailableCodenames();
-					treeModel.addAvailableCodename("Domain");
-					treeModel.addAvailableCodename("Net");
+//					treeModel.removeAllAvailableCodenames();
+//					treeModel.addAvailableCodename("Domain");
+//					treeModel.addAvailableCodename("Net");
+					
+//					graph.showOnlyDescendants((DefaultGraphCell) cell);
+					showOnly(new String[] {"Net", "Domain"});
+					treeModel.setRoot(null);
 				} 
 				
 			}
@@ -447,16 +451,42 @@ public class JGraphText implements GraphSelectionListener {
 	public void showOnly(String[] names) {
 		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		GraphModel model = this.graph.getModel();
-		CellView[] cellViews = graphLayoutCache.getCellViews();
-		for(CellView cellView: cellViews) {
-			DefaultGraphCell cell = (DefaultGraphCell) cellView.getCell();
-			if (model.isPort(cell)) {
-				MPort port = (MPort)cell;
-				Object userObject = port.getUserObject();
+		
+		
+//		CellView[] cellViews = graphLayoutCache.getCellViews();
+//		for(CellView cellView: cellViews) {
+//			DefaultGraphCell cell = (DefaultGraphCell) cellView.getCell();
+//			if (model.isPort(cell)) {
+//				MPort port = (MPort)cell;
+//				Object userObject = port.getUserObject();
+//				boolean hide = true;
+//				
+//				if (userObject instanceof AbstractBean) {
+//					AbstractBean bean = (AbstractBean)userObject;
+//					String codeName = bean.getCodeName();
+//					for (String name : names) {
+//						if (name.equals(codeName)) {
+//							hide = false;
+//							break;
+//						}
+//					}
+//					System.out.println("JGraphText.showOnly() | bean " + bean.getCodeName() + " hide:" + hide );
+//				} 
+//				
+//				graphLayoutCache.setVisible(cell.getParent(), !hide);
+//				
+//				System.out.println("JGraphText.showOnly() | " + cell + ", hide is " + hide);
+//			}
+//		}
+		
+		for(int i = 0; i<model.getRootCount(); i++) {
+			Object rootAt = model.getRootAt(i);
+			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
+				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
+				AbstractBean bean = port.getBean();				
 				boolean hide = true;
 				
-				if (userObject instanceof AbstractBean) {
-					AbstractBean bean = (AbstractBean)userObject;
+				if (bean != null) {
 					String codeName = bean.getCodeName();
 					for (String name : names) {
 						if (name.equals(codeName)) {
@@ -464,14 +494,12 @@ public class JGraphText implements GraphSelectionListener {
 							break;
 						}
 					}
-					System.out.println("JGraphText.showOnly() | bean " + bean.getCodeName() + " hide:" + hide );
-				} 
-				if (hide) {
-					graphLayoutCache.setVisible(cell.getParent(), false);
 				}
 				
-//				System.out.println("JGraphText.showOnly() | " + cell);
+				graphLayoutCache.setVisible(port.getParent(), !hide);
 			}
+			
+			
 		}
 		
 		this.treeModel.removeAllAvailableCodenames();
@@ -486,100 +514,43 @@ public class JGraphText implements GraphSelectionListener {
 	
 	public void hideTillCell(final MPort startPort, 
 	                         final MPort port) {
+		
+		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		graphLayoutCache.setVisible(startPort.getParent(), false);
+
 		if (startPort == port) {
 //			System.err.println("JGraphText.hideTillCell() | startPort == port: " + startPort);
 			return;
 		}
 		
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		graphLayoutCache.setVisible(startPort.getParent(), false);
-		
 //		System.out.println("JGraphText.hideTillCell() | startPort " + startPort);
 		
-		for(Object oEdge: startPort.getEdges()) {
-			Edge edge = (Edge)  oEdge;			
-			MPort sourcePort = this.direct ? (MPort) edge.getSource() : (MPort) edge.getTarget(); 
-			MPort targetPort = this.direct ? (MPort) edge.getTarget() : (MPort) edge.getSource();
-			
-			if (sourcePort == startPort) {
-//				System.out.println("JGraphText.hideTillCell() | sourcePort " + sourcePort);
-				
-				
-				
-				
-				this.hideTillCell(targetPort, port);
-			}
-			
-			
+		List<Port> targets = (this.direct ? startPort.getTargets() : startPort.getSources());
+		
+		for(Port targetPort: targets) {			
+				this.hideTillCell((MPort) targetPort, port);
 		}
 	}
 	
 	public void showOnlyDescendants(final DefaultGraphCell cell) {		
 		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		
-//		MPort port = (MPort) cell.getChildAt(0);
-//
-//		{
-//			MPort rootPort = (MPort) this.treeModel.getRoot();
-//			for(Object oEdge: rootPort.getEdges()) {
-//				Edge edge = (Edge)  oEdge;
-//				MPort sourcePort = this.direct ? (MPort) edge.getSource() : (MPort) edge.getTarget(); 
-//				MPort targetPort = this.direct ? (MPort) edge.getTarget() : (MPort) edge.getSource();
-//				
-////				System.out.println("JGraphText.showOnlyDescendants() | sourcePort " + sourcePort);
-////				System.out.println("JGraphText.showOnlyDescendants() | targetPort " + targetPort);				
-//				if (sourcePort == rootPort) {
-//					
-//					Set targetEdges = targetPort.getEdges();
-//					int parentReference = 0;
-//					for(Object otEdge: targetEdges) {
-//						Edge targetEdge = (Edge)  otEdge;
-//						MPort tSourcePort = this.direct ? (MPort) targetEdge.getSource() : (MPort) targetEdge.getTarget(); 
-//						MPort tTargetPort = this.direct ? (MPort) targetEdge.getTarget() : (MPort) targetEdge.getSource();
-//						if (tTargetPort == targetPort) {
-////							System.out.println("JGraphText.showOnlyDescendants() source of " + targetPort + " is " + tSourcePort);
-//							parentReference++;
-//						}
-//					}
-//					System.out.println("JGraphText.showOnlyDescendants() | " + targetPort + ", " + parentReference);
-//					if (parentReference == 1) {
-////						System.out.println("JGraphText.showOnlyDescendants() | start from " + targetPort);
-//						this.hideTillCell(targetPort, port);
-//					}
-//				}
-//			}
-//		}
-//		
-//		for(Object oEdge: port.getEdges()) {
-//			Edge edge = (Edge)  oEdge;			
-//			MPort sourcePort = this.direct ? (MPort) edge.getSource() : (MPort) edge.getTarget(); 
-//			MPort targetPort = this.direct ? (MPort) edge.getTarget() : (MPort) edge.getSource();
-//			
-//			if (!this.direct) {
-////				if (targetPort == port) {
-////					// go down child
-////				} else {
-////					
-////					
-////					graphLayoutCache.setVisible(targetPort.getParent(), false);
-////				}
-//			}
-//			
-//			System.out.println("JGraphText.showOnlyDescendants() | sourcePort " + sourcePort);
-//			System.out.println("JGraphText.showOnlyDescendants() | targetPort " + targetPort);
-//			System.out.println("JGraphText.showOnlyDescendants() | port " + port);
-//			
-//			if (targetPort == port) {
-//				graphLayoutCache.setVisible(sourcePort.getParent(), false);
-//
-//				
-//
-//			}
-//			
-//		}
+		GraphModel model = this.graph.getModel();		
 		
-		System.out.println("JGraphText.showOnlyDescendants() | " + cell);
-		// XXX
+		MPort selectedPort = (MPort) cell.getChildAt(0);
+		
+		for(int i = 0; i<model.getRootCount(); i++) {
+			Object rootAt = model.getRootAt(i);
+			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
+				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
+				List<Port> sources = this.direct ? port.getSources() : port.getTargets();
+				if (sources.isEmpty()) {
+					System.out.println("JGraphText.showOnlyDescendants() | empty sources have " + rootAt + '[' + rootAt.getClass().getName() + ']');
+					this.hideTillCell(port, selectedPort);
+				}
+			}
+			
+		}
 		this.treeModel.setRoot(cell);
 	}
 	
@@ -1233,6 +1204,9 @@ public class JGraphText implements GraphSelectionListener {
 				// TODO
 //				// Find Cell in Model Coordinates
 				DefaultGraphCell cell = (DefaultGraphCell) graph.getFirstCellForLocation(e.getX(), e.getY());
+				if (cell == null) {
+					return;
+				}
 				System.out.println("MyMarqueeHandler.mousePressed() | cell:" + cell);
 				if (cell.getAllowsChildren()) {
 					MPort port = (MPort) cell.getChildAt(0);

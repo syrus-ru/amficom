@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.3 2005/07/25 05:58:53 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.4 2005/07/25 11:08:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/25 11:08:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -65,7 +65,7 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 						public void actionPerformed(ActionEvent e) {
 							
 							graph.domainButton.setEnabled(false);
-							graph.netButton.setEnabled(true);
+							graph.netButton.setEnabled(false);
 							
 							graph.userButton.setEnabled(true);
 
