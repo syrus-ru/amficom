@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.31 2005/07/24 17:40:35 bass Exp $
+ * $Id: SchemeUtils.java,v 1.32 2005/07/25 12:20:48 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/07/24 17:40:35 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/25 12:20:48 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -125,19 +125,6 @@ public class SchemeUtils {
 			}
 		}
 		return schemeCableLinks;
-	}
-
-	public static Set<SchemePath> getTopologicalPaths(final Scheme scheme) {
-		final Set<SchemePath> schemePaths = new HashSet<SchemePath>(scheme.getCurrentSchemeMonitoringSolution().getSchemePaths());
-		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement.getScheme();
-			if (scheme1 != null && scheme1.getKind() == CABLE_SUBNETWORK) {
-				for (final SchemePath schemePath : getTopologicalPaths(scheme1)) {
-					schemePaths.add(schemePath);
-				}
-			}
-		}
-		return schemePaths;
 	}
 
 	public static SchemeElement getTopologicalElement(final Scheme scheme, final SchemeElement schemeElement) {
@@ -334,26 +321,22 @@ public class SchemeUtils {
 		return length;
 	}
 
-	public static double getPhysicalLength(PathElement pe) {
-		switch (pe.getKind().value()) {
+	public static double getPhysicalLength(final PathElement pathElement) {
+		switch (pathElement.getKind().value()) {
 			case _SCHEME_CABLE_LINK:
 			case _SCHEME_LINK:
-				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).
+				return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).
 						getPhysicalLength();
 			default:
 				return 0;
 		}
 	}
 
-	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public static void setPhysicalLength(PathElement pe, double d) {
-		switch (pe.getKind().value()) {
+	public static void setPhysicalLength(final PathElement pathElement, double d) {
+		switch (pathElement.getKind().value()) {
 			case _SCHEME_CABLE_LINK:
 			case _SCHEME_LINK:
-				((AbstractSchemeLink)pe.getAbstractSchemeElement()).setPhysicalLength(d);
+				((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setPhysicalLength(d);
 		}
 	}
 }
