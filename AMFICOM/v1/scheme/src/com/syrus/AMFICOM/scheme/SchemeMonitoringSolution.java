@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.52 2005/07/24 16:59:56 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.53 2005/07/25 12:15:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
@@ -23,6 +24,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
@@ -54,7 +56,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/07/24 16:59:56 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/25 12:15:00 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -70,7 +72,7 @@ public final class SchemeMonitoringSolution
 
 	private boolean active;
 
-	private Identifier parentSchemeId;
+	Identifier parentSchemeId;
 
 	/**
 	 * May be void, as <code>SchemeMonitoringSolution</code> may be used
@@ -79,7 +81,7 @@ public final class SchemeMonitoringSolution
 	 * {@code parentSchemeOptimizeInfoId} and {@link #parentSchemeId} can be
 	 * void at the same time.
 	 */
-	private Identifier parentSchemeOptimizeInfoId;
+	Identifier parentSchemeOptimizeInfoId;
 
 	/**
 	 * @param id
@@ -255,7 +257,9 @@ public final class SchemeMonitoringSolution
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId != null
+				&& this.parentSchemeOptimizeInfoId != null: OBJECT_NOT_INITIALIZED;
+		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentSchemeId);
 		dependencies.add(this.parentSchemeOptimizeInfoId);
@@ -467,12 +471,18 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @param parentScheme must be non-{@code null}.
+	 * @param parentScheme must be non-{@code null}, otherwise the object
+	 *        will be deleted from pool. 
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
 		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
-		assert parentScheme != null : NON_NULL_EXPECTED;
+
+		if (parentScheme == null) {
+			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+			StorableObjectPool.delete(super.id);
+			return;
+		}
 
 		if (!this.parentSchemeOptimizeInfoId.isVoid()) {
 			this.getParentSchemeOptimizeInfo().setParentScheme(parentScheme);
