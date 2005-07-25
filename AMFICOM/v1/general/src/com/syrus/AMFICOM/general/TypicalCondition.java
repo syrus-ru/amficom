@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.29 2005/07/24 15:01:57 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.30 2005/07/25 19:33:08 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,8 +123,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.29 $, $Date: 2005/07/24 15:01:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/25 19:33:08 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -519,29 +519,28 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *            key for controller (wrapper)
 	 */
 	public TypicalCondition(final String value, final OperationSort operation, final Short entityCode, final String key) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
+		final String className = ObjectGroupEntities.getPackageName(entityCode.shortValue()) + ".TypicalConditionImpl";
 		try {
-			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { String.class, OperationSort.class, Short.class, String.class});
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(String.class, OperationSort.class, Short.class, String.class);
 			ctor.setAccessible(true);
-			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { value, operation, entityCode, key});
-		} catch (ClassNotFoundException cnfe) {
+			this.delegate = (TypicalCondition) ctor.newInstance(value, operation, entityCode, key);
+		} catch (final ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (ClassCastException cce) {
+		} catch (final ClassCastException cce) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't inherit from "
 					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (NoSuchMethodException nsme) {
+		} catch (final NoSuchMethodException nsme) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " doesn't have the constructor expected"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (InstantiationException ie) {
+		} catch (final InstantiationException ie) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
 					+ className + " is abstract"
 					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
-		} catch (InvocationTargetException ite) {
+		} catch (final InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
@@ -554,21 +553,21 @@ public class TypicalCondition implements StorableObjectCondition {
 						+ "constructor throws an exception in class "
 						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
 			}
-		} catch (IllegalAccessException iae) {
+		} catch (final IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
-		} catch (IllegalArgumentException iae) {
+		} catch (final IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugException(iae, Level.SEVERE);
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
 					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
-		} catch (SecurityException se) {
+		} catch (final SecurityException se) {
 			/*
 			 * Never.
 			 */
@@ -691,6 +690,84 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	public TypicalCondition(final Boolean value, final OperationSort operation, final short entityCode, final String key) {
+		this(value, operation, new Short(entityCode), key);
+	}
+
+	/**
+	 * @param operation only {@link OperationSort#OPERATION_EQUALS} is
+	 *        currently supported.
+	 */
+	public TypicalCondition(final Boolean value, final OperationSort operation, final Short entityCode, final String key) {
+		final String className = ObjectGroupEntities.getPackageName(entityCode.shortValue()) + ".TypicalConditionImpl";
+		try {
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(Boolean.class, OperationSort.class, Short.class, String.class);
+			ctor.setAccessible(true);
+			this.delegate = (TypicalCondition) ctor.newInstance(value, operation, entityCode, key);
+		} catch (final ClassNotFoundException cnfe) {
+			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
+					+ " not found on the classpath"
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (final ClassCastException cce) {
+			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't inherit from "
+					+ TypicalCondition.class.getName() + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (final NoSuchMethodException nsme) {
+			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " doesn't have the constructor expected"
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (final InstantiationException ie) {
+			Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
+					+ className + " is abstract"
+					+ CREATING_A_DUMMY_CONDITION, Level.WARNING);
+		} catch (final InvocationTargetException ite) {
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+						+ "constructor throws an exception in class "
+						+ className + CREATING_A_DUMMY_CONDITION, Level.WARNING);
+			}
+		} catch (final IllegalAccessException iae) {
+			/*
+			 * Never.
+			 */
+			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} catch (final IllegalArgumentException iae) {
+			/*
+			 * Never.
+			 */
+			Log.debugException(iae, Level.SEVERE);
+			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} catch (final SecurityException se) {
+			/*
+			 * Never.
+			 */
+			Log.debugException(se, Level.SEVERE);
+			Log.debugMessage(TYPICAL_CONDITION_INIT + "Caught a SecurityException"
+					+ CREATING_A_DUMMY_CONDITION, Level.SEVERE);
+		} finally {
+			if (this.delegate == null) {
+				this.delegate = createDummyCondition();
+				this.delegate.key = key;
+				this.delegate.entityCode = entityCode;
+				this.delegate.type = TypicalSort._TYPE_BOOLEAN;
+				this.delegate.value = value;
+				this.delegate.otherValue = "";
+				this.delegate.operation = operation.value();
+
+			}
+		}
+	}
+
 	public TypicalCondition(final IdlTypicalCondition transferable) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		Log.debugMessage(TYPICAL_CONDITION_INIT + "Try reflect class " + className, Level.INFO);
@@ -726,11 +803,11 @@ public class TypicalCondition implements StorableObjectCondition {
 					break;
 				case TypicalSort._TYPE_STRING:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { String.class, OperationSort.class, Short.class, String.class});
+							String.class, OperationSort.class, Short.class, String.class);
 					ctor.setAccessible(true);
-					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { transferable.value,
+					this.delegate = (TypicalCondition) ctor.newInstance(transferable.value,
 							transferable.operation, new Short(transferable.entityCode),
-							transferable.key});
+							transferable.key);
 
 					break;
 				case TypicalSort._TYPE_DATE:
@@ -743,6 +820,13 @@ public class TypicalCondition implements StorableObjectCondition {
 							new Short(transferable.entityCode), transferable.key});
 
 					break;
+				case TypicalSort._TYPE_BOOLEAN:
+					ctor = Class.forName(className).getDeclaredConstructor(
+							Boolean.class, OperationSort.class, Short.class, String.class);
+					ctor.setAccessible(true);
+					this.delegate = (TypicalCondition) ctor.newInstance(Boolean.valueOf(transferable.value),
+							transferable.operation, new Short(transferable.entityCode),
+							transferable.key);
 				default: {
 					if (this.delegate == null) {
 						this.delegate = createDummyCondition();
@@ -895,6 +979,10 @@ public class TypicalCondition implements StorableObjectCondition {
 				transferable.otherValue = Long.toString(this.delegate.secondLong);
 				break;
 			case TypicalSort._TYPE_STRING:
+				/*
+				 * Fall through.
+				 */
+			case TypicalSort._TYPE_BOOLEAN:
 				transferable.value = this.delegate.value.toString();
 				transferable.otherValue = "";
 				break;
@@ -1107,6 +1195,17 @@ public class TypicalCondition implements StorableObjectCondition {
 						break;
 					case OperationSort._OPERATION_LESS_EQUALS:
 						result = (t < t1) || Math.abs(t - t1) < 1000L;
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						break;
+				}
+				break;
+			case TypicalSort._TYPE_BOOLEAN:
+				switch (this.operation) {
+					case OperationSort._OPERATION_EQUALS:
+						result = ((Boolean) this.value).booleanValue() ==
+								((Boolean) object).booleanValue();
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);

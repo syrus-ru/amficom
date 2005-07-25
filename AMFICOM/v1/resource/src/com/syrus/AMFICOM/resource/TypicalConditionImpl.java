@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.10 2005/06/21 12:44:30 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/07/25 19:33:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/21 12:44:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 19:33:09 $
  * @author $Author: bass $
- * @module resource_v1
+ * @module resource
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
@@ -37,6 +38,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final long firstLong,
 			final long secondLong,
 			final OperationSort operation,
@@ -50,6 +52,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final double firstDouble,
 			final double secondDouble,
 			final OperationSort operation,
@@ -63,6 +66,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final String value,
 			final OperationSort operation,
 			final Short entityCode,
@@ -74,6 +78,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final Date firstDate,
 			final Date secondDate,
 			final OperationSort operation,
@@ -87,13 +92,27 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
+	private TypicalConditionImpl(final Boolean value,
+			final OperationSort operation,
+			final Short entityCode,
+			final String key) {
+		this.value = value;
+		this.type = TypicalSort._TYPE_BOOLEAN;
+		this.operation = operation.value();
+		this.entityCode = entityCode;
+		this.key = key;
+	}
+
+	@Override
 	public boolean isNeedMore(final Set storableObjects) {
-		return this.type != TypicalSort._TYPE_STRING
+		return !(this.type == TypicalSort._TYPE_STRING || this.type == TypicalSort._TYPE_BOOLEAN)
 				|| this.operation != OperationSort._OPERATION_EQUALS
 				|| storableObjects == null
 				|| storableObjects.isEmpty();
 	}
 
+	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
 		if (storableObject instanceof AbstractImageResource)

@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.10 2005/06/27 10:07:12 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/07/25 19:33:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/27 10:07:12 $
- * @author $Author: arseniy $
- * @module map_v1
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 19:33:08 $
+ * @author $Author: bass $
+ * @module map
  */
 final class TypicalConditionImpl extends TypicalCondition {
 	@SuppressWarnings("unused")
@@ -92,9 +92,21 @@ final class TypicalConditionImpl extends TypicalCondition {
 		this.key = key;
 	}
 
+	@SuppressWarnings("unused")
+	private TypicalConditionImpl(final Boolean value,
+			final OperationSort operation,
+			final Short entityCode,
+			final String key) {
+		this.value = value;
+		this.type = TypicalSort._TYPE_BOOLEAN;
+		this.operation = operation.value();
+		this.entityCode = entityCode;
+		this.key = key;
+	}
+
 	@Override
 	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-		return this.type != TypicalSort._TYPE_STRING
+		return !(this.type == TypicalSort._TYPE_STRING || this.type == TypicalSort._TYPE_BOOLEAN)
 				|| this.operation != OperationSort._OPERATION_EQUALS
 				|| storableObjects == null
 				|| storableObjects.isEmpty();

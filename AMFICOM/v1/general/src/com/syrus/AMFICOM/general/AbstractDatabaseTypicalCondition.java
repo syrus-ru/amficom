@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.8 2005/07/14 16:08:04 bass Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.9 2005/07/25 19:33:08 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/14 16:08:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/25 19:33:08 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -244,6 +244,20 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
 								+ this.condition.getOperation().value());
 						break;
+				}
+				break;
+			case TypicalSort._TYPE_BOOLEAN:
+				final boolean value = ((Boolean) this.condition.getValue()).booleanValue();
+				buffer.append(this.getColumnName());
+				switch (this.condition.getOperation().value()) {
+				case OperationSort._OPERATION_EQUALS:
+					buffer.append(StorableObjectDatabase.EQUALS);
+					buffer.append(value ? '1' : '0');
+					break;
+				default:
+					Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
+							+ this.condition.getOperation().value());
+					break;
 				}
 				break;
 		}
