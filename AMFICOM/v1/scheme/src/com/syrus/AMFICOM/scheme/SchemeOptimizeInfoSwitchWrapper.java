@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.4 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.5 2005/07/25 12:10:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,16 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/25 12:10:56 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper {
+	public static final String COLUMN_PRICE = "price_usd";
+
+	public static final String COLUMN_NO_OF_PORTS = "no_of_ports";
+
+	public static final String COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID = "parent_scheme_optimize_info_id";
+
 	private static SchemeOptimizeInfoSwitchWrapper instance;
 
 	/**
