@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.5 2005/07/19 14:31:13 bob Exp $
+* $Id: GraphTreeModel.java,v 1.6 2005/07/25 05:58:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/19 14:31:13 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/25 05:58:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -229,7 +229,7 @@ public class GraphTreeModel implements TreeModel {
 			// //
 			// count += (sourceCount == 1 + (foundNotRootPort ? 1 : 0)) ? 1 : 0;
 		}
-//		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
+		 System.out.println("GraphTreeModel.getChildCount() | " + parent + ", count: " + count);
 		return count;
 	}
 
@@ -303,6 +303,55 @@ public class GraphTreeModel implements TreeModel {
 	public Object getRoot() {
 		return this.root;
 	}
+	
+	/**
+     * Sets the root to <code>root</code>. A null <code>root</code> implies
+     * the tree is to display nothing, and is legal.
+     */
+    public void setRoot(DefaultGraphCell root) {
+    	this.clearCache();
+        Object oldRoot = this.root;
+	this.root = root;
+        if (root == null && oldRoot != null) {
+            this.fireTreeStructureChanged(this, null);
+        }
+        else {
+            this.nodeStructureChanged(root);
+        }
+    }
+    
+    /**
+     * Invoke this method if you've totally changed the children of
+     * node and its childrens children...  This will post a
+     * treeStructureChanged event.
+     */
+   public void nodeStructureChanged(TreeNode node) {	   
+	   System.out.println("GraphTreeModel.nodeStructureChanged() | node " + node);
+       if(node != null) {
+    	   System.out.println("GraphTreeModel.nodeStructureChanged()");
+          fireTreeStructureChanged(this, this.getPathToRoot(node), null, null);
+       }
+   }
+    
+    /*
+     * Notifies all listeners that have registered interest for
+     * notification on this event type.  The event instance 
+     * is lazily created using the parameters passed into 
+     * the fire method.
+     *
+     * @param source the node where the tree model has changed
+     * @param path the path to the root node
+     * @see EventListenerList
+     */
+    private void fireTreeStructureChanged(Object source, TreePath path) {   
+    	System.out.println("GraphTreeModel.fireTreeStructureChanged() | " + path);
+    	TreeModelEvent e = null;
+        for (TreeModelListener listener : this.treeModelListeners) {
+			// Lazily create the event:
+			if (e == null) e = new TreeModelEvent(source, path);
+			listener.treeStructureChanged(e);
+		}
+    }
 
 	public boolean isLeaf(Object node) {
 		return this.getChildCount(node) == 0;
@@ -477,6 +526,7 @@ public class GraphTreeModel implements TreeModel {
 		for (TreeModelListener listener : this.treeModelListeners) {
 			if (e == null) {
 				e = new TreeModelEvent(source, path, childIndices, children);
+				System.out.println("GraphTreeModel.fireTreeStructureChanged() | " + e);
 			}
 			listener.treeStructureChanged(e);
 		}

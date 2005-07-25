@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.2 2005/07/20 14:51:07 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.3 2005/07/25 05:58:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,27 +9,21 @@
 package com.syrus.AMFICOM.manager;
 
 import java.awt.event.ActionEvent;
-import java.util.Hashtable;
-import java.util.Map;
 
 import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import org.jgraph.JGraph;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.GraphConstants;
+import org.jgraph.graph.DefaultGraphCell;
 
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/20 14:51:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/25 05:58:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module manager_v1
+ * @module manager
  */
 public class DomainBeanFactory extends AbstractBeanFactory {
 	
@@ -65,7 +59,6 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 
 				if (cell != null) {
 					JPopupMenu popupMenu = new JPopupMenu();
-					String lastName = null;					
 
 					popupMenu.add(new AbstractAction("Enter to domain") {
 
@@ -84,7 +77,9 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 
 							graph.mcmButton.setEnabled(true);
 							
-							graph.showOnly(new String[] {"Domain"});
+							graph.showOnlyDescendants((DefaultGraphCell) cell);
+							
+							graph.showOnly(new String[] {"Net", "User", "ARM", "RTU", "Server", "MCM"});
 							
 							System.out.println("DomainBeanFactory | entered");
 						};

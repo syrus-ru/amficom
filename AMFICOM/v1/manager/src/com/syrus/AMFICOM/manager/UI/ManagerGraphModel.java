@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.5 2005/07/19 09:49:00 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.6 2005/07/25 05:58:53 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,28 +8,26 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
-import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
-import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.Edge;
 
-import com.syrus.AMFICOM.manager.AbstractBean;
+import com.syrus.AMFICOM.manager.MPort;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/25 05:58:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class ManagerGraphModel extends DefaultGraphModel {
 	
-	private final DefaultGraphCell rootItem;
+//	private final DefaultGraphCell rootItem;
 	
 	private boolean direct;
 	
-	public ManagerGraphModel(final DefaultGraphCell rootItem, boolean direct) {
-		this.rootItem = rootItem;
+	public ManagerGraphModel(boolean direct) {
+//		this.rootItem = rootItem;
 		this.direct = direct;
 	}
 	
@@ -45,13 +43,13 @@ public class ManagerGraphModel extends DefaultGraphModel {
 //		}
 //		if (result) {
 //			System.out.println(".acceptsSource() | 1");
-//			DefaultPort sourcePort = (DefaultPort) edge2.getSource();
-//			DefaultPort targetPort = (DefaultPort) edge2.getTarget();
+//			MPort sourcePort = (MPort) edge2.getSource();
+//			MPort targetPort = (MPort) edge2.getTarget();
 //			System.out.println(".acceptsSource() | 1' " + port + ", " 
 //				+ targetPort);
 //			if (port != sourcePort) {
 //				result = !this.isLooped(targetPort,
-//					(DefaultPort) port,
+//					(MPort) port,
 //					false);
 //				System.out.println(".acceptsSource() | 1'' " + result);
 ////					result = true;
@@ -65,14 +63,14 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		return result;
 	}			
 	
-	private boolean isLooped(final DefaultPort port,
-	                         final DefaultPort basePort, 
+	private boolean isLooped(final MPort port,
+	                         final MPort basePort, 
 	                         final boolean target) {
 		boolean result = basePort == port;				
 		if (!result) {
 			for(Object object : port.getEdges()) {
 				Edge edge  = (Edge)object;
-				DefaultPort defaultPort = (DefaultPort) (this.direct ? edge.getTarget() : edge.getSource());
+				MPort defaultPort = (MPort) (this.direct ? edge.getTarget() : edge.getSource());
 				result = this.isLooped(defaultPort, basePort, target);
 				if (result) {
 					break;
@@ -82,63 +80,63 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		return result;
 	}
 	
-	@Override
-	public boolean acceptsTarget(	Object edge,
-									Object port) {
-		// null port doesn't supply
-		boolean result = port != null;			
-		if (result) {
-			DefaultPort port2 = (DefaultPort) port;
-			
-			DefaultPort rootPort = (DefaultPort) this.rootItem.getChildAt(0);
-			
-			// check for simplify
-			int yetConnected = 0;
-			for(Object oEdge : port2.getEdges()) {
-				Edge edge3 = (Edge)oEdge;
-				DefaultPort sourcePort = (DefaultPort) (this.direct ? edge3.getSource() : edge3.getTarget());
-				DefaultPort targetPort = (DefaultPort) (this.direct ? edge3.getTarget() : edge3.getSource());
-				if (targetPort == port && sourcePort != rootPort) {
-					yetConnected++;
-				}
-			}
-
-			result = yetConnected == 0;
-			
-			if (result) {
-				// check for looping
-				for(Object oEdge : port2.getEdges()) {
-					Edge edge3 = (Edge)oEdge;
-					DefaultPort sourcePort = (DefaultPort) (this.direct ? edge3.getSource() : edge3.getTarget());
-					DefaultPort targetPort = (DefaultPort) (this.direct ? edge3.getTarget() : edge3.getSource());
-					if (port != targetPort) {
-						result = !this.isLooped((DefaultPort) port, 
-							sourcePort,
-							true);
-					}
-				}
-			}
-			
-			if (result) {
-				// check for looping
-				for(Object oEdge : port2.getEdges()) {
-					Edge edge3 = (Edge)oEdge;
-					DefaultPort sourcePort = (DefaultPort) (this.direct ? edge3.getSource() : edge3.getTarget());
-					DefaultPort targetPort = (DefaultPort) (this.direct ? edge3.getTarget() : edge3.getSource());
-					if (port != targetPort) {
-						Object sourceObject = sourcePort.getUserObject();
-						Object targetObject = targetPort.getUserObject();
-						if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
-							AbstractBean sourceBean = (AbstractBean) sourceObject;
-							AbstractBean targetBean = (AbstractBean) targetObject;
-							result = sourceBean.isTargetValid(targetBean);
-						}
-					}
-				}
-			}
-		}
-		System.out.println("ManagerGraphModel.acceptsTarget() | result is " + result);
-		return result;
-	}			
+//	@Override
+//	public boolean acceptsTarget(	Object edge,
+//									Object port) {
+//		// null port doesn't supply
+//		boolean result = port != null;			
+//		if (result) {
+//			MPort port2 = (MPort) port;
+//			
+//			MPort rootPort = (MPort) this.rootItem.getChildAt(0);
+//			
+//			// check for simplify
+//			int yetConnected = 0;
+//			for(Object oEdge : port2.getEdges()) {
+//				Edge edge3 = (Edge)oEdge;
+//				MPort sourcePort = (MPort) (this.direct ? edge3.getSource() : edge3.getTarget());
+//				MPort targetPort = (MPort) (this.direct ? edge3.getTarget() : edge3.getSource());
+//				if (targetPort == port && sourcePort != rootPort) {
+//					yetConnected++;
+//				}
+//			}
+//
+//			result = yetConnected == 0;
+//			
+//			if (result) {
+//				// check for looping
+//				for(Object oEdge : port2.getEdges()) {
+//					Edge edge3 = (Edge)oEdge;
+//					MPort sourcePort = (MPort) (this.direct ? edge3.getSource() : edge3.getTarget());
+//					MPort targetPort = (MPort) (this.direct ? edge3.getTarget() : edge3.getSource());
+//					if (port != targetPort) {
+//						result = !this.isLooped((MPort) port, 
+//							sourcePort,
+//							true);
+//					}
+//				}
+//			}
+//			
+//			if (result) {
+//				// check for looping
+//				for(Object oEdge : port2.getEdges()) {
+//					Edge edge3 = (Edge)oEdge;
+//					MPort sourcePort = (MPort) (this.direct ? edge3.getSource() : edge3.getTarget());
+//					MPort targetPort = (MPort) (this.direct ? edge3.getTarget() : edge3.getSource());
+//					if (port != targetPort) {
+//						Object sourceObject = sourcePort.getUserObject();
+//						Object targetObject = targetPort.getUserObject();
+//						if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
+//							AbstractBean sourceBean = (AbstractBean) sourceObject;
+//							AbstractBean targetBean = (AbstractBean) targetObject;
+//							result = sourceBean.isTargetValid(targetBean);
+//						}
+//					}
+//				}
+//			}
+//		}
+//		System.out.println("ManagerGraphModel.acceptsTarget() | result is " + result);
+//		return result;
+//	}			
 }
 

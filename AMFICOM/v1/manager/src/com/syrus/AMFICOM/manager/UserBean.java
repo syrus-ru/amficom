@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.2 2005/07/20 14:51:07 bob Exp $
+ * $Id: UserBean.java,v 1.3 2005/07/25 05:58:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/20 14:51:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/25 05:58:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -55,7 +55,7 @@ public class UserBean extends AbstractBean {
 
 	@Override
 	public void updateEdgeAttributes(	DefaultEdge edge,
-										DefaultPort port) {
+										MPort port) {
 		AttributeMap attributes = edge.getAttributes();
 		GraphConstants.setLineWidth(attributes, 10.0f);
 		GraphConstants.setLineEnd(attributes, GraphConstants.ARROW_TECHNICAL);

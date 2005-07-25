@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.7 2005/07/20 14:51:07 bob Exp $
+ * $Id: AbstractBean.java,v 1.8 2005/07/25 05:58:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,16 @@
 
 package com.syrus.AMFICOM.manager;
 
-import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import org.jgraph.JGraph;
 import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultPort;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/20 14:51:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/25 05:58:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -67,7 +64,7 @@ public abstract class AbstractBean {
 	}
 
 	public void updateEdgeAttributes(	DefaultEdge edge,
-										DefaultPort port) {
+										MPort port) {
 		// nothing yet
 	}
 
