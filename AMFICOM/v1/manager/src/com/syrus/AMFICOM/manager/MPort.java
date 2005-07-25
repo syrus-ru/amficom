@@ -1,3 +1,10 @@
+/*-
+ * $Id: MPort.java,v 1.2 2005/07/25 05:59:25 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.manager;
 
@@ -11,7 +18,12 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
-
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/07/25 05:59:25 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module manager
+ */
 public class MPort extends DefaultGraphCell implements Port {
 
 	/** Edges that are connected to the port */
