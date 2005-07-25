@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAnalysisManager.java,v 1.17 2005/07/22 06:56:50 saa Exp $
+ * $Id: ClientAnalysisManager.java,v 1.18 2005/07/25 07:15:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/07/22 06:56:50 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/25 07:15:00 $
  * @module
  */
 public class ClientAnalysisManager extends CoreAnalysisManager
@@ -58,7 +58,7 @@ public class ClientAnalysisManager extends CoreAnalysisManager
 
 		// сохраняем в Pool
 		Heap.setMinuitAnalysisParams(minuitParams);
-		Heap.setMinuitInitialParams((AnalysisParameters)minuitParams.clone());
+		Heap.setMinuitInitialParamsFromCurrentAP();
 		Heap.notifyAnalysisParametersUpdated();
 	}
 

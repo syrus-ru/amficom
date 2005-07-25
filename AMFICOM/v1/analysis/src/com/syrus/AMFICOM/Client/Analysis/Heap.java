@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.95 2005/07/25 07:03:30 saa Exp $
+ * $Id: Heap.java,v 1.96 2005/07/25 07:15:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.95 $, $Date: 2005/07/25 07:03:30 $
+ * @version $Revision: 1.96 $, $Date: 2005/07/25 07:15:00 $
  * @module
  */
 public class Heap
@@ -412,15 +412,15 @@ public class Heap
 	}
 
 	public static AnalysisParameters getMinuitInitialParams() {
-		return initialAP;
+		return (AnalysisParameters) initialAP.clone();
 	}
 
-	public static void setMinuitInitialParams(AnalysisParameters minuitInitialParams) {
-		Heap.initialAP = minuitInitialParams;
+	public static void setMinuitInitialParamsFromCurrentAP() {
+		Heap.initialAP = (AnalysisParameters) currentAP.clone();
 	}
 
 	public static AnalysisParameters getMinuitDefaultParams() {
-		return defaultAP;
+		return (AnalysisParameters) defaultAP.clone();
 	}
 
 	public static void setMinuitDefaultParams(AnalysisParameters minuitDefaults) {

@@ -271,12 +271,12 @@ public class AnalysisUtil
 							params[i].getValue(),
 							AnalysisParameters.getReader());
 		}
-		if (analysisParams == null)
-		throw new DataFormatException(
-				"No" + DADARA_CRITERIA);
-		Heap.setMinuitAnalysisParams(
-			(AnalysisParameters)analysisParams.clone());
-		Heap.setMinuitInitialParams(analysisParams);
+		if (analysisParams == null) {
+			throw new DataFormatException(
+					"No" + DADARA_CRITERIA);
+		}
+		Heap.setMinuitAnalysisParams(analysisParams);
+		Heap.setMinuitInitialParamsFromCurrentAP();
 		Heap.notifyAnalysisParametersUpdated();
 	}
 

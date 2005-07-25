@@ -199,16 +199,14 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	void analysisInitialButton_actionPerformed(ActionEvent e)
-	{
-		AnalysisParameters ap = Heap.getMinuitInitialParams();
-		setValues(ap);
+	void analysisInitialButton_actionPerformed(ActionEvent e) {
+		Heap.setMinuitAnalysisParams(Heap.getMinuitInitialParams());
+		Heap.notifyAnalysisParametersUpdated();
 	}
 
-	void analysisDefaultsButton_actionPerformed(ActionEvent e)
-	{
-		AnalysisParameters ap = Heap.getMinuitDefaultParams();
-		setValues(ap);
+	void analysisDefaultsButton_actionPerformed(ActionEvent e) {
+		Heap.setMinuitAnalysisParams(Heap.getMinuitDefaultParams());
+		Heap.notifyAnalysisParametersUpdated();
 	}
 
 	public void bsHashAdded(String key)
