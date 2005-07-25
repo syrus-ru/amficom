@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.9 2005/07/24 17:40:35 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.10 2005/07/25 12:21:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/24 17:40:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/25 12:21:20 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -160,10 +160,12 @@ public final class SchemePathTestCase extends TestCase {
 
 		final String schemeName = "a scheme";
 		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
+		final String schemeMonitoringSolutionName = "a scheme monitoring solution";
+		final SchemeMonitoringSolution schemeMonitoringSolution = SchemeMonitoringSolution.createInstance(userId, schemeMonitoringSolutionName, scheme);
 		final String schemePathName = "a scheme path";
-		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
-		assertEquals(schemeName, schemePath.getParentScheme().getName());
-		final Set<SchemePath> schemePaths = scheme.getSchemePaths();
+		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, schemeMonitoringSolution);
+		assertEquals(schemeName, schemePath.getParentSchemeMonitoringSolution().getParentScheme().getName());
+		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively();
 		assertEquals(1, schemePaths.size());
 		assertEquals(schemePathName, schemePaths.iterator().next().getName());
 
@@ -226,10 +228,12 @@ public final class SchemePathTestCase extends TestCase {
 
 		final String schemeName = "a scheme";
 		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
+		final String schemeMonitoringSolutionName = "a scheme monitoring solution";
+		final SchemeMonitoringSolution schemeMonitoringSolution = SchemeMonitoringSolution.createInstance(userId, schemeMonitoringSolutionName, scheme);
 		final String schemePathName = "a scheme path";
-		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, scheme);
-		assertEquals(schemeName, schemePath.getParentScheme().getName());
-		final Set<SchemePath> schemePaths = scheme.getSchemePaths();
+		final SchemePath schemePath = SchemePath.createInstance(userId, schemePathName, schemeMonitoringSolution);
+		assertEquals(schemeName, schemePath.getParentSchemeMonitoringSolution().getParentScheme().getName());
+		final Set<SchemePath> schemePaths = scheme.getSchemePathsRecursively();
 		assertEquals(1, schemePaths.size());
 		assertEquals(schemePathName, schemePaths.iterator().next().getName());
 
@@ -280,7 +284,7 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	/**
-	 * @see Scheme#setSchemePaths(java.util.Set)
+	 * @see SchemeMonitoringSolution#setSchemePaths(java.util.Set)
 	 */
 	public void testSetSchemePaths() throws CreateObjectException {
 		final Identifier userId = new Identifier("User_0");
@@ -289,24 +293,27 @@ public final class SchemePathTestCase extends TestCase {
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
 
-		@SuppressWarnings("unused")
-		final SchemePath schemePath0 = SchemePath.createInstance(userId, "0", scheme0);
-		@SuppressWarnings("unused")
-		final SchemePath schemePath1 = SchemePath.createInstance(userId, "1", scheme0);
-		@SuppressWarnings("unused")
-		final SchemePath schemePath2 = SchemePath.createInstance(userId, "2", scheme0);
-		final SchemePath schemePath3 = SchemePath.createInstance(userId, "3", scheme0);
-		final SchemePath schemePath4 = SchemePath.createInstance(userId, "4", scheme0);
-		final SchemePath schemePath5 = SchemePath.createInstance(userId, "5", scheme0);
-		final SchemePath schemePath6 = SchemePath.createInstance(userId, "6", scheme0);
-		final SchemePath schemePath7 = SchemePath.createInstance(userId, "7", scheme1);
-		final SchemePath schemePath8 = SchemePath.createInstance(userId, "8", scheme1);
-		final SchemePath schemePath9 = SchemePath.createInstance(userId, "9", scheme1);
+		final SchemeMonitoringSolution schemeMonitoringSolution0 = SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution0", scheme0);
+		final SchemeMonitoringSolution schemeMonitoringSolution1 = SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution1", scheme1);
 
-		for (final SchemePath schemePath : scheme0.getSchemePaths()) {
+		@SuppressWarnings("unused")
+		final SchemePath schemePath0 = SchemePath.createInstance(userId, "0", schemeMonitoringSolution0);
+		@SuppressWarnings("unused")
+		final SchemePath schemePath1 = SchemePath.createInstance(userId, "1", schemeMonitoringSolution0);
+		@SuppressWarnings("unused")
+		final SchemePath schemePath2 = SchemePath.createInstance(userId, "2", schemeMonitoringSolution0);
+		final SchemePath schemePath3 = SchemePath.createInstance(userId, "3", schemeMonitoringSolution0);
+		final SchemePath schemePath4 = SchemePath.createInstance(userId, "4", schemeMonitoringSolution0);
+		final SchemePath schemePath5 = SchemePath.createInstance(userId, "5", schemeMonitoringSolution0);
+		final SchemePath schemePath6 = SchemePath.createInstance(userId, "6", schemeMonitoringSolution0);
+		final SchemePath schemePath7 = SchemePath.createInstance(userId, "7", schemeMonitoringSolution1);
+		final SchemePath schemePath8 = SchemePath.createInstance(userId, "8", schemeMonitoringSolution1);
+		final SchemePath schemePath9 = SchemePath.createInstance(userId, "9", schemeMonitoringSolution1);
+
+		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively()) {
 			System.out.println(scheme0.getName() + ": " + schemePath.getName());
 		}
-		for (final SchemePath schemePath : scheme1.getSchemePaths()) {
+		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively()) {
 			System.out.println(scheme1.getName() + ": " + schemePath.getName());
 		}
 		
@@ -319,12 +326,12 @@ public final class SchemePathTestCase extends TestCase {
 		schemePaths.add(schemePath8);
 		schemePaths.add(schemePath9);
 		
-		scheme0.setSchemePaths(schemePaths);
+		schemeMonitoringSolution0.setSchemePaths(schemePaths);
 
-		for (final SchemePath schemePath : scheme0.getSchemePaths()) {
+		for (final SchemePath schemePath : scheme0.getSchemePathsRecursively()) {
 			System.out.println(scheme0.getName() + ": " + schemePath.getName());
 		}
-		for (final SchemePath schemePath : scheme1.getSchemePaths()) {
+		for (final SchemePath schemePath : scheme1.getSchemePathsRecursively()) {
 			System.out.println(scheme1.getName() + ": " + schemePath.getName());
 		}
 	}
