@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.53 2005/07/24 19:46:38 arseniy Exp $
+ * $Id: Identifier.java,v 1.54 2005/07/25 14:54:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.53 $, $Date: 2005/07/24 19:46:38 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/25 14:54:42 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -158,10 +158,11 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	public static final IdlIdentifier[] createTransferables(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
+		final IdlIdentifier[] ids = new IdlIdentifier[identifiables.size()];
 		int i = 0;
-		final IdlIdentifier ids[] = new IdlIdentifier[identifiables.size()];
-		for (final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator(); identifiableIterator.hasNext(); i++)
-			ids[i] = identifiableIterator.next().getId().getTransferable();
+		for (final Identifiable identifiable : identifiables) {
+			ids[i] = identifiable.getId().getTransferable();
+		}
 		return ids;
 	}
 
@@ -173,7 +174,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiables != null: NON_NULL_EXPECTED;
 		
 		final int length = identifiables.length;
-		final IdlIdentifier ids[] = new IdlIdentifier[length];
+		final IdlIdentifier[] ids = new IdlIdentifier[length];
 		for (int i = 0; i < length; i++)
 			ids[i] = identifiables[i].getId().getTransferable();
 		return ids;
