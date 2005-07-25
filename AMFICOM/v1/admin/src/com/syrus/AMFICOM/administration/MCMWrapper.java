@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.11 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: MCMWrapper.java,v 1.12 2005/07/25 20:48:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,22 +16,22 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:48:15 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
 public class MCMWrapper extends StorableObjectWrapper {
 
-	public static final String	COLUMN_USER_ID			= "user_id";
-	public static final String	COLUMN_SERVER_ID		= "server_id";
+	public static final String COLUMN_USER_ID = "user_id";
+	public static final String COLUMN_SERVER_ID = "server_id";
 	// public static final String COLUMN_LOCATION = "location";
-	public static final String	COLUMN_HOSTNAME			= "hostname";
+	public static final String COLUMN_HOSTNAME = "hostname";
 
-	public static final String	COLUMN_KIS_IDS			= "kis_ids";
+	public static final String COLUMN_KIS_IDS = "kis_ids";
 
-	private static MCMWrapper	instance;
+	private static MCMWrapper instance;
 
-	private List				keys;
+	private List<String> keys;
 	public static final String LINK_COLUMN_MCM_ID = "mcm_id";
 
 	private MCMWrapper() {
@@ -47,7 +47,7 @@ public class MCMWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -58,9 +58,9 @@ public class MCMWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof MCM) {
-			MCM mcm = (MCM) object;
+			final MCM mcm = (MCM) object;
 			if (key.equals(COLUMN_NAME))
 				return mcm.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -79,9 +79,9 @@ public class MCMWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof MCM) {
-			MCM mcm = (MCM) object;
+			final MCM mcm = (MCM) object;
 			if (key.equals(COLUMN_NAME))
 				mcm.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -97,7 +97,7 @@ public class MCMWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {

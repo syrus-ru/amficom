@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.18 2005/07/20 11:07:56 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.19 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/20 11:07:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/07/25 20:50:00 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper {
@@ -42,11 +41,11 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 
 	private static MeasurementSetupWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private MeasurementSetupWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_PARAMETER_SET_ID,
+		final String[] keysArray = new String[] {COLUMN_PARAMETER_SET_ID,
 				COLUMN_CRITERIA_SET_ID,
 				COLUMN_THRESHOLD_SET_ID,
 				COLUMN_ETALON_ID,
@@ -64,7 +63,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -75,10 +74,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof MeasurementSetup) {
-			MeasurementSetup measurementSetup = (MeasurementSetup) object;
+			final MeasurementSetup measurementSetup = (MeasurementSetup) object;
 			if (key.equals(COLUMN_PARAMETER_SET_ID))
 				return measurementSetup.getParameterSet();
 			if (key.equals(COLUMN_CRITERIA_SET_ID))
@@ -102,16 +100,16 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		}
 		return value;
 	}
-	
-	private void addSetParameterInfo(StringBuffer buffer, String title, Parameter[] parameters) {
+
+	private void addSetParameterInfo(final StringBuffer buffer, final String title, final Parameter[] parameters) {
 		if (parameters.length == 0)
 			return;
 		buffer.append(title);
 		buffer.append('\n');
 		for (int i = 0; i < parameters.length; i++) {				
-			String string = parameters[i].getStringValue();
+			final String string = parameters[i].getStringValue();
 			if (string != null) {
-				ParameterType parameterType = (ParameterType) parameters[i].getType();
+				final ParameterType parameterType = (ParameterType) parameters[i].getType();
 				buffer.append(parameterType.getDescription() + ": " + string);
 				Set<Characteristic> characteristics = null;
 				try {
@@ -123,7 +121,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 //					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
 				if (characteristics != null && !characteristics.isEmpty()) {
 					for (final Characteristic characteristic : characteristics) {
-						StorableObjectType type = characteristic.getType();
+						final StorableObjectType type = characteristic.getType();
 //						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
 							buffer.append(' ' + characteristic.getValue());
@@ -138,11 +136,11 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		buffer.append('\n');
 	}
 	
-	private String getMeasurementSetupInfo(MeasurementSetup measurementSetup) {
-		ParameterSet parameterSet = measurementSetup.getParameterSet();
-		ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		ParameterSet etalon = measurementSetup.getEtalon();
-		StringBuffer buffer = new StringBuffer();
+	private String getMeasurementSetupInfo(final MeasurementSetup measurementSetup) {
+		final ParameterSet parameterSet = measurementSetup.getParameterSet();
+		final ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
+		final ParameterSet etalon = measurementSetup.getEtalon();
+		final StringBuffer buffer = new StringBuffer();
 		if (parameterSet != null) {
 			this.addSetParameterInfo(buffer, LangModelMeasurement.getString("Measurement parameters") + ':',  parameterSet.getParameters());
 		}
@@ -162,9 +160,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof MeasurementSetup) {
-			MeasurementSetup measurementSetup = (MeasurementSetup) object;
+			final MeasurementSetup measurementSetup = (MeasurementSetup) object;
 
 			if (key.equals(COLUMN_PARAMETER_SET_ID))
 				measurementSetup.setParameterSet((ParameterSet) value);
@@ -186,7 +184,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -194,13 +192,13 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

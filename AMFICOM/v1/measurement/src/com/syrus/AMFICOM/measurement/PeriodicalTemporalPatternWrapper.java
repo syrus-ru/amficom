@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternWrapper.java,v 1.3 2005/06/22 10:22:59 bob Exp $
+ * $Id: PeriodicalTemporalPatternWrapper.java,v 1.4 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,21 +15,21 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:22:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/07/25 20:50:00 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 
 	public static final String COLUMN_PERIOD = "PERIOD";
 
-	private static PeriodicalTemporalPatternWrapper	instance;
+	private static PeriodicalTemporalPatternWrapper instance;
 
-	private List						keys;
+	private List<String> keys;
 
 	private PeriodicalTemporalPatternWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_PERIOD};
+		final String[] keysArray = new String[] {COLUMN_PERIOD};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -40,7 +40,7 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -49,10 +49,11 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 		return key;
 	}
 
+	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof PeriodicalTemporalPattern) {
-			PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) object;
+			final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) object;
 			if (key.equals(COLUMN_PERIOD))
 				return new Long(periodicalTemporalPattern.getPeriod());
 		}
@@ -63,9 +64,9 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof PeriodicalTemporalPattern) {
-			PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) object;
+			final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) object;
 			if (key.equals(COLUMN_PERIOD))
 				periodicalTemporalPattern.setPeriod(((Long) value).longValue());			
 		}
@@ -76,12 +77,13 @@ public class PeriodicalTemporalPatternWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	@Override
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

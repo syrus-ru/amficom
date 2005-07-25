@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.5 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.6 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -37,7 +37,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 
 	private static ParameterSetWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private ParameterSetWrapper() {
 		// empty private constructor
@@ -55,7 +55,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -93,7 +93,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof ParameterSet) {
 			final ParameterSet set = (ParameterSet) object;
 			if (key.equals(COLUMN_SORT))
@@ -123,7 +123,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -131,12 +131,12 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;

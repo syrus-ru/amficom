@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.13 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.14 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -28,14 +28,14 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 	// description VARCHAR2(256),
 	// name VARCHAR2(64) NOT NULL,
 	// start_port_id VARCHAR2(32),
-	public static final String				COLUMN_START_PORT_ID	= "start_port_id";
+	public static final String COLUMN_START_PORT_ID = "start_port_id";
 
 	// finish_port_id VARCHAR2(32),
-	public static final String				COLUMN_FINISH_PORT_ID	= "finish_port_id";
-	
-	private static TransmissionPathWrapper	instance;
+	public static final String COLUMN_FINISH_PORT_ID = "finish_port_id";
 
-	private List							keys;
+	private static TransmissionPathWrapper instance;
+
+	private List<String> keys;
 
 	private TransmissionPathWrapper() {
 		// empty private constructor
@@ -50,7 +50,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -61,9 +61,9 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof TransmissionPath) {
-			TransmissionPath path = (TransmissionPath) object;
+			final TransmissionPath path = (TransmissionPath) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return path.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -84,9 +84,9 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof TransmissionPath) {
-			TransmissionPath path = (TransmissionPath) object;
+			final TransmissionPath path = (TransmissionPath) object;
 			if (key.equals(COLUMN_NAME))
 				path.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -105,13 +105,13 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

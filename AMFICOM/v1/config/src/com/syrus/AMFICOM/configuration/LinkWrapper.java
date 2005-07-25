@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.11 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: LinkWrapper.java,v 1.12 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -23,23 +23,23 @@ public final class LinkWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
 	// inventory_no VARCHAR2(64),
-	public static final String	COLUMN_INVENTORY_NO		= "inventory_no";
+	public static final String COLUMN_INVENTORY_NO = "inventory_no";
 
 	// supplier VARCHAR2(64),
-	public static final String	COLUMN_SUPPLIER			= "supplier";
+	public static final String COLUMN_SUPPLIER = "supplier";
 
 	// supplier_code VARCHAR2(64),
-	public static final String	COLUMN_SUPPLIER_CODE	= "supplier_code";
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
 
 	// color NUMBER(38),
-	public static final String	COLUMN_COLOR			= "color";
+	public static final String COLUMN_COLOR = "color";
 
 	// mark VARCHAR(32),
-	public static final String	COLUMN_MARK				= "mark";
+	public static final String COLUMN_MARK = "mark";
 
-	private static LinkWrapper	instance;
+	private static LinkWrapper instance;
 
-	private List				keys;
+	private List<String> keys;
 
 	private LinkWrapper() {
 		// empty private constructor
@@ -59,7 +59,7 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -70,9 +70,9 @@ public final class LinkWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Link) {
-			Link link = (Link) object;
+			final Link link = (Link) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return link.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -95,9 +95,9 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Link) {
-			Link link = (Link) object;
+			final Link link = (Link) object;
 			if (key.equals(COLUMN_NAME))
 				link.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -120,15 +120,13 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

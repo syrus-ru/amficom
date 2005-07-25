@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.8 2005/07/16 22:01:17 arseniy Exp $
+ * $Id: MeasurementWrapper.java,v 1.9 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,28 +18,35 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/16 22:01:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class MeasurementWrapper extends StorableObjectWrapper {
 
-	public static final String			COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String			COLUMN_SETUP_ID				= "setup_id";
-	public static final String			COLUMN_START_TIME			= "start_time";
-	public static final String			COLUMN_DURATION				= "duration";
-	public static final String			COLUMN_STATUS				= "status";
-	public static final String			COLUMN_LOCAL_ADDRESS		= "local_address";
-	public static final String			COLUMN_TEST_ID				= "test_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_SETUP_ID = "setup_id";
+	public static final String COLUMN_START_TIME = "start_time";
+	public static final String COLUMN_DURATION = "duration";
+	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
+	public static final String COLUMN_TEST_ID = "test_id";
 
-	private static MeasurementWrapper	instance;
+	private static MeasurementWrapper instance;
 
-	private List						keys;
+	private List<String> keys;
 
 	private MeasurementWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID, COLUMN_NAME, COLUMN_SETUP_ID,
-				COLUMN_START_TIME, COLUMN_DURATION, COLUMN_STATUS, COLUMN_LOCAL_ADDRESS, COLUMN_TEST_ID};
+		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
+				COLUMN_MONITORED_ELEMENT_ID,
+				COLUMN_NAME,
+				COLUMN_SETUP_ID,
+				COLUMN_START_TIME,
+				COLUMN_DURATION,
+				COLUMN_STATUS,
+				COLUMN_LOCAL_ADDRESS,
+				COLUMN_TEST_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -50,7 +57,7 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -61,9 +68,9 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Measurement) {
-			Measurement measurement = (Measurement) object;
+			final Measurement measurement = (Measurement) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return measurement.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -88,9 +95,9 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Measurement) {
-			Measurement measurement = (Measurement) object;
+			final Measurement measurement = (Measurement) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				measurement.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -116,15 +123,13 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

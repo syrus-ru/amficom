@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.11 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: DomainWrapper.java,v 1.12 2005/07/25 20:48:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,19 +15,19 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:48:15 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
 public class DomainWrapper extends StorableObjectWrapper {
 
-	private static DomainWrapper	instance;
+	private static DomainWrapper instance;
 
-	private List					keys;
+	private List<String> keys;
 
 	private DomainWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION};
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -38,7 +38,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -49,9 +49,9 @@ public class DomainWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Domain) {
-			Domain domain = (Domain) object;
+			final Domain domain = (Domain) object;
 			if (key.equals(COLUMN_NAME))
 				return domain.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -66,7 +66,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 
 	public void setValue(Object object, final String key, final Object value) {
 		if (object instanceof Domain) {
-			Domain domain = (Domain) object;
+			final Domain domain = (Domain) object;
 			if (key.equals(COLUMN_NAME))
 				domain.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -75,7 +75,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -83,13 +83,13 @@ public class DomainWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

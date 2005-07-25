@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.11 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.12 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -25,7 +25,7 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 
 	private static ModelingTypeWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private ModelingTypeWrapper() {
 		// empty private constructor
@@ -40,7 +40,7 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -53,7 +53,7 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 	public Object getValue(final Object object, final String key) {
 		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof ModelingType) {
-			ModelingType modelingType = (ModelingType) object;
+			final ModelingType modelingType = (ModelingType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return modelingType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -66,9 +66,9 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof ModelingType) {
-			ModelingType modelingType = (ModelingType) object;
+			final ModelingType modelingType = (ModelingType) object;
 			if (key.equals(COLUMN_CODENAME))
 				modelingType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -77,7 +77,7 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -85,12 +85,12 @@ public class ModelingTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;

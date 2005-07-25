@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.16 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: PortTypeWrapper.java,v 1.17 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -25,17 +25,13 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_KIND = "kind";
 
-	private static PortTypeWrapper	instance;
+	private static PortTypeWrapper instance;
 
-	private List					keys;
+	private List<String> keys;
 
 	private PortTypeWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME,
-				COLUMN_DESCRIPTION,
-				COLUMN_NAME,
-				COLUMN_SORT,
-				COLUMN_KIND};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_KIND };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -46,7 +42,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -78,7 +74,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof PortType) {
 			PortType type = (PortType) object;
 			if (key.equals(COLUMN_NAME))
@@ -97,13 +93,13 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

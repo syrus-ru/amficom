@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.10 2005/07/14 18:46:55 arseniy Exp $
+ * $Id: CableThreadWrapper.java,v 1.11 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,20 +15,20 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/14 18:46:55 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
 public final class CableThreadWrapper extends StorableObjectWrapper {
 
-	private static CableThreadWrapper	instance;
+	private static CableThreadWrapper instance;
 
-	private List						keys;
+	private List<String> keys;
 
 	private CableThreadWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, StorableObjectWrapper.COLUMN_TYPE_ID};
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -39,7 +39,7 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -50,9 +50,9 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof CableThread) {
-			CableThread thread = (CableThread) object;		
+			final CableThread thread = (CableThread) object;		
 			if (key.equals(COLUMN_DESCRIPTION))
 				return thread.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -67,9 +67,9 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof CableThread) {
-			CableThread thread = (CableThread) object;
+			final CableThread thread = (CableThread) object;
 			if (key.equals(COLUMN_NAME))
 				thread.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -84,15 +84,13 @@ public final class CableThreadWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

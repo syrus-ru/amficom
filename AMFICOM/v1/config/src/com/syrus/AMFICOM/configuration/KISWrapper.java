@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.11 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: KISWrapper.java,v 1.12 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -26,23 +26,23 @@ public final class KISWrapper extends StorableObjectWrapper {
 	// description VARCHAR2(256),
 	// name VARCHAR2(64) NOT NULL,
 	// hostname VARCHAR2(64),
-	public static final String COLUMN_HOSTNAME  	= "hostname";
+	public static final String COLUMN_HOSTNAME = "hostname";
 	// tcp_port NUMBER(5,0),
-	public static final String COLUMN_TCP_PORT  		= "tcp_port";
+	public static final String COLUMN_TCP_PORT = "tcp_port";
 	// equipment_id Identifier NOT NULL
-	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
+	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
 	// mcm_id Identifier NOT NULL
-	public static final String COLUMN_MCM_ID 		= "mcm_id";
-	
-	public static final String	COLUMN_MEASUREMENT_PORT_IDS	= "measurementPortIds";
+	public static final String COLUMN_MCM_ID = "mcm_id";
 
-	private static KISWrapper	instance;
+	public static final String COLUMN_MEASUREMENT_PORT_IDS = "measurementPortIds";
 
-	private List				keys;
+	private static KISWrapper instance;
+
+	private List<String> keys;
 	
 	private KISWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_DESCRIPTION,
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_EQUIPMENT_ID,
 				COLUMN_MCM_ID,
@@ -58,7 +58,7 @@ public final class KISWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -69,9 +69,9 @@ public final class KISWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof KIS) {
-			KIS kis = (KIS) object;
+			final KIS kis = (KIS) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -92,9 +92,9 @@ public final class KISWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof KIS) {
-			KIS kis = (KIS) object;
+			final KIS kis = (KIS) object;
 			if (key.equals(COLUMN_NAME))
 				kis.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -111,7 +111,7 @@ public final class KISWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -119,13 +119,13 @@ public final class KISWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

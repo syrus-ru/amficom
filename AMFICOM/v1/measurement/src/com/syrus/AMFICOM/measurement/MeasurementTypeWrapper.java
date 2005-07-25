@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.11 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.12 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -26,7 +26,7 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 
 	private static MeasurementTypeWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private MeasurementTypeWrapper() {
 		// private constructor
@@ -41,7 +41,7 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -70,11 +70,9 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, 
-	                     final String key, 
-	                     final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof MeasurementType) {
-			MeasurementType measurementType = (MeasurementType) object;
+			final MeasurementType measurementType = (MeasurementType) object;
 			if (key.equals(COLUMN_CODENAME))
 				measurementType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -87,9 +85,7 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 

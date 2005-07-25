@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.18 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.19 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -26,19 +26,19 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 	// codename VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
 	// sort NUMBER(2,0),
-	public static final String			COLUMN_KIND					= "kind";
+	public static final String COLUMN_KIND = "kind";
 	// manufacturer VARCHAR2(64),
-	public static final String			COLUMN_MANUFACTURER			= "manufacturer";
+	public static final String COLUMN_MANUFACTURER = "manufacturer";
 	// manufacturer_code VARCHAR2(64),
-	public static final String			COLUMN_MANUFACTURER_CODE	= "manufacturer_code";
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
 	// image_id VARCHAR2(32),
-	public static final String			COLUMN_IMAGE_ID				= "image_id";
+	public static final String COLUMN_IMAGE_ID = "image_id";
 
-	public static final String			LINK_FIELD_CABLE_THREAD_TYPES	= "cable_thread_types";
+	public static final String LINK_FIELD_CABLE_THREAD_TYPES = "cable_thread_types";
 
-	private static CableLinkTypeWrapper	instance;
+	private static CableLinkTypeWrapper instance;
 
-	private List						keys;
+	private List<String> keys;
 
 	private CableLinkTypeWrapper() {
 		// empty private constructor
@@ -59,7 +59,7 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -70,9 +70,9 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof CableLinkType) {
-			CableLinkType type = (CableLinkType) object;
+			final CableLinkType type = (CableLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -95,9 +95,9 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof CableLinkType) {
-			CableLinkType type = (CableLinkType) object;
+			final CableLinkType type = (CableLinkType) object;
 			if (key.equals(COLUMN_NAME))
 				type.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -120,13 +120,13 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

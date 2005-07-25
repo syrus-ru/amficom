@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.12 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.13 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -46,7 +46,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 
 	private static ResultWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private ResultWrapper() {
 		// empty private constructor
@@ -61,7 +61,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -97,7 +97,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Result) {
 			final Result result = (Result) object;
 			if (key.equals(COLUMN_ACTION_ID))
@@ -124,7 +124,7 @@ public class ResultWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -132,12 +132,12 @@ public class ResultWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;

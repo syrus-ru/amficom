@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisWrapper.java,v 1.9 2005/07/14 19:07:11 arseniy Exp $
+ * $Id: AnalysisWrapper.java,v 1.10 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/14 19:07:11 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -29,11 +29,11 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 
 	private static AnalysisWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private AnalysisWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_TYPE_ID,
+		final String[] keysArray = new String[] {COLUMN_TYPE_ID,
 				COLUMN_MONITORED_ELEMENT_ID,
 				COLUMN_MEASUREMENT_ID,
 				COLUMN_NAME,
@@ -48,7 +48,7 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -59,9 +59,9 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Analysis) {
-			Analysis analysis = (Analysis) object;
+			final Analysis analysis = (Analysis) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return analysis.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -80,9 +80,9 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Analysis) {
-			Analysis analysis = (Analysis) object;
+			final Analysis analysis = (Analysis) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				analysis.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -101,13 +101,13 @@ public class AnalysisWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

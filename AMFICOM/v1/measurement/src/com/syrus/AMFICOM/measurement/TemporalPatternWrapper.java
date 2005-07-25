@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.8 2005/07/24 15:30:14 arseniy Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.9 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/24 15:30:14 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -26,7 +26,7 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 
 	private static TemporalPatternWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private TemporalPatternWrapper() {
 		// empty private constructor
@@ -41,7 +41,7 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -52,9 +52,9 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof CronTemporalPattern) {
-			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
+			final CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return temporalPattern.getDescription();
 			if (key.equals(COLUMN_VALUE))
@@ -68,16 +68,15 @@ public class TemporalPatternWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof CronTemporalPattern) {
-			CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
+			final CronTemporalPattern temporalPattern = (CronTemporalPattern) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				temporalPattern.setDescription((String) value);
 			else if (key.equals(COLUMN_VALUE)) {
 				List cronStrings = (List) value;
 				for (Iterator it = cronStrings.iterator(); it.hasNext();) {
 					temporalPattern.addTemplate((String) it.next());
-
 				}
 			}
 

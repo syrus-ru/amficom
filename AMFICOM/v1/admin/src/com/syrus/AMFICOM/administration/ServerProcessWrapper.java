@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.8 2005/06/25 17:50:50 bass Exp $
+ * $Id: ServerProcessWrapper.java,v 1.9 2005/07/25 20:48:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/25 20:48:15 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class ServerProcessWrapper extends StorableObjectWrapper {
@@ -37,11 +37,11 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 
 	private static ServerProcessWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private ServerProcessWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_SERVER_ID, COLUMN_USER_ID, COLUMN_DESCRIPTION};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_SERVER_ID, COLUMN_USER_ID, COLUMN_DESCRIPTION};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -52,7 +52,7 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -63,9 +63,9 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof ServerProcess) {
-			ServerProcess serverProcess = (ServerProcess) object;
+			final ServerProcess serverProcess = (ServerProcess) object;
 			if (key.equals(COLUMN_CODENAME))
 				return serverProcess.getCodename();
 			if (key.equals(COLUMN_SERVER_ID))
@@ -82,9 +82,9 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof ServerProcess) {
-			ServerProcess serverProcess = (ServerProcess) object;
+			final ServerProcess serverProcess = (ServerProcess) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				serverProcess.setDescription((String) value);
 		}
@@ -95,13 +95,13 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

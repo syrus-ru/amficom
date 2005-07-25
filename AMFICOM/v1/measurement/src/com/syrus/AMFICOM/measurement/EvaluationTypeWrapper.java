@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.12 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.13 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -25,7 +25,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 
 	private static EvaluationTypeWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private EvaluationTypeWrapper() {
 		// empty private constructor
@@ -40,7 +40,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -51,9 +51,9 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof EvaluationType) {
-			EvaluationType evaluationType = (EvaluationType) object;
+			final EvaluationType evaluationType = (EvaluationType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return evaluationType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -66,9 +66,9 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof EvaluationType) {
-			EvaluationType evaluationType = (EvaluationType) object;
+			final EvaluationType evaluationType = (EvaluationType) object;
 			if (key.equals(COLUMN_CODENAME))
 				evaluationType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -81,12 +81,12 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		return String.class;
 	}
 

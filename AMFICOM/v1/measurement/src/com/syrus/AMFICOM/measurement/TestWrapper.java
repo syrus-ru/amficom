@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.15 2005/07/24 15:34:21 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.16 2005/07/25 20:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/24 15:34:21 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/25 20:50:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -43,11 +43,11 @@ public class TestWrapper extends StorableObjectWrapper {
 
 	private static TestWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private TestWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] {COLUMN_TEMPORAL_TYPE,
+		final String[] keysArray = new String[] {COLUMN_TEMPORAL_TYPE,
 				COLUMN_START_TIME,
 				COLUMN_END_TIME,
 				COLUMN_TEMPORAL_PATTERN_ID,
@@ -70,7 +70,7 @@ public class TestWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -81,9 +81,9 @@ public class TestWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Test) {
-			Test test = (Test) object;
+			final Test test = (Test) object;
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
 				return new Integer(test.getTemporalType().value());
 			if (key.equals(COLUMN_START_TIME))
@@ -120,9 +120,9 @@ public class TestWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Test) {
-			Test test = (Test) object;
+			final Test test = (Test) object;
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
 				test.setTemporalType(TestTemporalType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_START_TIME))
@@ -146,12 +146,12 @@ public class TestWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				test.setDescription((String) value);
 			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
-				test.setMeasurementSetupIds((java.util.Set) value);
+				test.setMeasurementSetupIds((Set) value);
 		}
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -159,13 +159,13 @@ public class TestWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

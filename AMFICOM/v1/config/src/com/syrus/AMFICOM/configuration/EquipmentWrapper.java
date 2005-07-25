@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.15 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: EquipmentWrapper.java,v 1.16 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -26,33 +26,33 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 	// table :: Equipment
 	// description VARCHAR2(256),
 	// image_id Identifier,
-	public static final String		COLUMN_IMAGE_ID			= "image_id";
+	public static final String COLUMN_IMAGE_ID = "image_id";
 	// name VARCHAR2(64) NOT NULL,
 	// type_id Identifier NOT NULL,
 	// supplier VARCHAR2(128)
-	public static final String		COLUMN_SUPPLIER			= "supplier";
+	public static final String COLUMN_SUPPLIER = "supplier";
 	// supplier_code VARCHAR2(128)
-	public static final String		COLUMN_SUPPLIER_CODE	= "supplier_code";
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
 	// latitude NUMBER
-	public static final String		COLUMN_LATITUDE			= "latitude";
+	public static final String COLUMN_LATITUDE = "latitude";
 	// longitude NUMBER
-	public static final String		COLUMN_LONGITUDE		= "longitude";
+	public static final String COLUMN_LONGITUDE = "longitude";
 	// hwSerial VARCHAR2(64)
-	public static final String		COLUMN_HW_SERIAL		= "hw_serial";
+	public static final String COLUMN_HW_SERIAL = "hw_serial";
 	// hwVersion VARCHAR2(64)
-	public static final String		COLUMN_HW_VERSION		= "hw_version";
+	public static final String COLUMN_HW_VERSION = "hw_version";
 	// swSerial VARCHAR2(64)
-	public static final String		COLUMN_SW_SERIAL		= "sw_serial";
+	public static final String COLUMN_SW_SERIAL = "sw_serial";
 	// swVersion VARCHAR2(64)
-	public static final String		COLUMN_SW_VERSION		= "sw_version";
+	public static final String COLUMN_SW_VERSION = "sw_version";
 	// inventory_number VARCHAR2(64)
-	public static final String		COLUMN_INVENTORY_NUMBER	= "inventory_number";
+	public static final String COLUMN_INVENTORY_NUMBER = "inventory_number";
 
-	public static final String		COLUMN_PORT_IDS			= "portIds";
+	public static final String COLUMN_PORT_IDS = "portIds";
 
-	private static EquipmentWrapper	instance;
+	private static EquipmentWrapper instance;
 
-	private List					keys;
+	private List<String> keys;
 
 	private EquipmentWrapper() {
 		// empty private constructor
@@ -80,7 +80,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -91,9 +91,9 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Equipment) {
-			Equipment equipment = (Equipment) object;
+			final Equipment equipment = (Equipment) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return equipment.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -130,9 +130,9 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Equipment) {
-			Equipment equipment = (Equipment) object;
+			final Equipment equipment = (Equipment) object;
 			if (key.equals(COLUMN_NAME))
 				equipment.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -167,13 +167,13 @@ public final class EquipmentWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

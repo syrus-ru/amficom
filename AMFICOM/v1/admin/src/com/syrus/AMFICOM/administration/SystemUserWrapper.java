@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.8 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.9 2005/07/25 20:48:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/25 20:48:15 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper {
-	public static final String	SYS_LOGIN		= "sys";
+	public static final String SYS_LOGIN = "sys";
 	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
 	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";
 	public static final String MSERVER_LOGIN = "mserver";
@@ -32,14 +32,14 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	// table :: users
 	// description VARCHAR2(256),
 	// login VARCHAR2(32) NOT NULL,
-	public static final String	COLUMN_LOGIN		= "login";
+	public static final String COLUMN_LOGIN = "login";
 	// name VARCHAR2(64) not NULL,
 	// sort NUMBER(2, 0) NOT NULL,
-	public static final String	COLUMN_SORT			= "sort";
+	public static final String COLUMN_SORT = "sort";
 
-	private static SystemUserWrapper	instance;
+	private static SystemUserWrapper instance;
 
-	private List				keys;
+	private List<String> keys;
 
 	private SystemUserWrapper() {
 		// empty private constructor
@@ -54,7 +54,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -65,9 +65,9 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof SystemUser) {
-			SystemUser user = (SystemUser) object;
+			final SystemUser user = (SystemUser) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return user.getDescription();
 			if (key.equals(COLUMN_LOGIN))
@@ -84,9 +84,9 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof SystemUser) {
-			SystemUser user = (SystemUser) object;
+			final SystemUser user = (SystemUser) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				user.setDescription((String) value);
 			else if (key.equals(COLUMN_LOGIN))
@@ -99,7 +99,7 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -107,13 +107,13 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

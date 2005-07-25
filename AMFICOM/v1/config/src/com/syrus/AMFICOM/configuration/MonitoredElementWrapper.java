@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.13 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.14 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,32 +20,35 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class MonitoredElementWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_MEASUREMENT_PORT_ID			= "measurement_port_id";
+	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	// sort NUMBER(2) NOT NULL,
-	public static final String				COLUMN_SORT							= "sort";
+	public static final String COLUMN_SORT = "sort";
 
-	public static final String				COLUMN_LOCAL_ADDRESS				= "local_address";
+	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
-	public static final String				COLUMN_MONITORED_DOMAIN_MEMBER		= "MonitoredDomainMember";
+	public static final String COLUMN_MONITORED_DOMAIN_MEMBER = "MonitoredDomainMember";
 
-	public static final String				LINK_COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String				LINK_COLUMN_EQUIPMENT_ID			= "equipment_id";
-	public static final String				LINK_COLUMN_TRANSMISSION_PATH_ID	= "transmission_path_id";
+	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String LINK_COLUMN_EQUIPMENT_ID = "equipment_id";
+	public static final String LINK_COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
 
-	private static MonitoredElementWrapper	instance;
+	private static MonitoredElementWrapper instance;
 
-	private List							keys;
+	private List<String> keys;
 
 	private MonitoredElementWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_NAME, COLUMN_MEASUREMENT_PORT_ID, COLUMN_SORT, COLUMN_LOCAL_ADDRESS,
-				COLUMN_MONITORED_DOMAIN_MEMBER};
+		final String[] keysArray = new String[] { COLUMN_NAME,
+				COLUMN_MEASUREMENT_PORT_ID,
+				COLUMN_SORT,
+				COLUMN_LOCAL_ADDRESS,
+				COLUMN_MONITORED_DOMAIN_MEMBER };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -56,7 +59,7 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -67,9 +70,9 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof MonitoredElement) {
-			MonitoredElement me = (MonitoredElement) object;
+			final MonitoredElement me = (MonitoredElement) object;
 			if (key.equals(COLUMN_NAME))
 				return me.getName();
 			if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
@@ -88,9 +91,9 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof MonitoredElement) {
-			MonitoredElement me = (MonitoredElement) object;
+			final MonitoredElement me = (MonitoredElement) object;
 			if (key.equals(COLUMN_NAME))
 				me.setName((String) value);
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
@@ -100,8 +103,8 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
 				me.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
-				Set<Identifier> meDomainMemeberIds = new HashSet<Identifier>(((Set) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();)
+				final Set<Identifier> meDomainMemeberIds = new HashSet<Identifier>(((Set) value).size());
+				for (final Iterator it = ((List) value).iterator(); it.hasNext();)
 					meDomainMemeberIds.add((Identifier) it.next());
 				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
 			}
@@ -113,13 +116,13 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

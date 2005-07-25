@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.10 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.11 2005/07/25 20:48:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 20:48:15 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -25,11 +25,11 @@ public class ServerWrapper extends StorableObjectWrapper {
 	// description VARCHAR2(256),
 	// name VARCHAR2(64) NOT NULL,
 	// hostname VARCHAR2(64) NOT NULL,
-	public static final String		COLUMN_HOSTNAME			= "hostname";
+	public static final String COLUMN_HOSTNAME = "hostname";
 
-	private static ServerWrapper	instance;
+	private static ServerWrapper instance;
 
-	private List					keys;
+	private List<String> keys;
 
 	private ServerWrapper() {
 		// empty private constructor
@@ -44,7 +44,7 @@ public class ServerWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -55,9 +55,9 @@ public class ServerWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Server) {
-			Server server = (Server) object;
+			final Server server = (Server) object;
 			if (key.equals(COLUMN_NAME))
 				return server.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -74,9 +74,9 @@ public class ServerWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Server) {
-			Server server = (Server) object;
+			final Server server = (Server) object;
 			if (key.equals(COLUMN_NAME))
 				server.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -89,7 +89,7 @@ public class ServerWrapper extends StorableObjectWrapper {
 	}
 
 	public String getKey(final int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	public Object getPropertyValue(final String key) {
@@ -97,13 +97,13 @@ public class ServerWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

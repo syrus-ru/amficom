@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortWrapper.java,v 1.10 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: MeasurementPortWrapper.java,v 1.11 2005/07/25 20:49:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 20:49:36 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -26,14 +26,14 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
 	// kis_id VARCHAR2(32),
-	public static final String				COLUMN_KIS_ID			= "kis_id";
+	public static final String COLUMN_KIS_ID = "kis_id";
 
 	// port_id VARCHAR2(32),
-	public static final String				COLUMN_PORT_ID			= "port_id";
+	public static final String COLUMN_PORT_ID = "port_id";
 
-	private static MeasurementPortWrapper	instance;
+	private static MeasurementPortWrapper instance;
 
-	private List							keys;
+	private List<String> keys;
 
 	private MeasurementPortWrapper() {
 		// empty private constructor
@@ -48,7 +48,7 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -59,9 +59,9 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof MeasurementPort) {
-			MeasurementPort port = (MeasurementPort) object;
+			final MeasurementPort port = (MeasurementPort) object;
 			if (key.equals(COLUMN_DESCRIPTION))
 				return port.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -80,9 +80,9 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof MeasurementPort) {
-			MeasurementPort port = (MeasurementPort) object;
+			final MeasurementPort port = (MeasurementPort) object;
 			if (key.equals(COLUMN_NAME))
 				port.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -101,13 +101,13 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
