@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.58 2005/07/25 12:20:18 bass Exp $
+ * $Id: Scheme.java,v 1.59 2005/07/25 19:34:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -46,7 +47,10 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -59,7 +63,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/25 12:20:18 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/25 19:34:53 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -91,6 +95,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	private Identifier schemeCellId;
 
 	Identifier parentSchemeElementId;
+	
+	/*-********************************************************************
+	 * Conditions used to implement #getCurrentSchemeMonitoringSolution() *
+	 **********************************************************************/
+
+	private TypicalCondition currentSolutionTypicalCondition;
+
+	private LinkedIdsCondition currentSolutionLinkedIdsCondition;
+
+	private CompoundCondition currentSolutionCompoundCondition0; 
+
+	private CompoundCondition currentSolutionCompoundCondition1; 
 
 	/**
 	 * @param id
@@ -274,7 +290,75 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public SchemeMonitoringSolution getCurrentSchemeMonitoringSolution() {
-		throw new UnsupportedOperationException();
+		try {
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions =
+				new HashSet<SchemeMonitoringSolution>();
+
+			/*
+			 * Common initialization.
+			 */
+			if (this.currentSolutionTypicalCondition == null) {
+				this.currentSolutionTypicalCondition =
+						new TypicalCondition(
+								Boolean.TRUE,
+								OperationSort.OPERATION_EQUALS,
+								SCHEMEMONITORINGSOLUTION_CODE,
+								SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE);
+			}
+			/*
+			 * Search type 1.
+			 */
+			if (this.currentSolutionCompoundCondition0 == null) {
+				this.currentSolutionCompoundCondition0 = new CompoundCondition(
+						this.currentSolutionTypicalCondition,
+						CompoundConditionSort.AND,
+						new LinkedIdsCondition(
+								this.id,
+								SCHEMEMONITORINGSOLUTION_CODE));
+			}
+
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions0 =
+					StorableObjectPool.getStorableObjectsByCondition(this.currentSolutionCompoundCondition0, true);
+			schemeMonitoringSolutions.addAll(schemeMonitoringSolutions0);
+
+			/*
+			 * Search type 2.
+			 */
+			for (final SchemeOptimizeInfo schemeOptimizeInfo : this.getSchemeOptimizeInfos()) {
+				final Identifier schemeOptimizeInfoId = schemeOptimizeInfo.getId();
+				if (this.currentSolutionLinkedIdsCondition == null) {
+					this.currentSolutionLinkedIdsCondition = new LinkedIdsCondition(schemeOptimizeInfoId, SCHEMEMONITORINGSOLUTION_CODE);
+				} else {
+					this.currentSolutionLinkedIdsCondition.setLinkedId(schemeOptimizeInfoId);
+				}
+				if (this.currentSolutionCompoundCondition1 == null) {
+					this.currentSolutionCompoundCondition1 = new CompoundCondition(
+							this.currentSolutionTypicalCondition,
+							CompoundConditionSort.AND,
+							this.currentSolutionLinkedIdsCondition);
+				}
+				final Set<SchemeMonitoringSolution> schemeMonitoringSolutions1 =
+						StorableObjectPool.getStorableObjectsByCondition(this.currentSolutionCompoundCondition1, true);
+				schemeMonitoringSolutions.addAll(schemeMonitoringSolutions1);
+			}
+
+			/*
+			 * Sanity checks.
+			 */
+			assert this.getSchemeMonitoringSolutionsRecursively().isEmpty()
+					? schemeMonitoringSolutions.isEmpty()
+					: schemeMonitoringSolutions.size() == 1;
+			/*
+			 * Return the first entry or null if empty.
+			 */
+			for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+				return schemeMonitoringSolution;
+			}
+			return null;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	/**
@@ -647,8 +731,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.parentSchemeElementId = parentSchemeElementId;
 	}
 
-	public void setCurrentSchemeMonitoringSolution(@SuppressWarnings("unused") final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
-		throw new UnsupportedOperationException();
+	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
+		assert currentSchemeMonitoringSolution != null : NON_NULL_EXPECTED;
+		/*
+		 * Not ...getParentSchemeId(), since we'll miss solutions with
+		 * non-null parent optimizeInfo. Here getParentSchemeId() may
+		 * eventually return a void identifier, while getParentScheme()
+		 * will never return null, unless this object is deleted, which
+		 * is unlikely.
+		 */
+		assert currentSchemeMonitoringSolution.getParentScheme().getId().equals(super.id);
+		currentSchemeMonitoringSolution.setActive(true);
 	}
 
 	/**
@@ -880,13 +973,17 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 **********************************************************************/
 
 	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutionsRecursively() {
+		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutionsRecursively0());
+	}
+
+	Set<SchemeMonitoringSolution> getSchemeMonitoringSolutionsRecursively0() {
 		final Set<SchemeMonitoringSolution> schemeMonitoringSolutions =
 				new HashSet<SchemeMonitoringSolution>();
 		schemeMonitoringSolutions.addAll(this.getSchemeMonitoringSolutions());
 		for (final SchemeOptimizeInfo schemeOptimizeInfo : this.getSchemeOptimizeInfos()) {
 			schemeMonitoringSolutions.addAll(schemeOptimizeInfo.getSchemeMonitoringSolutions());
 		}
-		return Collections.unmodifiableSet(schemeMonitoringSolutions);
+		return schemeMonitoringSolutions;
 	}
 
 	/**

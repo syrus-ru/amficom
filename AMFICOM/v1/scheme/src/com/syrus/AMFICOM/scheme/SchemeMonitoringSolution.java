@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.53 2005/07/25 12:15:00 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.54 2005/07/25 19:34:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/25 12:15:00 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/25 19:34:53 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -139,7 +139,7 @@ public final class SchemeMonitoringSolution
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, int, boolean, SchemeOptimizeInfo)}.
+	 * {@link #createInstance(Identifier, String, String, int, SchemeOptimizeInfo)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -150,12 +150,12 @@ public final class SchemeMonitoringSolution
 			final Identifier creatorId, final String name,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, false, parentSchemeOptimizeInfo);
+		return createInstance(creatorId, name, "", 0, parentSchemeOptimizeInfo);
 	}
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, int, boolean, Scheme)}.
+	 * {@link #createInstance(Identifier, String, String, int, Scheme)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -166,7 +166,7 @@ public final class SchemeMonitoringSolution
 			final Identifier creatorId, final String name,
 			final Scheme parentScheme)
 	throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, false, parentScheme);
+		return createInstance(creatorId, name, "", 0, parentScheme);
 	}
 
 	/**
@@ -174,14 +174,12 @@ public final class SchemeMonitoringSolution
 	 * @param name
 	 * @param description
 	 * @param price
-	 * @param active
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
 	public static SchemeMonitoringSolution createInstance(
 			final Identifier creatorId, final String name,
 			final String description, final int price,
-			final boolean active,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
@@ -191,6 +189,8 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
+			final boolean active = parentSchemeOptimizeInfo.getParentScheme()
+					.getSchemeMonitoringSolutionsRecursively().isEmpty();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
 					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created, created, creatorId, creatorId,
@@ -209,14 +209,13 @@ public final class SchemeMonitoringSolution
 	 * @param name
 	 * @param description
 	 * @param price
-	 * @param active
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
 	public static SchemeMonitoringSolution createInstance(
 			final Identifier creatorId, final String name,
 			final String description, final int price,
-			final boolean active, final Scheme parentScheme)
+			final Scheme parentScheme)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
@@ -225,6 +224,8 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
+			final boolean active = parentScheme
+					.getSchemeMonitoringSolutionsRecursively().isEmpty();
 			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
 					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
 					created, created, creatorId, creatorId,
@@ -334,9 +335,6 @@ public final class SchemeMonitoringSolution
 		return this.price;
 	}
 
-	/**
-	 * @todo Add sanity checks.
-	 */
 	public boolean isActive() {
 		return this.active;
 	}
@@ -505,11 +503,35 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @todo Add sanity checks.
+	 * @param active if {@code false}, removes itself from the pool and
+	 *        selects an arbitrary {@code SchemeMonitoringSolution} as
+	 *        active, thus preventing the parent {@code Scheme} from losing
+	 *        the active solution, unless it has no solutions at all upon
+	 *        removal of this one. 
 	 */
 	public void setActive(final boolean active) {
 		if (this.active == active)
 			return;
+
+		final Scheme parentScheme = this.getParentScheme();
+		if (active) {
+			final SchemeMonitoringSolution currentSchemeMonitoringSolution =
+					parentScheme.getCurrentSchemeMonitoringSolution();
+			currentSchemeMonitoringSolution.active = false;
+			currentSchemeMonitoringSolution.markAsChanged();
+		} else {
+			StorableObjectPool.delete(super.id);
+
+			final Set<SchemeMonitoringSolution> schemeMonitoringSolutions =
+					parentScheme.getSchemeMonitoringSolutionsRecursively0();
+			schemeMonitoringSolutions.remove(this);
+			for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+				schemeMonitoringSolution.active = true;
+				schemeMonitoringSolution.markAsChanged();
+				break;
+			}
+		}
+
 		this.active = active;
 		super.markAsChanged();
 	}

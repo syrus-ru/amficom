@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.10 2005/07/25 12:21:20 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.11 2005/07/25 19:34:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/25 12:21:20 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/25 19:34:53 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -70,6 +70,7 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testShiftRight"));
 		testSuite.addTest(new SchemePathTestCase("testSetSchemePaths"));
 		testSuite.addTest(new SchemePathTestCase("testSchemeProtoElementClone"));
+		testSuite.addTest(new SchemePathTestCase("testGetCurrentSchemeMonitoringSolution"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -389,5 +390,83 @@ public final class SchemePathTestCase extends TestCase {
 		}
 		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
 		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
+	}
+
+	/**
+	 * @throws CreateObjectException 
+	 * @see Scheme#getCurrentSchemeMonitoringSolution()
+	 *
+	 */
+	public void testGetCurrentSchemeMonitoringSolution() throws CreateObjectException {
+		final Identifier userId = new Identifier("User_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+
+		final SchemeOptimizeInfo schemeOptimizeInfo0 = SchemeOptimizeInfo.createInstance(userId, "schemeOptimizeInfo0", scheme0);
+		final SchemeOptimizeInfo schemeOptimizeInfo1 = SchemeOptimizeInfo.createInstance(userId, "schemeOptimizeInfo1", scheme0);
+
+		final SchemeMonitoringSolution schemeMonitoringSolution0 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution0", scheme0);
+		final SchemeMonitoringSolution schemeMonitoringSolution1 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution1", scheme0);
+		final SchemeMonitoringSolution schemeMonitoringSolution2 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution2", scheme0);
+		final SchemeMonitoringSolution schemeMonitoringSolution3 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution3", scheme0);
+		final SchemeMonitoringSolution schemeMonitoringSolution4 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution4", schemeOptimizeInfo0);
+		final SchemeMonitoringSolution schemeMonitoringSolution5 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution5", schemeOptimizeInfo0);
+		final SchemeMonitoringSolution schemeMonitoringSolution6 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution6", schemeOptimizeInfo0);
+		final SchemeMonitoringSolution schemeMonitoringSolution7 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution7", schemeOptimizeInfo1);
+		final SchemeMonitoringSolution schemeMonitoringSolution8 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution8", schemeOptimizeInfo1);
+		final SchemeMonitoringSolution schemeMonitoringSolution9 =
+				SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution9", schemeOptimizeInfo1);
+
+		schemeMonitoringSolution0.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution0.getId());
+
+		schemeMonitoringSolution1.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution1.getId());
+
+		schemeMonitoringSolution2.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution2.getId());
+
+		schemeMonitoringSolution3.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution3.getId());
+
+		schemeMonitoringSolution4.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution4.getId());
+
+		schemeMonitoringSolution5.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution5.getId());
+
+		schemeMonitoringSolution6.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution6.getId());
+
+		schemeMonitoringSolution7.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution7.getId());
+
+		schemeMonitoringSolution8.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution8.getId());
+
+		schemeMonitoringSolution9.setActive(true);
+		assertEquals(scheme0.getCurrentSchemeMonitoringSolution().getId(), schemeMonitoringSolution9.getId());
+
+		int i = 0;
+		for (Set<SchemeMonitoringSolution> schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively();
+				!schemeMonitoringSolutions.isEmpty();
+				schemeMonitoringSolutions = scheme0.getSchemeMonitoringSolutionsRecursively()) {
+			final SchemeMonitoringSolution oldSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution();
+			oldSchemeMonitoringSolution.setActive(false);
+			final SchemeMonitoringSolution newSchemeMonitoringSolution = scheme0.getCurrentSchemeMonitoringSolution();
+			System.out.println("Pass " + (i++)
+					+ "; old: " + oldSchemeMonitoringSolution.getName()
+					+ "; new: " + (newSchemeMonitoringSolution == null ? "<null>" : newSchemeMonitoringSolution.getName()));
+		}
 	}
 }
