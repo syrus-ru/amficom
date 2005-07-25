@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.34 2005/07/24 17:14:09 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.35 2005/07/25 19:48:23 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/07/24 17:14:09 $
+ * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/07/25 19:48:23 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPath implements MapElement
@@ -377,7 +377,7 @@ public final class MeasurementPath implements MapElement
 	 */
 	protected List<CablePath> getCablePaths() {
 		synchronized (this.unsortedCablePaths) {
-			final Scheme scheme = this.schemePath.getParentScheme();
+			final Scheme scheme = this.schemePath.getParentSchemeMonitoringSolution().getParentScheme();
 
 			this.unsortedCablePaths.clear();
 			for (final PathElement pathElement : this.schemePath.getPathMembers()) {
