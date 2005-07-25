@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.57 2005/07/24 17:40:34 bass Exp $
+ * $Id: Scheme.java,v 1.58 2005/07/25 12:20:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,10 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -58,7 +59,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/24 17:40:34 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/25 12:20:18 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -258,6 +259,11 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		schemeOptimizeInfo.setParentScheme(this);
 	}
 
+	public void addSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
+		schemeMonitoringSolution.setParentScheme(this);
+	}
+
 	@Override
 	public Scheme clone() {
 		final Scheme scheme = (Scheme) super.clone();
@@ -434,6 +440,29 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
+	/**
+	 * Returns a {@code Set} of {@code SchemeMonitoringSolution}s
+	 * <em>directly</em> referencing this {@code Scheme}, i. e. having
+	 * <em>no</em> parent {@code SchemeOptimizeInfo}. To get the
+	 * <em>entire</em> {@code Set} of {@code SchemeMonitoringSolution}s
+	 * that belong to this {@code Scheme}, use
+	 * {@link #getSchemeMonitoringSolutionsRecursively()} instead.
+	 * 
+	 * @see #getSchemeMonitoringSolutionsRecursively()
+	 */
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
+		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
+	}
+
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() {
+		try {
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
 	Identifier getSymbolId() {
 		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
 		assert this.symbolId.isVoid() || this.symbolId.getMajor() == IMAGERESOURCE_CODE;
@@ -541,8 +570,8 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	/**
-	 * The <code>SchemeOptimizeInfo</code> must belong to this
-	 * <code>Scheme</code>, or crap will meet the fan.
+	 * The {@code SchemeOptimizeInfo} must belong to this {@code Scheme}, or
+	 * crap will meet the fan.
 	 *
 	 * @param schemeOptimizeInfo
 	 */
@@ -550,6 +579,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
 		assert schemeOptimizeInfo.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfo.setParentScheme(null);
+	}
+
+	/**
+	 * The {@code SchemeMonitoringSolution} must belong to this
+	 * {@code Scheme}, or crap will meet the fan.
+	 *
+	 * @param schemeMonitoringSolution
+	 */
+	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
+		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
+		assert schemeMonitoringSolution.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeMonitoringSolution.setParentScheme(null);
 	}
 
 	/**
@@ -758,6 +799,22 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
+		assert schemeMonitoringSolutions != null : NON_NULL_EXPECTED;
+		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
+		/*
+		 * Check is made to prevent SchemeMonitoringSolutions from
+		 * permanently losing their parents.
+		 */
+		oldSchemeMonitoringSolutions.removeAll(schemeMonitoringSolutions);
+		for (final SchemeMonitoringSolution oldSchemeMonitoringSolution : oldSchemeMonitoringSolutions) {
+			this.removeSchemeMonitoringSolution(oldSchemeMonitoringSolution);
+		}
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : schemeMonitoringSolutions) {
+			this.addSchemeMonitoringSolution(schemeMonitoringSolution);
+		}
+	}
+
 	/**
 	 * @param symbol
 	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
@@ -810,51 +867,53 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
 	}
 
-	public void addSchemePath(final SchemePath schemePath) {
-		assert schemePath != null : NON_NULL_EXPECTED;
-		schemePath.setParentScheme(this);
-	}
-
-	public void removeSchemePath(final SchemePath schemePath) {
-		assert schemePath != null : NON_NULL_EXPECTED;
-		assert schemePath.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemePath.setParentScheme(null);
-	}
-
-	public Set<SchemePath> getSchemePaths() {
-		return Collections.unmodifiableSet(this.getSchemePaths0());
-	}
-
-	private Set<SchemePath> getSchemePaths0() {
-		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	public void setSchemePaths(final Set<SchemePath> schemePaths) {
-		assert schemePaths != null : NON_NULL_EXPECTED;
-		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
-		/*
-		 * Check is made to prevent SchemePaths from
-		 * permanently losing their parents.
-		 */
-		oldSchemePaths.removeAll(schemePaths);
-		for (final SchemePath oldSchemePath : oldSchemePaths) {
-			this.removeSchemePath(oldSchemePath);
-		}
-		for (final SchemePath schemePath : schemePaths) {
-			this.addSchemePath(schemePath);
-		}
-	}
-
 	/**
 	 * @see SchemeCellContainer#getIdMap()
 	 * @todo Implement.
 	 */
 	public java.util.Map<Identifier, Identifier> getIdMap() {
 		return Collections.emptyMap();
+	}
+
+	/*-********************************************************************
+	 * Non-model members.                                                 *
+	 **********************************************************************/
+
+	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutionsRecursively() {
+		final Set<SchemeMonitoringSolution> schemeMonitoringSolutions =
+				new HashSet<SchemeMonitoringSolution>();
+		schemeMonitoringSolutions.addAll(this.getSchemeMonitoringSolutions());
+		for (final SchemeOptimizeInfo schemeOptimizeInfo : this.getSchemeOptimizeInfos()) {
+			schemeMonitoringSolutions.addAll(schemeOptimizeInfo.getSchemeMonitoringSolutions());
+		}
+		return Collections.unmodifiableSet(schemeMonitoringSolutions);
+	}
+
+	/**
+	 * To get the {@code Set} of {@code SchemePath}s for the current
+	 * {@code SchemeMonitoringSolution} only, use
+	 * {@link #getCurrentSchemeMonitoringSolution()}.{@link SchemeMonitoringSolution#getSchemePaths() getSchemePaths()}
+	 * instead.
+	 */
+	public Set<SchemePath> getSchemePathsRecursively() {
+		final Set<SchemePath> schemePaths = new HashSet<SchemePath>();
+		for (final SchemeMonitoringSolution schemeMonitoringSolution : this.getSchemeMonitoringSolutionsRecursively()) {
+			schemePaths.addAll(schemeMonitoringSolution.getSchemePaths());
+		}
+		return Collections.unmodifiableSet(schemePaths);
+	}
+
+	public Set<SchemePath> getTopologicalPaths() {
+		final Set<SchemePath> schemePaths = new HashSet<SchemePath>(this.getCurrentSchemeMonitoringSolution().getSchemePaths());
+		for (final SchemeElement schemeElement : this.getSchemeElements()) {
+			for (final Scheme scheme : schemeElement.getSchemes()) {
+				if (scheme.getKind() == CABLE_SUBNETWORK) {
+					for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
+						schemePaths.add(schemePath);
+					}
+				}
+			}
+		}
+		return Collections.unmodifiableSet(schemePaths);
 	}
 }
