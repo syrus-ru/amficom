@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.138 2005/07/24 15:34:21 arseniy Exp $
+ * $Id: Test.java,v 1.139 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/07/24 15:34:21 $
+ * @version $Revision: 1.139 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -131,7 +132,7 @@ public final class Test extends StorableObject {
 	 */
 	Test(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Date startTime,
 			final Date endTime,
 			final Identifier temporalPatternId,
@@ -196,7 +197,7 @@ public final class Test extends StorableObject {
 		try {
 			final Test test = new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					startTime,
 					endTime,
 					temporalPatternId,
@@ -362,7 +363,7 @@ public final class Test extends StorableObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.timeStamps.getTransferable(orb),
 				this.measurementTypeId.getTransferable(),
 				this.analysisTypeId.getTransferable(),
@@ -456,7 +457,7 @@ public final class Test extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final int temporalType,
 			final Date startTime,
 			final Date endTime,

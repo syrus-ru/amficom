@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.29 2005/07/13 14:52:35 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.30 2005/07/25 20:50:06 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.Undoable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/13 14:52:35 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -66,7 +67,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 
 	IntervalsTemporalPattern(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap,
 			final SortedMap<Long, Long> intervalsDuration) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version);
@@ -87,9 +88,9 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			final SortedMap<Long, Long> intervalsDuration) throws CreateObjectException {
 
 		try {
-			IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
+			final IntervalsTemporalPattern intervalsTemporalPattern = new IntervalsTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.INTERVALSTEMPORALPATTERN_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					intervalsAbstractTemporalPatternMap,
 					intervalsDuration);
 
@@ -107,7 +108,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final SortedMap<Long, Identifier> intervalsAbstractTemporalPatternMap,
 			final SortedMap<Long, Long> intervalsDuration) {
@@ -498,7 +499,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				intervalTemporalPatternsIdT,
 				durationsT);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.84 2005/07/17 03:49:55 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.85 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,14 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/07/17 03:49:55 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -92,7 +93,7 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	MeasurementSetup(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final ParameterSet parameterSet,
 			final ParameterSet criteriaSet,
 			final ParameterSet thresholdSet,
@@ -146,7 +147,7 @@ public final class MeasurementSetup extends StorableObject {
 		try {
 			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
 				creatorId,
-				0L,
+				StorableObjectVersion.createInitial(),
 				parameterSet,
 				criteriaSet,
 				thresholdSet,
@@ -214,7 +215,7 @@ public final class MeasurementSetup extends StorableObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.parameterSet.getId().getTransferable(),
 				(this.criteriaSet != null) ? this.criteriaSet.getId().getTransferable() : voidIdlIdentifier,
 				(this.thresholdSet != null) ? this.thresholdSet.getId().getTransferable() : voidIdlIdentifier,
@@ -298,7 +299,7 @@ public final class MeasurementSetup extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final ParameterSet parameterSet,
 			final ParameterSet criteriaSet,
 			final ParameterSet thresholdSet,

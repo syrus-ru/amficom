@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.61 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.62 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -68,7 +69,7 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 
 	MeasurementPortType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name) {
@@ -98,9 +99,9 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
-			MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_TYPE_CODE),
+			final MeasurementPortType measurementPortType = new MeasurementPortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name);
@@ -117,7 +118,7 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
+		final IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;
 	}
@@ -135,7 +136,7 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "");
@@ -145,7 +146,7 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name) {

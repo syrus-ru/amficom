@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.16 2005/07/14 18:46:55 arseniy Exp $
+ * $Id: AbstractLinkType.java,v 1.17 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,18 +9,26 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/14 18:46:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
-public abstract class AbstractLinkType extends StorableObjectType implements Namable {
+public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;
 
 	public AbstractLinkType(Identifier id) {
@@ -36,7 +44,7 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super(id, created, modified, creatorId, modifierId, version, codename, description);		
@@ -57,4 +65,11 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 	public abstract String getName();
 
 	public abstract void setName(final String Name);
+
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
+		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
+		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
+		return characteristics;
+	}
+
 }

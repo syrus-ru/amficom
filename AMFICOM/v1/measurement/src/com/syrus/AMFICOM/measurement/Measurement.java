@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.85 2005/07/18 12:40:55 arseniy Exp $
+ * $Id: Measurement.java,v 1.86 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/07/18 12:40:55 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,7 +92,7 @@ public final class Measurement extends Action {
 	 */
 	Measurement(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final MeasurementType type,
 			final Identifier monitoredElementId,
 			final String name,
@@ -156,7 +157,7 @@ public final class Measurement extends Action {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				this.name,
@@ -226,7 +227,7 @@ public final class Measurement extends Action {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final MeasurementType type,
 			final Identifier monitoredElementId,
 			final String name,
@@ -278,7 +279,7 @@ public final class Measurement extends Action {
 		try {
 			final Measurement measurement = new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					type,
 					monitoredElementId,
 					name,

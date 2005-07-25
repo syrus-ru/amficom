@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.19 2005/06/25 17:50:50 bass Exp $
+ * $Id: DomainMember.java,v 1.20 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,11 +14,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/25 17:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/25 20:49:23 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -51,7 +52,7 @@ public abstract class DomainMember extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
@@ -110,7 +111,7 @@ public abstract class DomainMember extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId) {
 		super.setAttributes(created,
 				modified,

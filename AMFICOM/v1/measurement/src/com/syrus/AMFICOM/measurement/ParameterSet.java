@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.9 2005/07/03 19:16:30 bass Exp $
+ * $Id: ParameterSet.java,v 1.10 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/03 19:16:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/25 20:50:06 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -93,7 +94,7 @@ public final class ParameterSet extends StorableObject {
 	 */
 	ParameterSet(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final int sort,
 			final String description,
 			final Parameter[] parameters,
@@ -130,7 +131,7 @@ public final class ParameterSet extends StorableObject {
 		try {
 			final ParameterSet set = new ParameterSet(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERSET_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					sort.value(),
 					description,
 					parameters,
@@ -186,7 +187,7 @@ public final class ParameterSet extends StorableObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				ParameterSetSort.from_int(this.sort),
 				this.description,
 				pts,
@@ -244,7 +245,7 @@ public final class ParameterSet extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final int sort,
 			final String description) {
 		super.setAttributes(created,

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.84 2005/07/18 13:13:19 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.85 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,13 +29,14 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/07/18 13:13:19 $
+ * @version $Revision: 1.85 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -111,7 +112,7 @@ public final class AnalysisType extends ActionType {
 	 */
 	AnalysisType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final Set<Identifier> inParameterTypeIds,
@@ -169,7 +170,7 @@ public final class AnalysisType extends ActionType {
 		try {
 			final AnalysisType analysisType = new AnalysisType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					inParameterTypeIds,
@@ -225,7 +226,7 @@ public final class AnalysisType extends ActionType {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				inParTypeIds,
@@ -273,7 +274,7 @@ public final class AnalysisType extends ActionType {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super.setAttributes(created,	

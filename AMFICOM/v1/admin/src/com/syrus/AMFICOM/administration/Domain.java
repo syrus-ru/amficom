@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.45 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: Domain.java,v 1.46 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/25 20:49:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 public final class Domain extends DomainMember implements Characterizable {
@@ -80,7 +81,7 @@ public final class Domain extends DomainMember implements Characterizable {
 	 */
 	Domain(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description) {
@@ -120,7 +121,7 @@ public final class Domain extends DomainMember implements Characterizable {
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description);
@@ -170,9 +171,9 @@ public final class Domain extends DomainMember implements Characterizable {
 			final String name,
 			final String description) throws CreateObjectException {
 		try {
-			Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_CODE),
+			final Domain domain = new Domain(IdentifierPool.getGeneratedIdentifier(ObjectEntities.DOMAIN_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description);
@@ -197,7 +198,7 @@ public final class Domain extends DomainMember implements Characterizable {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description) {

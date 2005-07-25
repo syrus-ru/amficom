@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.19 2005/07/05 15:23:17 bass Exp $
+ * $Id: ServerProcess.java,v 1.20 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/05 15:23:17 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/25 20:49:23 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public final class ServerProcess extends StorableObject {
@@ -82,7 +83,7 @@ public final class ServerProcess extends StorableObject {
 	 */
 	ServerProcess(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final Identifier serverId,
 			final Identifier userId,
@@ -133,7 +134,7 @@ public final class ServerProcess extends StorableObject {
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.codename,
 				this.serverId.getTransferable(),
 				this.userId.getTransferable(),
@@ -146,9 +147,9 @@ public final class ServerProcess extends StorableObject {
 			final Identifier userId,
 			final String description) throws CreateObjectException {
 		try {
-			ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_CODE),
+			final ServerProcess serverProcess = new ServerProcess(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SERVERPROCESS_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					serverId,
 					userId,
@@ -174,7 +175,7 @@ public final class ServerProcess extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final Identifier serverId,
 			final Identifier userId,

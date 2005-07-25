@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.71 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: PortType.java,v 1.72 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,10 +36,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.72 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -72,7 +73,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 
 	PortType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -113,9 +114,9 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_TYPE_CODE),
+			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name,
@@ -134,7 +135,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlPortType ptt = (IdlPortType) transferable;
+		final IdlPortType ptt = (IdlPortType) transferable;
 		super.fromTransferable(ptt, ptt.codename, ptt.description);
 		this.name = ptt.name;
 		this.sort = ptt.sort.value();
@@ -153,7 +154,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
@@ -165,7 +166,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -199,7 +200,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		return PortTypeKind.from_int(this.kind);
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 		super.markAsChanged();
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.41 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: MCM.java,v 1.42 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.42 $, $Date: 2005/07/25 20:49:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -83,7 +84,7 @@ public final class MCM extends DomainMember implements Characterizable {
 	 */
 	MCM(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,
@@ -133,7 +134,7 @@ public final class MCM extends DomainMember implements Characterizable {
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.domainId.getTransferable(),
 				this.name,
 				this.description,
@@ -198,9 +199,9 @@ public final class MCM extends DomainMember implements Characterizable {
 			final Identifier userId,
 			final Identifier serverId) throws CreateObjectException {
 		try {
-			MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_CODE),
+			final MCM mcm = new MCM(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MCM_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description,
@@ -226,7 +227,7 @@ public final class MCM extends DomainMember implements Characterizable {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,

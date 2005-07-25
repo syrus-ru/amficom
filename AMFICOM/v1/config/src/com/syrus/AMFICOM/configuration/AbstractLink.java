@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.2 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.3 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
 public abstract class AbstractLink extends DomainMember implements Characterizable, TypedObject {
@@ -41,12 +42,14 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 //		super();
 	}
 
-	AbstractLink(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, long version,
+	AbstractLink(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			StorableObjectVersion version,
 			final Identifier domainId) {
-		super(id, created, modified, creatorId, modifierId, version,
-				domainId);
+		super(id, created, modified, creatorId, modifierId, version, domainId);
 	}
 
 	public void setType(final AbstractLinkType type) {

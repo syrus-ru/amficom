@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.63 2005/07/03 19:16:22 bass Exp $
+ * $Id: MonitoredElement.java,v 1.64 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,12 +30,13 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/07/03 19:16:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2005/07/25 20:49:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -68,7 +69,7 @@ public final class MonitoredElement extends DomainMember {
 	
 	MonitoredElement(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final Identifier measurementPortId,
@@ -107,14 +108,18 @@ public final class MonitoredElement extends DomainMember {
 			final MonitoredElementSort sort,
 			final String localAddress,
 			final Set<Identifier> monitoredDomainMemberIds) throws CreateObjectException {
-		if (creatorId == null || domainId == null || name == null || measurementPortId == null ||
-				localAddress == null || monitoredDomainMemberIds == null)
+		if (creatorId == null
+				|| domainId == null
+				|| name == null
+				|| measurementPortId == null
+				|| localAddress == null
+				|| monitoredDomainMemberIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
 			final MonitoredElement monitoredElement = new MonitoredElement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MONITOREDELEMENT_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					measurementPortId,
@@ -159,7 +164,7 @@ public final class MonitoredElement extends DomainMember {
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.measurementPortId.getTransferable(),
@@ -204,7 +209,7 @@ public final class MonitoredElement extends DomainMember {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final Identifier measurementPortId,

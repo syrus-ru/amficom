@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.79 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: Port.java,v 1.80 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,11 +33,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.80 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -69,7 +70,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 
 	Port(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final PortType type,
 			final String description,
 			final Identifier equipmentId) {
@@ -103,7 +104,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		try {
 			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_CODE),
 						creatorId,
-						0L,
+						StorableObjectVersion.createInitial(),
 						type,
 						description,
 						equipmentId);
@@ -143,7 +144,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.type.getId().getTransferable(),
 				this.description,
 				this.equipmentId.getTransferable());
@@ -176,7 +177,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final PortType type,
 			final String description,
 			final Identifier equipmentId) {

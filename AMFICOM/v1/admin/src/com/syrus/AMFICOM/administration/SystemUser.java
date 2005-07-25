@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.15 2005/07/17 05:18:01 arseniy Exp $
+ * $Id: SystemUser.java,v 1.16 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,11 +35,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/17 05:18:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/25 20:49:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -86,7 +87,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	 */
 	SystemUser(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String login,
 			final int sort,
 			final String name,
@@ -121,7 +122,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 			final Identifier generatedIdentifier = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SYSTEMUSER_CODE);
 			final SystemUser user = new SystemUser(generatedIdentifier,
 					creatorId != null ? creatorId : generatedIdentifier,
-					0L,
+					StorableObjectVersion.createInitial(),
 					login,
 					sort.value(),
 					name,
@@ -174,7 +175,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.login,
 				SystemUserSort.from_int(this.sort),
 				this.name,
@@ -230,7 +231,7 @@ public final class SystemUser extends StorableObject implements Characterizable,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String login,
 			final int sort,
 			final String name,

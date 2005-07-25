@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.106 2005/07/24 17:38:21 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.107 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
@@ -44,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/07/24 17:38:21 $
+ * @version $Revision: 1.107 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -163,7 +164,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 		final Test test = (storableObject == null) ? new Test(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
 				null,
-				0L,
+				StorableObjectVersion.ILLEGAL_VERSION,
 				null,
 				null,
 				null,
@@ -188,7 +189,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				resultSet.getInt(TestWrapper.COLUMN_TEMPORAL_TYPE),
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),

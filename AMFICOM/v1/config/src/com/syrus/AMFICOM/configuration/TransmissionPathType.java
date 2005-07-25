@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.61 2005/07/17 05:19:01 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.62 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/07/17 05:19:01 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -69,7 +70,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 
 	TransmissionPathType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name) {
@@ -100,9 +101,9 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_TYPE_CODE),
+			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name);
@@ -119,7 +120,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
+		final IdlTransmissionPathType tptt = (IdlTransmissionPathType) transferable;
 		super.fromTransferable(tptt, tptt.codename, tptt.description);
 		this.name = tptt.name;
 	}
@@ -137,7 +138,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "");
@@ -156,7 +157,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name) {

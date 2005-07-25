@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.108 2005/07/24 14:55:43 arseniy Exp $
+ * $Id: Equipment.java,v 1.109 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,12 +34,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/07/24 14:55:43 $
+ * @version $Revision: 1.109 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -83,7 +84,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	Equipment(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final EquipmentType type,
 			final String name,
@@ -165,7 +166,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		try {
 			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					type,
 					name,
@@ -224,7 +225,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.type.getId().getTransferable(),
 				this.name != null ? this.name : "",
@@ -272,7 +273,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final EquipmentType type,
 			final String name,

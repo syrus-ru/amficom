@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.99 2005/07/24 17:38:21 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.100 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/07/24 17:38:21 $
+ * @version $Revision: 1.100 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -120,7 +121,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		final MeasurementSetup measurementSetup = (storableObject == null)
 				? new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						null,
-						0L,
+						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -128,7 +129,8 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 						null,
 						0,
 						null,
-						null) : this.fromStorableObject(storableObject);	
+						null)
+					: this.fromStorableObject(storableObject);	
 		ParameterSet parameterSet;
 		ParameterSet criteriaSet;
 		ParameterSet thresholdSet;
@@ -149,16 +151,16 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		measurementSetup.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-									   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-									   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-									   parameterSet,
-									   criteriaSet,
-									   thresholdSet,
-									   etalon,
-									   (description != null) ? description : "",
-									   resultSet.getLong(MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				parameterSet,
+				criteriaSet,
+				thresholdSet,
+				etalon,
+				(description != null) ? description : "",
+				resultSet.getLong(MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION));
 		return measurementSetup;
 	}
 

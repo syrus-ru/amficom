@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.67 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: Link.java,v 1.68 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.67 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.68 $, $Date: 2005/07/25 20:49:45 $
  * @module config_v1
  */
 public final class Link extends AbstractLink {
@@ -56,7 +57,7 @@ public final class Link extends AbstractLink {
 
 	Link(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,
@@ -113,7 +114,7 @@ public final class Link extends AbstractLink {
 		try {
 			final Link link = new Link(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description,
@@ -159,7 +160,7 @@ public final class Link extends AbstractLink {
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
@@ -175,7 +176,7 @@ public final class Link extends AbstractLink {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,

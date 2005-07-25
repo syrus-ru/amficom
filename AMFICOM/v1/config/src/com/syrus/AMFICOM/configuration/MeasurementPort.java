@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.68 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.69 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,11 +34,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.69 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -74,7 +75,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 
 	MeasurementPort(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final MeasurementPortType type,
 			final String name,
 			final String description,	
@@ -116,7 +117,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 		try {
 			final MeasurementPort measurementPort = new MeasurementPort(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTPORT_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					type,
 					name,
 					description,
@@ -159,7 +160,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
@@ -196,7 +197,7 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final MeasurementPortType type,
 			final String name,
 			final String description,	

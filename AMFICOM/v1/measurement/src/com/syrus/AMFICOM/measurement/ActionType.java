@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.13 2005/06/24 13:54:35 arseniy Exp $
+ * $Id: ActionType.java,v 1.14 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,10 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/06/24 13:54:35 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -37,7 +38,7 @@ public abstract class ActionType extends StorableObjectType {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super(id,
@@ -55,7 +56,7 @@ public abstract class ActionType extends StorableObjectType {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);

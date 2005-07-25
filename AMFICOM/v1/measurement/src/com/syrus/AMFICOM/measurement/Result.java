@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.69 2005/07/03 19:16:30 bass Exp $
+ * $Id: Result.java,v 1.70 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/07/03 19:16:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/07/25 20:50:06 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -83,7 +84,7 @@ public final class Result extends StorableObject {
 	 */
 	Result(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Action action,
 			final int sort,
 			final Parameter[] parameters) {
@@ -153,7 +154,7 @@ public final class Result extends StorableObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				(this.sort == ResultSort._RESULT_SORT_MEASUREMENT)
 						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
@@ -223,7 +224,7 @@ public final class Result extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Action action,
 			final int sort) {
 		super.setAttributes(created,
@@ -245,7 +246,7 @@ public final class Result extends StorableObject {
 		try {
 			final Result result = new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_CODE),
 				creatorId,
-				0L,
+				StorableObjectVersion.createInitial(),
 				action,
 				sort.value(),
 				parameters);

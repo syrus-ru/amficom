@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.56 2005/07/17 05:19:00 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.57 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -32,15 +30,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/07/17 05:19:00 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
-public final class CableLinkType extends AbstractLinkType implements Characterizable {
+public final class CableLinkType extends AbstractLinkType {
 
 	private static final long serialVersionUID = 3257007652839372857L;
 
@@ -71,7 +70,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	CableLinkType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -118,7 +117,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		try {
 			final CableLinkType cableLinkType = new CableLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name,
@@ -139,7 +138,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlCableLinkType cltt = (IdlCableLinkType) transferable;
+		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();
 		this.manufacturer = cltt.manufacturer;
@@ -161,7 +160,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
@@ -180,7 +179,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -267,9 +266,4 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		return Collections.emptySet();
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
-	}
 }

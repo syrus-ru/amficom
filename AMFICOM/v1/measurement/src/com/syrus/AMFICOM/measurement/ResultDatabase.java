@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.96 2005/07/24 17:38:21 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.97 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/07/24 17:38:21 $
+ * @version $Revision: 1.97 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -195,12 +196,12 @@ public final class ResultDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Result result = (storableObject == null)
 				? new Result(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-									null,
-									0L,
-									null,
-									0,
-									null)
-				: this.fromStorableObject(storableObject);
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						0,
+						null)
+					: this.fromStorableObject(storableObject);
 		final int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
 		Action action = null;
 		switch (resultSort) {
@@ -243,7 +244,7 @@ public final class ResultDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				action,
 				resultSort);
 

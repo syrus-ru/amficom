@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractTemporalPattern.java,v 1.4 2005/06/23 11:54:10 arseniy Exp $
+ * $Id: AbstractTemporalPattern.java,v 1.5 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,10 @@ import java.util.TreeSet;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/23 11:54:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -25,10 +26,10 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 
 	private static final long serialVersionUID = -4278178783985442738L;
 
-	protected SortedSet<Date>	times;
+	protected SortedSet<Date> times;
 
-	protected long		startTime	= 0;
-	protected long		endTime		= 0;
+	protected long startTime = 0;
+	protected long endTime = 0;
 
 	/**
 	 * <p>
@@ -58,7 +59,7 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version) {
+			final StorableObjectVersion version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
@@ -72,23 +73,21 @@ public abstract class AbstractTemporalPattern extends StorableObject {
 	 *            Date
 	 * @return SortedSet of java.util.Date
 	 */
-	public final SortedSet<Date> getTimes(final Date start,
-	                                final Date end) {
+	public final SortedSet<Date> getTimes(final Date start, final Date end) {
 		return this.getTimes(start.getTime(), end.getTime());
 	}
 
 	/**
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
-	 *
+	 * 
 	 * @param start
-	 *            long
+	 *        long
 	 * @param end
-	 *            long
+	 *        long
 	 * @return SortedSet of java.util.Date
 	 */
-	public final SortedSet<Date> getTimes(final long start,
-	                                final long end) {
+	public final SortedSet<Date> getTimes(final long start, final long end) {
 		if (this.times == null)
 			this.times = new TreeSet<Date>();
 		if (this.startTime != start)

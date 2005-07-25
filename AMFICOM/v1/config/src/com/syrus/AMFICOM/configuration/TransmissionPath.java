@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.79 2005/07/24 14:55:43 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.80 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,10 +34,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.79 $, $Date: 2005/07/24 14:55:43 $
+ * @version $Revision: 1.80 $, $Date: 2005/07/25 20:49:45 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -73,7 +74,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 
 	TransmissionPath(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,
@@ -113,7 +114,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		try {
 			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description,
@@ -157,7 +158,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
@@ -195,7 +196,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,

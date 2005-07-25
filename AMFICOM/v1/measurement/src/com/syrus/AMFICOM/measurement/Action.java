@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.33 2005/07/03 19:16:30 bass Exp $
+ * $Id: Action.java,v 1.34 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/03 19:16:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/07/25 20:50:06 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -55,7 +56,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final ActionType type,
 			final Identifier monitoredElementId,
 			final Action parentAction) {
@@ -124,7 +125,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final ActionType type,
 			final Identifier monitoredElementId,
 			final Action parentAction) {

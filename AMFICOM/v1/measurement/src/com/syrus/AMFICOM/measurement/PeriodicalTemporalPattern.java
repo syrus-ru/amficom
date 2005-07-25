@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.15 2005/07/13 14:52:35 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.16 2005/07/25 20:50:06 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
@@ -29,31 +30,35 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/13 14:52:35 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
  */
 public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 
-	private static final long	serialVersionUID	= 3257567312898175032L;
-	
-	private long period;	
-	
-	private static final long	SECOND_LONG	= 1000;
-	private static final long	MINUTE_LONG	= 60 * SECOND_LONG;
-	private static final long	HOUR_LONG	= 60 * MINUTE_LONG;
-	private static final long	DAY_LONG	= 24 * HOUR_LONG;
+	private static final long serialVersionUID = 3257567312898175032L;
 
-	private static final String	I18N_KEY_MIN		= "min";
-	private static final String	I18N_KEY_HOUR		= "hour";
-	private static final String	I18N_KEY_DAYS		= "days";
+	private long period;
 
-	
+	private static final long SECOND_LONG = 1000;
+	private static final long MINUTE_LONG = 60 * SECOND_LONG;
+	private static final long HOUR_LONG = 60 * MINUTE_LONG;
+	private static final long DAY_LONG = 24 * HOUR_LONG;
+
+	private static final String I18N_KEY_MIN = "min";
+	private static final String I18N_KEY_HOUR = "hour";
+	private static final String I18N_KEY_DAYS = "days";
+
 	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 * <p>
+	 * <b>Clients must never explicitly call this method.</b>
+	 * </p>
 	 */
-	PeriodicalTemporalPattern(final Identifier id, final Identifier creatorId, final long version, final long period) {
+	PeriodicalTemporalPattern(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final long period) {
 		super(id,
 			new Date(System.currentTimeMillis()),
 			new Date(System.currentTimeMillis()),
@@ -95,9 +100,9 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 			throws CreateObjectException {
 
 		try {
-			PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
+			final PeriodicalTemporalPattern periodicalTemporalPattern = new PeriodicalTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PERIODICALTEMPORALPATTERN_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					period);
 
 			assert periodicalTemporalPattern.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -155,7 +160,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.period);
 	}
 
@@ -212,7 +217,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final long period) {
 		super.setAttributes(created,
 				modified,

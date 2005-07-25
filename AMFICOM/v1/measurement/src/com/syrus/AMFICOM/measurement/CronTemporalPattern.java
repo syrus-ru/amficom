@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.17 2005/07/13 14:52:35 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.18 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/13 14:52:35 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -52,42 +53,42 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3256437014894163509L;
-	private static final String	I18N_KEY_MIN		= "min";
-	private static final String	I18N_KEY_HOUR		= "hour";
-	private static final String	I18N_KEY_DAY_OF_MONTH	= "dayOfMonth";
-	private static final String	I18N_KEY_DAY_OF_WEEK	= "dayOfWeek";
-	private static final String	I18N_KEY_MONTH		= "month";
-	private static final String	I18N_KEY_OF		= "of";
-	private static final String	I18N_KEY_TO		= "to";
-	private static final String	I18N_KEY_FROM		= "from";
-	private static final String	I18N_KEY_EACH		= "each";
+	private static final long serialVersionUID = 3256437014894163509L;
+	private static final String I18N_KEY_MIN = "min";
+	private static final String I18N_KEY_HOUR = "hour";
+	private static final String I18N_KEY_DAY_OF_MONTH = "dayOfMonth";
+	private static final String I18N_KEY_DAY_OF_WEEK = "dayOfWeek";
+	private static final String I18N_KEY_MONTH = "month";
+	private static final String I18N_KEY_OF = "of";
+	private static final String I18N_KEY_TO = "to";
+	private static final String I18N_KEY_FROM = "from";
+	private static final String I18N_KEY_EACH = "each";
 
 	public class TimeLine {
 
-		private static final long	SECOND_LONG	= 1000;
-		private static final long	MINUTE_LONG	= 60 * SECOND_LONG;
-		private static final long	HOUR_LONG	= 60 * MINUTE_LONG;
-		private static final long	DAY_LONG	= 24 * HOUR_LONG;
-		private static final long	MONTH_LONG	= 31 * DAY_LONG;
+		private static final long SECOND_LONG = 1000;
+		private static final long MINUTE_LONG = 60 * SECOND_LONG;
+		private static final long HOUR_LONG = 60 * MINUTE_LONG;
+		private static final long DAY_LONG = 24 * HOUR_LONG;
+		private static final long MONTH_LONG = 31 * DAY_LONG;
 
-		protected SortedSet<Date>		dateList;
-		private TimeValue		dayOfMonth;
-		private TimeValue		dayOfWeek;
+		protected SortedSet<Date> dateList;
+		private TimeValue dayOfMonth;
+		private TimeValue dayOfWeek;
 
-		private String			timeLineDescription;
+		private String timeLineDescription;
 
-		private List<Integer>			divisorList	= new LinkedList<Integer>();
-		private long			endPeriod;
-		private List<Integer>			endsList	= new LinkedList<Integer>();
-		private TimeValue		hours;
+		private List<Integer> divisorList = new LinkedList<Integer>();
+		private long endPeriod;
+		private List<Integer> endsList = new LinkedList<Integer>();
+		private TimeValue hours;
 
-		private TimeValue		minutes;
-		private TimeValue		month;
+		private TimeValue minutes;
+		private TimeValue month;
 
-		private long			startPeriod;
-		private List<Integer>			startsList	= new LinkedList<Integer>();
-		private String			template;
+		private long startPeriod;
+		private List<Integer> startsList = new LinkedList<Integer>();
+		private String template;
 
 		public void fillAllData() {
 			if (this.minutes == null)
@@ -95,16 +96,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			if (this.hours == null)
 				this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), "*", 0, 23);
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(
-									LangModelMeasurement
-											.getString(I18N_KEY_DAY_OF_MONTH),
-									"*", 1, 31);
+				this.dayOfMonth = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH), "*", 1, 31);
 			if (this.month == null)
 				this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), "*", 0, 11);
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK),
-									"*", 0, 6);
+				this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK), "*", 0, 6);
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
 
@@ -133,7 +130,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			if (this.timeLineDescription == null) {
 				if (this.hours == null)
 					parseTemplate();
-				StringBuffer desc = new StringBuffer();
+				final StringBuffer desc = new StringBuffer();
 				//
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
@@ -143,19 +140,17 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 					desc.append(this.hours.toString());
 
 				} else {
-					LinkedList<String> list = new LinkedList<String>();
+					final LinkedList<String> list = new LinkedList<String>();
 					for (int h = 0; h < this.hours.host.length; h++) {
 						for (int m = 0; m < this.minutes.host.length; m++) {
-							list.add((this.hours.host[h] < 10 ? "0" : "")
-									+ Integer.toString(this.hours.host[h]) + ":"
-									+ (this.minutes.host[m] < 10 ? "0" : "")
-									+ Integer.toString(this.minutes.host[m]));
+							list.add((this.hours.host[h] < 10 ? "0" : "") + Integer.toString(this.hours.host[h]) + ":"
+									+ (this.minutes.host[m] < 10 ? "0" : "") + Integer.toString(this.minutes.host[m]));
 						}
 					}
 					if (list.size() < 10) {
 						Collections.sort(list);
 						for (int i = 0; i < list.size(); i++) {
-							String str = list.get(i);
+							final String str = list.get(i);
 							if (desc.length() > 0)
 								desc.append(", ");
 							desc.append(str);
@@ -229,53 +224,39 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			//String template = timeLine.getTemplate();
 			//String template = (String) templates.get(k);
 			long startTimeCalc = System.currentTimeMillis();
-			Pattern p = Pattern.compile("(.+)\\s+(.+)\\s+(.+)\\s+(.+)\\s+(.+)");
+			final Pattern p = Pattern.compile("(.+)\\s+(.+)\\s+(.+)\\s+(.+)\\s+(.+)");
 			//Pattern p = Pattern.compile("(.*)");
 			if (this.dateList != null)
 				this.dateList.clear();
-			Matcher matcher = p.matcher(this.template);
+			final Matcher matcher = p.matcher(this.template);
 			if (matcher.find()) {
 				for (int i = 1; i <= matcher.groupCount(); i++) {
-					int begin = matcher.start(i);
-					int end = matcher.end(i);
+					final int begin = matcher.start(i);
+					final int end = matcher.end(i);
 					if ((begin >= 0) && (end <= this.template.length())) {
-						String subString = this.template.substring(matcher.start(i), matcher
-								.end(i));
+						final String subString = this.template.substring(matcher.start(i), matcher.end(i));
 						if (DEBUG)
 							System.out.println(i + "\t" + subString);
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_MIN), subString, 0,
-												59);
+								this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), subString, 0, 59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_HOUR),
-												subString, 0,
-												23);
+								this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), subString, 0, 23);
 								break;
 							case 3:
 								//day of month
-								this.dayOfMonth = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_DAY_OF_MONTH),
-													subString,
-													1, 31);
+								this.dayOfMonth = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH), subString, 1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_MONTH), subString,
-												0,
-												11);
+								this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), subString, 0, 11);
 								break;
 							case 5:
 								//day of week
-								this.dayOfWeek = parseExpression(LangModelMeasurement
-										.getString(I18N_KEY_DAY_OF_WEEK),
-													subString, 0, 6);
+								this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK), subString, 0, 6);
 								break;
 						}
 
@@ -290,14 +271,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			//Calendar calendar = Calendar.getInstance();
 			//calendar.setTimeInMillis(startPeriod);
 			//calendar.set(Calendar.SECOND, 0);
-			Calendar c = Calendar.getInstance();
+			final Calendar c = Calendar.getInstance();
 			//c.set(Calendar.MINUTE, 41);
-			long backTime = c.getTimeInMillis();
+			final long backTime = c.getTimeInMillis();
 			if (DEBUG) {
-				System.out.println("startPeriod:"
-						+ new Date(this.startPeriod).toString());
-				System.out.println("endPeriod:"
-						+ new Date(this.endPeriod).toString());
+				System.out.println("startPeriod:" + new Date(this.startPeriod).toString());
+				System.out.println("endPeriod:" + new Date(this.endPeriod).toString());
 			}
 			for (int m = 0; m < this.month.host.length; m++) {
 				c.setTimeInMillis(backTime);
@@ -305,9 +284,8 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 				long mTime = c.getTimeInMillis();
 				if ((this.startPeriod - MONTH_LONG <= mTime) && (mTime <= this.endPeriod + MONTH_LONG)) {
 					if (DEBUG)
-						System.out.println("month\t"
-								+ c.getTime().toString());
-					long backMTime = c.getTimeInMillis();
+						System.out.println("month\t" + c.getTime().toString());
+					final long backMTime = c.getTimeInMillis();
 					for (int dm = 0; dm < this.dayOfMonth.host.length; dm++) {
 						c.setTimeInMillis(backMTime);
 						c.set(Calendar.DAY_OF_MONTH, this.dayOfMonth.host[dm]);
@@ -315,22 +293,16 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 						if ((this.startPeriod - DAY_LONG <= mTime)
 								&& (mTime <= this.endPeriod + DAY_LONG)) {
 							if (DEBUG)
-								System.out.println("dayOfMonth\t"
-										+ c.getTime().toString());
+								System.out.println("dayOfMonth\t" + c.getTime().toString());
 							long backDMTime = c.getTimeInMillis();
 							for (int dw = 0; dw < this.dayOfWeek.host.length; dw++) {
 								c.setTimeInMillis(backDMTime);
 								c.set(Calendar.DAY_OF_WEEK,
 									WEEK_NUMBER[this.dayOfWeek.host[dw]]);
 								mTime = c.getTimeInMillis();
-								if ((this.startPeriod - DAY_LONG <= mTime)
-										&& (mTime <= this.endPeriod + DAY_LONG)) {
+								if ((this.startPeriod - DAY_LONG <= mTime) && (mTime <= this.endPeriod + DAY_LONG)) {
 									if (DEBUG)
-										System.out
-												.println("dayOfWeek\t"
-														+ c
-																.getTime()
-																.toString());
+										System.out.println("dayOfWeek\t" + c.getTime().toString());
 									long backDWTime = c.getTimeInMillis();
 									for (int h = 0; h < this.hours.host.length; h++) {
 										c.setTimeInMillis(backDWTime);
@@ -341,13 +313,10 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 										// hour:"
 										// +
 										// this.hours.host[h]);
-										c.set(Calendar.HOUR_OF_DAY,
-											this.hours.host[h]);
+										c.set(Calendar.HOUR_OF_DAY, this.hours.host[h]);
 										mTime = c.getTimeInMillis();
-										if ((this.startPeriod - HOUR_LONG <= mTime)
-												&& (mTime <= this.endPeriod
-														+ HOUR_LONG)) {
-											//											if
+										if ((this.startPeriod - HOUR_LONG <= mTime) && (mTime <= this.endPeriod + HOUR_LONG)) {
+											// if
 											// (DEBUG)
 											//												System.out
 											//														.println("hour\t"
@@ -355,14 +324,11 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 											//																+ c
 											//																		.getTime()
 											//																		.toString());
-											long backHTime = c
-													.getTimeInMillis();
+											long backHTime = c.getTimeInMillis();
 											for (int mm = 0; mm < this.minutes.host.length; mm++) {
 												if (DEBUG)
-													System.out
-															.println(" \t* minute:"
-																	+ this.minutes.host[mm]);
-												//												System.out
+													System.out.println(" \t* minute:" + this.minutes.host[mm]);
+												// System.out
 												//														.println("backHTime:"
 												//																+
 												// new
@@ -380,30 +346,19 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 												// new
 												// Date(
 												//																		this.endPeriod));
-												c
-														.setTimeInMillis(backHTime);
-												c
-														.set(
-															Calendar.MINUTE,
-															this.minutes.host[mm]);
-												c.set(Calendar.SECOND,
-													0);
+												c.setTimeInMillis(backHTime);
+												c.set(Calendar.MINUTE, this.minutes.host[mm]);
+												c.set(Calendar.SECOND, 0);
 
-												mTime = c
-														.getTimeInMillis();
+												mTime = c.getTimeInMillis();
 												if (DEBUG)
-													System.out
-															.println(">"
-																	+ new Date(
-																			mTime)
-																	+ "\t"
-																	+ new Date(
-																			this.startPeriod)
-																	+ ", "
-																	+ new Date(
-																			this.endPeriod));
-												if ((this.startPeriod <= mTime)
-														&& (mTime <= this.endPeriod)) {
+													System.out.println(">"
+															+ new Date(mTime)
+															+ "\t"
+															+ new Date(this.startPeriod)
+															+ ", "
+															+ new Date(this.endPeriod));
+												if ((this.startPeriod <= mTime) && (mTime <= this.endPeriod)) {
 													if (this.dateList == null)
 														this.dateList = new TreeSet<Date>();
 													this.dateList.add(c.getTime());
@@ -425,8 +380,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 				}
 			}
 			if (DEBUG)
-				System.out.println("Calc time:"
-						+ (System.currentTimeMillis() - startTimeCalc) + " ms.");
+				System.out.println("Calc time:" + (System.currentTimeMillis() - startTimeCalc) + " ms.");
 
 		}
 
@@ -478,8 +432,8 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 		 * @return a host of values
 		 */
 		private TimeValue parseExpression(final String name, final String exp, final int min, final int max) {
-			TimeValue timeValue = new TimeValue(name);
-			boolean[] indices = new boolean[max + 1];
+			final TimeValue timeValue = new TimeValue(name);
+			final boolean[] indices = new boolean[max + 1];
 			for (int i = 0; i < indices.length; i++)
 				indices[i] = false;
 			String[] params = exp.split(",");
@@ -500,16 +454,16 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 				int divisor = 0;
 				int lvalue = -1;
 				int rvalue = -1;
-				String substr = params[j];
+				final String substr = params[j];
 				//System.out.println("->" + substr);
-				Pattern pattern = Pattern.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)");
-				Matcher matcher = pattern.matcher(params[j]);
+				final Pattern pattern = Pattern.compile("(\\*(\\/(\\d+))?)|((\\d+)(\\-(\\d+))?)");
+				final Matcher matcher = pattern.matcher(params[j]);
 				if (matcher.find()) {
 					for (int i = 1; i <= matcher.groupCount(); i++) {
-						int begin = matcher.start(i);
-						int end = matcher.end(i);
+						final int begin = matcher.start(i);
+						final int end = matcher.end(i);
 						if ((begin >= 0) && (end <= exp.length())) {
-							String s = substr.substring(begin, end);
+							final String s = substr.substring(begin, end);
 							switch (i) {
 								case 1:
 									divisor = 1;
@@ -527,8 +481,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 							}
 							if (DEBUG)
-								System.out.println(">" + i + "\t" + s
-										+ "\t" + lvalue + "," + rvalue);
+								System.out.println(">" + i + "\t" + s + "\t" + lvalue + "," + rvalue);
 						}
 						//					else {
 						//						System.out.println(">" + i +
@@ -637,17 +590,17 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	public class TimeValue {
 
-		public int[]	divisor;
-		public int[]	ends;
-		public int[]	host;
-		public int	max	= 0;
+		public int[] divisor;
+		public int[] ends;
+		public int[] host;
+		public int max = 0;
 
-		public int	min	= 0;
+		public int min = 0;
 
-		public String	name;
-		public String[]	names;
-		public String	pluralName;
-		public int[]	starts;
+		public String name;
+		public String[] names;
+		public String pluralName;
+		public int[] starts;
 
 		public TimeValue(final String name) {
 			this.name = name;
@@ -813,7 +766,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	CronTemporalPattern(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String description,
 			final String[] cronStrings) {
 		super(id,
@@ -830,7 +783,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	private CronTemporalPattern(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String description,
 			final Set<String> cronString) {
 		super(id,
@@ -857,9 +810,9 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
+			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					description,
 					cronString);
 
@@ -880,9 +833,9 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
+			final CronTemporalPattern cronTemporalPattern = new CronTemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CRONTEMPORALPATTERN_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					description,
 					cronStrings);
 
@@ -897,9 +850,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 	
 	public static String getCronStringsDescription(final String[] cronStrings) {
-		String desc = null;
-		CronTemporalPattern pattern = new CronTemporalPattern(null, null, 0L, null, cronStrings);
-		desc = pattern.toString();
+		final CronTemporalPattern pattern = new CronTemporalPattern(null,
+				null,
+				StorableObjectVersion.createInitial(),
+				null,
+				cronStrings);
+		final String desc = pattern.toString();
 		return desc;
 	}
 
@@ -910,12 +866,9 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	public String[] getCronStrings() {
 		if ((this.cronStrings == null) || (this.cronStrings.length != this.templates.size()))
 			this.cronStrings = new String[this.templates.size()];
-		{
-			int i = 0;
-			for (final Iterator<TimeLine> it = this.templates.iterator(); it.hasNext();) {
-				TimeLine line = it.next();
-				this.cronStrings[i++] = line.getTemplate();
-			}
+		int i = 0;
+		for (final TimeLine timeLine : this.templates) {
+			this.cronStrings[i++] = timeLine.getTemplate();
 		}
 		return this.cronStrings;
 	}
@@ -926,7 +879,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
+		final IdlCronTemporalPattern ctpt = (IdlCronTemporalPattern)transferable;
 		super.fromTransferable(ctpt);
 
 		this.description = ctpt.description;
@@ -946,7 +899,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.description,
 				getCronStrings());
 	}
@@ -955,7 +908,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String description,
 			final String[] cronStrings) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
@@ -989,15 +942,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	 */
 	@Override
 	protected void fillTimes() {
-		final Set<TimeLine> list = this.templates;
-		for (final Iterator<TimeLine> it = list.iterator(); it.hasNext();) {
-			TimeLine timeLine = it.next();
+		for (final TimeLine timeLine : this.templates) {
 			timeLine.setStartPeriod(this.startTime);
 			timeLine.setEndPeriod(this.endTime);
 			timeLine.parseTemplate();
 			if (timeLine.dateList != null) {
-				for (final Iterator<Date> it2 = timeLine.dateList.iterator(); it2.hasNext();) {
-					final Date date = it2.next();
+				for (final Date date : timeLine.dateList) {
 					if (!this.times.contains(date))
 						this.times.add(date);
 				}
@@ -1041,7 +991,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 			super.markAsChanged();
 	}
 
-	public void addTemplate(String template) {
+	public void addTemplate(final String template) {
 		if (this.times == null)
 			this.times = new TreeSet<Date>();
 		else
@@ -1058,12 +1008,12 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 		//setType(TIMESTAMPTYPE_PERIODIC);
 	}
 
-	public void removeTemplate(String template) {
+	public void removeTemplate(final String template) {
 		for (final Iterator<TimeLine> it = this.templates.iterator(); it.hasNext();) {
-		TimeLine timeLine = it.next();
-		if (timeLine.getTemplate().equals(template)) {
-			it.remove();
-			break;
+			final TimeLine timeLine = it.next();
+			if (timeLine.getTemplate().equals(template)) {
+				it.remove();
+				break;
 			}
 		}
 
@@ -1082,10 +1032,10 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		boolean equals = (obj == this);
 		if ((!equals) && (obj instanceof CronTemporalPattern)) {
-			CronTemporalPattern pattern = (CronTemporalPattern) obj;
+			final CronTemporalPattern pattern = (CronTemporalPattern) obj;
 			if ((pattern.id.equals(super.id))
 					&& HashCodeGenerator.equalsDate(this.created, pattern.created)
 					&& (this.creatorId.equals(pattern.creatorId))
@@ -1108,7 +1058,7 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 		hashCodeGenerator.addObject(this.modified);
 		hashCodeGenerator.addObject(this.modifierId);
 		hashCodeGenerator.addObject(this.templates);
-		int result = hashCodeGenerator.getResult();
+		final int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
 	}

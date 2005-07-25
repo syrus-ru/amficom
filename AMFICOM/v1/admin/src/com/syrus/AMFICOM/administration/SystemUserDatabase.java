@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.11 2005/07/24 17:37:58 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.12 2005/07/25 20:49:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,12 +20,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/24 17:37:58 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/25 20:49:23 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -72,7 +73,7 @@ public final class SystemUserDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		SystemUser user = this.fromStorableObject(storableObject);
+		final SystemUser user = this.fromStorableObject(storableObject);
 		return APOSTROPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(user.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
@@ -81,14 +82,22 @@ public final class SystemUserDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
-			throws IllegalDataException, SQLException {
-		final SystemUser user = (storableObject == null) ? new SystemUser(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, 0L, null, 0, null, null) : this.fromStorableObject(storableObject);
+			throws IllegalDataException,
+				SQLException {
+		final SystemUser user = (storableObject == null)
+				? new SystemUser(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						0,
+						null,
+						null)
+					: this.fromStorableObject(storableObject);
 		user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(SystemUserWrapper.COLUMN_LOGIN)),
 				resultSet.getInt(SystemUserWrapper.COLUMN_SORT),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),

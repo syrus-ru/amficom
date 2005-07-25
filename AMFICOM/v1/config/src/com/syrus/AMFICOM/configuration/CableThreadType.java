@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.48 2005/07/06 15:49:25 bass Exp $
+ * $Id: CableThreadType.java,v 1.49 2005/07/25 20:49:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
@@ -40,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.48 $, $Date: 2005/07/06 15:49:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/07/25 20:49:45 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -60,7 +61,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_TYPE_CODE);
+		final CableThreadTypeDatabase database = (CableThreadTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (final IllegalDataException ide) {
@@ -78,7 +79,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	CableThreadType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,
@@ -118,9 +119,9 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				&& linkType != null
 				&& cableLinkType != null;
 		try {
-			CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_TYPE_CODE),
+			final CableThreadType cableThreadType = new CableThreadType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name,
@@ -140,13 +141,12 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlCableThreadType cttt = (IdlCableThreadType) transferable;
+		final IdlCableThreadType cttt = (IdlCableThreadType) transferable;
 		super.fromTransferable(cttt, cttt.codename, cttt.description);
 		this.name = cttt.name;
 		this.color = cttt.color;
 		this.linkType = (LinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.linkTypeId), true);
-		this.cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId),
-				true);
+		this.cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId), true);
 	}
 
 	/**
@@ -161,7 +161,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				super.modified.getTime(),
 				super.creatorId.getTransferable(),
 				super.modifierId.getTransferable(),
-				super.version,
+				super.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
@@ -174,7 +174,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final String name,

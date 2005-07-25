@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.72 2005/07/14 19:07:11 arseniy Exp $
+ * $Id: Evaluation.java,v 1.73 2005/07/25 20:50:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,13 +27,14 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluation;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/07/14 19:07:11 $
+ * @version $Revision: 1.73 $, $Date: 2005/07/25 20:50:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -78,7 +79,7 @@ public final class Evaluation extends Action {
 	 */
 	Evaluation(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final EvaluationType type,
 			final Identifier monitoredElementId,
 			final Measurement measurement,
@@ -127,7 +128,7 @@ public final class Evaluation extends Action {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.type.getId().getTransferable(),
 				super.monitoredElementId.getTransferable(),
 				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
@@ -178,7 +179,7 @@ public final class Evaluation extends Action {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final EvaluationType type,
 			final Identifier monitoredElementId,
 			final Measurement measurement,
@@ -212,7 +213,7 @@ public final class Evaluation extends Action {
 		try {
 			final Evaluation evaluation = new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_CODE),
 				creatorId,
-				0L,
+				StorableObjectVersion.createInitial(),
 				type,
 				monitoredElementId,
 				measurement,
