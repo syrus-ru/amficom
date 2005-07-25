@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemePathImpl.java,v 1.4 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlSchemePathImpl.java,v 1.5 2005/07/25 12:14:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 17:08:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/25 12:14:08 $
  * @module scheme
  */
 final class IdlSchemePathImpl extends IdlSchemePath {
@@ -38,8 +38,7 @@ final class IdlSchemePathImpl extends IdlSchemePath {
 			final String name,
 			final String description,
 			final IdlIdentifier transmissionPathId,
-			final IdlIdentifier parentSchemeMonitoringSolutionId,
-			final IdlIdentifier parentSchemeId) {
+			final IdlIdentifier parentSchemeMonitoringSolutionId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -50,7 +49,6 @@ final class IdlSchemePathImpl extends IdlSchemePath {
 		this.description = description;
 		this.transmissionPathId = transmissionPathId;
 		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
-		this.parentSchemeId = parentSchemeId;
 	}
 
 	/**
