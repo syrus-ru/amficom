@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.5 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.6 2005/07/25 12:13:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/25 12:13:09 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -53,7 +53,7 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_NODES_CUT_PROB = "nodes_cut_prob";
 	public static final String COLUMN_SURVIVOR_RATE = "survivor_rate";
 	
-	public static final String COLUMN_SCHEME_ID = "scheme_id";
+	public static final String COLUMN_PARENT_SCHEME_ID = "parent_scheme_id";
 
 	private static SchemeOptimizeInfoWrapper instance;
 

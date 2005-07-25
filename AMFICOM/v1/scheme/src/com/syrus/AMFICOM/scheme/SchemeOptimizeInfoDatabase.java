@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.13 2005/07/24 17:54:41 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.14 2005/07/25 12:13:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/24 17:54:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/25 12:13:09 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -57,7 +57,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 					+ SchemeOptimizeInfoWrapper.COLUMN_NODES_SPLICE_PROB + COMMA
 					+ SchemeOptimizeInfoWrapper.COLUMN_NODES_CUT_PROB + COMMA
 					+ SchemeOptimizeInfoWrapper.COLUMN_SURVIVOR_RATE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_SCHEME_ID;
+					+ SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID;
 					
 		}
 		return columns;
@@ -186,7 +186,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_NODES_SPLICE_PROB),
 				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_NODES_CUT_PROB),
 				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_SURVIVOR_RATE),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeOptimizeInfoWrapper.COLUMN_SCHEME_ID));
+				DatabaseIdentifier.getIdentifier(resultSet, SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID));
 		return schemeOptimizeInfo;
 	}
 }
