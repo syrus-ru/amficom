@@ -260,6 +260,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					final WrapperedList objList = (WrapperedList) e.getSource();
 					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
+					if (measurementSetup1 == null) {
+						return;
+					}
 					final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));
 					final JPopupMenu popup = new JPopupMenu();
 					popup.add(deleteTestMenuItem);
