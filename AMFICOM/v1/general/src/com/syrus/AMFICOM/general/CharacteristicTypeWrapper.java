@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.13 2005/07/13 16:05:00 arseniy Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.14 2005/07/25 18:10:03 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/13 16:05:00 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/25 18:10:03 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -24,16 +24,15 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 	public static final String COLUMN_SORT = "sort";
 
-	protected static CharacteristicTypeWrapper	instance;
+	protected static CharacteristicTypeWrapper instance;
 
-	protected List								keys;
+	protected List<String> keys;
 
 	private CharacteristicTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_DATA_TYPE_CODE, COLUMN_SORT};
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_DATA_TYPE_CODE, COLUMN_SORT };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
-
 	}
 
 	public static CharacteristicTypeWrapper getInstance() {
@@ -42,22 +41,22 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
@@ -72,20 +71,20 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
-		Object value = super.getValue(object, key);
+	public Object getValue(final Object object, final String key) {
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof CharacteristicType) {
-			CharacteristicType characteristicType = (CharacteristicType) object;
+			final CharacteristicType characteristicType = (CharacteristicType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return characteristicType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -100,13 +99,13 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof CharacteristicType) {
-			CharacteristicType characteristicType = (CharacteristicType) object;
+			final CharacteristicType characteristicType = (CharacteristicType) object;
 			if (key.equals(COLUMN_CODENAME))
 				characteristicType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.26 2005/06/03 20:36:54 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.27 2005/07/25 18:05:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.26 $, $Date: 2005/06/03 20:36:54 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/25 18:05:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -50,11 +50,11 @@ public class StorableObjectXML {
 		short entityCode = identifier.getMajor();
 		StorableObject storableObject = getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
 		StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
-		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED), (Date) objectMap
-				.get(StorableObjectWrapper.COLUMN_MODIFIED), (Identifier) objectMap
-				.get(StorableObjectWrapper.COLUMN_CREATOR_ID), (Identifier) objectMap
-				.get(StorableObjectWrapper.COLUMN_MODIFIER_ID), ((Long) objectMap
-				.get(StorableObjectWrapper.COLUMN_VERSION)).longValue());
+		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED),
+				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
+				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_CREATOR_ID),
+				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				((StorableObjectVersion) objectMap.get(StorableObjectWrapper.COLUMN_VERSION)));
 		objectMap.remove(CLASSNAME);
 		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
@@ -69,52 +69,48 @@ public class StorableObjectXML {
 		return storableObject;
 	}
 
-	public Set retrieveByCondition(Set ids,
-									StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		Set set = null;
-		Set identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
-		for (Iterator it = identifiers.iterator(); it.hasNext();) {
-			Identifier id = (Identifier) it.next();
+	public Set retrieveByCondition(Set ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+		Set<StorableObject> set = null;
+		final Set<Identifier> identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
+		for (final Identifier id : identifiers) {
 			if (ids == null || !ids.contains(id)) {
 				try {
-					StorableObject storableObject = retrieve(id);
+					final StorableObject storableObject = retrieve(id);
 					if (condition.isConditionTrue(storableObject)) {
 						if (set == null)
-							set = new HashSet();
+							set = new HashSet<StorableObject>();
 						set.add(storableObject);
 					}
 
 				} catch (ObjectNotFoundException e) {
-					String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString()
+					final String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString()
 							+ " not found";
 					throw new RetrieveObjectException(msg, e);
 				} catch (ApplicationException e) {
-					String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check "
+					final String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check "
 							+ id.getIdentifierString() + " for condition ";
 					throw new RetrieveObjectException(msg, e);
 				}
 			}
 		}
 		if (set == null)
-			set = Collections.EMPTY_SET;
+			set = Collections.emptySet();
 		return set;
 	}
 
 	public void updateObject(final StorableObject storableObject, boolean force)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
-		StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
-		List keys = wrapper.getKeys();
-		Map objectMap = new HashMap();
-		for (Iterator it = keys.iterator(); it.hasNext();) {
-			String key = (String) it.next();
+		final StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
+		final List<String> keys = wrapper.getKeys();
+		final Map<String, Object> objectMap = new HashMap<String, Object>();
+		for (final String key : keys) {
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
-		Identifier id = storableObject.getId();
+		final Identifier id = storableObject.getId();
 		{
-			String className = storableObject.getClass().getName();
-			String shortClassName = className.substring(className.lastIndexOf('.') + 1);
+			final String className = storableObject.getClass().getName();
+			final String shortClassName = className.substring(className.lastIndexOf('.') + 1);
 			/* put short class name when id is not unambiguously define entity */
 			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
 				objectMap.put(CLASSNAME, shortClassName);
@@ -122,14 +118,14 @@ public class StorableObjectXML {
 		
 		boolean canBeModified = false;
 		try {
-			Map xmlObjectMap = this.driver.getObjectMap(id);
-			long version = ((Long) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION)).longValue();
+			final Map xmlObjectMap = this.driver.getObjectMap(id);
+			final StorableObjectVersion version = (StorableObjectVersion) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION);
 			if (force || version == storableObject.getVersion()) {
-				storableObject.version = version + 1;	
+				storableObject.version.increment();	
 				canBeModified = true;
 			} else {
 				throw new VersionCollisionException("StorableObjectXML.updateObject | version collision, id='"
-						+ id.getIdentifierString() + '\'', storableObject.version, version);
+						+ id.getIdentifierString() + '\'', storableObject.version.longValue(), version.longValue());
 			}
 			this.driver.deleteObject(id);
 		} catch (ObjectNotFoundException e) {
@@ -154,14 +150,13 @@ public class StorableObjectXML {
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATOR_ID, storableObject.getCreatorId());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIER_ID, storableObject.getModifierId());
-		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, new Long(storableObject.getVersion()));
+		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, storableObject.getVersion());
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 		storableObject.cleanupUpdate();
 	}
 
-	private StorableObject getStorableObject(	final Identifier identifier,
-												String className) throws IllegalDataException {
-		short entityCode = identifier.getMajor();
+	private StorableObject getStorableObject(final Identifier identifier, String className) throws IllegalDataException {
+		final short entityCode = identifier.getMajor();
 		String clazzName;
 		if (className == null)
 			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.' + ObjectEntities.codeToString(entityCode);
@@ -169,15 +164,15 @@ public class StorableObjectXML {
 			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.'
 					+ className.substring(className.lastIndexOf('.') + 1);
 		try {
-			Class clazz = Class.forName(clazzName);
-			Constructor[] constructors = clazz.getDeclaredConstructors();
+			final Class clazz = Class.forName(clazzName);
+			final Constructor[] constructors = clazz.getDeclaredConstructors();
 			for (int i = 0; i < constructors.length; i++) {
 				Class[] parameterTypes = constructors[i].getParameterTypes();
 				if (parameterTypes.length >= 2 && parameterTypes[0].equals(Identifier.class)
 						&& parameterTypes[1].equals(Identifier.class)) {
-					Constructor constructor = constructors[i];
+					final Constructor constructor = constructors[i];
 					constructor.setAccessible(true);
-					Object[] initArgs = new Object[parameterTypes.length];
+					final Object[] initArgs = new Object[parameterTypes.length];
 					initArgs[0] = identifier;
 					for (int j = 1; j < parameterTypes.length; j++) {
 						if (parameterTypes[j].equals(boolean.class)) {
@@ -218,8 +213,7 @@ public class StorableObjectXML {
 			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + clazzName
 					+ " not found on the classpath - " + e.getMessage());
 		}
-		throw new IllegalDataException(
-										"StorableObjectXML.getStorableObject | there is no constuctor(Identifier, Identifier, ...)");
+		throw new IllegalDataException("StorableObjectXML.getStorableObject | there is no constuctor(Identifier, Identifier, ...)");
 	}
 
 	public void flush() {

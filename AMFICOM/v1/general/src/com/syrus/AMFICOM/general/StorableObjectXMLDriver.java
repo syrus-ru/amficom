@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.22 2005/07/11 08:18:56 bass Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.23 2005/07/25 18:05:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,16 +49,16 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.22 $, $Date: 2005/07/11 08:18:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/07/25 18:05:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectXMLDriver {
 
-	private String		fileName;
-	private Document	doc;
-	private String		packageName;
-	private Node		root;
+	private String fileName;
+	private Document doc;
+	private String packageName;
+	private Node root;
 
 	public StorableObjectXMLDriver(final File path, final String packageName) {
 		if (path.exists()) {
@@ -79,11 +79,10 @@ public class StorableObjectXMLDriver {
 		this.parseXmlFile(false);
 	}
 
-	public void putObjectMap(final Identifier identifier, final Map objects) {		
-		Element element = this.doc.createElement(identifier.getIdentifierString());
-		for (Iterator it = objects.keySet().iterator(); it.hasNext();) {
-			String key = (String) it.next();
-			Object obj = objects.get(key);
+	public void putObjectMap(final Identifier identifier, final Map<String, Object> objects) {		
+		final Element element = this.doc.createElement(identifier.getIdentifierString());
+		for (final String key : objects.keySet()) {
+			final Object obj = objects.get(key);
 			if (obj != null)
 				this.addObject(element, key, obj);
 
@@ -91,31 +90,32 @@ public class StorableObjectXMLDriver {
 		this.root.appendChild(element);
 	}
 
-	public Map getObjectMap(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		Map map = null;
+	public Map<String, Object> getObjectMap(final Identifier identifier)
+			throws IllegalDataException,
+				ObjectNotFoundException,
+				RetrieveObjectException {
+		Map<String, Object> map = null;
 		try {
-			NodeList objList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
-					+ identifier.getIdentifierString());
+			final NodeList objList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
 			if (objList.getLength() > 1)
 				throw new IllegalDataException("StorableObjectXMLDriver.getObjectMap | more that one entity with id "
 						+ identifier.getIdentifierString());
 			if (objList.getLength() == 0)
 				throw new ObjectNotFoundException("StorableObjectXMLDriver.getObjectMap | object not found : "
 						+ identifier.getIdentifierString());
-			Node item = objList.item(0);
-			NodeList childNodes = item.getChildNodes();
+			final Node item = objList.item(0);
+			final NodeList childNodes = item.getChildNodes();
 			for (int i = 0; i < childNodes.getLength(); i++) {
-				Node node = childNodes.item(i);
+				final Node node = childNodes.item(i);
 				if (map == null)
-					map = new HashMap();
+					map = new HashMap<String, Object>();
 				map.put(node.getNodeName(), this.parse(node));
 			}
 
 			if (map == null)
-				map = Collections.EMPTY_MAP;
+				map = Collections.emptyMap();
 		} catch (TransformerException te) {
-			String msg = "StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage();
+			final String msg = "StorableObjectXMLDriver.getObjectMap | Caught " + te.getMessage();
 			Log.errorMessage(msg);
 			throw new RetrieveObjectException(msg, te);
 		}
@@ -123,13 +123,13 @@ public class StorableObjectXMLDriver {
 		return map;
 	}
 
-	private StorableObject reflectStorableObject(Identifier id) throws IllegalDataException {
+	private StorableObject reflectStorableObject(final Identifier id) throws IllegalDataException {
 		StorableObject storableObject = null;
-		String className = ObjectGroupEntities.getPackageName(id.getMajor()) + "."
+		final String className = ObjectGroupEntities.getPackageName(id.getMajor()) + "."
 				+ ObjectGroupEntities.getGroupName(id.getMajor()).replaceAll("Group$", "") + "StorableObjectPool";
 		try {
 			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + className, Level.INFO);
-			Class clazz = Class.forName(className);
+			final Class clazz = Class.forName(className);
 			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + clazz.getName(), Level.INFO);
 			Method method = clazz.getMethod("getStorableObject", new Class[] { Identifier.class, boolean.class});
 			storableObject = (StorableObject) method.invoke(null, new Object[] { id, Boolean.TRUE});
@@ -171,31 +171,31 @@ public class StorableObjectXMLDriver {
 		return storableObject;
 	}
 
-	private Object parse(Node node) throws IllegalDataException {
+	private Object parse(final Node node) throws IllegalDataException {
 //		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
 //		node.getNodeName(), Log.INFO);
 		Object object = null;
-		NamedNodeMap attributes = node.getAttributes();
+		final NamedNodeMap attributes = node.getAttributes();
 		if (attributes == null)
 			return object;
 		if (attributes.getLength() > 0) {
-			Node namedItem = attributes.getNamedItem("className");
-			String className = namedItem.getNodeValue();
+			final Node namedItem = attributes.getNamedItem("className");
+			final String className = namedItem.getNodeValue();
 			if (className.equals(Collection.class.getName())) {
-				NodeList childNodes = node.getChildNodes();
-				Set set = new HashSet(childNodes.getLength());
+				final NodeList childNodes = node.getChildNodes();
+				final Set<Object> set = new HashSet<Object>(childNodes.getLength());
 				for (int i = 0; i < childNodes.getLength(); i++) {
-					Object object2 = this.parse(childNodes.item(i));
+					final Object object2 = this.parse(childNodes.item(i));
 					if (object2 != null)
 						set.add(object2);
 				}
 				object = set;
 			} else if (className.equals(Map.class.getName())) {
-				NodeList childNodes = node.getChildNodes();
-				Map map = new HashMap(childNodes.getLength());
+				final NodeList childNodes = node.getChildNodes();
+				final Map<String, Object> map = new HashMap<String, Object>(childNodes.getLength());
 				for (int i = 0; i < childNodes.getLength(); i++) {
-					Node node2 = childNodes.item(i);
-					Object object2 = this.parse(node2);
+					final Node node2 = childNodes.item(i);
+					final Object object2 = this.parse(node2);
 					if (object2 != null)
 						map.put(node2.getNodeName(), object2);
 				}
@@ -208,7 +208,7 @@ public class StorableObjectXMLDriver {
 		return object;
 	}
 
-	private Object getObject(NodeList childNodes, String className) throws IllegalDataException {
+	private Object getObject(final NodeList childNodes, final String className) throws IllegalDataException {
 		String value = null;
 		/* just simple objects */
 		if (childNodes.getLength() > 1)
@@ -218,7 +218,7 @@ public class StorableObjectXMLDriver {
 			value = childNodes.item(0).getNodeValue();
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
-			Identifier identifier = new Identifier(value);
+			final Identifier identifier = new Identifier(value);
 			object = this.reflectStorableObject(identifier);
 		} else if (className.equals(Boolean.class.getName())) {
 			object = new Boolean(value);
@@ -227,19 +227,19 @@ public class StorableObjectXMLDriver {
 		} else if (className.equals(Date.class.getName())) {
 			object = new Date(Long.parseLong(value));
 		} else if (className.equals(Short.class.getName())) {
-			Short short1 = Short.valueOf(value);
+			final Short short1 = Short.valueOf(value);
 			object = short1;
 		} else if (className.equals(Integer.class.getName())) {
-			Integer integer = Integer.valueOf(value);
+			final Integer integer = Integer.valueOf(value);
 			object = integer;
 		} else if (className.equals(Long.class.getName())) {
 			Long long1 = Long.valueOf(value);
 			object = long1;
 		} else if (className.equals(Float.class.getName())) {
-			Float float1 = Float.valueOf(value);
+			final Float float1 = Float.valueOf(value);
 			object = float1;
 		} else if (className.equals(Double.class.getName())) {
-			Double double1 = Double.valueOf(value);
+			final Double double1 = Double.valueOf(value);
 			object = double1;
 		} else if (className.equals(String.class.getName())) {
 			if (value != null)
@@ -260,108 +260,108 @@ public class StorableObjectXMLDriver {
 		return object;
 	}
 
-	private void addObject(Node node, String key, Object object) {
-		Element element = this.doc.createElement(key);
+	private void addObject(final Node node, final String key, final Object object) {
+		final Element element = this.doc.createElement(key);
 		if (object == null) {
 			Log.errorMessage("StorableObjectXMLDriver.addObject | key : " + key + " , value is 'null'");
 			return;
 		}
 		String className = object.getClass().getName();		
 		if (object instanceof StorableObject) {
-			StorableObject storableObject = (StorableObject) object;
-			String string = storableObject.getId().getIdentifierString();
-			Text text = this.doc.createTextNode(string);
+			final StorableObject storableObject = (StorableObject) object;
+			final String string = storableObject.getId().getIdentifierString();
+			final Text text = this.doc.createTextNode(string);
 			className = StorableObject.class.getName();
 			element.appendChild(text);
 		} else if (object instanceof Identifier) {
-			Identifier id = (Identifier) object;
-			String string = id.getIdentifierString();
-			Text text = this.doc.createTextNode(string);
+			final Identifier id = (Identifier) object;
+			final String string = id.getIdentifierString();
+			final Text text = this.doc.createTextNode(string);
 			element.appendChild(text);
 		} else if (object instanceof Date) {
-			Date date = (Date) object;
-			Text text = this.doc.createTextNode(Long.toString(date.getTime()));
+			final Date date = (Date) object;
+			final Text text = this.doc.createTextNode(Long.toString(date.getTime()));
 			element.appendChild(text);
 		} else if (object instanceof Boolean) {
-			Boolean boolean1 = (Boolean) object;
-			Text text = this.doc.createTextNode(boolean1.toString());
+			final Boolean boolean1 = (Boolean) object;
+			final Text text = this.doc.createTextNode(boolean1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Integer) {
-			Integer integer = (Integer) object;
-			Text text = this.doc.createTextNode(integer.toString());
+			final Integer integer = (Integer) object;
+			final Text text = this.doc.createTextNode(integer.toString());
 			element.appendChild(text);
 		} else if (object instanceof Short) {
-			Short short1 = (Short) object;
-			Text text = this.doc.createTextNode(short1.toString());
+			final Short short1 = (Short) object;
+			final Text text = this.doc.createTextNode(short1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Long) {
-			Long long1 = (Long) object;
-			Text text = this.doc.createTextNode(long1.toString());
+			final Long long1 = (Long) object;
+			final Text text = this.doc.createTextNode(long1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Float) {
-			Float float1 = (Float) object;
-			Text text = this.doc.createTextNode(float1.toString());
+			final Float float1 = (Float) object;
+			final Text text = this.doc.createTextNode(float1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Double) {
-			Double double1 = (Double) object;
-			Text text = this.doc.createTextNode(double1.toString());
+			final Double double1 = (Double) object;
+			final Text text = this.doc.createTextNode(double1.toString());
 			element.appendChild(text);
 		} else if (object instanceof String) {
-			String string = (String) object;
-			Text text = this.doc.createTextNode(string);
+			final String string = (String) object;
+			final Text text = this.doc.createTextNode(string);
 			element.appendChild(text);
 		} else if (object instanceof byte[]) {
-			byte[] bs = (byte[]) object;
-			StringBuffer buffer = new StringBuffer();
+			final byte[] bs = (byte[]) object;
+			final StringBuffer buffer = new StringBuffer();
 			for (int j = 0; j < bs.length; j++) {
-				String s = Integer.toString(bs[j] & 0xFF, 16);
+				final String s = Integer.toString(bs[j] & 0xFF, 16);
 				buffer.append((s.length() == 1 ? "0" : "") + s);
 			}
-			Text text = this.doc.createTextNode(buffer.toString());
+			final Text text = this.doc.createTextNode(buffer.toString());
 			element.appendChild(text);
 		} else if (object instanceof Collection) {
 			/* TODO replace for java.util.Set*/
-			Collection collection = (Collection) object;
+			final Collection collection = (Collection) object;
 			className = Collection.class.getName();
-			Set set = new HashSet(collection);
-			for (Iterator it = set.iterator(); it.hasNext();) {
+			final Set set = new HashSet(collection);
+			for (final Iterator it = set.iterator(); it.hasNext();) {
 				this.addObject(element, key + "item", it.next());
 			}
 		} else if (object instanceof Map) {
-			Map map = (Map) object;
+			final Map map = (Map) object;
 			className = Map.class.getName();
-			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-				String key2 = (String) it.next();
+			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
+				final String key2 = (String) it.next();
 				this.addObject(element, key2, map.get(key2));
 			}
 		} else {
 			Log.errorMessage("StorableObjectXMLDriver.addObject | unsupported class value : "
 					+ object.getClass().getName());
-			String string = object.toString();
-			Text text = this.doc.createTextNode(string);
+			final String string = object.toString();
+			final Text text = this.doc.createTextNode(string);
 			element.appendChild(text);
 		}
 		element.setAttribute("className", className);
 		node.appendChild(element);
 	}
 
-	public Set getIdentifiers(short entityCode) throws IllegalDataException {
+	public Set<Identifier> getIdentifiers(final short entityCode) throws IllegalDataException {
 
 		try {
-			NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
+			final NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
 					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + "')]");
-			int size = idNodeList.getLength();
+			final int size = idNodeList.getLength();
 			if (size == 0)
-				return Collections.EMPTY_SET;
+				return Collections.emptySet();
 
-			Set idSet = new HashSet(size);
+			final Set<Identifier> idSet = new HashSet<Identifier>(size);
 			for (int i = 0; i < idNodeList.getLength(); i++) {
-				Node node = idNodeList.item(i);
+				final Node node = idNodeList.item(i);
 				idSet.add(new Identifier(node.getNodeName()));
 			}
 			return idSet;
 		} catch (TransformerException e) {
-			String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
+			final String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
 					+ " during retrieve identifiers for '" + ObjectEntities.codeToString(entityCode) + '\'';
 			Log.errorMessage(msg);
 			throw new IllegalDataException(msg, e);
@@ -370,7 +370,7 @@ public class StorableObjectXMLDriver {
 
 	public void deleteObject(final Identifier identifier) {
 		try {
-			NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
+			final NodeList sizeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/" + identifier.getIdentifierString());
 			if (sizeList.getLength() > 1) {
 				Log.errorMessage("StorableObjectXMLDriver.deleteObject | more that one entity with id "
 						+ identifier.getIdentifierString());
@@ -378,7 +378,7 @@ public class StorableObjectXMLDriver {
 			}
 
 			for (int i = 0; i < sizeList.getLength(); i++) {
-				Node children = sizeList.item(i);
+				final Node children = sizeList.item(i);
 				this.root.removeChild(children);
 			}
 		} catch (TransformerException te) {
@@ -392,17 +392,17 @@ public class StorableObjectXMLDriver {
 	private Document parseXmlFile(final boolean validating) {
 		try {
 			// Create a builder factory
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			factory.setValidating(validating);
 
 			// Create the builder and parse the file
-			File file = new File(this.fileName);
+			final File file = new File(this.fileName);
 			if (file.exists()) {
 				this.doc = factory.newDocumentBuilder().parse(file);
 				this.root = this.doc.getFirstChild();
 			} else {
 				/* if file not exists creat default document */
-				DocumentBuilder builder = factory.newDocumentBuilder();
+				final DocumentBuilder builder = factory.newDocumentBuilder();
 				this.doc = builder.newDocument();
 				/* with root item of package name */
 				this.root = this.doc.createElement(this.packageName);
@@ -424,14 +424,14 @@ public class StorableObjectXMLDriver {
 		try {
 			this.doc.normalize();
 			// Prepare the DOM document for writing
-			Source source = new DOMSource(this.doc);
+			final Source source = new DOMSource(this.doc);
 
 			// Prepare the output file
-			File file = new File(this.fileName);
-			Result result = new StreamResult(file);
+			final File file = new File(this.fileName);
+			final Result result = new StreamResult(file);
 
 			// Write the DOM document to the file
-			Transformer xformer = TransformerFactory.newInstance().newTransformer();
+			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
 			xformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			xformer.transform(source, result);
 		} catch (TransformerConfigurationException e) {

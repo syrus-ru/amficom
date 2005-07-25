@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.15 2005/06/25 17:07:46 bass Exp $
+ * $Id: CharacteristicWrapper.java,v 1.16 2005/07/25 18:10:03 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/25 18:10:03 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class CharacteristicWrapper extends StorableObjectWrapper {
@@ -23,23 +23,27 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
 	// value VARCHAR2(256),
-	public static final String				COLUMN_VALUE			= "value";
+	public static final String COLUMN_VALUE = "value";
 	// characterized_id VARCHAR2(32),
-	public static final String				COLUMN_CHARACTERIZABLE_ID	= "characterizable_id";
-	public static final String				COLUMN_EDITABLE			= "editable";
-	public static final String				COLUMN_VISIBLE			= "visible";
+	public static final String COLUMN_CHARACTERIZABLE_ID = "characterizable_id";
+	public static final String COLUMN_EDITABLE = "editable";
+	public static final String COLUMN_VISIBLE = "visible";
 
-	protected static CharacteristicWrapper	instance;
+	protected static CharacteristicWrapper instance;
 
-	protected List							keys;
+	final protected List<String> keys;
 
 	private CharacteristicWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_VALUE,
-				COLUMN_CHARACTERIZABLE_ID, COLUMN_EDITABLE, COLUMN_VISIBLE};
+		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_VALUE,
+				COLUMN_CHARACTERIZABLE_ID,
+				COLUMN_EDITABLE,
+				COLUMN_VISIBLE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
-
 	}
 
 	public static CharacteristicWrapper getInstance() {
@@ -48,18 +52,18 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
@@ -78,20 +82,20 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
-		Object value = super.getValue(object, key);
+	public Object getValue(final Object object, final String key) {
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Characteristic) {
-			Characteristic characteristic = (Characteristic) object;
+			final Characteristic characteristic = (Characteristic) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return characteristic.getType();
 			else if (key.equals(COLUMN_NAME))
@@ -110,13 +114,13 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Characteristic) {
-			Characteristic characteristic = (Characteristic) object;
+			final Characteristic characteristic = (Characteristic) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				characteristic.setType((CharacteristicType) value);
 			else if (key.equals(COLUMN_NAME))
