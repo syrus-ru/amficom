@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.94 2005/07/25 07:03:13 saa Exp $
+ * $Id: Heap.java,v 1.95 2005/07/25 07:03:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.94 $, $Date: 2005/07/25 07:03:13 $
+ * @version $Revision: 1.95 $, $Date: 2005/07/25 07:03:30 $
  * @module
  */
 public class Heap
@@ -833,7 +833,7 @@ public class Heap
 		fixEventList();
 		setMTMBackupEtalon(mtm);
 		if (mtm == null) {
-			backupEtalonMTM = null; // не нужен
+			backupEtalonMTM = null; // не нужно, он уже и так null
 			notifyEtalonMTMRemoved();
 		} else {
 			ClientAnalysisManager.setDefaultMinTraceLevel(); 
