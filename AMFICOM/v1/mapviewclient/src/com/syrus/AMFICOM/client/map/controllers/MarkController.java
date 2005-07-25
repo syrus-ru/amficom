@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.14 2005/06/23 08:27:18 krupenn Exp $
+ * $Id: MarkController.java,v 1.15 2005/07/25 08:44:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,11 +32,12 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Контроллер метки.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/23 08:27:18 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/25 08:44:29 $
  * @module mapviewclient_v1
  */
 public final class MarkController extends AbstractNodeController {
@@ -232,5 +233,13 @@ public final class MarkController extends AbstractNodeController {
 		mark.setLocation(converter.convertScreenToMap(new Point(
 			(int )Math.round(startNodeX + cosB * screenDistance),
 			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
+	}
+
+	public Identifier getImageId(AbstractNode node) {
+		if(node.getImageId() == null) {
+			Mark mark = (Mark )node;
+			mark.setImageId(imageId);
+		}
+		return node.getImageId();
 	}
 }
