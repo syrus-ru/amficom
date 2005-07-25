@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.35 2005/07/20 17:56:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.36 2005/07/25 12:44:09 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/07/20 17:56:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/07/25 12:44:09 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -440,10 +440,9 @@ public final class MapViewController {
 	 * 
 	 * @param scheme схема
 	 */
-	public void scanPaths(Scheme scheme) {
-		for(Iterator it = SchemeUtils.getTopologicalPaths(scheme).iterator(); it.hasNext();) {
-			SchemePath path = (SchemePath )it.next();
-			scanPath(path);
+	public void scanPaths(final Scheme scheme) {
+		for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
+			this.scanPath(schemePath);
 		}
 	}
 
@@ -451,13 +450,11 @@ public final class MapViewController {
 	 * Убрать все схемные пути заданной схемы из вида.
 	 * @param scheme схема
 	 */
-	public void removePaths(Scheme scheme) {
-		Collection schemePaths = SchemeUtils.getTopologicalPaths(scheme);
-		for(Iterator it = schemePaths.iterator(); it.hasNext();) {
-			SchemePath path = (SchemePath )it.next();
-			MeasurementPath mp = this.mapView.findMeasurementPath(path);
-			if(mp != null) {
-				unplaceElement(mp);
+	public void removePaths(final Scheme scheme) {
+		for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
+			final MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
+			if (measurementPath != null) {
+				this.unplaceElement(measurementPath);
 			}
 		}
 	}

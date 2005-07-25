@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.44 2005/07/19 07:02:54 krupenn Exp $
+* $Id: MapView.java,v 1.45 2005/07/25 12:44:10 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/07/19 07:02:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/07/25 12:44:10 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -498,7 +498,7 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (SchemeUtils.getTopologicalPaths(scheme).contains(schemePath)) {
+				if (scheme.getTopologicalPaths().contains(schemePath)) {
 					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, schemePath.getStartSchemeElement());
 					return findElement(se);
 				}
@@ -521,7 +521,7 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (SchemeUtils.getTopologicalPaths(scheme).contains(schemePath)) {
+				if (scheme.getTopologicalPaths().contains(schemePath)) {
 					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, schemePath.getEndSchemeElement());
 					return findElement(se);
 				}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.25 2005/07/24 18:12:44 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.26 2005/07/25 12:44:09 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 
@@ -80,7 +79,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.25 $, $Date: 2005/07/24 18:12:44 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/25 12:44:09 $
  * @author $Author: bass $
  * @module mapviewclient_v1
  */
@@ -384,20 +383,18 @@ public class MapSchemeTreeModel
 		return treeNode;
 	}
 
-	Item buildPathsTree(Scheme parentScheme, boolean isTopological) {
-		
-		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,PATH_BRANCH, getObjectName(PATH_BRANCH), true);
-		MapSchemeTreeNode childNode;
-		treeNode.setTopological(isTopological);
+	private Item buildPathsTree(final Scheme parentScheme, final boolean topological) {
+		final MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null, PATH_BRANCH, getObjectName(PATH_BRANCH), true);
+		treeNode.setTopological(topological);
 
-		for(Iterator it = SchemeUtils.getTopologicalPaths(parentScheme).iterator(); it.hasNext();) {
-			SchemePath schemePath = (SchemePath )it.next();
-			if(isTopological) {
-				childNode = new MapSchemeTreeNode(null,schemePath, getObjectName(schemePath), pathIcon, false);
+		for (final SchemePath schemePath : parentScheme.getTopologicalPaths()) {
+			MapSchemeTreeNode childNode;
+			if (topological) {
+				childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), pathIcon, false);
 				childNode.setDragDropEnabled(true);
+			} else {
+				childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), false);
 			}
-			else
-				childNode = new MapSchemeTreeNode(null,schemePath, getObjectName(schemePath), false);
 			treeNode.addChild(childNode);
 		}
 		
@@ -405,14 +402,20 @@ public class MapSchemeTreeModel
 	}
 }
 
-final class SchemeComparator implements Comparator {
-	public int compare(Object o1, Object o2) {
-		Scheme scheme1 = (Scheme )o1;
-		Scheme scheme2 = (Scheme )o2;
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/07/25 12:44:09 $
+ * @module mapviewclient
+ * @deprecated Use {@link com.syrus.util.WrapperComparator} instead.
+ */
+@Deprecated
+final class SchemeComparator implements Comparator<Scheme> {
+	public int compare(final Scheme scheme1, final Scheme scheme2) {
 		return scheme1.getName().compareTo(scheme2.getName());
 	}
 
-	public boolean equals(Object obj) {
+	@Override
+	public boolean equals(final Object obj) {
 		return (obj instanceof SchemeComparator);
 	}
 }
