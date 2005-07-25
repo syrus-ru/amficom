@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.14 2005/07/24 17:54:41 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.15 2005/07/25 12:12:33 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,14 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/24 17:54:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/25 12:12:33 $
  * @module scheme
  */
 public final class SchemePathDatabase extends StorableObjectDatabase {
-	
+
 	private static String columns;
 	private static String updateMultipleSQLValues;
-	
+
 	private SchemePath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if(storableObject instanceof SchemePath)
 			return (SchemePath) storableObject;
@@ -46,8 +46,7 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID + COMMA
-					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID + COMMA
-					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_ID;
+					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID;
 		}
 		return columns;
 	}
@@ -61,7 +60,6 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION;
@@ -81,8 +79,7 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPathId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolutionId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeId());
+				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolutionId());
 		return sql;
 	}
 
@@ -104,7 +101,6 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPathId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolutionId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeId());
 		return startParameterNumber;
 	}
 
@@ -123,7 +119,7 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 			Date created = new Date();
 			schemePath = new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 					created, created, null, null, 0L, null,
-					null, null, null, null);
+					null, null, null);
 		} else {
 			schemePath = fromStorableObject(storableObject);
 		}
@@ -135,8 +131,7 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_ID));
+				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID));
 		return schemePath;
 	}
 }

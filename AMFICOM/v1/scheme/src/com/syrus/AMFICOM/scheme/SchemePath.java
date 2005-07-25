@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.58 2005/07/24 17:40:34 bass Exp $
+ * $Id: SchemePath.java,v 1.59 2005/07/25 12:12:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -64,7 +63,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/24 17:40:34 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/25 12:12:33 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -77,9 +76,7 @@ public final class SchemePath extends StorableObject
 
 	private Identifier transmissionPathId;
 
-	private Identifier parentSchemeMonitoringSolutionId;
-
-	Identifier parentSchemeId;
+	Identifier parentSchemeMonitoringSolutionId;
 
 	/**
 	 * @param id
@@ -106,21 +103,18 @@ public final class SchemePath extends StorableObject
 	 * @param description
 	 * @param transmissionPath
 	 * @param parentSchemeMonitoringSolution
-	 * @param parentScheme
 	 */
 	SchemePath(final Identifier id, final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
-			final Scheme parentScheme) {
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 		this.transmissionPathId = Identifier.possiblyVoid(transmissionPath);
 		this.parentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
-		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 	}
 
 	/**
@@ -133,17 +127,19 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, TransmissionPath, SchemeMonitoringSolution, Scheme)}.
+	 * {@link #createInstance(Identifier, String, String, TransmissionPath, SchemeMonitoringSolution)}.
 	 *
 	 * @param creatorId
 	 * @param name
-	 * @param parentScheme
+	 * @param parentSchemeMonitoringSolution
 	 * @throws CreateObjectException
 	 */
 	public static SchemePath createInstance(final Identifier creatorId,
-			final String name, final Scheme parentScheme)
-			throws CreateObjectException {
-		return createInstance(creatorId, name, "", null, null, parentScheme);
+			final String name,
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
+	throws CreateObjectException {
+		return createInstance(creatorId, name, "", null,
+				parentSchemeMonitoringSolution);
 	}
 
 	/**
@@ -152,25 +148,17 @@ public final class SchemePath extends StorableObject
 	 * @param description
 	 * @param transmissionPath
 	 * @param parentSchemeMonitoringSolution
-	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
 	public static SchemePath createInstance(final Identifier creatorId,
 			final String name, final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution,
-			final Scheme parentScheme)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentScheme != null : NON_NULL_EXPECTED;
-		assert parentSchemeMonitoringSolution == null
-				|| parentSchemeMonitoringSolution.getParentSchemeOptimizeInfo() == null
-				|| parentSchemeMonitoringSolution.getParentSchemeOptimizeInfo()
-						.getParentScheme().getId()
-						.equals(parentScheme.getId());
-
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeMonitoringSolution != null : NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
 			final SchemePath schemePath = new SchemePath(
@@ -178,8 +166,7 @@ public final class SchemePath extends StorableObject
 					created, created, creatorId, creatorId,
 					0L, name, description,
 					transmissionPath,
-					parentSchemeMonitoringSolution,
-					parentScheme);
+					parentSchemeMonitoringSolution);
 			schemePath.markAsChanged();
 			return schemePath;
 		} catch (final IdentifierGenerationException ige) {
@@ -226,7 +213,8 @@ public final class SchemePath extends StorableObject
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.transmissionPathId != null
-				&& this.parentSchemeMonitoringSolutionId != null: OBJECT_NOT_INITIALIZED;
+				&& this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.transmissionPathId);
 		dependencies.add(this.parentSchemeMonitoringSolutionId);
@@ -252,8 +240,9 @@ public final class SchemePath extends StorableObject
 	}
 
 	Identifier getParentSchemeMonitoringSolutionId() {
-		assert this.parentSchemeMonitoringSolutionId != null: OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeMonitoringSolutionId.isVoid() || this.parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
 		return this.parentSchemeMonitoringSolutionId;
 	}
 
@@ -263,25 +252,6 @@ public final class SchemePath extends StorableObject
 	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
 		try {
 			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.getParentSchemeMonitoringSolutionId(), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
-	}
-
-	Identifier getParentSchemeId() {
-		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
-		assert this.parentSchemeId.getMajor() == SCHEME_CODE;
-		return this.parentSchemeId;
-	}
-
-	/**
-	 * A wrapper around {@link #getParentSchemeId()}.
-	 */
-	public Scheme getParentScheme() {
-		try {
-			return (Scheme) StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -319,8 +289,7 @@ public final class SchemePath extends StorableObject
 				this.version, this.name,
 				this.description,
 				this.transmissionPathId.getTransferable(),
-				this.parentSchemeMonitoringSolutionId.getTransferable(),
-				this.parentSchemeId.getTransferable());
+				this.parentSchemeMonitoringSolutionId.getTransferable());
 	}
 
 	Identifier getTransmissionPathId() {
@@ -366,28 +335,24 @@ public final class SchemePath extends StorableObject
 	 * @param description
 	 * @param transmissionPathId
 	 * @param parentSchemeMonitoringSolutionId
-	 * @param parentSchemeId
 	 */
 	synchronized void setAttributes(final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId, final long version,
 			final String name, final String description,
 			final Identifier transmissionPathId,
-			final Identifier parentSchemeMonitoringSolutionId,
-			final Identifier parentSchemeId) {
+			final Identifier parentSchemeMonitoringSolutionId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		
 		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
 		assert description != null: NON_NULL_EXPECTED;
 		assert transmissionPathId != null: NON_NULL_EXPECTED;
-		assert parentSchemeMonitoringSolutionId != null: NON_NULL_EXPECTED;
-		assert parentSchemeId != null && !parentSchemeId.isVoid() : NON_VOID_EXPECTED;
+		assert parentSchemeMonitoringSolutionId != null && !parentSchemeMonitoringSolutionId.isVoid() : NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
 		this.transmissionPathId = transmissionPathId;
 		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
-		this.parentSchemeId = parentSchemeId;
 	}
 
 	/**
@@ -415,26 +380,18 @@ public final class SchemePath extends StorableObject
 	}
 
 	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
-		final Identifier newParentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
-		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId))
-			return;
-		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
-		super.markAsChanged();
-	}
-
-	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
-		if (parentScheme == null) {
+		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		if (parentSchemeMonitoringSolution == null) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
-		final Identifier newParentSchemeId = Identifier.possiblyVoid(parentScheme);
-		if (this.parentSchemeId.equals(newParentSchemeId)) {
+		final Identifier newParentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
+		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId)) {
 			return;
 		}
-		this.parentSchemeId = newParentSchemeId;
+		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
 		super.markAsChanged();
 	}
 
@@ -466,7 +423,6 @@ public final class SchemePath extends StorableObject
 		this.description = schemePath.description;
 		this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
 		this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
-		this.parentSchemeId = new Identifier(schemePath.parentSchemeId);
 	}
 
 	/*-********************************************************************
