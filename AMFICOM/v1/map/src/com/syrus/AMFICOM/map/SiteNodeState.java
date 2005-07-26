@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeState.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: SiteNodeState.java,v 1.4 2005/07/26 11:05:04 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,30 +15,28 @@ import com.syrus.util.HashCodeGenerator;
 /**
  * состо€ние узла
  *
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 11:05:04 $
  * @module map_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
-public class SiteNodeState extends NodeState
-{
+public class SiteNodeState extends NodeState {
 	public Identifier mapProtoId;
-	
-	public SiteNodeState(SiteNode msne)
-	{
+
+	public SiteNodeState(final SiteNode msne) {
 		super(msne);
 
 		this.mapProtoId = msne.getType().getId();
 	}
 
-	public boolean equals(Object obj)
-	{
-		SiteNodeState msnes = (SiteNodeState)obj;
-		return super.equals(obj)
-			&& this.mapProtoId.equals(msnes.mapProtoId);
+	@Override
+	public boolean equals(final Object obj) {
+		final SiteNodeState msnes = (SiteNodeState) obj;
+		return super.equals(obj) && this.mapProtoId.equals(msnes.mapProtoId);
 	}
-	
+
+	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addInt(super.hashCode());
 		codeGenerator.addObject(this.mapProtoId);
 		return codeGenerator.getResult();
