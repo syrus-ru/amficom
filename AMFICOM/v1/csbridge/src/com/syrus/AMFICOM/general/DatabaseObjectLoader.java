@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.21 2005/07/26 17:39:34 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.22 2005/07/26 18:09:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/26 17:39:34 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/26 18:09:03 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -62,6 +62,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		if (storableObjects.isEmpty()) {
 			return;
 		}
+
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
 		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
