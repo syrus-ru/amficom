@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeTypeSort.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: SiteNodeTypeSort.java,v 1.4 2005/07/26 11:12:27 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ package com.syrus.AMFICOM.map;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL},
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND},
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 11:12:27 $
  * @module map_v1
  */
 public class SiteNodeTypeSort {
@@ -39,16 +39,15 @@ public class SiteNodeTypeSort {
 
 	private String codename;
 
-	private SiteNodeTypeSort(
-			String codename) {
+	private SiteNodeTypeSort(final String codename) {
 		this.codename = codename;
 	}
 
 	public String value() {
 		return this.codename;
 	}
-	
-	public static SiteNodeTypeSort fromString(String codename) {
+
+	public static SiteNodeTypeSort fromString(final String codename) {
 		if(codename.equals(_WELL))
 			return WELL;
 		if(codename.equals(_PIQUET))
