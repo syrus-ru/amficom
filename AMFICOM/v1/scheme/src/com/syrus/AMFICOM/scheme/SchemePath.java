@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.59 2005/07/25 12:12:33 bass Exp $
+ * $Id: SchemePath.java,v 1.60 2005/07/26 12:02:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
@@ -48,7 +49,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -63,11 +63,11 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/07/25 12:12:33 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/26 12:02:56 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
-		implements Describable, Characterizable, Cloneable, PathOwner<PathElement> {
+		implements Describable, Characterizable, PathOwner<PathElement> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -188,23 +188,20 @@ public final class SchemePath extends StorableObject
 		pathElement.setParentPathOwner(this, processSubsequentSiblings);
 	}
 
-	@Override
-	public SchemePath clone() throws CloneNotSupportedException {
-		final SchemePath schemePath = (SchemePath) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemePath;
+	/**
+	 * @see Characterizable#getCharacteristics()
+	 */
+	public Set<Characteristic> getCharacteristics() {
+		try {
+			return Collections.unmodifiableSet(this.getCharacteristics0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
 	}
 
-	/**
-	 * @throws ApplicationException 
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
-	 */
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	private Set<Characteristic> getCharacteristics0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
 	}
 
 	/**
