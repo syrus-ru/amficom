@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.27 2005/07/26 13:13:11 arseniy Exp $
+ * $Id: Marker.java,v 1.28 2005/07/26 13:14:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,7 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -51,7 +49,7 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.27 $, $Date: 2005/07/26 13:13:11 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/26 13:14:17 $
  * @module mapview_v1
  * @author $Author: arseniy $
  */
