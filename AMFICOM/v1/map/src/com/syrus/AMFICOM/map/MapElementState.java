@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementState.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: MapElementState.java,v 1.4 2005/07/26 09:53:46 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,11 @@ package com.syrus.AMFICOM.map;
  *
  *
  *
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 09:53:46 $
  * @module map_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
 public abstract class MapElementState {
+	@Override
 	public abstract boolean equals(Object object);
 }

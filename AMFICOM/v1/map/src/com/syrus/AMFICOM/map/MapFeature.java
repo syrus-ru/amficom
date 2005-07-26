@@ -1,5 +1,5 @@
 /*-
- * $Id: MapFeature.java,v 1.2 2005/06/28 10:06:44 arseniy Exp $
+ * $Id: MapFeature.java,v 1.3 2005/07/26 09:54:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,14 @@ public class MapFeature {
 	
 	private String name;
 	
-	public MapFeature (double centerX, double centerY, String name) {
+	public MapFeature (final double centerX, final double centerY, final String name) {
 		assert name != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.name = name;
 	}
 	
-	MapFeature (IdlMapFeature ft) {
+	MapFeature (final IdlMapFeature ft) {
 		this.centerX = ft.centerX;
 		this.centerY = ft.centerY;
 		this.name = ft.name;
