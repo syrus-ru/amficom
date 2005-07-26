@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.96 2005/07/25 07:15:00 saa Exp $
+ * $Id: Heap.java,v 1.97 2005/07/26 15:14:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.Marker;
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
-import com.syrus.AMFICOM.Client.General.Command.Analysis.AnalysisCommand;
 import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.CurrentEventChangeListener;
@@ -91,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.96 $, $Date: 2005/07/25 07:15:00 $
+ * @version $Revision: 1.97 $, $Date: 2005/07/26 15:14:28 $
  * @module
  */
 public class Heap
@@ -210,8 +209,9 @@ public class Heap
 	/**
 	 * Открывает рефлектограмму как первичную.
 	 * Автоматически закрывает все ранее открытые рефлектограммы.
+	 * Анализ не проводит. Уведомлений не обеспечивает.
 	 */ 
-	private static void openPrimaryTrace(Trace tr) {
+	public static void openPrimaryTrace(Trace tr) {
 		closeAll();
 		setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
 	}
@@ -540,7 +540,7 @@ public class Heap
 	// NB: if the primary trace is opened, then there are
 	// two events generated:
 	// notifyBsHashAdd -> bsHashAdded() and
-	// notifyPrimaryTraceChanged -> primaryTraceCUpdated()
+	// notifyPrimaryTraceOpened -> primaryTraceCUpdated()
 	private static void notifyBsHashAdd(String key) {
 		Log.debugMessage("Heap.notifyBsHashAdd | key " + key, Level.FINEST);
 		for (BsHashChangeListener listener: bsHashChangedListeners)
@@ -563,13 +563,13 @@ public class Heap
 	/**
 	 * should also be suitable if primary trace completely replaced
 	 */
-	public static void notifyPrimaryTraceOpened() {
+	private static void notifyPrimaryTraceOpened() {
 		Log.debugMessage("Heap.notifyPrimaryTraceOpened | ", Level.FINEST);
 		for (PrimaryTraceListener listener: primaryTraceListeners)
 			listener.primaryTraceCUpdated();
 	}
 
-	public static void notifyPrimaryTraceClosed() {
+	private static void notifyPrimaryTraceClosed() {
 		Log.debugMessage("Heap.notifyPrimaryTraceClosed | ", Level.FINEST);
 		for (PrimaryTraceListener listener: primaryTraceListeners)
 			listener.primaryTraceRemoved();
@@ -734,6 +734,9 @@ public class Heap
 		removeListener(refMismatchListeners, listener);
 	}
 
+	/**
+	 * вызывайте этот метод после установки нового primary trace и его анализа
+	 */
 	public static void primaryTraceOpened() {
 		notifyBsHashAdd(PRIMARY_TRACE_KEY);
 		notifyPrimaryTraceOpened();
@@ -1053,7 +1056,7 @@ public class Heap
 	 */
 
 	public static void makePrimaryAnalysis() {
-		new AnalysisCommand().execute();
+		makeAnalysis();
 		primaryTraceOpened();
 		if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
 			currentEvent.toEvent(0); // (1)
