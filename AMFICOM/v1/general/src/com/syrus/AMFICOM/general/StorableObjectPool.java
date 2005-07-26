@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.135 2005/07/26 18:09:34 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.136 2005/07/26 18:23:16 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.135 $, $Date: 2005/07/26 18:09:34 $
+ * @version $Revision: 1.136 $, $Date: 2005/07/26 18:23:16 $
  * @author $Author: bass $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -172,7 +172,7 @@ public final class StorableObjectPool {
 			return null;
 		}
 
-		final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			StorableObject storableObject = objectPool.get(id);
 			if (storableObject == null && useLoader) {
@@ -204,7 +204,7 @@ public final class StorableObjectPool {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
-		final LRUMap<Identifier, T> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
 			Log.errorMessage("StorableObjectPool.getStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
@@ -315,7 +315,7 @@ public final class StorableObjectPool {
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Requested but: " + ids
 				+ ", for condition: " + condition, Log.DEBUGLEVEL10);
 
-		final LRUMap<Identifier, T> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool == null) {
 			Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
@@ -392,7 +392,7 @@ public final class StorableObjectPool {
 		if (entityDeletedIds != null && entityDeletedIds.contains(id))
 			return;
 
-		final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			objectPool.put(id, storableObject);
 		}
@@ -759,7 +759,7 @@ public final class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) entityCodeIterator.value();
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCodeIterator);
 
 			final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 
@@ -830,5 +830,15 @@ public final class StorableObjectPool {
 			Log.errorMessage("StorableObjectPool.truncateImpl | ERROR: Object pool class '" + objectPool.getClass().getName()
 					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool");
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <K, V> LRUMap<K, V> getLRUMap(final short entityCode) {
+		return (LRUMap) objectPoolMap.get(entityCode);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <K, V> LRUMap<K, V> getLRUMap(final TShortObjectIterator tShortObjectIterator) {
+		return (LRUMap) tShortObjectIterator.value();
 	}
 }
