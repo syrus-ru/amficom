@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.26 2005/07/14 11:29:53 arseniy Exp $
+ * $Id: ServerCore.java,v 1.27 2005/07/26 18:21:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,15 +25,15 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/07/14 11:29:53 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/26 18:21:59 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -156,7 +156,7 @@ public abstract class ServerCore implements CommonServer {
 			return transferables;
 		}
 		catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		}
 		catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -199,7 +199,7 @@ public abstract class ServerCore implements CommonServer {
 			return transferables;
 		}
 		catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		}
 		catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -235,10 +235,10 @@ public abstract class ServerCore implements CommonServer {
 			return StorableObject.createHeadersTransferable(this.orb, storableObjects);
 		}
 		catch (final VersionCollisionException vce) {
-			throw this.processDefaultApplicationException(vce, ErrorCode.ERROR_VERSION_COLLISION);
+			throw this.processDefaultApplicationException(vce, IdlErrorCode.ERROR_VERSION_COLLISION);
 		}
 		catch (final UpdateObjectException uoe) {
-			throw this.processDefaultApplicationException(uoe, ErrorCode.ERROR_UPDATE);
+			throw this.processDefaultApplicationException(uoe, IdlErrorCode.ERROR_UPDATE);
 		}
 		catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -285,7 +285,7 @@ public abstract class ServerCore implements CommonServer {
 
 			return Identifier.createTransferables(storableObjects);
 		} catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, ErrorCode.ERROR_RETRIEVE);
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
@@ -294,17 +294,17 @@ public abstract class ServerCore implements CommonServer {
 	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable t) {
 		Log.debugException(t, Level.SEVERE);
 		return new AMFICOMRemoteException(
-				ErrorCode.ERROR_UNKNOWN,
-				CompletionStatus.COMPLETED_PARTIALLY,
+				IdlErrorCode.ERROR_UNKNOWN,
+				IdlCompletionStatus.COMPLETED_PARTIALLY,
 				t.getMessage());
 	}
 
 	private AMFICOMRemoteException processDefaultApplicationException(
 			final ApplicationException ae,
-			final ErrorCode errorCode) {
+			final IdlErrorCode errorCode) {
 		Log.debugException(ae, Level.SEVERE);
 		return new AMFICOMRemoteException(errorCode,
-				CompletionStatus.COMPLETED_NO,
+				IdlCompletionStatus.COMPLETED_NO,
 				ae.getMessage());
 	}
 
@@ -313,8 +313,8 @@ public abstract class ServerCore implements CommonServer {
 			final short entityCode) {
 		Log.debugException(ioee, Level.SEVERE);
 		return new AMFICOMRemoteException(
-				ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-				CompletionStatus.COMPLETED_NO,
+				IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+				IdlCompletionStatus.COMPLETED_NO,
 				"Illegal object entity: '"
 				+ ObjectEntities.codeToString(entityCode)
 				+ '\'');
@@ -323,8 +323,8 @@ public abstract class ServerCore implements CommonServer {
 	private AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige, final short entityCode) {
 		Log.debugException(ige, Level.SEVERE);
 		return new AMFICOMRemoteException(
-				ErrorCode.ERROR_RETRIEVE,
-				CompletionStatus.COMPLETED_NO,
+				IdlErrorCode.ERROR_RETRIEVE,
+				IdlCompletionStatus.COMPLETED_NO,
 				"Cannot create major/minor entries of identifier for entity: '"
 				+ ObjectEntities.codeToString(entityCode)
 				+ "' -- "

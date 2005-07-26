@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGeneratorServer.java,v 1.6 2005/07/03 19:16:25 bass Exp $
+ * $Id: LocalIdentifierGeneratorServer.java,v 1.7 2005/07/26 18:21:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.general;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/03 19:16:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/26 18:21:59 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 
@@ -26,36 +26,35 @@ public class LocalIdentifierGeneratorServer implements IdentifierGeneratorServer
 		//nothing
 	}
 
-	public IdlIdentifier getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
+	public IdlIdentifier getGeneratedIdentifier(final short entityCode) throws AMFICOMRemoteException {
 		try {
-			Identifier identifier = LocalIdentifierGenerator.generateIdentifier(entityCode);
+			final Identifier identifier = LocalIdentifierGenerator.generateIdentifier(entityCode);
 			return identifier.getTransferable();
-		}
-		catch (IllegalObjectEntityException ioee) {
+		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-																			 CompletionStatus.COMPLETED_NO,
-																			 "Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
-		}	
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+					IdlCompletionStatus.COMPLETED_NO,
+					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
+		}
 	}
 
-	public IdlIdentifier[] getGeneratedIdentifierRange(short entityCode, int size) throws AMFICOMRemoteException {
+	public IdlIdentifier[] getGeneratedIdentifierRange(final short entityCode, final int size) throws AMFICOMRemoteException {
 		try {
-			Identifier[] identifiers = LocalIdentifierGenerator.generateIdentifierRange(entityCode, size);
-			IdlIdentifier[] identifiersT = new IdlIdentifier[identifiers.length];
-			for (int i = 0; i < identifiersT.length; i++)
+			final Identifier[] identifiers = LocalIdentifierGenerator.generateIdentifierRange(entityCode, size);
+			final IdlIdentifier[] identifiersT = new IdlIdentifier[identifiers.length];
+			for (int i = 0; i < identifiersT.length; i++) {
 				identifiersT[i] = identifiers[i].getTransferable();
+			}
 			return identifiersT;
-		}
-		catch (IllegalObjectEntityException ioee) {
+		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-																			 CompletionStatus.COMPLETED_NO,
-																			 "Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+					IdlCompletionStatus.COMPLETED_NO,
+					"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
 		}
 	}
 
-	public void verify(byte i) {
+	public void verify(final byte i) {
 		throw new UnsupportedOperationException("It is dumb to call this method -- " + i);
 	}
 

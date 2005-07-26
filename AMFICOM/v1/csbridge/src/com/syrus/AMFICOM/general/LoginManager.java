@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.16 2005/06/28 15:27:55 arseniy Exp $
+ * $Id: LoginManager.java,v 1.17 2005/07/26 18:21:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,14 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.corba.IdlDomain;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.leserver.corba.LoginServer;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/06/28 15:27:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/26 18:21:59 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -61,11 +61,11 @@ public final class LoginManager {
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
-				case ErrorCode._ERROR_ILLEGAL_LOGIN:
+				case IdlErrorCode._ERROR_ILLEGAL_LOGIN:
 					throw new LoginException("Illegal login");
-				case ErrorCode._ERROR_ILLEGAL_PASSWORD:
+				case IdlErrorCode._ERROR_ILLEGAL_PASSWORD:
 					throw new LoginException("Illegal password");
-				case ErrorCode._ERROR_ALREADY_LOGGED:
+				case IdlErrorCode._ERROR_ALREADY_LOGGED:
 					throw new LoginException("Already logged");
 				default:
 					throw new LoginException("Cannot login -- " + are.message);
@@ -83,7 +83,7 @@ public final class LoginManager {
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
-				case ErrorCode._ERROR_NOT_LOGGED_IN:
+				case IdlErrorCode._ERROR_NOT_LOGGED_IN:
 					throw new LoginException("Not logged in");
 				default:
 					throw new LoginException("Cannot logout -- " + are.message);
@@ -111,7 +111,7 @@ public final class LoginManager {
 		}
 		catch (AMFICOMRemoteException are) {
 			switch (are.errorCode.value()) {
-				case ErrorCode._ERROR_NO_DOMAINS_AVAILABLE:
+				case IdlErrorCode._ERROR_NO_DOMAINS_AVAILABLE:
 					throw new LoginException("No domains available");
 				default:
 					throw new LoginException("Cannot get available domains -- " + are.message);
