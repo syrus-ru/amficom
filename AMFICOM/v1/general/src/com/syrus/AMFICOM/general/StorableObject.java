@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.80 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: StorableObject.java,v 1.81 2005/07/26 14:37:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,13 +33,11 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.80 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.81 $, $Date: 2005/07/26 14:37:28 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
 	private static final long serialVersionUID = 3904998894075738999L;
-
-	static final long VERSION_ILLEGAL = -1L;
 
 	protected Identifier id;
 	protected Date created;
