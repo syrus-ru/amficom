@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.134 2005/07/26 17:22:21 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.135 2005/07/26 18:09:34 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/07/26 17:22:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.135 $, $Date: 2005/07/26 18:09:34 $
+ * @author $Author: bass $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -172,9 +172,9 @@ public final class StorableObjectPool {
 			return null;
 		}
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool != null) {
-			StorableObject storableObject = (StorableObject) objectPool.get(id);
+			StorableObject storableObject = objectPool.get(id);
 			if (storableObject == null && useLoader) {
 				final Set storableObjects = objectLoader.loadStorableObjects(Collections.singleton(id));
 				if (!storableObjects.isEmpty())
@@ -194,7 +194,7 @@ public final class StorableObjectPool {
 		return null;
 	}
 
-	public static Set getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
+	public static <T extends StorableObject> Set<T> getStorableObjects(final Set<Identifier> ids, boolean useLoader) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		Log.debugMessage("StorableObjectPool.getStorableObjects | Requested for: " + ids, Log.DEBUGLEVEL10);
 		if (ids.isEmpty()) {
@@ -204,7 +204,7 @@ public final class StorableObjectPool {
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, T> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool == null) {
 			Log.errorMessage("StorableObjectPool.getStorableObjects | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
@@ -219,11 +219,11 @@ public final class StorableObjectPool {
 			Identifier.subtractFromIdentifiers(loadIds, entityDeletedIds);
 		}
 
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		final Set<T> storableObjects = new HashSet<T>();
 
 		for (final Iterator<Identifier> it = loadIds.iterator(); it.hasNext();) {
 			final Identifier id = it.next();
-			final StorableObject storableObject = (StorableObject) objectPool.get(id);
+			final T storableObject = objectPool.get(id);
 			if (storableObject != null) {
 				storableObjects.add(storableObject);
 				it.remove();
@@ -234,12 +234,12 @@ public final class StorableObjectPool {
 				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
 
 		if (useLoader && !loadIds.isEmpty()) {
-			final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(loadIds);
+			final Set<T> loadedObjects = objectLoader.loadStorableObjects(loadIds);
 
 			Log.debugMessage("StorableObjectPool.getStorableObjects | Loaded " + loadedObjects.size()
 					+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
 
-			for (final StorableObject storableObject : loadedObjects) {
+			for (final T storableObject : loadedObjects) {
 				storableObjects.add(storableObject);
 				objectPool.put(storableObject.getId(), storableObject);
 			}
@@ -258,7 +258,7 @@ public final class StorableObjectPool {
 	 * @return Set of StorableObject matching condition 
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
+	public static <T extends StorableObject> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition, final boolean useLoader)  throws ApplicationException {
 		return getStorableObjectsByCondition(condition, useLoader, true);
 	}
 
@@ -270,7 +270,7 @@ public final class StorableObjectPool {
 	 * @return Set of StorableObject matching condition
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsByCondition(final StorableObjectCondition condition,
+	public static <T extends StorableObject> Set<T> getStorableObjectsByCondition(final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
 		final Set<Identifier> emptySet = Collections.emptySet();
@@ -285,7 +285,7 @@ public final class StorableObjectPool {
 	 * @return Set of StorableObject matching condition with ids not in given set
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		return getStorableObjectsButIdsByCondition(ids, condition, useLoader, true);
@@ -300,7 +300,7 @@ public final class StorableObjectPool {
 	 * @return Set of StorableObject matching condition with ids not in given set
 	 * @throws ApplicationException
 	 */
-	public static Set getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public static <T extends StorableObject> Set<T> getStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader,
 			final boolean breakOnLoadError) throws ApplicationException {
@@ -315,7 +315,7 @@ public final class StorableObjectPool {
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Requested but: " + ids
 				+ ", for condition: " + condition, Log.DEBUGLEVEL10);
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, T> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool == null) {
 			Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
@@ -330,9 +330,9 @@ public final class StorableObjectPool {
 			Identifier.addToIdentifiers(loadButIds, entityDeletedIds);
 		}
 
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
-		for (final Iterator storableObjectIterator = objectPool.iterator(); storableObjectIterator.hasNext();) {
-			final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
+		final Set<T> storableObjects = new HashSet<T>();
+		for (final Iterator<T> storableObjectIterator = objectPool.iterator(); storableObjectIterator.hasNext();) {
+			final T storableObject = storableObjectIterator.next();
 			final Identifier id = storableObject.getId();
 			if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
 				storableObjects.add(storableObject);
@@ -344,7 +344,7 @@ public final class StorableObjectPool {
 
 		if (useLoader && condition.isNeedMore(storableObjects)) {
 			Identifier.addToIdentifiers(loadButIds, storableObjects);
-			Set<StorableObject> loadedObjects = null;
+			Set<T> loadedObjects = null;
 			try {
 				loadedObjects = objectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 			}
@@ -358,7 +358,7 @@ public final class StorableObjectPool {
 				Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Loaded " + loadedObjects.size()
 						+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
 
-				for (final StorableObject storableObject : loadedObjects) {
+				for (final T storableObject : loadedObjects) {
 					storableObjects.add(storableObject);
 					objectPool.put(storableObject.getId(), storableObject);
 				}
@@ -392,7 +392,7 @@ public final class StorableObjectPool {
 		if (entityDeletedIds != null && entityDeletedIds.contains(id))
 			return;
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			objectPool.put(id, storableObject);
 		}
@@ -411,7 +411,7 @@ public final class StorableObjectPool {
 
 		DELETED_IDS_MAP.remove(new Short(entityCode));
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			for (final Iterator it = objectPool.iterator(); it.hasNext();) {
 				final StorableObject storableObject = (StorableObject) it.next();
@@ -442,7 +442,7 @@ public final class StorableObjectPool {
 		}
 		entityDeletedIds.add(id);
 
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			objectPool.remove(id);
 		}
@@ -486,7 +486,7 @@ public final class StorableObjectPool {
 			}
 			entityDeletedIds.addAll(entityDeleteIds);
 
-			final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityKey.shortValue());
+			final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityKey.shortValue());
 			if (objectPool != null) {
 				for (final Identifier id : entityDeleteIds) {
 					objectPool.remove(id);
@@ -553,7 +553,7 @@ public final class StorableObjectPool {
 	}
 
 	private static void checkChangedWithDependencies(final short entityCode) throws ApplicationException {
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
 		if (objectPool != null) {
 			synchronized (objectPool) {
 				for (final Iterator it = objectPool.iterator(); it.hasNext();) {
@@ -688,7 +688,6 @@ public final class StorableObjectPool {
 
 	/**
 	 * 
-	 * @param entityCode
 	 * @param transferables
 	 * @param continueOnError
 	 * @return Set of Storable Objects
@@ -720,8 +719,6 @@ public final class StorableObjectPool {
 	 * <code>transferable</code> instance is returned. <em>Never</em> returns
 	 * <code>null</code>.
 	 * 
-	 * @param entityCode
-	 *        to be removed as soon as migration to valuetypes is complete.
 	 * @param transferable
 	 * @throws ApplicationException
 	 */
@@ -762,7 +759,7 @@ public final class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			final LRUMap objectPool = (LRUMap) entityCodeIterator.value();
+			final LRUMap<Identifier, StorableObject> objectPool = (LRUMap) entityCodeIterator.value();
 
 			final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 

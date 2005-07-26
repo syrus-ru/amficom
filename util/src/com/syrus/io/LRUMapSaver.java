@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.16 2005/07/15 11:31:13 max Exp $
+ * $Id: LRUMapSaver.java,v 1.17 2005/07/26 18:09:34 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/15 11:31:13 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/07/26 18:09:34 $
+ * @author $Author: bass $
  * @module util
  */
 public class LRUMapSaver {
@@ -85,7 +85,7 @@ public class LRUMapSaver {
 	 * @todo Consider returning an empty list instead of null. Check all
 	 *       dependent code (within workspace).
 	 */
-	public static Set load(final String objectEntityName) {
+	public static <T> Set<T> load(final String objectEntityName) {
 		try {
 			init();
 			Log.debugMessage("LRUMapSaver.load | Trying to load LRUMap with " + objectEntityName , Log.DEBUGLEVEL10);
@@ -96,7 +96,7 @@ public class LRUMapSaver {
 				Log.errorMessage("LRUMapSaver.load | Wrong input file "+ saveFile.getAbsolutePath() + ". Loading failed");
 				return null;
 			}
-			Set keys = (HashSet) in.readObject();
+			Set<T> keys = (Set) in.readObject();
 			return keys;
 		} catch (FileNotFoundException fnfe) {
 			Log.debugMessage("LRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);

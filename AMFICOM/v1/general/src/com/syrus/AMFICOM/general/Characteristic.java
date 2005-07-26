@@ -1,9 +1,9 @@
-/*
- * $Id: Characteristic.java,v 1.47 2005/07/25 20:47:00 arseniy Exp $
+/*-
+ * $Id: Characteristic.java,v 1.48 2005/07/26 18:09:34 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/07/25 20:47:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/07/26 18:09:34 $
+ * @author $Author: bass $
  * @module general_v1
  */
-
-public final class Characteristic extends StorableObject implements TypedObject {
+public final class Characteristic extends StorableObject
+		implements TypedObject, Cloneable {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
