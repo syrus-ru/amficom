@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.25 2005/07/24 17:13:34 arseniy Exp $
+ * $Id: UnboundNode.java,v 1.26 2005/07/26 13:30:53 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/07/24 17:13:34 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/26 13:30:53 $
  * @module mapviewclient_v1
  */
 public final class UnboundNode extends SiteNode
@@ -66,16 +66,13 @@ public final class UnboundNode extends SiteNode
 	 * @param location географические координаты непривязанного элемента
 	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
 	 */
-	protected UnboundNode(
-		Identifier id,
-		Identifier creatorId,
-		final long version,
-		SchemeElement schemeElement,
-		DoublePoint location,
-		SiteNodeType nodeType)
-	{
-		super(
-				id,
+	protected UnboundNode(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final SchemeElement schemeElement,
+			final DoublePoint location,
+			final SiteNodeType nodeType) {
+		super(id,
 				creatorId,
 				version,
 				nodeType.getImageId(),
@@ -92,85 +89,82 @@ public final class UnboundNode extends SiteNode
 	}
 
 	/**
-	 * Создать новый непривязанный элемент.
-	 * Вызывается при дропе схемного элемента на окно карты
-	 * (см. com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener.schemeElementDropped(SchemeElement, Point)
-	 * в модуле mapviewclient_v1).
-	 * @param schemeElement элемент схемы
-	 * @param location географические координаты непривязанного элемента
-	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
+	 * Создать новый непривязанный элемент. Вызывается при дропе схемного элемента
+	 * на окно карты (см.
+	 * com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener.schemeElementDropped(SchemeElement,
+	 * Point) в модуле mapviewclient_v1).
+	 * 
+	 * @param schemeElement
+	 *        элемент схемы
+	 * @param location
+	 *        географические координаты непривязанного элемента
+	 * @param nodeType
+	 *        тип элемента (должен быть {@link SiteNodeType#DEFAULT_UNBOUND})
 	 * @return новый непривязанный элемент
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
-	 * 	если невозможно получить новый идентификатор
+	 *         если невозможно получить новый идентификатор
 	 */
-	public static UnboundNode createInstance(
-			Identifier creatorId,
-			SchemeElement schemeElement,
-			DoublePoint location,
-			SiteNodeType nodeType)
-		throws CreateObjectException
-	{
+	public static UnboundNode createInstance(final Identifier creatorId,
+			final SchemeElement schemeElement,
+			final DoublePoint location,
+			final SiteNodeType nodeType) throws CreateObjectException {
 		if (schemeElement == null || location == null || nodeType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try
-		{
-			UnboundNode unboundNode = new UnboundNode(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE),
-				creatorId,
-				0L,
-				schemeElement,
-				location,
-				nodeType);
+
+		try {
+			final UnboundNode unboundNode = new UnboundNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE),
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					schemeElement,
+					location,
+					nodeType);
 			unboundNode.markAsChanged();
 			return unboundNode;
-		} catch (IdentifierGenerationException e)
-		{
+		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("UnboundNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	/**
-	 * Установить флаг возможности привязки непривязанного узла к сетевому
-	 * узлу.
-	 * @param canBind значение флага
+	 * Установить флаг возможности привязки непривязанного узла к сетевому узлу.
+	 * 
+	 * @param canBind
+	 *        значение флага
 	 */
-	public void setCanBind(boolean canBind)
-	{
+	public void setCanBind(final boolean canBind) {
 		this.canBind = canBind;
 	}
-	
+
 	/**
-	 * получить флаг возможности привязки непривязанного узла к сетевому
-	 * узлу.
+	 * получить флаг возможности привязки непривязанного узла к сетевому узлу.
+	 * 
 	 * @return значение флага
 	 */
-	public boolean getCanBind()
-	{
+	public boolean getCanBind() {
 		return this.canBind;
 	}
 
 	/**
 	 * Установить элемент схемы.
-	 * @param schemeElement элемент схемы
+	 * 
+	 * @param schemeElement
+	 *        элемент схемы
 	 */
-	public void setSchemeElement(SchemeElement schemeElement)
-	{
+	public void setSchemeElement(final SchemeElement schemeElement) {
 		this.schemeElement = schemeElement;
 		setName(schemeElement.getName());
 	}
 
-
 	/**
 	 * Получить элемент схемы.
+	 * 
 	 * @return элемент схемы
 	 */
-	public SchemeElement getSchemeElement()
-	{
+	public SchemeElement getSchemeElement() {
 		return this.schemeElement;
 	}
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * {@inheritDoc}
@@ -179,16 +173,6 @@ public final class UnboundNode extends SiteNode
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
-	 */
-	@Override
-	public IdlStorableObject getHeaderTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -208,7 +192,7 @@ public final class UnboundNode extends SiteNode
 	}
 
 	@Override
-	public void setName(String name) {
+	public void setName(final String name) {
 		throw new UnsupportedOperationException("Use SchemeElement.setName(String)");
 	}
 

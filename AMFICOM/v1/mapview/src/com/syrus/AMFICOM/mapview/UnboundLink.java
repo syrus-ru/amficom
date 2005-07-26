@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.22 2005/06/25 17:50:49 bass Exp $
+ * $Id: UnboundLink.java,v 1.23 2005/07/26 13:30:53 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/06/25 17:50:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/07/26 13:30:53 $
  * @module mapviewclient_v1
  */
 public final class UnboundLink extends PhysicalLink {
@@ -53,14 +53,12 @@ public final class UnboundLink extends PhysicalLink {
 	 * @param eNode конечный узел
 	 * @param type тип (должен быть {@link PhysicalLinkType#DEFAULT_UNBOUND})
 	 */
-	protected UnboundLink(
-			Identifier id,
-			Identifier creatorId,
-			final long version,
-			AbstractNode stNode,
-			AbstractNode eNode,
-			PhysicalLinkType type)
-	{
+	protected UnboundLink(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final AbstractNode stNode,
+			final AbstractNode eNode,
+			final PhysicalLinkType type) {
 		super(id, creatorId, version, id.toString(), "", type, stNode, eNode, "", "", "", 0, 0, true, true);
 	}
 
@@ -74,53 +72,47 @@ public final class UnboundLink extends PhysicalLink {
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException если
 	 * нельзя создать объект
 	 */
-	public static PhysicalLink createInstance(
-			Identifier creatorId,
-			AbstractNode stNode,
-			AbstractNode eNode,
-			PhysicalLinkType type)
-		throws CreateObjectException
-	{
+	public static PhysicalLink createInstance(final Identifier creatorId,
+			final AbstractNode stNode,
+			final AbstractNode eNode,
+			final PhysicalLinkType type) throws CreateObjectException {
 		if (stNode == null || eNode == null || type == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try
-		{
-			UnboundLink unboundLink = new UnboundLink(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_CODE),
-				creatorId,
-				0L,
-				stNode,
-				eNode,
-				type);
+
+		try {
+			final UnboundLink unboundLink = new UnboundLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_CODE),
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					stNode,
+					eNode,
+					type);
 			unboundLink.markAsChanged();
 			return unboundLink;
-		} catch (IdentifierGenerationException e)
-		{
+		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("UnboundLink.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	/**
 	 * Установить кабельный путь.
-	 * @param cablePath кабельный путь
+	 * 
+	 * @param cablePath
+	 *        кабельный путь
 	 */
-	public void setCablePath(CablePath cablePath)
-	{
+	public void setCablePath(final CablePath cablePath) {
 		this.cablePath = cablePath;
 	}
 
-
 	/**
 	 * Получить кабельный путь.
+	 * 
 	 * @return кабельный путь
 	 */
-	public CablePath getCablePath()
-	{
+	public CablePath getCablePath() {
 		return this.cablePath;
 	}
 
-////////////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * {@inheritDoc}
@@ -129,16 +121,6 @@ public final class UnboundLink extends PhysicalLink {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
-	 */
-	@Override
-	public IdlStorableObject getHeaderTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 
