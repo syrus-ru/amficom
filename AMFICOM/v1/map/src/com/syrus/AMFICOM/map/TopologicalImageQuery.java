@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.11 2005/07/08 11:47:41 krupenn Exp $
+ * $Id: TopologicalImageQuery.java,v 1.12 2005/07/26 11:17:35 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/07/08 11:47:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/07/26 11:17:35 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable<TopologicalImageQuery> {
@@ -27,11 +27,8 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * запроса пользователя и перерисовываемых в фоновом режиме
 	 */
 	private static final int PRIORITY_BACKGROUND = 20;
-
 	public static final int PRIORITY_BACKGROUND_HIGH = TopologicalImageQuery.PRIORITY_BACKGROUND + 1;
-
 	public static final int PRIORITY_BACKGROUND_MIDDLE = TopologicalImageQuery.PRIORITY_BACKGROUND + 2;
-
 	public static final int PRIORITY_BACKGROUND_LOW = TopologicalImageQuery.PRIORITY_BACKGROUND + 3;
 
 	/**
@@ -56,7 +53,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Ширина изображения карты в пикселях
 	 * 
 	 */
-
 	private int mapImageWidth;
 
 	/**
@@ -64,7 +60,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Высота изображения карты в пикселях
 	 * 
 	 */
-
 	private int mapImageHeight;
 
 	/**
@@ -72,7 +67,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Координата Х топологического центра в сферических координатах
 	 * 
 	 */
-
 	private double topoCenterX;
 
 	/**
@@ -80,7 +74,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Координата Y топологического центра в сферических координатах
 	 * 
 	 */
-
 	private double topoCenterY;
 
 	private transient DoublePoint topoCenter = null;
@@ -90,7 +83,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Массштаб
 	 * 
 	 */
-
 	private double topoScale;
 
 	/**
@@ -98,7 +90,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Видимость слоёв
 	 * 
 	 */
-
 	private boolean[] layerVisibilities;
 
 	/**
@@ -106,7 +97,6 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * Видимость надписей на слоях
 	 * 
 	 */
-
 	private boolean[] labelVisibilities;
 
 	/**
@@ -125,61 +115,41 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	private transient Image image = null;
 
 	/**
-	 * 
 	 * @param mapImageWidth
-	 * 
 	 * @param mapImageHeight
-	 * 
 	 * @param topoCenterX
-	 * 
 	 * @param topoCenterY
-	 * 
 	 * @param topoScale
-	 * 
 	 * @param layerVisibilities
-	 * 
 	 * @param labelVisibilities
-	 * 
 	 */
 
-	public TopologicalImageQuery(int mapImageWidth, int mapImageHeight,
-
-	double topoCenterX, double topoCenterY, double topoScale,
-
-	boolean[] layerVisibilities, boolean[] labelVisibilities) {
-
+	public TopologicalImageQuery(final int mapImageWidth,
+			final int mapImageHeight,
+			final double topoCenterX,
+			final double topoCenterY,
+			final double topoScale,
+			final boolean[] layerVisibilities,
+			final boolean[] labelVisibilities) {
 		this.mapImageWidth = mapImageWidth;
-
 		this.mapImageHeight = mapImageHeight;
-
 		this.topoCenterX = topoCenterX;
-
 		this.topoCenterY = topoCenterY;
-
 		this.topoScale = topoScale;
-
 		this.layerVisibilities = layerVisibilities;
-
 		this.labelVisibilities = labelVisibilities;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 	}
 
-	public TopologicalImageQuery(IdlTopologicalImageQuery tit) {
-
+	public TopologicalImageQuery(final IdlTopologicalImageQuery tit) {
 		this.mapImageWidth = tit.mapImageWidth;
-
 		this.mapImageHeight = tit.mapImageHeight;
-
 		this.topoCenterX = tit.topoCenterX;
-
 		this.topoCenterY = tit.topoCenterY;
-
 		this.topoScale = tit.topoScale;
-
 		this.layerVisibilities = tit.layerVisibilities;
-
 		this.labelVisibilities = tit.labelVisibilities;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -200,10 +170,12 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 */
 	public IdlTopologicalImageQuery getTransferable() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return new IdlTopologicalImageQuery(
-				this.mapImageWidth, this.mapImageHeight,
-				this.topoCenterX, this.topoCenterY,
-				this.topoScale, this.layerVisibilities,
+		return new IdlTopologicalImageQuery(this.mapImageWidth,
+				this.mapImageHeight,
+				this.topoCenterX,
+				this.topoCenterY,
+				this.topoScale,
+				this.layerVisibilities,
 				this.labelVisibilities);
 	}
 
@@ -217,57 +189,39 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	}
 
 	public boolean[] getLabelVisibilities() {
-
 		return this.labelVisibilities;
-
 	}
 
-	public void setLabelVisibilities(boolean[] labelVisibilities) {
-
+	public void setLabelVisibilities(final boolean[] labelVisibilities) {
 		this.labelVisibilities = labelVisibilities;
-
 	}
 
 	public boolean[] getLayerVisibilities() {
-
 		return this.layerVisibilities;
-
 	}
 
-	public void setLayerVisibilities(boolean[] layerVisibilities) {
-
+	public void setLayerVisibilities(final boolean[] layerVisibilities) {
 		this.layerVisibilities = layerVisibilities;
-
 	}
 
 	public int getMapImageHeight() {
-
 		return this.mapImageHeight;
-
 	}
 
-	public void setMapImageHeight(int mapImageHeight) {
-
+	public void setMapImageHeight(final int mapImageHeight) {
 		this.mapImageHeight = mapImageHeight;
-
 	}
 
 	public int getMapImageWidth() {
-
 		return this.mapImageWidth;
-
 	}
 
-	public void setMapImageWidth(int mapImageWidth) {
-
+	public void setMapImageWidth(final int mapImageWidth) {
 		this.mapImageWidth = mapImageWidth;
-
 	}
 
 	public double getTopoCenterX() {
-
 		return this.topoCenterX;
-
 	}
 
 	/**
@@ -275,14 +229,12 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * @param topoCenterX
 	 */
 	@Deprecated
-	public void setTopoCenterX(double topoCenterX) {
+	public void setTopoCenterX(final double topoCenterX) {
 		this.topoCenterX = topoCenterX;
 	}
 
 	public double getTopoCenterY() {
-
 		return this.topoCenterY;
-
 	}
 
 	/**
@@ -290,20 +242,16 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * @param topoCenterY
 	 */
 	@Deprecated
-	public void setTopoCenterY(double topoCenterY) {
+	public void setTopoCenterY(final double topoCenterY) {
 		this.topoCenterY = topoCenterY;
 	}
 
 	public double getTopoScale() {
-
 		return this.topoScale;
-
 	}
 
-	public void setTopoScale(double topoScale) {
-
+	public void setTopoScale(final double topoScale) {
 		this.topoScale = topoScale;
-
 	}
 
 	public int getPriority() {
@@ -318,16 +266,15 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 		return this.lastUsed;
 	}
 
-	public void setLastUsed(long lastUsed) {
+	public void setLastUsed(final long lastUsed) {
 		this.lastUsed = lastUsed;
 	}
 
 	@Override
 	public String toString() {
-		String resultString = "priority (" + this.priority + "), "
+		final String resultString = "priority (" + this.priority + "), "
 				+ "topo scale (" + this.topoScale + "), " + "topo center ("
 				+ this.topoCenterX + ":" + this.topoCenterY + ")";
-
 		return resultString;
 	}
 
@@ -342,7 +289,7 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 		return this.image;
 	}
 
-	public void setImage(Image image) {
+	public void setImage(final Image image) {
 		this.image = image;
 	}
 
@@ -350,15 +297,17 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 		return this.topoCenter;
 	}
 
-	public void setTopoCenter(DoublePoint topoCenter) {
+	public void setTopoCenter(final DoublePoint topoCenter) {
 		this.topoCenter = topoCenter;
 		this.topoCenterX = topoCenter.getX();
 		this.topoCenterY = topoCenter.getY();
 	}
+
 	public long getTimeCreated() {
 		return this.timeCreated;
 	}
-	public void setTimeCreated(long timeCreated) {
+
+	public void setTimeCreated(final long timeCreated) {
 		this.timeCreated = timeCreated;
 	}
 }
