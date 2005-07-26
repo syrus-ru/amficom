@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.136 2005/07/26 18:23:16 bass Exp $
+ * $Id: StorableObjectPool.java,v 1.137 2005/07/26 20:10:12 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.136 $, $Date: 2005/07/26 18:23:16 $
+ * @version $Revision: 1.137 $, $Date: 2005/07/26 20:10:12 $
  * @author $Author: bass $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -442,7 +442,7 @@ public final class StorableObjectPool {
 		}
 		entityDeletedIds.add(id);
 
-		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			objectPool.remove(id);
 		}
@@ -486,7 +486,7 @@ public final class StorableObjectPool {
 			}
 			entityDeletedIds.addAll(entityDeleteIds);
 
-			final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityKey.shortValue());
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityKey.shortValue());
 			if (objectPool != null) {
 				for (final Identifier id : entityDeleteIds) {
 					objectPool.remove(id);
@@ -623,7 +623,7 @@ public final class StorableObjectPool {
 		}
 	}
 
-	private static void saveStorableObjects(final Set<? extends StorableObject> storableObjects,
+	private static void saveStorableObjects(final Set<StorableObject> storableObjects,
 			final Identifier modifierId,
 			final boolean force) throws ApplicationException {
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);

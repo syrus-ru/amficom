@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.23 2005/07/26 18:51:45 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.24 2005/07/26 20:10:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/07/26 18:51:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/07/26 20:10:26 $
+ * @author $Author: bass $
  * @module csbridge
  */
 public class DatabaseObjectLoader implements ObjectLoader {
@@ -30,7 +30,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 			return Collections.emptySet();
 		}
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
 		assert database != null : ErrorMessages.NON_NULL_EXPECTED;
 		return database.retrieveByIdsByCondition(ids, null);
 	}
@@ -41,7 +41,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		return database.retrieveButIdsByCondition(ids, condition);
 	}
@@ -53,19 +53,19 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 		return versionsMap;
 	}
 
-	public final void saveStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
+	public final void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (storableObjects.isEmpty()) {
 			return;
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.save(storableObjects);
 	}
@@ -77,7 +77,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 			return Collections.emptySet();
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		return database.getOldVersionIds(versionsMap);
 	}
@@ -87,7 +87,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 			return;
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(identifiables);
-		final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
+		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.delete(identifiables);
 	}

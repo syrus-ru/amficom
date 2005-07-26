@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.32 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.33 2005/07/26 20:10:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,11 +16,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/25 20:47:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/07/26 20:10:12 $
+ * @author $Author: bass $
  * @module general_v1
  */
-public final class ParameterTypeDatabase extends StorableObjectDatabase  {
+public final class ParameterTypeDatabase extends StorableObjectDatabase<ParameterType>  {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -52,22 +52,16 @@ public final class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final ParameterType parameterType = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final ParameterType storableObject) throws IllegalDataException {
+		final ParameterType parameterType = storableObject;
 		return APOSTROPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(parameterType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ Integer.toString(parameterType.getDataType().getCode());
 	}	
 
-	private ParameterType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof ParameterType)
-			return (ParameterType)storableObject;
-		throw new IllegalDataException("ParameterTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected ParameterType updateEntityFromResultSet(final ParameterType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final ParameterType parameterType = (storableObject == null)
 				? new ParameterType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -77,7 +71,7 @@ public final class ParameterTypeDatabase extends StorableObjectDatabase  {
 						null,
 						null,
 						DataType.RAW)
-				: this.fromStorableObject(storableObject);
+				: storableObject;
 		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -91,13 +85,12 @@ public final class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(final ParameterType storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final ParameterType parameterType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, parameterType.getName(), SIZE_NAME_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, parameterType.getDataType().getCode());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getDataType().getCode());
 		return startParameterNumber;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectLoader.java,v 1.5 2005/07/26 18:09:34 bass Exp $
+ * $Id: ObjectLoader.java,v 1.6 2005/07/26 20:10:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/26 18:09:34 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/26 20:10:12 $
  * @author $Author: bass $
  * @module general
  */
@@ -23,7 +23,7 @@ public interface ObjectLoader {
 
 	Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException;
 
-	void saveStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException;
+	void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException;
 
 	Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException;
 

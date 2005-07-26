@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.169 2005/07/26 17:18:27 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.170 2005/07/26 20:10:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.169 $, $Date: 2005/07/26 17:18:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.170 $, $Date: 2005/07/26 20:10:12 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
-public abstract class StorableObjectDatabase {
+public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public static final String APOSTROPHE = "'";
 	public static final String CLOSE_BRACKET = " ) ";
@@ -135,9 +135,9 @@ public abstract class StorableObjectDatabase {
 		return updateMultipleSQLValues + this.getUpdateMultipleSQLValuesTmpl();
 	}
 
-	protected abstract String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException;
+	protected abstract String getUpdateSingleSQLValuesTmpl(T storableObject) throws IllegalDataException;
 
-	protected final String getUpdateSingleSQLValues(final StorableObject storableObject, final ExecuteMode mode)
+	protected final String getUpdateSingleSQLValues(final T storableObject, final ExecuteMode mode)
 			throws IllegalDataException {
 		String modeString;
 		switch (mode) {
@@ -184,11 +184,11 @@ public abstract class StorableObjectDatabase {
 		return buffer.toString();
 	}
 
-	protected abstract int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+	protected abstract int setEntityForPreparedStatementTmpl(T storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException;
 
-	protected final int setEntityForPreparedStatement(final StorableObject storableObject,
+	protected final int setEntityForPreparedStatement(final T storableObject,
 			final PreparedStatement preparedStatement,
 			final ExecuteMode mode) throws IllegalDataException, SQLException {
 		int i = 0;
@@ -220,17 +220,17 @@ public abstract class StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 * @throws SQLException
 	 */
-	protected abstract StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected abstract T updateEntityFromResultSet(T storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
 
 	// ////////////////////// retrieve /////////////////////////
 
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final T storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
 	}
 
-	protected final void retrieveEntity(final StorableObject storableObject)
+	protected final void retrieveEntity(final T storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		final String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		final String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
@@ -268,14 +268,14 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set retrieveByCondition(final StorableObjectCondition condition)
+	public final Set<T> retrieveByCondition(final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	protected Set retrieveByCondition(final String conditionQuery)
+	protected Set<T> retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		final Set<T> storableObjects = new HashSet<T>();
 
 		final String sql = this.retrieveQuery(conditionQuery);
 		Statement statement = null;
@@ -286,7 +286,7 @@ public abstract class StorableObjectDatabase {
 			Log.debugMessage(this.getEntityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				StorableObject storableObject = this.updateEntityFromResultSet(null, resultSet);
+				T storableObject = this.updateEntityFromResultSet(null, resultSet);
 				storableObjects.add(storableObject);
 			}
 		} catch (SQLException sqle) {
@@ -310,7 +310,7 @@ public abstract class StorableObjectDatabase {
 		return storableObjects;
 	}
 
-	public final Set retrieveButIdsByCondition(final Set<Identifier> ids,
+	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
@@ -324,7 +324,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
-	public final Set retrieveAll() throws RetrieveObjectException {
+	public final Set<T> retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByCondition((String) null);
 		} catch (final IllegalDataException ide) {
@@ -332,7 +332,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public final Set retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
+	public final Set<T> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
@@ -354,7 +354,7 @@ public abstract class StorableObjectDatabase {
 	 * @param linkedIdColumnName
 	 * @throws RetrieveObjectException
 	 */
-	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<? extends StorableObject> storableObjects,
+	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<T> storableObjects,
 			String tableName,
 			String idColumnName,
 			String linkedIdColumnName)
@@ -555,11 +555,11 @@ public abstract class StorableObjectDatabase {
 
 	// //////////////////// insert /////////////////////////
 
-	protected void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	protected void insert(final Set<T> storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 
-	protected final void insertEntities(final Set<? extends StorableObject> storableObjects)
+	protected final void insertEntities(final Set<T> storableObjects)
 			throws IllegalDataException,
 				CreateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
@@ -579,8 +579,7 @@ public abstract class StorableObjectDatabase {
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final Iterator<? extends StorableObject> it = storableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = it.next();
+			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 				try {
 					if (isPresentInDatabase(id)) {
@@ -702,7 +701,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws CreateObjectException
 	 * @throws UpdateObjectException 
 	 */
-	public final void save(final Set<? extends StorableObject> storableObjects)
+	public final void save(final Set<T> storableObjects)
 			throws RetrieveObjectException,
 				CreateObjectException,
 				IllegalDataException,
@@ -729,11 +728,11 @@ public abstract class StorableObjectDatabase {
 		this.update(storableObjects);
 	}
 
-	protected void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	protected void update(final Set<T> storableObjects) throws UpdateObjectException {
 		this.updateEntities(storableObjects);
 	}
 
-	protected final void updateEntities(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	protected final void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
 		assert StorableObject.getGroupCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
@@ -764,7 +763,7 @@ public abstract class StorableObjectDatabase {
 		try {
 			preparedStatement = connection.prepareStatement(sql.toString());
 			Log.debugMessage(this.getEntityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final StorableObject storableObject : storableObjects) {
+			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
 
 				try {
