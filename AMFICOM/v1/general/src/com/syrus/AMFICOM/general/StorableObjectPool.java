@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.131 2005/07/26 08:52:55 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.132 2005/07/26 15:46:00 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.131 $, $Date: 2005/07/26 08:52:55 $
+ * @version $Revision: 1.132 $, $Date: 2005/07/26 15:46:00 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -694,17 +694,14 @@ public final class StorableObjectPool {
 	 * @return Set of Storable Objects
 	 * @throws ApplicationException
 	 */
-	public static Set fromTransferables(final short entityCode,
-			final IdlStorableObject[] transferables,
-			final boolean continueOnError) throws ApplicationException {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
-
+	public static Set fromTransferables(final IdlStorableObject[] transferables, final boolean continueOnError)
+			throws ApplicationException {
 		final int length = transferables.length;
 		final Set<StorableObject> storableObjects = new HashSet<StorableObject>(length);
 		
 		for (int i = 0; i < length; i++) {
 			try {
-				storableObjects.add(fromTransferable(entityCode, transferables[i]));
+				storableObjects.add(fromTransferable(transferables[i]));
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
 					Log.debugException(ae, Level.SEVERE);
@@ -728,10 +725,7 @@ public final class StorableObjectPool {
 	 * @param transferable
 	 * @throws ApplicationException
 	 */
-	public static StorableObject fromTransferable(final short entityCode, final IdlStorableObject transferable)
-			throws ApplicationException {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
-
+	public static StorableObject fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		StorableObject storableObject = null;
 		try {
 			storableObject = getStorableObject(new Identifier(transferable.id), false);
