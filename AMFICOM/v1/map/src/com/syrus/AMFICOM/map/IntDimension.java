@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.8 2005/07/17 05:20:43 arseniy Exp $
+* $Id: IntDimension.java,v 1.9 2005/07/26 09:23:33 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.map;
  * пространстве (ширина и высота)
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/26 09:23:33 $
  * @module map_v1
  */
 
@@ -28,21 +28,21 @@ public class IntDimension implements java.io.Serializable {
 	/**
 	 * Ширина.
 	 */
-	private int	width;
+	private int width;
 	/**
 	 * Высота.
 	 */
-	private int	height;
+	private int height;
 
 	public IntDimension() {
 		this(0, 0);
 	}
 
-	public IntDimension(IntDimension d) {
+	public IntDimension(final IntDimension d) {
 		this(d.width, d.height);
 	}
 
-	public IntDimension(int width, int height) {
+	public IntDimension(final int width, final int height) {
 		this.width = width;
 		this.height = height;
 	}
@@ -55,7 +55,7 @@ public class IntDimension implements java.io.Serializable {
 		return this.height;
 	}
 
-	public void setSize(double width, double height) {
+	public void setSize(final double width, final double height) {
 		this.width = (int) Math.ceil(width);
 		this.height = (int) Math.ceil(height);
 	}
@@ -64,19 +64,19 @@ public class IntDimension implements java.io.Serializable {
 		return new IntDimension(this.width, this.height);
 	}
 
-	public void setSize(IntDimension d) {
+	public void setSize(final IntDimension d) {
 		setSize(d.width, d.height);
 	}
 
-	public void setSize(int width, int height) {
+	public void setSize(final int width, final int height) {
 		this.width = width;
 		this.height = height;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj instanceof IntDimension) {
-			IntDimension d = (IntDimension) obj;
+			final IntDimension d = (IntDimension) obj;
 			return (this.width == d.width) && (this.height == d.height);
 		}
 		return false;
@@ -84,20 +84,20 @@ public class IntDimension implements java.io.Serializable {
 
 	@Override
 	public int hashCode() {
-		int sum = this.width + this.height;
+		final int sum = this.width + this.height;
 		return sum * (sum + 1) / 2 + this.width;
 	}
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "[width=" + this.width + ",height=" + this.height + "]";
+		return this.getClass().getName() + "[width=" + this.width + ",height=" + this.height + "]";
 	}
 
-	public void setHeight(int height) {
+	public void setHeight(final int height) {
 		this.height = height;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(final int width) {
 		this.width = width;
 	}
 }

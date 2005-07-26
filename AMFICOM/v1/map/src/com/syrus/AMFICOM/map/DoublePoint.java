@@ -1,5 +1,5 @@
 /**
- * $Id: DoublePoint.java,v 1.6 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: DoublePoint.java,v 1.7 2005/07/26 09:23:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ package com.syrus.AMFICOM.map;
  * конвертации координат.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/26 09:23:33 $
  * @module map_v1
  */
 public class DoublePoint implements Cloneable {
@@ -25,12 +25,12 @@ public class DoublePoint implements Cloneable {
 	/**
 	 * Координата, соответствующая долготе (longitude)
 	 */
-	private double	x;
+	private double x;
 
 	/**
 	 * Координата, соответствующая широте (latitude)
 	 */
-	private double	y;
+	private double y;
 
 	/**
 	 * empty default constructor.
@@ -39,7 +39,7 @@ public class DoublePoint implements Cloneable {
 		//empty
 	}
 
-	public DoublePoint(double x, double y) {
+	public DoublePoint(final double x, final double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -52,7 +52,7 @@ public class DoublePoint implements Cloneable {
 		return this.y;
 	}
 
-	public void setLocation(double x, double y) {
+	public void setLocation(final double x, final double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -62,41 +62,41 @@ public class DoublePoint implements Cloneable {
 		return "DoublePoint[" + this.x + ", " + this.y + "]";
 	}
 
-	public void setLocation(DoublePoint p) {
+	public void setLocation(final DoublePoint p) {
 		setLocation(p.getX(), p.getY());
 	}
 
-	public static double distanceSq(double X1, double Y1, double X2, double Y2) {
-		X1 -= X2;
-		Y1 -= Y2;
-		return (X1 * X1 + Y1 * Y1);
+	public static double distanceSq(final double X1, final double Y1, final double X2, final double Y2) {
+		final double dX = X1 - X2;
+		final double dY = Y1 - Y2;
+		return (dX * dX + dY * dY);
 	}
 
-	public static double distance(double X1, double Y1, double X2, double Y2) {
-		X1 -= X2;
-		Y1 -= Y2;
-		return Math.sqrt(X1 * X1 + Y1 * Y1);
+	public static double distance(final double X1, final double Y1, final double X2, final double Y2) {
+		final double dX = X1 - X2;
+		final double dY = Y1 - Y2;
+		return Math.sqrt(dX * dX + dY * dY);
 	}
 
-	public double distanceSq(double px, double py) {
-		px -= getX();
-		py -= getY();
+	public double distanceSq(final double px, final double py) {
+		final double dX = px - this.getX();
+		final double dY = py - this.getY();
+		return (dX * dX + dY * dY);
+	}
+
+	public double distanceSq(final DoublePoint pt) {
+		final double px = pt.getX() - this.getX();
+		final double py = pt.getY() - this.getY();
 		return (px * px + py * py);
 	}
 
-	public double distanceSq(DoublePoint pt) {
-		double px = pt.getX() - this.getX();
-		double py = pt.getY() - this.getY();
-		return (px * px + py * py);
+	public double distance(final double px, final double py) {
+		final double dX = px - this.getX();
+		final double dY = py - this.getY();
+		return Math.sqrt(dX * dX + dY * dY);
 	}
 
-	public double distance(double px, double py) {
-		px -= getX();
-		py -= getY();
-		return Math.sqrt(px * px + py * py);
-	}
-
-	public double distance(DoublePoint pt) {
+	public double distance(final DoublePoint pt) {
 		double px = pt.getX() - this.getX();
 		double py = pt.getY() - this.getY();
 		return Math.sqrt(px * px + py * py);
@@ -119,10 +119,10 @@ public class DoublePoint implements Cloneable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj instanceof DoublePoint) {
-			DoublePoint p2d = (DoublePoint) obj;
-			return (getX() == p2d.getX()) && (getY() == p2d.getY());
+			final DoublePoint p2d = (DoublePoint) obj;
+			return (this.getX() == p2d.getX()) && (this.getY() == p2d.getY());
 		}
 		return super.equals(obj);
 	}

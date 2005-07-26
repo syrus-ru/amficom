@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.14 2005/07/12 13:55:30 bass Exp $
+ * $Id: MapElement.java,v 1.15 2005/07/26 09:23:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,12 +23,11 @@ import com.syrus.AMFICOM.general.Namable;
  *
  *
  *
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/12 13:55:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/26 09:23:33 $
  * @module map_v1
  */
-public interface MapElement extends Characterizable, Namable
-{
+public interface MapElement extends Characterizable, Namable {
 	/**
 	 * Поучить идентификатор элемента.
 	 * @return Идентификатор элемента карты.

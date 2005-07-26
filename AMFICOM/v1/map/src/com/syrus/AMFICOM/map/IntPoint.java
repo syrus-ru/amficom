@@ -1,5 +1,5 @@
 /**
- * $Id: IntPoint.java,v 1.5 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: IntPoint.java,v 1.6 2005/07/26 09:23:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,20 +18,20 @@ import com.syrus.util.HashCodeGenerator;
  * целочисленной двумерной плоскости.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/26 09:23:33 $
  * @module
  */
 public class IntPoint implements Cloneable {
 
-	public int	x;
+	public int x;
 
-	public int	y;
+	public int y;
 
 	public IntPoint() {
 		// default constructor
 	}
 
-	public IntPoint(int x, int y) {
+	public IntPoint(final int x, final int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -44,7 +44,7 @@ public class IntPoint implements Cloneable {
 		return this.y;
 	}
 
-	public void setLocation(int x, int y) {
+	public void setLocation(final int x, final int y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -54,43 +54,43 @@ public class IntPoint implements Cloneable {
 		return "IntPoint[" + this.x + ", " + this.y + "]";
 	}
 
-	public void setLocation(IntPoint p) {
+	public void setLocation(final IntPoint p) {
 		setLocation(p.getX(), p.getY());
 	}
 
-	public static double distanceSq(int x1, int y1, int x2, int y2) {
-		x1 -= x2;
-		y1 -= y2;
-		return (x1 * x1 + y1 * y1);
+	public static double distanceSq(final int x1, final int y1, final int x2, final int y2) {
+		final int dX = x1 - x2;
+		final int dY = y1 - y2;
+		return (dX * dX + dY * dY);
 	}
 
-	public static double distance(int x1, int y1, int x2, int y2) {
-		x1 -= x2;
-		y1 -= y2;
-		return Math.sqrt(x1 * x1 + y1 * y1);
+	public static double distance(final int x1, final int y1, final int x2, final int y2) {
+		final int dX = x1 - x2;
+		final int dY = y1 - y2;
+		return Math.sqrt(dX * dX + dY * dY);
 	}
 
-	public double distanceSq(int px, int py) {
-		px -= getX();
-		py -= getY();
+	public double distanceSq(final int px, final int py) {
+		final int dX = px - this.getX();
+		final int dY = py - this.getY();
+		return (dX * dX + dY * dY);
+	}
+
+	public double distanceSq(final IntPoint pt) {
+		final int px = pt.getX() - this.getX();
+		final int py = pt.getY() - this.getY();
 		return (px * px + py * py);
 	}
 
-	public double distanceSq(IntPoint pt) {
-		int px = pt.getX() - this.getX();
-		int py = pt.getY() - this.getY();
-		return (px * px + py * py);
+	public double distance(final int px, final int py) {
+		final int dX = px - this.getX();
+		final int dY = py - this.getY();
+		return Math.sqrt(dX * dX + dY * dY);
 	}
 
-	public double distance(int px, int py) {
-		px -= getX();
-		py -= getY();
-		return Math.sqrt(px * px + py * py);
-	}
-
-	public double distance(IntPoint pt) {
-		int px = pt.getX() - this.getX();
-		int py = pt.getY() - this.getY();
+	public double distance(final IntPoint pt) {
+		final int px = pt.getX() - this.getX();
+		final int py = pt.getY() - this.getY();
 		return Math.sqrt(px * px + py * py);
 	}
 
@@ -104,9 +104,9 @@ public class IntPoint implements Cloneable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj instanceof IntPoint) {
-			IntPoint p2d = (IntPoint) obj;
+			final IntPoint p2d = (IntPoint) obj;
 			return (getX() == p2d.getX()) && (getY() == p2d.getY());
 		}
 		return super.equals(obj);
@@ -114,7 +114,7 @@ public class IntPoint implements Cloneable {
 
 	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addInt(this.x);
 		codeGenerator.addInt(this.y);
 		return codeGenerator.getResult();

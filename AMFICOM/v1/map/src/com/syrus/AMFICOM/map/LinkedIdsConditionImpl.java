@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/06/27 10:07:11 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/07/26 09:23:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -85,7 +85,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.NODELINK_CODE:
-				NodeLink nodeLink = (NodeLink) storableObject;
+				final NodeLink nodeLink = (NodeLink) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PHYSICALLINK_CODE:
 						condition = this.checkPhysicalLink(nodeLink);
@@ -104,7 +104,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				break;
 			case ObjectEntities.MAP_CODE:
-				Map map = (Map) storableObject;
+				final Map map = (Map) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.DOMAIN_CODE:
 						condition = this.checkDomain(map);
