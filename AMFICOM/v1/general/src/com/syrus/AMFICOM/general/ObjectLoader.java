@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectLoader.java,v 1.2 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: ObjectLoader.java,v 1.3 2005/07/26 17:00:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/26 17:00:56 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -27,6 +27,6 @@ public interface ObjectLoader {
 
 	Set<Identifier> refresh(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException;
 
-	void delete(final Set<? extends Identifiable> identifiables);
+	void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException;
 
 }
