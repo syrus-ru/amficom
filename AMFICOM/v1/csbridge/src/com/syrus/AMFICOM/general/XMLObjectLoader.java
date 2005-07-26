@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.2 2005/05/18 12:52:58 bass Exp $
+ * $Id: XMLObjectLoader.java,v 1.3 2005/07/26 18:06:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,84 @@
  */
 package com.syrus.AMFICOM.general;
 
+import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/18 12:52:58 $
- * @author $Author: bass $
- * @module csbridge_v1
+ * @version $Revision: 1.3 $, $Date: 2005/07/26 18:06:47 $
+ * @author $Author: arseniy $
+ * @module csbridge
  */
-public abstract class XMLObjectLoader {
-	/*
-	 * Currently -- nothing
-	 * */
+public final class XMLObjectLoader implements ObjectLoader {
+	private static final String PACKAGE_NAME = "general";
+
+	private StorableObjectXML soXML;
+
+	public XMLObjectLoader(final File path) {
+		final StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, PACKAGE_NAME);
+		this.soXML = new StorableObjectXML(driver);
+	}
+
+
+	public Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>(ids.size());
+		for (final Identifier id : ids) {
+			storableObjects.add(this.soXML.retrieve(id));
+		}
+		return storableObjects;
+	}
+
+	public Set loadStorableObjectsButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		return this.soXML.retrieveByCondition(ids, condition);
+	}
+
+	public Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty()) {
+			return Collections.emptyMap();
+		}
+
+		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>(ids.size());
+		for (final Identifier id : ids) {
+			versionsMap.put(id, StorableObjectVersion.ILLEGAL_VERSION);
+		}
+		return versionsMap;
+	}
+
+	public void saveStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (storableObjects.isEmpty()) {
+			return;
+		}
+
+		for (final StorableObject storableObject : storableObjects) {
+			this.soXML.updateObject(storableObject, true);
+		}
+		this.soXML.flush();
+	}
+
+	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) {
+		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
+		return Collections.emptySet();
+	}
+
+	public void delete(final Set<? extends Identifiable> identifiables) {
+		for (final Identifiable identifiable : identifiables) {
+			this.soXML.delete(identifiable.getId());
+		}
+		this.soXML.flush();
+	}
+
 }
