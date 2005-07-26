@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.34 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: Event.java,v 1.35 2005/07/26 08:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.event;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -34,20 +33,19 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.35 $, $Date: 2005/07/26 08:39:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public final class Event extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = 3977015150102788401L;
-
-	protected static final int UPDATE_STATUS = 1;
 
 	private EventType type;
 	private String description;
@@ -82,7 +80,7 @@ public final class Event extends StorableObject implements TypedObject {
 
 	Event(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final EventType type,
 			final String description,
 			final Set<EventParameter> eventParameters,
@@ -113,17 +111,17 @@ public final class Event extends StorableObject implements TypedObject {
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 */
 	public static Event createInstance(final Identifier creatorId,
-		EventType type,
-		String description,
-		Set<EventParameter> eventParameters,
-		Set<Identifier> eventSourceIds) throws CreateObjectException {
+			EventType type,
+			String description,
+			Set<EventParameter> eventParameters,
+			Set<Identifier> eventSourceIds) throws CreateObjectException {
 		if (creatorId == null || type == null || description == null || eventParameters == null || eventSourceIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_CODE),
+			final Event event = new Event(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					type,
 					description,
 					eventParameters,
@@ -142,7 +140,7 @@ public final class Event extends StorableObject implements TypedObject {
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlEvent et = (IdlEvent) transferable;
+		final IdlEvent et = (IdlEvent) transferable;
 
 		super.fromTransferable(et);
 
@@ -169,11 +167,12 @@ public final class Event extends StorableObject implements TypedObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		int i = 0;
-		IdlEventParameter[] ept = new IdlEventParameter[this.eventParameters.size()];
-		for (Iterator<EventParameter> it = this.eventParameters.iterator(); it.hasNext(); i++)
-			ept[i] = it.next().getTransferable(orb);
+		final IdlEventParameter[] ept = new IdlEventParameter[this.eventParameters.size()];
+		for (final EventParameter eventParameter : this.eventParameters) {
+			ept[i] = eventParameter.getTransferable(orb);
+		}
 
-		IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
+		final IdlIdentifier[] esIdsT = Identifier.createTransferables(this.eventSourceIds);
 
 		return IdlEventHelper.init(orb,
 				this.id.getTransferable(),
@@ -181,7 +180,7 @@ public final class Event extends StorableObject implements TypedObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.type.getId().getTransferable(),
 				this.description,
 				ept,
@@ -219,7 +218,7 @@ public final class Event extends StorableObject implements TypedObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final EventType type,
 			final String description) {
 		super.setAttributes(created,

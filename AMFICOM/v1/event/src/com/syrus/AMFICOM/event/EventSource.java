@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.26 2005/07/05 16:10:22 bass Exp $
+ * $Id: EventSource.java,v 1.27 2005/07/26 08:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/05 16:10:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/07/26 08:39:13 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public final class EventSource extends StorableObject {
@@ -60,26 +61,21 @@ public final class EventSource extends StorableObject {
 
 	EventSource(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier sourceEntityId) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version);
+		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version);
 		this.sourceEntityId = sourceEntityId;
 	}
 
-	public static EventSource createInstance(final Identifier creatorId,
-			final Identifier sourceEntityId) throws CreateObjectException {
+	public static EventSource createInstance(final Identifier creatorId, final Identifier sourceEntityId)
+			throws CreateObjectException {
 		if (creatorId == null || sourceEntityId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_CODE),
+			final EventSource eventSource = new EventSource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENTSOURCE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					sourceEntityId);
 
 			assert eventSource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -87,15 +83,14 @@ public final class EventSource extends StorableObject {
 			eventSource.markAsChanged();
 
 			return eventSource;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) {
-		IdlEventSource est = (IdlEventSource) transferable;
+		final IdlEventSource est = (IdlEventSource) transferable;
 		try {
 			super.fromTransferable(est);
 		}
@@ -118,7 +113,7 @@ public final class EventSource extends StorableObject {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.sourceEntityId.getTransferable());
 	}
 
@@ -135,13 +130,9 @@ public final class EventSource extends StorableObject {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier sourceEntityId) {
-		super.setAttributes(created,
-				modified,
-				creatorId,
-				modifierId,
-				version);
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.sourceEntityId = sourceEntityId;
 	}
 

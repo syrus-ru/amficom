@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.35 2005/07/24 17:38:28 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.36 2005/07/26 08:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/24 17:38:28 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/26 08:39:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -101,26 +102,27 @@ public final class EventDatabase extends StorableObjectDatabase {
 	@Override
 	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		final Event event = (storableObject == null) ? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-				null,
-				0L,
-				null,
-				null,
-				null,
-				null) : this.fromStorableObject(storableObject);
+		final Event event = (storableObject == null)
+				? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null)
+					: this.fromStorableObject(storableObject);
 		EventType eventType;
 		try {
 			eventType = (EventType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_TYPE_ID), true);			
-		}
-		catch (ApplicationException ae) {
+					StorableObjectWrapper.COLUMN_TYPE_ID), true);
+		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		event.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				eventType,
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return event;

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.21 2005/07/24 17:38:28 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.22 2005/07/26 08:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,12 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/24 17:38:28 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/26 08:39:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -193,11 +194,12 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
-		final EventSource eventSource = (storableObject == null) ? new EventSource(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID),
-				null,
-				0L,
-				null) : this.fromStorableObject(storableObject);
+		final EventSource eventSource = (storableObject == null)
+				? new EventSource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null)
+					: this.fromStorableObject(storableObject);
 		final short sourceEntityCode = resultSet.getShort(EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE);
 		Identifier sourceEntityId = null;
 		switch (sourceEntityCode) {
@@ -224,7 +226,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase {
 				 DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				 resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				 new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				 sourceEntityId);
 
 		return eventSource;

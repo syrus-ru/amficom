@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.38 2005/07/24 15:48:54 arseniy Exp $
+ * $Id: EventType.java,v 1.39 2005/07/26 08:39:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,12 +34,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/24 15:48:54 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/26 08:39:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -51,7 +52,6 @@ public final class EventType extends StorableObjectType {
 
 	private Set<Identifier> parameterTypeIds;
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
-//	private Set userIds;
 
 	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -81,7 +81,7 @@ public final class EventType extends StorableObjectType {
 
 	EventType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final Set<Identifier> parameterTypeIds,
@@ -121,9 +121,9 @@ public final class EventType extends StorableObjectType {
 			throw new IllegalArgumentException("Argument is null'");
 
 		try {
-			EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_TYPE_CODE),
+			final EventType eventType = new EventType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVENT_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					parameterTypeIds,
@@ -134,8 +134,7 @@ public final class EventType extends StorableObjectType {
 			eventType.markAsChanged();
 
 			return eventType;
-		}
-		catch (IdentifierGenerationException ige) {
+		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
@@ -191,7 +190,7 @@ public final class EventType extends StorableObjectType {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
 				parTypeIdsT,
@@ -213,27 +212,28 @@ public final class EventType extends StorableObjectType {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-  public Set<Identifier> getParameterTypeIds() {
+	public Set<Identifier> getParameterTypeIds() {
 		return Collections.unmodifiableSet(this.parameterTypeIds);
 	}
 
 	protected void setParameterTypeIds0(final Set<Identifier> parameterTypeIds) {
 		this.parameterTypeIds.clear();
-		if (parameterTypeIds != null)
-	     	this.parameterTypeIds.addAll(parameterTypeIds);
+		if (parameterTypeIds != null) {
+			this.parameterTypeIds.addAll(parameterTypeIds);
+		}
 	}
 
 	/**
 	 * client setter for parameterTypeIds
-	 *
+	 * 
 	 * @param parameterTypeIds
-	 *            The inParameterTypeIds to set.
+	 *        The inParameterTypeIds to set.
 	 */
 	public void setParameterTypeIds(final Set<Identifier> parameterTypeIds) {
 		this.setParameterTypeIds0(parameterTypeIds);
