@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.82 2005/07/26 17:01:30 arseniy Exp $
+ * $Id: StorableObject.java,v 1.83 2005/07/26 18:50:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.82 $, $Date: 2005/07/26 17:01:30 $
+ * @version $Revision: 1.83 $, $Date: 2005/07/26 18:50:15 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -307,13 +307,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return transferables;
 	}
 
-	public static final Set<StorableObject> fromTransferables(final IdlStorableObject[] storableObjectsT) {
+	@SuppressWarnings("unchecked")
+	public static final <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] storableObjectsT) {
 		assert storableObjectsT != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
-		for (int i = 0; i < storableObjectsT.length; i++) {
+		final Set<T> storableObjects = new HashSet<T>();
+		for (final IdlStorableObject idlStorableObject : storableObjectsT) {
 			try {
-				storableObjects.add(storableObjectsT[i].getNative());
+				storableObjects.add((T) idlStorableObject.getNative());
 			} catch (IdlCreateObjectException coe) {
 				Log.errorException(coe);
 			}
