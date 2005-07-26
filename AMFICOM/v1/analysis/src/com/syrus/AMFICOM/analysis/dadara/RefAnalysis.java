@@ -21,16 +21,21 @@ public class RefAnalysis
 	 * @param that
 	 * @param mtae
 	 */
-	public RefAnalysis(RefAnalysis that, ModelTraceAndEventsImpl mtae)
-	{
+	public RefAnalysis(RefAnalysis that, ModelTraceAndEventsImpl mtae) {
 		this.bs = that.bs;
 		this.ar = new AnalysisResult(that.ar.getDataLength(),
 				that.ar.getTraceLength(),
 				mtae);
 		decode();
 	}
-	public RefAnalysis(BellcoreStructure bs)
-	{
+
+	public RefAnalysis(BellcoreStructure bs, AnalysisResult ar) {
+		this.bs = bs;
+		this.ar = ar;
+		decode();
+	}
+
+	public RefAnalysis(BellcoreStructure bs) {
 		this.bs = bs;
 		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
 		if (ap == null) {
