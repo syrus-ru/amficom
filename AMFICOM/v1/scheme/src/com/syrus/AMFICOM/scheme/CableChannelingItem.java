@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.45 2005/07/24 17:10:19 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.46 2005/07/26 12:01:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,12 +52,12 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/26 12:01:53 $
  * @module scheme
  */
 public final class CableChannelingItem
 		extends StorableObject
-		implements Cloneable, Comparable<CableChannelingItem>, PathMember<SchemeCableLink, CableChannelingItem> {
+		implements Comparable<CableChannelingItem>, PathMember<SchemeCableLink, CableChannelingItem> {
 	private static final long serialVersionUID = 3256437027796038705L;
 
 	private double startSpare;
@@ -206,15 +206,6 @@ public final class CableChannelingItem
 			throw new CreateObjectException(
 					"CableChanelingItem.createInstance | cannot generate identifier ", ige);
 		}
-	}
-
-	@Override
-	public CableChannelingItem clone() throws CloneNotSupportedException {
-		final CableChannelingItem cableChannelingItem = (CableChannelingItem) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return cableChannelingItem;
 	}
 
 	/**

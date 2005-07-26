@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.54 2005/07/25 19:34:53 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.55 2005/07/26 12:01:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,12 +56,12 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/25 19:34:53 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/26 12:01:53 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
 		extends StorableObject
-		implements Describable, Cloneable {
+		implements Describable {
 	private static final long serialVersionUID = 3906364939487949361L;
 
 	private String name;
@@ -242,15 +242,6 @@ public final class SchemeMonitoringSolution
 	public void addSchemePath(final SchemePath schemePath) {
 		assert schemePath != null: NON_NULL_EXPECTED;
 		schemePath.setParentSchemeMonitoringSolution(this);
-	}
-
-	@Override
-	public SchemeMonitoringSolution clone() throws CloneNotSupportedException {
-		final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeMonitoringSolution;
 	}
 
 	/**

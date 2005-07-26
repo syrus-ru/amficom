@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.53 2005/07/24 17:40:35 bass Exp $
+ * $Id: PathElement.java,v 1.54 2005/07/26 12:01:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/24 17:40:35 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/26 12:01:53 $
  * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  *       SchemeElement
  */
 public final class PathElement extends StorableObject
-		implements Describable, Cloneable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
+		implements Describable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -387,15 +387,6 @@ public final class PathElement extends StorableObject
 			throw new CreateObjectException(
 					"PathElement.createInstance() | cannot generate identifier ", ige);
 		}
-	}
-
-	@Override
-	public PathElement clone() throws CloneNotSupportedException {
-		final PathElement pathElement = (PathElement) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return pathElement;
 	}
 
 	/**

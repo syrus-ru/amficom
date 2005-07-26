@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.50 2005/07/25 12:13:09 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.51 2005/07/26 12:01:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,11 +54,11 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/25 12:13:09 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/26 12:01:53 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
-		implements Describable, Cloneable {
+		implements Describable {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -250,15 +250,6 @@ public final class SchemeOptimizeInfo extends StorableObject
 	public void addSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
 		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(this);
-	}
-
-	@Override
-	public SchemeOptimizeInfo clone() throws CloneNotSupportedException {
-		final SchemeOptimizeInfo schemeOptimizeInfo = (SchemeOptimizeInfo) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeOptimizeInfo;
 	}
 
 	/**
