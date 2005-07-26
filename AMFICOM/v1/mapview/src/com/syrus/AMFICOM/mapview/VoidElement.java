@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.14 2005/07/17 05:20:55 arseniy Exp $
+ * $Id: VoidElement.java,v 1.15 2005/07/26 13:30:26 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.MapElementState;
  * Пустой элемент.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/07/17 05:20:55 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/26 13:30:26 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -49,7 +49,7 @@ public final class VoidElement implements MapElement {
 	 * @param mapView вид карты
 	 * @return instance
 	 */
-	public static VoidElement getInstance(MapView mapView) {
+	public static VoidElement getInstance(final MapView mapView) {
 		singleton.mapView = mapView;
 		return singleton;
 	}
@@ -84,14 +84,14 @@ public final class VoidElement implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setAlarmState(boolean alarmState) {
+	public void setAlarmState(final boolean alarmState) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -119,7 +119,7 @@ public final class VoidElement implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -140,20 +140,6 @@ public final class VoidElement implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void addCharacteristic(Characteristic ch) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	public void removeCharacteristic(Characteristic ch) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
 	public void revert(MapElementState state) {
 		throw new UnsupportedOperationException();
 	}
@@ -168,7 +154,7 @@ public final class VoidElement implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setRemoved(boolean removed) {
+	public void setRemoved(final boolean removed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -180,19 +166,4 @@ public final class VoidElement implements MapElement {
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
 }
