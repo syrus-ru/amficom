@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLBeansTransferable.java,v 1.3 2005/07/26 11:45:17 arseniy Exp $
+ * $Id: XMLBeansTransferable.java,v 1.4 2005/07/26 11:46:32 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,9 @@ package com.syrus.AMFICOM.general;
 import org.apache.xmlbeans.XmlObject;
 
 /**
- * $Id: XMLBeansTransferable.java,v 1.3 2005/07/26 11:45:17 arseniy Exp $
- *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 11:46:32 $
+ * @author $Author: arseniy $
+ * @module map
  */
 public interface XMLBeansTransferable {
 
