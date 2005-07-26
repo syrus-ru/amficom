@@ -1,5 +1,5 @@
 /**
- * $Id: XMLBeansTransferable.java,v 1.1 2005/05/30 14:50:23 krupenn Exp $
+ * $Id: XMLBeansTransferable.java,v 1.2 2005/07/26 08:57:21 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,8 @@ package com.syrus.AMFICOM.general;
 import org.apache.xmlbeans.XmlObject;
 
 public interface XMLBeansTransferable {
-	void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool)
-		throws ApplicationException;
+
+	void fromXMLTransferable(XmlObject xmlObject, ClonedIdsPool clonedIdsPool) throws ApplicationException;
+
 	XmlObject getXMLTransferable();
 }

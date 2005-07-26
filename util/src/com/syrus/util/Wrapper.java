@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.4 2005/05/30 15:36:48 bob Exp $
+* $Id: Wrapper.java,v 1.5 2005/07/26 08:53:47 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import java.util.List;
  * wrapper's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/05/30 15:36:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/26 08:53:47 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
@@ -32,7 +32,7 @@ public interface Wrapper {
 	/**
 	 * @return array of available keys
 	 */
-	List getKeys();
+	List<String> getKeys();
 
 	/**
 	 * Name of the entity represented by <code>key</code>.
