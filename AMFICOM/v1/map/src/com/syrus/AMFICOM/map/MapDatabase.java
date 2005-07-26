@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.36 2005/07/24 17:38:43 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.37 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/24 17:38:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/26 11:41:05 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -265,19 +266,25 @@ public final class MapDatabase extends StorableObjectDatabase {
 
 	@Override
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, SQLException {
-		final Map map = (storableObject == null) ?
-				new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null) :
-					fromStorableObject(storableObject);				
-		
+			throws IllegalDataException,
+				SQLException {
+		final Map map = (storableObject == null)
+				? new Map(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null)
+					: fromStorableObject(storableObject);
+
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-							   DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));
 		return map;
 	}
 
@@ -297,7 +304,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
 		this.updateLinkedObjectIds(storableObjects, _MAP_MARK);
@@ -307,7 +314,8 @@ public final class MapDatabase extends StorableObjectDatabase {
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
 	}	
 
-	private void updateLinkedObjectIds(Set<? extends StorableObject> maps, int linkedTable) throws UpdateObjectException {
+	private void updateLinkedObjectIds(final Set<? extends StorableObject> maps, final int linkedTable)
+			throws UpdateObjectException {
 		if (maps == null || maps.isEmpty())
 			return;
 

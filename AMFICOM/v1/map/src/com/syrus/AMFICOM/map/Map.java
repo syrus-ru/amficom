@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.60 2005/07/19 07:01:33 krupenn Exp $
+ * $Id: Map.java,v 1.61 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
-
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -39,6 +37,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -50,8 +49,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.60 $, $Date: 2005/07/19 07:01:33 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -118,18 +117,12 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	}
 
 	Map(final Identifier id,
-				  final Identifier creatorId,
-				  final long version,
-				  final Identifier domainId,
-				  final String name,
-				  final String description) {
-		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			domainId);
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final Identifier domainId,
+			final String name,
+			final String description) {
+		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version, domainId);
 		this.name = name;
 		this.description = description;
 
@@ -155,9 +148,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_CODE),
+			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description);
@@ -174,7 +167,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlMap mt = (IdlMap) transferable;
+		final IdlMap mt = (IdlMap) transferable;
 		super.fromTransferable(mt, new Identifier(mt.domainId));
 
 		this.name = mt.name;
@@ -233,7 +226,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
@@ -402,7 +395,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final Identifier domainId) {
@@ -524,12 +517,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return сетевой узел или null, если узел не найден
 	 */
 	public SiteNode getSiteNode(final Identifier siteId) {
-		Iterator e = this.getAllSiteNodes().iterator();
-		while (e.hasNext()) {
-			SiteNode msne = (SiteNode) e.next();
-
-			if (msne.getId().equals(siteId))
-				return msne;
+		for (final SiteNode siteNode : this.getAllSiteNodes()) {
+			if (siteNode.getId().equals(siteId))
+				return siteNode;
 		}
 		return null;
 	}
@@ -542,12 +532,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return топологический узел или null, если узел не найден
 	 */
 	public TopologicalNode getTopologicalNode(final Identifier topologicalNodeId) {
-		Iterator e = this.getAllTopologicalNodes().iterator();
-		while (e.hasNext()) {
-			TopologicalNode msne = (TopologicalNode) e.next();
-
-			if (msne.getId().equals(topologicalNodeId))
-				return msne;
+		for (final TopologicalNode topologicalNode : this.getAllTopologicalNodes()) {
+			if (topologicalNode.getId().equals(topologicalNodeId))
+				return topologicalNode;
 		}
 		return null;
 	}
@@ -560,12 +547,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return метка или null, если метка не найден
 	 */
 	public Mark getMark(final Identifier markId) {
-		Iterator e = this.getAllMarks().iterator();
-		while (e.hasNext()) {
-			Mark msne = (Mark) e.next();
-
-			if (msne.getId().equals(markId))
-				return msne;
+		for (final Mark mark : this.getAllMarks()) {
+			if (mark.getId().equals(markId))
+				return mark;
 		}
 		return null;
 	}
@@ -578,11 +562,11 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return узел или null, если узел не найден
 	 */
 	public AbstractNode getNode(final Identifier nodeId) {
-		AbstractNode node = getSiteNode(nodeId);
+		AbstractNode node = this.getSiteNode(nodeId);
 		if (node == null)
-			node = getTopologicalNode(nodeId);
+			node = this.getTopologicalNode(nodeId);
 		if (node == null)
-			node = getMark(nodeId);
+			node = this.getMark(nodeId);
 		return null;
 	}
 
@@ -640,10 +624,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return коллектор
 	 */
 	public Collector getCollector(final PhysicalLink physicalLink) {
-		for (Iterator it = this.getAllCollectors().iterator(); it.hasNext();) {
-			Collector cp = (Collector) it.next();
-			if (cp.getPhysicalLinks().contains(physicalLink))
-				return cp;
+		for (final Collector collector : this.getAllCollectors()) {
+			if (collector.getPhysicalLinks().contains(physicalLink))
+				return collector;
 		}
 		return null;
 	}
@@ -657,12 +640,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	public Set getPhysicalLinksAt(final AbstractNode node) {
 		final HashSet<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
-		Iterator e = this.getAllPhysicalLinks().iterator();
-
-		while (e.hasNext()) {
-			final PhysicalLink link = (PhysicalLink) e.next();
-			if ((link.getEndNode().equals(node)) || (link.getStartNode().equals(node)))
-				returnLinks.add(link);
+		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
+			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
+				returnLinks.add(physicalLink);
 		}
 		return returnLinks;
 	}
@@ -674,7 +654,6 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 *          линия
 	 */
 	public void addPhysicalLink(final PhysicalLink physicalLink) {
-
 		this.physicalLinks.add(physicalLink);
 		physicalLink.setRemoved(false);
 		super.markAsChanged();
@@ -687,7 +666,6 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 *          линия
 	 */
 	public void removePhysicalLink(final PhysicalLink physicalLink) {
-
 		physicalLink.setSelected(false);
 		this.selectedElements.remove(physicalLink);
 		this.physicalLinks.remove(physicalLink);
@@ -707,10 +685,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return лниия
 	 */
 	public PhysicalLink getPhysicalLink(final Identifier phisicalLinkId) {
-		Iterator e = this.getAllPhysicalLinks().iterator();
-
-		while (e.hasNext()) {
-			PhysicalLink physicalLink = (PhysicalLink) e.next();
+		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
 			if (physicalLink.getId().equals(phisicalLinkId))
 				return physicalLink;
 		}
@@ -727,11 +702,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return линия
 	 */
 	public PhysicalLink getPhysicalLink(final AbstractNode startNode, final AbstractNode endNode) {
-		for (Iterator it = this.getAllPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink) it.next();
-			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
-					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) {
-				return link;
+		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
+			if (((physicalLink.getStartNode().equals(startNode)) && (physicalLink.getEndNode().equals(endNode)))
+					|| ((physicalLink.getStartNode().equals(endNode)) && (physicalLink.getEndNode().equals(startNode)))) {
+				return physicalLink;
 			}
 		}
 		return null;
@@ -771,10 +745,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(final Identifier nodeLinkId) {
-		Iterator e = this.getAllNodeLinks().iterator();
-
-		while (e.hasNext()) {
-			NodeLink nodeLink = (NodeLink) e.next();
+		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
 			if (nodeLink.getId().equals(nodeLinkId)) {
 				return nodeLink;
 			}
@@ -873,10 +844,12 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	public void setSelected(final MapElement me, final boolean selected) {
 		me.setSelected(selected);
-		if (selected)
+		if (selected) {
 			this.selectedElements.add(me);
-		else
+		}
+		else {
 			this.selectedElements.remove(me);
+		}
 	}
 
 	/**
@@ -899,15 +872,15 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	public static Map createInstance(final Identifier creatorId, final Identifier domainId, final java.util.Map exportMap1)
 			throws CreateObjectException {
-		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		String name1 = (String) exportMap1.get(COLUMN_NAME);
-		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		final String name1 = (String) exportMap1.get(COLUMN_NAME);
+		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
 
 		if (id1 == null || name1 == null || description1 == null || creatorId == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Map map = new Map(id1, creatorId, 0L, domainId, name1, description1);
+			final Map map = new Map(id1, creatorId, StorableObjectVersion.createInitial(), domainId, name1, description1);
 			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();
 
@@ -971,15 +944,13 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	public Set<AbstractNode> getOppositeNodes(final AbstractNode node) {
 		final Set<AbstractNode> returnNodes = new HashSet<AbstractNode>();
-		final Iterator<NodeLink> e = this.getNodeLinks(node).iterator();
-
-		while (e.hasNext()) {
-			final NodeLink nodeLink = e.next();
-
-			if (nodeLink.getEndNode().equals(node))
+		for (final NodeLink nodeLink : this.getNodeLinks(node)) {
+			if (nodeLink.getEndNode().equals(node)) {
 				returnNodes.add(nodeLink.getStartNode());
-			else
+			}
+			else {
 				returnNodes.add(nodeLink.getEndNode());
+			}
 		}
 
 		return returnNodes;
@@ -992,7 +963,6 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	public Set<PhysicalLink> getPhysicalLinks(final AbstractNode node) {
 		final Set<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
-
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
 			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
 				returnLinks.add(physicalLink);
@@ -1002,108 +972,83 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	}
 
 	public XmlObject getXMLTransferable() {
-		com.syrus.amficom.map.xml.Map xmlMap = com.syrus.amficom.map.xml.Map.Factory.newInstance();
+		final com.syrus.amficom.map.xml.Map xmlMap = com.syrus.amficom.map.xml.Map.Factory.newInstance();
 		fillXMLTransferable(xmlMap);
 		return xmlMap;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
+		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
 
-		com.syrus.amficom.general.xml.UID uid = xmlMap.addNewUid();
+		final com.syrus.amficom.general.xml.UID uid = xmlMap.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlMap.setName(this.name);
 		xmlMap.setDescription(this.description);
 
-		com.syrus.amficom.map.xml.TopologicalNodes xmlTopologicalNodes = xmlMap.addNewTopologicalnodes();
-		com.syrus.amficom.map.xml.SiteNodes xmlSiteNodes = xmlMap.addNewSitenodes();
-		com.syrus.amficom.map.xml.PhysicalLinks xmlPhysicalLinks = xmlMap.addNewPhysicallinks();
-		com.syrus.amficom.map.xml.NodeLinks xmlNodeLinks = xmlMap.addNewNodelinks();
-		com.syrus.amficom.map.xml.Collectors xmlCollectors = xmlMap.addNewCollectors();
+		final com.syrus.amficom.map.xml.TopologicalNodes xmlTopologicalNodes = xmlMap.addNewTopologicalnodes();
+		final com.syrus.amficom.map.xml.SiteNodes xmlSiteNodes = xmlMap.addNewSitenodes();
+		final com.syrus.amficom.map.xml.PhysicalLinks xmlPhysicalLinks = xmlMap.addNewPhysicallinks();
+		final com.syrus.amficom.map.xml.NodeLinks xmlNodeLinks = xmlMap.addNewNodelinks();
+		final com.syrus.amficom.map.xml.Collectors xmlCollectors = xmlMap.addNewCollectors();
 
-		Collection xmlTopologicalNodesArray = new LinkedList();
-		for(Iterator it = getTopologicalNodes().iterator(); it.hasNext();) {
-			TopologicalNode topologicalNode = (TopologicalNode )it.next();
+		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
+		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
 			xmlTopologicalNodesArray.add(topologicalNode.getXMLTransferable());
 //			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodes.addNewTopologicalnode();
 //			topologicalNode.fillXMLTransferable(xmlTopologicalNode);
 		}
-		xmlTopologicalNodes.setTopologicalnodeArray(
-				(com.syrus.amficom.map.xml.TopologicalNode[] )
-				xmlTopologicalNodesArray.toArray(
-						new com.syrus.amficom.map.xml.TopologicalNode[xmlTopologicalNodesArray.size()]));
+		xmlTopologicalNodes.setTopologicalnodeArray(xmlTopologicalNodesArray.toArray(new com.syrus.amficom.map.xml.TopologicalNode[xmlTopologicalNodesArray.size()]));
 
-		Collection xmlSiteNodesArray = new LinkedList();
-		for(Iterator it = getSiteNodes().iterator(); it.hasNext();) {
-			SiteNode siteNode = (SiteNode )it.next();
+		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
+		for (final SiteNode siteNode : this.getSiteNodes()) {
 			xmlSiteNodesArray.add(siteNode.getXMLTransferable());
 //			com.syrus.amficom.map.xml.SiteNode xmlSiteNode = xmlSiteNodes.addNewSitenode();
 //			siteNode.fillXMLTransferable(xmlSiteNode);
 		}
-		xmlSiteNodes.setSitenodeArray(
-				(com.syrus.amficom.map.xml.SiteNode[] )
-				xmlSiteNodesArray.toArray(
-						new com.syrus.amficom.map.xml.SiteNode[xmlSiteNodesArray.size()]));
+		xmlSiteNodes.setSitenodeArray(xmlSiteNodesArray.toArray(new com.syrus.amficom.map.xml.SiteNode[xmlSiteNodesArray.size()]));
 
-		Collection xmlPhysicalLinksArray = new LinkedList();
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink physicalLink = (PhysicalLink )it.next();
+		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
+		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
 			xmlPhysicalLinksArray.add(physicalLink.getXMLTransferable());
 //			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = xmlPhysicalLinks.addNewPhysicallink();
 //			physicalLink.fillXMLTransferable(xmlPhysicalLink);
 		}
-		xmlPhysicalLinks.setPhysicallinkArray(
-				(com.syrus.amficom.map.xml.PhysicalLink[] )
-				xmlPhysicalLinksArray.toArray(
-						new com.syrus.amficom.map.xml.PhysicalLink[xmlPhysicalLinksArray.size()]));
+		xmlPhysicalLinks.setPhysicallinkArray(xmlPhysicalLinksArray.toArray(new com.syrus.amficom.map.xml.PhysicalLink[xmlPhysicalLinksArray.size()]));
 
-		Collection xmlNodeLinksArray = new LinkedList();
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink nodeLink = (NodeLink )it.next();
+		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
+		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			xmlNodeLinksArray.add(nodeLink.getXMLTransferable());
 //			com.syrus.amficom.map.xml.NodeLink xmlNodeLink = xmlNodeLinks.addNewNodelink();
 //			nodeLink.fillXMLTransferable(xmlNodeLink);
 		}
-		xmlNodeLinks.setNodelinkArray(
-				(com.syrus.amficom.map.xml.NodeLink[] )
-				xmlNodeLinksArray.toArray(
-						new com.syrus.amficom.map.xml.NodeLink[xmlNodeLinksArray.size()]));
+		xmlNodeLinks.setNodelinkArray(xmlNodeLinksArray.toArray(new com.syrus.amficom.map.xml.NodeLink[xmlNodeLinksArray.size()]));
 
-		Collection xmlCollectorsArray = new LinkedList();
-		for(Iterator it = getCollectors().iterator(); it.hasNext();) {
-			Collector collector = (Collector )it.next();
+		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
+		for (final Collector collector : this.getCollectors()) {
 			xmlCollectorsArray.add(collector.getXMLTransferable());
 //			com.syrus.amficom.map.xml.Collector xmlCollector = xmlCollectors.addNewCollector();
 //			collector.fillXMLTransferable(xmlCollector);
 		}
-		xmlCollectors.setCollectorArray(
-				(com.syrus.amficom.map.xml.Collector[] )
-				xmlCollectorsArray.toArray(
-						new com.syrus.amficom.map.xml.Collector[xmlCollectorsArray.size()]));
+		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new com.syrus.amficom.map.xml.Collector[xmlCollectorsArray.size()]));
 	}
 
-	Map(
-			Identifier creatorId, 
-			Identifier domainId, 
-			com.syrus.amficom.map.xml.Map xmlMap, 
-			ClonedIdsPool clonedIdsPool) 
-		throws CreateObjectException, ApplicationException {
+	Map(final Identifier creatorId,
+			final Identifier domainId,
+			final com.syrus.amficom.map.xml.Map xmlMap,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
-		super(
-				clonedIdsPool.getClonedId(
-						ObjectEntities.MAP_CODE, 
-						xmlMap.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.MAP_CODE, xmlMap.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				0,
+				StorableObjectVersion.createInitial(),
 				domainId);
 		this.fromXMLTransferable(xmlMap, clonedIdsPool);
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
+		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject; 
 		
 		this.name = xmlMap.getName();
 		this.description = xmlMap.getDescription();
@@ -1121,43 +1066,33 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.nodeElements = new HashSet<AbstractNode>();
 		this.externalNodes = new HashSet<AbstractNode>();
 		
-		com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = 
-			xmlMap.getTopologicalnodes().getTopologicalnodeArray();
-		for(int i = 0; i < xmlTopologicalNodesArray.length; i++) {
-			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = 
-				xmlTopologicalNodesArray[i];
+		final com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = xmlMap.getTopologicalnodes().getTopologicalnodeArray();
+		for (int i = 0; i < xmlTopologicalNodesArray.length; i++) {
+			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodesArray[i];
 			this.addNode(TopologicalNode.createInstance(this.creatorId, xmlTopologicalNode, clonedIdsPool));
 		}
 
-		com.syrus.amficom.map.xml.SiteNode[] xmlSiteNodesArray = 
-			xmlMap.getSitenodes().getSitenodeArray();
-		for(int i = 0; i < xmlSiteNodesArray.length; i++) {
-			com.syrus.amficom.map.xml.SiteNode xmlSiteNode = 
-				xmlSiteNodesArray[i];
+		final com.syrus.amficom.map.xml.SiteNode[] xmlSiteNodesArray = xmlMap.getSitenodes().getSitenodeArray();
+		for (int i = 0; i < xmlSiteNodesArray.length; i++) {
+			final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = xmlSiteNodesArray[i];
 			this.addNode(SiteNode.createInstance(this.creatorId, xmlSiteNode, clonedIdsPool));
 		}
 
-		com.syrus.amficom.map.xml.PhysicalLink[] xmlPhysicalLinksArray = 
-			xmlMap.getPhysicallinks().getPhysicallinkArray();
-		for(int i = 0; i < xmlPhysicalLinksArray.length; i++) {
-			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = 
-				xmlPhysicalLinksArray[i];
+		final com.syrus.amficom.map.xml.PhysicalLink[] xmlPhysicalLinksArray = xmlMap.getPhysicallinks().getPhysicallinkArray();
+		for (int i = 0; i < xmlPhysicalLinksArray.length; i++) {
+			final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = xmlPhysicalLinksArray[i];
 			this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, xmlPhysicalLink, clonedIdsPool));
 		}
 
-		com.syrus.amficom.map.xml.NodeLink[] xmlNodeLinksArray = 
-			xmlMap.getNodelinks().getNodelinkArray();
-		for(int i = 0; i < xmlNodeLinksArray.length; i++) {
-			com.syrus.amficom.map.xml.NodeLink xmlNodeLink = 
-				xmlNodeLinksArray[i];
+		final com.syrus.amficom.map.xml.NodeLink[] xmlNodeLinksArray = xmlMap.getNodelinks().getNodelinkArray();
+		for (int i = 0; i < xmlNodeLinksArray.length; i++) {
+			final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = xmlNodeLinksArray[i];
 			this.addNodeLink(NodeLink.createInstance(this.creatorId, xmlNodeLink, clonedIdsPool));
 		}
 
-		com.syrus.amficom.map.xml.Collector[] xmlCollectorsArray = 
-			xmlMap.getCollectors().getCollectorArray();
-		for(int i = 0; i < xmlCollectorsArray.length; i++) {
-			com.syrus.amficom.map.xml.Collector xmlCollector = 
-				xmlCollectorsArray[i];
+		final com.syrus.amficom.map.xml.Collector[] xmlCollectorsArray = xmlMap.getCollectors().getCollectorArray();
+		for (int i = 0; i < xmlCollectorsArray.length; i++) {
+			final com.syrus.amficom.map.xml.Collector xmlCollector = xmlCollectorsArray[i];
 			this.addCollector(Collector.createInstance(this.creatorId, xmlCollector, clonedIdsPool));
 		}
 	}
@@ -1167,10 +1102,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject;
+		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject;
 
 		try {
-			Map map = new Map(creatorId, domainId, xmlMap, clonedIdsPool);
+			final Map map = new Map(creatorId, domainId, xmlMap, clonedIdsPool);
 			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();
 

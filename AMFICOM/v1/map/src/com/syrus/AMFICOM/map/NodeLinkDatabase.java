@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.29 2005/07/24 17:38:43 arseniy Exp $
+ * $Id: NodeLinkDatabase.java,v 1.30 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/24 17:38:43 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/26 11:41:05 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -34,7 +35,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	private static String updateMultipleSQLValues;
 
-	private NodeLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private NodeLink fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TopologicalNode)
 			return (NodeLink) storableObject;
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -47,7 +48,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	@Override
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
 				+ NodeLinkWrapper.COLUMN_START_NODE_ID + COMMA
@@ -59,7 +60,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -71,9 +72,10 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		NodeLink nodeLink = fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final NodeLink nodeLink = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, nodeLink.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, nodeLink.getPhysicalLink().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, nodeLink.getStartNode().getId());
@@ -83,9 +85,9 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		NodeLink nodeLink = fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(nodeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final NodeLink nodeLink = fromStorableObject(storableObject);
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(nodeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getPhysicalLink().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getStartNode().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getEndNode().getId()) + COMMA
@@ -94,11 +96,20 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		NodeLink nodeLink = (storableObject == null) ?
-				new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0) :
-					fromStorableObject(storableObject);
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		final NodeLink nodeLink = (storableObject == null)
+				? new NodeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						0.0)
+					: fromStorableObject(storableObject);
 
 		PhysicalLink physicalLink;
 		AbstractNode startNode;
@@ -123,7 +134,7 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				physicalLink,
 				startNode,

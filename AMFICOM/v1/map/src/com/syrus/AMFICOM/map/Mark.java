@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.51 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: Mark.java,v 1.52 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
 
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: arseniy $
- * @version $Revision: 1.51 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -85,7 +85,7 @@ public final class Mark extends AbstractNode {
 	Mark(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_CODE);
+		final MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -115,7 +115,7 @@ public final class Mark extends AbstractNode {
 
 	Mark(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final double longitude,
@@ -141,20 +141,9 @@ public final class Mark extends AbstractNode {
 		this.building = building;
 	}
 
-	public static Mark createInstance(final Identifier creatorId,
-			final PhysicalLink link,
-			final double len)
+	public static Mark createInstance(final Identifier creatorId, final PhysicalLink link, final double len)
 			throws CreateObjectException {
-		return Mark.createInstance(creatorId,
-				"",
-				"",
-				0.0D,
-				0.0D,
-				link,
-				len,
-				"",
-				"",
-				"");
+		return Mark.createInstance(creatorId, "", "", 0.0D, 0.0D, link, len, "", "", "");
 	}
 
 	public static Mark createInstance(final Identifier creatorId,
@@ -177,9 +166,9 @@ public final class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_CODE),
+			final Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					name,
 					description,
 					longitude,
@@ -217,7 +206,7 @@ public final class Mark extends AbstractNode {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name,
 				this.description,
 				this.location.getX(),
@@ -298,7 +287,7 @@ public final class Mark extends AbstractNode {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final double longitude,
@@ -384,17 +373,16 @@ public final class Mark extends AbstractNode {
 	 * @return дистанция
 	 */
 	public double getFromStartLengthLt() {
-		getPhysicalLink().sortNodeLinks();
+		this.getPhysicalLink().sortNodeLinks();
 
 		double pathLength = 0;
 
-		for (Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink nl = (NodeLink) it.next();
-			if (nl.equals(this.nodeLink)) {
+		for (final NodeLink nodeLink : this.getPhysicalLink().getNodeLinks()) {
+			if (nodeLink.equals(this.nodeLink)) {
 				pathLength += this.getSizeInDoubleLt();
 				break;
 			}
-			pathLength += nl.getLengthLt();
+			pathLength += nodeLink.getLengthLt();
 		}
 		return pathLength;
 	}
@@ -405,13 +393,13 @@ public final class Mark extends AbstractNode {
 	 * @return дистанция
 	 */
 	public double getFromEndLengthLt() {
-		getPhysicalLink().sortNodeLinks();
+		this.getPhysicalLink().sortNodeLinks();
 
 		double pathLength = 0;
 
-		List nodeLinks = getPhysicalLink().getNodeLinks();
-		for (ListIterator listIterator = nodeLinks.listIterator(); listIterator.hasPrevious();) {
-			NodeLink nl = (NodeLink) listIterator.previous();
+		final List nodeLinks = getPhysicalLink().getNodeLinks();
+		for (final ListIterator listIterator = nodeLinks.listIterator(); listIterator.hasPrevious();) {
+			final NodeLink nl = (NodeLink) listIterator.previous();
 			if (nl == this.nodeLink) {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
@@ -454,7 +442,7 @@ public final class Mark extends AbstractNode {
 	 * {@inheritDoc}
 	 */
 	public void revert(final MapElementState state) {
-		NodeState mnes = (NodeState) state;
+		final NodeState mnes = (NodeState) state;
 		setName(mnes.name);
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
@@ -484,16 +472,16 @@ public final class Mark extends AbstractNode {
 	}
 
 	public static Mark createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
-		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		String name1 = (String) exportMap1.get(COLUMN_NAME);
-		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		Identifier physicalLinkId1 = (Identifier) exportMap1.get(COLUMN_PHYSICAL_LINK_ID);
-		double distance1 = Double.parseDouble((String) exportMap1.get(COLUMN_DISTANCE));
-		String city1 = (String) exportMap1.get(COLUMN_CITY);
-		String street1 = (String) exportMap1.get(COLUMN_STREET);
-		String building1 = (String) exportMap1.get(COLUMN_BUILDING);
-		double x1 = Double.parseDouble((String) exportMap1.get(COLUMN_X));
-		double y1 = Double.parseDouble((String) exportMap1.get(COLUMN_Y));
+		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		final String name1 = (String) exportMap1.get(COLUMN_NAME);
+		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		final Identifier physicalLinkId1 = (Identifier) exportMap1.get(COLUMN_PHYSICAL_LINK_ID);
+		final double distance1 = Double.parseDouble((String) exportMap1.get(COLUMN_DISTANCE));
+		final String city1 = (String) exportMap1.get(COLUMN_CITY);
+		final String street1 = (String) exportMap1.get(COLUMN_STREET);
+		final String building1 = (String) exportMap1.get(COLUMN_BUILDING);
+		final double x1 = Double.parseDouble((String) exportMap1.get(COLUMN_X));
+		final double y1 = Double.parseDouble((String) exportMap1.get(COLUMN_Y));
 
 		if (id1 == null
 				|| creatorId == null
@@ -506,11 +494,11 @@ public final class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			Mark mark = new Mark(
+			final PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
+			final Mark mark = new Mark(
 					id1,
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					name1,
 					description1,
 					x1,

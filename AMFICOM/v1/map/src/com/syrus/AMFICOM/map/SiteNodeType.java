@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.49 2005/07/24 16:20:19 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.50 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -37,6 +36,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -56,12 +56,11 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.49 $, $Date: 2005/07/24 16:20:19 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
-public final class SiteNodeType extends StorableObjectType 
-implements Characterizable, Namable, XMLBeansTransferable {
+public final class SiteNodeType extends StorableObjectType implements Characterizable, Namable, XMLBeansTransferable {
 
 	public static final String DEFAULT_WELL = "well";
 	public static final String DEFAULT_PIQUET = "piquet";
@@ -103,7 +102,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 
 	SiteNodeType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final SiteNodeTypeSort sort,
 			final String codename,
 			final String name,
@@ -136,9 +135,9 @@ implements Characterizable, Namable, XMLBeansTransferable {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
+			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					sort,
 					codename,
 					name,
@@ -158,7 +157,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
+		final IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
 		super.fromTransferable(sntt, sntt.codename, sntt.description);
 
 		this.name = sntt.name;
@@ -199,7 +198,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.codename,
 				this.name,
 				this.description,
@@ -236,7 +235,7 @@ implements Characterizable, Namable, XMLBeansTransferable {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String name,
 			final String description,
@@ -273,14 +272,15 @@ implements Characterizable, Namable, XMLBeansTransferable {
 	}
 
 	public XmlObject getXMLTransferable() {
-		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = com.syrus.amficom.map.xml.SiteNodeType.Factory.newInstance();
-		fillXMLTransferable(xmlSiteNodeType);
+		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = com.syrus.amficom.map.xml.SiteNodeType.Factory.newInstance();
+		this.fillXMLTransferable(xmlSiteNodeType);
 		return xmlSiteNodeType;
-}
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject; 
+	}
 
-		com.syrus.amficom.general.xml.UID uid = xmlSiteNodeType.addNewUid();
+	public void fillXMLTransferable(final XmlObject xmlObject) {
+		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
+
+		final com.syrus.amficom.general.xml.UID uid = xmlSiteNodeType.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
@@ -289,59 +289,55 @@ implements Characterizable, Namable, XMLBeansTransferable {
 
 		String imageCodeName = "";
 		try {
-			AbstractImageResource ir = (AbstractImageResource )
-				StorableObjectPool.getStorableObject(this.getImageId(), false);
-			if(ir instanceof FileImageResource)
-				imageCodeName = ((FileImageResource)ir).getCodename();
-			else if(ir instanceof BitmapImageResource)
-				imageCodeName = ((BitmapImageResource)ir).getCodename();
-		} catch(ApplicationException e) {
+			final AbstractImageResource ir = (AbstractImageResource) StorableObjectPool.getStorableObject(this.getImageId(), false);
+			if (ir instanceof FileImageResource) {
+				imageCodeName = ((FileImageResource) ir).getCodename();
+			}
+			else if (ir instanceof BitmapImageResource) {
+				imageCodeName = ((BitmapImageResource) ir).getCodename();
+			}
+		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 		xmlSiteNodeType.setImage(imageCodeName);
 	}
 
-	SiteNodeType(
-			final Identifier creatorId, 
-			String codename,
-			String description,
-			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType, 
-			final ClonedIdsPool clonedIdsPool) 
-		throws CreateObjectException, ApplicationException {
+	SiteNodeType(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
-		super(
-				clonedIdsPool.getClonedId(
-						ObjectEntities.SITENODE_CODE, 
-						xmlSiteNodeType.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE, xmlSiteNodeType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				0,
+				StorableObjectVersion.createInitial(),
 				codename,
 				description);
 		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool);
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
+		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
 
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
 		this.sort = SiteNodeTypeSort.fromString(xmlSiteNodeType.getSort().toString());
 		this.topological = xmlSiteNodeType.getTopological();
 
-		String imageCodeName = xmlSiteNodeType.getImage();
+		final String imageCodeName = xmlSiteNodeType.getImage();
 		Identifier loadedImageId = null;
-		StorableObjectCondition condition = new TypicalCondition(
+		final StorableObjectCondition condition = new TypicalCondition(
 				String.valueOf(ImageResourceSort._FILE),
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGERESOURCE_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
-		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		final Set bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
-			FileImageResource ir = (FileImageResource )it.next();
+		for(final Iterator it = bitMaps.iterator(); it.hasNext();) {
+			final FileImageResource ir = (FileImageResource )it.next();
 			if(ir.getCodename().equals(imageCodeName)) {
 				loadedImageId = ir.getId();
 				break;
@@ -355,13 +351,14 @@ implements Characterizable, Namable, XMLBeansTransferable {
 		this.imageId = loadedImageId;
 	}
 
-	public static SiteNodeType createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
+	public static SiteNodeType createInstance(final Identifier creatorId,
+			final XmlObject xmlObject,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
+		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
 
 		try {
-			SiteNodeType siteNode = new SiteNodeType(
+			final SiteNodeType siteNode = new SiteNodeType(
 					creatorId, 
 					xmlSiteNodeType.getSort().toString(),
 					xmlSiteNodeType.getDescription(),

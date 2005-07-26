@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.56 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: Collector.java,v 1.57 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -47,7 +48,7 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -99,7 +100,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 
 	Collector(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description) {
 		super(id,
@@ -121,9 +122,9 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_CODE),
+			final Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					name,
 					description);
 
@@ -162,14 +163,14 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 */
 	@Override
 	public IdlCollector getTransferable(final ORB orb) {
-		IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
+		final IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
 		return IdlCollectorHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name,
 				this.description,
 				physicalLinkIds);
@@ -220,7 +221,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
@@ -251,13 +252,12 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 */
 	public DoublePoint getLocation() {
 		int count = 0;
-		DoublePoint point = new DoublePoint(0.0, 0.0);
+		final DoublePoint point = new DoublePoint(0.0, 0.0);
 
 		double x = 0.0;
 		double y = 0.0;
-		for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink mle = (PhysicalLink) it.next();
-			DoublePoint an = mle.getLocation();
+		for (final PhysicalLink mle : this.getPhysicalLinks()) {
+			final DoublePoint an = mle.getLocation();
 			x += an.getX();
 			y += an.getY();
 			count++;
@@ -278,9 +278,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 */
 	public double getLengthLt() {
 		double length = 0;
-		Iterator e = getPhysicalLinks().iterator();
-		while (e.hasNext()) {
-			PhysicalLink mle = (PhysicalLink) e.next();
+		for (final PhysicalLink mle : this.getPhysicalLinks()) {
 			length = length + mle.getLengthLt();
 		}
 		return length;
@@ -364,19 +362,18 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	}
 
 	public static Collector createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
-		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		String name1 = (String) exportMap1.get(COLUMN_NAME);
-		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		Collection physicalLinkIds1 = (Collection) exportMap1.get(COLUMN_LINKS);
+		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		final String name1 = (String) exportMap1.get(COLUMN_NAME);
+		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		final Set<Identifier> physicalLinkIds1 = (Set) exportMap1.get(COLUMN_LINKS);
 
 		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkIds1 == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Collector collector = new Collector(id1, creatorId, 0L, name1, description1);
-			for (Iterator it = physicalLinkIds1.iterator(); it.hasNext();) {
-				Identifier physicalLinkId = (Identifier) it.next();
-				PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
+			final Collector collector = new Collector(id1, creatorId, StorableObjectVersion.createInitial(), name1, description1);
+			for (final Identifier physicalLinkId : physicalLinkIds1) {
+				final PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 				collector.addPhysicalLink(physicalLink);
 			}
 
@@ -397,64 +394,55 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	}
 
 	public XmlObject getXMLTransferable() {
-		com.syrus.amficom.map.xml.Collector xmlCollector = com.syrus.amficom.map.xml.Collector.Factory.newInstance();
+		final com.syrus.amficom.map.xml.Collector xmlCollector = com.syrus.amficom.map.xml.Collector.Factory.newInstance();
 		fillXMLTransferable(xmlCollector);
 		return xmlCollector;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
+		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
 
-		com.syrus.amficom.general.xml.UID uid = xmlCollector.addNewUid();
+		final com.syrus.amficom.general.xml.UID uid = xmlCollector.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlCollector.setName(this.name);
 		xmlCollector.setDescription(this.description);
 
-		com.syrus.amficom.map.xml.PhysicalLinkUIds xmlPhysicalLinkUIds = xmlCollector.addNewPhysicallinkuids();
+		final com.syrus.amficom.map.xml.PhysicalLinkUIds xmlPhysicalLinkUIds = xmlCollector.addNewPhysicallinkuids();
 
-		for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink) it.next();
-			com.syrus.amficom.general.xml.UID xmlPhysicalLinkUId = xmlPhysicalLinkUIds.addNewPhysicallinkuid();
+		for (final PhysicalLink link : this.getPhysicalLinks()) {
+			final com.syrus.amficom.general.xml.UID xmlPhysicalLinkUId = xmlPhysicalLinkUIds.addNewPhysicallinkuid();
 			xmlPhysicalLinkUId.setStringValue(link.getId().toString());
 		}
 	}
 
-	Collector(
-			Identifier creatorId, 
-			com.syrus.amficom.map.xml.Collector xmlCollector, 
-			ClonedIdsPool clonedIdsPool) 
-		throws CreateObjectException, ApplicationException {
+	Collector(final Identifier creatorId, final com.syrus.amficom.map.xml.Collector xmlCollector, final ClonedIdsPool clonedIdsPool)
+			throws CreateObjectException,
+				ApplicationException {
 
-		super(
-				clonedIdsPool.getClonedId(
-						ObjectEntities.COLLECTOR_CODE, 
-						xmlCollector.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.COLLECTOR_CODE, xmlCollector.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				0);
+				StorableObjectVersion.createInitial());
 
 		this.physicalLinks = new HashSet<PhysicalLink>();
-		
+
 		this.fromXMLTransferable(xmlCollector, clonedIdsPool);
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
+		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		this.name = xmlCollector.getName();
 		this.description = xmlCollector.getDescription();
 
-		com.syrus.amficom.map.xml.PhysicalLinkUIds[] xmlPhysicalLinkUIdsArray = 
-			xmlCollector.getPhysicallinkuidsArray();
-		com.syrus.amficom.general.xml.UID[] xmlUIDsArray = 
-			xmlPhysicalLinkUIdsArray[0].getPhysicallinkuidArray();
-		for(int i = 0; i < xmlUIDsArray.length; i++) {
-			Identifier physicalLinkId = clonedIdsPool.getClonedId(
-					ObjectEntities.PHYSICALLINK_CODE, 
+		final com.syrus.amficom.map.xml.PhysicalLinkUIds[] xmlPhysicalLinkUIdsArray = xmlCollector.getPhysicallinkuidsArray();
+		final com.syrus.amficom.general.xml.UID[] xmlUIDsArray = xmlPhysicalLinkUIdsArray[0].getPhysicallinkuidArray();
+		for (int i = 0; i < xmlUIDsArray.length; i++) {
+			final Identifier physicalLinkId = clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE,
 					xmlUIDsArray[i].getStringValue());
-			PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
+			final PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
 			this.addPhysicalLink(physicalLink);
 		}
 	}
@@ -462,10 +450,10 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	public static Collector createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
-		com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject;
+		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		try {
-			Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
+			final Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			collector.markAsChanged();
 			return collector;

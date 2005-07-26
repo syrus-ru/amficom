@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.30 2005/07/24 17:38:43 arseniy Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.31 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/24 17:38:43 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/26 11:41:05 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -36,7 +37,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	private static String updateMultipleSQLValues;
 	
-	private PhysicalLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private PhysicalLink fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PhysicalLink)
 			return (PhysicalLink) storableObject;
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -49,7 +50,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	@Override
 	protected String getColumnsTmpl() {
-		if (columns == null){
+		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID + COMMA
@@ -67,7 +68,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -85,9 +86,10 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		PhysicalLink physicalLink = fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final PhysicalLink physicalLink = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, physicalLink.getType().getId());
@@ -103,9 +105,9 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		PhysicalLink physicalLink = fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final PhysicalLink physicalLink = fromStorableObject(storableObject);
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(physicalLink.getType().getId()) + COMMA
 			+ DatabaseString.toQuerySubString(physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
@@ -120,13 +122,26 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
-		PhysicalLink physicalLink = (storableObject == null) ? new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, null, null, null, null, 0, 0, false, false)
-				: fromStorableObject(storableObject);
+		final PhysicalLink physicalLink = (storableObject == null) ? new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID),
+				null,
+				StorableObjectVersion.ILLEGAL_VERSION,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				0,
+				0,
+				false,
+				false) : fromStorableObject(storableObject);
 
 		PhysicalLinkType type;
 		AbstractNode startNode;
@@ -139,18 +154,18 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		} catch (SQLException sqle) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
-		int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
+		final int topLeft = resultSet.getInt(PhysicalLinkWrapper.COLUMN_TOPLEFT);
 		physicalLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				type,

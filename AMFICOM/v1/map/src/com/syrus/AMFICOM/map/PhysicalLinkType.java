@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.55 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.56 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
@@ -46,14 +47,13 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: arseniy $
- * @version $Revision: 1.55 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
  * @todo make 'sort' transient (update database scheme as well)
  */
-public final class PhysicalLinkType extends StorableObjectType 
-		implements Characterizable, Namable, XMLBeansTransferable {
+public final class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable, XMLBeansTransferable {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "tunnel";
@@ -80,17 +80,17 @@ public final class PhysicalLinkType extends StorableObjectType
 	/**
 	 * –азмерность тоннел€. ƒл€ тоннел€ обозначает размерность матрицы труб в
 	 * разрезе, дл€ участка коллектора - число полок и мест на полках
-	 *
+	 * 
 	 * @todo добавить сохранение в Ѕƒ
 	 */
-	private IntDimension 			bindingDimension;
+	private IntDimension bindingDimension;
 
 	private transient boolean topological = true;
 
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE);
+		final PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -108,7 +108,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	PhysicalLinkType(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final PhysicalLinkTypeSort sort,
 			final String codename,
 			final String name,
@@ -124,10 +124,12 @@ public final class PhysicalLinkType extends StorableObjectType
 				description);
 		this.sort = sort;
 		this.name = name;
-		if (bindingDimension == null)
+		if (bindingDimension == null) {
 			this.bindingDimension = new IntDimension(0, 0);
-		else
+		}
+		else {
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
+		}
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,
@@ -141,9 +143,9 @@ public final class PhysicalLinkType extends StorableObjectType
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_TYPE_CODE),
+			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_TYPE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					sort,
 					codename,
 					name,
@@ -162,7 +164,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
+		final IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
 		super.fromTransferable(pltt, pltt.codename, pltt.description);
 
 		this.name = pltt.name;
@@ -189,7 +191,7 @@ public final class PhysicalLinkType extends StorableObjectType
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.codename,
 				this.name,
 				this.description,
@@ -203,7 +205,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	@Override
-	protected void setDescription0(String description) {
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
@@ -239,7 +241,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final String name,
 			final String description,
@@ -261,7 +263,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	@Override
-	public void setCodename(String codename) {
+	public void setCodename(final String codename) {
 		super.setCodename(codename);
 		//@todo retreive from transferable!
 		this.sort = PhysicalLinkTypeSort.fromString(codename);
@@ -300,14 +302,15 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	public XmlObject getXMLTransferable() {
-		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = com.syrus.amficom.map.xml.PhysicalLinkType.Factory.newInstance();
+		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = com.syrus.amficom.map.xml.PhysicalLinkType.Factory.newInstance();
 		fillXMLTransferable(xmlPhysicalLinkType);
 		return xmlPhysicalLinkType;
-}
-	public void fillXMLTransferable(XmlObject xmlObject) {
-		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject; 
+	}
 
-		com.syrus.amficom.general.xml.UID uid = xmlPhysicalLinkType.addNewUid();
+	public void fillXMLTransferable(final XmlObject xmlObject) {
+		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType) xmlObject;
+
+		final com.syrus.amficom.general.xml.UID uid = xmlPhysicalLinkType.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
@@ -317,51 +320,43 @@ public final class PhysicalLinkType extends StorableObjectType
 		xmlPhysicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
 	}
 
-	PhysicalLinkType(
-			Identifier creatorId,
-			String codename,
-			String description,
-			com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType, 
-			ClonedIdsPool clonedIdsPool) 
-		throws CreateObjectException, ApplicationException {
+	PhysicalLinkType(final Identifier creatorId,
+			final String codename,
+			final String description,
+			final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
-		super(
-				clonedIdsPool.getClonedId(
-						ObjectEntities.PHYSICALLINK_CODE, 
-						xmlPhysicalLinkType.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE, xmlPhysicalLinkType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				0,
+				StorableObjectVersion.createInitial(),
 				codename,
 				description);
 		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool);
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject; 
+		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType) xmlObject;
 
 		this.name = xmlPhysicalLinkType.getName();
 		this.description = xmlPhysicalLinkType.getDescription();
-		this.bindingDimension = new IntDimension(
-				xmlPhysicalLinkType.getDimensionX().intValue(), 
+		this.bindingDimension = new IntDimension(xmlPhysicalLinkType.getDimensionX().intValue(),
 				xmlPhysicalLinkType.getDimensionY().intValue());
 	}
 
-	public static PhysicalLinkType createInstance(
-			final Identifier creatorId,
+	public static PhysicalLinkType createInstance(final Identifier creatorId,
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType )xmlObject;
+		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType) xmlObject;
 
 		try {
-			PhysicalLinkType physicalLinkType = new PhysicalLinkType(
-					creatorId, 
+			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(creatorId,
 					xmlPhysicalLinkType.getSort().toString(),
 					xmlPhysicalLinkType.getDescription(),
-					xmlPhysicalLinkType, 
+					xmlPhysicalLinkType,
 					clonedIdsPool);
 			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLinkType.markAsChanged();

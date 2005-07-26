@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.30 2005/07/24 17:38:43 arseniy Exp $
+ * $Id: SiteNodeDatabase.java,v 1.31 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/24 17:38:43 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/26 11:41:05 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -34,7 +35,7 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 
 	private static String updateMultipleSQLValues;
 
-	private SiteNode fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private SiteNode fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof SiteNode)
 			return (SiteNode) storableObject;
 		throw new IllegalDataException("SiteNodeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -78,9 +79,10 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		SiteNode siteNode = fromStorableObject(storableObject);
+	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final SiteNode siteNode = this.fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setDouble(++startParameterNumber, siteNode.getLocation().getX());
@@ -94,9 +96,9 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		SiteNode siteNode = fromStorableObject(storableObject);
-		String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final SiteNode siteNode = this.fromStorableObject(storableObject);
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ siteNode.getLocation().getX() + COMMA
 			+ siteNode.getLocation().getY() + COMMA
@@ -109,36 +111,49 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		SiteNode siteNode = (storableObject == null) ?
-				new SiteNode(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, null, 0.0, 0.0, null, null, null) :
-					fromStorableObject(storableObject);
-				
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		final SiteNode siteNode = (storableObject == null) ? new SiteNode(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID),
+				null,
+				StorableObjectVersion.ILLEGAL_VERSION,
+				null,
+				null,
+				null,
+				null,
+				0.0,
+				0.0,
+				null,
+				null,
+				null) : this.fromStorableObject(storableObject);
+
 		SiteNodeType type;
 		try {
-			type = (SiteNodeType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
+			type = (SiteNodeType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
 		} catch (ApplicationException ae) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
+			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
 		} catch (SQLException sqle) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
+			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
 			throw new RetrieveObjectException(msg, sqle);
 		}
 		siteNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),
-							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LATIUDE),
-							   DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_IMAGE_ID),
-							   type,
-							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_CITY)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_STREET)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_BUILDING)));		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),
+				resultSet.getDouble(SiteNodeWrapper.COLUMN_LATIUDE),
+				DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_IMAGE_ID),
+				type,
+				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_CITY)),
+				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_STREET)),
+				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_BUILDING)));
 		return siteNode;
 	}
 

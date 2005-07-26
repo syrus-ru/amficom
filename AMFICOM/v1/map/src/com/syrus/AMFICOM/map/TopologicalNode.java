@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.52 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.53 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.53 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -79,7 +80,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	TopologicalNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICALNODE_CODE);
+		final TopologicalNodeDatabase database = (TopologicalNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICALNODE_CODE);
 		try {
 			database.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -97,7 +98,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 
 	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final double longitude,
@@ -117,7 +118,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 
 	TopologicalNode(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final PhysicalLink physicalLink,
@@ -139,21 +140,19 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		this.selected = false;
 	}
 
-	protected static TopologicalNode createInstance0(
-			final Identifier creatorId,
+	protected static TopologicalNode createInstance0(final Identifier creatorId,
 			final String name,
 			final String description,
 			final PhysicalLink physicalLink,
-			final DoublePoint location)
-		throws CreateObjectException {
+			final DoublePoint location) throws CreateObjectException {
 
 		if (creatorId == null || name == null || description == null || location == null || physicalLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICALNODE_CODE),
+			final TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICALNODE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					name,
 					description,
 					physicalLink,
@@ -172,26 +171,17 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		}
 	}
 
-	public static TopologicalNode createInstance(
-			final Identifier creatorId,
+	public static TopologicalNode createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
 			final PhysicalLink physicalLink,
-			final DoublePoint location)
-		throws CreateObjectException {
-
-		return TopologicalNode.createInstance0(
-				creatorId,
-				name,
-				description,
-				physicalLink,
-				location);
-		}
+			final DoublePoint location) throws CreateObjectException {
+		return TopologicalNode.createInstance0(creatorId, name, description, physicalLink, location);
+	}
 
 	public static TopologicalNode createInstance(final Identifier creatorId,
 			final PhysicalLink physicalLink,
 			final DoublePoint location) throws CreateObjectException {
-
 		return TopologicalNode.createInstance0(creatorId, "", "", physicalLink, location);
 	}
 
@@ -212,7 +202,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name,
 				this.description,
 				this.location.getX(),
@@ -243,26 +233,26 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	 */
 	public PhysicalLink getPhysicalLink() {
 		if (this.physicalLink == null)
-			this.physicalLink = findPhysicalLink();
+			this.physicalLink = this.findPhysicalLink();
 		return this.physicalLink;
 	}
 
 	private PhysicalLink findPhysicalLink() {
 		try {
-			StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
-			Set nlinks;
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
 
-			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			NodeLink nodeLink = (NodeLink )nlinks.iterator().next();
+			// NOTE: This call never results in using loader, so it doesn't matter
+			// what to pass as 3-d argument
+			final Set nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			final NodeLink nodeLink = (NodeLink) nlinks.iterator().next();
 			return nodeLink.getPhysicalLink();
-		} catch(ApplicationException e) {
+		} catch (ApplicationException e) {
 			// TODO how to work it over?!
 			e.printStackTrace();
 		}
 		return null;
-//	return this.map.getNodeLink(this).getPhysicalLink();
-}
+		// return this.map.getNodeLink(this).getPhysicalLink();
+	}
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
@@ -273,7 +263,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final double longitude,
@@ -322,15 +312,15 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	 * {@inheritDoc}
 	 */
 	public void revert(final MapElementState state) {
-		TopologicalNodeState mpnes = (TopologicalNodeState) state;
+		final TopologicalNodeState mpnes = (TopologicalNodeState) state;
 
-		setName(mpnes.name);
-		setDescription(mpnes.description);
-		setImageId(mpnes.imageId);
-		setLocation(mpnes.location);
-		setActive(mpnes.active);
+		this.setName(mpnes.name);
+		this.setDescription(mpnes.description);
+		this.setImageId(mpnes.imageId);
+		this.setLocation(mpnes.location);
+		this.setActive(mpnes.active);
 		try {
-			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
+			this.setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -357,20 +347,27 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 
 	public static TopologicalNode createInstance(final Identifier creatorId, final java.util.Map exportMap1)
 			throws CreateObjectException {
-		Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
-		String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
-		String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
-		Identifier physicalLinkId1 = (Identifier) exportMap1.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
-		double x1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_X));
-		double y1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_Y));
-		boolean active1 = Boolean.valueOf((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_ACTIVE)).booleanValue();
+		final Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
+		final String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
+		final String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
+		final Identifier physicalLinkId1 = (Identifier) exportMap1.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
+		final double x1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_X));
+		final double y1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_Y));
+		final boolean active1 = Boolean.valueOf((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_ACTIVE)).booleanValue();
 
 		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkId1 == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			TopologicalNode node1 = new TopologicalNode(id1, creatorId, 0L, name1, description1, x1, y1, active1);
+			final PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
+			final TopologicalNode node1 = new TopologicalNode(id1,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name1,
+					description1,
+					x1,
+					y1,
+					active1);
 			node1.setPhysicalLink(physicalLink1);
 
 			assert node1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -384,36 +381,31 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	}
 
 	public XmlObject getXMLTransferable() {
-		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = com.syrus.amficom.map.xml.TopologicalNode.Factory.newInstance();
-		fillXMLTransferable(xmlTopologicalNode);
+		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = com.syrus.amficom.map.xml.TopologicalNode.Factory.newInstance();
+		this.fillXMLTransferable(xmlTopologicalNode);
 		return xmlTopologicalNode;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject; 
+		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject; 
 
-		com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
+		final com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
 		uid.setStringValue(this.id.toString());
 		xmlTopologicalNode.setX(this.location.getX());
 		xmlTopologicalNode.setY(this.location.getY());
 		xmlTopologicalNode.setActive(this.active);
 	}
 
-	TopologicalNode(
-			final Identifier creatorId, 
-			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode, 
-			final ClonedIdsPool clonedIdsPool) 
-		throws CreateObjectException, ApplicationException {
+	TopologicalNode(final Identifier creatorId,
+			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
-		super(
-				clonedIdsPool.getClonedId(
-						ObjectEntities.TOPOLOGICALNODE_CODE, 
-						xmlTopologicalNode.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.TOPOLOGICALNODE_CODE, xmlTopologicalNode.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				0,
+				StorableObjectVersion.createInitial(),
 				"",
 				"",
 				new DoublePoint(0, 0));
@@ -422,7 +414,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
+		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
@@ -432,10 +424,10 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode )xmlObject;
+		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		try {
-			TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
+			final TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();
 			return topologicalNode;

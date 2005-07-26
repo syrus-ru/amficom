@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.29 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.30 2005/07/26 11:41:05 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
@@ -27,15 +28,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/26 11:41:05 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
  */
-public abstract class AbstractNode
-	extends StorableObject
-	implements MapElement
-{
+public abstract class AbstractNode extends StorableObject implements MapElement {
 
 	static final long serialVersionUID = -2623880496462305233L;
 
@@ -73,7 +71,7 @@ public abstract class AbstractNode
 
 	protected transient boolean removed = false;
 
-	protected AbstractNode(Identifier id) {
+	protected AbstractNode(final Identifier id) {
 		super(id);
 	}
 
@@ -82,7 +80,7 @@ public abstract class AbstractNode
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String name,
 			final String desription,
 			final DoublePoint location) {
@@ -172,11 +170,10 @@ public abstract class AbstractNode
 	}
 
 	public DoublePoint getLocation() {
-		return (DoublePoint)this.location.clone();
+		return (DoublePoint) this.location.clone();
 	}
 
-	public void setLocation(final DoublePoint location)
-	{
+	public void setLocation(final DoublePoint location) {
 		this.location.setLocation(location.getX(), location.getY());
 		super.markAsChanged();
 	}
@@ -184,48 +181,42 @@ public abstract class AbstractNode
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelected()
-	{
+	public boolean isSelected() {
 		return this.selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(final boolean selected)
-	{
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(final boolean alarmState)
-	{
+	public void setAlarmState(final boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean getAlarmState()
-	{
+	public boolean getAlarmState() {
 		return this.alarmState;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRemoved()
-	{
+	public boolean isRemoved() {
 		return this.removed;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(final boolean removed)
-	{
+	public void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 }
