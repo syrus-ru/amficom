@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeState.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: TopologicalNodeState.java,v 1.4 2005/07/26 11:30:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,30 +17,29 @@ import com.syrus.util.HashCodeGenerator;
  *
  *
  *
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 11:30:29 $
  * @module map_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
-public final class TopologicalNodeState extends NodeState
-{
+public final class TopologicalNodeState extends NodeState {
 	public boolean active;
 	public Identifier physicalLinkId;
-	
-	public TopologicalNodeState(TopologicalNode topologicalNode) {
+
+	public TopologicalNodeState(final TopologicalNode topologicalNode) {
 		super(topologicalNode);
 		this.active = topologicalNode.isActive();
 		this.physicalLinkId = topologicalNode.getPhysicalLink().getId();
 	}
 
-	public boolean equals(Object object){
-		TopologicalNodeState mpnes = (TopologicalNodeState)object;
-		return super.equals(object)
-			&& this.physicalLinkId.equals(mpnes.physicalLinkId)
-			&& this.active == mpnes.active;
+	@Override
+	public boolean equals(final Object object) {
+		final TopologicalNodeState mpnes = (TopologicalNodeState) object;
+		return super.equals(object) && this.physicalLinkId.equals(mpnes.physicalLinkId) && this.active == mpnes.active;
 	}
-	
+
+	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addInt(super.hashCode());
 		codeGenerator.addObject(this.physicalLinkId);
 		codeGenerator.addBoolean(this.active);
