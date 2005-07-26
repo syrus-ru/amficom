@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.4 2005/07/25 11:08:09 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.5 2005/07/26 14:42:50 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,22 @@
 package com.syrus.AMFICOM.manager;
 
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import org.jgraph.graph.DefaultGraphCell;
+import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/25 11:08:09 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/26 14:42:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -58,13 +62,45 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 										final Object cell) {
 
 				if (cell != null) {
-					JPopupMenu popupMenu = new JPopupMenu();
+					final JPopupMenu popupMenu = new JPopupMenu();
 
-					popupMenu.add(new AbstractAction("Enter to domain") {
+					popupMenu.add(new AbstractAction(LangModelManager.getString("Dialog.EnterIntoDomain")) {
 
 						public void actionPerformed(ActionEvent e) {
 							
+							DefaultGraphCell cell2 =  (DefaultGraphCell) cell;
+							
+							MPort port = (MPort) cell2.getChildAt(0);
+							
+							List<Port> ports = graph.isDirect() ? port.getTargets() : port.getSources();
+							
+							if (ports.isEmpty()) {
+								JOptionPane.showMessageDialog(popupMenu, 
+									LangModelManager.getString("Error.DomainDoesnotContainNetwork"), 
+									LangModelManager.getString("Error"),
+									JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							
+							for(Port port2 : ports) {
+								MPort port3 = (MPort) port2;
+								AbstractBean bean2 = port3.getBean();
+								
+								if (bean2 == null || !bean2.getCodeName().equals("Net")) {
+									JOptionPane.showMessageDialog(popupMenu, 
+										LangModelManager.getString("Error.DomainContainsNotOnlyNetwork"), 
+										LangModelManager.getString("Error"),
+										JOptionPane.ERROR_MESSAGE);
+									return;
+								}
+							}
+							
+							graph.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + cell2.getUserObject());
+							
+							graph.domainsButton.setEnabled(true);
+							
 							graph.domainButton.setEnabled(false);
+							
 							graph.netButton.setEnabled(false);
 							
 							graph.userButton.setEnabled(true);
@@ -77,7 +113,7 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 
 							graph.mcmButton.setEnabled(true);
 							
-							graph.showOnlyDescendants((DefaultGraphCell) cell);
+							graph.showOnlyDescendants(cell2);
 							
 							graph.showOnly(new String[] {"Net", "User", "ARM", "RTU", "Server", "MCM"});
 							
@@ -89,9 +125,8 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 
 				return null;
 			}			
-			
-
 		};
+		
 		bean.setCodeName("Domain");
 		bean.setValidator(this.getValidator());
 		bean.setName("Domain" + (++this.count));
