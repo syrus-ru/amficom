@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.130 2005/07/25 20:46:13 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.131 2005/07/26 08:52:55 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.130 $, $Date: 2005/07/25 20:46:13 $
+ * @version $Revision: 1.131 $, $Date: 2005/07/26 08:52:55 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * сведения о сохранении от метода saveStorableObjects, исходя из которых именно он и должен
  * обновлять версии успешно сохранённых объектов. Учение о Сохранении подлежит переработке.
  */
-public abstract class StorableObjectPool {
+public final class StorableObjectPool {
 	private static final int OBJECT_POOL_SIZE = 10;
 	private static final int MAX_OBJECT_POOL_SIZE = 1000;
 
