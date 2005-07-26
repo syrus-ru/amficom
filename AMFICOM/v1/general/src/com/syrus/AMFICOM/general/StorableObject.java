@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.81 2005/07/26 14:37:28 arseniy Exp $
+ * $Id: StorableObject.java,v 1.82 2005/07/26 17:01:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,14 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
@@ -33,7 +35,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.81 $, $Date: 2005/07/26 14:37:28 $
+ * @version $Revision: 1.82 $, $Date: 2005/07/26 17:01:30 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -303,6 +305,20 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			transferables[i++] = storableObject.getTransferable(orb);
 		}
 		return transferables;
+	}
+
+	public static final Set<StorableObject> fromTransferables(final IdlStorableObject[] storableObjectsT) {
+		assert storableObjectsT != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		for (int i = 0; i < storableObjectsT.length; i++) {
+			try {
+				storableObjects.add(storableObjectsT[i].getNative());
+			} catch (IdlCreateObjectException coe) {
+				Log.errorException(coe);
+			}
+		}
+		return storableObjects;
 	}
 
 	public static final Map<Identifier, StorableObjectVersion> createVersionsMap(final Set<? extends StorableObject> storableObjects) {
