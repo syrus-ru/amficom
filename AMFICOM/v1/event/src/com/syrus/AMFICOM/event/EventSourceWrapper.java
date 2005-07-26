@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.6 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventSourceWrapper.java,v 1.7 2005/07/26 08:39:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/26 08:39:09 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -34,11 +34,11 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 
 	private static EventSourceWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private EventSourceWrapper() {
 		//private constructor
-		String[] keysArray = new String[] {LINK_FIELD_SOURCE_ENTITY_ID};
+		final String[] keysArray = new String[] { LINK_FIELD_SOURCE_ENTITY_ID };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
@@ -48,7 +48,7 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -59,40 +59,40 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof EventSource) {
-			EventSource eventSource = (EventSource) object;
+			final EventSource eventSource = (EventSource) object;
 			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
 				return eventSource.getSourceEntityId();
 		}
-		
+
 		return value;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof EventSource) {
-			EventSource eventSource = (EventSource) object;
+			final EventSource eventSource = (EventSource) object;
 			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
 				eventSource.setSourceEntityId((Identifier) value);
 		}
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}

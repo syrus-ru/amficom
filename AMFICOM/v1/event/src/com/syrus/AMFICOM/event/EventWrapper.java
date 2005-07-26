@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.11 2005/07/14 20:11:24 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.12 2005/07/26 08:39:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/14 20:11:24 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/26 08:39:09 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -31,14 +31,14 @@ public class EventWrapper extends StorableObjectWrapper {
 
 	private static EventWrapper instance;
 
-	private List keys;
+	private List<String> keys;
 
 	private EventWrapper() {
 		//private constructor
-		String[] keysArray = new String[] {COLUMN_TYPE_ID,
+		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
 				COLUMN_DESCRIPTION,
 				LINK_FIELD_EVENT_PARAMETERS,
-				LINK_FIELD_EVENT_SOURCES};
+				LINK_FIELD_EVENT_SOURCES };
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
@@ -48,7 +48,7 @@ public class EventWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -59,9 +59,9 @@ public class EventWrapper extends StorableObjectWrapper {
 
 	@Override
 	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
+		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Event) {
-			Event event = (Event) object;
+			final Event event = (Event) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				return event.getType();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -74,9 +74,9 @@ public class EventWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Event) {
-			Event event = (Event) object;
+			final Event event = (Event) object;
 			if (key.equals(COLUMN_TYPE_ID))
 				event.setType((EventType) value);
 			else
@@ -91,22 +91,22 @@ public class EventWrapper extends StorableObjectWrapper {
 		}
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
-		Class clazz = super.getPropertyClass(key); 
+	public Class getPropertyClass(final String key) {
+		final Class clazz = super.getPropertyClass(key); 
 		if (clazz != null) {
 			return clazz;
 		}
