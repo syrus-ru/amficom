@@ -8,7 +8,7 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.1 2005/07/19 09:49:00 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.2 2005/07/26 14:42:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,25 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/26 14:42:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module Miscs
  */
 public class UserBeanWrapper implements Wrapper {
 
-	public static final String		KEY_FULL_NAME	= "fullName";
-	public static final String		KEY_USER_NATURE	= "nature";
+	public static final String		KEY_FULL_NAME			= "fullName";
+	public static final String		KEY_USER_NATURE			= "nature";
+	public static final String		KEY_USER_POSITION		= "position";
+	public static final String		KEY_USER_DEPARTEMENT	= "departement";
+	public static final String		KEY_USER_COMPANY		= "company";
+	public static final String		KEY_USER_ROOM_NO		= "roomNo";
+	public static final String		KEY_USER_CITY			= "city";
+	public static final String		KEY_USER_STREET			= "street";
+	public static final String		KEY_USER_BUILDING		= "building";
+	public static final String		KEY_USER_EMAIL			= "email";
+	public static final String		KEY_USER_PHONE			= "phone";
+	public static final String		KEY_USER_CELLULAR		= "cellular";
 
 	private static UserBeanWrapper	instance;
 
@@ -36,14 +46,26 @@ public class UserBeanWrapper implements Wrapper {
 
 	private UserBeanWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { KEY_FULL_NAME, KEY_USER_NATURE};
+		String[] keysArray = new String[] { KEY_FULL_NAME, 
+				KEY_USER_NATURE, 
+				KEY_USER_POSITION,
+				KEY_USER_DEPARTEMENT,
+				KEY_USER_COMPANY,
+				KEY_USER_ROOM_NO,
+				KEY_USER_CITY,
+				KEY_USER_STREET,
+				KEY_USER_BUILDING,
+				KEY_USER_EMAIL,
+				KEY_USER_PHONE,
+				KEY_USER_CELLULAR};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static UserBeanWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new UserBeanWrapper();
+		}
 		return instance;
 	}
 
@@ -52,12 +74,50 @@ public class UserBeanWrapper implements Wrapper {
 	}
 
 	public String getName(final String key) {
-		/* there is no reason to rename it */
-		return key;
+		if (key.equals(KEY_FULL_NAME)) {
+			return LangModelManager.getString("Entity.User.attributes.FullName");
+		} else if (key.equals(KEY_USER_NATURE)) { 
+			return LangModelManager.getString("Entity.User.attributes.Type"); 
+		} else if (key.equals(KEY_USER_POSITION)) { 
+			return LangModelManager.getString("Entity.User.attributes.Position"); 
+		} else if (key.equals(KEY_USER_DEPARTEMENT)) { 
+			return LangModelManager.getString("Entity.User.attributes.Departement"); 
+		} else if (key.equals(KEY_USER_COMPANY)) { 
+			return LangModelManager.getString("Entity.User.attributes.Company"); 
+		} else if (key.equals(KEY_USER_ROOM_NO)) { 
+			return LangModelManager.getString("Entity.User.attributes.RoomNo"); 
+		} else if (key.equals(KEY_USER_CITY)) { 
+			return LangModelManager.getString("Entity.User.attributes.City"); 
+		} else if (key.equals(KEY_USER_STREET)) { 
+			return LangModelManager.getString("Entity.User.attributes.Street");
+		} else if (key.equals(KEY_USER_BUILDING)) { 
+			return LangModelManager.getString("Entity.User.attributes.Building");
+		} else if (key.equals(KEY_USER_EMAIL)) { 
+			return LangModelManager.getString("Entity.User.attributes.EMail"); 
+		} else if (key.equals(KEY_USER_PHONE)) { 
+			return LangModelManager.getString("Entity.User.attributes.Phone"); 
+		} else if (key.equals(KEY_USER_CELLULAR)) { 
+			return LangModelManager.getString("Entity.User.attributes.Cellular"); 
+		}
+		
+		return null;
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(KEY_FULL_NAME) || key.equals(KEY_USER_NATURE)) { return String.class; }
+		if (key.equals(KEY_FULL_NAME) || 
+				key.equals(KEY_USER_NATURE) ||
+				key.equals(KEY_USER_POSITION) ||
+				key.equals(KEY_USER_DEPARTEMENT) ||
+				key.equals(KEY_USER_COMPANY) ||
+				key.equals(KEY_USER_ROOM_NO) ||
+				key.equals(KEY_USER_CITY) ||
+				key.equals(KEY_USER_STREET) ||
+				key.equals(KEY_USER_BUILDING) ||
+				key.equals(KEY_USER_EMAIL) ||
+				key.equals(KEY_USER_PHONE) ||
+				key.equals(KEY_USER_CELLULAR)) { 
+			return String.class; 
+		}
 		return null;
 	}
 
@@ -72,7 +132,29 @@ public class UserBeanWrapper implements Wrapper {
 			UserBean userBean = (UserBean) object;
 			if (key.equals(KEY_FULL_NAME)) {
 				return userBean.getFullName();
-			} else if (key.equals(KEY_USER_NATURE)) { return userBean.getNature(); }
+			} else if (key.equals(KEY_USER_NATURE)) { 
+				return userBean.getNature(); 
+			} else if (key.equals(KEY_USER_POSITION)) { 
+				return userBean.getPosition(); 
+			} else if (key.equals(KEY_USER_DEPARTEMENT)) { 
+				return userBean.getDepartement(); 
+			} else if (key.equals(KEY_USER_COMPANY)) { 
+				return userBean.getCompany(); 
+			} else if (key.equals(KEY_USER_ROOM_NO)) { 
+				return userBean.getRoomNo(); 
+			} else if (key.equals(KEY_USER_CITY)) { 
+				return userBean.getCity(); 
+			} else if (key.equals(KEY_USER_STREET)) { 
+				return userBean.getStreet(); 
+			} else if (key.equals(KEY_USER_BUILDING)) { 
+				return userBean.getBuilding(); 
+			} else if (key.equals(KEY_USER_EMAIL)) { 
+				return userBean.getEmail(); 
+			} else if (key.equals(KEY_USER_PHONE)) { 
+				return userBean.getPhone(); 
+			} else if (key.equals(KEY_USER_CELLULAR)) { 
+				return userBean.getCellular(); 
+			}
 		}
 		return null;
 	}
@@ -97,6 +179,26 @@ public class UserBeanWrapper implements Wrapper {
 				userBean.setFullName((String) value);
 			} else if (key.equals(KEY_USER_NATURE)) {
 				userBean.setNature((String) value);
+			} else if (key.equals(KEY_USER_POSITION)) {
+				userBean.setPosition((String) value);
+			} else if (key.equals(KEY_USER_DEPARTEMENT)) { 
+				userBean.setDepartement((String) value); 
+			} else if (key.equals(KEY_USER_COMPANY)) { 
+				userBean.setCompany((String) value); 
+			} else if (key.equals(KEY_USER_ROOM_NO)) { 
+				userBean.setRoomNo((String) value); 
+			} else if (key.equals(KEY_USER_CITY)) { 
+				userBean.setCity((String) value); 
+			} else if (key.equals(KEY_USER_STREET)) { 
+				userBean.setStreet((String) value); 
+			} else if (key.equals(KEY_USER_BUILDING)) { 
+				userBean.setBuilding((String) value); 
+			} else if (key.equals(KEY_USER_EMAIL)) { 
+				userBean.setEmail((String) value); 
+			} else if (key.equals(KEY_USER_PHONE)) { 
+				userBean.setPhone((String) value); 
+			} else if (key.equals(KEY_USER_CELLULAR)) { 
+				userBean.setCellular((String) value); 
 			}
 		}
 	}

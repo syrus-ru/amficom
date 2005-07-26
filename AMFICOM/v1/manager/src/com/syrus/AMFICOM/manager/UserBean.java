@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.3 2005/07/25 05:58:53 bob Exp $
+ * $Id: UserBean.java,v 1.4 2005/07/26 14:42:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import javax.swing.JPopupMenu;
 
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
-import org.jgraph.graph.DefaultPort;
 import org.jgraph.graph.GraphConstants;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
@@ -32,7 +31,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 14:42:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,9 +42,29 @@ public class UserBean extends AbstractBean {
 	
 	private List<PropertyChangeListener>						propertyChangeListeners;
 
-	private String	fullName;
+	private String	nature;	
 
-	private String	nature;
+	private String	fullName;
+	
+	private String	position;
+	
+	private String	departement;
+	
+	private String	company;
+
+	private String	roomNo;
+	
+	private String	city;
+	
+	private String	street;
+	
+	private String	building;
+	
+	private String	email;
+	
+	private String	phone;
+	
+	private String	cellular;
 	
 	WrapperedPropertyTable table;
 
@@ -177,6 +196,166 @@ public class UserBean extends AbstractBean {
 			(WrapperedPropertyTableModel) this.table.getModel();
 		model.setObject(this);
 		return super.getPropertyPanel();
+	}
+
+	
+	public final String getBuilding() {
+		return this.building;
+	}
+
+	
+	public final void setBuilding(String building) {
+		if (this.building != building &&
+				(this.building != null && !this.building.equals(building) ||
+				!building.equals(this.building))) {
+			String oldValue = this.name;
+			this.building = building;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_BUILDING, oldValue, building));
+		}	
+	}
+
+	
+	public final String getCellular() {
+		return this.cellular;
+	}
+
+	
+	public final void setCellular(String cellular) {
+		if (this.cellular != cellular &&
+				(this.cellular != null && !this.cellular.equals(cellular) ||
+				!cellular.equals(this.cellular))) {
+			String oldValue = this.name;
+			this.cellular = cellular;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_CELLULAR, oldValue, cellular));
+		}
+	}
+
+	
+	public final String getCity() {
+		return this.city;
+	}
+
+	
+	public final void setCity(String city) {
+		if (this.city != city &&
+				(this.city != null && !this.city.equals(city) ||
+				!city.equals(this.city))) {
+			String oldValue = this.name;
+			this.city = city;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_CITY, oldValue, city));
+		}
+	}
+
+	
+	public final String getCompany() {
+		return this.company;
+	}
+
+	
+	public final void setCompany(String company) {
+		if (this.company != company &&
+				(this.company != null && !this.company.equals(company) ||
+				!company.equals(this.company))) {
+			String oldValue = this.name;
+			this.company = company;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_COMPANY, oldValue, company));
+		}
+	}
+
+	
+	public final String getDepartement() {
+		return this.departement;
+	}
+
+	
+	public final void setDepartement(String departement) {
+		if (this.departement != departement &&
+				(this.departement != null && !this.departement.equals(departement) ||
+				!departement.equals(this.departement))) {
+			String oldValue = this.name;
+			this.departement = departement;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_DEPARTEMENT, oldValue, departement));
+		}
+	}
+
+	
+	public final String getEmail() {
+		return this.email;
+	}
+
+	
+	public final void setEmail(String email) {
+		if (this.email != email &&
+				(this.email != null && !this.email.equals(email) ||
+				!email.equals(this.email))) {
+			String oldValue = this.name;
+			this.email = email;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_EMAIL, oldValue, email));
+		}
+	}
+
+	
+	public final String getPhone() {
+		return this.phone;
+	}
+
+	
+	public final void setPhone(String phone) {
+		if (this.phone != phone &&
+				(this.phone != null && !this.phone.equals(phone) ||
+				!phone.equals(this.phone))) {
+			String oldValue = this.name;
+			this.phone = phone;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_PHONE, oldValue, phone));
+		}
+	}
+
+	
+	public final String getPosition() {
+		return this.position;
+	}
+
+	
+	public final void setPosition(String position) {
+		if (this.position != position &&
+				(this.position != null && !this.position.equals(position) ||
+				!position.equals(this.position))) {
+			String oldValue = this.name;
+			this.position = position;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_POSITION, oldValue, position));
+		}
+	}
+
+	
+	public final String getRoomNo() {
+		return this.roomNo;
+	}
+
+	
+	public final void setRoomNo(String roomNo) {
+		if (this.roomNo != roomNo &&
+				(this.roomNo != null && !this.roomNo.equals(roomNo) ||
+				!roomNo.equals(this.roomNo))) {
+			String oldValue = this.name;
+			this.roomNo = roomNo;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_ROOM_NO, oldValue, roomNo));
+		}
+	}
+
+	
+	public final String getStreet() {
+		return this.street;
+	}
+
+	
+	public final void setStreet(String street) {
+		if (this.street != street &&
+				(this.street != null && !this.street.equals(street) ||
+				!street.equals(this.street))) {
+			String oldValue = this.name;
+			this.street = street;
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_STREET, oldValue, street));
+		}
 	}
 
 }

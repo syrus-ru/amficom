@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.6 2005/07/19 09:49:00 bob Exp $
+* $Id: UserBeanFactory.java,v 1.7 2005/07/26 14:42:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/26 14:42:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -88,7 +88,17 @@ public class UserBeanFactory extends AbstractBeanFactory {
 				new WrapperedPropertyTable(wrapper, 
 					bean, 
 					new String[] { UserBeanWrapper.KEY_FULL_NAME, 
-						UserBeanWrapper.KEY_USER_NATURE}
+							UserBeanWrapper.KEY_USER_NATURE, 
+							UserBeanWrapper.KEY_USER_POSITION,
+							UserBeanWrapper.KEY_USER_DEPARTEMENT,
+							UserBeanWrapper.KEY_USER_COMPANY,
+							UserBeanWrapper.KEY_USER_ROOM_NO,
+							UserBeanWrapper.KEY_USER_CITY,
+							UserBeanWrapper.KEY_USER_STREET,
+							UserBeanWrapper.KEY_USER_BUILDING,
+							UserBeanWrapper.KEY_USER_EMAIL,
+							UserBeanWrapper.KEY_USER_PHONE,
+							UserBeanWrapper.KEY_USER_CELLULAR}
 				);
 			this.table.setDefaultTableCellRenderer();			
 	
