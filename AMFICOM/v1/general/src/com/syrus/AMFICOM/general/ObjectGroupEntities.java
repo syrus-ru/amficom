@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.20 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.21 2005/07/26 18:09:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/07/25 20:47:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/07/26 18:09:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -90,7 +90,6 @@ public final class ObjectGroupEntities {
 	/**
 	 * @todo Implement
 	 * @param groupCode
-	 * @return
 	 */
 	public static short[] getEntityCodes(final short groupCode) {
 		assert isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
