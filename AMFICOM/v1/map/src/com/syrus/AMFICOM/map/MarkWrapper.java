@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.8 2005/07/17 05:20:43 arseniy Exp $
+ * $Id: MarkWrapper.java,v 1.9 2005/07/26 11:39:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:20:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/26 11:39:26 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -24,23 +24,23 @@ public class MarkWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
 	// longitude NUMBER(12,6),
-	public static final String		COLUMN_LONGITUDE			= "longitude";
+	public static final String COLUMN_LONGITUDE = "longitude";
 	// latiude NUMBER(12,6),
-	public static final String		COLUMN_LATIUDE				= "latiude";
+	public static final String COLUMN_LATIUDE = "latiude";
 	// physical_link_id VARCHAR2(32) NOT NULL,
-	public static final String		COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 	// distance NUMBER(12,6),
-	public static final String		COLUMN_DISTANCE				= "distance";
+	public static final String COLUMN_DISTANCE = "distance";
 	// city VARCHAR2(128),
-	public static final String		COLUMN_CITY					= "city";
+	public static final String COLUMN_CITY = "city";
 	// street VARCHAR2(128),
-	public static final String		COLUMN_STREET				= "street";
+	public static final String COLUMN_STREET = "street";
 	// building VARCHAR2(128),
-	public static final String		COLUMN_BUILDING				= "building";
+	public static final String COLUMN_BUILDING = "building";
 
-	protected static MarkWrapper	instance;
+	protected static MarkWrapper instance;
 
-	protected List					keys;
+	protected List<String> keys;
 
 	private MarkWrapper() {
 		// empty private constructor
@@ -64,33 +64,33 @@ public class MarkWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		return String.class;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		if (object instanceof Mark) {
-			Mark mark = (Mark) object;
+			final Mark mark = (Mark) object;
 			if (key.equals(COLUMN_NAME))
 				return mark.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -114,17 +114,17 @@ public class MarkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Mark) {
-			Mark mark = (Mark) object;
+			final Mark mark = (Mark) object;
 			if (key.equals(COLUMN_NAME))
 				mark.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

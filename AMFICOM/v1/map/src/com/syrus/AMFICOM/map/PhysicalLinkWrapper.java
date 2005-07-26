@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.7 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.8 2005/07/26 11:39:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/26 11:39:26 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -24,27 +24,27 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
 	// physical_link_type_id VARCHAR2(32) NOT NULL,
-	public static final String				COLUMN_PHYSICAL_LINK_TYPE_ID	= "physical_link_type_id";
+	public static final String COLUMN_PHYSICAL_LINK_TYPE_ID = "physical_link_type_id";
 	// city VARCHAR2(128),
-	public static final String				COLUMN_CITY						= "city";
+	public static final String COLUMN_CITY = "city";
 	// street VARCHAR2(128),
-	public static final String				COLUMN_STREET					= "street";
+	public static final String COLUMN_STREET = "street";
 	// building VARCHAR2(128),
-	public static final String				COLUMN_BUILDING					= "building";
+	public static final String COLUMN_BUILDING = "building";
 	// dimension_x NUMBER(12),
-	public static final String				COLUMN_DIMENSION_X				= "dimension_x";
+	public static final String COLUMN_DIMENSION_X = "dimension_x";
 	// dimension_y NUMBER(12),
-	public static final String				COLUMN_DIMENSION_Y				= "dimension_y";
+	public static final String COLUMN_DIMENSION_Y = "dimension_y";
 	// topLeft NUMBER(1),
-	public static final String				COLUMN_TOPLEFT					= "topLeft";
+	public static final String COLUMN_TOPLEFT = "topLeft";
 	// start_node_id VARCHAR2(32),
-	public static final String				COLUMN_START_NODE_ID			= "start_node_id";
+	public static final String COLUMN_START_NODE_ID = "start_node_id";
 	// end_node_id VARCHAR2(32),
-	public static final String				COLUMN_END_NODE_ID				= "end_node_id";
+	public static final String COLUMN_END_NODE_ID = "end_node_id";
 
-	protected static PhysicalLinkWrapper	instance;
+	protected static PhysicalLinkWrapper instance;
 
-	protected List							keys;
+	protected List<String> keys;
 
 	private PhysicalLinkWrapper() {
 		// empty private constructor
@@ -70,33 +70,33 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		return String.class;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		if (object instanceof PhysicalLink) {
-			PhysicalLink physicalLink = (PhysicalLink) object;
+			final PhysicalLink physicalLink = (PhysicalLink) object;
 			if (key.equals(COLUMN_NAME))
 				return physicalLink.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -117,17 +117,17 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof PhysicalLink) {
-			PhysicalLink physicalLink = (PhysicalLink) object;
+			final PhysicalLink physicalLink = (PhysicalLink) object;
 			if (key.equals(COLUMN_NAME))
 				physicalLink.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.7 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.8 2005/07/26 11:39:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/26 11:39:26 $
  * @author $Author: arseniy $
  * @module map_v1
  */
@@ -25,13 +25,13 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
 	// dimension_x NUMBER(12),
-	public static final String					COLUMN_DIMENSION_X			= "dimension_x";
+	public static final String COLUMN_DIMENSION_X = "dimension_x";
 	// dimension_y NUMBER(12),
-	public static final String					COLUMN_DIMENSION_Y			= "dimension_y";
+	public static final String COLUMN_DIMENSION_Y = "dimension_y";
 
-	protected static PhysicalLinkTypeWrapper	instance;
+	protected static PhysicalLinkTypeWrapper instance;
 
-	protected List								keys;
+	protected List<String> keys;
 
 	private PhysicalLinkTypeWrapper() {
 		// empty private constructor
@@ -51,33 +51,33 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		/* there is no reason rename it */
 		return key;
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		return String.class;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		if (object instanceof PhysicalLinkType) {
-			PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
+			final PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
 				return physicalLinkType.getCodename();
 			else if (key.equals(COLUMN_NAME))
@@ -92,17 +92,17 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof PhysicalLinkType) {
-			PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
+			final PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
 			if (key.equals(COLUMN_CODENAME))
 				physicalLinkType.setCodename((String) value);
 			else if (key.equals(COLUMN_NAME))

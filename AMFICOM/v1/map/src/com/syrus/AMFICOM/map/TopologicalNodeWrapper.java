@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.10 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.11 2005/07/26 11:39:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,28 +15,28 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/17 05:20:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/26 11:39:26 $
  * @author $Author: arseniy $
  * @module map_v1
  */
 public class TopologicalNodeWrapper extends StorableObjectWrapper {
 
-	public static final String				COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
-	public static final String				COLUMN_X					= "x";
-	public static final String				COLUMN_Y					= "y";
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
 	// longitude NUMBER(12,6),
-	public static final String				COLUMN_LONGITUDE			= "longitude";
+	public static final String COLUMN_LONGITUDE = "longitude";
 	// latiude NUMBER(12,6),
-	public static final String				COLUMN_LATIUDE				= "latiude";
+	public static final String COLUMN_LATIUDE = "latiude";
 	// active NUMBER(1),
-	public static final String				COLUMN_ACTIVE				= "active";
+	public static final String COLUMN_ACTIVE = "active";
 
-	protected static TopologicalNodeWrapper	instance;
+	protected static TopologicalNodeWrapper instance;
 
-	protected List							keys;
+	protected List<String> keys;
 
 	private TopologicalNodeWrapper() {
 		// empty private constructor
@@ -52,11 +52,11 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 		return instance;
 	}
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -66,19 +66,19 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		return String.class;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		/* there is no properties */
 		return null;
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		if (object instanceof TopologicalNode) {
-			TopologicalNode topologicalNode = (TopologicalNode) object;
+			final TopologicalNode topologicalNode = (TopologicalNode) object;
 			if (key.equals(COLUMN_NAME))
 				return topologicalNode.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -96,17 +96,17 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof TopologicalNode) {
-			TopologicalNode topologicalNode = (TopologicalNode) object;
+			final TopologicalNode topologicalNode = (TopologicalNode) object;
 			if (key.equals(COLUMN_NAME))
 				topologicalNode.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
