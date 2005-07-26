@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkTypeSort.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: PhysicalLinkTypeSort.java,v 1.4 2005/07/26 10:56:01 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ package com.syrus.AMFICOM.map;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR},
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 10:56:01 $
  * @module map_v1
  */
 public class PhysicalLinkTypeSort {
@@ -46,27 +46,26 @@ public class PhysicalLinkTypeSort {
 	public static final PhysicalLinkTypeSort UNBOUND = new PhysicalLinkTypeSort(_UNBOUND);
 	private String codename;
 
-	PhysicalLinkTypeSort(
-			String codename) {
+	PhysicalLinkTypeSort(final String codename) {
 		this.codename = codename;
 	}
 
 	public String value() {
 		return this.codename;
 	}
-	
-	public static PhysicalLinkTypeSort fromString(String codename) {
-		if(codename.equals(_TUNNEL))
+
+	public static PhysicalLinkTypeSort fromString(final String codename) {
+		if (codename.equals(_TUNNEL))
 			return TUNNEL;
-		if(codename.equals(_COLLECTOR))
+		if (codename.equals(_COLLECTOR))
 			return COLLECTOR;
-		if(codename.equals(_INDOOR))
+		if (codename.equals(_INDOOR))
 			return INDOOR;
-		if(codename.equals(_SUBMARINE))
+		if (codename.equals(_SUBMARINE))
 			return SUBMARINE;
-		if(codename.equals(_OVERHEAD))
+		if (codename.equals(_OVERHEAD))
 			return OVERHEAD;
-		if(codename.equals(_UNBOUND))
+		if (codename.equals(_UNBOUND))
 			return UNBOUND;
 		return null;
 	}
