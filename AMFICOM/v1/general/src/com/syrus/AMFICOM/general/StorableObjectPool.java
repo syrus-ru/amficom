@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.133 2005/07/26 17:00:12 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.134 2005/07/26 17:22:21 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.133 $, $Date: 2005/07/26 17:00:12 $
+ * @version $Revision: 1.134 $, $Date: 2005/07/26 17:22:21 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -782,7 +782,7 @@ public final class StorableObjectPool {
 			Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for entity: '"
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, Log.DEBUGLEVEL08);
 
-			final Set<Identifier> returnedStorableObjectsIds = objectLoader.refresh(StorableObject.createVersionsMap(storableObjects));
+			final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
 			if (returnedStorableObjectsIds.isEmpty())
 				continue;
 
