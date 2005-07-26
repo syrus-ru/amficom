@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.25 2005/07/24 16:08:06 arseniy Exp $
+ * $Id: BitmapImageResource.java,v 1.26 2005/07/26 08:51:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/07/24 16:08:06 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/26 08:51:42 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -55,7 +56,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 
 	BitmapImageResource(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final byte image[]) {
 		super(id,
@@ -71,9 +72,9 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	public static BitmapImageResource createInstance(final Identifier creatorId, final String codename, final byte image[])
 			throws CreateObjectException {
 		try {
-			BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
+			final BitmapImageResource bitmapImageResource = new BitmapImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					codename,
 					image);
 
@@ -120,7 +121,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				imageResourceData);
 	}
 
@@ -139,7 +140,7 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String codename,
 			final byte image[]) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);

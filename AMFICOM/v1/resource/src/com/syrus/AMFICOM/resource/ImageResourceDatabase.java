@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.29 2005/07/24 17:38:34 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.30 2005/07/26 08:51:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,6 +25,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/07/24 17:38:34 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/26 08:51:42 $
  * @module resource_v1
  */
 
@@ -175,8 +175,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		if (sort == ImageResourceSort._BITMAP) {
 			BitmapImageResource bitmapImageResource;
 			if (storableObject == null) {
-				bitmapImageResource = new BitmapImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null, 0L, null, null);
+				bitmapImageResource = new BitmapImageResource(DatabaseIdentifier.getIdentifier(resultSet,
+							StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null);
 			} else {
 				bitmapImageResource = (BitmapImageResource) storableObject;
 			}
@@ -185,7 +185,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				image);
 			
@@ -195,7 +195,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			if (storableObject == null) {
 				fileImageResource = new FileImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 							null,
-							0L,
+							StorableObjectVersion.ILLEGAL_VERSION,
 							null);
 			} else {
 				fileImageResource = (FileImageResource) storableObject;
@@ -204,14 +204,14 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 					DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)));
 			return fileImageResource;
 		} else if (sort == ImageResourceSort._SCHEME) {
 			SchemeImageResource schemeImageResource;
 			if (storableObject == null) {
-				schemeImageResource = new SchemeImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-						null, 0L);
+				schemeImageResource = new SchemeImageResource(DatabaseIdentifier.getIdentifier(resultSet,
+							StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION);
 			} else {
 				schemeImageResource = (SchemeImageResource) storableObject;
 			}
@@ -220,7 +220,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 					image);			
 			return schemeImageResource;
 		}
@@ -284,10 +284,10 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		for(final Iterator it = storableObjects.iterator();it.hasNext();){
-			final AbstractImageResource abstractImageResource = this.fromStorableObject((StorableObject)it.next());
+		for (final StorableObject storableObject : storableObjects) {
+			final AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
 				try {
 					this.updateImage(abstractImageResource);
@@ -300,17 +300,18 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
+		for (final StorableObject storableObject : storableObjects) {
 			AbstractImageResource abstractImageResource;
 			try {
-				abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
+				abstractImageResource = this.fromStorableObject(storableObject);
 			} catch (IllegalDataException e) {
 				throw new UpdateObjectException("ImageResourceDatabase.update | object isn't AbstractImageResource");
 			}
-			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource))
-				updateImage(abstractImageResource);
+			if ((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
+				this.updateImage(abstractImageResource);
+			}
 		}
 		
 	}

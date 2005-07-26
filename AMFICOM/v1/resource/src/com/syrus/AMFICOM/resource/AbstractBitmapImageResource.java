@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.8 2005/06/25 17:07:52 bass Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.9 2005/07/26 08:51:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,12 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/07/26 08:51:42 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -33,7 +34,7 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version) {
+			final StorableObjectVersion version) {
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 

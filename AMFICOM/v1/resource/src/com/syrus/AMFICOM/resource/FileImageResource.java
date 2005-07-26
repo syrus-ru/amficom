@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.26 2005/07/24 16:08:06 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.27 2005/07/26 08:51:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/07/24 16:08:06 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/26 08:51:42 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -52,7 +53,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	FileImageResource(final Identifier id,
 			final Identifier creatorId,
-			final long version,
+			final StorableObjectVersion version,
 			final String fileName) {
 		super(id,
 			new Date(System.currentTimeMillis()),
@@ -65,9 +66,9 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	public static FileImageResource createInstance(final Identifier creatorId, final String fileName) throws CreateObjectException {
 		try {
-			FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
+			final FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					fileName);
 
 			assert fileImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -120,7 +121,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				imageResourceData);
 	}
 
@@ -133,7 +134,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final String fileName) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.fileName = fileName;
