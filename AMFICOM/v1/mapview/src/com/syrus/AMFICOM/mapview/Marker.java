@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.28 2005/07/26 13:14:17 arseniy Exp $
+ * $Id: Marker.java,v 1.29 2005/07/26 13:14:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,13 +49,12 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.28 $, $Date: 2005/07/26 13:14:17 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/26 13:14:43 $
  * @module mapview_v1
  * @author $Author: arseniy $
  */
 
-public class Marker extends AbstractNode
-{
+public class Marker extends AbstractNode {
 	private static final long serialVersionUID = 02L;
 	
 	/**
