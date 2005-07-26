@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.29 2005/07/26 19:39:52 bass Exp $
+ * $Id: LRUMap.java,v 1.30 2005/07/26 20:09:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/26 19:39:52 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/26 20:09:21 $
  * @author $Author: bass $
  * @module util
  */
@@ -24,7 +24,7 @@ public class LRUMap<K, V> implements Serializable {
 
 	public static final int SIZE = 10;
 
-	protected Entry<K, V>[] array;
+	protected Entry<?, ?>[] array;
 
 	protected transient int modCount = 0;
 
@@ -87,7 +87,7 @@ public class LRUMap<K, V> implements Serializable {
 		Entry<K, V> newEntry = new Entry<K, V>(key, value);
 		V ret = null;
 		if (this.array[this.array.length - 1] != null)
-			ret = this.array[this.array.length - 1].value;
+			ret = (V) this.array[this.array.length - 1].value;
 		for (int i = this.array.length - 1; i > 0; i--)
 			this.array[i] = this.array[i - 1];
 		this.array[0] = newEntry;
@@ -100,7 +100,7 @@ public class LRUMap<K, V> implements Serializable {
 			V ret = null;
 			for (int i = 0; i < this.array.length; i++)
 				if (this.array[i] != null && key.equals(this.array[i].key)) {
-					ret = this.array[i].value;
+					ret = (V) this.array[i].value;
 					break;
 				}
 			return ret;
@@ -125,7 +125,7 @@ public class LRUMap<K, V> implements Serializable {
 			for (int i = 0; i < this.array.length; i++) {
 				Entry entry = this.array[i];
 				if ((entry != null) && (entry.key != null) && (key.equals(entry.key))) {
-					ret = this.array[i].value;					
+					ret = (V) this.array[i].value;					
 					for (int j = i; j < this.array.length - 1; j++)
 						this.array[j] = this.array[j + 1];
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
@@ -213,7 +213,7 @@ public class LRUMap<K, V> implements Serializable {
 			
 			try {
 				int modCountPrev = LRUMap.this.modCount;
-				LRUMap.this.remove(LRUMap.this.array[this.lastRet].key);
+				LRUMap.this.remove((K) LRUMap.this.array[this.lastRet].key);
 				LRUMap.this.modCount = modCountPrev;
 				if (this.lastRet < this.cursor)
 					this.cursor--;
