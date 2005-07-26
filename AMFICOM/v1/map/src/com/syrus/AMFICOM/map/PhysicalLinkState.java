@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkState.java,v 1.4 2005/05/18 11:48:20 bass Exp $
+ * $Id: PhysicalLinkState.java,v 1.5 2005/07/26 10:49:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,23 +22,21 @@ import java.util.List;
  *
  *
  *
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/26 10:49:31 $
  * @module map_v1
  */
-public class PhysicalLinkState extends MapElementState
-{
+public class PhysicalLinkState extends MapElementState {
 	public String name;
 
 	public AbstractNode startNode;
 	public AbstractNode endNode;
-	
-	public List nodeLinks = new LinkedList();
+
+	public List<NodeLink> nodeLinks = new LinkedList<NodeLink>();
 	public Identifier mapProtoId;
 	public String description;
 
-	public PhysicalLinkState(PhysicalLink physicalLink)
-	{
+	public PhysicalLinkState(final PhysicalLink physicalLink) {
 		super();
 		this.name = physicalLink.getName();
 		this.startNode = physicalLink.getStartNode();
@@ -49,18 +47,19 @@ public class PhysicalLinkState extends MapElementState
 		this.description = physicalLink.getDescription();
 	}
 
-	public boolean equals(Object object){
-		PhysicalLinkState physicalLinkState = (PhysicalLinkState)object;
+	@Override
+	public boolean equals(final Object object) {
+		final PhysicalLinkState physicalLinkState = (PhysicalLinkState) object;
 		return (this.name.equals(physicalLinkState.name)
-			&& this.startNode.equals(physicalLinkState.startNode)
-			&& this.endNode.equals(physicalLinkState.endNode)
-			&& this.description.equals(physicalLinkState.description)
-			&& this.mapProtoId.equals(physicalLinkState.mapProtoId)
-			&& this.nodeLinks.equals(physicalLinkState.nodeLinks));
+				&& this.startNode.equals(physicalLinkState.startNode)
+				&& this.endNode.equals(physicalLinkState.endNode)
+				&& this.description.equals(physicalLinkState.description)
+				&& this.mapProtoId.equals(physicalLinkState.mapProtoId) && this.nodeLinks.equals(physicalLinkState.nodeLinks));
 	}
-	
+
+	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addObject(this.name);
 		codeGenerator.addObject(this.startNode);
 		codeGenerator.addObject(this.endNode);
