@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.26 2005/07/12 13:55:31 bass Exp $
+ * $Id: Marker.java,v 1.27 2005/07/26 13:13:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,9 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.26 $, $Date: 2005/07/12 13:55:31 $
+ * @version $Revision: 1.27 $, $Date: 2005/07/26 13:13:11 $
  * @module mapview_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
 
 public class Marker extends AbstractNode
@@ -113,19 +113,17 @@ public class Marker extends AbstractNode
 	 * @param monitoredElementId исследуемый объект
 	 * @param dpoint географические координаты меркера
 	 */
-	protected Marker(
-			Identifier id,
-			Identifier creatorId,
-			MapView mapView,
-			AbstractNode startNode,
-			AbstractNode endNode,
-			NodeLink nodeLink,
-			MeasurementPath path,
-			Identifier monitoredElementId,
-			DoublePoint dpoint)
-	{
+	protected Marker(final Identifier id,
+			final Identifier creatorId,
+			final MapView mapView,
+			final AbstractNode startNode,
+			final AbstractNode endNode,
+			final NodeLink nodeLink,
+			final MeasurementPath path,
+			final Identifier monitoredElementId,
+			final DoublePoint dpoint) {
 		this(id, creatorId, mapView, 0.0, path, monitoredElementId, String.valueOf(id.getMinor()));
-		
+
 		this.startNode = startNode;
 		this.endNode = endNode;
 		this.nodeLink = nodeLink;
@@ -134,49 +132,42 @@ public class Marker extends AbstractNode
 
 	/**
 	 * Создание маркера пользователем на карте.
-	 *
-	 * @param creatorId пользователь
-	 * @param mapView вид карты
-	 * @param startNode начальный узел фрагмента
-	 * @param endNode конечный узел фрагмента
-	 * @param nodeLink фрагмент
-	 * @param path измерительный путь
-	 * @param monitoredElementId исследуемый объект
-	 * @param dpoint географические координаты меркера
+	 * 
+	 * @param creatorId
+	 *        пользователь
+	 * @param mapView
+	 *        вид карты
+	 * @param startNode
+	 *        начальный узел фрагмента
+	 * @param endNode
+	 *        конечный узел фрагмента
+	 * @param nodeLink
+	 *        фрагмент
+	 * @param path
+	 *        измерительный путь
+	 * @param monitoredElementId
+	 *        исследуемый объект
+	 * @param dpoint
+	 *        географические координаты меркера
 	 * @return новый маркер
-	 * @throws com.syrus.AMFICOM.general.CreateObjectException нельзя создать
+	 * @throws com.syrus.AMFICOM.general.CreateObjectException
+	 *         нельзя создать
 	 */
-	public static Marker createInstance(
-			Identifier creatorId,
-			MapView mapView,
-			AbstractNode startNode,
-			AbstractNode endNode,
-			NodeLink nodeLink,
-			MeasurementPath path,
-			Identifier monitoredElementId,
-			DoublePoint dpoint)
-		throws CreateObjectException
-	{
-		if (startNode == null || mapView == null || endNode == null
-				|| path == null || dpoint == null)
+	public static Marker createInstance(final Identifier creatorId,
+			final MapView mapView,
+			final AbstractNode startNode,
+			final AbstractNode endNode,
+			final NodeLink nodeLink,
+			final MeasurementPath path,
+			final Identifier monitoredElementId,
+			final DoublePoint dpoint) throws CreateObjectException {
+		if (startNode == null || mapView == null || endNode == null || path == null || dpoint == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try
-		{
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
-			return new Marker(
-				ide,
-				creatorId,
-				mapView,
-				startNode,
-				endNode,
-				nodeLink,
-				path,
-				monitoredElementId,
-				dpoint);
-		} catch (IdentifierGenerationException e)
-		{
+
+		try {
+			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
+			return new Marker(ide, creatorId, mapView, startNode, endNode, nodeLink, path, monitoredElementId, dpoint);
+		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -184,27 +175,32 @@ public class Marker extends AbstractNode
 	/**
 	 * Создание маркера на основе полученного сообщения с указанием оптической
 	 * дистанции.
-	 *
-	 * @param id идентификатор
-	 * @param creatorId пользователь
-	 * @param mapView вид карты
-	 * @param opticalDistance оптическая дистанция от начала пути
-	 * @param path измерительный путь
-	 * @param monitoredElementId идентификатор исследуемого объекта
-	 * @param name название маркера
+	 * 
+	 * @param id
+	 *        идентификатор
+	 * @param creatorId
+	 *        пользователь
+	 * @param mapView
+	 *        вид карты
+	 * @param opticalDistance
+	 *        оптическая дистанция от начала пути
+	 * @param path
+	 *        измерительный путь
+	 * @param monitoredElementId
+	 *        идентификатор исследуемого объекта
+	 * @param name
+	 *        название маркера
 	 */
-	public Marker(
-			Identifier id,
-			Identifier creatorId,
-			MapView mapView,
-			double opticalDistance,
-			MeasurementPath path,
-			Identifier monitoredElementId,
-			String name)
-	{
+	public Marker(final Identifier id,
+			final Identifier creatorId,
+			final MapView mapView,
+			final double opticalDistance,
+			final MeasurementPath path,
+			final Identifier monitoredElementId,
+			final String name) {
 		super(id);
 
-		long time = System.currentTimeMillis();
+		final long time = System.currentTimeMillis();
 		super.created = new Date(time);
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
@@ -223,224 +219,200 @@ public class Marker extends AbstractNode
 	/**
 	 * Создание маркера на основе полученного сообщения с указанием оптической
 	 * дистанции.
-	 *
-	 * @param creatorId пользователь
-	 * @param mapView вид карты
-	 * @param opticalDistance оптическая дистанция от начала пути
-	 * @param path измерительный путь
-	 * @param monitoredElementId идентификатор исследуемого объекта
-	 * @param name название маркера
+	 * 
+	 * @param creatorId
+	 *        пользователь
+	 * @param mapView
+	 *        вид карты
+	 * @param opticalDistance
+	 *        оптическая дистанция от начала пути
+	 * @param path
+	 *        измерительный путь
+	 * @param monitoredElementId
+	 *        идентификатор исследуемого объекта
+	 * @param name
+	 *        название маркера
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 * @return новый маркер
 	 */
-	public static Marker createInstance(
-			Identifier creatorId,
-			MapView mapView,
-			double opticalDistance,
-			MeasurementPath path,
-			Identifier monitoredElementId,
-			String name)
-		throws CreateObjectException
-	{
+	public static Marker createInstance(final Identifier creatorId,
+			final MapView mapView,
+			final double opticalDistance,
+			final MeasurementPath path,
+			final Identifier monitoredElementId,
+			final String name) throws CreateObjectException {
 		if (monitoredElementId == null || mapView == null || path == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try
-		{
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
-			return new Marker(
-				ide,
-				creatorId,
-				mapView,
-				opticalDistance,
-				path,
-				monitoredElementId,
-				name);
-		} catch (IdentifierGenerationException e)
-		{
+
+		try {
+			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
+			return new Marker(ide, creatorId, mapView, opticalDistance, path, monitoredElementId, name);
+		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
 	}
 
 	/**
 	 * Установить идентификатор.
-	 * @param id идентификатор
+	 * 
+	 * @param id
+	 *        идентификатор
 	 */
-	public void setId(Identifier id)
-	{
+	public void setId(final Identifier id) {
 		super.id = id;
 	}
 
 	/**
 	 * Установить вид карты.
-	 * @param mapView вид карты
+	 * 
+	 * @param mapView
+	 *        вид карты
 	 */
-	public void setMapView(MapView mapView)
-	{
+	public void setMapView(final MapView mapView) {
 		this.mapView = mapView;
 	}
-	
+
 	/**
 	 * Получить вид карты.
+	 * 
 	 * @return вид карты
 	 */
-	public MapView getMapView()
-	{
+	public MapView getMapView() {
 		return this.mapView;
 	}
 
-	public double getOpticalDistanceFromStart()
-	{
+	public double getOpticalDistanceFromStart() {
 		return 0.0;
 	}
 
-	public NodeLink previousNodeLink()
-	{
+	public NodeLink previousNodeLink() {
 		NodeLink nLink;
-		int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
-		if(index == 0)
+		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
+		if (index == 0) {
 			nLink = null;
-		else
-			nLink = (NodeLink )(this.measurementPath.getSortedNodeLinks().get(index - 1));
+		}
+		else {
+			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index - 1));
+		}
 		return nLink;
 	}
 
-	public NodeLink nextNodeLink()
-	{
+	public NodeLink nextNodeLink() {
 		NodeLink nLink;
-		int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
-		if(index == this.measurementPath.getSortedNodeLinks().size() - 1)
+		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
+		if (index == this.measurementPath.getSortedNodeLinks().size() - 1) {
 			nLink = null;
-		else
-			nLink = (NodeLink )(this.measurementPath.getSortedNodeLinks().get(index + 1));
+		}
+		else {
+			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index + 1));
+		}
 		return nLink;
 	}
 
-	public SiteNode getLeft()
-	{
-		List nodes = this.cpath.getSortedNodes();
+	public SiteNode getLeft() {
+		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
 		SiteNode previous = null;
-		for (Iterator it = nodes.iterator(); it.hasNext();) {
-			AbstractNode node = (AbstractNode) it.next();
-			if (node instanceof SiteNode)
+		for (final AbstractNode node : nodes) {
+			if (node instanceof SiteNode) {
 				previous = (SiteNode) node;
-			if(node.equals(this.startNode))
+			}
+			if (node.equals(this.startNode)) {
 				break;
+			}
 		}
 		return previous;
 	}
 
-	public SiteNode getRight()
-	{
-		List nodes = this.cpath.getSortedNodes();
+	public SiteNode getRight() {
+		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
 		SiteNode found = null;
-		
-		for (ListIterator it = nodes.listIterator(nodes.size()); it.hasPrevious();) {
-			AbstractNode node = (AbstractNode) it.previous();
-			if (node instanceof SiteNode)
-				found = (SiteNode )node;
-			if(node.equals(this.endNode))
+
+		for (final AbstractNode node : nodes) {
+			if (node instanceof SiteNode) {
+				found = (SiteNode) node;
+			}
+			if (node.equals(this.endNode)) {
 				break;
+			}
 		}
 		return found;
 	}
 
-	public void setMeasurementPath(MeasurementPath measurementPath)
-	{
+	public void setMeasurementPath(final MeasurementPath measurementPath) {
 		this.measurementPath = measurementPath;
 	}
 
-	public MeasurementPath getMeasurementPath()
-	{
+	public MeasurementPath getMeasurementPath() {
 		return this.measurementPath;
 	}
 
-	public void setDescriptor(Object descriptor)
-	{
+	public void setDescriptor(final Object descriptor) {
 		this.descriptor = descriptor;
 	}
 
-	public Object getDescriptor()
-	{
+	public Object getDescriptor() {
 		return this.descriptor;
 	}
 
-	public void setNodeLink(NodeLink nodeLink)
-	{
+	public void setNodeLink(final NodeLink nodeLink) {
 		this.nodeLink = nodeLink;
 	}
 
-	public NodeLink getNodeLink()
-	{
+	public NodeLink getNodeLink() {
 		return this.nodeLink;
 	}
 
-	public void setStartNode(AbstractNode startNode)
-	{
+	public void setStartNode(final AbstractNode startNode) {
 		this.startNode = startNode;
 	}
 
-	public AbstractNode getStartNode()
-	{
+	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 
-	public void setEndNode(AbstractNode endNode)
-	{
+	public void setEndNode(final AbstractNode endNode) {
 		this.endNode = endNode;
 	}
 
-	public AbstractNode getEndNode()
-	{
+	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
 
-	public CablePath getCablePath()
-	{
+	public CablePath getCablePath() {
 		return this.cpath;
 	}
 
-	public void setCablePath(CablePath cpath)
-	{
+	public void setCablePath(final CablePath cpath) {
 		this.cpath = cpath;
 	}
 
-	public void setMeId(Identifier meId)
-	{
+	public void setMeId(final Identifier meId) {
 		this.monitoredElementId = meId;
 	}
 
-	public Identifier getMeId()
-	{
+	public Identifier getMeId() {
 		return this.monitoredElementId;
 	}
 
-	public void setDistance(double distance)
-	{
+	public void setDistance(final double distance) {
 		this.distance = distance;
 	}
 
-	public double getDistance()
-	{
+	public double getDistance() {
 		return this.distance;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
+	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
+	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void revert(MapElementState state)
-	{
+	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -459,28 +431,16 @@ public class Marker extends AbstractNode
 	 * Suppress since this class is not storable
 	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
-	public void insert()
-	{
+	public void insert() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 * {@inheritDoc} Suppress since this class is not storable (unlike
+	 * {@link com.syrus.AMFICOM.general.StorableObject})
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is not storable
-	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
-	 */
-	@Override
-	public IdlStorableObject getHeaderTransferable(final ORB orb) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -494,19 +454,4 @@ public class Marker extends AbstractNode
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(Set)
-	 */
-	public void setCharacteristics(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(Set)
-	 */
-	public void setCharacteristics0(Set characteristics) {
-		throw new UnsupportedOperationException();
-	}
 }
