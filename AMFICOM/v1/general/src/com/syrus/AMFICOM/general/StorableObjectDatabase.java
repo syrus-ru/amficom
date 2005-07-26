@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.168 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.169 2005/07/26 17:18:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.168 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.169 $, $Date: 2005/07/26 17:18:27 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -921,7 +921,7 @@ public abstract class StorableObjectDatabase {
 
 	// ////////////////////refresh /////////////////////////
 
-	public final Set<Identifier> getOlderVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
+	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
 			throws RetrieveObjectException {
 		final Set<Identifier> ids = versionsMap.keySet();
 		final Map<Identifier, StorableObjectVersion> dbVersionsMap = this.retrieveVersions(ids);
