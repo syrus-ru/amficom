@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.3 2005/07/26 18:06:47 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.4 2005/07/26 18:51:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/26 18:06:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 18:51:45 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -30,21 +30,21 @@ public final class XMLObjectLoader implements ObjectLoader {
 	}
 
 
-	public Set loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
 		}
 
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>(ids.size());
+		final Set<T> storableObjects = new HashSet<T>(ids.size());
 		for (final Identifier id : ids) {
-			storableObjects.add(this.soXML.retrieve(id));
+			storableObjects.add((T) this.soXML.retrieve(id));
 		}
 		return storableObjects;
 	}
 
-	public Set loadStorableObjectsButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-			throws ApplicationException {
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
 		return this.soXML.retrieveByCondition(ids, condition);
