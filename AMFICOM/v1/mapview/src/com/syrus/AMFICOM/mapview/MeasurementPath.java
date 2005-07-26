@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.35 2005/07/25 19:48:23 bass Exp $
+ * $Id: MeasurementPath.java,v 1.36 2005/07/26 13:21:04 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.mapview;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +39,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/07/25 19:48:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/07/26 13:21:04 $
  * @module mapviewclient_v1
  */
-public final class MeasurementPath implements MapElement
-{
+public final class MeasurementPath implements MapElement {
 	/**
 	 * Флаг выделения.
 	 */
@@ -105,12 +103,10 @@ public final class MeasurementPath implements MapElement
 	 * @param schemePath схемный путь
 	 * @param mapView вид
 	 */
-	protected MeasurementPath(
-			SchemePath schemePath,
-			AbstractNode stNode,
-			AbstractNode eNode,
-			MapView mapView)
-	{
+	protected MeasurementPath(final SchemePath schemePath,
+			final AbstractNode stNode,
+			final AbstractNode eNode,
+			final MapView mapView) {
 		this.startNode = stNode;
 		this.endNode = eNode;
 		this.mapView = mapView;
@@ -120,65 +116,59 @@ public final class MeasurementPath implements MapElement
 
 	/**
 	 * Сохдать новый элемент пути.
-	 * @param schemePath схемный путь
-	 * @param mapView вид карты
+	 * 
+	 * @param schemePath
+	 *        схемный путь
+	 * @param mapView
+	 *        вид карты
 	 * @return новый элемент пути
 	 */
-	public static MeasurementPath createInstance(
-			SchemePath schemePath,
-			AbstractNode stNode,
-			AbstractNode eNode,
-			MapView mapView)
-	{
+	public static MeasurementPath createInstance(final SchemePath schemePath,
+			final AbstractNode stNode,
+			final AbstractNode eNode,
+			final MapView mapView) {
 		if (mapView == null || stNode == null || eNode == null || schemePath == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		return new MeasurementPath(
-			schemePath,
-			stNode,
-			eNode,
-			mapView);
+
+		return new MeasurementPath(schemePath, stNode, eNode, mapView);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * @throws ApplicationException 
+	 * 
+	 * @throws ApplicationException
 	 */
-	public Set<Characteristic> getCharacteristics() throws ApplicationException
-	{
+	public Set<Characteristic> getCharacteristics() throws ApplicationException {
 		return this.schemePath.getCharacteristics();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Identifier getId()
-	{
+	public Identifier getId() {
 		return this.schemePath.getId();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return this.schemePath.getName();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setName(String name)
-	{
+	public void setName(final String name) {
 		this.schemePath.setName(name);
 	}
 
 	/**
 	 * Получить описание.
+	 * 
 	 * @return описание
 	 */
-	public String getDescription()
-	{
+	public String getDescription() {
 		return this.schemePath.getDescription();
 	}
 
@@ -186,40 +176,35 @@ public final class MeasurementPath implements MapElement
 	 * Установить описание.
 	 * @param description описание
 	 */
-	public void setDescription(String description)
-	{
+	public void setDescription(final String description) {
 		this.schemePath.setDescription(description);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelected()
-	{
+	public boolean isSelected() {
 		return this.selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected)
-	{
+	public void setSelected(final boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState)
-	{
+	public void setAlarmState(final boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean getAlarmState()
-	{
+	public boolean getAlarmState() {
 		return this.alarmState;
 	}
 
@@ -228,22 +213,19 @@ public final class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public DoublePoint getLocation()
-	{
+	public DoublePoint getLocation() {
 		int count = 0;
 		double x = 0.0D;
 		double y = 0.0D;
 
-		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
-		{
-			CablePath cpath = (CablePath)it.next();
-			DoublePoint an = cpath.getLocation();
+		for (final CablePath cablePath : this.getCablePaths()) {
+			final DoublePoint an = cablePath.getLocation();
 			x += an.getX();
 			y += an.getY();
 			count++;
 		}
 		this.location.setLocation(x /= count, y /= count);
-		
+
 		return this.location;
 	}
 
@@ -251,16 +233,14 @@ public final class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRemoved()
-	{
+	public boolean isRemoved() {
 		return this.removed;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed)
-	{
+	public void setRemoved(final boolean removed) {
 		this.removed = removed;
 	}
 
@@ -268,55 +248,55 @@ public final class MeasurementPath implements MapElement
 	 * Get this.endNode.
 	 * @return this.endNode
 	 */
-	public AbstractNode getEndNode()
-	{
+	public AbstractNode getEndNode() {
 		return this.endNode;
-//		return getMapView().getEndNode(this.getSchemePath());
+		// return getMapView().getEndNode(this.getSchemePath());
 	}
-	
+
 	/**
 	 * Set {@link #endNode}.
-	 * @param endNode new endNode
+	 * 
+	 * @param endNode
+	 *        new endNode
 	 */
-	public void setEndNode(AbstractNode endNode)
-	{
+	public void setEndNode(final AbstractNode endNode) {
 		this.endNode = endNode;
 	}
-	
+
 	/**
 	 * Get {@link #startNode}.
+	 * 
 	 * @return this.startNode
 	 */
-	public AbstractNode getStartNode()
-	{
+	public AbstractNode getStartNode() {
 		return this.startNode;
-//		return getMapView().getStartNode(this.getSchemePath());
+		// return getMapView().getStartNode(this.getSchemePath());
 	}
 	
 	/**
 	 * Set {@link #startNode}.
 	 * @param startNode new startNode
 	 */
-	public void setStartNode(AbstractNode startNode)
-	{
+	public void setStartNode(final AbstractNode startNode) {
 		this.startNode = startNode;
 	}
-	
+
 	/**
 	 * Установить схемный путь.
-	 * @param schemePath схемный путь.
+	 * 
+	 * @param schemePath
+	 *        схемный путь.
 	 */
-	public void setSchemePath(SchemePath schemePath)
-	{
+	public void setSchemePath(final SchemePath schemePath) {
 		this.schemePath = schemePath;
 	}
 
 	/**
 	 * получить схемный путь.
+	 * 
 	 * @return схемный путь
 	 */
-	public SchemePath getSchemePath()
-	{
+	public SchemePath getSchemePath() {
 		return this.schemePath;
 	}
 
@@ -324,42 +304,38 @@ public final class MeasurementPath implements MapElement
 	 * @deprecated
 	 */
 	@Deprecated
-	public boolean isSelectionVisible()
-	{
+	public boolean isSelectionVisible() {
 		return isSelected();
 	}
 
 	/**
 	 * Возвращает топологическую длинну в метрах
+	 * 
 	 * @return топологическая длина
 	 */
-	public double getLengthLt()
-	{
+	public double getLengthLt() {
 		double length = 0;
-		Iterator e = getSortedCablePaths().iterator();
-		while( e.hasNext())
-		{
-			CablePath cpath = (CablePath)e.next();
-			length = length + cpath.getLengthLt();
+		for (final CablePath cablePath : this.getSortedCablePaths()) {
+			length = length + cablePath.getLengthLt();
 		}
 		return length;
 	}
 
 	/**
 	 * Возвращает физическую длину в метрах.
+	 * 
 	 * @return физическая длина
 	 */
-	public double getLengthLf()
-	{
+	public double getLengthLf() {
 		return SchemeUtils.getPhysicalLength(this.schemePath);
 	}
 
 	/**
 	 * Возвращает оптическую длину в метрах.
+	 * 
 	 * @return оптическая длина
 	 */
-	public double getLengthLo()
-	{
+	public double getLengthLo() {
 		return SchemeUtils.getOpticalLength(this.schemePath);
 	}
 
@@ -423,63 +399,57 @@ public final class MeasurementPath implements MapElement
 	 * Get {@link #sortedNodeLinks}.
 	 * @return this.sortedNodeLinks
 	 */
-	public List getSortedNodeLinks()
-	{
+	public List getSortedNodeLinks() {
 		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
-	
+
 	/**
 	 * Get {@link #sortedNodes}.
+	 * 
 	 * @return this.sortedNodes
 	 */
-	public List getSortedNodes()
-	{
+	public List getSortedNodes() {
 		return Collections.unmodifiableList(this.sortedNodes);
 	}
-	
+
 	/**
 	 * Get {@link #sortedCablePaths}.
+	 * 
 	 * @return this.sortedCablePaths
 	 */
-	public List<CablePath> getSortedCablePaths()
-	{
+	public List<CablePath> getSortedCablePaths() {
 		return Collections.unmodifiableList(this.sortedCablePaths);
 	}
 	
 	/**
-	 * Сортировать элементы пути. Включает сортировку кабельных путей,
-	 * фрагментов линий и узлов.
+	 * Сортировать элементы пути. Включает сортировку кабельных путей, фрагментов
+	 * линий и узлов.
 	 */
-	public void sortPathElements()
-	{
+	public void sortPathElements() {
 		this.sortedCablePaths.clear();
 		this.sortedNodeLinks.clear();
 		this.sortedNodes.clear();
-		
+
 		AbstractNode node = getStartNode();
 
 		this.sortedCablePaths.addAll(getCablePaths());
-		
-		for(Iterator it = this.sortedCablePaths.iterator(); it.hasNext();)
-		{
-			CablePath cpath = (CablePath)it.next();
-			cpath.sortNodeLinks();
-			if(cpath.getStartNode().equals(node))
-			{
-				this.sortedNodeLinks.addAll(cpath.getSortedNodeLinks());
-				this.sortedNodes.addAll(cpath.getSortedNodes());
-			} else
-			{
-				final List<NodeLink> reversedSortedNodeLinks = new ArrayList<NodeLink>(cpath.getSortedNodeLinks());
+
+		for (final CablePath cablePath : this.sortedCablePaths) {
+			cablePath.sortNodeLinks();
+			if (cablePath.getStartNode().equals(node)) {
+				this.sortedNodeLinks.addAll(cablePath.getSortedNodeLinks());
+				this.sortedNodes.addAll(cablePath.getSortedNodes());
+			} else {
+				final List<NodeLink> reversedSortedNodeLinks = new ArrayList<NodeLink>(cablePath.getSortedNodeLinks());
 				Collections.reverse(reversedSortedNodeLinks);
 				for (int i = 0; i < reversedSortedNodeLinks.size(); i++)
 					this.sortedNodeLinks.add(reversedSortedNodeLinks.get(i));
-				final List<AbstractNode> reversedSortedNodes = new ArrayList<AbstractNode>(cpath.getSortedNodes());
+				final List<AbstractNode> reversedSortedNodes = new ArrayList<AbstractNode>(cablePath.getSortedNodes());
 				Collections.reverse(reversedSortedNodes);
 				for (int i = 0; i < reversedSortedNodes.size(); i++)
 					this.sortedNodes.add(reversedSortedNodes.get(i));
 			}
-			node = cpath.getOtherNode(node);
+			node = cablePath.getOtherNode(node);
 
 			// to avoid duplicate entry
 			this.sortedNodes.remove(node);
@@ -489,17 +459,18 @@ public final class MeasurementPath implements MapElement
 
 	/**
 	 * Получить следующий фрагмент по цепочке сортированных фрагментов.
-	 * @param nodeLink фрагмент
-	 * @return следующий фрагмент, или <code>null</code>, если nl - последний
-	 * в списке
+	 * 
+	 * @param nodeLink
+	 *        фрагмент
+	 * @return следующий фрагмент, или <code>null</code>, если nl - последний в
+	 *         списке
 	 */
-	public NodeLink nextNodeLink(NodeLink nodeLink)
-	{
-		int index = getSortedNodeLinks().indexOf(nodeLink);
-		if(index == getSortedNodeLinks().size() - 1)
+	public NodeLink nextNodeLink(final NodeLink nodeLink) {
+		final int index = getSortedNodeLinks().indexOf(nodeLink);
+		if (index == getSortedNodeLinks().size() - 1)
 			return null;
 
-		return (NodeLink)getSortedNodeLinks().get(index + 1);
+		return (NodeLink) getSortedNodeLinks().get(index + 1);
 	}
 
 	/**
@@ -508,21 +479,18 @@ public final class MeasurementPath implements MapElement
 	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый
 	 * в списке
 	 */
-	public NodeLink previousNodeLink(NodeLink nodeLink)
-	{
+	public NodeLink previousNodeLink(final NodeLink nodeLink) {
 		int index = getSortedNodeLinks().indexOf(nodeLink);
-		if(index == 0)
+		if (index == 0)
 			return null;
 
-		return (NodeLink)getSortedNodeLinks().get(index - 1);
+		return (NodeLink) getSortedNodeLinks().get(index - 1);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
+	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -530,8 +498,7 @@ public final class MeasurementPath implements MapElement
 	 * {@inheritDoc}
 	 * Suppress since this class is transient
 	 */
-	public void revert(MapElementState state)
-	{
+	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException();
 	}
 

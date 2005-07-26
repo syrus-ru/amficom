@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.15 2005/07/17 05:20:55 arseniy Exp $
+ * $Id: Selection.java,v 1.16 2005/07/26 13:25:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mapview;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
  * Набор выбранных элементов.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/07/17 05:20:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/26 13:25:11 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -87,14 +86,14 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed) {
+	public void setRemoved(final boolean removed) {
 		// cannot be removed
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setAlarmState(boolean alarmState) {
+	public void setAlarmState(final boolean alarmState) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,8 +109,8 @@ public final class Selection implements MapElement {
 	 */
 	public void clear() {
 		this.elements.clear();
-		recalcLocation();
-		recalcType();
+		this.recalcLocation();
+		this.recalcType();
 	}
 
 	/**
@@ -119,10 +118,10 @@ public final class Selection implements MapElement {
 	 *
 	 * @param mapElement элемент карты
 	 */
-	public void add(MapElement mapElement) {
+	public void add(final MapElement mapElement) {
 		this.elements.add(mapElement);
-		recalcLocation();
-		recalcType();
+		this.recalcLocation();
+		this.recalcType();
 	}
 
 	/**
@@ -130,10 +129,10 @@ public final class Selection implements MapElement {
 	 *
 	 * @param coll набор элементов
 	 */
-	public void addAll(Set<MapElement> coll) {
+	public void addAll(final Set<MapElement> coll) {
 		this.elements.addAll(coll);
-		recalcLocation();
-		recalcType();
+		this.recalcLocation();
+		this.recalcType();
 	}
 
 	/**
@@ -141,10 +140,10 @@ public final class Selection implements MapElement {
 	 *
 	 * @param mapElement элемент карты
 	 */
-	public void remove(MapElement mapElement) {
+	public void remove(final MapElement mapElement) {
 		this.elements.remove(mapElement);
-		recalcLocation();
-		recalcType();
+		this.recalcLocation();
+		this.recalcType();
 	}
 
 	/**
@@ -158,13 +157,10 @@ public final class Selection implements MapElement {
 	 * Пересчитать ГМТ центров выделенных элементов.
 	 */
 	protected void recalcLocation() {
-		MapElement me;
 		double x = 0.0D;
 		double y = 0.0D;
-		for(Iterator it = this.elements.iterator(); it.hasNext();) {
-			me = (MapElement )it.next();
-			DoublePoint pt = me.getLocation();
-
+		for (final MapElement mapElement : this.elements) {
+			final DoublePoint pt = mapElement.getLocation();
 			x += pt.getX();
 			y += pt.getY();
 		}
@@ -185,27 +181,25 @@ public final class Selection implements MapElement {
 		this.unboundSelection = true;
 		this.physicalLinkSelection = true;
 
-		for(Iterator it = this.elements.iterator(); it.hasNext();) {
-			MapElement me = (MapElement )it.next();
-			if(!(me instanceof TopologicalNode))
+		for (final MapElement mapElement : this.elements) {
+			if(!(mapElement instanceof TopologicalNode))
 				this.physicalNodeSelection = false;
-			if(!(me instanceof UnboundNode))
+			if(!(mapElement instanceof UnboundNode))
 				this.unboundNodeSelection = false;
-			if(!(me instanceof UnboundLink))
+			if(!(mapElement instanceof UnboundLink))
 				this.unboundLinkSelection = false;
-			if(!(me instanceof CablePath))
+			if(!(mapElement instanceof CablePath))
 				this.unboundCableSelection = false;
-			if(!(me instanceof UnboundNode) && !(me instanceof UnboundLink)
-					&& !(me instanceof CablePath))
+			if(!(mapElement instanceof UnboundNode) && !(mapElement instanceof UnboundLink)
+					&& !(mapElement instanceof CablePath))
 				this.unboundSelection = false;
-			if(!(me instanceof PhysicalLink))
+			if(!(mapElement instanceof PhysicalLink))
 				this.physicalLinkSelection = false;
 		}
 	}
 
-	public void setLocation(DoublePoint aLocation) {
-		throw new UnsupportedOperationException(
-				"Cannot set location to selection");
+	public void setLocation(final DoublePoint aLocation) {
+		throw new UnsupportedOperationException("Cannot set location to selection");
 	}
 
 	/**
@@ -225,7 +219,7 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc} cannnot be selected
 	 */
-	public void setSelected(boolean selected) {
+	public void setSelected(final boolean selected) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -246,7 +240,7 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -264,7 +258,7 @@ public final class Selection implements MapElement {
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void revert(MapElementState state) {
+	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException();
 	}
 
