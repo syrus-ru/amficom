@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.42 2005/07/26 17:31:20 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.43 2005/07/26 17:39:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,9 +27,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/07/26 17:31:20 $
+ * @version $Revision: 1.43 $, $Date: 2005/07/26 17:39:34 $
  * @author $Author: arseniy $
- * @module csbridge_v1
+ * @module csbridge
  */
 public class CORBAObjectLoader implements ObjectLoader {
 	protected ServerConnectionManager serverConnectionManager;
