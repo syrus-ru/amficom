@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.60 2005/07/26 12:02:56 bass Exp $
+ * $Id: SchemePath.java,v 1.61 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,6 +53,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
@@ -62,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/07/26 12:02:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -104,10 +105,14 @@ public final class SchemePath extends StorableObject
 	 * @param transmissionPath
 	 * @param parentSchemeMonitoringSolution
 	 */
-	SchemePath(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	SchemePath(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final TransmissionPath transmissionPath,
 			final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
 		super(id, created, modified, creatorId, modifierId, version);
@@ -151,27 +156,30 @@ public final class SchemePath extends StorableObject
 	 * @throws CreateObjectException
 	 */
 	public static SchemePath createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final TransmissionPath transmissionPath,
-			final SchemeMonitoringSolution parentSchemeMonitoringSolution)
-	throws CreateObjectException {
+			final SchemeMonitoringSolution parentSchemeMonitoringSolution) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolution != null : NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final SchemePath schemePath = new SchemePath(
-					IdentifierPool.getGeneratedIdentifier(SCHEMEPATH_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description,
+			final SchemePath schemePath = new SchemePath(IdentifierPool.getGeneratedIdentifier(SCHEMEPATH_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
 					transmissionPath,
 					parentSchemeMonitoringSolution);
 			schemePath.markAsChanged();
 			return schemePath;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemePath.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemePath.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -283,7 +291,8 @@ public final class SchemePath extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.name,
+				this.version.longValue(),
+				this.name,
 				this.description,
 				this.transmissionPathId.getTransferable(),
 				this.parentSchemeMonitoringSolutionId.getTransferable());
@@ -334,16 +343,19 @@ public final class SchemePath extends StorableObject
 	 * @param parentSchemeMonitoringSolutionId
 	 */
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final Identifier transmissionPathId,
 			final Identifier parentSchemeMonitoringSolutionId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert transmissionPathId != null: NON_NULL_EXPECTED;
+
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert transmissionPathId != null : NON_NULL_EXPECTED;
 		assert parentSchemeMonitoringSolutionId != null && !parentSchemeMonitoringSolutionId.isVoid() : NON_NULL_EXPECTED;
 
 		this.name = name;

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.42 2005/07/26 12:03:49 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.43 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,14 +44,15 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/07/26 12:03:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -105,12 +106,17 @@ public abstract class AbstractSchemePort
 	 * @param measurementPort
 	 * @param parentSchemeDevice
 	 */
-	AbstractSchemePort(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	AbstractSchemePort(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final IdlDirectionType directionType,
-			final PortType portType, final Port port,
+			final PortType portType,
+			final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
 		super(id, created, modified, creatorId, modifierId, version);
@@ -285,25 +291,29 @@ public abstract class AbstractSchemePort
 	 * @param parentSchemeDeviceId
 	 */
 	final synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final IdlDirectionType directionType,
-			final Identifier portTypeId, final Identifier portId,
+			final Identifier portTypeId,
+			final Identifier portId,
 			final Identifier measurementPortId,
 			final Identifier parentSchemeDeviceId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert directionType != null: NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert directionType != null : NON_NULL_EXPECTED;
 
-		assert portTypeId != null: NON_NULL_EXPECTED;
-		assert portId != null: NON_NULL_EXPECTED;
+		assert portTypeId != null : NON_NULL_EXPECTED;
+		assert portId != null : NON_NULL_EXPECTED;
 		assert portTypeId.isVoid() ^ portId.isVoid();
 
-		assert measurementPortId != null: NON_NULL_EXPECTED;
-		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid(): NON_VOID_EXPECTED;
+		assert measurementPortId != null : NON_NULL_EXPECTED;
+		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid() : NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;

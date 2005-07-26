@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.35 2005/07/26 12:03:49 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.36 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,6 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
@@ -42,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/07/26 12:03:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -80,10 +81,14 @@ public abstract class AbstractSchemeElement
 	 * @param description
 	 * @param parentScheme
 	 */
-	AbstractSchemeElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	AbstractSchemeElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
@@ -230,10 +235,14 @@ public abstract class AbstractSchemeElement
 		this.parentSchemeId = new Identifier(parentSchemeId1);
 	}
 
-	final synchronized void setAttributes(final Date created, final Date modified,
+	final synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description, final Identifier parentSchemeId) {
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
 		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;

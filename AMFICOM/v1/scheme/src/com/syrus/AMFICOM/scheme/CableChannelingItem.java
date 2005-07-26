@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.46 2005/07/26 12:01:53 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.47 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -51,8 +52,8 @@ import com.syrus.util.Log;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/26 12:01:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -110,11 +111,16 @@ public final class CableChannelingItem
 	 * @param endSiteNode
 	 * @param parentSchemeCableLink
 	 */
-	CableChannelingItem(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final double startSpare, final double endSpare,
-			final int rowX, final int placeY,
+	CableChannelingItem(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final double startSpare,
+			final double endSpare,
+			final int rowX,
+			final int placeY,
 			final int sequentialNumber,
 			final PhysicalLink physicalLink,
 			final SiteNode startSiteNode,
@@ -150,15 +156,11 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	public static CableChannelingItem createInstance(
-			final Identifier creatorId,
+	public static CableChannelingItem createInstance(final Identifier creatorId,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
-			final SchemeCableLink parentSchemeCableLink)
-			throws CreateObjectException {
-		return createInstance(creatorId, 0, 0, 0, 0, null,
-				startSiteNode, endSiteNode,
-				parentSchemeCableLink);
+			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+		return createInstance(creatorId, 0, 0, 0, 0, null, startSiteNode, endSiteNode, parentSchemeCableLink);
 	}
 
 	/**
@@ -173,18 +175,19 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	public static CableChannelingItem createInstance(
-			final Identifier creatorId, final double startSpare,
-			final double endSpare, final int rowX,
-			final int placeY, final PhysicalLink physicalLink,
+	public static CableChannelingItem createInstance(final Identifier creatorId,
+			final double startSpare,
+			final double endSpare,
+			final int rowX,
+			final int placeY,
+			final PhysicalLink physicalLink,
 			final SiteNode startSiteNode,
 			final SiteNode endSiteNode,
-			final SchemeCableLink parentSchemeCableLink)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert startSiteNode != null: NON_NULL_EXPECTED;
-		assert endSiteNode != null: NON_NULL_EXPECTED;
-		assert parentSchemeCableLink != null: NON_NULL_EXPECTED;
+			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert startSiteNode != null : NON_NULL_EXPECTED;
+		assert endSiteNode != null : NON_NULL_EXPECTED;
+		assert parentSchemeCableLink != null : NON_NULL_EXPECTED;
 		
 		try {
 			final Date created = new Date();
@@ -193,12 +196,20 @@ public final class CableChannelingItem
 			 * yet put to the pool.
 			 */
 			final int sequentialNumber = parentSchemeCableLink.getPathMembers().size();
-			final CableChannelingItem cableChannelingItem = new CableChannelingItem(
-					IdentifierPool.getGeneratedIdentifier(CABLECHANNELINGITEM_CODE),
-					created, created, creatorId, creatorId,
-					0L, startSpare, endSpare, rowX, placeY,
-					sequentialNumber, physicalLink,
-					startSiteNode, endSiteNode,
+			final CableChannelingItem cableChannelingItem = new CableChannelingItem(IdentifierPool.getGeneratedIdentifier(CABLECHANNELINGITEM_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					startSpare,
+					endSpare,
+					rowX,
+					placeY,
+					sequentialNumber,
+					physicalLink,
+					startSiteNode,
+					endSiteNode,
 					parentSchemeCableLink);
 			cableChannelingItem.markAsChanged();
 			return cableChannelingItem;
@@ -348,8 +359,11 @@ public final class CableChannelingItem
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.startSpare,
-				this.endSpare, this.rowX, this.placeY,
+				this.version.longValue(),
+				this.startSpare,
+				this.endSpare,
+				this.rowX,
+				this.placeY,
 				this.sequentialNumber,
 				this.physicalLinkId.getTransferable(),
 				this.startSiteNodeId.getTransferable(),
@@ -374,10 +388,14 @@ public final class CableChannelingItem
 	 * @param parentSchemeCableLinkId
 	 */
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final double startSpare, final double endSpare,
-			final int rowX, final int placeY,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final double startSpare,
+			final double endSpare,
+			final int rowX,
+			final int placeY,
 			final int sequentialNumber,
 			final Identifier physicalLinkId,
 			final Identifier startSiteNodeId,

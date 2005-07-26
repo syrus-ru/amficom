@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.15 2005/07/24 17:54:41 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.16 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.database.DatabaseDate;
@@ -26,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/24 17:54:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeCablePortDatabase extends StorableObjectDatabase {
@@ -132,7 +133,18 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date();
 			schemeCablePort = new SchemeCablePort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null, null, null, null);
+					created,
+					created,
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null);
 		} else {
 			schemeCablePort = fromStorableObject(storableObject);
 		}
@@ -140,7 +152,7 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				IdlDirectionType.from_int(resultSet.getInt(SchemeCablePortWrapper.COLUMN_DIRECTION_TYPE)),

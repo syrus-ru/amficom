@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.49 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeLink.java,v 1.50 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,6 +53,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
@@ -62,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -110,28 +111,42 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @param parentSchemeElement
 	 * @param parentSchemeProtoElement
 	 */
-	SchemeLink(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	SchemeLink(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
-			final double opticalLength, final LinkType linkType,
-			final Link link, final SiteNode siteNode,
+			final double opticalLength,
+			final LinkType linkType,
+			final Link link,
+			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
 			final Scheme parentScheme,
 			final SchemeElement parentSchemeElement,
 			final SchemeProtoElement parentSchemeProtoElement) {
-		super(id, created, modified, creatorId, modifierId, version,
-				name, description, physicalLength,
-				opticalLength, linkType, link,
-				sourceSchemePort, targetSchemePort,
+		super(id,
+				created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				name,
+				description,
+				physicalLength,
+				opticalLength,
+				linkType,
+				link,
+				sourceSchemePort,
+				targetSchemePort,
 				parentScheme);
 		this.siteNodeId = Identifier.possiblyVoid(siteNode);
 
-		assert (parentScheme == null ? 0 : 1)
-				+ (parentSchemeElement == null ? 0 : 1)
-				+ (parentSchemeProtoElement == null ? 0 : 1) <= 1: EXACTLY_ONE_PARENT_REQUIRED;
+		assert (parentScheme == null ? 0 : 1) + (parentSchemeElement == null ? 0 : 1) + (parentSchemeProtoElement == null ? 0 : 1) <= 1 : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 	}
@@ -225,34 +240,45 @@ public final class SchemeLink extends AbstractSchemeLink {
          * @throws CreateObjectException
          */
 	public static SchemeLink createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final double physicalLength,
-			final double opticalLength, final LinkType linkType,
-			final Link link, final SiteNode siteNode,
+			final double opticalLength,
+			final LinkType linkType,
+			final Link link,
+			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
-			final SchemePort targetSchemePort)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
+			final SchemePort targetSchemePort) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeLink schemeLink = new SchemeLink(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMELINK_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, physicalLength,
-					opticalLength, linkType, link,
-					siteNode, sourceSchemePort,
-					targetSchemePort, null, null, null);
+			final SchemeLink schemeLink = new SchemeLink(IdentifierPool.getGeneratedIdentifier(SCHEMELINK_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					physicalLength,
+					opticalLength,
+					linkType,
+					link,
+					siteNode,
+					sourceSchemePort,
+					targetSchemePort,
+					null,
+					null,
+					null);
 			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -271,37 +297,47 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	public static SchemeLink createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final double physicalLength,
-			final double opticalLength, final LinkType linkType,
-			final Link link, final SiteNode siteNode,
+			final double opticalLength,
+			final LinkType linkType,
+			final Link link,
+			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final Scheme parentScheme)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentScheme != null: NON_NULL_EXPECTED;
+			final Scheme parentScheme) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeLink schemeLink = new SchemeLink(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMELINK_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, physicalLength,
-					opticalLength, linkType, link,
-					siteNode, sourceSchemePort,
-					targetSchemePort, parentScheme, null,
+			final SchemeLink schemeLink = new SchemeLink(IdentifierPool.getGeneratedIdentifier(SCHEMELINK_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					physicalLength,
+					opticalLength,
+					linkType,
+					link,
+					siteNode,
+					sourceSchemePort,
+					targetSchemePort,
+					parentScheme,
+					null,
 					null);
 			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -320,37 +356,47 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	public static SchemeLink createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final double physicalLength,
-			final double opticalLength, final LinkType linkType,
-			final Link link, final SiteNode siteNode,
+			final double opticalLength,
+			final LinkType linkType,
+			final Link link,
+			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeElement parentSchemeElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeElement != null: NON_NULL_EXPECTED;
+			final SchemeElement parentSchemeElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeLink schemeLink = new SchemeLink(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMELINK_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, physicalLength,
-					opticalLength, linkType, link,
-					siteNode, sourceSchemePort,
-					targetSchemePort, null, parentSchemeElement,
+			final SchemeLink schemeLink = new SchemeLink(IdentifierPool.getGeneratedIdentifier(SCHEMELINK_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					physicalLength,
+					opticalLength,
+					linkType,
+					link,
+					siteNode,
+					sourceSchemePort,
+					targetSchemePort,
+					null,
+					parentSchemeElement,
 					null);
 			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -369,37 +415,47 @@ public final class SchemeLink extends AbstractSchemeLink {
 	 * @throws CreateObjectException
 	 */
 	public static SchemeLink createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final double physicalLength,
-			final double opticalLength, final LinkType linkType,
-			final Link link, final SiteNode siteNode,
+			final double opticalLength,
+			final LinkType linkType,
+			final Link link,
+			final SiteNode siteNode,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeProtoElement parentSchemeProtoElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElement != null: NON_NULL_EXPECTED;
+			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeLink schemeLink = new SchemeLink(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMELINK_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, physicalLength,
-					opticalLength, linkType, link,
-					siteNode, sourceSchemePort,
-					targetSchemePort, null, null,
+			final SchemeLink schemeLink = new SchemeLink(IdentifierPool.getGeneratedIdentifier(SCHEMELINK_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					physicalLength,
+					opticalLength,
+					linkType,
+					link,
+					siteNode,
+					sourceSchemePort,
+					targetSchemePort,
+					null,
+					null,
 					parentSchemeProtoElement);
 			schemeLink.markAsChanged();
 			if (link != null || linkType != null)
 				schemeLink.abstractLinkTypeSet = true;
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeLink.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -616,7 +672,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, super.getName(),
+				this.version.longValue(),
+				super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
@@ -631,28 +688,41 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
 			final double opticalLength,
 			final Identifier linkTypeId,
-			final Identifier linkId, final Identifier siteNodeId,
+			final Identifier linkId,
+			final Identifier siteNodeId,
 			final Identifier sourceSchemePortId,
 			final Identifier targetSchemePortId,
 			final Identifier parentSchemeId,
 			final Identifier parentSchemeElementId,
 			final Identifier parentSchemeProtoElementId) {
-		super.setAttributes(created, modified, creatorId, modifierId,
-				version, name, description, physicalLength,
-				opticalLength, linkTypeId, linkId,
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				name,
+				description,
+				physicalLength,
+				opticalLength,
+				linkTypeId,
+				linkId,
 				sourceSchemePortId,
-				targetSchemePortId, parentSchemeId);
+				targetSchemePortId,
+				parentSchemeId);
 
-		assert siteNodeId != null: NON_NULL_EXPECTED;
+		assert siteNodeId != null : NON_NULL_EXPECTED;
 
-		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null: NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
 		assert (parentSchemeId.isVoid() ? 0 : 1)
 				+ (parentSchemeElementId.isVoid() ? 0 : 1)
 				+ (parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.56 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeElement.java,v 1.57 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -67,8 +68,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -136,19 +137,25 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentScheme
 	 * @param parentSchemeElement
 	 */
-	SchemeElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final String label, final EquipmentType equipmentType,
-			final Equipment equipment, final KIS kis,
-			final SiteNode siteNode, final BitmapImageResource symbol,
+	SchemeElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final String label,
+			final EquipmentType equipmentType,
+			final Equipment equipment,
+			final KIS kis,
+			final SiteNode siteNode,
+			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
 			final Scheme parentScheme,
 			final SchemeElement parentSchemeElement) {
-		super(id, created, modified, creatorId, modifierId, version,
-				name, description, parentScheme);
+		super(id, created, modified, creatorId, modifierId, version, name, description, parentScheme);
 		this.label = label;
 
 		assert equipmentType == null || equipment == null;
@@ -161,7 +168,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
-		assert parentScheme == null || parentSchemeElement == null: EXACTLY_ONE_PARENT_REQUIRED;
+		assert parentScheme == null || parentSchemeElement == null : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 	}
 
@@ -221,8 +228,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	public static SchemeElement createInstance(final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final Equipment equipment,
 			final KIS kis,
@@ -230,28 +239,39 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final Scheme parentScheme)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert parentScheme != null: NON_NULL_EXPECTED;
+			final Scheme parentScheme) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeElement schemeElement = new SchemeElement(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, parentScheme, null);
+			final SchemeElement schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					label,
+					equipmentType,
+					equipment,
+					kis,
+					siteNode,
+					symbol,
+					ugoCell,
+					schemeCell,
+					parentScheme,
+					null);
 			schemeElement.markAsChanged();
 			if (equipment != null || equipmentType != null)
 				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -271,35 +291,49 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @throws CreateObjectException
 	 */
 	public static SchemeElement createInstance(final Identifier creatorId,
-			final String name, final String description,
-			final String label, final EquipmentType equipmentType,
-			final Equipment equipment, final KIS kis,
+			final String name,
+			final String description,
+			final String label,
+			final EquipmentType equipmentType,
+			final Equipment equipment,
+			final KIS kis,
 			final SiteNode siteNode,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeElement parentSchemeElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert parentSchemeElement != null: NON_NULL_EXPECTED;
+			final SchemeElement parentSchemeElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
+		assert parentSchemeElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeElement schemeElement = new SchemeElement(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label, equipmentType, equipment, kis, siteNode, symbol, ugoCell, schemeCell, null, parentSchemeElement);
+			final SchemeElement schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					label,
+					equipmentType,
+					equipment,
+					kis,
+					siteNode,
+					symbol,
+					ugoCell,
+					schemeCell,
+					null,
+					parentSchemeElement);
 			schemeElement.markAsChanged();
 			if (equipment != null || equipmentType != null)
 				schemeElement.equipmentTypeSet = true;
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeElement.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -618,7 +652,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				super.getName(),
 				super.getDescription(),
 				this.label,
@@ -720,34 +754,40 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @param parentSchemeId
 	 * @param parentSchemeElementId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final String label, final Identifier equipmentTypeId,
-			final Identifier equipmentId, final Identifier kisId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final String label,
+			final Identifier equipmentTypeId,
+			final Identifier equipmentId,
+			final Identifier kisId,
 			final Identifier siteNodeId,
-			final Identifier symbolId, final Identifier ugoCellId,
+			final Identifier symbolId,
+			final Identifier ugoCellId,
 			final Identifier schemeCellId,
 			final Identifier parentSchemeId,
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
 
-		assert label != null: NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
 
-		assert equipmentTypeId != null: NON_NULL_EXPECTED;
-		assert equipmentId != null: NON_NULL_EXPECTED;
+		assert equipmentTypeId != null : NON_NULL_EXPECTED;
+		assert equipmentId != null : NON_NULL_EXPECTED;
 		assert equipmentTypeId.isVoid() ^ equipmentId.isVoid();
 
-		assert kisId != null: NON_NULL_EXPECTED;
-		assert siteNodeId != null: NON_NULL_EXPECTED;
-		assert symbolId != null: NON_NULL_EXPECTED;
-		assert ugoCellId != null: NON_NULL_EXPECTED;
-		assert schemeCellId != null: NON_NULL_EXPECTED;
-		
-		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
+		assert kisId != null : NON_NULL_EXPECTED;
+		assert siteNodeId != null : NON_NULL_EXPECTED;
+		assert symbolId != null : NON_NULL_EXPECTED;
+		assert ugoCellId != null : NON_NULL_EXPECTED;
+		assert schemeCellId != null : NON_NULL_EXPECTED;
+
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() ^ parentSchemeElementId.isVoid();
-		
+
 		this.label = label;
 		this.equipmentTypeId = equipmentTypeId;
 		this.equipmentId = equipmentId;

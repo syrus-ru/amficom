@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.49 2005/07/24 17:40:34 bass Exp $
+ * $Id: SchemePort.java,v 1.50 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
@@ -47,8 +48,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/07/24 17:40:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -84,17 +85,31 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @param measurementPort
 	 * @param parentSchemeDevice
 	 */
-	SchemePort(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	SchemePort(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final IdlDirectionType directionType,
-			final PortType portType, final Port port,
+			final PortType portType,
+			final Port port,
 			final MeasurementPort measurementPort,
 			final SchemeDevice parentSchemeDevice) {
-		super(id, created, modified, creatorId, modifierId, version,
-				name, description, directionType, portType,
-				port, measurementPort,
+		super(id,
+				created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				name,
+				description,
+				directionType,
+				portType,
+				port,
+				measurementPort,
 				parentSchemeDevice);
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
@@ -139,34 +154,40 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @throws CreateObjectException
 	 */
 	public static SchemePort createInstance(final Identifier creatorId,
-			final String name, final String description,
+			final String name,
+			final String description,
 			final IdlDirectionType directionType,
-			final PortType portType, final Port port,
+			final PortType portType,
+			final Port port,
 			final MeasurementPort measurementPort,
-			final SchemeDevice parentSchemeDevice)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert directionType != null: NON_NULL_EXPECTED;
-		assert parentSchemeDevice != null: NON_NULL_EXPECTED;
+			final SchemeDevice parentSchemeDevice) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert directionType != null : NON_NULL_EXPECTED;
+		assert parentSchemeDevice != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemePort schemePort = new SchemePort(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEPORT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, directionType,
-					portType, port, measurementPort,
+			final SchemePort schemePort = new SchemePort(IdentifierPool.getGeneratedIdentifier(SCHEMEPORT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					directionType,
+					portType,
+					port,
+					measurementPort,
 					parentSchemeDevice);
 			schemePort.markAsChanged();
 			if (port != null || portType != null)
 				schemePort.portTypeSet = true;
 			return schemePort;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemePort.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemePort.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -231,7 +252,8 @@ public final class SchemePort extends AbstractSchemePort {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, super.getName(),
+				this.version.longValue(),
+				super.getName(),
 				super.getDescription(),
 				super.getDirectionType(),
 				super.portTypeId.getTransferable(),

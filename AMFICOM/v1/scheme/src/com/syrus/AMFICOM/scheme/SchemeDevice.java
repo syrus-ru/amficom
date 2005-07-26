@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.55 2005/07/26 12:03:49 bass Exp $
+ * $Id: SchemeDevice.java,v 1.56 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,6 +53,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDevice;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDeviceHelper;
@@ -61,8 +62,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/26 12:03:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeDevice extends StorableObject
@@ -105,17 +106,21 @@ public final class SchemeDevice extends StorableObject
 	 * @param parentSchemeProtoElement
 	 * @param parentSchemeElement
 	 */
-	SchemeDevice(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	SchemeDevice(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final SchemeProtoElement parentSchemeProtoElement,
 			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
 
-		assert parentSchemeProtoElement == null || parentSchemeElement == null: EXACTLY_ONE_PARENT_REQUIRED;		
+		assert parentSchemeProtoElement == null || parentSchemeElement == null : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 	}
@@ -184,26 +189,28 @@ public final class SchemeDevice extends StorableObject
 	 * @param description cannot be <code>null</code>, but can be empty.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeDevice createInstance(final Identifier creatorId,
-			final String name, final String description)
+	public static SchemeDevice createInstance(final Identifier creatorId, final String name, final String description)
 			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description,
-					null, null);
+			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					null,
+					null);
 			schemeDevice.markAsChanged();
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -215,28 +222,31 @@ public final class SchemeDevice extends StorableObject
 	 * @throws CreateObjectException
 	 */
 	public static SchemeDevice createInstance(final Identifier creatorId,
-			final String name, final String description,
-			final SchemeProtoElement parentSchemeProtoElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElement != null: NON_NULL_EXPECTED;
+			final String name,
+			final String description,
+			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description,
-					parentSchemeProtoElement, null);
+			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					parentSchemeProtoElement,
+					null);
 			schemeDevice.markAsChanged();
 			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -248,28 +258,31 @@ public final class SchemeDevice extends StorableObject
 	 * @throws CreateObjectException
 	 */
 	public static SchemeDevice createInstance(final Identifier creatorId,
-			final String name, final String description,
-			final SchemeElement parentSchemeElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeElement != null: NON_NULL_EXPECTED;
+			final String name,
+			final String description,
+			final SchemeElement parentSchemeElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeDevice schemeDevice = new SchemeDevice(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description,
-					null, parentSchemeElement);
+			final SchemeDevice schemeDevice = new SchemeDevice(IdentifierPool.getGeneratedIdentifier(SCHEMEDEVICE_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					null,
+					parentSchemeElement);
 			schemeDevice.markAsChanged();
 			schemeDevice.parentSet = true;
 			return schemeDevice;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeDevice.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeDevice.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -451,7 +464,8 @@ public final class SchemeDevice extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.name,
+				this.version.longValue(),
+				this.name,
 				this.description,
 				this.parentSchemeProtoElementId.getTransferable(),
 				this.parentSchemeElementId.getTransferable());
@@ -492,18 +506,21 @@ public final class SchemeDevice extends StorableObject
 	 * @param parentSchemeProtoElementId
 	 * @param parentSchemeElementId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final Identifier parentSchemeProtoElementId,
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null: NON_NULL_EXPECTED;
-		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoElementId.isVoid() ^ parentSchemeElementId.isVoid();
 
 		this.name = name;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.53 2005/07/26 12:03:49 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.54 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
@@ -59,8 +60,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/26 12:03:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeCableThread extends StorableObject
@@ -110,11 +111,16 @@ public final class SchemeCableThread extends StorableObject
 	 * @param targetSchemePort
 	 * @param parentSchemeCableLink
 	 */
-	SchemeCableThread(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final CableThreadType cableThreadType, final Link link,
+	SchemeCableThread(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final CableThreadType cableThreadType,
+			final Link link,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
 			final SchemeCableLink parentSchemeCableLink) {
@@ -162,34 +168,39 @@ public final class SchemeCableThread extends StorableObject
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	public static SchemeCableThread createInstance(
-			final Identifier creatorId, final String name,
+	public static SchemeCableThread createInstance(final Identifier creatorId,
+			final String name,
 			final String description,
-			final CableThreadType cableThreadType, final Link link,
+			final CableThreadType cableThreadType,
+			final Link link,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
-			final SchemeCableLink parentSchemeCableLink)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert cableThreadType != null: NON_NULL_EXPECTED;
-		assert parentSchemeCableLink != null: NON_NULL_EXPECTED;
+			final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert cableThreadType != null : NON_NULL_EXPECTED;
+		assert parentSchemeCableLink != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeCableThread schemeCableThread = new SchemeCableThread(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMECABLETHREAD_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, cableThreadType,
-					link, sourceSchemePort,
-					targetSchemePort, parentSchemeCableLink);
+			final SchemeCableThread schemeCableThread = new SchemeCableThread(IdentifierPool.getGeneratedIdentifier(SCHEMECABLETHREAD_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					cableThreadType,
+					link,
+					sourceSchemePort,
+					targetSchemePort,
+					parentSchemeCableLink);
 			schemeCableThread.markAsChanged();
 			return schemeCableThread;
 		} catch (final IdentifierGenerationException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableThread.createInstance | cannot generate identifier ", ioee);
+			throw new CreateObjectException("SchemeCableThread.createInstance | cannot generate identifier ", ioee);
 		}
 	}
 
@@ -384,7 +395,8 @@ public final class SchemeCableThread extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.name,
+				this.version.longValue(),
+				this.name,
 				this.description,
 				this.cableThreadTypeId.getTransferable(),
 				this.linkId.getTransferable(),
@@ -408,22 +420,25 @@ public final class SchemeCableThread extends StorableObject
 	 * @param parentSchemeCableLinkId
 	 */
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final Identifier cableThreadTypeId,
 			final Identifier linkId,
 			final Identifier sourceSchemePortId,
 			final Identifier targetSchemePortId,
 			final Identifier parentSchemeCableLinkId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
+
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
 		assert cableThreadTypeId != null && !cableThreadTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert linkId != null;
-		assert sourceSchemePortId != null: NON_NULL_EXPECTED;
-		assert targetSchemePortId != null: NON_NULL_EXPECTED;
+		assert sourceSchemePortId != null : NON_NULL_EXPECTED;
+		assert targetSchemePortId != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLinkId != null && !parentSchemeCableLinkId.isVoid() : NON_VOID_EXPECTED;
 
 		this.name = name;

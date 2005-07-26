@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.26 2005/07/24 17:10:19 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.27 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
@@ -38,8 +39,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -111,10 +112,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @param targetAbstractSchemePort
 	 * @param parentScheme
 	 */
-	AbstractSchemeLink(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	AbstractSchemeLink(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
 			final double opticalLength,
 			final AbstractLinkType abstractLinkType,
@@ -122,8 +127,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final AbstractSchemePort sourceAbstractSchemePort,
 			final AbstractSchemePort targetAbstractSchemePort,
 			final Scheme parentScheme) {
-		super(id, created, modified, creatorId, modifierId, version,
-				name, description, parentScheme);
+		super(id, created, modified, creatorId, modifierId, version, name, description, parentScheme);
 		this.physicalLength = physicalLength;
 		this.opticalLength = opticalLength;
 
@@ -357,25 +361,28 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
 			final double opticalLength,
 			final Identifier abstractLinkTypeId,
 			final Identifier abstractLinkId,
 			final Identifier sourceAbstractSchemePortId,
-			final Identifier targetAbstractSchemePortId,			
+			final Identifier targetAbstractSchemePortId,
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
 
-		assert abstractLinkTypeId != null: NON_NULL_EXPECTED;
-		assert abstractLinkId != null: NON_NULL_EXPECTED;
+		assert abstractLinkTypeId != null : NON_NULL_EXPECTED;
+		assert abstractLinkId != null : NON_NULL_EXPECTED;
 		assert abstractLinkTypeId.isVoid() ^ abstractLinkId.isVoid();
 
-		assert sourceAbstractSchemePortId != null: NON_NULL_EXPECTED;
-		assert targetAbstractSchemePortId != null: NON_NULL_EXPECTED;
+		assert sourceAbstractSchemePortId != null : NON_NULL_EXPECTED;
+		assert targetAbstractSchemePortId != null : NON_NULL_EXPECTED;
 
 		this.physicalLength = physicalLength;
 		this.opticalLength = opticalLength;

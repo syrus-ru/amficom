@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.59 2005/07/25 19:34:53 bass Exp $
+ * $Id: Scheme.java,v 1.60 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
@@ -62,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/07/25 19:34:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -143,12 +144,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeCell
 	 * @param parentSchemeElement
 	 */
-	Scheme(final Identifier id, final Date created, final Date modified,
-			final Identifier creatorId, final Identifier modifierId,
-			final long version, final Identifier domainId,
-			final String name, final String description,
-			final String label, final int width, final int height,
-			final IdlKind kind, final Map map,
+	Scheme(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final String label,
+			final int width,
+			final int height,
+			final IdlKind kind,
+			final Map map,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -210,14 +219,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws CreateObjectException
 	 */
 	public static Scheme createInstance(final Identifier creatorId,
-			final String name, final String description,
-			final String label, final int width, final int height,
-			final IdlKind kind, final Identifier domainId,
-			final Map map, final BitmapImageResource symbol,
+			final String name,
+			final String description,
+			final String label,
+			final int width,
+			final int height,
+			final IdlKind kind,
+			final Identifier domainId,
+			final Map map,
+			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeElement parentSchemeElement)
-			throws CreateObjectException {
+			final SchemeElement parentSchemeElement) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
 		assert description != null: NON_NULL_EXPECTED;
@@ -227,13 +240,23 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 
 		try {
 			final Date created = new Date();
-			final Scheme scheme = new Scheme(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEME_CODE),
-					created, created, creatorId, creatorId,
-					0L, domainId, name, description, label, width,
-					height, kind, map, symbol,
-					ugoCell, schemeCell,
+			final Scheme scheme = new Scheme(IdentifierPool.getGeneratedIdentifier(SCHEME_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					domainId,
+					name,
+					description,
+					label,
+					width,
+					height,
+					kind,
+					map,
+					symbol,
+					ugoCell,
+					schemeCell,
 					parentSchemeElement);
 			scheme.markAsChanged();
 			return scheme;
@@ -582,7 +605,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name, this.description, this.label,
 				this.width, this.height, this.kind,
 				super.getDomainId().getTransferable(),
@@ -696,13 +719,20 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @param schemeCellId
 	 * @param parentSchemeElementId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final String label, final int width, final int height,
-			final IdlKind kind, final Identifier domainId,
-			final Identifier mapId, final Identifier symbolId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final String label,
+			final int width,
+			final int height,
+			final IdlKind kind,
+			final Identifier domainId,
+			final Identifier mapId,
+			final Identifier symbolId,
 			final Identifier ugoCellId,
 			final Identifier schemeCellId,
 			final Identifier parentSchemeElementId) {

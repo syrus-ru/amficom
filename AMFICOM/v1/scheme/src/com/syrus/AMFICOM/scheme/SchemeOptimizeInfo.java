@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.51 2005/07/26 12:01:53 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.52 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
@@ -53,8 +54,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/26 12:01:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -129,17 +130,26 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param survivorRate
 	 * @param parentScheme
 	 */
-	SchemeOptimizeInfo(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final int optimizationMode, final int iterations,
-			final double price, final double waveLength,
-			final double lenMargin, final double mutationRate,
+	SchemeOptimizeInfo(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final int optimizationMode,
+			final int iterations,
+			final double price,
+			final double waveLength,
+			final double lenMargin,
+			final double mutationRate,
 			final double mutationDegree,
-			final double rtuDeleteProb, final double rtuCreateProb,
+			final double rtuDeleteProb,
+			final double rtuCreateProb,
 			final double nodesSpliceProb,
-			final double nodesCutProb, final double survivorRate,
+			final double nodesCutProb,
+			final double survivorRate,
 			final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
@@ -201,39 +211,54 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	public static SchemeOptimizeInfo createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final int optimizationMode,
-			final int iterations, final double price,
-			final double waveLength, final double lenMargin,
-			final double mutationRate, final double mutationDegree,
-			final double rtuDeleteProb, final double rtuCreateProb,
+	public static SchemeOptimizeInfo createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final int optimizationMode,
+			final int iterations,
+			final double price,
+			final double waveLength,
+			final double lenMargin,
+			final double mutationRate,
+			final double mutationDegree,
+			final double rtuDeleteProb,
+			final double rtuCreateProb,
 			final double nodesSpliceProb,
-			final double nodesCutProb, final double survivorRate,
+			final double nodesCutProb,
+			final double survivorRate,
 			final Scheme parentScheme) throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentScheme != null: NON_NULL_EXPECTED;
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEOPTIMIZEINFO_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description,
-					optimizationMode, iterations, price,
-					waveLength, lenMargin, mutationRate,
-					mutationDegree, rtuDeleteProb,
-					rtuCreateProb, nodesSpliceProb,
-					nodesCutProb, survivorRate,
+			final SchemeOptimizeInfo schemeOptimizeInfo = new SchemeOptimizeInfo(IdentifierPool.getGeneratedIdentifier(SCHEMEOPTIMIZEINFO_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					optimizationMode,
+					iterations,
+					price,
+					waveLength,
+					lenMargin,
+					mutationRate,
+					mutationDegree,
+					rtuDeleteProb,
+					rtuCreateProb,
+					nodesSpliceProb,
+					nodesCutProb,
+					survivorRate,
 					parentScheme);
 			schemeOptimizeInfo.markAsChanged();
 			return schemeOptimizeInfo;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeOptimizeInfo.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -395,13 +420,21 @@ public final class SchemeOptimizeInfo extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.name,
-				this.description, this.optimizationMode,
-				this.iterations, this.price, this.waveLength,
-				this.lenMargin, this.mutationRate,
-				this.mutationDegree, this.rtuDeleteProb,
-				this.rtuCreateProb, this.nodesSpliceProb,
-				this.nodesCutProb, this.survivorRate,
+				this.version.longValue(),
+				this.name,
+				this.description,
+				this.optimizationMode,
+				this.iterations,
+				this.price,
+				this.waveLength,
+				this.lenMargin,
+				this.mutationRate,
+				this.mutationDegree,
+				this.rtuDeleteProb,
+				this.rtuCreateProb,
+				this.nodesSpliceProb,
+				this.nodesCutProb,
+				this.survivorRate,
 				this.parentSchemeId.getTransferable());
 	}
 
@@ -450,22 +483,30 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @param parentSchemeId
 	 */
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final int optimizationMode, final int iterations,
-			final double price, final double waveLength,
-			final double lenMargin, final double mutationRate,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final int optimizationMode,
+			final int iterations,
+			final double price,
+			final double waveLength,
+			final double lenMargin,
+			final double mutationRate,
 			final double mutationDegree,
-			final double rtuDeleteProb, final double rtuCreateProb,
+			final double rtuDeleteProb,
+			final double rtuCreateProb,
 			final double nodesSpliceProb,
-			final double nodesCutProb, final double survivorRate,
+			final double nodesCutProb,
+			final double survivorRate,
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeId != null && !parentSchemeId.isVoid(): NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentSchemeId != null && !parentSchemeId.isVoid() : NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;

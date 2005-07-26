@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.14 2005/07/24 17:54:41 bass Exp $
+ * $Id: PathElementDatabase.java,v 1.15 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/24 17:54:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class PathElementDatabase extends StorableObjectDatabase {
@@ -130,7 +131,18 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date();
 			pathElement = new PathElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, 0, null, null, null, null, null);
+					created,
+					created,
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					null,
+					0,
+					null,
+					null,
+					null,
+					null,
+					null);
 		} else {
 			pathElement = fromStorableObject(storableObject);
 		}
@@ -138,7 +150,7 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID),
 				resultSet.getInt(PathElementWrapper.COLUMN_SEQUENTIAL_NUMBER),
 				IdlKind.from_int(resultSet.getInt(PathElementWrapper.COLUMN_KIND)),

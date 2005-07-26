@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.54 2005/07/26 12:01:53 bass Exp $
+ * $Id: PathElement.java,v 1.55 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,6 +52,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
@@ -67,8 +68,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/26 12:01:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -135,9 +136,12 @@ public final class PathElement extends StorableObject
 	 * @param version
 	 * @param parentSchemePath
 	 */
-	private PathElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	private PathElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final SchemePath parentSchemePath) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.parentSchemePathId = Identifier.possiblyVoid(parentSchemePath);
@@ -161,9 +165,12 @@ public final class PathElement extends StorableObject
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */
-	PathElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	PathElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
 			final AbstractSchemePort startAbstractSchemePort,
 			final AbstractSchemePort endSbstractSchemePort) {
@@ -199,9 +206,12 @@ public final class PathElement extends StorableObject
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */
-	PathElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	PathElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
 			final SchemeCableThread schemeCableThread) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
@@ -232,9 +242,12 @@ public final class PathElement extends StorableObject
 	 *       invocations (in favor of direct checks) unless this constructor
 	 *       is ever called by databases.
 	 */
-	PathElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	PathElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
 			final SchemeLink schemeLink) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
@@ -265,9 +278,12 @@ public final class PathElement extends StorableObject
 	 * @param schemeCableThread
 	 * @param schemeLink
 	 */
-	PathElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	PathElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final SchemePath parentSchemePath,
 			final int sequentialNumber,
 			final IdlKind kind,
@@ -319,10 +335,13 @@ public final class PathElement extends StorableObject
 						== (startAbstractSchemePort == null)): NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath,
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					parentSchemePath,
 					startAbstractSchemePort,
 					endAbstractSchemePort);
 			pathElement.markAsChanged();
@@ -349,10 +368,14 @@ public final class PathElement extends StorableObject
 		assert parentSchemePath != null && schemeCableThread != null: NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath, schemeCableThread);
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					parentSchemePath,
+					schemeCableThread);
 			pathElement.markAsChanged();
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
@@ -377,10 +400,14 @@ public final class PathElement extends StorableObject
 		assert parentSchemePath != null && schemeLink != null: NON_NULL_EXPECTED;
 		try {
 			final Date created = new Date();
-			final PathElement pathElement = new PathElement(
-					IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, parentSchemePath, schemeLink);
+			final PathElement pathElement = new PathElement(IdentifierPool.getGeneratedIdentifier(PATHELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					parentSchemePath,
+					schemeLink);
 			pathElement.markAsChanged();
 			return pathElement;
 		} catch (final IdentifierGenerationException ige) {
@@ -674,7 +701,7 @@ public final class PathElement extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.parentSchemePathId.getTransferable(),
 				this.sequentialNumber, data);
 	}
@@ -709,11 +736,14 @@ public final class PathElement extends StorableObject
 	 * @param schemeCableThreadId
 	 * @param schemeLinkId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final Identifier parentSchemePathId,
-			final int sequentialNumber, final IdlKind kind,
+			final int sequentialNumber,
+			final IdlKind kind,
 			final Identifier startAbstractSchemePortId,
 			final Identifier endAbstractSchemePortId,
 			final Identifier schemeCableThreadId,

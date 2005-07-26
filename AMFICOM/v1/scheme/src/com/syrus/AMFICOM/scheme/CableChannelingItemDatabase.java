@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.15 2005/07/24 17:54:41 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.16 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,14 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/24 17:54:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase {
@@ -135,7 +136,20 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 		if (storableObject == null) {
 			Date created = new Date();
 			cableChannelingItem = new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, 0d, 0d, 0, 0, 0, null, null, null, null);
+					created,
+					created,
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					0d,
+					0d,
+					0,
+					0,
+					0,
+					null,
+					null,
+					null,
+					null);
 		} else {
 			cableChannelingItem = fromStorableObject(storableObject);
 		}
@@ -143,7 +157,7 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				resultSet.getDouble(CableChannelingItemWrapper.COLUMN_START_SPARE),
 				resultSet.getDouble(CableChannelingItemWrapper.COLUMN_END_SPARE),
 				resultSet.getInt(CableChannelingItemWrapper.COLUMN_ROW_X),

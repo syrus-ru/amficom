@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.55 2005/07/26 12:01:53 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.56 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
@@ -55,8 +56,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/26 12:01:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -112,11 +113,16 @@ public final class SchemeMonitoringSolution
 	 * @param parentScheme
 	 * @param parentSchemeOptimizeInfo
 	 */
-	SchemeMonitoringSolution(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final int price, final boolean active,
+	SchemeMonitoringSolution(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final int price,
+			final boolean active,
 			final Scheme parentScheme,
 			final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
 		super(id, created, modified, creatorId, modifierId, version);
@@ -124,7 +130,7 @@ public final class SchemeMonitoringSolution
 		this.description = description;
 		this.price = price;
 		this.active = active;
-		
+
 		assert parentScheme == null || parentSchemeOptimizeInfo == null : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
 		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
@@ -177,11 +183,11 @@ public final class SchemeMonitoringSolution
 	 * @param parentSchemeOptimizeInfo
 	 * @throws CreateObjectException
 	 */
-	public static SchemeMonitoringSolution createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final int price,
-			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
-	throws CreateObjectException {
+	public static SchemeMonitoringSolution createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final int price,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -189,18 +195,23 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
-			final boolean active = parentSchemeOptimizeInfo.getParentScheme()
-					.getSchemeMonitoringSolutionsRecursively().isEmpty();
-			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
-					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, price, active,
-					null, parentSchemeOptimizeInfo);
+			final boolean active = parentSchemeOptimizeInfo.getParentScheme().getSchemeMonitoringSolutionsRecursively().isEmpty();
+			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					price,
+					active,
+					null,
+					parentSchemeOptimizeInfo);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -212,11 +223,11 @@ public final class SchemeMonitoringSolution
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	public static SchemeMonitoringSolution createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final int price,
-			final Scheme parentScheme)
-	throws CreateObjectException {
+	public static SchemeMonitoringSolution createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final int price,
+			final Scheme parentScheme) throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
@@ -224,18 +235,23 @@ public final class SchemeMonitoringSolution
 
 		try {
 			final Date created = new Date();
-			final boolean active = parentScheme
-					.getSchemeMonitoringSolutionsRecursively().isEmpty();
-			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(
-					IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, price, active,
-					parentScheme, null);
+			final boolean active = parentScheme.getSchemeMonitoringSolutionsRecursively().isEmpty();
+			final SchemeMonitoringSolution schemeMonitoringSolution = new SchemeMonitoringSolution(IdentifierPool.getGeneratedIdentifier(SCHEMEMONITORINGSOLUTION_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					price,
+					active,
+					parentScheme,
+					null);
 			schemeMonitoringSolution.markAsChanged();
 			return schemeMonitoringSolution;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeMonitoringSolution.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -355,8 +371,11 @@ public final class SchemeMonitoringSolution
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, this.name,
-				this.description, this.price, this.active,
+				this.version.longValue(),
+				this.name,
+				this.description,
+				this.price,
+				this.active,
 				this.parentSchemeId.getTransferable(),
 				this.parentSchemeOptimizeInfoId.getTransferable());
 	}
@@ -381,10 +400,14 @@ public final class SchemeMonitoringSolution
 	 * @param parentSchemeOptimizeInfoId
 	 */
 	synchronized void setAttributes(final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final int price, final boolean active,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final int price,
+			final boolean active,
 			final Identifier parentSchemeId,
 			final Identifier parentSchemeOptimizeInfoId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);

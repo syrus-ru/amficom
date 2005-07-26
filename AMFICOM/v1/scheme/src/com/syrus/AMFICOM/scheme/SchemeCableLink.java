@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.56 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.57 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
@@ -56,8 +57,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -86,10 +87,14 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @param modifierId
 	 * @param version
 	 */
-	SchemeCableLink(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+	SchemeCableLink(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
 			final double opticalLength,
 			final CableLinkType cableLinkType,
@@ -97,10 +102,20 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 			final SchemeCablePort sourceSchemeCablePort,
 			final SchemeCablePort targetSchemeCablePort,
 			final Scheme parentScheme) {
-		super(id, created, modified, creatorId, modifierId, version,
-				name, description, physicalLength,
-				opticalLength, cableLinkType, link,
-				sourceSchemeCablePort, targetSchemeCablePort,
+		super(id,
+				created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				name,
+				description,
+				physicalLength,
+				opticalLength,
+				cableLinkType,
+				link,
+				sourceSchemeCablePort,
+				targetSchemeCablePort,
 				parentScheme);
 	}
 
@@ -121,11 +136,9 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
-	public static SchemeCableLink createInstance(final Identifier creatorId,
-			final String name, final Scheme parentScheme)
+	public static SchemeCableLink createInstance(final Identifier creatorId, final String name, final Scheme parentScheme)
 			throws CreateObjectException {
-		return createInstance(creatorId, name, "", 0, 0, null, null,
-				null, null, parentScheme);
+		return createInstance(creatorId, name, "", 0, 0, null, null, null, null, parentScheme);
 	}
 
 	
@@ -143,35 +156,43 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @throws CreateObjectException
 	 */
 	public static SchemeCableLink createInstance(final Identifier creatorId,
-			final String name, final String description,
-			final double physicalLength, final double opticalLength,
-			final CableLinkType cableLinkType, final Link link,
+			final String name,
+			final String description,
+			final double physicalLength,
+			final double opticalLength,
+			final CableLinkType cableLinkType,
+			final Link link,
 			final SchemeCablePort sourceSchemeCablePort,
 			final SchemeCablePort targetSchemeCablePort,
-			final Scheme parentScheme)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentScheme != null: NON_NULL_EXPECTED;
+			final Scheme parentScheme) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert parentScheme != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeCableLink schemeCableLink = new SchemeCableLink(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMECABLELINK_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, physicalLength,
-					opticalLength, cableLinkType, link,
+			final SchemeCableLink schemeCableLink = new SchemeCableLink(IdentifierPool.getGeneratedIdentifier(SCHEMECABLELINK_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					physicalLength,
+					opticalLength,
+					cableLinkType,
+					link,
 					sourceSchemeCablePort,
-					targetSchemeCablePort, parentScheme);
+					targetSchemeCablePort,
+					parentScheme);
 			schemeCableLink.markAsChanged();
 			if (link != null || cableLinkType != null)
 				schemeCableLink.abstractLinkTypeSet = true;
 			return schemeCableLink;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeCableLink.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeCableLink.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -337,7 +358,8 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version, super.getName(),
+				this.version.longValue(),
+				super.getName(),
 				super.getDescription(),
 				super.getPhysicalLength(),
 				super.getOpticalLength(),
@@ -388,18 +410,34 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @see AbstractSchemeLink#setAttributes(Date, Date, Identifier, Identifier, long, String, String, double, double, Identifier, Identifier, Identifier, Identifier, Identifier)
 	 */
 	@Override
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final double physicalLength,
 			final double opticalLength,
 			final Identifier cableLinkTypeId,
 			final Identifier linkId,
 			final Identifier sourceSchemeCablePortId,
-			final Identifier targetSchemeCablePortId,			
+			final Identifier targetSchemeCablePortId,
 			final Identifier parentSchemeId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, physicalLength, opticalLength, cableLinkTypeId, linkId, sourceSchemeCablePortId, targetSchemeCablePortId, parentSchemeId);
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version,
+				name,
+				description,
+				physicalLength,
+				opticalLength,
+				cableLinkTypeId,
+				linkId,
+				sourceSchemeCablePortId,
+				targetSchemeCablePortId,
+				parentSchemeId);
 
 		assert !parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 	}

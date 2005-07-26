@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.14 2005/07/25 12:13:09 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.15 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/25 12:13:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
@@ -156,14 +157,33 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 	 * @throws SQLException
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException,
+				SQLException {
 		SchemeOptimizeInfo schemeOptimizeInfo;
 		if (storableObject == null) {
 			Date created = new Date();
 			schemeOptimizeInfo = new SchemeOptimizeInfo(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, 0, 0, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, 0d, null);
+					created,
+					created,
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					null,
+					null,
+					0,
+					0,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					0d,
+					null);
 		} else {
 			schemeOptimizeInfo = fromStorableObject(storableObject);
 		}
@@ -171,7 +191,7 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getInt(SchemeOptimizeInfoWrapper.COLUMN_OPTIMIZATION_MODE),

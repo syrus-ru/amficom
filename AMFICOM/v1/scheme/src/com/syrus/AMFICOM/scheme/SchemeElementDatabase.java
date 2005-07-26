@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.12 2005/07/24 17:54:41 bass Exp $
+ * $Id: SchemeElementDatabase.java,v 1.13 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,15 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/24 17:54:41 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase {
@@ -148,9 +149,25 @@ public final class SchemeElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, SQLException {
 		SchemeElement schemeElement;
 		if (storableObject == null) {
-			Date created = new Date();
+			final Date created = new Date();
 			schemeElement = new SchemeElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created, created, null, null, 0L, null, null, null, null, null, null, null, null, null, null, null, null);
+					created,
+					created,
+					null,
+					null,
+					StorableObjectVersion.ILLEGAL_VERSION,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null);
 		} else {
 			schemeElement = fromStorableObject(storableObject);
 		}
@@ -158,7 +175,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase {
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(SchemeElementWrapper.COLUMN_LABEL)),

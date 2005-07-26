@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.61 2005/07/26 12:03:49 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.62 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
@@ -76,8 +77,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/07/26 12:03:49 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -143,11 +144,16 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param parentSchemeProtoGroup
 	 * @param parentSchemeProtoElement
 	 */
-	SchemeProtoElement(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final String label, final EquipmentType equipmentType,
+	SchemeProtoElement(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final String label,
+			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
@@ -162,7 +168,7 @@ public final class SchemeProtoElement extends StorableObject
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
 		this.schemeCellId = Identifier.possiblyVoid(schemeCell);
 
-		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null: EXACTLY_ONE_PARENT_REQUIRED;
+		assert parentSchemeProtoGroup == null || parentSchemeProtoElement == null : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
 	}
@@ -240,33 +246,40 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param schemeCell may be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
-			final SchemeImageResource schemeCell)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
+			final SchemeImageResource schemeCell) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, null, null);
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					null,
+					null);
 			schemeProtoElement.markAsChanged();
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -282,37 +295,43 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param parentSchemeProtoElement cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoElement parentSchemeProtoElement)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElement != null: NON_NULL_EXPECTED;
+			final SchemeProtoElement parentSchemeProtoElement) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElement != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, null,
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					null,
 					parentSchemeProtoElement);
 			schemeProtoElement.markAsChanged();
 			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -328,37 +347,43 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param parentSchemeProtoGroup cannot be <code>null</code>.
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoElement createInstance(
-			final Identifier creatorId, final String name,
-			final String description, final String label,
+	public static SchemeProtoElement createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final String label,
 			final EquipmentType equipmentType,
 			final BitmapImageResource symbol,
 			final SchemeImageResource ugoCell,
 			final SchemeImageResource schemeCell,
-			final SchemeProtoGroup parentSchemeProtoGroup)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoGroup != null: NON_NULL_EXPECTED;
+			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroup != null : NON_NULL_EXPECTED;
 
 		try {
 			final Date created = new Date();
-			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(
-					IdentifierPool
-							.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, label,
-					equipmentType, symbol, ugoCell,
-					schemeCell, parentSchemeProtoGroup,
+			final SchemeProtoElement schemeProtoElement = new SchemeProtoElement(IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOELEMENT_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					label,
+					equipmentType,
+					symbol,
+					ugoCell,
+					schemeCell,
+					parentSchemeProtoGroup,
 					null);
 			schemeProtoElement.markAsChanged();
 			schemeProtoElement.parentSet = true;
 			return schemeProtoElement;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeProtoElement.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeProtoElement.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -753,7 +778,7 @@ public final class SchemeProtoElement extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name,
 				this.description,
 				this.label,
@@ -864,27 +889,32 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param parentSchemeProtoGroupId
 	 * @param parentSchemeProtoElementId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
-			final String label, final Identifier equipmentTypeId,
-			final Identifier symbolId, final Identifier ugoCellId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
+			final String label,
+			final Identifier equipmentTypeId,
+			final Identifier symbolId,
+			final Identifier ugoCellId,
 			final Identifier schemeCellId,
 			final Identifier parentSchemeProtoGroupId,
 			final Identifier parentSchemeProtoElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert equipmentTypeId != null: NON_NULL_EXPECTED;
-		assert symbolId != null: NON_NULL_EXPECTED;
-		assert ugoCellId != null: NON_NULL_EXPECTED;
-		assert schemeCellId != null: NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert label != null : NON_NULL_EXPECTED;
+		assert equipmentTypeId != null : NON_NULL_EXPECTED;
+		assert symbolId != null : NON_NULL_EXPECTED;
+		assert ugoCellId != null : NON_NULL_EXPECTED;
+		assert schemeCellId != null : NON_NULL_EXPECTED;
 
-		assert parentSchemeProtoGroupId != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null: NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeProtoGroupId.isVoid() ^ parentSchemeProtoElementId.isVoid();
 
 		this.name = name;

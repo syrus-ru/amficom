@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.51 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.52 2005/07/26 12:52:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
@@ -56,8 +57,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/24 17:10:19 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/07/26 12:52:23 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -105,9 +106,12 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param symbol
 	 * @param parentSchemeProtoGroup
 	 */
-	SchemeProtoGroup(final Identifier id, final Date created,
-			final Date modified, final Identifier creatorId,
-			final Identifier modifierId, final long version,
+	SchemeProtoGroup(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
 			final String name,
 			final String description,
 			final BitmapImageResource symbol,
@@ -148,28 +152,31 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param parentSchemeProtoGroup may be <code>null</code> (for a top-level group).
 	 * @throws CreateObjectException
 	 */
-	public static SchemeProtoGroup createInstance(
-			final Identifier creatorId, final String name,
+	public static SchemeProtoGroup createInstance(final Identifier creatorId,
+			final String name,
 			final String description,
 			final BitmapImageResource symbol,
-			final SchemeProtoGroup parentSchemeProtoGroup)
-			throws CreateObjectException {
-		assert creatorId != null && !creatorId.isVoid(): NON_VOID_EXPECTED;
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		
+			final SchemeProtoGroup parentSchemeProtoGroup) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+
 		try {
 			final Date created = new Date();
-			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(
-					IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOGROUP_CODE),
-					created, created, creatorId, creatorId,
-					0L, name, description, symbol,
+			final SchemeProtoGroup schemeProtoGroup = new SchemeProtoGroup(IdentifierPool.getGeneratedIdentifier(SCHEMEPROTOGROUP_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					description,
+					symbol,
 					parentSchemeProtoGroup);
 			schemeProtoGroup.markAsChanged();
 			return schemeProtoGroup;
 		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"SchemeProtoGroup.createInstance | cannot generate identifier ", ige);
+			throw new CreateObjectException("SchemeProtoGroup.createInstance | cannot generate identifier ", ige);
 		}
 	}
 
@@ -403,7 +410,7 @@ public final class SchemeProtoGroup extends StorableObject
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.name,
 				this.description,
 				this.symbolId.getTransferable(),
@@ -469,19 +476,21 @@ public final class SchemeProtoGroup extends StorableObject
 	 *        supply {@link Identifier#VOID_IDENTIFIER} as an argument.
 	 * @param parentSchemeProtoGroupId
 	 */
-	synchronized void setAttributes(final Date created, final Date modified,
+	synchronized void setAttributes(final Date created,
+			final Date modified,
 			final Identifier creatorId,
-			final Identifier modifierId, final long version,
-			final String name, final String description,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String description,
 			final Identifier symbolId,
 			final Identifier parentSchemeProtoGroupId) {
-		super.setAttributes(created, modified, creatorId, modifierId,
-				version);
+		super.setAttributes(created, modified, creatorId, modifierId, version);
 
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert symbolId != null: NON_NULL_EXPECTED;
-		assert parentSchemeProtoGroupId != null: NON_NULL_EXPECTED;
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert description != null : NON_NULL_EXPECTED;
+		assert symbolId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
 
 		this.name = name;
 		this.description = description;
