@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.5 2005/07/21 12:50:00 saa Exp $
+ * $Id: Trace.java,v 1.6 2005/07/26 15:13:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,38 +33,59 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/07/21 12:50:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/26 15:13:00 $
  * @module
  */
 public class Trace {
 	private BellcoreStructure bs;
-	private AnalysisParameters ap; // будет использоваться для построения mtae
+	private AnalysisParameters ap; // может использоваться для построения mtae
 	private String key;
 	private Result result; // may be null
 
 	private double[] traceData = null; // null if not cached yet
 	private ModelTraceAndEventsImpl mtae = null;
 
-	/**
-	 * @param result
-	 * @param ap
-	 * @throws SimpleApplicationException если попытались открыть
-	 * результат, не содержащий рефлектограмму
-	 */
-	public Trace(Result result, AnalysisParameters ap)
-	throws SimpleApplicationException {
-		this.bs = AnalysisUtil.getBellcoreStructureFromResult(result);
-		this.ap = ap;
-		this.key = result.getId().getIdentifierString();
-		this.result = result;
-		// @todo - автоматически загружать и mtae, если имеются результаты анализа
-	}
 	public Trace(BellcoreStructure bs, String key, AnalysisParameters ap) {
 		this.bs = bs;
 		this.ap = ap;
 		this.key = key;
 		this.result = null;
 	}
+	/**
+	 * one of ap and mtae may be null
+	 */
+	private Trace(Result result,
+			AnalysisParameters ap, ModelTraceAndEventsImpl mtae)
+	throws SimpleApplicationException {
+		this.bs = AnalysisUtil.getBellcoreStructureFromResult(result);
+		this.ap = ap;
+		this.key = result.getId().getIdentifierString();
+		this.result = result;
+		this.mtae = mtae;
+	}
+	/**
+	 * Открывает рефлектограмму без предварительно полученных результатов анализа
+	 * @param result результат измерения
+	 * @param ap параметры анализа (будут использованы в момент getMTAE())
+	 * @throws SimpleApplicationException если попытались открыть
+	 * результат, не содержащий рефлектограмму
+	 */
+	public Trace(Result result, AnalysisParameters ap)
+	throws SimpleApplicationException {
+		this(result, ap, null);
+	}
+	/**
+	 * Открывает рефлектограмму с предварительно полученными результатами анализа
+	 * @param result результат измерения
+	 * @param mtae результат анализа
+	 * @throws SimpleApplicationException если попытались открыть
+	 * результат, не содержащую рефлектограмму 
+	 */
+	public Trace(Result result, ModelTraceAndEventsImpl mtae)
+	throws SimpleApplicationException {
+		this(result, null, mtae);
+	}
+
 	public ModelTraceAndEventsImpl getMTAE() {
 		if (mtae == null) {
 			// XXX: пользоваться traceData, если она есть
