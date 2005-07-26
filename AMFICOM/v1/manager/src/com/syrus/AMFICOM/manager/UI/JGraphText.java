@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.13 2005/07/25 11:08:09 bob Exp $
+ * $Id: JGraphText.java,v 1.14 2005/07/26 14:42:37 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,21 +9,17 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/25 11:08:09 $
+ * @version $Revision: 1.14 $, $Date: 2005/07/26 14:42:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.DisplayMode;
 import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -37,15 +33,15 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
@@ -65,7 +61,6 @@ import org.jgraph.event.GraphSelectionListener;
 import org.jgraph.event.GraphModelEvent.GraphModelChange;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.BasicMarqueeHandler;
-import org.jgraph.graph.CellView;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
@@ -78,6 +73,7 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
@@ -103,7 +99,7 @@ public class JGraphText implements GraphSelectionListener {
 //	GraphTreeModel	treeModel;
 	NonRootGraphTreeModel	treeModel;
 	
-	private JPanel panel;
+//	private JPanel panel;
 	
 	private JPanel propertyPanel;
 	
@@ -128,9 +124,16 @@ public class JGraphText implements GraphSelectionListener {
 
 	 public JButton	netButton;
 
-	 public JButton	domainButton;
+	 public JButton	domainButton;	 
+	 
 
+	 public JButton	domainsButton;
+	
+	 public JLabel	currentPerspectiveLabel;
+	 
 	 private boolean direct = false;
+
+	
 	
 	public JGraphText() {
 		// Construct Model and Graph
@@ -177,9 +180,8 @@ public class JGraphText implements GraphSelectionListener {
 		
 		this.createModelListener();
 		
-		this.getPanel();
+//		this._getPanel();		
 		
-		this.createChilden();
 	}
 	
 	private void createChilden() {
@@ -226,6 +228,16 @@ public class JGraphText implements GraphSelectionListener {
 		
 		DefaultGraphCell net1 = this.createChild(domain2, netBeanFactory.getShortName() + "-" + 1, 
 				netBeanFactory.createBean(), 0, 50, 0, 0, netBeanFactory.getImage());
+		
+		ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
+		
+		DefaultGraphCell arm1 = this.createChild(net1, armBeanFactory.getShortName() + "-" + 1, 
+			armBeanFactory.createBean(), 0, 350, 0, 0, armBeanFactory.getImage());
+		
+		UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
+		
+		DefaultGraphCell user1 = this.createChild(arm1, userBeanFactory.getShortName() + "-" + 1, 
+			userBeanFactory.createBean(), 250, 250, 0, 0, userBeanFactory.getImage());
 		
 		DefaultGraphCell domain3 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 3, 
 				domainBeanFactory.createBean(), 200, 350, 0, 0, domainBeanFactory.getImage());
@@ -361,35 +373,86 @@ public class JGraphText implements GraphSelectionListener {
 		});
 	}
 	
-	JPanel getPanel() {
-		if (this.panel == null) {
-			this.panel = new JPanel(new GridBagLayout());
+	private void openFrames() {
+		{
+			// show tree frame
+			JScrollPane pane = new JScrollPane(this.tree);
+			JFrame frame = new JFrame("Tree");
+			frame.getContentPane().add(pane);
+			
+			frame.setSize(200, 600);
+			frame.setLocation(0, 0);
+			
+			frame.setVisible(true);
+		}
+		
+		{
+			
+			// show graph frame
+			
+			JPanel panel = new JPanel(new GridBagLayout());
 			
 			GridBagConstraints gbc = new GridBagConstraints();
 			
 			gbc.fill = GridBagConstraints.BOTH;
-			gbc.weightx = 1.0;
+			gbc.weightx = 0.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+			Box box = Box.createHorizontalBox();
 			
-			JComboBox box = this.createPerspecives();
-			this.panel.add(box, gbc);
-			this.panel.add(this.createToolBar(), gbc);
+			JToolBar perspectiveBox = this.createPerspecives();
+			
+			CommonUIUtilities.fixHorizontalSize(perspectiveBox);
+			
+			this.currentPerspectiveLabel = new JLabel();
+			
+			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
+			box.add(perspectiveBox);
+			box.add(Box.createHorizontalGlue());
+			
+			
+			
+			panel.add(box, gbc);
+			
+			gbc.weightx = 1.0;
+
+			panel.add(this.createToolBar(), gbc);
 			
 			gbc.weightx = 0.0;
 			gbc.weighty = 1.0;
 			gbc.gridwidth = GridBagConstraints.RELATIVE;
 			
-			
-			
-			this.panel.add(this.createEntityToolBar(), gbc);
-			
-			gbc.weightx = 1.0;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.RELATIVE;
-			JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.tree), new JScrollPane(this.graph));
-			splitPane.setDividerLocation(200);
-			this.panel.add(splitPane, gbc);
+			
+			panel.add(this.createEntityToolBar(), gbc);
+			
+			JScrollPane pane = new JScrollPane(this.graph);
+			
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			
+			panel.add(pane, gbc);
+			
+			gbc.gridheight = GridBagConstraints.REMAINDER;
+			gbc.weighty = 0.0;
+			panel.add(this.currentPerspectiveLabel, gbc);
+			
+			JFrame frame = new JFrame("Graph");
+			frame.getContentPane().add(panel);
+
+			frame.setSize(800, 800);
+			frame.setLocation(200, 0);
+
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			frame.setVisible(true);			
+			
+		}
+		
+		{
+			
+//			 show property frame
+			JFrame frame = new JFrame("Properties");
 			
 			this.propertyPanel = new JPanel(new GridBagLayout());
 			this.gbc2 = new GridBagConstraints();
@@ -397,29 +460,73 @@ public class JGraphText implements GraphSelectionListener {
 			this.gbc2.weightx = 1.0;
 			this.gbc2.weighty = 1.0;
 			this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
+
 			
-			gbc.gridheight = GridBagConstraints.REMAINDER;	
-			this.panel.add(this.propertyPanel, gbc);
+			frame.getContentPane().add(this.propertyPanel);
 			
-			box.setSelectedIndex(0);
+			frame.setSize(200, 200);
+			frame.setLocation(0, 600);
+			
+			frame.setVisible(true);
+			
+
 		}
-		
-		return this.panel;
 	}
 	
-	private JComboBox createPerspecives() {		
-		final String[] names = new String[] {"Domains"};		
-		JComboBox comboBox = new JComboBox(names);
+//	JPanel _getPanel() {
+//		if (this.panel == null) {
+//			this.panel = new JPanel(new GridBagLayout());
+//			
+//			GridBagConstraints gbc = new GridBagConstraints();
+//			
+//			gbc.fill = GridBagConstraints.BOTH;
+//			gbc.weightx = 1.0;
+//			gbc.weighty = 0.0;
+//			gbc.gridwidth = GridBagConstraints.REMAINDER;
+//			
+//			JComboBox box = this.createPerspecives();
+//			this.panel.add(box, gbc);
+//			this.panel.add(this.createToolBar(), gbc);
+//			
+//			gbc.weightx = 0.0;
+//			gbc.weighty = 1.0;
+//			gbc.gridwidth = GridBagConstraints.RELATIVE;
+//			
+//			
+//			
+//			this.panel.add(this.createEntityToolBar(), gbc);
+//			
+//			gbc.weightx = 1.0;
+//			gbc.gridwidth = GridBagConstraints.REMAINDER;
+//			gbc.gridheight = GridBagConstraints.RELATIVE;
+//			JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.tree), new JScrollPane(this.graph));
+//			splitPane.setDividerLocation(200);
+//			this.panel.add(splitPane, gbc);
+//			
+//			this.propertyPanel = new JPanel(new GridBagLayout());
+//			this.gbc2 = new GridBagConstraints();
+//			this.gbc2.fill = GridBagConstraints.BOTH;
+//			this.gbc2.weightx = 1.0;
+//			this.gbc2.weighty = 1.0;
+//			this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
+//			
+//			gbc.gridheight = GridBagConstraints.REMAINDER;	
+//			this.panel.add(this.propertyPanel, gbc);
+//			
+//			box.setSelectedIndex(0);
+//		}
+//		
+//		return this.panel;
+//	}
+	
+	private JToolBar createPerspecives() {		
 		
-		comboBox.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {				
-				JComboBox box = (JComboBox) e.getSource();
-				Object selectedItem = box.getSelectedItem();
+		JToolBar perspectives = new JToolBar();
+		
+		this.domainsButton = perspectives.add(new AbstractAction(LangModelManager.getString("Action.Domains")) {
+			public void actionPerformed(ActionEvent e) {
+					currentPerspectiveLabel.setText(LangModelManager.getString("Label.DomainsLevel"));
 				
-				System.out.println(".actionPerformed() | selectedItem:" + selectedItem);
-				
-				if (selectedItem == names[0]) {
 					domainButton.setEnabled(true);
 					netButton.setEnabled(true);
 					
@@ -440,12 +547,15 @@ public class JGraphText implements GraphSelectionListener {
 //					graph.showOnlyDescendants((DefaultGraphCell) cell);
 					showOnly(new String[] {"Net", "Domain"});
 					treeModel.setRoot(null);
-				} 
-				
+					
+					JButton button = (JButton) e.getSource();
+					button.setEnabled(false);
 			}
-		});
+		});	
+
+		perspectives.addSeparator();
 		
-		return comboBox;
+		return perspectives;
 	}
 	
 	public void showOnly(String[] names) {
@@ -1090,17 +1200,24 @@ public class JGraphText implements GraphSelectionListener {
 	public static void main(String[] args) {
 
 		JGraphText text = new JGraphText();
-		JFrame frame = new JFrame("JGraphText");
-		frame.getContentPane().add(text.getPanel());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
+//		JFrame frame = new JFrame("JGraphText");
+//		frame.getContentPane().add(text.getPanel());
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.pack();
+//		
+//		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+//		GraphicsDevice gs = ge.getDefaultScreenDevice();
+//		DisplayMode[] dmodes = gs.getDisplayModes();
+//		
+//		frame.setSize(3 * dmodes[0].getWidth() / 4, 3 * dmodes[0].getHeight() / 4);
+//		frame.setVisible(true);
 		
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice gs = ge.getDefaultScreenDevice();
-		DisplayMode[] dmodes = gs.getDisplayModes();
+		text.openFrames();
 		
-		frame.setSize(3 * dmodes[0].getWidth() / 4, 3 * dmodes[0].getHeight() / 4);
-		frame.setVisible(true);
+		text.createChilden();
+		
+		text.domainsButton.doClick();
+	
 	}
 	
 	
@@ -1377,5 +1494,10 @@ public class JGraphText implements GraphSelectionListener {
 	
 	public final JGraph getGraph() {
 		return this.graph;
+	}
+
+	
+	public final boolean isDirect() {
+		return this.direct;
 	}
 }
