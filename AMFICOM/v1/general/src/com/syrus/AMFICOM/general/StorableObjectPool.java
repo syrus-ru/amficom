@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.132 2005/07/26 15:46:00 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.133 2005/07/26 17:00:12 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/07/26 15:46:00 $
+ * @version $Revision: 1.133 $, $Date: 2005/07/26 17:00:12 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -543,7 +543,7 @@ public final class StorableObjectPool {
 		}
 	}
 
-	private static void flushDeleted(final short entityCode) {
+	private static void flushDeleted(final short entityCode) throws ApplicationException {
 		final Short entityKey = new Short(entityCode);
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(entityKey);
 		if (entityDeletedIds != null) {
