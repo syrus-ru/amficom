@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.31 2005/07/24 17:39:22 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.32 2005/07/26 13:31:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -41,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/24 17:39:22 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/26 13:31:25 $
  * @author $Author: arseniy $
  * @module mapview_v1
  */
@@ -76,7 +77,7 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 
-	private MapView fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	private MapView fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MapView)
 			return (MapView) storableObject;
 		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -84,7 +85,7 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 
 	
 	@Override
-	public void retrieve(StorableObject storableObject)
+	public void retrieve(final StorableObject storableObject)
 			throws IllegalDataException,
 				ObjectNotFoundException,
 				RetrieveObjectException {
@@ -146,9 +147,10 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	
 	
 @Override
-		protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
-		MapView mapView = fromStorableObject(storableObject);
+		protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		final MapView mapView = this.fromStorableObject(storableObject);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
@@ -161,9 +163,9 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		MapView mapView = fromStorableObject(storableObject);
-		String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
+		final MapView mapView = this.fromStorableObject(storableObject);
+		final String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ mapView.getLongitude() + COMMA
@@ -175,18 +177,30 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		MapView map = (storableObject == null) ?
-				new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null, null, 0.0, 0.0, 0.0, 0.0, null) :
-					fromStorableObject(storableObject);				
-		
+	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		final MapView map = (storableObject == null)
+				? new MapView(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						0.0,
+						0.0,
+						0.0,
+						0.0,
+						null)
+					: this.fromStorableObject(storableObject);
+
 		try {
 			map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 					DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 					DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
@@ -260,7 +274,7 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 		final StringBuffer stringBuffer = idsEnumerationString(schemeIds, LINK_COLUMN_SCHEME_ID, true);
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + stringBuffer.toString());
@@ -281,10 +295,10 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 			
 	@Override
-	protected Set retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<MapView> maps = super.retrieveByCondition(conditionQuery);
 		
-		java.util.Map<Identifier, MapView> mapIds = new HashMap<Identifier, MapView>();
+		final java.util.Map<Identifier, MapView> mapIds = new HashMap<Identifier, MapView>();
 		for (final MapView map : maps) {
 			mapIds.put(map.getId(), map);
 		}

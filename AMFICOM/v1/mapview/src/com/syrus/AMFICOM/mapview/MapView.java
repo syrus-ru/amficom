@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.45 2005/07/25 12:44:10 bass Exp $
+* $Id: MapView.java,v 1.46 2005/07/26 13:31:25 arseniy Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -56,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/25 12:44:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/07/26 13:31:25 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -111,30 +112,24 @@ public final class MapView extends DomainMember implements Namable {
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {
-			fromTransferable(mvt);
+			this.fromTransferable(mvt);
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
 	MapView(final Identifier id,
-				  final Identifier creatorId,
-				  final long version,
-				  final Identifier domainId,
-				  final String name,
-				  final String description,
-				  final double longitude,
-				  final double latitude,
-				  final double scale,
-				  final double defaultScale,
-				  final Map map) {
-		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			domainId);
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final Identifier domainId,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final double scale,
+			final double defaultScale,
+			final Map map) {
+		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version, domainId);
 		this.name = name;
 		this.description = description;
 		this.longitude = longitude;
@@ -147,7 +142,7 @@ public final class MapView extends DomainMember implements Namable {
 		this.allElements = new LinkedList<MapElement>();
 
 		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
-	}	
+	}
 	
 	public static MapView createInstance(final Identifier creatorId,
 			final Identifier domainId,
@@ -163,7 +158,7 @@ public final class MapView extends DomainMember implements Namable {
 		try {
 			final MapView mapView = new MapView(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_CODE),
 					creatorId,
-					0L,
+					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description,
@@ -180,19 +175,18 @@ public final class MapView extends DomainMember implements Namable {
 	}
 	
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable)
-			throws ApplicationException {
-		
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+
 		final IdlMapView mvt = (IdlMapView) transferable;
 		super.fromTransferable(mvt, new Identifier(mvt.domainId));
 
 		this.name = mvt.name;
 		this.description = mvt.description;
-		
+
 		this.longitude = mvt.longitude;
 		this.latitude = mvt.latitude;
 		this.scale = mvt.scale;
-		this.defaultScale = mvt.defaultScale;		
+		this.defaultScale = mvt.defaultScale;
 
 		final Set<Identifier> schemeIds = Identifier.fromTransferables(mvt.schemeIds);
 
@@ -235,7 +229,7 @@ public final class MapView extends DomainMember implements Namable {
 				this.modified.getTime(),
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
-				this.version,
+				this.version.longValue(),
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
@@ -255,29 +249,27 @@ public final class MapView extends DomainMember implements Namable {
 		return Collections.unmodifiableSet(this.schemes);
 	}
 
-	public void addScheme(final Scheme scheme)
-	{
+	public void addScheme(final Scheme scheme) {
 		this.schemes.add(scheme);
 		super.markAsChanged();
 	}
-	
-	public void removeScheme(final Scheme scheme)
-	{
+
+	public void removeScheme(final Scheme scheme) {
 		this.schemes.remove(scheme);
 		super.markAsChanged();
 	}
-	
+
 	protected void setSchemes0(final Set<Scheme> schemes) {
 		this.schemes.clear();
 		if (schemes != null)
 			this.schemes.addAll(schemes);
 	}
-	
+
 	public void setSchemes(final Set<Scheme> schemeIds) {
 		this.setSchemes0(schemeIds);
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * ѕолучить описание вида.
 	 * @return описание вида
@@ -285,7 +277,7 @@ public final class MapView extends DomainMember implements Namable {
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	/**
 	 * ”становить описание вида.
 	 * @param description описание вида
@@ -294,7 +286,7 @@ public final class MapView extends DomainMember implements Namable {
 		this.description = description;
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * ѕолучить название вида.
 	 * @return название
@@ -302,7 +294,7 @@ public final class MapView extends DomainMember implements Namable {
 	public String getName() {
 		return this.name;
 	}
-	
+
 	/**
 	 * ”становить новое название вида.
 	 * @param name новое название
@@ -311,12 +303,12 @@ public final class MapView extends DomainMember implements Namable {
 		this.name = name;
 		super.markAsChanged();
 	}	
-	
+
 	protected synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
-			final long version,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final String name,
 			final String description,
@@ -325,19 +317,14 @@ public final class MapView extends DomainMember implements Namable {
 			final double scale,
 			final double defaultScale,
 			final Map map) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version,
-					domainId);
-			this.name = name;
-			this.description = description;
-			this.longitude = longitude;
-			this.latitude = latitude;
-			this.scale = scale;
-			this.defaultScale = defaultScale;
-			this.map = map;
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
+		this.name = name;
+		this.description = description;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.scale = scale;
+		this.defaultScale = defaultScale;
+		this.map = map;
 	}
 
 	public double getDefaultScale() {
@@ -406,8 +393,8 @@ public final class MapView extends DomainMember implements Namable {
 	 * @param center центр вида
 	 */
 	public void setCenter(final DoublePoint center) {
-		setLongitude(center.getX());
-		setLatitude(center.getY());
+		this.setLongitude(center.getX());
+		this.setLatitude(center.getY());
 	}
 
 	/**
@@ -543,11 +530,14 @@ public final class MapView extends DomainMember implements Namable {
 		if (schemeElement == null)
 			return null;
 		for (final SiteNode siteNode : this.getMap().getAllSiteNodes()) {
-			if (siteNode instanceof UnboundNode)
-				if (((UnboundNode) siteNode).getSchemeElement().equals(schemeElement))
+			if (siteNode instanceof UnboundNode) {
+				if (((UnboundNode) siteNode).getSchemeElement().equals(schemeElement)) {
 					return siteNode;
-			if (schemeElement.getSiteNode() != null && schemeElement.getSiteNode().equals(siteNode))
+				}
+			}
+			if (schemeElement.getSiteNode() != null && schemeElement.getSiteNode().equals(siteNode)) {
 				return siteNode;
+			}
 		}
 		return null;
 	}
@@ -559,8 +549,9 @@ public final class MapView extends DomainMember implements Namable {
 	 */
 	public CablePath findCablePath(final SchemeCableLink schemeCableLink) {
 		for (final CablePath cablePath : this.getCablePaths()) {
-			if (cablePath.getSchemeCableLink().equals(schemeCableLink))
+			if (cablePath.getSchemeCableLink().equals(schemeCableLink)) {
 				return cablePath;
+			}
 		}
 		return null;
 	}
@@ -572,8 +563,9 @@ public final class MapView extends DomainMember implements Namable {
 	 */
 	public MeasurementPath findMeasurementPath(final SchemePath schemePath) {
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
-			if (measurementPath.getSchemePath().equals(schemePath))
+			if (measurementPath.getSchemePath().equals(schemePath)) {
 				return measurementPath;
+			}
 		}
 		return null;
 	}
@@ -612,8 +604,9 @@ public final class MapView extends DomainMember implements Namable {
 	public List<CablePath> getCablePaths(final PhysicalLink physicalLink) {
 		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
 		for (final CablePath cablePath : this.getCablePaths()) {
-			if (cablePath.getLinks().contains(physicalLink))
+			if (cablePath.getLinks().contains(physicalLink)) {
 				returnVector.add(cablePath);
+			}
 		}
 		return returnVector;
 	}
@@ -627,8 +620,9 @@ public final class MapView extends DomainMember implements Namable {
 		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
 		for (final CablePath cablePath : this.getCablePaths()) {
 			cablePath.sortNodes();
-			if (cablePath.getSortedNodes().contains(node))
+			if (cablePath.getSortedNodes().contains(node)) {
 				returnVector.add(cablePath);
+			}
 		}
 		return returnVector;
 	}
@@ -643,8 +637,9 @@ public final class MapView extends DomainMember implements Namable {
 		final LinkedList<CablePath> returnVector = new LinkedList<CablePath>();
 		for (final CablePath cablePath : this.getCablePaths()) {
 			cablePath.sortNodeLinks();
-			if (cablePath.getSortedNodeLinks().contains(nodeLink))
+			if (cablePath.getSortedNodeLinks().contains(nodeLink)) {
 				returnVector.add(cablePath);
+			}
 		}
 		return returnVector;
 	}
@@ -683,8 +678,9 @@ public final class MapView extends DomainMember implements Namable {
 	public List<MeasurementPath> getMeasurementPaths(final CablePath cablePath) {
 		final LinkedList<MeasurementPath> returnVector = new LinkedList<MeasurementPath>();
 		for (final MeasurementPath measurementPath : this.getMeasurementPaths()) {
-			if (measurementPath.getSortedCablePaths().contains(cablePath))
+			if (measurementPath.getSortedCablePaths().contains(cablePath)) {
 				returnVector.add(measurementPath);
+			}
 		}
 		return returnVector;
 	}
