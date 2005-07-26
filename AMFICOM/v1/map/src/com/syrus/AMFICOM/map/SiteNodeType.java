@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.50 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.51 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -303,6 +303,7 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 	}
 
 	SiteNodeType(final Identifier creatorId,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType,
@@ -313,7 +314,7 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				version,
 				codename,
 				description);
 		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool);
@@ -358,11 +359,11 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
 
 		try {
-			final SiteNodeType siteNode = new SiteNodeType(
-					creatorId, 
+			final SiteNodeType siteNode = new SiteNodeType(creatorId,
+					StorableObjectVersion.createInitial(),
 					xmlSiteNodeType.getSort().toString(),
 					xmlSiteNodeType.getDescription(),
-					xmlSiteNodeType, 
+					xmlSiteNodeType,
 					clonedIdsPool);
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.53 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.54 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -387,7 +387,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject; 
+		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		final com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
 		uid.setStringValue(this.id.toString());
@@ -397,6 +397,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	}
 
 	TopologicalNode(final Identifier creatorId,
+			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
@@ -405,7 +406,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				version,
 				"",
 				"",
 				new DoublePoint(0, 0));
@@ -427,7 +428,10 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		try {
-			final TopologicalNode topologicalNode = new TopologicalNode(creatorId, xmlTopologicalNode, clonedIdsPool);
+			final TopologicalNode topologicalNode = new TopologicalNode(creatorId,
+					StorableObjectVersion.createInitial(),
+					xmlTopologicalNode,
+					clonedIdsPool);
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();
 			return topologicalNode;

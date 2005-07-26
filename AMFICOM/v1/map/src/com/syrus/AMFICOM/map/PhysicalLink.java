@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.75 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.76 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: arseniy $
- * @version $Revision: 1.75 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.76 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -971,7 +971,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	public XmlObject getXMLTransferable() {
 		final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = com.syrus.amficom.map.xml.PhysicalLink.Factory.newInstance();
-		fillXMLTransferable(xmlPhysicalLink);
+		this.fillXMLTransferable(xmlPhysicalLink);
 		return xmlPhysicalLink;
 	}
 
@@ -998,6 +998,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	PhysicalLink(final Identifier creatorId,
+			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
@@ -1006,14 +1007,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial());
+				version);
 		this.nodeLinks = new ArrayList<NodeLink>();
 		this.selected = false;
 		this.fromXMLTransferable(xmlPhysicalLink, clonedIdsPool);
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject; 
+		final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink) xmlObject;
 
 		this.name = xmlPhysicalLink.getName();
 		this.description = xmlPhysicalLink.getDescription();
@@ -1072,7 +1073,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = (com.syrus.amficom.map.xml.PhysicalLink )xmlObject;
 
 		try {
-			final PhysicalLink physicalLink = new PhysicalLink(creatorId, xmlPhysicalLink, clonedIdsPool);
+			final PhysicalLink physicalLink = new PhysicalLink(creatorId,
+					StorableObjectVersion.createInitial(),
+					xmlPhysicalLink,
+					clonedIdsPool);
 			assert physicalLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLink.markAsChanged();
 			return physicalLink;

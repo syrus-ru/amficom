@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.56 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: SiteNode.java,v 1.57 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -435,12 +435,12 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 	public XmlObject getXMLTransferable() {
 		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = com.syrus.amficom.map.xml.SiteNode.Factory.newInstance();
-		fillXMLTransferable(xmlSiteNode);
+		this.fillXMLTransferable(xmlSiteNode);
 		return xmlSiteNode;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject; 
+		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject; 
 
 		final SiteNodeType siteNodeType = (SiteNodeType) this.getType(); 
 
@@ -456,7 +456,10 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		xmlSiteNode.setBuilding(this.building);
 	}
 
-	SiteNode(final Identifier creatorId, final com.syrus.amficom.map.xml.SiteNode xmlSiteNode, final ClonedIdsPool clonedIdsPool)
+	SiteNode(final Identifier creatorId,
+			final StorableObjectVersion version,
+			final com.syrus.amficom.map.xml.SiteNode xmlSiteNode,
+			final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException,
 				ApplicationException {
 
@@ -465,7 +468,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				version,
 				"",
 				"",
 				new DoublePoint(0, 0));
@@ -477,7 +480,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
+		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject;
 
 		this.name = xmlSiteNode.getName();
 		this.description = xmlSiteNode.getDescription();
@@ -514,10 +517,10 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	public static SiteNode createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode )xmlObject;
+		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject;
 
 		try {
-			final SiteNode siteNode = new SiteNode(creatorId, xmlSiteNode, clonedIdsPool);
+			final SiteNode siteNode = new SiteNode(creatorId, StorableObjectVersion.createInitial(), xmlSiteNode, clonedIdsPool);
 			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();
 			return siteNode;

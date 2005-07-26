@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.59 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: NodeLink.java,v 1.60 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -476,7 +476,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink )xmlObject; 
+		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject; 
 
 		com.syrus.amficom.general.xml.UID uid = xmlNodeLink.addNewUid();
 		uid.setStringValue(this.id.toString());
@@ -493,16 +493,17 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		uid.setStringValue(this.endNode.getId().toString());
 	}
 
-	NodeLink(Identifier creatorId, com.syrus.amficom.map.xml.NodeLink xmlNodeLink, ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException,
-				ApplicationException {
+	NodeLink(final Identifier creatorId,
+			final StorableObjectVersion version,
+			final com.syrus.amficom.map.xml.NodeLink xmlNodeLink,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.NODELINK_CODE, xmlNodeLink.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial());
+				version);
 		this.selected = false;
 		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool);
 	}
@@ -531,7 +532,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject;
 
 		try {
-			final NodeLink nodeLink = new NodeLink(creatorId, xmlNodeLink, clonedIdsPool);
+			final NodeLink nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool);
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();
 			return nodeLink;

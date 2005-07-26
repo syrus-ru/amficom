@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.61 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: Map.java,v 1.62 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.61 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -973,12 +973,12 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	public XmlObject getXMLTransferable() {
 		final com.syrus.amficom.map.xml.Map xmlMap = com.syrus.amficom.map.xml.Map.Factory.newInstance();
-		fillXMLTransferable(xmlMap);
+		this.fillXMLTransferable(xmlMap);
 		return xmlMap;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject; 
+		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject;
 
 		final com.syrus.amficom.general.xml.UID uid = xmlMap.addNewUid();
 		uid.setStringValue(this.id.toString());
@@ -1033,6 +1033,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	}
 
 	Map(final Identifier creatorId,
+			final StorableObjectVersion version,
 			final Identifier domainId,
 			final com.syrus.amficom.map.xml.Map xmlMap,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
@@ -1042,7 +1043,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				version,
 				domainId);
 		this.fromXMLTransferable(xmlMap, clonedIdsPool);
 	}
@@ -1102,10 +1103,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map )xmlObject;
+		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject;
 
 		try {
-			final Map map = new Map(creatorId, domainId, xmlMap, clonedIdsPool);
+			final Map map = new Map(creatorId, StorableObjectVersion.createInitial(), domainId, xmlMap, clonedIdsPool);
 			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();
 

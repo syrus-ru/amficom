@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.56 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.57 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -303,7 +303,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 
 	public XmlObject getXMLTransferable() {
 		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = com.syrus.amficom.map.xml.PhysicalLinkType.Factory.newInstance();
-		fillXMLTransferable(xmlPhysicalLinkType);
+		this.fillXMLTransferable(xmlPhysicalLinkType);
 		return xmlPhysicalLinkType;
 	}
 
@@ -321,6 +321,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 	}
 
 	PhysicalLinkType(final Identifier creatorId,
+			final StorableObjectVersion version,
 			final String codename,
 			final String description,
 			final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType,
@@ -331,7 +332,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial(),
+				version,
 				codename,
 				description);
 		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool);
@@ -354,6 +355,7 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 
 		try {
 			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(creatorId,
+					StorableObjectVersion.createInitial(),
 					xmlPhysicalLinkType.getSort().toString(),
 					xmlPhysicalLinkType.getDescription(),
 					xmlPhysicalLinkType,

@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.57 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: Collector.java,v 1.58 2005/07/26 12:07:03 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/07/26 11:41:05 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/26 12:07:03 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -395,12 +395,12 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 
 	public XmlObject getXMLTransferable() {
 		final com.syrus.amficom.map.xml.Collector xmlCollector = com.syrus.amficom.map.xml.Collector.Factory.newInstance();
-		fillXMLTransferable(xmlCollector);
+		this.fillXMLTransferable(xmlCollector);
 		return xmlCollector;
 	}
 
 	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector )xmlObject; 
+		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		final com.syrus.amficom.general.xml.UID uid = xmlCollector.addNewUid();
 		uid.setStringValue(this.id.toString());
@@ -415,16 +415,17 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	Collector(final Identifier creatorId, final com.syrus.amficom.map.xml.Collector xmlCollector, final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException,
-				ApplicationException {
+	Collector(final Identifier creatorId,
+			final StorableObjectVersion version,
+			final com.syrus.amficom.map.xml.Collector xmlCollector,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.COLLECTOR_CODE, xmlCollector.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
-				StorableObjectVersion.createInitial());
+				version);
 
 		this.physicalLinks = new HashSet<PhysicalLink>();
 
@@ -453,7 +454,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		try {
-			final Collector collector = new Collector(creatorId, xmlCollector, clonedIdsPool);
+			final Collector collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool);
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			collector.markAsChanged();
 			return collector;
