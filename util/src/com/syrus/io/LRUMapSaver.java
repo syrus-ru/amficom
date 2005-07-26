@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.17 2005/07/26 18:09:34 bass Exp $
+ * $Id: LRUMapSaver.java,v 1.18 2005/07/26 19:39:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/26 18:09:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/26 19:39:52 $
  * @author $Author: bass $
  * @module util
  */
@@ -44,7 +44,7 @@ public class LRUMapSaver {
 			// empty
 	}
 
-	public static void save(final LRUMap lruMap, final String objectEntityName, final boolean cleanLRUMap) {
+	public static void save(final LRUMap<?, ?> lruMap, final String objectEntityName, final boolean cleanLRUMap) {
 		File tempFile = null;
 		try {
 			init();
@@ -85,6 +85,7 @@ public class LRUMapSaver {
 	 * @todo Consider returning an empty list instead of null. Check all
 	 *       dependent code (within workspace).
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> Set<T> load(final String objectEntityName) {
 		try {
 			init();

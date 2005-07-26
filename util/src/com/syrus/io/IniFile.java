@@ -1,5 +1,5 @@
 /*
- * $Id: IniFile.java,v 1.13 2005/07/16 21:40:20 arseniy Exp $
+ * $Id: IniFile.java,v 1.14 2005/07/26 19:39:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,13 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/07/16 21:40:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/07/26 19:39:52 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */
 @Deprecated
+@SuppressWarnings("all")
 public final class IniFile {
 	byte[] data;
 	FileInputStream fis;

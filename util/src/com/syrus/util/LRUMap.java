@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.28 2005/07/26 18:09:34 bass Exp $
+ * $Id: LRUMap.java,v 1.29 2005/07/26 19:39:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/26 18:09:34 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/26 19:39:52 $
  * @author $Author: bass $
  * @module util
  */
@@ -108,7 +108,7 @@ public class LRUMap<K, V> implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	public synchronized boolean containsKey(Object key) {
+	public synchronized boolean containsKey(K key) {
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++)
 				if (this.array[i] != null && key.equals(this.array[i].key))
@@ -118,10 +118,10 @@ public class LRUMap<K, V> implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	public synchronized Object remove(final Object key) {
+	public synchronized V remove(final K key) {
 		this.modCount++;
 		if (key != null) {
-			Object ret = null;
+			V ret = null;
 			for (int i = 0; i < this.array.length; i++) {
 				Entry entry = this.array[i];
 				if ((entry != null) && (entry.key != null) && (key.equals(entry.key))) {
@@ -152,11 +152,11 @@ public class LRUMap<K, V> implements Serializable {
 				throw new IllegalArgumentException("Key is NULL");
 		}
 
-		public Object getKey() {
+		public L getKey() {
 			return this.key;
 		}
 
-		public Object getValue() {
+		public W getValue() {
 			return this.value;
 		}
 	}
