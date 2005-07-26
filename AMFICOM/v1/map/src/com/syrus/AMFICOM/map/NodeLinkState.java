@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkState.java,v 1.3 2005/05/18 11:48:20 bass Exp $
+ * $Id: NodeLinkState.java,v 1.4 2005/07/26 10:20:09 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,12 +17,11 @@ import com.syrus.util.HashCodeGenerator;
  *
  *
  *
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/26 10:20:09 $
  * @module map_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
-public final class NodeLinkState extends MapElementState
-{
+public final class NodeLinkState extends MapElementState {
 	public String name;
 
 	public AbstractNode startNode;
@@ -30,25 +29,24 @@ public final class NodeLinkState extends MapElementState
 
 	public Identifier physicalLinkId;
 
-	public NodeLinkState(NodeLink nodeLink){
+	public NodeLinkState(NodeLink nodeLink) {
 		super();
 		this.name = nodeLink.getName();
 		this.startNode = nodeLink.getStartNode();
 		this.endNode = nodeLink.getEndNode();
-		
+
 		this.physicalLinkId = nodeLink.getPhysicalLink().getId();
 	}
 
-	public boolean equals(Object object) {
-		NodeLinkState mnles = (NodeLinkState)object;
-		return (this.name.equals(mnles.name)
-			&& this.startNode.equals(mnles.startNode)
-			&& this.endNode.equals(mnles.endNode)
-			&& this.physicalLinkId.equals(mnles.physicalLinkId));
+	@Override
+	public boolean equals(final Object object) {
+		NodeLinkState mnles = (NodeLinkState) object;
+		return (this.name.equals(mnles.name) && this.startNode.equals(mnles.startNode) && this.endNode.equals(mnles.endNode) && this.physicalLinkId.equals(mnles.physicalLinkId));
 	}
-	
+
+	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addInt(super.hashCode());
 		codeGenerator.addObject(this.name);
 		codeGenerator.addObject(this.startNode);

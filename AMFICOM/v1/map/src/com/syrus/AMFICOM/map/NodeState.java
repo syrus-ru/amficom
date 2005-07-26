@@ -1,5 +1,5 @@
 /**
- * $Id: NodeState.java,v 1.4 2005/05/18 11:48:20 bass Exp $
+ * $Id: NodeState.java,v 1.5 2005/07/26 10:21:09 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,41 +19,41 @@ import java.util.HashMap;
  *
  *
  *
- * @version $Revision: 1.4 $, $Date: 2005/05/18 11:48:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/26 10:21:09 $
  * @module map_v1
- * @author $Author: bass $
+ * @author $Author: arseniy $
  */
-public class NodeState extends MapElementState
-{
+public class NodeState extends MapElementState {
 	public String name;
 	public String description;
 	public Identifier imageId;
 	public DoublePoint location;
 	public String optimizerAttribute;
 	public java.util.Map attributes = new HashMap();
-	
-	public NodeState(AbstractNode mne)
-	{
+
+	public NodeState(final AbstractNode mne) {
 		super();
 		this.name = mne.getName();
-//		description = mne.getDescription();
+		// description = mne.getDescription();
 		this.imageId = mne.getImageId();
-		this.location = (DoublePoint)mne.getLocation().clone();
-//		optimizerAttribute = mne.optimizerAttribute;
+		this.location = (DoublePoint) mne.getLocation().clone();
+		// optimizerAttribute = mne.optimizerAttribute;
 
 	}
 
-	public boolean equals(Object object) {
-		NodeState mnes = (NodeState)object;
+	@Override
+	public boolean equals(final Object object) {
+		final NodeState mnes = (NodeState) object;
 		return (this.name.equals(mnes.name)
-			&& this.description.equals(mnes.description)
-			&& this.imageId.equals(mnes.imageId)
-			&& this.location.equals(mnes.location)
-			&& this.optimizerAttribute.equals(mnes.optimizerAttribute));
+				&& this.description.equals(mnes.description)
+				&& this.imageId.equals(mnes.imageId)
+				&& this.location.equals(mnes.location)
+				&& this.optimizerAttribute.equals(mnes.optimizerAttribute));
 	}
 	
+	@Override
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		final HashCodeGenerator codeGenerator = new HashCodeGenerator();
 		codeGenerator.addObject(this.name);
 		codeGenerator.addObject(this.description);
 		codeGenerator.addObject(this.imageId);
