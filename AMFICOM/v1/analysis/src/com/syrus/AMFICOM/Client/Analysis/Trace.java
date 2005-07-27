@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.6 2005/07/26 15:13:00 saa Exp $
+ * $Id: Trace.java,v 1.7 2005/07/27 07:41:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.Analysis;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
@@ -21,9 +22,9 @@ import com.syrus.io.BellcoreStructure;
  * <ul>
  * <li> BellcoreStructure bs - собственно рефлектограмма
  * <li> double[] traceData - кэш bs.getTraceData() (полагаемся, что никто не будет изменять этот массив) 
- * <li> MTAE - результаты первого анализа (для отображения а/к на экране; для primarytrace может отсутствовать)
- *   (mtae может быть вычислен в любой момент от загрузки Trace до запроса
- *   getMTAE, в соответствии с любыми действующими на этом периоде времени
+ * <li> ar - результаты первого анализа (для отображения а/к на экране; для primarytrace может отсутствовать)
+ *   (ar может быть вычислен в любой момент от загрузки Trace до запросов
+ *   getAR/getMTAE, в соответствии с любыми действующими на этом периоде времени
  *   парамерами анализа; может также быть загружен, если такой анализ был
  *   проведен на агенте)
  * <li> Object key - идентификатор для проверки уникальности, это может быть
@@ -33,7 +34,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/07/26 15:13:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/27 07:41:29 $
  * @module
  */
 public class Trace {
@@ -43,7 +44,7 @@ public class Trace {
 	private Result result; // may be null
 
 	private double[] traceData = null; // null if not cached yet
-	private ModelTraceAndEventsImpl mtae = null;
+	private AnalysisResult ar = null;
 
 	public Trace(BellcoreStructure bs, String key, AnalysisParameters ap) {
 		this.bs = bs;
@@ -55,13 +56,13 @@ public class Trace {
 	 * one of ap and mtae may be null
 	 */
 	private Trace(Result result,
-			AnalysisParameters ap, ModelTraceAndEventsImpl mtae)
+			AnalysisParameters ap, AnalysisResult ar)
 	throws SimpleApplicationException {
 		this.bs = AnalysisUtil.getBellcoreStructureFromResult(result);
 		this.ap = ap;
 		this.key = result.getId().getIdentifierString();
 		this.result = result;
-		this.mtae = mtae;
+		this.ar = ar;
 	}
 	/**
 	 * Открывает рефлектограмму без предварительно полученных результатов анализа
@@ -77,22 +78,24 @@ public class Trace {
 	/**
 	 * Открывает рефлектограмму с предварительно полученными результатами анализа
 	 * @param result результат измерения
-	 * @param mtae результат анализа
+	 * @param ar результат анализа
 	 * @throws SimpleApplicationException если попытались открыть
 	 * результат, не содержащую рефлектограмму 
 	 */
-	public Trace(Result result, ModelTraceAndEventsImpl mtae)
+	public Trace(Result result, AnalysisResult ar)
 	throws SimpleApplicationException {
-		this(result, null, mtae);
+		this(result, null, ar);
+	}
+
+	public AnalysisResult getAR() {
+		if (ar == null) {
+			ar = CoreAnalysisManager.performAnalysis(bs, ap);
+		}
+		return ar;
 	}
 
 	public ModelTraceAndEventsImpl getMTAE() {
-		if (mtae == null) {
-			// XXX: пользоваться traceData, если она есть
-			// XXX: имеет ли смысл запоминать весь AnalysisResult, а не только MTAE?
-			mtae = CoreAnalysisManager.performAnalysis(bs, ap).getMTAE();
-		}
-		return mtae;
+		return getAR().getMTAE();
 	}
 	/**
 	 * Возвращается всегда один и тот же объект,

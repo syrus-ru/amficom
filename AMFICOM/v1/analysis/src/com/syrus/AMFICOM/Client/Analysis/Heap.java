@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.101 2005/07/27 06:55:07 saa Exp $
+ * $Id: Heap.java,v 1.102 2005/07/27 07:41:29 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.101 $, $Date: 2005/07/27 06:55:07 $
+ * @version $Revision: 1.102 $, $Date: 2005/07/27 07:41:29 $
  * @module
  */
 public class Heap
@@ -239,7 +239,7 @@ public class Heap
 	public static void openPrimaryTraceAndNotify(Result result,
 			AnalysisResult ar)
 	throws SimpleApplicationException {
-		Trace tr = new Trace(result, ar.getMTAE());
+		Trace tr = new Trace(result, ar);
 		openPrimaryTrace(tr);
 		setRefAnalysisPrimary(new RefAnalysis(tr.getBS(), ar));
 		primaryTraceOpened();
