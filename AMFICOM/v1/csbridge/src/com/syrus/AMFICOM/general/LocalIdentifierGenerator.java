@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGenerator.java,v 1.7 2005/07/14 11:29:53 arseniy Exp $
+ * $Id: LocalIdentifierGenerator.java,v 1.8 2005/07/27 13:44:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 import java.util.List;
 import java.util.LinkedList;
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/14 11:29:53 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/27 13:44:17 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -23,32 +23,35 @@ public class LocalIdentifierGenerator {
 		// singleton constructor
 	}
 
-	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException {
-		short major = generateMajor(entityCode);
-		long minor = generateMinor(entityCode);
+	public static synchronized Identifier generateIdentifier(final short entityCode) throws IllegalObjectEntityException {
+		final short major = generateMajor(entityCode);
+		final long minor = generateMinor(entityCode);
 		return new Identifier(major, minor);
 	}
 
-	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException {
-		List<Identifier> list = new LinkedList<Identifier>();
-		short major = generateMajor(entityCode);
-		long minor;
+	public static synchronized Identifier[] generateIdentifierRange(final short entityCode, final int rangeSize)
+			throws IllegalObjectEntityException {
+		final List<Identifier> list = new LinkedList<Identifier>();
+		final short major = generateMajor(entityCode);
 		for (int i = 0; i < rangeSize; i++) {
-			minor = generateMinor(entityCode);
+			final long minor = generateMinor(entityCode);
 			list.add(new Identifier(major, minor));
 		}
 		return list.toArray(new Identifier[list.size()]);
 	}
 
-	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
-		if (ObjectEntities.isEntityCodeValid(entityCode))
+	private static short generateMajor(final short entityCode) throws IllegalObjectEntityException {
+		if (ObjectEntities.isEntityCodeValid(entityCode)) {
 			return entityCode;
-		throw new IllegalObjectEntityException(ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
+		throw new IllegalObjectEntityException(ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode,
+				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
-	private static long generateMinor(short entityCode) {
-		if (counter >= MAX_COUNTER)
+	private static long generateMinor(final short entityCode) {
+		if (counter >= MAX_COUNTER) {
 			counter = 0;
+		}
 
 		return entityCode + System.currentTimeMillis() + (counter++);
 	}
