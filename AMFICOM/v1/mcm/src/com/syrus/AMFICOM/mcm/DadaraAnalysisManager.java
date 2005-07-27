@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.56 2005/07/14 20:27:50 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.57 2005/07/27 11:58:34 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,13 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/07/14 20:27:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/07/27 11:58:34 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
 //*
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -103,8 +104,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	/**
 	 * This constructor is called only by Reflection API
 	 * @param measurementResult
-	 * @param analysis
-	 * @param etalon
+	 * @param analysis (not null)
+	 * @param etalon may be null
 	 * @throws AnalysisException
 	 */
 	@SuppressWarnings("unused")
@@ -116,7 +117,9 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		this.etalonPars = new HashMap<String,byte[]>();
 		this.addSetParameters(this.tracePars, measurementResult.getParameters());
 		this.addSetParameters(this.criteriaPars, analysis.getCriteriaSet().getParameters());
-		this.addSetParameters(this.etalonPars, etalon.getParameters());
+		if(etalon != null) {
+			this.addSetParameters(this.etalonPars, etalon.getParameters());
+		}
 	}
 
 	private void addSetParameters(final Map<String,byte[]> parsMap, final Parameter[] setParameters) throws AnalysisException {
@@ -140,14 +143,18 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		return parsMap.get(codename) != null;
 	}
 
-	private byte[] getParameter(final Map<String,byte[]> parsMap, final String codename) throws AnalysisException {
+	private byte[] getParameter(final Map<String,byte[]> parsMap, final String codename)
+	throws AnalysisException {
 		byte[] rawData = parsMap.get(codename);
 		if (rawData == null)
 			throw new AnalysisException("Cannot get parameter of codename '" + codename + "'");
 		return rawData;
 	}
 
+	// возвращает null, если эталона нет.
 	private Etalon obtainEtalon() throws AnalysisException {
+		if (! hasParameter(this.etalonPars, CODENAME_DADARA_ETALON))
+			return null;
 		byte[] etalonData = this.getParameter(this.etalonPars, CODENAME_DADARA_ETALON);
 		try {
 			Etalon et = (Etalon) DataStreamableUtil.
@@ -159,10 +166,9 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		}
 	}
 
-	// may return null if no such parameter
-	private AnalysisParameters obtainAnalysisParameters() throws AnalysisException {
-		if (!hasParameter(this.criteriaPars, CODENAME_DADARA_CRITERIA))
-			return null;
+	// will not return null
+	private AnalysisParameters obtainAnalysisParameters()
+	throws AnalysisException {
 		byte[] bar = this.getParameter(this.criteriaPars, CODENAME_DADARA_CRITERIA);
 		try {
 			return (AnalysisParameters) DataStreamableUtil.readDataStreamableFromBA(bar, AnalysisParameters.getReader());
@@ -181,10 +187,10 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// Получаем рефлектограмму
 		BellcoreStructure bs = (new BellcoreReader()).getData(this.getParameter(this.tracePars, CODENAME_REFLECTOGRAMMA));
 
-		// Получаем параметры анализа (могут быть null, тогда анализ не проводим)
+		// Получаем параметры анализа
 		AnalysisParameters ap = this.obtainAnalysisParameters();
 
-		// Получаем эталон
+		// Получаем эталон (может быть null, тогда сравнение не проводим)
 		Etalon etalon = obtainEtalon();
 
 		// === Обрабатываем входные данные, анализируем, сравниваем ===
@@ -192,17 +198,24 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// проводим анализ
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
 
-		// сравниваем: дополняем ar результатами сравнения и получаем алармы
-		List<ReflectogramMismatch> alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
+		// если есть эталон, то сравниваем:
+		// дополняем ar результатами сравнения и получаем алармы
+		List<ReflectogramMismatch> alarmList;
+		if (etalon != null)
+			alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
+		else
+			alarmList = null;
 
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
 
 		// === Формируем результаты ===
 
-		// добавляем алармы в результаты анализа
-		ReflectogramMismatch[] alarms = alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
-		outParameters.put(CODENAME_ALARMS, ReflectogramMismatch.alarmsToByteArray(alarms));
+		// если эталон есть, то добавляем алармы в результаты анализа
+		if (etalon != null) {
+			ReflectogramMismatch[] alarms = alarmList.toArray(new ReflectogramMismatch[alarmList.size()]);
+			outParameters.put(CODENAME_ALARMS, ReflectogramMismatch.alarmsToByteArray(alarms));
+		}
 
 		// формируем результаты анализа
 		Parameter[] ret = new Parameter[outParameters.size()];
