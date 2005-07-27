@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.24 2005/07/26 20:10:26 bass Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.25 2005/07/27 16:37:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/07/26 20:10:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/07/27 16:37:18 $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public class DatabaseObjectLoader implements ObjectLoader {
@@ -54,6 +54,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
+		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
 		return versionsMap;
 	}
