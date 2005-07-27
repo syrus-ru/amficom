@@ -235,6 +235,10 @@ ActionListener, PropertyChangeListener {
 	}
 
 	public void setStartDate(Date start) {
+		if (this.startDate != null && this.startDate.equals(start)) {
+			return;
+		}
+		
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -554,6 +558,14 @@ ActionListener, PropertyChangeListener {
 				case 1:
 				case 2:
 					this.cal.set(Calendar.SECOND, 0);
+			}
+		}
+		
+		for (int i = 0; i < this.getComponentCount(); i++) {
+			Component component = PlanPanel.this.getComponent(i);
+			if (component instanceof TimeLine) {
+				TimeLine timeLine = (TimeLine) component;
+				timeLine.updateScale();
 			}
 		}
 		this.revalidate();

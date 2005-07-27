@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -138,6 +139,10 @@ public class TestLine extends TimeLine {
 
 	protected boolean	skip					= false;
 
+	long	lastRefreshTimeItemMs;
+
+	boolean	refreshTimeItemsRequire;
+
 	public TestLine(ApplicationContext aContext, String title, Identifier monitoredElementId) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		// this.schedulerModel.addTestsEditor(this);
@@ -155,6 +160,24 @@ public class TestLine extends TimeLine {
 		// this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST,
 		// this);
 		this.setToolTipText("");
+		
+		new Thread() {
+			@Override
+			public void run() {
+				while(true) {
+					if (refreshTimeItemsRequire && System.currentTimeMillis() > 1000) {
+						refreshTimeItemsRequire = false;
+						lazyRefreshTimeItems();
+					}
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}.start();
 	}
 
 	//
@@ -553,6 +576,7 @@ public class TestLine extends TimeLine {
 	}
 
 	private void acquireTests() {
+		System.out.println("TestLine.acquireTests()");
 		// Log.debugMessage("TestLine.acquireTests | test1.size() " +
 		// tests1.size(), Log.FINEST);
 		this.testIds.clear();
@@ -687,8 +711,16 @@ public class TestLine extends TimeLine {
 		this.refreshTimeItems();
 	}
 
-	synchronized void refreshTimeItems() {
-		// Log.debugMessage("TestLine.refreshTimeItems | ", Log.FINEST);
+	void refreshTimeItems() {
+		
+		this.lastRefreshTimeItemMs = System.currentTimeMillis();
+		this.refreshTimeItemsRequire = true;
+
+	}
+
+	synchronized void lazyRefreshTimeItems() {		
+		
+//		Log.debugMessage("TestLine.refreshTimeItems | ", Log.DEBUGLEVEL01);
 		this.timeItems.clear();
 		if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
 			// Log.debugMessage("TestLine.refreshTimeItems | this.scale is "

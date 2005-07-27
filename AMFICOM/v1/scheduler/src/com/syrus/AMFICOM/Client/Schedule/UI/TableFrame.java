@@ -152,17 +152,16 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			for (Iterator it = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true).iterator(); it.hasNext();) {
 				Test test1 = (Test) it.next();
 				Identifier groupTestId = test1.getGroupTestId();
-				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
-						+ groupTestId, Level.FINEST);
+//				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
+//						+ groupTestId, Level.FINEST);
 				if (!groupTestId.isVoid() && !groupTestId.equals(test1.getId())) {
 					continue;
 				}
 				if (model.getIndexOfObject(test1) < 0) {
-					Log.debugMessage("TableFrame.setTests | added ", Level.FINEST);
-					model.getValues().add(test1);
+//					Log.debugMessage("TableFrame.setTests | added ", Level.FINEST);
+					model.addObject(test1);
 				}
 			}
-			this.listTable.resort();
 		} catch (ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
 		}

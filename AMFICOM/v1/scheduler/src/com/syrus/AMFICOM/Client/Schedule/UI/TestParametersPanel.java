@@ -76,7 +76,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 	WrapperedComboBox		evaluationComboBox;
 
 	JPanel					switchPanel;
-	List					msList;
+	List<MeasurementSetup>					msList;
 
 	WrapperedList			testSetups;
 
@@ -416,7 +416,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		
 		if (this.measurementSetupId != null && measurementSetup != null
 				&& this.measurementSetupId.equals(measurementSetup.getId()) || this.msList == null) {
-			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
+//			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
 			 if (this.msList == null) {
 				 this.measurementSetupId = measurementSetup.getId();
 			 }
@@ -481,7 +481,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
 		
 		if (this.msList == null)
-			this.msList = new LinkedList();
+			this.msList = new LinkedList<MeasurementSetup>();
 		else {
 			// year! really equals links to the same object
 			if (this.msList != measurementSetups)

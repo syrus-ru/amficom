@@ -203,48 +203,48 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_ADD_NEW_MEASUREMENT_SETUP, this);
 
 		//
-		add("menuSession");
-		add("menuSessionNew");
-		add("menuSessionClose");
-		add("menuSessionOptions");
-		add("menuSessionConnection");
-		add("menuSessionChangePassword");
-		add("menuSessionSave");
-		add("menuSessionUndo");
-		add("menuSessionDomain");
-		add("menuExit");
+		this.add("menuSession");
+		this.add("menuSessionNew");
+		this.add("menuSessionClose");
+		this.add("menuSessionOptions");
+		this.add("menuSessionConnection");
+		this.add("menuSessionChangePassword");
+		this.add("menuSessionSave");
+		this.add("menuSessionUndo");
+		this.add("menuSessionDomain");
+		this.add("menuExit");
 
-		add(ScheduleMainMenuBar.MENU_VIEW);
-		add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
-		add(ScheduleMainMenuBar.MENU_VIEW_TREE);
-		add(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS);
-		add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
-		add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
-		add(ScheduleMainMenuBar.MENU_VIEW_TIME);
-		add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
-		add(ApplicationModel.MENU_VIEW_ARRANGE);
+		this.add(ScheduleMainMenuBar.MENU_VIEW);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_TREE);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_TIME);
+		this.add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
+		this.add(ApplicationModel.MENU_VIEW_ARRANGE);
 
-		add(ScheduleMainMenuBar.MENU_REPORT);
-		add(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT);
+		this.add(ScheduleMainMenuBar.MENU_REPORT);
+		this.add(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT);
 
-		add(ApplicationModel.MENU_HELP);
-		add(ApplicationModel.MENU_HELP_ABOUT);
+		this.add(ApplicationModel.MENU_HELP);
+		this.add(ApplicationModel.MENU_HELP_ABOUT);
 
-		setVisible("menuSessionSave", false);
-		setVisible("menuSessionUndo", false);
-		setVisible("menuSessionOptions", false);
+		this.setVisible("menuSessionSave", false);
+		this.setVisible("menuSessionUndo", false);
+		this.setVisible("menuSessionOptions", false);
 
-		setVisible(ScheduleMainMenuBar.MENU_VIEW, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
-		setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
+		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
 
-		setVisible(ApplicationModel.MENU_HELP, true);
-		setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
+		this.setVisible(ApplicationModel.MENU_HELP, true);
+		this.setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
 
 	}
 
@@ -861,6 +861,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
 		}
+		this.refreshMeasurementSetups();
 		this.refreshTests();
 		// this.refreshTest();
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));

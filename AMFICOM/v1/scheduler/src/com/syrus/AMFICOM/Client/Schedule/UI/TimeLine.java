@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.10 2005/05/23 10:26:12 bob Exp $
+ * $Id: TimeLine.java,v 1.11 2005/07/27 08:56:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/23 10:26:12 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/27 08:56:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -137,7 +137,7 @@ public abstract class TimeLine extends JComponent {
 		double scale1 = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 		double currentScale = this.scale;
 		this.scale = 0.0;
-		if (Math.abs(currentScale - scale1) > Double.MIN_VALUE) {
+		if (Math.abs(currentScale - scale1) > Double.MIN_VALUE) {			
 			this.scale = scale1;
 			this.refreshTimeItems();
 		} else {
