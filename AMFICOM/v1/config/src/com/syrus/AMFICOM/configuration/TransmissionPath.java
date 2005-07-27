@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.80 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.81 2005/07/27 15:09:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.80 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/07/27 15:09:44 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -56,9 +56,8 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	TransmissionPath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final TransmissionPathDatabase database = (TransmissionPathDatabase) DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

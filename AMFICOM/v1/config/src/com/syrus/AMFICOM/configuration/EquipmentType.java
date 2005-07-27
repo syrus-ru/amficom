@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.76 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.77 2005/07/27 15:09:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.77 $, $Date: 2005/07/27 15:09:43 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -53,9 +53,8 @@ public final class EquipmentType extends StorableObjectType implements Character
 	EquipmentType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final EquipmentTypeDatabase database = (EquipmentTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

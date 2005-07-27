@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.57 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.58 2005/07/27 15:09:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/07/27 15:09:44 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType {
@@ -52,9 +52,8 @@ public final class CableLinkType extends AbstractLinkType {
 	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final CableLinkTypeDatabase database = (CableLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.CABLELINK_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

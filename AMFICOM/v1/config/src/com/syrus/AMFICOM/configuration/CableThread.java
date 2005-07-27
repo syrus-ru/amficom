@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.35 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: CableThread.java,v 1.36 2005/07/27 15:09:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/07/27 15:09:43 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableThread extends DomainMember implements TypedObject {
@@ -50,9 +50,8 @@ public final class CableThread extends DomainMember implements TypedObject {
 	public CableThread(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		CableThreadDatabase database = (CableThreadDatabase) DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

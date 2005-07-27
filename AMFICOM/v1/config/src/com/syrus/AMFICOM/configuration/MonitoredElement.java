@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.64 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.65 2005/07/27 15:09:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/07/27 15:09:43 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -55,9 +55,8 @@ public final class MonitoredElement extends DomainMember {
 
 		this.monitoredDomainMemberIds = new HashSet<Identifier>();
 
-		final MonitoredElementDatabase database = (MonitoredElementDatabase) DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

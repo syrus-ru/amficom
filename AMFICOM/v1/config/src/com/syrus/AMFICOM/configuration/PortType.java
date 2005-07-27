@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.72 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: PortType.java,v 1.73 2005/07/27 15:09:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/07/27 15:09:43 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -55,9 +55,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	PortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final PortTypeDatabase database = (PortTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

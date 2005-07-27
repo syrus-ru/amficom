@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.69 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.70 2005/07/27 15:09:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.70 $, $Date: 2005/07/27 15:09:43 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -57,9 +57,8 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final MeasurementPortDatabase database = (MeasurementPortDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
