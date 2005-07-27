@@ -1,11 +1,13 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.util.Collection;
+import java.util.Set;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -14,6 +16,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodename;
@@ -23,6 +26,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -82,6 +86,23 @@ public class AnalysisUtil
 		}
 
 		return bs;
+	}
+	
+	public static AnalysisResult getAnalysisForMeasurement(Measurement m) throws DataFormatException, ApplicationException {
+		LinkedIdsCondition condition1 = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
+		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+		for (Analysis analysis : analyse) {
+			LinkedIdsCondition condition2 = new LinkedIdsCondition(analysis.getId(), ObjectEntities.RESULT_CODE);
+			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+			for (Result result1 : results) {
+				for (Parameter parameter : result1.getParameters()) {
+					if (((ParameterType)parameter.getType()).getCodename().equals(ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue())) {
+						return (AnalysisResult) DataStreamableUtil.readDataStreamableFromBA(parameter.getValue(), AnalysisResult.getDSReader());
+					}
+				}
+			}
+		}
+		throw new ApplicationException("No AnalysisResult found for Measurement " + m.getName());
 	}
 
 	public static ParameterType getParameterType(String codename,
