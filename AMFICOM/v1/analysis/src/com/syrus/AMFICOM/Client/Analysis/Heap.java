@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.99 2005/07/27 06:05:40 saa Exp $
+ * $Id: Heap.java,v 1.100 2005/07/27 06:39:27 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
-import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
@@ -41,8 +41,6 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -90,7 +88,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.99 $, $Date: 2005/07/27 06:05:40 $
+ * @version $Revision: 1.100 $, $Date: 2005/07/27 06:39:27 $
  * @module
  */
 public class Heap
@@ -202,14 +200,20 @@ public class Heap
 	 * Предполагается использование этого метода для выбора первичной
 	 * р/г среди уже загруженных.
 	 */ 
+	@Deprecated
 	public static void setPrimaryTrace(Trace tr) {
 		setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
 	}
 
 	/**
 	 * Открывает рефлектограмму как первичную.
-	 * Автоматически закрывает все ранее открытые рефлектограммы.
+	 * Предварительно автоматически закрывает все ранее
+	 * открытые рефлектограммы.
 	 * Анализ не проводит. Уведомлений не обеспечивает.
+	 * Поскольку GUI рассчитывает, что primaryTrace и primaryAnalysis
+	 * появятся одновременно, необходимо после вызова этого метода
+	 * провести анализ либо как-то инане установить refAnalysis,
+	 * а затем разослать уведомления о смене/появлении primary trace&analysis.
 	 */ 
 	public static void openPrimaryTrace(Trace tr) {
 		closeAll();
@@ -226,19 +230,6 @@ public class Heap
 			String key) {
 		openPrimaryTrace(new Trace(primaryTrace,
 				key,
-				getMinuitAnalysisParams()));
-	}
-
-	/**
-	 * Открывает рефлектограмму из результата.
-	 * Автоматически закрывает все ранее открытые рефлектограммы.
-	 * @param result Результат измерения с рефлектограммой
-	 * @throws SimpleApplicationException в результате нет рефлектограммы.
-	 *   В таком случае открытые на данный момент р/г не закрываются
-	 */
-	public static void openPrimaryTraceFromResult(Result result)
-	throws SimpleApplicationException {
-		openPrimaryTrace(new Trace(result,
 				getMinuitAnalysisParams()));
 	}
 
