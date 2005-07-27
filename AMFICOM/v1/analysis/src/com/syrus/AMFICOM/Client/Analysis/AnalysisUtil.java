@@ -167,7 +167,7 @@ public class AnalysisUtil
 	throws DataFormatException
 	{
 		ParameterSet etalonSet = ms.getEtalon();
-		ParameterSet metas = ms.getParameterSet();
+		//ParameterSet metas = ms.getParameterSet();
 
 		BellcoreStructure etalonBS = null;
 		Etalon etalonObj = null;
@@ -199,7 +199,7 @@ public class AnalysisUtil
 			return;
 		}
 		Heap.setEtalonPair(etalonBS, etalonObj);
-		Heap.setEtalonEtalonMetas(metas);
+		//Heap.setEtalonEtalonMetas(metas);
 	}
 
 	public static ParameterSet createCriteriaSet(Identifier userId,

@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.98 2005/07/27 06:04:25 saa Exp $
+ * $Id: Heap.java,v 1.99 2005/07/27 06:05:40 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.98 $, $Date: 2005/07/27 06:04:25 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/27 06:05:40 $
  * @module
  */
 public class Heap
@@ -490,11 +490,6 @@ public class Heap
 
 	public static void removeAnyBSByName(String id) {
 		removeAnyTraceByKey(id);
-	}
-
-	public static void setEtalonEtalonMetas(ParameterSet metas) {
-		// @todo: may be required in Survey
-		// Pool.put("etalon", ETALON, metas);
 	}
 
 	public static ModelTraceManager getMTMBackupEtalon() {
