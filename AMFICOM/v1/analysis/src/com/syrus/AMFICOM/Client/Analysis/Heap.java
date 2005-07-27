@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.97 2005/07/26 15:14:28 saa Exp $
+ * $Id: Heap.java,v 1.98 2005/07/27 06:04:25 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.97 $, $Date: 2005/07/26 15:14:28 $
+ * @version $Revision: 1.98 $, $Date: 2005/07/27 06:04:25 $
  * @module
  */
 public class Heap
@@ -495,11 +495,6 @@ public class Heap
 	public static void setEtalonEtalonMetas(ParameterSet metas) {
 		// @todo: may be required in Survey
 		// Pool.put("etalon", ETALON, metas);
-	}
-
-	public static void setActiveContextActivePathIDToEmptyString() {
-		// @todo: may be required in Survey
-		// Pool.put("activecontext", "activepathid", "");
 	}
 
 	public static ModelTraceManager getMTMBackupEtalon() {

@@ -68,7 +68,6 @@ public class FileOpenAsWavetekCommand extends AbstractCommand
 			}
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.openPrimaryTraceFromBS(bs, bs.title);
-			Heap.setActiveContextActivePathIDToEmptyString();
 			Heap.makePrimaryAnalysis();
 
 			try

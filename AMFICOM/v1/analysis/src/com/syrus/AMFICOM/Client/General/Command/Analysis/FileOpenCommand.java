@@ -100,7 +100,6 @@ public class FileOpenCommand extends AbstractCommand
 		boolean testBehaviour = false && AnalyseMainFrameSimplified.DEBUG; // FIXME: debug only: for local comparison; should be false
 		Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		Heap.openPrimaryTraceFromBS(bs, bs.title);
-		Heap.setActiveContextActivePathIDToEmptyString();
 		Heap.makePrimaryAnalysis();
 
 		// FIXME: debug-only code
