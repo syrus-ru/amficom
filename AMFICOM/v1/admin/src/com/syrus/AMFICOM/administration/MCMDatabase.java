@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.35 2005/07/25 20:49:23 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.36 2005/07/27 13:18:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -26,22 +25,16 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/25 20:49:23 $
+ * @version $Revision: 1.36 $, $Date: 2005/07/27 13:18:07 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
-public final class MCMDatabase extends StorableObjectDatabase {
+public final class MCMDatabase extends StorableObjectDatabase<MCM> {
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private MCM fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MCM)
-			return (MCM) storableObject;
-		throw new IllegalDataException("MCMDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -75,45 +68,42 @@ public final class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final MCM mcm = this.fromStorableObject(storableObject);
-		final String sql = DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mcm.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(mcm.getServerId());
+	protected String getUpdateSingleSQLValuesTmpl(final MCM storableObject) throws IllegalDataException {
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHostName(), SIZE_HOSTNAME_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getUserId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getServerId());
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(final MCM storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final MCM mcm = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcm.getDomainId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mcm.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mcm.getHostName(), SIZE_HOSTNAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcm.getUserId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mcm.getServerId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getHostName(), SIZE_HOSTNAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUserId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getServerId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MCM updateEntityFromResultSet(final MCM storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		MCM mcm = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (mcm == null) {
-			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null);
-		}
+		final MCM mcm = (storableObject == null)
+				? new MCM(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null)
+					: storableObject;
 		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

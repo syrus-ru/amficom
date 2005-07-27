@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.43 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.44 2005/07/27 13:15:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.44 $, $Date: 2005/07/27 13:15:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public final class CharacteristicDatabase extends StorableObjectDatabase {
+public final class CharacteristicDatabase extends StorableObjectDatabase<Characteristic> {
 	private static final int SIZE_VALUE_COLUMN = 256;
 
 	private static String columns;
@@ -61,15 +61,14 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Characteristic characteristic = this.fromStorableObject(storableObject);
-		final String sql = DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE  + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristic.getValue(), SIZE_VALUE_COLUMN) + APOSTROPHE + COMMA
-			+ (characteristic.isEditable()?"1":"0") + COMMA
-			+ (characteristic.isVisible()?"1":"0") + COMMA
-			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizableId());
+	protected String getUpdateSingleSQLValuesTmpl(final Characteristic storableObject) throws IllegalDataException {
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE  + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getValue(), SIZE_VALUE_COLUMN) + APOSTROPHE + COMMA
+			+ (storableObject.isEditable()?"1":"0") + COMMA
+			+ (storableObject.isVisible()?"1":"0") + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getCharacterizableId());
 			/**
 			 * check sort support
 			 */
@@ -77,43 +76,34 @@ public final class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Characteristic storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Characteristic characteristic = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristic.getValue(), SIZE_VALUE_COLUMN);
-		preparedStatement.setInt( ++startParameterNumber, characteristic.isEditable()? 1:0);
-		preparedStatement.setInt( ++startParameterNumber, characteristic.isVisible()? 1:0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, characteristic.getCharacterizableId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getValue(), SIZE_VALUE_COLUMN);
+		preparedStatement.setInt( ++startParameterNumber, storableObject.isEditable()? 1:0);
+		preparedStatement.setInt( ++startParameterNumber, storableObject.isVisible()? 1:0);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getCharacterizableId());
 		return startParameterNumber;
 	}	
 
-	private Characteristic fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Characteristic)
-			return (Characteristic)storableObject;
-		throw new IllegalDataException("CharacteristicDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
-
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Characteristic updateEntityFromResultSet(final Characteristic storableObject, final ResultSet resultSet)
 			throws RetrieveObjectException, SQLException, IllegalDataException {
-		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject);
-		if (characteristic == null) {
-			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null,
-					null,
-					false,
-					false);			
-		}
+		final Characteristic characteristic = (storableObject == null)
+				? new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null,
+						false,
+						false)
+					: storableObject;
 
 		final Identifier characterizableId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID);
 

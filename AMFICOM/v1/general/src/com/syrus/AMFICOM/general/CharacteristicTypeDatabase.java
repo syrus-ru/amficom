@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.33 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.34 2005/07/27 13:15:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/27 13:15:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
+public final class CharacteristicTypeDatabase extends StorableObjectDatabase<CharacteristicType> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -55,51 +55,40 @@ public final class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(characteristicType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ Integer.toString(characteristicType.getDataType().getCode()) + COMMA
-			+ Integer.toString(characteristicType.getSort().value());
+	protected String getUpdateSingleSQLValuesTmpl(final CharacteristicType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ Integer.toString(storableObject.getDataType().getCode()) + COMMA
+			+ Integer.toString(storableObject.getSort().value());
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final CharacteristicType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, characteristicType.getName(), SIZE_NAME_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, characteristicType.getDataType().getCode());
-		preparedStatement.setInt(++startParameterNumber, characteristicType.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getDataType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
 		return startParameterNumber;
 	}
 
-	private CharacteristicType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof CharacteristicType)
-			return (CharacteristicType)storableObject;
-		throw new IllegalDataException("CharacteristicTypeDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
-
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected CharacteristicType updateEntityFromResultSet(final CharacteristicType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		CharacteristicType characteristicType = storableObject == null ? null : this.fromStorableObject(storableObject);
-
-		if (characteristicType == null) {
-			characteristicType = new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					DataType.RAW,
-					0);
-		}
+		final CharacteristicType characteristicType = (storableObject == null)
+				? new CharacteristicType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						DataType.RAW,
+						0)
+					: storableObject;
 		characteristicType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
