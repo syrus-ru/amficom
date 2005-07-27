@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.AbstractItem;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
@@ -145,7 +144,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Level.FINEST);
+//		Log.debugMessage("ElementsTreeFrame.setMonitoredElement | monitoredElement " + (monitoredElement != null ? monitoredElement.getId() : null), Level.FINEST);
 		this.paramMap.put(ObjectEntities.MONITOREDELEMENT, monitoredElement);
 		this.treePanel.expandAll(true);
 		this.selectItems();

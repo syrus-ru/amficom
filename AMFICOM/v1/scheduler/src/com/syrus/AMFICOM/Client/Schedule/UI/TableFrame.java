@@ -160,6 +160,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				if (model.getIndexOfObject(test1) < 0) {
 //					Log.debugMessage("TableFrame.setTests | added ", Level.FINEST);
 					model.addObject(test1);
+//					System.out.println("TableFrame.setTests() | " + test1.getStatus().value());
 				}
 			}
 		} catch (ApplicationException e) {
