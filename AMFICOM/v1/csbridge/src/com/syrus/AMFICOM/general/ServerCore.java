@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.27 2005/07/26 18:21:59 arseniy Exp $
+ * $Id: ServerCore.java,v 1.28 2005/07/27 16:38:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,15 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
-import com.syrus.AMFICOM.general.StorableObjectDatabase.UpdateKind;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.general.corba.IdVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -33,96 +30,229 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/07/26 18:21:59 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/27 16:38:52 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
-public abstract class ServerCore implements CommonServer {
+public class ServerCore implements CommonServer {
 	private static final long serialVersionUID = 2873567194611284256L;
 
+	private LoginServerConnectionManager loginServerConnectionManager;
 	private ORB orb;
 
-	protected ServerCore(final ORB orb) {
+	protected ServerCore(final LoginServerConnectionManager loginServerConnectionManager, final ORB orb) {
+		this.loginServerConnectionManager = loginServerConnectionManager;
 		this.orb = orb;
 	}
 
-	/**
-	 * @param sessionKeyT an "in" parameter.
-	 * @param userIdH an "out" parameter.
-	 * @param domainIdH an "out" parameter.
-	 * @throws AMFICOMRemoteException
-	 * @todo Move method body here (declaring method itself as final)
-	 */
-	protected abstract void validateAccess(final IdlSessionKey sessionKeyT,
-			final IdlIdentifierHolder userIdH,
-			final IdlIdentifierHolder domainIdH)
-			throws AMFICOMRemoteException;
 
-	/**
-	 * @param idsT
-	 * @param sessionKeyT
-	 * @throws AMFICOMRemoteException
-	 */
-	public final void delete(final IdlIdentifier[] idsT,
-			final IdlSessionKey sessionKeyT)
+
+	// ///////////////////////////// CommonServer ///////////////////////////////////////////////
+
+	public final IdlStorableObject[] transmitStorableObjects(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			this.validateAccess(sessionKeyT,
-					new IdlIdentifierHolder(),
-					new IdlIdentifierHolder());
-	
-			Log.debugMessage("ServerCore.delete() | Trying to delete... ", Level.INFO);
-			StorableObjectPool.delete(Identifier.fromTransferables(idsT));
+			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
+			final int length = idsT.length;
+			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
+			assert StorableObject.hasSingleTypeEntities(idsT);
+
+			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userIdH, domainIdH);
+
+			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+
+			Log.debugMessage("ServerCore.transmitStorableObjects | Requested '"
+					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)) + "'s for ids: " + ids, Level.FINEST);
+
+			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjects(ids, true);
+			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
+			return transferables;
+		} catch (ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
+		} catch (AMFICOMRemoteException are) {
+			throw are;
+		} catch (Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+	public final IdlStorableObject[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idsT,
+			final IdlStorableObjectCondition conditionT,
+			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		try {
+			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
+
+			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
+			final short entityCode = condition.getEntityCode().shortValue();
+
+			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+
+			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsByCondition | Requested '"
+					+ ObjectEntities.codeToString(entityCode) + "'s but ids: " + ids, Level.FINEST);
+
+			/**
+			 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
+			 */
+			final Set<? extends StorableObject> storableObjects = StorableObjectPool.getStorableObjectsButIdsByCondition(ids,
+					condition,
+					true,
+					false);
+			final IdlStorableObject[] transferables = StorableObject.createTransferables(storableObjects, this.orb);
+			return transferables;
+		} catch (final ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
-		} catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
 		}
 	}
 
-	/**
-	 * @param b
-	 * @see com.syrus.AMFICOM.general.corba.Verifiable#verify(byte)
-	 */
-	public final void verify(final byte b) {
-		try {
-			Log.debugMessage("ServerCore.verify() | Verifying value: " + b, Level.CONFIG);
-		} catch (final Throwable t) {
-			Log.debugException(t, Level.SEVERE);
-		}
-	}
-
-	/**
-	 * @param entityCode
-	 * @param size
-	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer#getGeneratedIdentifierRange(short, int)
-	 */
-	public final IdlIdentifier[] getGeneratedIdentifierRange(
-			final short entityCode, final int size)
+	public final IdVersion[] transmitRemoteVersions(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT)
 			throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("ServerCore.getGeneratedIdentifierRange() | Generating "
-					+ size + " identifiers of type: "
-					+ ObjectEntities.codeToString(entityCode),
-					Level.CONFIG);
-			return Identifier.createTransferables(IdentifierGenerator.generateIdentifierRange(entityCode, size));
-		} catch (final IllegalObjectEntityException ioee) {
-			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
-		} catch (final IdentifierGenerationException ige) {
-			throw this.processDefaultIdentifierGenerationException(ige, entityCode);
-		} catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
+			assert idsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			final int length = idsT.length;
+			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+
+			Log.debugMessage("ServerCore.transmitRemoteVersions | Versions for '"
+					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+
+			final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
+			final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
+			int i = 0;
+			for (final Identifier id : versionsMap.keySet()) {
+				idVersions[i++] = new IdVersion(id.getTransferable(), versionsMap.get(id).longValue());
+			}
+			return idVersions;
+		} catch (ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
 		}
 	}
 
-	public final IdlIdentifier getGeneratedIdentifier(
-			final short entityCode) throws AMFICOMRemoteException {
+	public final void receiveStorableObjects(final IdlStorableObject[] storableObjectsT, final IdlSessionKey sessionKeyT)
+			throws AMFICOMRemoteException {
 		try {
-			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier of type: "
-					+ ObjectEntities.codeToString(entityCode),
-					Level.CONFIG);
+			assert storableObjectsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			final int length = storableObjectsT.length;
+			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Set<StorableObject> storableObjects = StorableObjectPool.fromTransferables(storableObjectsT, true);
+			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+			Log.debugMessage("ServerCore.receiveStorableObjects | Received '"
+					+ ObjectEntities.codeToString(entityCode) + "'s: " + Identifier.createIdentifiers(storableObjects), Level.FINEST);
+
+			final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+			database.save(storableObjects);
+		} catch (ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_UPDATE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+	public final IdlIdentifier[] transmitOldVersionIds(final IdVersion[] idVersions, final IdlSessionKey sessionKeyT)
+			throws AMFICOMRemoteException {
+		try {
+			assert idVersions != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			final int length = idVersions.length;
+			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
+			for (int i = 0; i < idVersions.length; i++) {
+				versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
+			}
+			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+			final Set<Identifier> ids = database.getOldVersionIds(versionsMap);
+
+			Log.debugMessage("ServerCore.transmitOldVersionIds | Old versions have '"
+					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+
+			return Identifier.createTransferables(ids);
+		} catch (ApplicationException ae) {
+			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+	public final void delete(final IdlIdentifier[] idsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		try {
+			assert idsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+			final int length = idsT.length;
+			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			this.validateAccess(sessionKeyT, userId, domainId);
+
+			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
+			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
+			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
+
+			Log.debugMessage("ServerCore.delete | Deleting '"
+					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+
+			database.delete(ids);
+		} catch (final AMFICOMRemoteException are) {
+			throw are;
+		} catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+
+
+	// /////////////////////////////// IdentifierGeneratorServer /////////////////////////////////////////////
+
+	public final IdlIdentifier getGeneratedIdentifier(final short entityCode) throws AMFICOMRemoteException {
+		try {
+			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier for '"
+					+ ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
 			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
 		} catch (final IllegalObjectEntityException ioee) {
 			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
@@ -133,201 +263,82 @@ public abstract class ServerCore implements CommonServer {
 		}
 	}
 
-	protected final IDLEntity[] transmitStorableObjects(final IdlIdentifier[] idsT,
-			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+	public final IdlIdentifier[] getGeneratedIdentifierRange(final short entityCode, final int size) throws AMFICOMRemoteException {
 		try {
-			assert idsT != null && sessionKeyT != null: ErrorMessages.NON_NULL_EXPECTED;
-			final int length = idsT.length;
-			assert length != 0: ErrorMessages.NON_EMPTY_EXPECTED;
-			assert StorableObject.hasSingleTypeEntities(idsT);
-	
-			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userIdH, domainIdH);
-
-			Log.debugMessage("ServerCore.transmitStorableObjects() | Requested " + length + " storable object(s) of type: "
-					+ ObjectEntities.codeToString(StorableObject.getEntityCodeOfIdentifiables(idsT)), Level.FINEST);
-
-			final Set storableObjects = StorableObjectPool.getStorableObjects(Identifier.fromTransferables(idsT), true);
-			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
-			int i = 0;
-			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
-				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.orb);
-			return transferables;
-		}
-		catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
-		}
-		catch (final AMFICOMRemoteException are) {
-			throw are;
-		}
-		catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
-		}
-	}
-
-	protected final IDLEntity[] transmitStorableObjectsButIdsByCondition(final IdlIdentifier[] idsT,
-			final IdlSessionKey sessionKeyT,
-			final IdlStorableObjectCondition conditionT) throws AMFICOMRemoteException {
-		try {
-			assert idsT != null && sessionKeyT != null && conditionT != null : ErrorMessages.NON_NULL_EXPECTED;
-
-			final StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(conditionT);
-			final short entityCode = condition.getEntityCode().shortValue();
-
-			assert StorableObject.hasSingleTypeEntities(idsT);
-			assert idsT.length == 0 || entityCode == StorableObject.getEntityCodeOfIdentifiables(idsT);
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
-			Log.debugMessage("ServerCore.transmitStorableObjectsButIdsCondition() | Requested storable object(s) of type: "
-					+ ObjectEntities.codeToString(entityCode), Level.FINEST);
-
-			/**
-			 * NOTE: If it is impossible to load objects by Loader - return only those from Pool
-			 */
-			final Set storableObjects = StorableObjectPool.getStorableObjectsByConditionButIds(Identifier.fromTransferables(idsT),
-					condition,
-					true,
-					false);
-			final IDLEntity[] transferables = new IDLEntity[storableObjects.size()];
-			int i = 0;
-			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext(); i++)
-				transferables[i] = ((StorableObject) storableObjectIterator.next()).getTransferable(this.orb);
-			return transferables;
-		}
-		catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
-		}
-		catch (final AMFICOMRemoteException are) {
-			throw are;
-		}
-		catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
-		}
-	}
-
-	protected final IdlStorableObject[] receiveStorableObjects(final short entityCode,
-			final IdlStorableObject[] transferables,
-			final boolean force,
-			final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
-		try {
-			final IdlIdentifierHolder userIdH = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainIdH = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userIdH, domainIdH);
-
-			final Set<StorableObject> storableObjects = new HashSet<StorableObject>(transferables.length);
-			for (int i = 0; i < transferables.length; i++) {
-				try {
-					storableObjects.add(StorableObjectPool.fromTransferable(entityCode, transferables[i]));
-				}
-				catch (final ApplicationException ae) {
-					Log.debugException(ae, Level.SEVERE);
-				}
-			}
-
-			final StorableObjectDatabase database = DatabaseContext.getDatabase(entityCode);
-			database.update(storableObjects,
-					new Identifier(userIdH.value),
-					force ? UpdateKind.UPDATE_FORCE : UpdateKind.UPDATE_CHECK);
-			return StorableObject.createHeadersTransferable(this.orb, storableObjects);
-		}
-		catch (final VersionCollisionException vce) {
-			throw this.processDefaultApplicationException(vce, IdlErrorCode.ERROR_VERSION_COLLISION);
-		}
-		catch (final UpdateObjectException uoe) {
-			throw this.processDefaultApplicationException(uoe, IdlErrorCode.ERROR_UPDATE);
-		}
-		catch (final AMFICOMRemoteException are) {
-			throw are;
-		}
-		catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
-		}
-	}
-
-	/**
-	 * Accepts headers of a <em>single</em> <em>solitary</em> group.
-	 *
-	 * @param headers
-	 * @param sessionKeyT
-	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.corba.CommonServer#transmitRefreshedStorableObjects(com.syrus.AMFICOM.general.corba.IdlStorableObject[], com.syrus.AMFICOM.security.corba.IdlSessionKey)
-	 */
-	public final IdlIdentifier[] transmitRefreshedStorableObjects(
-			final IdlStorableObject headers[],
-			final IdlSessionKey sessionKeyT)
-			throws AMFICOMRemoteException {
-		this.validateAccess(sessionKeyT,
-				new IdlIdentifierHolder(),
-				new IdlIdentifierHolder());
-
-		final Map<Identifier, IdlStorableObject> headerMap = new HashMap<Identifier, IdlStorableObject>();
-		for (int i = 0; i < headers.length; i++)
-			headerMap.put(new Identifier(headers[i].id), headers[i]);
-
-		try {
-			StorableObjectPool.refresh();
-
-			final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(headerMap.keySet(), true);
-			for (final Iterator storableObjectIterator = storableObjects.iterator(); storableObjectIterator.hasNext();) {
-				final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-				final IdlStorableObject header = headerMap.get(storableObject.getId());
-				/*
-				 * Remove objects with older versions as well as objects with the same versions.
-				 * Not only with older ones!
-				 */
-				if (!storableObject.hasNewerVersion(header.version))
-					storableObjectIterator.remove();
-			}
-
-			return Identifier.createTransferables(storableObjects);
-		} catch (final ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
+			Log.debugMessage("ServerCore.getGeneratedIdentifierRange() | Generating " + size
+					+ " identifiers for '" + ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
+			return Identifier.createTransferables(IdentifierGenerator.generateIdentifierRange(entityCode, size));
+		} catch (final IllegalObjectEntityException ioee) {
+			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
+		} catch (final IdentifierGenerationException ige) {
+			throw this.processDefaultIdentifierGenerationException(ige, entityCode);
 		} catch (final Throwable t) {
 			throw this.processDefaultThrowable(t);
 		}
 	}
 
-	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable t) {
-		Log.debugException(t, Level.SEVERE);
-		return new AMFICOMRemoteException(
-				IdlErrorCode.ERROR_UNKNOWN,
-				IdlCompletionStatus.COMPLETED_PARTIALLY,
-				t.getMessage());
+
+
+	// /////////////////////////////// Verifiable /////////////////////////////////////////////
+
+	public final void verify(final byte b) {
+		try {
+			Log.debugMessage("ServerCore.verify | Verify value: " + b, Level.CONFIG);
+		} catch (final Throwable t) {
+			Log.debugException(t, Level.SEVERE);
+		}
 	}
 
-	private AMFICOMRemoteException processDefaultApplicationException(
-			final ApplicationException ae,
-			final IdlErrorCode errorCode) {
+
+
+	// ///////////////////////////// helper methods ///////////////////////////////////////////////
+	/**
+	 * @param sessionKeyT an "in" parameter.
+	 * @param userIdH an "out" parameter.
+	 * @param domainIdH an "out" parameter.
+	 * @throws AMFICOMRemoteException
+	 */
+	private final void validateAccess(final IdlSessionKey sessionKeyT,
+			final IdlIdentifierHolder userIdH,
+			final IdlIdentifierHolder domainIdH)
+			throws AMFICOMRemoteException {
+		try {
+			this.loginServerConnectionManager.getLoginServerReference().validateAccess(sessionKeyT, userIdH, domainIdH);
+		}
+		catch (final CommunicationException ce) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ACCESS_VALIDATION, IdlCompletionStatus.COMPLETED_NO, ce.getMessage());
+		}
+		catch (AMFICOMRemoteException are) {
+			throw are;
+		}
+		catch (final Throwable throwable) {
+			throw this.processDefaultThrowable(throwable);
+		}
+	}
+
+	private final AMFICOMRemoteException processDefaultApplicationException(final ApplicationException ae, final IdlErrorCode errorCode) {
 		Log.debugException(ae, Level.SEVERE);
-		return new AMFICOMRemoteException(errorCode,
-				IdlCompletionStatus.COMPLETED_NO,
-				ae.getMessage());
+		return new AMFICOMRemoteException(errorCode, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 	}
 
-	private AMFICOMRemoteException processDefaultIllegalObjectEntityException(
-			final IllegalObjectEntityException ioee,
+	private final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
+		Log.debugException(throwable, Level.SEVERE);
+		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
+	}
+
+	private final AMFICOMRemoteException processDefaultIllegalObjectEntityException(final IllegalObjectEntityException ioee,
 			final short entityCode) {
 		Log.debugException(ioee, Level.SEVERE);
-		return new AMFICOMRemoteException(
-				IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+		return new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 				IdlCompletionStatus.COMPLETED_NO,
-				"Illegal object entity: '"
-				+ ObjectEntities.codeToString(entityCode)
-				+ '\'');
+				"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
 	}
 
-	private AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige, final short entityCode) {
+	private final AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige,
+			final short entityCode) {
 		Log.debugException(ige, Level.SEVERE);
-		return new AMFICOMRemoteException(
-				IdlErrorCode.ERROR_RETRIEVE,
+		return new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE,
 				IdlCompletionStatus.COMPLETED_NO,
-				"Cannot create major/minor entries of identifier for entity: '"
-				+ ObjectEntities.codeToString(entityCode)
-				+ "' -- "
-				+ ige.getMessage());
+				"Cannot create identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
 	}
 }
