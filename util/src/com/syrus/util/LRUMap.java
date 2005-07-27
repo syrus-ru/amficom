@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.30 2005/07/26 20:09:21 bass Exp $
+ * $Id: LRUMap.java,v 1.31 2005/07/27 11:15:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,17 +14,16 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/26 20:09:21 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/27 11:15:44 $
  * @author $Author: bass $
  * @module util
  */
-
 public class LRUMap<K, V> implements Serializable {
 	private static final long serialVersionUID = 5686622326974494326L;
 
 	public static final int SIZE = 10;
 
-	protected Entry<?, ?>[] array;
+	protected IEntry<K, V>[] array;
 
 	protected transient int modCount = 0;
 
@@ -36,7 +35,7 @@ public class LRUMap<K, V> implements Serializable {
 
 	public LRUMap(final int capacity) {
 		if (capacity > 0) {
-			this.array = new Entry[capacity];
+			this.array = new IEntry[capacity];
 		} else
 			throw new IllegalArgumentException("Illegal capacity: " + capacity);
 	}
@@ -70,7 +69,7 @@ public class LRUMap<K, V> implements Serializable {
 		int index = -1;
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++) {
-				Entry entry = this.array[i];
+				Entry entry = (Entry) this.array[i];
 				if ((entry != null) && (entry.key.equals(key))) {
 					index = i;
 					break;
@@ -84,10 +83,10 @@ public class LRUMap<K, V> implements Serializable {
 		this.modCount++;
 		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
 		this.remove(key);
-		Entry<K, V> newEntry = new Entry<K, V>(key, value);
+		Entry newEntry = new Entry(key, value);
 		V ret = null;
 		if (this.array[this.array.length - 1] != null)
-			ret = (V) this.array[this.array.length - 1].value;
+			ret = ((Entry) this.array[this.array.length - 1]).value;
 		for (int i = this.array.length - 1; i > 0; i--)
 			this.array[i] = this.array[i - 1];
 		this.array[0] = newEntry;
@@ -99,8 +98,8 @@ public class LRUMap<K, V> implements Serializable {
 		if (key != null) {
 			V ret = null;
 			for (int i = 0; i < this.array.length; i++)
-				if (this.array[i] != null && key.equals(this.array[i].key)) {
-					ret = (V) this.array[i].value;
+				if (this.array[i] != null && key.equals(((Entry) this.array[i]).key)) {
+					ret = ((Entry) this.array[i]).value;
 					break;
 				}
 			return ret;
@@ -111,7 +110,7 @@ public class LRUMap<K, V> implements Serializable {
 	public synchronized boolean containsKey(K key) {
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++)
-				if (this.array[i] != null && key.equals(this.array[i].key))
+				if (this.array[i] != null && key.equals(((Entry) this.array[i]).key))
 					return true;
 			return false;
 		}
@@ -123,9 +122,9 @@ public class LRUMap<K, V> implements Serializable {
 		if (key != null) {
 			V ret = null;
 			for (int i = 0; i < this.array.length; i++) {
-				Entry entry = this.array[i];
+				Entry entry = (Entry) this.array[i];
 				if ((entry != null) && (entry.key != null) && (key.equals(entry.key))) {
-					ret = (V) this.array[i].value;					
+					ret = ((Entry) this.array[i]).value;
 					for (int j = i; j < this.array.length - 1; j++)
 						this.array[j] = this.array[j + 1];
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
@@ -137,11 +136,17 @@ public class LRUMap<K, V> implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	protected class Entry<L, W> /*implements Serializable */{
-		L key;
-		W value;
+        protected static interface IEntry<L, W> {
+        	L getKey();
 
-		public Entry(final L key, final W value) {
+        	W getValue();
+        }
+
+	protected class Entry implements IEntry<K, V> /*implements Serializable */{
+		K key;
+		V value;
+
+		public Entry(final K key, final V value) {
 			if (key != null) {
 				if (value != null) {
 					this.key = key;
@@ -152,11 +157,11 @@ public class LRUMap<K, V> implements Serializable {
 				throw new IllegalArgumentException("Key is NULL");
 		}
 
-		public L getKey() {
+		public K getKey() {
 			return this.key;
 		}
 
-		public W getValue() {
+		public V getValue() {
 			return this.value;
 		}
 	}
@@ -196,7 +201,7 @@ public class LRUMap<K, V> implements Serializable {
 			try {
 				Object next = null;
 				while (next == null) {
-					next = this.keyIterator ? LRUMap.this.array[this.cursor].key : LRUMap.this.array[this.cursor].value;
+					next = this.keyIterator ? ((Entry) LRUMap.this.array[this.cursor]).key : ((Entry) LRUMap.this.array[this.cursor]).value;
 					this.lastRet = this.cursor++;
 				}
 				return next;
@@ -213,7 +218,7 @@ public class LRUMap<K, V> implements Serializable {
 			
 			try {
 				int modCountPrev = LRUMap.this.modCount;
-				LRUMap.this.remove((K) LRUMap.this.array[this.lastRet].key);
+				LRUMap.this.remove(((Entry) LRUMap.this.array[this.lastRet]).key);
 				LRUMap.this.modCount = modCountPrev;
 				if (this.lastRet < this.cursor)
 					this.cursor--;

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.6 2005/07/25 15:09:53 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.7 2005/07/27 11:15:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.util.Set;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/25 15:09:53 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/07/27 11:15:44 $
+ * @author $Author: bass $
  * @module general_v1
  */
-public class StorableObjectResizableLRUMap extends LRUMap {
+public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableObject> {
 	private static final long serialVersionUID = 5983495252523370955L;
 	
 	private int initialCapacity;
@@ -35,18 +35,18 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 	}
 
 	@Override
-	public synchronized Object put(final Object key, final Object value) {
-		assert (value instanceof StorableObject) : "Use only StorableObject as value";
-		final StorableObject throwedObject = (StorableObject) super.put(key, value);
-		if (throwedObject == null || !throwedObject.isChanged())
-			return throwedObject;
+	public synchronized StorableObject put(final Identifier key, final StorableObject value) {
+		assert (value != null) : "Use only StorableObject as value";
+		final StorableObject thrownObject = super.put(key, value);
+		if (thrownObject == null || !thrownObject.isChanged())
+			return thrownObject;
 
 		for (int i = super.array.length - 1; i >= 0; i--) {
-			final StorableObject storableObject = (StorableObject) super.array[i].getValue();
+			final StorableObject storableObject = super.array[i].getValue();
 			if (!storableObject.isChanged()) {
 				for (int j = i; j < super.array.length - 1; j++)
 					super.array[j] = super.array[j + 1];
-				super.array[super.array.length - 1] = new Entry(throwedObject.getId(), throwedObject);
+				super.array[super.array.length - 1] = new Entry(thrownObject.getId(), thrownObject);
 				return storableObject;
 			}
 		}
@@ -54,7 +54,7 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 		super.entityCount++;
 		final Entry[] array1 = new Entry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
-		array1[super.array.length] = new Entry(throwedObject.getId(), throwedObject);
+		array1[super.array.length] = new Entry(thrownObject.getId(), thrownObject);
 		super.array = array1;
 		return null;
 	}
@@ -63,13 +63,11 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 		final Set<StorableObject> changedObjects = new HashSet<StorableObject>();
 
 		for (int i = 0; i < super.array.length; i++) {
-			final Entry entry = super.array[i];
+			final IEntry<Identifier, StorableObject> entry = super.array[i];
 			if (entry != null) {
-				final Object value = entry.getValue();
-				if (value instanceof StorableObject) {
-					final StorableObject storableObject = (StorableObject) value;
-					if (storableObject.isChanged())
-						changedObjects.add(storableObject);
+				final StorableObject value = entry.getValue();
+				if (value != null && value.isChanged()) {
+					changedObjects.add(value);
 				}
 			}
 		}
@@ -79,13 +77,11 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 
 	public synchronized void removeChangedStorableObjects() {
 		for (int i = 0; i < super.array.length; i++) {
-			final Entry entry = super.array[i];
+			final IEntry<Identifier, StorableObject> entry = super.array[i];
 			if (entry != null) {
-				final Object value = entry.getValue();
-				if (value instanceof StorableObject) {
-					final StorableObject storableObject = (StorableObject) value;
-					if (storableObject.isChanged())
-						this.remove(entry.getKey());
+				final StorableObject value = entry.getValue();
+				if (value != null && value.isChanged()) {
+					this.remove(entry.getKey());
 				}
 			}
 		}
@@ -94,19 +90,17 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 	public synchronized void truncate(boolean removeAlsoUnchanged) {
 		super.modCount++;
 
-		final List<Entry> retainedEntries = new ArrayList<Entry>(super.array.length);
+		final List<IEntry<Identifier, StorableObject>> retainedEntries = new ArrayList<IEntry<Identifier, StorableObject>>(super.array.length);
 
 		for (int i = 0; i < super.array.length; i++) {
-			final Entry entry = super.array[i];
+			final IEntry<Identifier, StorableObject> entry = super.array[i];
 			if (entry != null) {
 				if (!removeAlsoUnchanged)
 					retainedEntries.add(entry);
 				else {
-					final Object value = entry.getValue();
-					if (value instanceof StorableObject) {
-						final StorableObject storableObject = (StorableObject) value;
-						if (storableObject.isChanged())
-							retainedEntries.add(entry);
+					final StorableObject value = entry.getValue();
+					if (value != null && value.isChanged()) {
+						retainedEntries.add(entry);
 					}
 				}
 			}
@@ -115,7 +109,7 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 		final int size = retainedEntries.size();
 		super.array = new Entry[(size > this.initialCapacity) ? size : this.initialCapacity];
 		int i = 0;
-		for (final Entry entry : retainedEntries) {
+		for (final IEntry<Identifier, StorableObject> entry : retainedEntries) {
 			super.array[i] = entry;
 		}
 		super.entityCount = size;
