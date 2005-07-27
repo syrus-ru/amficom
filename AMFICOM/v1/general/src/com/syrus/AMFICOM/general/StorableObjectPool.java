@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.140 2005/07/27 15:56:56 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.141 2005/07/27 18:46:14 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/07/27 15:56:56 $
+ * @version $Revision: 1.141 $, $Date: 2005/07/27 18:46:14 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -595,7 +595,7 @@ public final class StorableObjectPool {
 		}
 
 		if (storableObject.isChanged()) {
-			Log.debugMessage("StorableObjectPool.checkChangedWithDependenciesS | Object '" + storableObject.getId() + "' is changed",
+			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
 					Log.DEBUGLEVEL10);
 			final Integer dependencyKey = new Integer(-dependencyLevel);
 			Map<Short, Set<StorableObject>> levelSavingObjectsMap = SAVING_OBJECTS_MAP.get(dependencyKey);
