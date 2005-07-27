@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.138 2005/07/27 15:28:40 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.139 2005/07/27 15:44:04 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.138 $, $Date: 2005/07/27 15:28:40 $
+ * @version $Revision: 1.139 $, $Date: 2005/07/27 15:44:04 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -331,8 +331,7 @@ public final class StorableObjectPool {
 		}
 
 		final Set<T> storableObjects = new HashSet<T>();
-		for (final Iterator<T> storableObjectIterator = objectPool.iterator(); storableObjectIterator.hasNext();) {
-			final T storableObject = storableObjectIterator.next();
+		for (final T storableObject : objectPool) {
 			final Identifier id = storableObject.getId();
 			if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
 				storableObjects.add(storableObject);
@@ -411,10 +410,10 @@ public final class StorableObjectPool {
 
 		DELETED_IDS_MAP.remove(new Short(entityCode));
 
-		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
-			for (final Iterator it = objectPool.iterator(); it.hasNext();) {
-				final StorableObject storableObject = (StorableObject) it.next();
+			for (final Iterator<StorableObject> it = objectPool.iterator(); it.hasNext();) {
+				final StorableObject storableObject = it.next();
 				if (storableObject.isChanged())
 					it.remove();
 			}
@@ -553,11 +552,10 @@ public final class StorableObjectPool {
 	}
 
 	private static void checkChangedWithDependencies(final short entityCode) throws ApplicationException {
-		final LRUMap<?, ?> objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			synchronized (objectPool) {
-				for (final Iterator it = objectPool.iterator(); it.hasNext();) {
-					final StorableObject storableObject = (StorableObject) it.next();
+				for (final StorableObject storableObject : objectPool) {
 					checkChangedWithDependencies(storableObject, 0);
 				}
 			}
@@ -759,7 +757,7 @@ public final class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCodeIterator);
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 
 			final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 
@@ -821,7 +819,7 @@ public final class StorableObjectPool {
 	/*	Truncate */
 
 	public static void truncate(final short entityCode) {
-		final LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool instanceof StorableObjectResizableLRUMap) {
 			((StorableObjectResizableLRUMap) objectPool).truncate(true);
 		}
@@ -834,10 +832,5 @@ public final class StorableObjectPool {
 	@SuppressWarnings("unchecked")
 	private static <K, V> LRUMap<K, V> getLRUMap(final short entityCode) {
 		return (LRUMap) objectPoolMap.get(entityCode);
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <K, V> LRUMap<K, V> getLRUMap(final TShortObjectIterator tShortObjectIterator) {
-		return (LRUMap) tShortObjectIterator.value();
 	}
 }
