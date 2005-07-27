@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.86 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: Measurement.java,v 1.87 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.87 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -66,9 +66,8 @@ public final class Measurement extends Action {
 	public Measurement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final MeasurementDatabase database = (MeasurementDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

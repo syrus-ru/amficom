@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.100 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.101 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +26,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -34,12 +35,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.101 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class MeasurementSetupDatabase extends StorableObjectDatabase {
+public final class MeasurementSetupDatabase extends StorableObjectDatabase<MeasurementSetup> {
 	private static String columns;	
 	private static String updateMultipleSQLValues;	
 
@@ -76,47 +77,43 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {		
-		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		final ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		final ParameterSet thresholdSet = measurementSetup.getThresholdSet();
-		final ParameterSet etalon = measurementSetup.getEtalon();
-		final String values = DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ Long.toString(measurementSetup.getMeasurementDuration());
+	protected String getUpdateSingleSQLValuesTmpl(final MeasurementSetup storableObject) throws IllegalDataException {		
+		final ParameterSet criteriaSet = storableObject.getCriteriaSet();
+		final ParameterSet thresholdSet = storableObject.getThresholdSet();
+		final ParameterSet etalon = storableObject.getEtalon();
+		final String values = DatabaseIdentifier.toSQLString(storableObject.getParameterSet().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : VOID_IDENTIFIER) + COMMA
+			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : VOID_IDENTIFIER) + COMMA
+			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : VOID_IDENTIFIER) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ Long.toString(storableObject.getMeasurementDuration());
 		return values;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final MeasurementSetup storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		final ParameterSet criteriaSet = measurementSetup.getCriteriaSet();
-		final ParameterSet thresholdSet = measurementSetup.getThresholdSet();
-		final ParameterSet etalon = measurementSetup.getEtalon();
+		final ParameterSet criteriaSet = storableObject.getCriteriaSet();
+		final ParameterSet thresholdSet = storableObject.getThresholdSet();
+		final ParameterSet etalon = storableObject.getEtalon();
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParameterSet().getId());
 		DatabaseIdentifier.setIdentifier(preparedStatement,
 				++startParameterNumber,
-				measurementSetup.getParameterSet().getId());
+				(criteriaSet != null) ? criteriaSet.getId() : VOID_IDENTIFIER);
 		DatabaseIdentifier.setIdentifier(preparedStatement,
 				++startParameterNumber,
-				(criteriaSet != null) ? criteriaSet.getId() : Identifier.VOID_IDENTIFIER);
+				(thresholdSet != null) ? thresholdSet.getId() : VOID_IDENTIFIER);
 		DatabaseIdentifier.setIdentifier(preparedStatement,
 				++startParameterNumber,
-				(thresholdSet != null) ? thresholdSet.getId() : Identifier.VOID_IDENTIFIER);
-		DatabaseIdentifier.setIdentifier(preparedStatement,
-				++startParameterNumber,
-				(etalon != null) ? etalon.getId() : Identifier.VOID_IDENTIFIER);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setLong(++startParameterNumber, measurementSetup.getMeasurementDuration());
+				(etalon != null) ? etalon.getId() : VOID_IDENTIFIER);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setLong(++startParameterNumber, storableObject.getMeasurementDuration());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MeasurementSetup updateEntityFromResultSet(final MeasurementSetup storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final MeasurementSetup measurementSetup = (storableObject == null)
 				? new MeasurementSetup(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -130,21 +127,26 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 						0,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);	
+					: storableObject;	
 		ParameterSet parameterSet;
-		ParameterSet criteriaSet;
-		ParameterSet thresholdSet;
-		ParameterSet etalon;
-		Identifier id;
+		ParameterSet criteriaSet = null;
+		ParameterSet thresholdSet = null;
+		ParameterSet etalon = null;
 		try {
-			parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID), true);			
+			Identifier id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_PARAMETER_SET_ID);
+			parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(id, true);
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_CRITERIA_SET_ID);
-			criteriaSet = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;
+			if (id != VOID_IDENTIFIER) {
+				criteriaSet = StorableObjectPool.getStorableObject(id, true);
+			}
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_THRESHOLD_SET_ID);
-			thresholdSet = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;			
+			if (id != VOID_IDENTIFIER) {
+				thresholdSet = StorableObjectPool.getStorableObject(id, true);
+			}			
 			id = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.COLUMN_ETALON_ID);
-			etalon = (id != null) ? (ParameterSet) StorableObjectPool.getStorableObject(id, true) : null;
+			if (id != VOID_IDENTIFIER) {
+				etalon = StorableObjectPool.getStorableObject(id, true);
+			}
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
@@ -164,19 +166,12 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return measurementSetup;
 	}
 
-	private MeasurementSetup fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MeasurementSetup)
-			return (MeasurementSetup) storableObject;
-		throw new IllegalDataException("MeasurementSetupDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final MeasurementSetup storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-		super.retrieveEntity(measurementSetup);
-		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(measurementSetup));
-		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(measurementSetup));
+		super.retrieveEntity(storableObject);
+		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(storableObject));
+		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementSetupMELinksByOneQuery(final Set<MeasurementSetup> measurementSetups)
@@ -215,7 +210,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<MeasurementSetup> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupMELinks(storableObjects);
@@ -226,7 +221,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<MeasurementSetup> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
 		this.updateMeasurementSetupMELinks(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
@@ -267,8 +262,9 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<MeasurementSetup> retrieveByCondition(final String conditionQuery)
+			throws RetrieveObjectException, IllegalDataException {
+		final Set<MeasurementSetup> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupMELinksByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;

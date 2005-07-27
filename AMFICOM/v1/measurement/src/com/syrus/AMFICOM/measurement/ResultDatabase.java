@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.97 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.98 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,7 +18,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -41,12 +41,12 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.98 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class ResultDatabase extends StorableObjectDatabase {
+public final class ResultDatabase extends StorableObjectDatabase<Result> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -85,114 +85,104 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Result result = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final Result storableObject) throws IllegalDataException {
 		final StringBuffer buffer = new StringBuffer();
-		final int resultSort = result.getSort().value();
+		final int resultSort = storableObject.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
+				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
+				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
 				buffer.append(COMMA);
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
-						+ " of result '" + result.getId().getIdentifierString() + "'");
+						+ " of result '" + storableObject.getId().getIdentifierString() + "'");
 		}
 		buffer.append(Integer.toString(resultSort));
 		return buffer.toString();
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Result storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Result result = this.fromStorableObject(storableObject);
-		final int resultSort = result.getSort().value();
+		final int resultSort = storableObject.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);					
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);					
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
 				break;
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
-						+ " of result '" + result.getId().getIdentifierString() + "'");
+						+ " of result '" + storableObject.getId().getIdentifierString() + "'");
 		}
-		preparedStatement.setInt(++startParameterNumber, result.getSort().value());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
 		return startParameterNumber;
 	}
 
-	private Result fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Result)
-			return (Result) storableObject;
-		throw new IllegalDataException("ResultDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
-
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final Result storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Result result = this.fromStorableObject(storableObject);
-		this.retrieveEntity(result);
-		this.retrieveResultParametersByOneQuery(Collections.singleton(result));
+		this.retrieveEntity(storableObject);
+		this.retrieveResultParametersByOneQuery(Collections.singleton(storableObject));
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Result updateEntityFromResultSet(final Result storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Result result = (storableObject == null)
 				? new Result(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -201,38 +191,38 @@ public final class ResultDatabase extends StorableObjectDatabase {
 						null,
 						0,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		final int resultSort = resultSet.getInt(ResultWrapper.COLUMN_SORT);
 		Action action = null;
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				try {
-					action = (Measurement) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							ResultWrapper.COLUMN_MEASUREMENT_ID), true);
+					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MEASUREMENT_ID);
+					action = (Measurement) StorableObjectPool.getStorableObject(actionId, true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				try {
-					action = (Analysis) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							ResultWrapper.COLUMN_ANALYSIS_ID), true);
+					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_ANALYSIS_ID);
+					action = (Analysis) StorableObjectPool.getStorableObject(actionId, true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				try {
-					action = (Evaluation) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							ResultWrapper.COLUMN_EVALUATION_ID), true);
+					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_EVALUATION_ID);
+					action = (Evaluation) StorableObjectPool.getStorableObject(actionId, true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				try {
-					action = (Modeling) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							ResultWrapper.COLUMN_MODELING_ID), true);
+					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID);
+					action = (Modeling) StorableObjectPool.getStorableObject(actionId, true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}
@@ -328,11 +318,10 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<Result> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
-		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-			final Result result = this.fromStorableObject((StorableObject) it.next());
+		for (final Result result : storableObjects) {
 			this.insertResultParameters(result);
 		}
 
@@ -423,8 +412,8 @@ public final class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<Result> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<Result> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveResultParametersByOneQuery(objects);
 		return objects;
 	}

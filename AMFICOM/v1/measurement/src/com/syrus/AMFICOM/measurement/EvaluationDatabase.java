@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.62 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.63 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +20,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,20 +27,14 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.63 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class EvaluationDatabase extends StorableObjectDatabase {
+public final class EvaluationDatabase extends StorableObjectDatabase<Evaluation> {
 	private static String columns;	
 	private static String updateMultipleSQLValues;
-
-	private Evaluation fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Evaluation)
-			return (Evaluation) storableObject;
-		throw new IllegalDataException("EvaluationDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -69,31 +64,29 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Evaluation evaluation = this.fromStorableObject(storableObject);
-		final Measurement measurement = evaluation.getMeasurement();
-		final String values = DatabaseIdentifier.toSQLString(evaluation.getType().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(evaluation.getMonitoredElementId()) + COMMA
-			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER) + COMMA
-			+ DatabaseIdentifier.toSQLString(evaluation.getThresholdSet().getId());
+	protected String getUpdateSingleSQLValuesTmpl(final Evaluation storableObject) throws IllegalDataException {
+		final Measurement measurement = storableObject.getMeasurement();
+		final String values = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
+			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : VOID_IDENTIFIER) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getThresholdSet().getId());
 		return values;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Evaluation storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Evaluation evaluation = this.fromStorableObject(storableObject);
-		final Measurement measurement = evaluation.getMeasurement();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : Identifier.VOID_IDENTIFIER);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, evaluation.getThresholdSet().getId());
+		final Measurement measurement = storableObject.getMeasurement();
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : VOID_IDENTIFIER);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getThresholdSet().getId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Evaluation updateEntityFromResultSet(final Evaluation storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Evaluation evaluation = (storableObject == null)
 				? new Evaluation(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -103,16 +96,19 @@ public final class EvaluationDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		EvaluationType evaluationType;
 		Measurement measurement = null;
 		ParameterSet thresholdSet;
 		try {
-			evaluationType = (EvaluationType)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+			final Identifier evaluationTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
+			evaluationType = (EvaluationType) StorableObjectPool.getStorableObject(evaluationTypeId, true);
 			final Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
-			if (measurementId != null)
+			if (measurementId != VOID_IDENTIFIER) {
 				measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
-			thresholdSet = (ParameterSet)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID), true);
+			}
+			final Identifier thresholdSetId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID);
+			thresholdSet = (ParameterSet) StorableObjectPool.getStorableObject(thresholdSetId, true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.9 2005/06/29 12:48:48 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.10 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,17 +31,17 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/29 12:48:48 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
-public abstract class ActionTypeDatabase extends StorableObjectDatabase {
+public abstract class ActionTypeDatabase<T extends ActionType> extends StorableObjectDatabase<T> {
 
 	abstract String getParameterTypeLinkTableName();
 
 	abstract String getActionTypeColumnName();
 
-	final void retrieveParameterTypeIdsByOneQuery(final Set<? extends ActionType> actionTypes) throws RetrieveObjectException {
+	final void retrieveParameterTypeIdsByOneQuery(final Set<T> actionTypes) throws RetrieveObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 
@@ -58,7 +58,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Map<Identifier, Map<String, Set<Identifier>>> retrieveDBParameterTypeIdsMap(final Set<? extends ActionType> actionTypes)
+	private Map<Identifier, Map<String, Set<Identifier>>> retrieveDBParameterTypeIdsMap(final Set<T> actionTypes)
 			throws RetrieveObjectException {
 		final String tableName = this.getParameterTypeLinkTableName();
 		final String actionTypeColumnName = this.getActionTypeColumnName();
@@ -120,7 +120,7 @@ public abstract class ActionTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	final void updateParameterTypeIds(final Set<? extends ActionType> actionTypes) throws UpdateObjectException {
+	final void updateParameterTypeIds(final Set<T> actionTypes) throws UpdateObjectException {
 		if (actionTypes == null || actionTypes.isEmpty())
 			return;
 

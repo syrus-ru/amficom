@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTemporalPatternDatabase.java,v 1.10 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: PeriodicalTemporalPatternDatabase.java,v 1.11 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,27 +16,20 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase {
+public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatabase<PeriodicalTemporalPattern> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private PeriodicalTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof PeriodicalTemporalPattern)
-			return (PeriodicalTemporalPattern) storableObject;
-		throw new IllegalDataException("PeriodicalTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -60,30 +53,28 @@ public final class PeriodicalTemporalPatternDatabase extends StorableObjectDatab
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		final String values = "" + periodicalTemporalPattern.getPeriod();
+	protected String getUpdateSingleSQLValuesTmpl(final PeriodicalTemporalPattern storableObject) throws IllegalDataException {
+		final String values = "" + storableObject.getPeriod();
 		return values;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final PeriodicalTemporalPattern storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {		
-		final PeriodicalTemporalPattern periodicalTemporalPattern = this.fromStorableObject(storableObject);
-		preparedStatement.setLong(++startParameterNumber, periodicalTemporalPattern.getPeriod());
+		preparedStatement.setLong(++startParameterNumber, storableObject.getPeriod());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
-			throws IllegalDataException, SQLException {
+	protected PeriodicalTemporalPattern updateEntityFromResultSet(final PeriodicalTemporalPattern storableObject,
+			final ResultSet resultSet) throws IllegalDataException, SQLException {
 		final PeriodicalTemporalPattern periodicalTemporalPattern = (storableObject == null)
 				? new PeriodicalTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
 						0)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		periodicalTemporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

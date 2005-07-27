@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.139 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: Test.java,v 1.140 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.139 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.140 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -85,9 +85,8 @@ public final class Test extends StorableObject {
 		super(id);
 		this.measurementSetupIds = new HashSet<Identifier>();
 
-		final TestDatabase database = (TestDatabase) DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.TEST_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -664,7 +663,10 @@ public final class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					return this.startTime != null;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					return this.startTime != null && this.endTime != null && this.temporalPatternId != null && this.startTime.getTime() < this.endTime.getTime();
+					return this.startTime != null
+							&& this.endTime != null
+							&& this.temporalPatternId != null
+							&& this.startTime.getTime() < this.endTime.getTime();
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					return this.startTime != null && this.endTime != null && this.startTime.getTime() < this.endTime.getTime();
 				default:

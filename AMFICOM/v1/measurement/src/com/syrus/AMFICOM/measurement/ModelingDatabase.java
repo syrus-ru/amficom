@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.50 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.51 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,10 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,20 +26,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module module_name
  */
 
-public final class ModelingDatabase extends StorableObjectDatabase {
+public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private Modeling fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Modeling)
-			return (Modeling) storableObject;
-		throw new IllegalDataException("ModelingDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -69,29 +63,27 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Modeling storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Modeling modeling = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, modeling.getArgumentSet().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, modeling.getName(), SIZE_NAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getArgumentSet().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-  protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-  	final Modeling modeling = this.fromStorableObject(storableObject);
-  	final String values = DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(modeling.getMonitoredElementId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(modeling.getArgumentSet().getId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(modeling.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
+  protected String getUpdateSingleSQLValuesTmpl(final Modeling storableObject) throws IllegalDataException {
+  	final String values = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getArgumentSet().getId()) + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
 	@Override
-  protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+  protected Modeling updateEntityFromResultSet(final Modeling storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
   	final Modeling modeling = (storableObject == null)
 				? new Modeling(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -101,14 +93,14 @@ public final class ModelingDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		ModelingType modelingType;
 		ParameterSet argumentSet;
 		try {
-			modelingType = (ModelingType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_TYPE_ID), true);
-			argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
+			final Identifier modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
+			modelingType = (ModelingType) StorableObjectPool.getStorableObject(modelingTypeId, true);
+			final Identifier argumentSetId = DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID);
+			argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(argumentSetId, true);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}

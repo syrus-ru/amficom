@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.85 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.86 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.86 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -67,9 +67,8 @@ public final class MeasurementSetup extends StorableObject {
 		this.monitoredElementIds = new HashSet<Identifier>();
 		this.measurementTypeIds = new HashSet<Identifier>();
 
-		final MeasurementSetupDatabase database = (MeasurementSetupDatabase) DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

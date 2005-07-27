@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.105 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.106 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -35,12 +34,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.106 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
+public final class MeasurementTypeDatabase extends ActionTypeDatabase<MeasurementType>  {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -53,13 +52,6 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	String getActionTypeColumnName() {
 		return MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID;
 	}
-
-	private MeasurementType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MeasurementType)
-			return (MeasurementType) storableObject;
-		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}	
 
 	@Override
 	protected short getEntityCode() {
@@ -85,15 +77,14 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final MeasurementType measurementType = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final MeasurementType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MeasurementType updateEntityFromResultSet(final MeasurementType storableObject, final ResultSet resultSet)
 		throws IllegalDataException, SQLException {
 		final MeasurementType measurementType = (storableObject == null)
 				? new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -104,7 +95,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -116,23 +107,21 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final MeasurementType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final MeasurementType measurementType = this.fromStorableObject(storableObject);
-			DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 		}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final MeasurementType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final MeasurementType measurementType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(measurementType);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(measurementType));
-		this.retrieveMeasurementPortTypeIdsByOneQuery(Collections.singleton(measurementType));
+		this.retrieveEntity(storableObject);
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveMeasurementPortTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementPortTypeIdsByOneQuery(final Set<MeasurementType> measurementTypes) throws RetrieveObjectException {
@@ -153,7 +142,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<MeasurementType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypeIds(storableObjects);
@@ -164,7 +153,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<MeasurementType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
 		super.updateParameterTypeIds(storableObjects);
 		this.updateMeasurementPortTypeIds(storableObjects);
@@ -224,8 +213,9 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase  {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<MeasurementType> retrieveByCondition(final String conditionQuery)
+			throws RetrieveObjectException, IllegalDataException {
+		final Set<MeasurementType> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementPortTypeIdsByOneQuery(objects);
 		return objects;

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.44 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: ModelingType.java,v 1.45 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.45 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -76,9 +76,8 @@ public final class ModelingType extends ActionType {
 		this.inParameterTypeIds = new HashSet<Identifier>();
 		this.outParameterTypeIds = new HashSet<Identifier>();
 
-		final ModelingTypeDatabase database = (ModelingTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

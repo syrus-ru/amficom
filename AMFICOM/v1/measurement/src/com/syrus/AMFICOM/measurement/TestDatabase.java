@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.107 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.108 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -45,12 +44,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.108 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class TestDatabase extends StorableObjectDatabase {
+public final class TestDatabase extends StorableObjectDatabase<Test> {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 
 	private static String columns;
@@ -100,23 +99,18 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Test test = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final Test storableObject) throws IllegalDataException {
+		final Test test = storableObject;
 		final Date startTime = test.getStartTime();
 		final Date endTime = test.getEndTime();
-		final Identifier temporalPatternId = test.getTemporalPatternId();		
-		final Identifier analysisTypeId = test.getAnalysisTypeId();
-		final Identifier evaluationTypeId = test.getEvaluationTypeId();
-		final Identifier groupTestId = test.getGroupTestId();
-
 		return test.getTemporalType().value() + COMMA
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
-			+ ((temporalPatternId != null) ? DatabaseIdentifier.toSQLString(temporalPatternId) : SQL_NULL) + COMMA
+			+ DatabaseIdentifier.toSQLString(test.getTemporalPatternId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMeasurementTypeId()) + COMMA
-			+ ((analysisTypeId != null) ? DatabaseIdentifier.toSQLString(analysisTypeId): SQL_NULL) + COMMA			
-			+ ((evaluationTypeId != null) ? DatabaseIdentifier.toSQLString(evaluationTypeId) : SQL_NULL) + COMMA
-			+ ((groupTestId != null) ? DatabaseIdentifier.toSQLString(groupTestId) : SQL_NULL) + COMMA
+			+ DatabaseIdentifier.toSQLString(test.getAnalysisTypeId()) + COMMA			
+			+ DatabaseIdentifier.toSQLString(test.getEvaluationTypeId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(test.getGroupTestId()) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
@@ -132,34 +126,29 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Test storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 
-		final Test test = this.fromStorableObject(storableObject);
-		final Date startTime = test.getStartTime();
-		final Date endTime = test.getEndTime();
-		final Identifier temporalPatternId = test.getTemporalPatternId();		
-		final Identifier analysisTypeId = test.getAnalysisTypeId();
-		final Identifier evaluationTypeId = test.getEvaluationTypeId();
-		final Identifier groupTestId = test.getGroupTestId();
-		preparedStatement.setInt(++startParameterNumber, test.getTemporalType().value());
+		final Date startTime = storableObject.getStartTime();
+		final Date endTime = storableObject.getEndTime();
+		preparedStatement.setInt(++startParameterNumber, storableObject.getTemporalType().value());
 		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (temporalPatternId != null) ? temporalPatternId : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMeasurementTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (analysisTypeId != null) ? analysisTypeId : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (evaluationTypeId != null) ? evaluationTypeId : null);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (groupTestId != null) ? groupTestId : null);
-		preparedStatement.setInt(++startParameterNumber, test.getStatus().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, test.getMonitoredElement().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, test.getNumberOfMeasurements());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTemporalPatternId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAnalysisTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEvaluationTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getGroupTestId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getStatus().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElement().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getNumberOfMeasurements());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Test updateEntityFromResultSet(final Test storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Test test = (storableObject == null) ? new Test(DatabaseIdentifier.getIdentifier(resultSet,
 				StorableObjectWrapper.COLUMN_ID),
@@ -175,7 +164,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 				null,
 				null,
 				null,
-				null) : this.fromStorableObject(storableObject);
+				null) : storableObject;
 
 		MonitoredElement monitoredElement;
 		try {			
@@ -206,18 +195,11 @@ public final class TestDatabase extends StorableObjectDatabase {
 		return test;
 	}
 
-	private Test fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Test)
-			return (Test)storableObject;
-		throw new IllegalDataException("TestDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final Test storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Test test = this.fromStorableObject(storableObject);
-		this.retrieveEntity(test);
-		this.retrieveMeasurementSetupTestLinksByOneQuery(Collections.singleton(test));
+		this.retrieveEntity(storableObject);
+		this.retrieveMeasurementSetupTestLinksByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementSetupTestLinksByOneQuery(final Set<Test> tests) throws RetrieveObjectException {
@@ -376,7 +358,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<Test> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateMeasurementSetupIds(storableObjects);
@@ -386,7 +368,7 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<Test> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateMeasurementSetupIds(storableObjects);
 	}
@@ -409,8 +391,8 @@ public final class TestDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<Test> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<Test> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupTestLinksByOneQuery(objects);
 		return objects;
 	}

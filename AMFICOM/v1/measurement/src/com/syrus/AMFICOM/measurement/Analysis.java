@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.76 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: Analysis.java,v 1.77 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.77 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -54,9 +54,8 @@ public final class Analysis extends Action {
 	public Analysis(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final AnalysisDatabase database = (AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

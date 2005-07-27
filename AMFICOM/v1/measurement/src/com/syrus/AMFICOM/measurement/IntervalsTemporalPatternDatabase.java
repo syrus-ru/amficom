@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.14 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.15 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,7 +28,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -39,22 +37,16 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
-public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase {
+public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase<IntervalsTemporalPattern> {
 	private static final int	TEMPORAL_PATTERN_ID_ROW	= 0;
 	private static final int	DURATION_ROW	= 1;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private IntervalsTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof IntervalsTemporalPattern)
-			return (IntervalsTemporalPattern) storableObject;
-		throw new IllegalDataException("IntervalsTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -78,34 +70,32 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + intervalsTemporalPattern.getName() + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final IntervalsTemporalPattern storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + storableObject.getName() + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final IntervalsTemporalPattern storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {		
-		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		preparedStatement.setString(++startParameterNumber, intervalsTemporalPattern.getName());
+		preparedStatement.setString(++startParameterNumber, storableObject.getName());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
-			throws IllegalDataException, RetrieveObjectException, SQLException {
+	protected IntervalsTemporalPattern updateEntityFromResultSet(final IntervalsTemporalPattern storableObject,
+			final ResultSet resultSet) throws IllegalDataException, RetrieveObjectException, SQLException {
 		final SortedMap<Long, Identifier> absMap = new TreeMap<Long, Identifier>();
 		final SortedMap<Long, Long> durMap = new TreeMap<Long, Long>();
 
-		IntervalsTemporalPattern intervalsTemporalPattern;
-		if (storableObject == null) {
-			intervalsTemporalPattern = new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null);
-		} else {
-			intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		}
+		final IntervalsTemporalPattern intervalsTemporalPattern = (storableObject == null)
+				? new IntervalsTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null)
+					: storableObject;
 
 		final Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
 		final Map<Long, List<Object>> tableMap = this.getMapsFromDB(intervalsTemporalPatternId);
@@ -175,15 +165,10 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects)
-			throws UpdateObjectException {
+	public void update(final Set<IntervalsTemporalPattern> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		for (final StorableObject storableObject : storableObjects) {
-			try {
-				updateLinkedTable(storableObject);
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException(e.getMessage(),e);
-			}
+		for (final IntervalsTemporalPattern intervalsTemporalPattern : storableObjects) {
+			this.updateLinkedTable(intervalsTemporalPattern);
 		}
 	}
 
@@ -229,11 +214,10 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		}
 	}
 	
-	private void updateLinkedTable(final StorableObject storableObject) throws UpdateObjectException, IllegalDataException {
-		final IntervalsTemporalPattern intervalsTemporalPattern = this.fromStorableObject(storableObject);
-		final Identifier intervalsTemporalPatternId = intervalsTemporalPattern.getId();
-		final SortedMap<Long, Identifier> abstractMap = intervalsTemporalPattern.getIntervalsAbstractTemporalPatternMap();
-		final SortedMap<Long, Long> durationMap = intervalsTemporalPattern.getIntervalsDuration();
+	private void updateLinkedTable(final IntervalsTemporalPattern storableObject) throws UpdateObjectException {
+		final Identifier intervalsTemporalPatternId = storableObject.getId();
+		final SortedMap<Long, Identifier> abstractMap = storableObject.getIntervalsAbstractTemporalPatternMap();
+		final SortedMap<Long, Long> durationMap = storableObject.getIntervalsDuration();
 
 		Map<Long, List<Object>> dbTableMap;
 
@@ -382,9 +366,8 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws CreateObjectException {
-		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-			final IntervalsTemporalPattern intervalsTemporalPattern = (IntervalsTemporalPattern) it.next();
+	public void insert(final Set<IntervalsTemporalPattern> storableObjects) throws CreateObjectException {
+		for (final IntervalsTemporalPattern intervalsTemporalPattern : storableObjects) {
 			this.insertInLinkedTable(intervalsTemporalPattern);			
 		}
 	}

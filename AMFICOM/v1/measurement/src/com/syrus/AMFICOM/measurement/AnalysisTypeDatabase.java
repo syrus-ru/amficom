@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.98 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.99 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -35,12 +34,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class AnalysisTypeDatabase extends ActionTypeDatabase {	
+public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType> {	
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -52,13 +51,6 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	@Override
 	String getActionTypeColumnName() {
 		return AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID;
-	}
-
-	private AnalysisType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof AnalysisType)
-			return (AnalysisType) storableObject;
-		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
 	}
 
 	@Override
@@ -85,17 +77,16 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final AnalysisType analysisType = this.fromStorableObject(storableObject);		
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(analysisType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final AnalysisType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected AnalysisType updateEntityFromResultSet(final AnalysisType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		final AnalysisType analysisType = storableObject == null
+		final AnalysisType analysisType = (storableObject == null)
 				? new AnalysisType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						null,
 						StorableObjectVersion.ILLEGAL_VERSION,
@@ -106,7 +97,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -118,22 +109,20 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final AnalysisType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final AnalysisType analysisType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, analysisType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, analysisType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final AnalysisType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final AnalysisType analysisType = this.fromStorableObject(storableObject);
-		super.retrieveEntity(analysisType);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(analysisType));
-		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(analysisType));
+		super.retrieveEntity(storableObject);
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementTypeIdsByOneQuery(final Set<AnalysisType> analysisTypes) throws RetrieveObjectException {
@@ -154,7 +143,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<AnalysisType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypeIds(storableObjects);
@@ -165,7 +154,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<AnalysisType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
 		super.updateParameterTypeIds(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
@@ -219,8 +208,8 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<AnalysisType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<AnalysisType> objects = super.retrieveByCondition(conditionQuery);
 		super.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;

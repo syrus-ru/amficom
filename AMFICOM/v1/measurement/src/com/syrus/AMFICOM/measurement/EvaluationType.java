@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.81 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.82 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationTypeHelper;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.82 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -86,9 +86,8 @@ public final class EvaluationType extends ActionType {
 
 		this.measurementTypeIds = new HashSet<Identifier>();
 
-		final EvaluationTypeDatabase database = (EvaluationTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.EVALUATION_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.EVALUATION_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.12 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.13 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import oracle.jdbc.driver.OracleResultSet;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -27,22 +26,16 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
+public final class CronTemporalPatternDatabase extends StorableObjectDatabase<CronTemporalPattern> {
 	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
 	private static String columns;
 	private static String updateMultipleSQLValues;	
-
-	private CronTemporalPattern fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof CronTemporalPattern)
-			return (CronTemporalPattern)storableObject;
-		throw new IllegalDataException("CronTemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -83,15 +76,14 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ this.getUpdateCronStringArray(temporalPattern);
+	protected String getUpdateSingleSQLValuesTmpl(final CronTemporalPattern storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ this.getUpdateCronStringArray(storableObject);
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected CronTemporalPattern updateEntityFromResultSet(final CronTemporalPattern storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final CronTemporalPattern temporalPattern = (storableObject == null)
 				? new CronTemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -99,7 +91,7 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		final String[] cronStrings = ((CronStringArray) (((OracleResultSet) resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE,
 				CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -113,12 +105,12 @@ public final class CronTemporalPatternDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final CronTemporalPattern storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final CronTemporalPattern temporalPattern = this.fromStorableObject(storableObject);
-		preparedStatement.setString(++startParameterNumber, temporalPattern.getDescription());
-		((OraclePreparedStatement) preparedStatement).setORAData(++startParameterNumber, new CronStringArray(temporalPattern.getCronStrings()));
+		preparedStatement.setString(++startParameterNumber, storableObject.getDescription());
+		((OraclePreparedStatement) preparedStatement).setORAData(++startParameterNumber,
+				new CronStringArray(storableObject.getCronStrings()));
 		return startParameterNumber;
 	}
 

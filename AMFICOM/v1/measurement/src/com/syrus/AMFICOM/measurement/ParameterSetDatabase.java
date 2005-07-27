@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.9 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.10 2005/07/27 18:20:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -42,12 +40,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/27 18:20:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class ParameterSetDatabase extends StorableObjectDatabase {
+public final class ParameterSetDatabase extends StorableObjectDatabase<ParameterSet> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -75,31 +73,23 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final ParameterSet set = this.fromStorableObject(storableObject);
-		final String values = Integer.toString(set.getSort().value()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final ParameterSet storableObject) throws IllegalDataException {
+		final String values = Integer.toString(storableObject.getSort().value()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final ParameterSet storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final ParameterSet set = this.fromStorableObject(storableObject);
-		preparedStatement.setInt(++startParameterNumber, set.getSort().value());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
-	private ParameterSet fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof ParameterSet)
-			return (ParameterSet)storableObject;
-		throw new IllegalDataException("ParameterSetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected ParameterSet updateEntityFromResultSet(final ParameterSet storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final ParameterSet set = (storableObject == null)
 				? new ParameterSet(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -109,7 +99,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
@@ -123,12 +113,11 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final ParameterSet storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final ParameterSet set = this.fromStorableObject(storableObject);
-		this.retrieveEntity(set);
-		this.retrieveSetParametersByOneQuery(Collections.singleton(set));
-		this.retrieveSetMELinksByOneQuery(Collections.singleton(set));
+		this.retrieveEntity(storableObject);
+		this.retrieveSetParametersByOneQuery(Collections.singleton(storableObject));
+		this.retrieveSetMELinksByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveSetParametersByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
@@ -144,8 +133,6 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 		sql.append(idsEnumerationString(sets, ParameterSetWrapper.LINK_COLUMN_SET_ID, true));
 
 		final Map<Identifier, Set<Parameter>> setParametersMap = new HashMap<Identifier, Set<Parameter>>();
-		//Identifier setId;
-//		Set setParameters;
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -158,13 +145,14 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 			while (resultSet.next()) {
 				ParameterType parameterType;
 				try {
-					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+					final Identifier parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
+					parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
 				}
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
+						parameterType,
+						ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				final Identifier setId = DatabaseIdentifier.getIdentifier(resultSet, ParameterSetWrapper.LINK_COLUMN_SET_ID);
 				Set<Parameter> setParameters = setParametersMap.get(setId);
 				if (setParameters == null) {
@@ -222,11 +210,10 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<ParameterSet> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-			final ParameterSet set = this.fromStorableObject((StorableObject) it.next());
-			this.insertSetParameters(set);
+		for (final ParameterSet parameterSet : storableObjects) {
+			this.insertSetParameters(parameterSet);
 		}
 		try {
 			this.updateSetMELinks(storableObjects);
@@ -278,7 +265,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
-			String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
+			final String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
 					+ "' of type '" + parameterTypeId.toString() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
@@ -295,7 +282,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<ParameterSet> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateSetMELinks(storableObjects);
 	}
@@ -352,8 +339,8 @@ public final class ParameterSetDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<ParameterSet> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<ParameterSet> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveSetParametersByOneQuery(objects);
 		this.retrieveSetMELinksByOneQuery(objects);
 		return objects;

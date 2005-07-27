@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.93 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.94 2005/07/27 18:20:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -35,12 +34,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.94 $, $Date: 2005/07/27 18:20:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
-public final class EvaluationTypeDatabase extends ActionTypeDatabase {
+public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationType> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -53,13 +52,6 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	String getActionTypeColumnName() {
 		return EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID;
 	}
-
-	private EvaluationType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof EvaluationType)
-			return (EvaluationType) storableObject;
-		throw new IllegalDataException("EvaluationTypeDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}	
 
 	@Override
 	protected short getEntityCode() {
@@ -86,25 +78,23 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final EvaluationType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, evaluationType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(evaluationType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(evaluationType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;		
+	protected String getUpdateSingleSQLValuesTmpl(final EvaluationType storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;		
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected EvaluationType updateEntityFromResultSet(final EvaluationType storableObject, final ResultSet resultSet)
 		throws IllegalDataException, SQLException {
 		final EvaluationType evaluationType = (storableObject == null)
 				? new EvaluationType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -117,7 +107,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		evaluationType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -129,12 +119,11 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final EvaluationType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(evaluationType);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(evaluationType));
-		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(evaluationType));
+		super.retrieveEntity(storableObject);
+		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementTypeIdsByOneQuery(final Set<EvaluationType> evaluationTypes) throws RetrieveObjectException {
@@ -155,7 +144,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<EvaluationType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			super.updateParameterTypeIds(storableObjects);
@@ -166,7 +155,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<EvaluationType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
 		super.updateParameterTypeIds(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
@@ -222,8 +211,8 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<EvaluationType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<EvaluationType> objects = super.retrieveByCondition(conditionQuery);
 		super.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;
