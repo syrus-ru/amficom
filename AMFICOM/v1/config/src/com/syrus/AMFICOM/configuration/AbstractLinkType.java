@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.17 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: AbstractLinkType.java,v 1.18 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.18 $, $Date: 2005/07/27 15:59:22 $
+ * @author $Author: bass $
+ * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;

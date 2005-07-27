@@ -1,5 +1,5 @@
 /*-
- * $Id: PortDatabase.java,v 1.69 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: PortDatabase.java,v 1.70 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -27,19 +26,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.70 $, $Date: 2005/07/27 15:59:22 $
+ * @author $Author: bass $
+ * @module config
  */
-public final class PortDatabase extends StorableObjectDatabase {
+public final class PortDatabase extends StorableObjectDatabase<Port> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private Port fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Port)
-			return (Port)storableObject;
-		throw new IllegalDataException("PortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -68,24 +61,25 @@ public final class PortDatabase extends StorableObjectDatabase {
 	}	
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Port port = this.fromStorableObject(storableObject);
-		final Identifier typeId = port.getType().getId();
-		final Identifier equipmentId = port.getEquipmentId();
+	protected String getUpdateSingleSQLValuesTmpl(final Port storableObject) throws IllegalDataException {
+		final Identifier typeId = storableObject.getType().getId();
+		final Identifier equipmentId = storableObject.getEquipmentId();
 		return DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(port.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE	+ COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE	+ COMMA
 			+ DatabaseIdentifier.toSQLString(equipmentId);
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Port updateEntityFromResultSet(final Port storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		final Port port = (storableObject == null) ? new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-				null,
-				StorableObjectVersion.ILLEGAL_VERSION,
-				null,
-				null,
-				null) : this.fromStorableObject(storableObject);
+		final Port port = (storableObject == null)
+				? new Port(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null)
+				: storableObject;
 		PortType portType;
 		try {
 			final Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
@@ -107,15 +101,14 @@ public final class PortDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Port storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Port port = this.fromStorableObject(storableObject);
-		final Identifier typeId = port.getType().getId();
-		final Identifier equipmentId = port.getEquipmentId();
+		final Identifier typeId = storableObject.getType().getId();
+		final Identifier equipmentId = storableObject.getEquipmentId();
 
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, port.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipmentId);
 		return startParameterNumber;
 	}

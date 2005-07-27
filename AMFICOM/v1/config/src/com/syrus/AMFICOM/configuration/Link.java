@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.68 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: Link.java,v 1.69 2005/07/27 15:59:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/07/25 20:49:45 $
- * @module config_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.69 $, $Date: 2005/07/27 15:59:21 $
+ * @module config
  */
 public final class Link extends AbstractLink {
 	private static final long serialVersionUID = 3257283626012783672L;

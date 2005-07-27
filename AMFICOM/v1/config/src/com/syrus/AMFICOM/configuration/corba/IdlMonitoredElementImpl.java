@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMonitoredElementImpl.java,v 1.2 2005/07/11 08:18:58 bass Exp $
+ * $Id: IdlMonitoredElementImpl.java,v 1.3 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:58 $
- * @module config_v1
+ * @version $Revision: 1.3 $, $Date: 2005/07/27 15:59:22 $
+ * @module config
  */
 final class IdlMonitoredElementImpl extends IdlMonitoredElement {
 	private static final long serialVersionUID = 7497960841961799987L;

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.110 2005/07/27 15:09:44 bass Exp $
+ * $Id: Equipment.java,v 1.111 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,9 +40,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/07/27 15:09:44 $
+ * @version $Revision: 1.111 $, $Date: 2005/07/27 15:59:22 $
  * @author $Author: bass $
- * @module config_v1
+ * @module config
  */
 
 public final class Equipment extends DomainMember implements MonitoredDomainMember, Characterizable, TypedObject {

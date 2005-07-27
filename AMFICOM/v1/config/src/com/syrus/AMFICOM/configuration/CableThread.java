@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.36 2005/07/27 15:09:43 bass Exp $
+ * $Id: CableThread.java,v 1.37 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,9 +35,9 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/27 15:09:43 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/27 15:59:22 $
  * @author $Author: bass $
- * @module config_v1
+ * @module config
  */
 public final class CableThread extends DomainMember implements TypedObject {
 

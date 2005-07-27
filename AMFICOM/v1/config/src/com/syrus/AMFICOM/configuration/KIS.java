@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.97 2005/07/27 15:09:43 bass Exp $
+ * $Id: KIS.java,v 1.98 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,9 +40,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/07/27 15:09:43 $
+ * @version $Revision: 1.98 $, $Date: 2005/07/27 15:59:22 $
  * @author $Author: bass $
- * @module config_v1
+ * @module config
  */
 
 public final class KIS extends DomainMember implements Characterizable {

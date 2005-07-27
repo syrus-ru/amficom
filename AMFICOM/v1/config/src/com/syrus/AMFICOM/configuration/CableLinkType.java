@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.58 2005/07/27 15:09:44 bass Exp $
+ * $Id: CableLinkType.java,v 1.59 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,9 +35,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/07/27 15:09:44 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/27 15:59:22 $
  * @author $Author: bass $
- * @module config_v1
+ * @module config
  */
 public final class CableLinkType extends AbstractLinkType {
 

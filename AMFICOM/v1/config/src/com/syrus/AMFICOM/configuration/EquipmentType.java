@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.77 2005/07/27 15:09:43 bass Exp $
+ * $Id: EquipmentType.java,v 1.78 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,9 +38,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/27 15:09:43 $
+ * @version $Revision: 1.78 $, $Date: 2005/07/27 15:59:22 $
  * @author $Author: bass $
- * @module config_v1
+ * @module config
  */
 
 public final class EquipmentType extends StorableObjectType implements Characterizable, Namable {

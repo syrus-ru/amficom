@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.8 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: CableLink.java,v 1.9 2005/07/27 15:59:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,9 +31,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/07/25 20:49:45 $
- * @module config_v1
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/07/27 15:59:22 $
+ * @module config
  */
 public final class CableLink extends AbstractLink {
 	private static final long serialVersionUID = 7733720151418798562L;
