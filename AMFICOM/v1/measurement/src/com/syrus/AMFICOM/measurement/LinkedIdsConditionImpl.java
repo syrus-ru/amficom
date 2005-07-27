@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.51 2005/07/21 14:02:30 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.52 2005/07/27 19:06:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/07/21 14:02:30 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/27 19:06:38 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -148,7 +148,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				}
 				/* measurement haven't parent action*/
 				break;
-			case ObjectEntities.MEASUREMENT_TYPE_CODE: {
+			case ObjectEntities.MEASUREMENT_TYPE_CODE:
 				final MeasurementType measurementType = (MeasurementType) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
@@ -160,7 +160,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			}
 			case ObjectEntities.MEASUREMENTSETUP_CODE:
 				final MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
 				switch (this.linkedEntityCode) {
@@ -192,10 +191,11 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							break;
 						}
 					}
-				} else
+				} else {
 					throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
 							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
 				break;
 			case ObjectEntities.TEST_CODE:
 				final Test test = (Test) storableObject;
@@ -211,6 +211,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						break;
 					case ObjectEntities.MEASUREMENTSETUP_CODE:
 						condition = super.conditionTest(test.getMeasurementSetupIds());
+						break;
 					case ObjectEntities.TEST_CODE:
 						condition = super.conditionTest(test.getGroupTestId());
 						break;

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.98 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.99 2005/07/27 19:06:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.99 $, $Date: 2005/07/27 19:06:38 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -128,6 +128,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
 				buffer.append(COMMA);
+				break;
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
 						+ " of result '" + storableObject.getId().getIdentifierString() + "'");
