@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.32 2005/07/27 11:28:30 bass Exp $
+ * $Id: LRUMap.java,v 1.33 2005/07/27 12:04:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/27 11:28:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/07/27 12:04:24 $
+ * @author $Author: arseniy $
  * @module util
  */
 public class LRUMap<K, V> implements Serializable {
@@ -51,14 +51,14 @@ public class LRUMap<K, V> implements Serializable {
 	 * value iterator
 	 */
 	public Iterator<V> iterator() {
-		return new Itr(false);
+		return new Itr();
 	}
 
 	/**
 	 * key iterator
 	 */
 	public Iterator<K> keyIterator() {
-		return new Itr(true);
+		return new KeyIterator();
 	}
 
 	public int size() {
@@ -69,7 +69,7 @@ public class LRUMap<K, V> implements Serializable {
 		int index = -1;
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++) {
-				IEntry entry = this.array[i];
+				final IEntry entry = this.array[i];
 				if (entry != null && entry.getKey().equals(key)) {
 					index = i;
 					break;
@@ -83,7 +83,7 @@ public class LRUMap<K, V> implements Serializable {
 		this.modCount++;
 		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
 		this.remove(key);
-		Entry newEntry = new Entry(key, value);
+		final IEntry<K, V> newEntry = new Entry(key, value);
 		V ret = null;
 		if (this.array[this.array.length - 1] != null)
 			ret = this.array[this.array.length - 1].getValue();
@@ -107,7 +107,7 @@ public class LRUMap<K, V> implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	public synchronized boolean containsKey(K key) {
+	public synchronized boolean containsKey(final K key) {
 		if (key != null) {
 			for (int i = 0; i < this.array.length; i++)
 				if (this.array[i] != null && key.equals(this.array[i].getKey()))
@@ -122,9 +122,9 @@ public class LRUMap<K, V> implements Serializable {
 		if (key != null) {
 			V ret = null;
 			for (int i = 0; i < this.array.length; i++) {
-				IEntry entry = this.array[i];
+				final IEntry<K, V> entry = this.array[i];
 				if (entry != null && entry.getKey() != null && key.equals(entry.getKey())) {
-					ret = this.array[i].getValue();
+					ret = entry.getValue();
 					for (int j = i; j < this.array.length - 1; j++)
 						this.array[j] = this.array[j + 1];
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
@@ -136,6 +136,7 @@ public class LRUMap<K, V> implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
+
 	protected static interface IEntry<L, W> {
 		L getKey();
 
@@ -143,18 +144,20 @@ public class LRUMap<K, V> implements Serializable {
 	}
 
 	protected class Entry implements IEntry<K, V> /*implements Serializable */{
-		K key;
-		V value;
+		private K key;
+		private V value;
 
 		public Entry(final K key, final V value) {
 			if (key != null) {
 				if (value != null) {
 					this.key = key;
 					this.value = value;
-				} else
+				} else {
 					throw new IllegalArgumentException("Value is NULL");
-			} else
+				}
+			} else {
 				throw new IllegalArgumentException("Key is NULL");
+			}
 		}
 
 		public K getKey() {
@@ -166,8 +169,8 @@ public class LRUMap<K, V> implements Serializable {
 		}
 	}
 
-	protected class Itr implements Iterator/*, Serializable */{
 
+	private abstract class AbstractItr {
 		/**
 		 * Index of element to be returned by subsequent call to next.
 		 */
@@ -186,38 +189,17 @@ public class LRUMap<K, V> implements Serializable {
 		 */
 		int expectedModCount = LRUMap.this.modCount;
 
-		private boolean keyIterator = false;
-
-		public Itr(final boolean keyIterator) {
-			this.keyIterator = keyIterator;
-		}
-
-		public boolean hasNext() {
+		public final boolean hasNext() {
 			return this.cursor != LRUMap.this.entityCount;
 		}
 
-		public Object next() {
-			this.checkForComodification();
-			try {
-				Object next = null;
-				while (next == null) {
-					next = this.keyIterator ? LRUMap.this.array[this.cursor].getKey() : LRUMap.this.array[this.cursor].getValue();
-					this.lastRet = this.cursor++;
-				}
-				return next;
-			} catch (IndexOutOfBoundsException e) {
-				this.checkForComodification();
-				throw new NoSuchElementException();
-			}
-		}
-		
-		public void remove() {
+		public final void remove() {
 			if (this.lastRet == -1)
 				throw new IllegalStateException();
 			this.checkForComodification();
 			
 			try {
-				int modCountPrev = LRUMap.this.modCount;
+				final int modCountPrev = LRUMap.this.modCount;
 				LRUMap.this.remove(LRUMap.this.array[this.lastRet].getKey());
 				LRUMap.this.modCount = modCountPrev;
 				if (this.lastRet < this.cursor)
@@ -229,9 +211,43 @@ public class LRUMap<K, V> implements Serializable {
 			}
 		}
 		
-		private final void checkForComodification() {
+		final void checkForComodification() {
 			if (LRUMap.this.modCount != this.expectedModCount)
 				throw new ConcurrentModificationException();
+		}
+	}
+
+	protected class Itr extends AbstractItr implements Iterator<V> {
+		public V next() {
+			this.checkForComodification();
+			try {
+				V next = null;
+				while (next == null) {
+					next = LRUMap.this.array[this.cursor].getValue();
+					this.lastRet = this.cursor++;
+				}
+				return next;
+			} catch (IndexOutOfBoundsException e) {
+				this.checkForComodification();
+				throw new NoSuchElementException();
+			}
+		}
+	}
+
+	protected class KeyIterator extends AbstractItr implements Iterator<K> {
+		public K next() {
+			this.checkForComodification();
+			try {
+				K next = null;
+				while (next == null) {
+					next = LRUMap.this.array[this.cursor].getKey();
+					this.lastRet = this.cursor++;
+				}
+				return next;
+			} catch (IndexOutOfBoundsException e) {
+				this.checkForComodification();
+				throw new NoSuchElementException();
+			}
 		}
 	}
 
