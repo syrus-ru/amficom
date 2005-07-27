@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.34 2005/07/26 08:39:13 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.35 2005/07/27 15:44:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -40,21 +39,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/26 08:39:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/07/27 15:44:14 $
+ * @author $Author: max $
  * @module event_v1
  */
 
-public final class EventTypeDatabase extends StorableObjectDatabase {
+public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private EventType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof EventType)
-			return (EventType) storableObject;
-		throw new IllegalDataException("EventTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -71,12 +64,11 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final EventType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final EventType eventType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, eventType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
@@ -90,15 +82,14 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final EventType eventType = this.fromStorableObject(storableObject);		
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(eventType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(eventType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final EventType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected EventType updateEntityFromResultSet(final EventType storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
 		final EventType eventType = storableObject == null
@@ -109,7 +100,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		eventType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -121,12 +112,11 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final EventType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final EventType eventType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(eventType);
-		this.retrieveParameterTypeIdsByOneQuery(Collections.singleton(eventType));
-		this.retrieveUserAlertKindsByOneQuery(Collections.singleton(eventType));
+		this.retrieveEntity(storableObject);
+		this.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveUserAlertKindsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveParameterTypeIdsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
@@ -221,7 +211,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<EventType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updateParameterTypeIds(storableObjects);
@@ -237,7 +227,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	 * Do not updates parameter types.
 	 */
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<EventType> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateParameterTypeIds(storableObjects);
 		this.updateUserAlertKinds(storableObjects);
@@ -545,8 +535,8 @@ public final class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<EventType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<EventType> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveParameterTypeIdsByOneQuery(objects);
 		this.retrieveUserAlertKindsByOneQuery(objects);
 		return objects;
