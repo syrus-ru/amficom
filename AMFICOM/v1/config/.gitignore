@@ -20,3 +20,6 @@ Makefile.inc
 .settings
 .#*
 test
+build.xml
+nbproject
+.nbintdb

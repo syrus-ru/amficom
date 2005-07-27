@@ -27,3 +27,4 @@ cache
 tmp
 nbproject
 build.xml
+.nbintdb
