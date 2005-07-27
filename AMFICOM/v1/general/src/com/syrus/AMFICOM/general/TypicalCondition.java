@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.30 2005/07/25 19:33:08 bass Exp $
+ * $Id: TypicalCondition.java,v 1.31 2005/07/27 12:12:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,7 +123,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.30 $, $Date: 2005/07/25 19:33:08 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/27 12:12:21 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -827,6 +827,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					this.delegate = (TypicalCondition) ctor.newInstance(Boolean.valueOf(transferable.value),
 							transferable.operation, new Short(transferable.entityCode),
 							transferable.key);
+					break;
 				default: {
 					if (this.delegate == null) {
 						this.delegate = createDummyCondition();
