@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.6 2005/07/14 11:29:53 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.7 2005/07/27 13:42:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/14 11:29:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/27 13:42:50 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -28,51 +28,58 @@ public class IdentifierGenerator {
 		assert false;
 	}
 	
-	protected static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
-		short major = generateMajor(entityCode);
-		long minor = generateMinor(entityCode);
+	protected static synchronized Identifier generateIdentifier(final short entityCode)
+			throws IllegalObjectEntityException,
+				IdentifierGenerationException {
+		final short major = generateMajor(entityCode);
+		final long minor = generateMinor(entityCode);
 		return new Identifier(major, minor);
 	}
 
-	protected static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
-		List<Identifier> list = new LinkedList<Identifier>();
-		short major = generateMajor(entityCode);
-		long minor;
+	protected static synchronized Identifier[] generateIdentifierRange(final short entityCode, final int rangeSize)
+			throws IllegalObjectEntityException,
+				IdentifierGenerationException {
+		final List<Identifier> list = new LinkedList<Identifier>();
+		final short major = generateMajor(entityCode);
 		for (int i = 0; i < rangeSize; i++) {
-			minor = generateMinor(entityCode);
+			final long minor = generateMinor(entityCode);
 			list.add(new Identifier(major, minor));
 		}
 		return list.toArray(new Identifier[list.size()]);
 	}
 
-	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
-		if (ObjectEntities.isEntityCodeValid(entityCode))
+	private static short generateMajor(final short entityCode) throws IllegalObjectEntityException {
+		if (ObjectEntities.isEntityCodeValid(entityCode)) {
 			return entityCode;
+		}
 		throw new IllegalObjectEntityException(ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
-	private static long generateMinor(short entityCode) throws IdentifierGenerationException {
-		String entity = ObjectEntities.codeToString(entityCode);
-		if (entity != null)
+	private static long generateMinor(final short entityCode) throws IdentifierGenerationException {
+		final String entity = ObjectEntities.codeToString(entityCode);
+		if (entity != null) {
 			return generateMinor(entity);
+		}
 		throw new IdentifierGenerationException("NULL entity");
 	}
 
-	private static long generateMinor(String entity) throws IdentifierGenerationException {
+	private static long generateMinor(final String entity) throws IdentifierGenerationException {
 		long minor = 0L;
 
-		String seqName = entity + "_seq";
-		String sql = "SELECT " + seqName + ".NEXTVAL FROM sys.dual";
+		final String seqName = entity + "_seq";
+		final String sql = "SELECT " + seqName + ".NEXTVAL FROM sys.dual";
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = DatabaseConnection.getConnection().createStatement();
 			Log.debugMessage("IdentifierGenerator.generateMinor | Trying: " + sql, Log.DEBUGLEVEL08);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
+			if (resultSet.next()) {
 				minor = resultSet.getLong(1);
-			else
+			}
+			else {
 				throw new IdentifierGenerationException("Cannot get nextval from sequence: " + seqName);
+			}
 		}
 		catch (SQLException sqle) {
 			Log.errorException(sqle);
