@@ -25,3 +25,5 @@ javadoc.xml
 logs
 cache
 tmp
+nbproject
+build.xml
