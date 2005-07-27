@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.102 2005/07/27 07:41:29 saa Exp $
+ * $Id: Heap.java,v 1.103 2005/07/27 07:48:30 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.102 $, $Date: 2005/07/27 07:41:29 $
+ * @version $Revision: 1.103 $, $Date: 2005/07/27 07:48:30 $
  * @module
  */
 public class Heap
@@ -232,7 +232,7 @@ public class Heap
 	 * рефлектограммы с уже проведенным на агенте анализе.
 	 * </p>
 	 * @param result результат измерения, содержащий рефлектограмму
-	 * @param ar результат анализа этой рефлектограммы
+	 * @param ar результат анализа этой рефлектограммы (not null)
 	 * @throws SimpleApplicationException,
 	 *    если в загружаемом результате нет рефлектограммы.
 	 */
@@ -242,6 +242,26 @@ public class Heap
 		Trace tr = new Trace(result, ar);
 		openPrimaryTrace(tr);
 		setRefAnalysisPrimary(new RefAnalysis(tr.getBS(), ar));
+		primaryTraceOpened();
+	}
+
+	/**
+	 * Закрывает все рефлектограммы, открывает в качестве первичной
+	 * рефлектограмму заданного измерения, проводит анализ,
+	 * рассылает все необходимые оповещения.
+	 * <p>
+	 * На данный момент метод используется в модуле survey.
+	 * @todo перейти на пользование этим методом и в analysis.
+	 * </p>
+	 * @param result результат измерения, содержащий рефлектограмму
+	 * @throws SimpleApplicationException,
+	 *    если в загружаемом результате нет рефлектограммы.
+	 */
+	public static void openPrimaryTraceAndNotify(Result result)
+	throws SimpleApplicationException {
+		Trace tr = new Trace(result, getMinuitAnalysisParams());
+		openPrimaryTrace(tr);
+		setRefAnalysisPrimary(new RefAnalysis(tr.getBS()));
 		primaryTraceOpened();
 	}
 
