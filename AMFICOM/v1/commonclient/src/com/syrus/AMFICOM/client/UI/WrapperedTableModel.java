@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/27 08:56:27 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/27 16:18:28 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -210,8 +210,8 @@ public class WrapperedTableModel extends AbstractTableModel {
 	}
 
 	public void sortRows(int columnIndex) {
-		this.sortRows(columnIndex, this.ascendings[columnIndex]);
 		this.ascendings[columnIndex] = !this.ascendings[columnIndex];
+		this.sortRows(columnIndex, this.ascendings[columnIndex]);		
 	}
 
 	public void sortRows(	final int columnIndex,

@@ -23,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/27 08:56:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/27 16:18:28 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -155,10 +155,11 @@ public class WrapperedTable extends ATable {
 				int mColIndex = table.convertColumnIndexToModel(columnIndex);
 				WrapperedTableModel model = (WrapperedTableModel) table.getModel();
 				String s;
-				if (model.getSortOrder(mColIndex))
-					s = " v "; //$NON-NLS-1$
-				else
+				if (model.getSortOrder(mColIndex)) {
 					s = " ^ "; //$NON-NLS-1$
+				} else {
+					s = " v "; //$NON-NLS-1$
+				}
 				String columnName = model.getColumnName(mColIndex);
 				table.getColumnModel().getColumn(columnIndex)
 						.setHeaderValue(s + (columnName == null ? "" : columnName) + s);
