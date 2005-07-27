@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.48 2005/07/26 18:09:34 bass Exp $
+ * $Id: Characteristic.java,v 1.49 2005/07/27 12:03:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/26 18:09:34 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/27 12:03:43 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -44,9 +44,8 @@ public final class Characteristic extends StorableObject
 	Characteristic(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final CharacteristicDatabase database = (CharacteristicDatabase) DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

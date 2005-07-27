@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.7 2005/07/27 11:15:44 bass Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.8 2005/07/27 12:03:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/27 11:15:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/27 12:03:43 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -52,7 +52,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 		}
 
 		super.entityCount++;
-		final Entry[] array1 = new Entry[super.array.length + SIZE];
+		final IEntry<Identifier, StorableObject>[] array1 = new IEntry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
 		array1[super.array.length] = new Entry(thrownObject.getId(), thrownObject);
 		super.array = array1;
@@ -107,7 +107,7 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 		}
 
 		final int size = retainedEntries.size();
-		super.array = new Entry[(size > this.initialCapacity) ? size : this.initialCapacity];
+		super.array = new IEntry[(size > this.initialCapacity) ? size : this.initialCapacity];
 		int i = 0;
 		for (final IEntry<Identifier, StorableObject> entry : retainedEntries) {
 			super.array[i] = entry;
