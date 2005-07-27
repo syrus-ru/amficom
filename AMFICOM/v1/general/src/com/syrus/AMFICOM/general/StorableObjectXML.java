@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.27 2005/07/25 18:05:10 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.28 2005/07/27 13:31:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.27 $, $Date: 2005/07/25 18:05:10 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/27 13:31:35 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -44,12 +43,12 @@ public class StorableObjectXML {
 		this.driver = driver;
 	}
 
-	public StorableObject retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
+	public <T extends StorableObject> T retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		Map objectMap = this.driver.getObjectMap(identifier);
-		short entityCode = identifier.getMajor();
-		StorableObject storableObject = getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
-		StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
+		final Map<String, Object> objectMap = this.driver.getObjectMap(identifier);
+		final short entityCode = identifier.getMajor();
+		final T storableObject = this.getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
+		final StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED),
 				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
 				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -62,23 +61,24 @@ public class StorableObjectXML {
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATOR_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIER_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_VERSION);
-		for (Iterator it = objectMap.keySet().iterator(); it.hasNext();) {
-			String key = (String) it.next();
+		for (final String key : objectMap.keySet()) {
 			wrapper.setValue(storableObject, key, objectMap.get(key));
 		}
 		return storableObject;
 	}
 
-	public Set retrieveByCondition(Set ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
-		Set<StorableObject> set = null;
+	public <T extends StorableObject> Set<T> retrieveByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+			throws RetrieveObjectException,
+				IllegalDataException {
+		Set<T> set = null;
 		final Set<Identifier> identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
 		for (final Identifier id : identifiers) {
 			if (ids == null || !ids.contains(id)) {
 				try {
-					final StorableObject storableObject = retrieve(id);
+					final T storableObject = this.retrieve(id);
 					if (condition.isConditionTrue(storableObject)) {
 						if (set == null)
-							set = new HashSet<StorableObject>();
+							set = new HashSet<T>();
 						set.add(storableObject);
 					}
 
@@ -118,7 +118,7 @@ public class StorableObjectXML {
 		
 		boolean canBeModified = false;
 		try {
-			final Map xmlObjectMap = this.driver.getObjectMap(id);
+			final Map<String, Object> xmlObjectMap = this.driver.getObjectMap(id);
 			final StorableObjectVersion version = (StorableObjectVersion) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION);
 			if (force || version == storableObject.getVersion()) {
 				storableObject.version.increment();	
@@ -155,7 +155,7 @@ public class StorableObjectXML {
 		storableObject.cleanupUpdate();
 	}
 
-	private StorableObject getStorableObject(final Identifier identifier, String className) throws IllegalDataException {
+	private <T extends StorableObject> T getStorableObject(final Identifier identifier, final String className) throws IllegalDataException {
 		final short entityCode = identifier.getMajor();
 		String clazzName;
 		if (className == null)
@@ -193,7 +193,7 @@ public class StorableObjectXML {
 							initArgs[j] = null;
 					}
 					try {
-						return (StorableObject) constructor.newInstance(initArgs);
+						return (T) constructor.newInstance(initArgs);
 					} catch (IllegalArgumentException e) {
 						throw new IllegalDataException(
 														"StorableObjectXML.getStorableObject | Caught an IllegalArgumentException");

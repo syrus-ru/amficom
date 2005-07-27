@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.4 2005/07/26 18:51:45 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.5 2005/07/27 13:32:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/26 18:51:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/27 13:32:54 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -38,7 +38,8 @@ public final class XMLObjectLoader implements ObjectLoader {
 
 		final Set<T> storableObjects = new HashSet<T>(ids.size());
 		for (final Identifier id : ids) {
-			storableObjects.add((T) this.soXML.retrieve(id));
+			final T storableObject = this.soXML.retrieve(id);
+			storableObjects.add(storableObject);
 		}
 		return storableObjects;
 	}
@@ -63,7 +64,7 @@ public final class XMLObjectLoader implements ObjectLoader {
 		return versionsMap;
 	}
 
-	public void saveStorableObjects(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
+	public void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (storableObjects.isEmpty()) {
 			return;
