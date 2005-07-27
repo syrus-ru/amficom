@@ -17,6 +17,7 @@ public class Analyse extends AbstractApplication
 		super(Analyse.APPLICATION_NAME);
 	}
 	
+	@Override
 	protected void init() {
 		super.init();		
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
