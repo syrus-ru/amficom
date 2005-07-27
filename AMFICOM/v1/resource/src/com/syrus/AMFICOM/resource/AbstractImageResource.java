@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.18 2005/07/26 08:51:42 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.19 2005/07/27 18:33:34 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/07/26 08:51:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/27 18:33:34 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -42,9 +42,8 @@ public abstract class AbstractImageResource extends StorableObject {
 	protected AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		ImageResourceDatabase database = (ImageResourceDatabase) DatabaseContext.getDatabase(ObjectEntities.IMAGERESOURCE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.IMAGERESOURCE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.30 2005/07/26 08:51:42 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.31 2005/07/27 18:33:34 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -37,11 +36,11 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/07/26 08:51:42 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/27 18:33:34 $
  * @module resource_v1
  */
 
-public final class ImageResourceDatabase extends StorableObjectDatabase {
+public final class ImageResourceDatabase extends StorableObjectDatabase<AbstractImageResource> {
 	// table :: ImageResource
 	private static final int SIZE_CODENAME_COLUMN_IR = 256;
 
@@ -63,29 +62,31 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;
 
 	private byte[] retrieveImage(final AbstractImageResource abstractImageResource) throws RetrieveObjectException {
-		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		String sql = SQL_SELECT + COLUMN_IMAGE + SQL_FROM + getEntityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
-		Connection connection = DatabaseConnection.getConnection();
+		final String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
+		final String sql = SQL_SELECT + COLUMN_IMAGE
+				+ SQL_FROM + this.getEntityName()
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		final Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		byte[] image = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEntityName() + "Database.retrieveImage | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.retrieveImage | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				Blob blob = resultSet.getBlob(COLUMN_IMAGE);
+				final Blob blob = resultSet.getBlob(COLUMN_IMAGE);
 				image = ByteArrayDatabase.toByteArray(blob);
 				if(abstractImageResource instanceof BitmapImageResource) {
-					BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
+					final BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
 					bitmapImageResource.setImage(image);
 				} else {
-					SchemeImageResource schemeImageResource = (SchemeImageResource) abstractImageResource;
+					final SchemeImageResource schemeImageResource = (SchemeImageResource) abstractImageResource;
 					schemeImageResource.setImage(image);
 				}				
 			}			
 		} catch (SQLException sqle) {
-			String mesg = getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
+			final String mesg = this.getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
@@ -95,14 +96,16 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	private void updateImage(final AbstractImageResource abstractImageResource) throws UpdateObjectException {
-		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		String sql = SQL_UPDATE + getEntityName() + SQL_SET + COLUMN_IMAGE + EQUALS + SQL_FUNCTION_EMPTY_BLOB + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
-		Connection connection = DatabaseConnection.getConnection();
+		final String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
+		final String sql = SQL_UPDATE + this.getEntityName() + SQL_SET
+				+ COLUMN_IMAGE + EQUALS + SQL_FUNCTION_EMPTY_BLOB
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		final Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;		
 		byte[] image = abstractImageResource.getImage();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEntityName()
+			Log.debugMessage(this.getEntityName()
 				+ "Database.updateImage | Trying: " + sql,
 				Log.DEBUGLEVEL09);
 			statement.executeQuery(sql);
@@ -110,17 +113,11 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			ByteArrayDatabase.saveAsBlob(image, connection, ObjectEntities.IMAGERESOURCE, COLUMN_IMAGE, StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr);
 			connection.commit();			
 		} catch (SQLException sqle) {
-			String mesg = getEntityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
+			final String mesg = this.getEntityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
 		}
-	}
-
-	private AbstractImageResource fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof AbstractImageResource)
-			return (AbstractImageResource) storableObject;
-		throw new IllegalDataException("ImageResourceDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
 	@Override
@@ -147,114 +144,118 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject)
+	protected String getUpdateSingleSQLValuesTmpl(final AbstractImageResource storableObject)
 			throws IllegalDataException {
-		AbstractImageResource abstractImageResource = fromStorableObject(storableObject);
-		ImageResourceSort sort = abstractImageResource.getSort();
+		final ImageResourceSort sort = storableObject.getSort();
 		String codename = null;
-		if(abstractImageResource instanceof BitmapImageResource) {
-			codename = ((BitmapImageResource) abstractImageResource).getCodename();
-		} else if (abstractImageResource instanceof FileImageResource) {
-			codename = ((FileImageResource) abstractImageResource).getCodename();
-		} else if (abstractImageResource instanceof SchemeImageResource) {
+		if(storableObject instanceof BitmapImageResource) {
+			codename = ((BitmapImageResource) storableObject).getCodename();
+		} else if (storableObject instanceof FileImageResource) {
+			codename = ((FileImageResource) storableObject).getCodename();
+		} else if (storableObject instanceof SchemeImageResource) {
 			// Do nothing
 		} else {
-			throw new IllegalDataException("ImageResourceDatabase.getUpdateSingleSQLValues | Illegal AbstractImageResource : " + abstractImageResource.getClass().getName());
+			throw new IllegalDataException("ImageResourceDatabase.getUpdateSingleSQLValues | Illegal AbstractImageResource : "
+					+ storableObject.getClass().getName());
 		}
 
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTROPHE + COMMA
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTROPHE + COMMA
 				+ sort.value();
 		return sql;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected AbstractImageResource updateEntityFromResultSet(final AbstractImageResource storableObject, final ResultSet resultSet)
 			throws RetrieveObjectException {
 		try {
 			final int sort = resultSet.getInt(COLUMN_SORT);
-		if (sort == ImageResourceSort._BITMAP) {
-			BitmapImageResource bitmapImageResource;
-			if (storableObject == null) {
-				bitmapImageResource = new BitmapImageResource(DatabaseIdentifier.getIdentifier(resultSet,
+			if (sort == ImageResourceSort._BITMAP) {
+				BitmapImageResource bitmapImageResource;
+				if (storableObject == null) {
+					bitmapImageResource = new BitmapImageResource(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null);
-			} else {
-				bitmapImageResource = (BitmapImageResource) storableObject;
-			}
-			final byte[] image = retrieveImage(bitmapImageResource);
-			bitmapImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-				image);
-			
-			return bitmapImageResource;
-		} else if (sort == ImageResourceSort._FILE) {
-			FileImageResource fileImageResource;
-			if (storableObject == null) {
-				fileImageResource = new FileImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				} else {
+					bitmapImageResource = (BitmapImageResource) storableObject;
+				}
+				final byte[] image = retrieveImage(bitmapImageResource);
+				bitmapImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+						image);
+
+				return bitmapImageResource;
+			} else if (sort == ImageResourceSort._FILE) {
+				FileImageResource fileImageResource;
+				if (storableObject == null) {
+					fileImageResource = new FileImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 							null,
 							StorableObjectVersion.ILLEGAL_VERSION,
 							null);
-			} else {
-				fileImageResource = (FileImageResource) storableObject;
-			}
-			fileImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-					DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)));
-			return fileImageResource;
-		} else if (sort == ImageResourceSort._SCHEME) {
-			SchemeImageResource schemeImageResource;
-			if (storableObject == null) {
-				schemeImageResource = new SchemeImageResource(DatabaseIdentifier.getIdentifier(resultSet,
+				} else {
+					fileImageResource = (FileImageResource) storableObject;
+				}
+				fileImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)));
+				return fileImageResource;
+			} else if (sort == ImageResourceSort._SCHEME) {
+				SchemeImageResource schemeImageResource;
+				if (storableObject == null) {
+					schemeImageResource = new SchemeImageResource(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION);
-			} else {
-				schemeImageResource = (SchemeImageResource) storableObject;
+				} else {
+					schemeImageResource = (SchemeImageResource) storableObject;
+				}
+				final byte[] image = retrieveImage(schemeImageResource);
+				schemeImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
+						DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
+						image);
+				return schemeImageResource;
 			}
-			final byte[] image = retrieveImage(schemeImageResource);
-			schemeImageResource.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-					DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-					DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-					new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-					image);			
-			return schemeImageResource;
+			throw new RetrieveObjectException(this.getEntityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);
+		} catch (SQLException e) {
+			Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage());
+			throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
 		}
-		throw new RetrieveObjectException(getEntityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				
-	} catch (SQLException e) {
-		Log.errorMessage("ImageResourceDatabase.updateEntityFromResultSet " + e.getMessage() );
-		throw new RetrieveObjectException("ImageResourceDatabase.updateEntityFromResultSet ", e);
 	}
-	}
-	
+
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
-			PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException {
-		final AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
-		final int sort = abstractImageResource.getSort().value();
+	protected int setEntityForPreparedStatementTmpl(final AbstractImageResource storableObject,
+			PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException {
+		final int sort = storableObject.getSort().value();
 		try {
-			if(sort == ImageResourceSort._BITMAP) {
-				BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
-				DatabaseString.setString(preparedStatement, ++startParameterNumber, bitmapImageResource.getCodename(), SIZE_CODENAME_COLUMN_IR);
+			if (sort == ImageResourceSort._BITMAP) {
+				BitmapImageResource bitmapImageResource = (BitmapImageResource) storableObject;
+				DatabaseString.setString(preparedStatement,
+						++startParameterNumber,
+						bitmapImageResource.getCodename(),
+						SIZE_CODENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._BITMAP);
-			} else if(sort == ImageResourceSort._FILE) {
-				FileImageResource fileImageResource = (FileImageResource) abstractImageResource;
-				DatabaseString.setString(preparedStatement, ++startParameterNumber, fileImageResource.getFileName(), SIZE_CODENAME_COLUMN_IR);
+			} else if (sort == ImageResourceSort._FILE) {
+				FileImageResource fileImageResource = (FileImageResource) storableObject;
+				DatabaseString.setString(preparedStatement,
+						++startParameterNumber,
+						fileImageResource.getFileName(),
+						SIZE_CODENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._FILE);
-			} else if(sort == ImageResourceSort._SCHEME) {
+			} else if (sort == ImageResourceSort._SCHEME) {
 				DatabaseString.setString(preparedStatement, ++startParameterNumber, "", SIZE_CODENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._SCHEME);
 			} else {
 				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort);
 			}			
 		} catch (SQLException sqle) {
-			throw new IllegalDataException(getEntityName()
-					+ "Database.setEntityForPreparedStatement | Error "
+			throw new IllegalDataException(this.getEntityName() + "Database.setEntityForPreparedStatement | Error "
 					+ sqle.getMessage(), sqle);
 		}
 		return startParameterNumber;
@@ -262,37 +263,38 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 	public int getSort(final Identifier id) throws RetrieveObjectException {
 		final String absIdStr = DatabaseIdentifier.toSQLString(id);
-		final String sql = SQL_SELECT + COLUMN_SORT + SQL_FROM + getEntityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		final String sql = SQL_SELECT + COLUMN_SORT
+				+ SQL_FROM + this.getEntityName()
+				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
 		final Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(getEntityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEntityName() + "Database.getSort | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return resultSet.getInt(COLUMN_SORT);
 
-			final String msg = getEntityName() + "Database.getSort couldn't find entity with id: " + id;
-			throw new RetrieveObjectException(msg);			
+			final String msg = this.getEntityName() + "Database.getSort couldn't find entity with id: " + id;
+			throw new RetrieveObjectException(msg);
 		} catch (SQLException sqle) {
-			String mesg = getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
+			final String mesg = this.getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			DatabaseConnection.releaseConnection(connection);
-		}    	
+		}
 	}
 
 	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<AbstractImageResource> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		for (final StorableObject storableObject : storableObjects) {
-			final AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
+		for (final AbstractImageResource abstractImageResource : storableObjects) {
 			if((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
 				try {
 					this.updateImage(abstractImageResource);
 				} catch (UpdateObjectException e) {
-					throw new CreateObjectException(getEntityName() + "Database.insert ", e);
+					throw new CreateObjectException(this.getEntityName() + "Database.insert ", e);
 				}
 			}
 		}
@@ -300,15 +302,9 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	public void update(final Set<AbstractImageResource> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		for (final StorableObject storableObject : storableObjects) {
-			AbstractImageResource abstractImageResource;
-			try {
-				abstractImageResource = this.fromStorableObject(storableObject);
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException("ImageResourceDatabase.update | object isn't AbstractImageResource");
-			}
+		for (final AbstractImageResource abstractImageResource : storableObjects) {
 			if ((abstractImageResource instanceof BitmapImageResource) || (abstractImageResource instanceof SchemeImageResource)) {
 				this.updateImage(abstractImageResource);
 			}
