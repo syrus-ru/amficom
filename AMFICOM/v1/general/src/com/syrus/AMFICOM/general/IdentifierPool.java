@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.25 2005/07/14 11:29:21 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.26 2005/07/27 13:48:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/07/14 11:29:21 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/27 13:48:23 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -39,13 +39,13 @@ public class IdentifierPool {
 		// empty private construcor
 	}
 
-	public static void init(IGSConnectionManager igsConnectionMananger1, int capacity1) {
+	public static void init(final IGSConnectionManager igsConnectionMananger1, final int capacity1) {
 		igsConnectionMananger = igsConnectionMananger1;
 		capacity = (capacity1 <= MAX_CAPACITY) ? capacity1 : MAX_CAPACITY;
 		idPoolMap = new TShortObjectHashMap();
 	}
 
-	public static void init(IGSConnectionManager igsConnectionMananger1) {
+	public static void init(final IGSConnectionManager igsConnectionMananger1) {
 		init(igsConnectionMananger1, DEFAULT_CAPACITY);
 	}
 
@@ -84,7 +84,7 @@ public class IdentifierPool {
 			throw new IdentifierGenerationException("Cannot obtain reference on identifier generator server", ce);
 		}
 
-		IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
+		final IdentifierLoader identifierLoader = new IdentifierLoader(igServer, fifo, entityCode);
 		identifierLoader.start();
 		/*	Do not wait more than MAX_TIME_WAIT*/
 		try {
