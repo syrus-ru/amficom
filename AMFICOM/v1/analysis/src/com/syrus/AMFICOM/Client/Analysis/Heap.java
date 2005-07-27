@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.100 2005/07/27 06:39:27 saa Exp $
+ * $Id: Heap.java,v 1.101 2005/07/27 06:55:07 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.EventAnchorer;
+import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
@@ -41,6 +42,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEventImpl;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
@@ -88,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.100 $, $Date: 2005/07/27 06:39:27 $
+ * @version $Revision: 1.101 $, $Date: 2005/07/27 06:55:07 $
  * @module
  */
 public class Heap
@@ -218,6 +220,29 @@ public class Heap
 	public static void openPrimaryTrace(Trace tr) {
 		closeAll();
 		setAnyTraceByKey(PRIMARY_TRACE_KEY, tr);
+	}
+
+	/**
+	 * Закрывает все рефлектограммы, открывает в качестве первичной
+	 * рефлектограмму заданного измерения и ее готовый анализ,
+	 * рассылает все необходимые оповещения.
+	 * <p>
+	 * На данный момент метод используется в модуле survey.
+	 * @todo пользоваться этим методом и в модуле analysis при открытии
+	 * рефлектограммы с уже проведенным на агенте анализе.
+	 * </p>
+	 * @param result результат измерения, содержащий рефлектограмму
+	 * @param ar результат анализа этой рефлектограммы
+	 * @throws SimpleApplicationException,
+	 *    если в загружаемом результате нет рефлектограммы.
+	 */
+	public static void openPrimaryTraceAndNotify(Result result,
+			AnalysisResult ar)
+	throws SimpleApplicationException {
+		Trace tr = new Trace(result, ar.getMTAE());
+		openPrimaryTrace(tr);
+		setRefAnalysisPrimary(new RefAnalysis(tr.getBS(), ar));
+		primaryTraceOpened();
 	}
 
 	/**
@@ -721,6 +746,11 @@ public class Heap
 	public static void primaryTraceOpened() {
 		notifyBsHashAdd(PRIMARY_TRACE_KEY);
 		notifyPrimaryTraceOpened();
+		if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
+			currentEvent.toEvent(0); // (1)
+		notifyCurrentEventChanged(); // (2)
+		// операторы (1) и (2) делают текущим событие #0
+		setCurrentTracePrimary();
 	}
 
 	private static void traceClosed(String key) {
@@ -1039,11 +1069,6 @@ public class Heap
 	public static void makePrimaryAnalysis() {
 		makeAnalysis();
 		primaryTraceOpened();
-		if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
-			currentEvent.toEvent(0); // (1)
-		notifyCurrentEventChanged(); // (2)
-		// операторы (1) и (2) делают текущим событие #0
-		setCurrentTracePrimary();
 	}
 
 	public static void makeAnalysis() {
