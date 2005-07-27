@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.69 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.70 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -27,21 +26,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.70 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
 
-public final class TransmissionPathDatabase extends StorableObjectDatabase {
+public final class TransmissionPathDatabase extends StorableObjectDatabase<TransmissionPath> {
 	private static String		columns;
 	private static String		updateMultipleSQLValues;
-
-	private TransmissionPath fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof TransmissionPath)
-			return (TransmissionPath) storableObject;
-		throw new IllegalDataException("TransmissionPathDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -75,32 +67,30 @@ public final class TransmissionPathDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		return DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
+	protected String getUpdateSingleSQLValuesTmpl(final TransmissionPath storableObject) throws IllegalDataException {
+		return DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getStartPortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getFinishPortId());
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final TransmissionPath storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, transmissionPath.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getStartPortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, transmissionPath.getFinishPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getFinishPortId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected TransmissionPath updateEntityFromResultSet(final TransmissionPath storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final TransmissionPath transmissionPath = (storableObject == null)
 				? new TransmissionPath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -112,7 +102,7 @@ public final class TransmissionPathDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+				: storableObject;
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 

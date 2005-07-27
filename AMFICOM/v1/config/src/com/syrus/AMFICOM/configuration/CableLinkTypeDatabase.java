@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.38 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.39 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.logging.Level;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -24,11 +23,11 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.39 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
-public final class CableLinkTypeDatabase extends StorableObjectDatabase {
+public final class CableLinkTypeDatabase extends StorableObjectDatabase<CableLinkType> {
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
@@ -75,54 +74,45 @@ public final class CableLinkTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ cableLinkType.getSort().value() + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(cableLinkType.getImageId());
+	protected String getUpdateSingleSQLValuesTmpl(final CableLinkType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getSort().value() + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getImageId());
 		return sql;
 	}
 
-	private CableLinkType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof CableLinkType)
-			return (CableLinkType)storableObject;
-		throw new IllegalDataException("CableLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(final CableLinkType storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final CableLinkType cableLinkType = this.fromStorableObject(storableObject);
-		preparedStatement.setString( ++startParameterNumber, cableLinkType.getCodename());
-		preparedStatement.setString( ++startParameterNumber, cableLinkType.getDescription());
-		preparedStatement.setString( ++startParameterNumber, cableLinkType.getName());
-		preparedStatement.setInt( ++startParameterNumber, cableLinkType.getSort().value());
-		preparedStatement.setString( ++startParameterNumber, cableLinkType.getManufacturer());
-		preparedStatement.setString( ++startParameterNumber, cableLinkType.getManufacturerCode());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableLinkType.getImageId());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getCodename());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getDescription());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getName());
+		preparedStatement.setInt( ++startParameterNumber, storableObject.getSort().value());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getManufacturer());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getManufacturerCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected CableLinkType updateEntityFromResultSet(final CableLinkType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		CableLinkType cableLinkType = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (cableLinkType == null) {
-			cableLinkType = new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					0,
-					null,
-					null,
-					null);
-		}
+		CableLinkType cableLinkType = storableObject == null
+				? new CableLinkType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						0,
+						null,
+						null,
+						null)
+				: storableObject;
 		cableLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

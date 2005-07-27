@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.41 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.42 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,12 +25,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.42 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
 
-public final class CableThreadTypeDatabase extends StorableObjectDatabase {
+public final class CableThreadTypeDatabase extends StorableObjectDatabase<CableThreadType> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	
@@ -67,54 +66,45 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final CableThreadType cableThreadType = this.fromStorableObject(storableObject);
-		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(cableThreadType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + cableThreadType.getColor() + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkType().getId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableThreadType.getCableLinkType().getId());
+	protected String getUpdateSingleSQLValuesTmpl(final CableThreadType storableObject) throws IllegalDataException {
+		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + storableObject.getColor() + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getLinkType().getId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getCableLinkType().getId());
 		return sql;
 	}
 
-	private CableThreadType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof CableThreadType)
-			return (CableThreadType) storableObject;
-		throw new IllegalDataException("CableThreadTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final CableThreadType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final CableThreadType cableThreadType = this.fromStorableObject(storableObject);
-		preparedStatement.setString(++startParameterNumber, cableThreadType.getCodename());
-		preparedStatement.setString(++startParameterNumber, cableThreadType.getDescription());
-		preparedStatement.setString(++startParameterNumber, cableThreadType.getName());
-		preparedStatement.setInt(++startParameterNumber, cableThreadType.getColor());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThreadType.getLinkType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableThreadType.getCableLinkType().getId());
+		preparedStatement.setString(++startParameterNumber, storableObject.getCodename());
+		preparedStatement.setString(++startParameterNumber, storableObject.getDescription());
+		preparedStatement.setString(++startParameterNumber, storableObject.getName());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getColor());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getLinkType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getCableLinkType().getId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected CableThreadType updateEntityFromResultSet(final CableThreadType storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
-		CableThreadType cableThreadType = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (cableThreadType == null) {
-			cableThreadType = new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					0,
-					null,
-					null);
-		}
+		CableThreadType cableThreadType = storableObject == null
+				? new CableThreadType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						0,
+						null,
+						null)
+				: storableObject;
 		LinkType linkType;
 		CableLinkType cableLinkType;
 		try {

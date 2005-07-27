@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.59 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.60 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -28,11 +27,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.60 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
-public final class MeasurementPortDatabase extends StorableObjectDatabase {
+public final class MeasurementPortDatabase extends StorableObjectDatabase<MeasurementPort> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
 
@@ -66,55 +65,46 @@ public final class MeasurementPortDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final MeasurementPort measurementPort = this.fromStorableObject(storableObject);
-		final Identifier typeId = measurementPort.getType().getId();
-		final Identifier kisId = measurementPort.getKISId();
-		final Identifier portId = measurementPort.getPortId();
+	protected String getUpdateSingleSQLValuesTmpl(final MeasurementPort storableObject) throws IllegalDataException {
+		final Identifier typeId = storableObject.getType().getId();
+		final Identifier kisId = storableObject.getKISId();
+		final Identifier portId = storableObject.getPortId();
 		final String sql = DatabaseIdentifier.toSQLString(typeId) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getName(), SIZE_NAME_COLUMN) + APOSTROPHE	+ COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE	+ COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
 			+ DatabaseIdentifier.toSQLString(portId);
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final MeasurementPort storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final MeasurementPort measurementPort = this.fromStorableObject(storableObject);
-		final Identifier typeId = measurementPort.getType().getId();
-		final Identifier kisId = measurementPort.getKISId();
-		final Identifier portId = measurementPort.getPortId();
+		final Identifier typeId = storableObject.getType().getId();
+		final Identifier kisId = storableObject.getKISId();
+		final Identifier portId = storableObject.getPortId();
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, typeId);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, kisId);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, portId);
 		return startParameterNumber;
 	}
 
-  private MeasurementPort fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MeasurementPort)
-			return (MeasurementPort)storableObject;
-		throw new IllegalDataException("MeasurementPortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MeasurementPort updateEntityFromResultSet(final MeasurementPort storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		MeasurementPort measurementPort = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (measurementPort == null) {
-			measurementPort = new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null,
-					null);
-		}
+		MeasurementPort measurementPort = storableObject == null
+				? new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
 		MeasurementPortType measurementPortType;
 		try {
 			final Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);

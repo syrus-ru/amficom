@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.59 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.60 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,19 +22,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.60 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
-public final class PortTypeDatabase extends StorableObjectDatabase {
+public final class PortTypeDatabase extends StorableObjectDatabase<PortType> {
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private PortType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof PortType)
-			return (PortType) storableObject;
-		throw new IllegalDataException("PortTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -67,17 +60,16 @@ public final class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final PortType portType = this.fromStorableObject(storableObject);
-		return APOSTROPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(portType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(portType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ portType.getSort().value() + COMMA
-			+ portType.getKind().value();
+	protected String getUpdateSingleSQLValuesTmpl(final PortType storableObject) throws IllegalDataException {
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getSort().value() + COMMA
+			+ storableObject.getKind().value();
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected PortType updateEntityFromResultSet(final PortType storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final PortType portType = (storableObject == null)
 				? new PortType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -87,7 +79,8 @@ public final class PortTypeDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						0,
-						0) : this.fromStorableObject(storableObject);
+						0)
+				: storableObject;
 		portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -102,14 +95,13 @@ public final class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(final PortType storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final PortType portType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, portType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, portType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, portType.getName(), SIZE_NAME_COLUMN);
-		preparedStatement.setInt( ++startParameterNumber, portType.getSort().value());
-		preparedStatement.setInt( ++startParameterNumber, portType.getKind().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt( ++startParameterNumber, storableObject.getSort().value());
+		preparedStatement.setInt( ++startParameterNumber, storableObject.getKind().value());
 		return startParameterNumber;	
 	}
 

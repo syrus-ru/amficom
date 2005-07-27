@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.92 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.93 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -27,12 +26,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.93 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
 
-public final class EquipmentDatabase extends StorableObjectDatabase {
+public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 	private static final int SIZE_SUPPLIER_COLUMN   = 128;
 	private static final int SIZE_SUPPLIER_CODE_COLUMN = 128;
 	private static final int SIZE_HW_SERIAL_COLUMN  = 64;
@@ -43,12 +42,6 @@ public final class EquipmentDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private Equipment fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Equipment)
-			return (Equipment)storableObject;
-		throw new IllegalDataException("EquipmentDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -98,72 +91,69 @@ public final class EquipmentDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Equipment equipment = this.fromStorableObject(storableObject);
-		final String sql = DatabaseIdentifier.toSQLString(equipment.getDomainId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(equipment.getType().getId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(equipment.getImageId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getSupplier(), SIZE_SUPPLIER_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN) + APOSTROPHE + COMMA
-			+ equipment.getLatitude() + COMMA
-			+ equipment.getLongitude() + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final Equipment storableObject) throws IllegalDataException {
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getImageId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getSupplier(), SIZE_SUPPLIER_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getLatitude() + COMMA
+			+ storableObject.getLongitude() + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHwSerial(), SIZE_HW_SERIAL_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getHwVersion(), SIZE_HW_VERSION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getSwSerial(), SIZE_SW_SERIAL_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getSwVersion(), SIZE_SW_VERSION_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Equipment storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Equipment equipment = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, equipment.getImageId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-		preparedStatement.setFloat(++startParameterNumber, equipment.getLatitude());
-		preparedStatement.setFloat(++startParameterNumber, equipment.getLongitude());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+		preparedStatement.setFloat(++startParameterNumber, storableObject.getLatitude());
+		preparedStatement.setFloat(++startParameterNumber, storableObject.getLongitude());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getHwVersion(), SIZE_HW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getSwVersion(), SIZE_SW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Equipment updateEntityFromResultSet(final Equipment storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
-		Equipment equipment = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (equipment == null) {
-			equipment = new Equipment(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null,
-					null,
-					"",
-					null,
-					0,
-					0,
-					null,
-					null,
-					null,
-					null,
-					null);
-		}
+		Equipment equipment = storableObject == null
+				? new Equipment(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null,
+						"",
+						null,
+						0,
+						0,
+						null,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		EquipmentType equipmentType;

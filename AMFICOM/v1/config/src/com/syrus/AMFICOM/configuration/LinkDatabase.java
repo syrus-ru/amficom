@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.48 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.49 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -27,12 +26,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.49 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
 
-public final class LinkDatabase extends StorableObjectDatabase {
+public final class LinkDatabase extends StorableObjectDatabase<Link> {
 	private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
 	private static final int SIZE_SUPPLIER_COLUMN  = 128;
 	private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
@@ -40,12 +39,6 @@ public final class LinkDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private Link fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Link)
-			return (Link) storableObject;
-		throw new IllegalDataException("LinkDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -85,59 +78,56 @@ public final class LinkDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Link link = this.fromStorableObject(storableObject);
-		final String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
-		final String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
-		final String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-		final String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
-		final String sql = DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+	protected String getUpdateSingleSQLValuesTmpl(final Link storableObject) throws IllegalDataException {
+		final String inventoryNo = DatabaseString.toQuerySubString(storableObject.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
+		final String supplier = DatabaseString.toQuerySubString(storableObject.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		final String supplierCode = DatabaseString.toQuerySubString(storableObject.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+		final String mark = DatabaseString.toQuerySubString(storableObject.getMark(),SIZE_MARK_COLUMN);
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + (inventoryNo != null ? inventoryNo : "") + APOSTROPHE + COMMA
 			+ APOSTROPHE + (supplier != null ? supplier : "") + APOSTROPHE + COMMA
 			+ APOSTROPHE + (supplierCode != null ? supplierCode : "") + APOSTROPHE + COMMA
-			+ APOSTROPHE + link.getColor() + APOSTROPHE + COMMA
+			+ APOSTROPHE + storableObject.getColor() + APOSTROPHE + COMMA
 			+ APOSTROPHE + (mark != null ? mark : "") + APOSTROPHE;
 		return sql;
 	}
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Link storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Link link = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getDomainId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, link.getType().getId());
-		preparedStatement.setString( ++startParameterNumber, link.getName());
-		preparedStatement.setString( ++startParameterNumber, link.getDescription());
-		preparedStatement.setString( ++startParameterNumber, link.getInventoryNo());
-		preparedStatement.setString( ++startParameterNumber, link.getSupplier());
-		preparedStatement.setString( ++startParameterNumber, link.getSupplierCode());
-		preparedStatement.setInt( ++startParameterNumber, link.getColor());
-		preparedStatement.setString( ++startParameterNumber, link.getMark());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getName());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getDescription());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getInventoryNo());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getSupplier());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getSupplierCode());
+		preparedStatement.setInt( ++startParameterNumber, storableObject.getColor());
+		preparedStatement.setString( ++startParameterNumber, storableObject.getMark());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Link updateEntityFromResultSet(final Link storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
-		Link link = storableObject == null ? null : this.fromStorableObject(storableObject);
-		if (link == null) {
-			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					null,
-					0,
-					null);
-		}
+		Link link = storableObject == null
+				? new Link(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						0,
+						null)
+				: storableObject;
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		final String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.79 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.80 2005/07/27 15:58:51 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -39,23 +38,16 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/07/25 20:49:45 $
- * @author $Author: arseniy $
- * @module config_v1
+ * @version $Revision: 1.80 $, $Date: 2005/07/27 15:58:51 $
+ * @author $Author: bass $
+ * @module config
  */
 
-public final class MonitoredElementDatabase extends StorableObjectDatabase {
+public final class MonitoredElementDatabase extends StorableObjectDatabase<MonitoredElement> {
 	private static final int SIZE_LOCAL_ADDRESS_COLUMN = 64;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private MonitoredElement fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MonitoredElement)
-			return (MonitoredElement) storableObject;
-		throw new IllegalDataException("MonitoredElementDatabase.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -86,53 +78,49 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		final String sql = DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
-				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final MonitoredElement storableObject) throws IllegalDataException {
+		final String sql = DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortId()) + COMMA
+				+ storableObject.getSort().value() + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTROPHE;
 		return sql;
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final MonitoredElement storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getDomainId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, monitoredElement.getName(), SIZE_NAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, monitoredElement.getMeasurementPortId());
-		preparedStatement.setInt(++startParameterNumber, monitoredElement.getSort().value());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, monitoredElement.getLocalAddress(),
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementPortId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLocalAddress(),
 			SIZE_LOCAL_ADDRESS_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
+	public void retrieve(final MonitoredElement storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
-		final MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
-		super.retrieveEntity(monitoredElement);
-		this.retrieveMonitoredDomainMemberIds(monitoredElement);
+		super.retrieveEntity(storableObject);
+		this.retrieveMonitoredDomainMemberIds(storableObject);
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MonitoredElement updateEntityFromResultSet(final MonitoredElement storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		MonitoredElement monitoredElement = (storableObject == null) ? null : this.fromStorableObject(storableObject);
-		if (monitoredElement == null) {
-			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					0,
-					null,
-					null);
-		}
+		MonitoredElement monitoredElement = (storableObject == null)
+				? monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						0,
+						null,
+						null)
+				: storableObject;
 		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -272,7 +260,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<MonitoredElement> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		for (final Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 			final MonitoredElement monitoredElement = (MonitoredElement) iter.next();
@@ -359,7 +347,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	public void update(final Set<MonitoredElement> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
@@ -476,8 +464,8 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<MonitoredElement> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<MonitoredElement> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveMonitoredDomainMemberIdsByOneQuery(objects);
 		return objects;
 	}
