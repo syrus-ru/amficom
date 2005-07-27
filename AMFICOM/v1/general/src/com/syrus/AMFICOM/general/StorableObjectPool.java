@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.139 2005/07/27 15:44:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.140 2005/07/27 15:56:56 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.139 $, $Date: 2005/07/27 15:44:04 $
+ * @version $Revision: 1.140 $, $Date: 2005/07/27 15:56:56 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -155,7 +155,8 @@ public final class StorableObjectPool {
 
 	/*	Get */
 
-	public static StorableObject getStorableObject(final Identifier id, final boolean useLoader) throws ApplicationException {
+	public static <T extends StorableObject> T getStorableObject(final Identifier id, final boolean useLoader)
+			throws ApplicationException {
 		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = id.getMajor();
 
@@ -172,13 +173,14 @@ public final class StorableObjectPool {
 			return null;
 		}
 
-		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+		final LRUMap<Identifier, T> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
-			StorableObject storableObject = objectPool.get(id);
+			T storableObject = objectPool.get(id);
 			if (storableObject == null && useLoader) {
-				final Set storableObjects = objectLoader.loadStorableObjects(Collections.singleton(id));
-				if (!storableObjects.isEmpty())
-					storableObject = (StorableObject) storableObjects.iterator().next();
+				final Set<T> storableObjects = objectLoader.loadStorableObjects(Collections.singleton(id));
+				if (!storableObjects.isEmpty()) {
+					storableObject = storableObjects.iterator().next();
+				}
 				if (storableObject != null)
 					try {
 						putStorableObject(storableObject);
@@ -691,14 +693,15 @@ public final class StorableObjectPool {
 	 * @return Set of Storable Objects
 	 * @throws ApplicationException
 	 */
-	public static Set fromTransferables(final IdlStorableObject[] transferables, final boolean continueOnError)
-			throws ApplicationException {
+	public static <T extends StorableObject> Set<T> fromTransferables(final IdlStorableObject[] transferables,
+			final boolean continueOnError) throws ApplicationException {
 		final int length = transferables.length;
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>(length);
+		final Set<T> storableObjects = new HashSet<T>(length);
 		
 		for (int i = 0; i < length; i++) {
 			try {
-				storableObjects.add(fromTransferable(transferables[i]));
+				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);
+				storableObjects.add(storableObject);
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
 					Log.debugException(ae, Level.SEVERE);
@@ -720,10 +723,11 @@ public final class StorableObjectPool {
 	 * @param transferable
 	 * @throws ApplicationException
 	 */
-	public static StorableObject fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		StorableObject storableObject = null;
+	@SuppressWarnings("unchecked")
+	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		T storableObject = null;
 		try {
-			storableObject = getStorableObject(new Identifier(transferable.id), false);
+			storableObject = StorableObjectPool.<T>getStorableObject(new Identifier(transferable.id), false);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
@@ -735,7 +739,7 @@ public final class StorableObjectPool {
 			storableObject.fromTransferable(transferable);
 		} else {
 			try {
-				storableObject = transferable.getNative();
+				storableObject = (T) transferable.getNative();
 			} catch (final IdlCreateObjectException coe) {
 				Log.debugException(coe, Level.SEVERE);
 				throw new CreateObjectException(coe.detailMessage);
