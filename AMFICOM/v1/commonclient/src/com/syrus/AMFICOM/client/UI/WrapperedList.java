@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedList.java,v 1.3 2005/06/15 12:04:44 bob Exp $
+ * $Id: WrapperedList.java,v 1.4 2005/07/27 15:16:49 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,15 +11,17 @@ package com.syrus.AMFICOM.client.UI;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JList;
 import javax.swing.ListModel;
 
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/06/15 12:04:44 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/27 15:16:49 $
  * @module generalclient_v1
  */
 public class WrapperedList extends JList {
@@ -62,30 +64,39 @@ public class WrapperedList extends JList {
 //		Log.debugMessage("WrapperedList.setSelectedValue | this.model.compareKey: " + this.model.compareKey, Log.FINEST);
 //		Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.FINEST);
 		if (anObjectValue == null) {
-			setSelectedIndex(-1);
+//			System.err.println("WrapperedList.setSelectedValue() | -1"); 
+			int selectedIndex = super.getSelectedIndex();
+			super.removeSelectionInterval(selectedIndex, selectedIndex);
+			super.repaint();
 		} else {
 			Object elementValue = this.model.wrapper.getValue(getSelectedValue(), this.model.compareKey);
-//			Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
+//			Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Level.FINEST);
 			if (!anObjectValue.equals(elementValue)) {
 				ListModel dm = this.getModel();
 				int count = dm.getSize();
 //				Log.debugMessage("WrapperedList.setSelectedValue | count " + count, Log.FINEST);
 				for (int i = 0; i < count; i++) {
 					elementValue = this.model.wrapper.getValue(dm.getElementAt(i), this.model.compareKey);
-//					Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Log.FINEST);
-//					Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Log.FINEST);
+//					Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " + anObjectValue, Level.FINEST);
+//					Log.debugMessage("WrapperedList.setSelectedValue | elementValue " + elementValue, Level.FINEST);
 					if (anObjectValue.equals(elementValue)) {
-						setSelectedIndex(i);
+//						System.out.println("WrapperedList.setSelectedValue() | " + i);
+						super.setSelectedIndex(i);
 						if (shouldScroll) {
-							ensureIndexIsVisible(i);
+							super.ensureIndexIsVisible(i);
 						}
-						this.repaint();						
+						super.repaint();						
 						return;
 					}
 				}
-				this.setSelectedIndex(-1);
+				
 			}
-			this.repaint();
+//			System.out.println("WrapperedList.setSelectedValue() | -1");
+			int selectedIndex = super.getSelectedIndex();
+			super.removeSelectionInterval(selectedIndex, selectedIndex);
+			super.repaint();
 		}
+		
 	}
+	
 }
