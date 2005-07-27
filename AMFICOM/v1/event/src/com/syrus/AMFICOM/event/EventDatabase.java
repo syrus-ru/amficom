@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.36 2005/07/26 08:39:13 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.37 2005/07/27 15:20:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -41,22 +39,16 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/26 08:39:13 $
+ * @version $Revision: 1.37 $, $Date: 2005/07/27 15:20:35 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
-public final class EventDatabase extends StorableObjectDatabase {
+public final class EventDatabase extends StorableObjectDatabase<Event> {
 	protected static final int SIZE_PARAMETER_VALUE_COLUMN = 256;
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private Event fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Event)
-			return (Event) storableObject;
-		throw new IllegalDataException("EventDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -82,25 +74,23 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Event storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Event event = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, event.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, event.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		final Event event = this.fromStorableObject(storableObject);
-		final String values = DatabaseIdentifier.toSQLString(event.getType().getId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(event.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final Event storableObject) throws IllegalDataException {
+		final String values = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Event updateEntityFromResultSet(final Event storableObject, final ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		final Event event = (storableObject == null)
 				? new Event(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -110,7 +100,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		EventType eventType;
 		try {
 			eventType = (EventType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
@@ -129,11 +119,10 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Event event = this.fromStorableObject(storableObject);
-		this.retrieveEntity(event);
-		this.retrieveEventParametersByOneQuery(Collections.singleton(event));
-		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(event));
+	public void retrieve(final Event storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		this.retrieveEntity(storableObject);
+		this.retrieveEventParametersByOneQuery(Collections.singleton(storableObject));
+		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(storableObject));
 	}	
 
 	private void retrieveEventParametersByOneQuery(final Set<Event> events) throws RetrieveObjectException {
@@ -227,11 +216,10 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<Event> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
-		for (final Iterator it = storableObjects.iterator(); it.hasNext();) {
-			final Event event = this.fromStorableObject((StorableObject) it.next());
+		for (final Event event : storableObjects) {
 			this.insertEventParameters(event);
 		}
 
@@ -300,7 +288,7 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<Event> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateEventSources(storableObjects);
 	}
@@ -322,8 +310,8 @@ public final class EventDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<Event> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<Event> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveEventParametersByOneQuery(objects);
 		this.retrieveEventSourceIdsByOneQuery(objects);
 		return objects;
