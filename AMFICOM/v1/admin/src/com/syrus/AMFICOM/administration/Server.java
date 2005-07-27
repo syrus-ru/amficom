@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.44 2005/07/25 20:49:23 arseniy Exp $
+ * $Id: Server.java,v 1.45 2005/07/27 12:15:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/07/25 20:49:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/07/27 12:15:36 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -54,9 +54,8 @@ public final class Server extends DomainMember implements Characterizable {
 	public Server(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final ServerDatabase database = (ServerDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE).retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);

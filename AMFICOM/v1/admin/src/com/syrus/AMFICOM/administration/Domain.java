@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.46 2005/07/25 20:49:23 arseniy Exp $
+ * $Id: Domain.java,v 1.47 2005/07/27 12:15:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/25 20:49:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/07/27 12:15:36 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -53,9 +53,8 @@ public final class Domain extends DomainMember implements Characterizable {
 	Domain(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final DomainDatabase database = (DomainDatabase) DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE).retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);

@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.42 2005/07/25 20:49:23 arseniy Exp $
+ * $Id: MCM.java,v 1.43 2005/07/27 12:15:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/07/25 20:49:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/07/27 12:15:36 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -56,9 +56,8 @@ public final class MCM extends DomainMember implements Characterizable {
 	public MCM(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MCM_CODE).retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);

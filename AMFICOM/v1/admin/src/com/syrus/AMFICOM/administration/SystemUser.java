@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.16 2005/07/25 20:49:23 arseniy Exp $
+ * $Id: SystemUser.java,v 1.17 2005/07/27 12:15:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/25 20:49:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/07/27 12:15:36 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -59,9 +59,8 @@ public final class SystemUser extends StorableObject implements Characterizable,
 	public SystemUser(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		final SystemUserDatabase database = (SystemUserDatabase) DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE).retrieve(this);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
