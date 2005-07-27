@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.33 2005/07/27 12:04:24 arseniy Exp $
+ * $Id: LRUMap.java,v 1.34 2005/07/27 12:12:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/27 12:04:24 $
+ * @version $Revision: 1.34 $, $Date: 2005/07/27 12:12:43 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -170,7 +170,7 @@ public class LRUMap<K, V> implements Serializable {
 	}
 
 
-	private abstract class AbstractItr {
+	private abstract class AbstractIterator {
 		/**
 		 * Index of element to be returned by subsequent call to next.
 		 */
@@ -217,7 +217,7 @@ public class LRUMap<K, V> implements Serializable {
 		}
 	}
 
-	protected class Itr extends AbstractItr implements Iterator<V> {
+	private class Itr extends AbstractIterator implements Iterator<V> {
 		public V next() {
 			this.checkForComodification();
 			try {
@@ -234,7 +234,7 @@ public class LRUMap<K, V> implements Serializable {
 		}
 	}
 
-	protected class KeyIterator extends AbstractItr implements Iterator<K> {
+	private class KeyIterator extends AbstractIterator implements Iterator<K> {
 		public K next() {
 			this.checkForComodification();
 			try {
