@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.28 2005/07/27 13:31:35 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.29 2005/07/27 14:32:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.28 $, $Date: 2005/07/27 13:31:35 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/27 14:32:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -47,7 +47,7 @@ public class StorableObjectXML {
 			RetrieveObjectException {
 		final Map<String, Object> objectMap = this.driver.getObjectMap(identifier);
 		final short entityCode = identifier.getMajor();
-		final T storableObject = this.getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
+		final T storableObject = this.<T>getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
 		final StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED),
 				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
@@ -75,7 +75,7 @@ public class StorableObjectXML {
 		for (final Identifier id : identifiers) {
 			if (ids == null || !ids.contains(id)) {
 				try {
-					final T storableObject = this.retrieve(id);
+					final T storableObject = this.<T>retrieve(id);
 					if (condition.isConditionTrue(storableObject)) {
 						if (set == null)
 							set = new HashSet<T>();
