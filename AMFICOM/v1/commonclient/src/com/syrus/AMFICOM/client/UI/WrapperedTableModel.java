@@ -15,7 +15,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/21 10:46:13 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/27 08:56:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -41,6 +41,8 @@ public class WrapperedTableModel extends AbstractTableModel {
 
 	
 	private boolean[]			editables;
+	
+	private int lastSortedModelIndex = -1;
 	
 	/**
 	 * @param wrapper
@@ -93,7 +95,7 @@ public class WrapperedTableModel extends AbstractTableModel {
 	}
 
 	public List getValues() {
-		return this.list;
+		return Collections.unmodifiableList(this.list);
 	}
 
 	public int getIndexOfObject(final Object object) {
@@ -157,7 +159,13 @@ public class WrapperedTableModel extends AbstractTableModel {
 			list1 = new ArrayList();
 		}
 		this.list = list1;
-		super.fireTableDataChanged();
+		
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just do fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
+		}
 	}
 
 	public void setValues(final Collection collection) {
@@ -168,7 +176,13 @@ public class WrapperedTableModel extends AbstractTableModel {
 		if (collection != null) {
 			this.list.addAll(collection);
 		}
-		super.fireTableDataChanged();
+		
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just do fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
+		}
 	}
 
 	public void setValueAt(	final Object obj,
@@ -182,7 +196,13 @@ public class WrapperedTableModel extends AbstractTableModel {
 		} else {
 			this.wrapper.setValue(object, key, obj);
 		}
-		this.fireTableDataChanged();
+		
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just do fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
+		}
 	}
 
 	public boolean getSortOrder(int columnIndex) {
@@ -197,19 +217,25 @@ public class WrapperedTableModel extends AbstractTableModel {
 	public void sortRows(	final int columnIndex,
 	                     	final boolean ascending) {
 		if (this.list != null) {
-			final String key = this.keys[columnIndex];
-			Collections.sort(this.list, new WrapperComparator(this.wrapper, key, ascending));
-			this.fireTableDataChanged();
+			this.lastSortedModelIndex = columnIndex;
+			String sortedKey = this.keys[columnIndex];
+			Collections.sort(this.list, new WrapperComparator(this.wrapper, sortedKey, ascending));
+			super.fireTableDataChanged();
 		}
 	}
-
+	
 	public int addObject(Object object) {
 		return this.addObject(this.list.size(), object);
 	}
 	
 	public int addObject(int index, Object object) {
 		this.list.add(index, object);
-		this.fireTableDataChanged();
+		if (this.lastSortedModelIndex >= 0) {
+			// sortRows just do fireTableDataChanged self
+			this.sortRows(this.lastSortedModelIndex, this.ascendings[this.lastSortedModelIndex]);
+		} else {
+			super.fireTableDataChanged();
+		}
 		return this.list.indexOf(object);
 	}
 
