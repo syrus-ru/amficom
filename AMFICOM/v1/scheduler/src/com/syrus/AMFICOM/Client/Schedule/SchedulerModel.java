@@ -940,9 +940,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 					test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
 						LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
-						temporalPattern == null ? null : temporalPattern.getId(), this.measurementType.getId(),
-						this.analysisTypeId == null ? null : this.analysisTypeId, test.getGroupTestId(),
-						this.evaluationTypeId == null ? null : this.evaluationTypeId, test.getStatus().value(),
+						temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(), this.measurementType.getId(),
+						this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId, test.getGroupTestId(),
+						this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId, test.getStatus().value(),
 						this.monitoredElement, this.returnType.value(), this.name != null
 								&& this.name.trim().length() > 0 ? this.name : sdf.format(startTime), test
 								.getNumberOfMeasurements());

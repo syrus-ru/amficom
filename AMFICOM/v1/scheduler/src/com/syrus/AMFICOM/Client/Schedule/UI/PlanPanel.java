@@ -235,10 +235,7 @@ ActionListener, PropertyChangeListener {
 	}
 
 	public void setStartDate(Date start) {
-		if (this.startDate != null && this.startDate.equals(start)) {
-			return;
-		}
-		
+
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
@@ -267,9 +264,10 @@ ActionListener, PropertyChangeListener {
 			this.scaleEnd = this.cal.getTime();
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
+			
+			this.updateTestLinesTimeRegion();
 		}
-
-		this.updateTestLinesTimeRegion();
+		
 	}
 
 	// protected void paintComponent(Graphics g) {
