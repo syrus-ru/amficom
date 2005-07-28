@@ -11,8 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
-import java.util.logging.Level;
+import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -28,15 +27,14 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
-import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.16 $, $Date: 2005/07/20 07:28:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 20:55:07 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */
@@ -118,20 +116,13 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 			ActionListener actionListener = new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					TestReturnType returnType = SaveParametersFrame.this.getReturnType();
-					Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | " + returnType.value(), Log.DEBUGLEVEL10);
-
-					java.util.Set selectedTestIds = SaveParametersFrame.this.schedulerModel.getSelectedTestIds();
+					final Set<Identifier> selectedTestIds = SaveParametersFrame.this.schedulerModel.getSelectedTestIds();
 					if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 						try {
-							java.util.Set storableObjects = StorableObjectPool.getStorableObjects(
-								selectedTestIds, true);
-							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-								Test test = (Test) iterator.next();
+							final Set<Test> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+							for (final Test test : storableObjects) {
 								if (test.isChanged()) {
-									Log.debugMessage("SaveParametersFrame.refreshTestsReturnType | set " + test.getId()
-											+ ", " + returnType.value(), Level.FINEST);
-									test.setReturnType(returnType);
+									//Return type gone. Don't know, what to write here.
 								}
 							}
 						} catch (ApplicationException e1) {
@@ -158,41 +149,9 @@ public class SaveParametersFrame extends JInternalFrame implements  PropertyChan
 
 	}
 
-	public TestReturnType getReturnType() {
-		TestReturnType returnType = TestReturnType.TEST_RETURN_TYPE_WHOLE;
-		if (this.recognizedEventsButton.isSelected())
-			returnType = TestReturnType.TEST_RETURN_TYPE_EVENTS;
-		else if (this.measurementIdButton.isSelected())
-			returnType = TestReturnType.TEST_RETURN_TYPE_REFERENCE;
-		return returnType;
-	}
-	
-	
 	public void propertyChange(PropertyChangeEvent evt) {
-			String propertyName = evt.getPropertyName();
-			if (propertyName.equals(SchedulerModel.COMMAND_SET_RETURN_TYPE)) {
-				this.setReturnType( (TestReturnType) evt.getNewValue());
-			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_RETURN_TYPE)) {
-				TestReturnType testReturnType = getReturnType();
-				if (testReturnType != null) {
-					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_RETURN_TYPE, null, testReturnType));
-				}					
-			} 
+			final String propertyName = evt.getPropertyName();
+			//Return type gone. Don't know, what to write here.
 	}
 
-	public void setReturnType(TestReturnType returnType) {		
-		if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_WHOLE)) {
-			if(!this.allResultsButton.isSelected()) {
-				this.allResultsButton.doClick();
-			}
-		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_EVENTS)) {
-			if(!this.recognizedEventsButton.isSelected()) {
-				this.recognizedEventsButton.doClick();
-			}
-		} else if (returnType.equals(TestReturnType.TEST_RETURN_TYPE_REFERENCE)) {
-			if(!this.measurementIdButton.isSelected()) {
-				this.measurementIdButton.doClick();
-			}
-		}
-	}
 }

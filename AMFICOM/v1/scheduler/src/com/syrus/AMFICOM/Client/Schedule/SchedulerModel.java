@@ -60,7 +60,6 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.Log;
@@ -92,7 +91,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	private Set<Identifier>		testIds								= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
 	Set<Identifier>				selectedTestIds;
-	Map							measurementSetupIdMap;
+	Map<Set<Identifier>, Set<Identifier>>							measurementSetupIdMap;
 
 	public static final String	COMMAND_GET_NAME					= "GetName";
 	public static final String	COMMAND_SET_NAME					= "SetName";
@@ -146,14 +145,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	private Identifier			evaluationTypeId					= null;
 	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
-	private TestReturnType		returnType							= null;
 	private TestTemporalStamps	testTimeStamps						= null;
 
 	private Date				startGroupDate;
 	private long				interval;
 	private boolean				aloneGroupTest;
 
-	private Map					meTestGroup;
+	private Map<Identifier, Identifier>					meTestGroup;
 
 	private boolean				groupTest							= false;
 
@@ -313,9 +311,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.measurementSetup = (MeasurementSetup) evt.getNewValue();
 			// this.generateTest();
-		} else if (propertyName.equals(COMMAND_SET_RETURN_TYPE)) {
-			this.returnType = (TestReturnType) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_TEMPORAL_STAMPS)) {
 			this.testTimeStamps = (TestTemporalStamps) evt.getNewValue();
 			// this.generateTest();
@@ -340,13 +335,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			try {
 				Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
 					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
-				Set<Identifier> testIds = new HashSet<Identifier>(testsByCondition.size());
+				Set<Identifier> testIds1 = new HashSet<Identifier>(testsByCondition.size());
 				for (Iterator iterator = testsByCondition.iterator(); iterator.hasNext();) {
 					Identifier testId = ((Test) iterator.next()).getId();
-					testIds.add(testId);
+					testIds1.add(testId);
 					this.testIds.remove(testId);
 				}
-				StorableObjectPool.delete(testIds);
+				StorableObjectPool.delete(testIds1);
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -372,8 +367,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
 
 		{
-			Collection measurementTypes = StorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE), true, true);
+			final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
+			final Set<MeasurementType> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
 			// LinkedIdsCondition domainCondition = new
 			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
@@ -383,10 +378,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 			// domainCondition, true);
 
-			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
+			final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.size());
 
-			MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager
-					.getDomainId());
+			final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
 				MeasurementType measurementType1 = (MeasurementType) iter.next();
 				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
@@ -399,30 +393,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 
 			// this.elementsViewer.setElements(measurementTypeItems);
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null,
-																		measurementTypeItems));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null, measurementTypeItems));
 
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(
-																this,
-																COMMAND_SET_ANALYSIS_TYPES,
-																null,
-																StorableObjectPool
-																		.getStorableObjectsByCondition(
-																			new EquivalentCondition(
-																									ObjectEntities.ANALYSIS_TYPE_CODE),
-																			true, true)));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_ANALYSIS_TYPES,
+					null,
+					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE), true, true)));
 
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(
-																this,
-																COMMAND_SET_EVALUATION_TYPES,
-																null,
-																StorableObjectPool
-																		.getStorableObjectsByCondition(
-																			new EquivalentCondition(
-																									ObjectEntities.EVALUATION_TYPE_CODE),
-																			true, true)));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_EVALUATION_TYPES,
+					null,
+					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATION_TYPE_CODE),
+							true,
+							true)));
 
 			// if (!monitoredElements.isEmpty()) {
 			// LinkedIdsCondition linkedIdsCondition;
@@ -450,9 +433,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		Test test = this.getSelectedTest();
 
 		if (test != null) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPE, null,
-																		StorableObjectPool.getStorableObject(test
-																				.getMeasurementTypeId(), true)));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_MEASUREMENT_TYPE,
+					null,
+					StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)));
 			MonitoredElement monitoredElement1 = test.getMonitoredElement();
 			// MeasurementPort measurementPort = (MeasurementPort)
 			// ConfigurationStorableObjectPool.getStorableObject(
@@ -460,19 +444,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// this.kisEditor.setKIS((KIS)
 			// ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
 			// true));
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null,
-																		monitoredElement1));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test
-					.getAnalysisTypeId()));
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_EVALUATION_TYPE, null, test
-					.getEvaluationTypeId()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test.getAnalysisTypeId()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_EVALUATION_TYPE,
+					null,
+					test.getEvaluationTypeId()));
 
-			Collection measurementSetupIds = test.getMeasurementSetupIds();
+			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
-				Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-				MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(
-					mainMeasurementSetupId, true);
+				final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
+				final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
+						true);
 				if (measurementSetup1 != null) {
 					// this.refreshMeasurementSetups();
 					// this.dispatcher.firePropertyChange(new
@@ -487,14 +471,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				}
 			}
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_RETURN_TYPE, null, test
-					.getReturnType()));
-			// this.returnTypeEditor.setReturnType(this.selectedTest.getReturnType());
 			if (test.getGroupTestId().isVoid()) {
 				this.refreshTemporalStamps();
 			} else {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,
-																			test.getStartTime()));
+				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null, test.getStartTime()));
 			}
 
 		}
@@ -502,10 +482,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	private void refreshTemporalStamps() {
-		Test test = this.getSelectedTest();
+		final Test test = this.getSelectedTest();
 
 		if (test != null) {
-			Identifier temporalPatternId = test.getTemporalPatternId();
+			final Identifier temporalPatternId = test.getTemporalPatternId();
 			AbstractTemporalPattern temporalPattern = null;
 			if (temporalPatternId != null) {
 				try {
@@ -515,11 +495,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					Log.errorException(e);
 				}
 			}
-			TestTemporalStamps timeStamps = new TestTemporalStamps(test.getTemporalType(), test.getStartTime(), test
-					.getEndTime(), temporalPattern);
+			final TestTemporalStamps timeStamps = new TestTemporalStamps(test.getTemporalType(),
+					test.getStartTime(),
+					test.getEndTime(),
+					temporalPattern);
 			// this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_TEMPORAL_STAMPS, null,
-																		timeStamps));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_TEMPORAL_STAMPS, null, timeStamps));
 		}
 
 	}
@@ -559,8 +540,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.groupTest = false;
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_TYPE, null, null));
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MONITORED_ELEMENT, null, null));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MONITORED_ELEMENT, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_ANALYSIS_TYPE, null, null));
@@ -572,8 +552,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.dispatcher
-					.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_RETURN_TYPE, null, null));
@@ -606,22 +585,22 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
 		// this.testTimeStamps =
 		// this.testTemporalStampsEditor.getTestTemporalStamps();
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
+		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.generateTest();
+		}
 	}
 
 	public void setBreakData() {
 		this.flag = 0;
 	}
 
-	public void updateTests(long startTime,
-							long endTime) throws ApplicationException {
+	public void updateTests(final long startTime, final long endTime) throws ApplicationException {
 		// Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
 		// getClass().getName()); //$NON-NLS-1$
 		// this.setCursor(UIStorage.WAIT_CURSOR);
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																	LangModelSchedule
-																			.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModelSchedule.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
 
@@ -630,66 +609,71 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		StorableObjectPool.refresh();
 
-		Date startDate = new Date(startTime);
-		Date endDate = new Date(endTime);
+		final Date startDate = new Date(startTime);
+		final Date endDate = new Date(endTime);
 
-		TypicalCondition startTypicalCondition = new TypicalCondition(startDate, endDate,
-																		OperationSort.OPERATION_IN_RANGE,
-																		ObjectEntities.TEST_CODE,
-																		TestWrapper.COLUMN_START_TIME);
-		TypicalCondition endTypicalCondition = new TypicalCondition(startDate, endDate,
-																	OperationSort.OPERATION_IN_RANGE,
-																	ObjectEntities.TEST_CODE,
-																	TestWrapper.COLUMN_END_TIME);
-		TypicalCondition startTypicalCondition1 = new TypicalCondition(startDate, null,
-																		OperationSort.OPERATION_LESS_EQUALS,
-																		ObjectEntities.TEST_CODE,
-																		TestWrapper.COLUMN_START_TIME);
-		TypicalCondition endTypicalCondition2 = new TypicalCondition(endDate, null,
-																		OperationSort.OPERATION_GREAT_EQUALS,
-																		ObjectEntities.TEST_CODE,
-																		TestWrapper.COLUMN_END_TIME);
+		TypicalCondition startTypicalCondition = new TypicalCondition(startDate,
+				endDate,
+				OperationSort.OPERATION_IN_RANGE,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_START_TIME);
+		TypicalCondition endTypicalCondition = new TypicalCondition(startDate,
+				endDate,
+				OperationSort.OPERATION_IN_RANGE,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_END_TIME);
+		TypicalCondition startTypicalCondition1 = new TypicalCondition(startDate,
+				null,
+				OperationSort.OPERATION_LESS_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_START_TIME);
+		TypicalCondition endTypicalCondition2 = new TypicalCondition(endDate,
+				null,
+				OperationSort.OPERATION_GREAT_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_END_TIME);
 
-		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition, CompoundConditionSort.OR,
-																		endTypicalCondition);
+		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition,
+				CompoundConditionSort.OR,
+				endTypicalCondition);
 
-		CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1, CompoundConditionSort.AND,
-																		endTypicalCondition2);
+		CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1,
+				CompoundConditionSort.AND,
+				endTypicalCondition2);
 
-		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR,
-																	compoundCondition2);
+		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR, compoundCondition2);
 
-		java.util.Set tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
 		this.testIds.clear();
-		for (Iterator iterator = tests.iterator(); iterator.hasNext();) {
-			Test test = (Test) iterator.next();
+		for (final Test test : tests) {
 			this.testIds.add(test.getId());
 		}
 
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE,
-																	LangModelSchedule
-																			.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModelSchedule.getString("StatusMessage.TestsUpdated"))); //$NON-NLS-1$
 		this.refreshTests();
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 	}
 
-	public java.util.Set getSelectedTestIds() {
+	public Set<Identifier> getSelectedTestIds() {
 		return this.selectedTestIds;
 	}
 
 	public Test getSelectedTest() {
 		try {
-			return this.selectedFirstTestId != null ? (Test) StorableObjectPool.getStorableObject(
-				this.selectedFirstTestId, true) : null;
+			return this.selectedFirstTestId != null
+					? (Test) StorableObjectPool.getStorableObject(this.selectedFirstTestId, true)
+						: null;
 		} catch (ApplicationException e) {
 			return null;
 		}
 	}
 
-	public void addSelectedTest(Test selectedTest) throws ApplicationException {
-		Identifier selectedTestId = selectedTest.getId();
+	public void addSelectedTest(final Test selectedTest) throws ApplicationException {
+		final Identifier selectedTestId = selectedTest.getId();
 		if (this.selectedTestIds == null) {
-			this.selectedTestIds = new HashSet();
+			this.selectedTestIds = new HashSet<Identifier>();
 		}
 
 		if (selectedTest != null) {
@@ -705,7 +689,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 	}
 
-	public void unselectTests() throws ApplicationException {
+	public void unselectTests() {
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 		}
@@ -715,7 +699,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// COMMAND_REFRESH_TEST, null, null));
 	}
 
-	public void setSelectedMeasurementType(MeasurementType measurementType) {
+	public void setSelectedMeasurementType(final MeasurementType measurementType) {
 		if (this.measurementType == null || measurementType == null
 				|| !this.measurementType.getId().equals(measurementType.getId())) {
 			this.measurementType = measurementType;
@@ -723,7 +707,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 	}
 
-	public void setSelectedMonitoredElement(MonitoredElement monitoredElement) {
+	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
 		if (this.monitoredElement == null || monitoredElement == null
 				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
 			this.monitoredElement = monitoredElement;
@@ -731,17 +715,16 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 	}
 
-	public void setSelectedMonitoredElement(MonitoredElement monitoredElement,
-											MeasurementType measurementType) {
+	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement, final MeasurementType measurementType) {
 		boolean changed = false;
-		if (this.monitoredElement == null || monitoredElement == null
+		if (this.monitoredElement == null
+				|| monitoredElement == null
 				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
 			changed = true;
 			this.monitoredElement = monitoredElement;
 		}
 
-		if (this.measurementType == null || measurementType == null
-				|| !this.measurementType.getId().equals(measurementType.getId())) {
+		if (this.measurementType == null || measurementType == null || !this.measurementType.getId().equals(measurementType.getId())) {
 			changed = true;
 			this.measurementType = measurementType;
 		}
@@ -759,7 +742,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		LinkedIdsCondition measurementTypeCondition = null;
 		Identifier identifier = null;
-		java.util.Set idSet = null;
+		Set<Identifier> idSet = null;
 
 		if (SchedulerModel.this.measurementType != null) {
 			identifier = SchedulerModel.this.measurementType.getId();
@@ -767,11 +750,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 
 		if (SchedulerModel.this.monitoredElement != null) {
-			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(SchedulerModel.this.monitoredElement
-					.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
+			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(SchedulerModel.this.monitoredElement.getId(),
+					ObjectEntities.MEASUREMENTSETUP_CODE);
 			try {
 				if (measurementTypeCondition != null) {
-					idSet = new HashSet(2);
+					idSet = new HashSet<Identifier>(2);
 					idSet.add(identifier);
 					identifier = SchedulerModel.this.monitoredElement.getId();
 					idSet.add(identifier);
@@ -794,38 +777,39 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		try {
 			if (condition != null) {
-				final java.util.Set idSet1 = idSet;
+				final Set<Identifier> idSet1 = idSet;
 				final StorableObjectCondition condition1 = condition;
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 					public void run() {
 						try {
-							java.util.Set measurementSetupIds = (java.util.Set) (SchedulerModel.this.measurementSetupIdMap != null
-									? SchedulerModel.this.measurementSetupIdMap.get(idSet1) : null);
+							Set<Identifier> measurementSetupIds = SchedulerModel.this.measurementSetupIdMap != null
+									? SchedulerModel.this.measurementSetupIdMap.get(idSet1)
+										: null;
 							Set<MeasurementSetup> measurementSetups = null;
 							if (measurementSetupIds == null) {
 								measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition1, true,
 									true);
 								if (SchedulerModel.this.measurementSetupIdMap == null) {
-									SchedulerModel.this.measurementSetupIdMap = new HashMap();
+									SchedulerModel.this.measurementSetupIdMap = new HashMap<Set<Identifier>, Set<Identifier>>();
 								}
-								measurementSetupIds = new HashSet();
-								for (Iterator iterator = measurementSetups.iterator(); iterator.hasNext();) {
-									Identifiable identifiable = (Identifiable) iterator.next();
+								measurementSetupIds = new HashSet<Identifier>();
+								for (final Identifiable identifiable : measurementSetups) {
 									measurementSetupIds.add(identifiable.getId());
 								}
 								SchedulerModel.this.measurementSetupIdMap.put(idSet1, measurementSetupIds);
 							} else {
 								measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
 							}
-							
-							for(MeasurementSetup measurementSetup : measurementSetups) {
-								System.out.println("refreshMeasurementSetups | " + measurementSetup.getId() + ", " + measurementSetup.getDescription());
+
+							for(final MeasurementSetup measurementSetup1 : measurementSetups) {
+								System.out.println("refreshMeasurementSetups | " + measurementSetup1.getId() + ", " + measurementSetup1.getDescription());
 							}
-							
-							SchedulerModel.this.dispatcher
-									.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUPS,
-																				null, measurementSetups));
+
+							SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+									COMMAND_SET_MEASUREMENT_SETUPS,
+									null,
+									measurementSetups));
 						} catch (ApplicationException e) {
 							AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 						}
@@ -835,19 +819,20 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 
 			if (SchedulerModel.this.selectedTestIds != null && !SchedulerModel.this.selectedTestIds.isEmpty()) {
-				Collection measurementSetupIds = getSelectedTest().getMeasurementSetupIds();
+				final Collection<Identifier> measurementSetupIds = getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
-					Identifier mainMeasurementSetupId = (Identifier) measurementSetupIds.iterator().next();
-					MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(
-						mainMeasurementSetupId, true);
+					final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
+					final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
+							true);
 					if (measurementSetup1 != null) {
 						// SchedulerModel.this.dispatcher
 						// .firePropertyChange(new PropertyChangeEvent(this,
 						// COMMAND_SET_SET, null,
 						// measurementSetup1.getParameterSet()));
-						SchedulerModel.this.dispatcher
-								.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP, null,
-																			measurementSetup1));
+						SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+								COMMAND_SET_MEASUREMENT_SETUP,
+								null,
+								measurementSetup1));
 
 					}
 				}
@@ -861,7 +846,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void commitChanges() throws ApplicationException {
-		StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), true);
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
 		}
@@ -876,22 +861,25 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 			Test test = null;
 			test = (this.flag == FLAG_APPLY) ? this.getSelectedTest() : null;
-			SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-			java.util.Set measurementSetupIds;
+			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+			Set<Identifier> measurementSetupIds;
 			if (this.measurementSetup == null) {
-				if (this.set == null)
+				if (this.set == null) {
 					return;
+				}
 				try {
-					this.measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(), this.set, null,
-						null, null, LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date())
-								+ "/", 1000 * 60 * 10, Collections.singleton(this.monitoredElement.getId()),
-						Collections.singleton(this.measurementType.getId()));
-					StorableObjectPool.putStorableObject(this.measurementSetup);
+					this.measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
+							this.set,
+							null,
+							null,
+							null,
+							LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
+							1000 * 60 * 10,
+							Collections.singleton(this.monitoredElement.getId()),
+							Collections.singleton(this.measurementType.getId()));
 					if (this.measurementSetupIdMap != null) {
 						this.measurementSetupIdMap.clear();
 					}
-				} catch (IllegalObjectEntityException e) {
-					Log.debugException(e, Log.DEBUGLEVEL05);
 				} catch (CreateObjectException e) {
 					Log.debugException(e, Log.DEBUGLEVEL05);
 				}
@@ -900,26 +888,32 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 			measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 
-			Date startTime = this.testTimeStamps.getStartTime();
-			Date endTime = this.testTimeStamps.getEndTime();
-			TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
-			AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
+			final Date startTime = this.testTimeStamps.getStartTime();
+			final Date endTime = this.testTimeStamps.getEndTime();
+			final TestTemporalType temporalType = this.testTimeStamps.getTestTemporalType();
+			final AbstractTemporalPattern temporalPattern = this.testTimeStamps.getTemporalPattern();
 			if (test == null) {
 				try {
 					if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
-						test = Test.createInstance(LoginManager.getUserId(), startTime, endTime,
-							temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(), temporalType,
-							this.measurementType.getId(), this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
-							this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId, Identifier.VOID_IDENTIFIER, this.monitoredElement,
-							this.returnType, this.name != null && this.name.trim().length() > 0 ? this.name : sdf
-									.format(startTime), measurementSetupIds);
+						test = Test.createInstance(LoginManager.getUserId(),
+								startTime,
+								endTime,
+								temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(),
+								temporalType,
+								this.measurementType.getId(),
+								this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
+								this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId,
+								Identifier.VOID_IDENTIFIER,
+								this.monitoredElement,
+								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
+								measurementSetupIds);
 
 						if (this.groupTest) {
 							if (this.meTestGroup == null) {
-								this.meTestGroup = new HashMap();
+								this.meTestGroup = new HashMap<Identifier, Identifier>();
 							}
-							Identifier meId = this.monitoredElement.getId();
-							Identifier testGroupId = (Identifier) this.meTestGroup.get(meId);
+							final Identifier meId = this.monitoredElement.getId();
+							Identifier testGroupId = this.meTestGroup.get(meId);
 							if (testGroupId == null || testGroupId.isVoid()) {
 								testGroupId = test.getId();
 								this.meTestGroup.put(meId, testGroupId);
@@ -928,32 +922,40 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							test.setGroupTestId(testGroupId);
 						}
 
-						StorableObjectPool.putStorableObject(test);
 					} else {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
-								.getString("Cannot add test"), LangModelSchedule.getString("Error"),
-							JOptionPane.OK_OPTION);
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelSchedule.getString("Cannot add test"),
+								LangModelSchedule.getString("Error"),
+								JOptionPane.OK_OPTION);
 					}
-				} catch (IllegalObjectEntityException e) {
-					Log.errorException(e);
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 				}
 				this.testIds.add(test.getId());
 			} else {
 				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
-					test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-						LoginManager.getUserId(), test.getVersion(), temporalType.value(), startTime, endTime,
-						temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(), this.measurementType.getId(),
-						this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId, test.getGroupTestId(),
-						this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId, test.getStatus().value(),
-						this.monitoredElement, this.returnType.value(), this.name != null
-								&& this.name.trim().length() > 0 ? this.name : sdf.format(startTime), test
-								.getNumberOfMeasurements());
+					test.setAttributes(test.getCreated(),
+							new Date(System.currentTimeMillis()),
+							test.getCreatorId(),
+							LoginManager.getUserId(),
+							test.getVersion(),
+							temporalType.value(),
+							startTime,
+							endTime,
+							temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(),
+							this.measurementType.getId(),
+							this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
+							test.getGroupTestId(),
+							this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId,
+							test.getStatus().value(),
+							this.monitoredElement,
+							this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
+							test.getNumberOfMeasurements());
 				} else {
-					JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
-							.getString("Cannot update test"), LangModelSchedule.getString("Error"),
-						JOptionPane.OK_OPTION);
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelSchedule.getString("Cannot update test"),
+							LangModelSchedule.getString("Error"),
+							JOptionPane.OK_OPTION);
 				}
 			}
 			try {
@@ -976,21 +978,20 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 	}
 
-	public void addGroupTest(Date date) {
+	public void addGroupTest(final Date date) {
 		this.aloneGroupTest = true;
 		this.startGroupDate = date;
 		this.addGroupTests();
 	}
 
-	public void addGroupTests(	Date date,
-								long interval1) {
+	public void addGroupTests(final Date date, final long interval1) {
 		this.aloneGroupTest = false;
 		this.startGroupDate = date;
 		this.interval = interval1;
 		this.addGroupTests();
 	}
 
-	public void moveSelectedTests(Date startDate) {
+	public void moveSelectedTests(final Date startDate) {
 //
 //		try {
 //			throw new Exception();
@@ -1000,30 +1001,31 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 //		}
 
 		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
-		long t0 = System.currentTimeMillis();
+		final long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			try {
-				SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(),
-																			TestWrapper.COLUMN_START_TIME));
-				selectedTests.addAll(StorableObjectPool.getStorableObjects(this.selectedTestIds, true));
+				final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator(TestWrapper.getInstance(),
+						TestWrapper.COLUMN_START_TIME));
+				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
+				selectedTests.addAll(tests);
 
-				Test firstTest = ((Test) selectedTests.first());
-				long offset = startDate.getTime() - firstTest.getStartTime().getTime();
+				final Test firstTest = selectedTests.first();
+				final long offset = startDate.getTime() - firstTest.getStartTime().getTime();
 
 				boolean correct = true;
-				for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
-					Test selectedTest = (Test) iterator.next();
+				for (final Test selectedTest : selectedTests) {
 					if (selectedTest.isChanged()) {
-						Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+						final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
 						Date newEndDate = selectedTest.getEndTime();
 						if (newEndDate != null) {
 							newEndDate = new Date(newEndDate.getTime() + offset);
 						}
 						correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
 						if (!correct) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
-									.getString("Cannot move tests"), LangModelSchedule.getString("Error"),
-								JOptionPane.OK_OPTION);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									LangModelSchedule.getString("Cannot move tests"),
+									LangModelSchedule.getString("Error"),
+									JOptionPane.OK_OPTION);
 							break;
 						}
 					}
@@ -1031,10 +1033,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 				if (correct) {
 					boolean moved = false;
-					for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
-						Test selectedTest = (Test) iterator.next();
+					for (final Test selectedTest : selectedTests) {
 						if (selectedTest.isChanged()) {
-							Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+							final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
 							Date newEndDate = selectedTest.getEndTime();
 							if (newEndDate != null) {
 								newEndDate = new Date(newEndDate.getTime() + offset);
@@ -1057,32 +1058,41 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		// XXX - regenerate time line !!!
 
-		Test selectedTest = this.getSelectedTest();
+		final Test selectedTest = this.getSelectedTest();
 		if (selectedTest.getGroupTestId().isVoid()) {
 			this.refreshTemporalStamps();
 		} else {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_START_GROUP_TIME, null,
-																		selectedTest.getStartTime()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+					COMMAND_SET_START_GROUP_TIME,
+					null,
+					selectedTest.getStartTime()));
 		}
 
-		long t1 = System.currentTimeMillis();
+		final long t1 = System.currentTimeMillis();
 		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Level.FINEST);
 	}
 
 	private void addGroupTests() {
 		Log.debugMessage("SchedulerModel.addGroupTests | ", Level.FINEST);
-		Identifier meId = this.monitoredElement.getId();
-		Identifier testGroupId = (Identifier) (this.meTestGroup != null ? this.meTestGroup.get(meId) : null);
+		final Identifier meId = this.monitoredElement.getId();
+		Identifier testGroupId = this.meTestGroup != null ? this.meTestGroup.get(meId) : null;
 		if (testGroupId != null) {
 			try {
-				Test testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
+				final Test testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
 				if (this.aloneGroupTest) {
 					if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
-						Test test = Test.createInstance(LoginManager.getUserId(), this.startGroupDate, null, Identifier.VOID_IDENTIFIER,
-							TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, testGroup.getMeasurementTypeId(), testGroup
-									.getAnalysisTypeId(), testGroup.getEvaluationTypeId(), testGroupId, testGroup
-									.getMonitoredElement(), testGroup.getReturnType(), testGroup.getDescription(),
-							testGroup.getMeasurementSetupIds());
+						final Test test = Test.createInstance(LoginManager.getUserId(),
+								this.startGroupDate,
+								null,
+								Identifier.VOID_IDENTIFIER,
+								TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
+								testGroup.getMeasurementTypeId(),
+								testGroup.getAnalysisTypeId(),
+								testGroup.getEvaluationTypeId(),
+								testGroupId,
+								testGroup.getMonitoredElement(),
+								testGroup.getDescription(),
+								testGroup.getMeasurementSetupIds());
 						StorableObjectPool.putStorableObject(test);
 						this.testIds.add(test.getId());
 						if (this.selectedTestIds != null) {
@@ -1092,9 +1102,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						}
 						this.selectedTestIds.add(test.getId());
 					} else {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
-								.getString("Cannot add tests"), LangModelSchedule.getString("Error"),
-							JOptionPane.OK_OPTION);
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelSchedule.getString("Cannot add tests"),
+								LangModelSchedule.getString("Error"),
+								JOptionPane.OK_OPTION);
 					}
 				}
 			} catch (ApplicationException e) {
@@ -1116,27 +1127,25 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					}
 				} else {
 
-					SortedSet selectedTests = new TreeSet(new WrapperComparator(TestWrapper.getInstance(),
-																				TestWrapper.COLUMN_START_TIME));
-					selectedTests.addAll(StorableObjectPool.getStorableObjects(this.selectedTestIds, true));
-					Test firstTest = ((Test) selectedTests.first());
-					Test lastTest = ((Test) selectedTests.last());
+					final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator(TestWrapper.getInstance(),
+							TestWrapper.COLUMN_START_TIME));
+					final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
+					selectedTests.addAll(tests);
+					final Test firstTest = selectedTests.first();
+					final Test lastTest = selectedTests.last();
 
-					Date endTime = lastTest.getEndTime();
-					long firstTime = firstTest.getStartTime().getTime();
-					long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval
-							- firstTime;
+					final Date endTime = lastTest.getEndTime();
+					final long firstTime = firstTest.getStartTime().getTime();
+					final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
 
-					assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime),
-						Level.FINEST);
+					assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Level.FINEST);
 					assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
 
 					this.selectedTestIds.clear();
 
 					boolean correct = true;
-					for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
-						Test selectedTest = (Test) iterator.next();
-						Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
+					for (final Test selectedTest : selectedTests) {
+						final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
 						Date endDate = selectedTest.getEndTime();
 						if (endDate != null) {
 							endDate = new Date(endDate.getTime() + offset);
@@ -1148,17 +1157,18 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						// new endDate " + endDate, Log.FINEST);
 						correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
 						if (!correct) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), LangModelSchedule
-									.getString("Cannot add tests"), LangModelSchedule.getString("Error"),
-								JOptionPane.OK_OPTION);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+									LangModelSchedule.getString("Cannot add tests"),
+									LangModelSchedule.getString("Error"),
+									JOptionPane.OK_OPTION);
 							break;
 						}
 					}
 
 					if (correct) {
 						for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
-							Test selectedTest = (Test) iterator.next();
-							Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
+							final Test selectedTest = (Test) iterator.next();
+							final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
 							Date endDate = selectedTest.getEndTime();
 							if (endDate != null) {
 								endDate = new Date(endDate.getTime() + offset);
@@ -1168,13 +1178,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							// | new startDate " + startDate, Log.FINEST);
 							// Log.debugMessage("SchedulerModel.addGroupTests
 							// | new endDate " + endDate, Log.FINEST);
-							Test test = Test.createInstance(LoginManager.getUserId(), startDate, endDate, selectedTest
-									.getTemporalPatternId(), selectedTest.getTemporalType(), selectedTest
-									.getMeasurementTypeId(), selectedTest.getAnalysisTypeId(), selectedTest
-									.getEvaluationTypeId(), testGroupId, selectedTest.getMonitoredElement(),
-								selectedTest.getReturnType(), selectedTest.getDescription(), selectedTest
-										.getMeasurementSetupIds());
-							Identifier testId = test.getId();
+							final Test test = Test.createInstance(LoginManager.getUserId(),
+									startDate,
+									endDate,
+									selectedTest.getTemporalPatternId(),
+									selectedTest.getTemporalType(),
+									selectedTest.getMeasurementTypeId(),
+									selectedTest.getAnalysisTypeId(),
+									selectedTest.getEvaluationTypeId(),
+									testGroupId,
+									selectedTest.getMonitoredElement(),
+									selectedTest.getDescription(),
+									selectedTest.getMeasurementSetupIds());
+							final Identifier testId = test.getId();
 							if (testGroupId == null || testGroupId.isVoid()) {
 								testGroupId = testId;
 								test.setGroupTestId(testGroupId);
@@ -1182,8 +1198,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							StorableObjectPool.putStorableObject(test);
 							this.testIds.add(testId.getId());
 							this.selectedTestIds.add(testId);
-							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId() + " at "
-									+ startDate + "," + endDate, Level.FINEST);
+							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
+									+ " at " + startDate + "," + endDate, Level.FINEST);
 						}
 					}
 
@@ -1198,30 +1214,22 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 	}
 
-	public boolean isValid(	final Date startDate,
-							final Date endDate,
-							final Identifier monitoredElementId) {
+	public boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
 		boolean result = true;
 		Log.debugMessage("SchedulerModel.isValid | ", Level.FINEST);
 		try {
-			for (Iterator iterator = StorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator
-					.hasNext();) {
-				Test test = (Test) iterator.next();
-				Date startTime = test.getStartTime();
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
+			for (final Test test : tests) {
+				final Date startTime = test.getStartTime();
 				Date endTime = test.getEndTime();
 				if (endTime == null) {
 					endTime = startTime;
 				}
-				Log
-						.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate,
-							Level.FINEST);
+				Log.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate, Level.FINEST);
 
-				Log
-						.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime,
-							Level.FINEST);
+				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime, Level.FINEST);
 				if (test.getMonitoredElement().getId().equals(monitoredElementId)
-						&& ((endDate != null && endDate.after(startTime) && endDate.before(endTime)) || (startDate
-								.after(startTime) && startDate.before(endTime)))) {
+						&& ((endDate != null && endDate.after(startTime) && endDate.before(endTime)) || (startDate.after(startTime) && startDate.before(endTime)))) {
 					result = false;
 					break;
 				}
@@ -1234,12 +1242,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		return result;
 	}
 
-	public static Color getColor(TestStatus testStatus) {
+	public static Color getColor(final TestStatus testStatus) {
 		return getColor(testStatus, false);
 	}
 
-	public static Color getColor(	TestStatus testStatus,
-									boolean selected) {
+	public static Color getColor(final TestStatus testStatus, final boolean selected) {
 		Color color;
 		switch (testStatus.value()) {
 			case TestStatus._TEST_STATUS_COMPLETED:

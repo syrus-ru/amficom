@@ -34,11 +34,11 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 
@@ -111,8 +111,8 @@ ActionListener, PropertyChangeListener {
 //	private SchedulerModel			schedulerModel;
 
 	private static final int		MAX_ZOOM			= 50;
-	Map								testLines			= new HashMap();
-	Map								testTemporalLines	= new HashMap();
+	Map<Identifier, TestLine> testLines = new HashMap<Identifier, TestLine>();
+	Map testTemporalLines = new HashMap();
 
 	private PlanToolBar				toolBar;
 
@@ -133,6 +133,7 @@ ActionListener, PropertyChangeListener {
 		
 		this.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				int width = PlanPanel.this.getWidth();
 				Dimension dimension = null;
@@ -155,14 +156,10 @@ ActionListener, PropertyChangeListener {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				try {
-					schedulerModel.unselectTests();
-				} catch (ApplicationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				schedulerModel.unselectTests();
 			}
 			
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
@@ -180,6 +177,7 @@ ActionListener, PropertyChangeListener {
 		});
 		this.addMouseMotionListener(new MouseMotionAdapter() {
 
+			@Override
 			public void mouseDragged(MouseEvent e) {
 				PlanPanel.this.currentPosition = e.getPoint();
 
@@ -419,6 +417,7 @@ ActionListener, PropertyChangeListener {
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
@@ -588,24 +587,21 @@ ActionListener, PropertyChangeListener {
 		super.repaint();
 		super.revalidate();
 		this.parent.repaint();
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			TestLine line = (TestLine) this.testLines.get(key);
+		for (final Identifier monitoredElementId : this.testLines.keySet()) {
+			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTests();
 			line.refreshTimeItems();
 		}
 	}
 
 	private void updateTest() {
-		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			TestLine line = (TestLine) this.testLines.get(key);
+		for (final Identifier monitoredElementId : this.testLines.keySet()) {
+			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTest();
-			Rectangle visibleRectangle = line.getVisibleRectangle();
+			final Rectangle visibleRectangle = line.getVisibleRectangle();
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}
-
 		}
 	}
 
@@ -613,23 +609,23 @@ ActionListener, PropertyChangeListener {
 		try {
 			for (Iterator it = StorableObjectPool.getStorableObjects(((SchedulerModel) this.aContext.getApplicationModel()).getTestIds(), true).iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
-				MonitoredElement monitoredElement = test.getMonitoredElement();
-				if (!this.testLines.keySet().contains(monitoredElement)) {
-					TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElement.getId());
+				final MonitoredElement monitoredElement = test.getMonitoredElement();
+				final Identifier monitoredElementId = monitoredElement.getId();
+				if (!this.testLines.containsKey(monitoredElementId)) {
+					final TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElementId);
 					// testLine.setTestTemporalStamps((TestTemporalStamps)
 					// this.testTemporalLines.get(monitoredElement));
-					this.testLines.put(monitoredElement, testLine);
+					this.testLines.put(monitoredElementId, testLine);
 					testLine.setPreferredSize(new Dimension(this.getWidth(), 25));
 				}
 			}
 
 			this.removeAll();
-			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
-				TestLine testLine = (TestLine) this.testLines.get(it.next());
+			for (final Identifier monitoredElementId : this.testLines.keySet()) {
+				final TestLine testLine = this.testLines.get(monitoredElementId);
 				this.add(testLine);
 			}
-			
-			
+
 			super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 
 			this.updateTestLinesTimeRegion();

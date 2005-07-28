@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.13 2005/07/28 10:08:13 bob Exp $
+ * $Id: TimeLine.java,v 1.14 2005/07/28 20:55:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -29,8 +28,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/28 10:08:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/07/28 20:55:07 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -45,7 +44,7 @@ public abstract class TimeLine extends JComponent {
 	long		end = 0;
 	double		scale = 0.0;
 
-	SortedSet	timeItems	= new TreeSet();
+	SortedSet<TestTimeItem>	timeItems	= new TreeSet<TestTimeItem>();
 
 	public TimeLine() {
 		
@@ -62,6 +61,7 @@ public abstract class TimeLine extends JComponent {
 	private void createComponentListener() {
 		this.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentResized(ComponentEvent e) {
 				updateScale();
 			}
@@ -108,12 +108,12 @@ public abstract class TimeLine extends JComponent {
 
 	abstract void refreshTimeItems();
 	
+	@Override
 	public String getToolTipText(MouseEvent event) {
 		int x = event.getX();
 //		Log.debugMessage("TimeLine.getToolTipText | this.timeItems.size() " + this.timeItems.size(), Log.FINEST);
 		if (!this.timeItems.isEmpty()) {
-			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
-				TestTimeItem testTimeItem = (TestTimeItem) it.next();
+			for (final TestTimeItem testTimeItem : this.timeItems) {
 //				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x " + testTimeItem.x, Log.FINEST);
 //				Log.debugMessage("TimeLine.getToolTipText | x " + x, Log.FINEST);
 //				Log.debugMessage("TimeLine.getToolTipText | testTimeItem.x + testTimeItem.getWidth() " + (testTimeItem.x + testTimeItem.getWidth()), Log.FINEST);
@@ -121,12 +121,10 @@ public abstract class TimeLine extends JComponent {
 					Object object = testTimeItem.object;
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 					if (object instanceof Test) {
-						Test test = (Test)object;
-						return sdf
-						.format(test.getStartTime());
+						final Test test = (Test) object;
+						return sdf.format(test.getStartTime());
 					}
-					return sdf
-							.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
+					return sdf.format(new Date((long) (this.start + ((testTimeItem.x - PlanPanel.MARGIN / 2) / this.scale))));
 				}
 			}
 		}
@@ -147,6 +145,7 @@ public abstract class TimeLine extends JComponent {
 		super.revalidate();
 	}
 	
+	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
