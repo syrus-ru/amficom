@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.53 2005/07/13 19:35:43 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.54 2005/07/28 10:25:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,13 +21,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/07/13 19:35:43 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/28 10:25:43 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -110,13 +111,14 @@ public class ClientMeasurementServer {
 				ServerProcessWrapper.CMSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE)).retrieveForServerAndCodename(serverId, processCodename);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId, processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			login = user.getLogin();
 
 			/*	Init database object loader*/
 			DatabaseObjectLoader.init(user.getId());
-	
+
 			/*	Create session environment*/
 			CMServerSessionEnvironment.createInstance(server.getHostName());
 	
