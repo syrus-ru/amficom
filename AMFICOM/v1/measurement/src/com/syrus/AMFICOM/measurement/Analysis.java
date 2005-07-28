@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.77 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: Analysis.java,v 1.78 2005/07/28 09:09:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.78 $, $Date: 2005/07/28 09:09:33 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -107,6 +107,7 @@ public final class Analysis extends Action {
 		super.fromTransferable(at, null, new Identifier(at.monitoredElementId), null);
 
 		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at._typeId), true);
+		this.name = at.name;
 		final Identifier parentActionId = new Identifier(at.measurementId);
 		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
 				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
