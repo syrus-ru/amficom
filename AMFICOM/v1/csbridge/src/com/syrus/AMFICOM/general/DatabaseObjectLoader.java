@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.25 2005/07/27 16:37:18 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.26 2005/07/28 10:16:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/07/27 16:37:18 $
+ * @version $Revision: 1.26 $, $Date: 2005/07/28 10:16:45 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -24,7 +24,11 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		userId = userId1;
 	}
 
-	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	/**
+	 * Overridden in:
+	 * CMServerObjectLoader
+	 */
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -35,7 +39,11 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		return database.retrieveByIdsByCondition(ids, null);
 	}
 
-	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	/**
+	 * Overridden in:
+	 * CMServerObjectLoader
+	 */
+	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
