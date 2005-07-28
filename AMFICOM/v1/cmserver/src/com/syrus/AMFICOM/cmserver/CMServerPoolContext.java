@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.8 2005/07/13 19:35:43 arseniy Exp $
+ * $Id: CMServerPoolContext.java,v 1.9 2005/07/28 10:25:34 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,16 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/13 19:35:43 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/28 10:25:34 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -58,27 +50,13 @@ final class CMServerPoolContext extends PoolContext {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
 				DATABASE_LOADER_ONLY)).booleanValue();
 
-		GeneralObjectLoader generalObjectLoader;
-		AdministrationObjectLoader administrationObjectLoader;
-		ConfigurationObjectLoader configurationObjectLoader;
-		MeasurementObjectLoader measurementObjectLoader;
+		ObjectLoader objectLoader;
 		if (!databaseLoaderOnly) {
-			/*
-			 * refreshTimeout is needed for
-			 * MeasurementStorableObjectPool only.
-			 */
 			final long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L;
-
-			generalObjectLoader = new CMServerGeneralObjectLoader();
-			administrationObjectLoader = new CMServerAdministrationObjectLoader();
-			configurationObjectLoader = new CMServerConfigurationObjectLoader();
-			measurementObjectLoader = new CMServerMeasurementObjectLoader(refreshTimeout, this.cmServerServantManager);
+			objectLoader = new CMServerObjectLoader(refreshTimeout, this.cmServerServantManager);
 		}
 		else {
-			generalObjectLoader = new DatabaseGeneralObjectLoader();
-			administrationObjectLoader = new DatabaseAdministrationObjectLoader();
-			configurationObjectLoader = new DatabaseConfigurationObjectLoader();
-			measurementObjectLoader = new DatabaseMeasurementObjectLoader();
+			objectLoader = new DatabaseObjectLoader();
 		}
 
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
@@ -88,10 +66,10 @@ final class CMServerPoolContext extends PoolContext {
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
 		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
 
-		GeneralStorableObjectPool.init(generalObjectLoader, lruMapClass, generalPoolSize);
-		AdministrationStorableObjectPool.init(administrationObjectLoader, lruMapClass, administrationPoolSize);
-		ConfigurationStorableObjectPool.init(configurationObjectLoader, lruMapClass, configurationPoolSize);
-		MeasurementStorableObjectPool.init(measurementObjectLoader, lruMapClass, measurementPoolSize);
-
+		StorableObjectPool.init(objectLoader, lruMapClass);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
 	}
 }
