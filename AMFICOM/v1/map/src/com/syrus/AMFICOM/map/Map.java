@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.62 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: Map.java,v 1.63 2005/07/28 11:24:17 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.63 $, $Date: 2005/07/28 11:24:17 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -74,7 +74,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * Набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -100,9 +100,8 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	Map(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final MapDatabase database = (MapDatabase) DatabaseContext.getDatabase(ObjectEntities.MAP_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MAP_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -860,7 +859,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
@@ -870,7 +869,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		}
 	}
 
-	public static Map createInstance(final Identifier creatorId, final Identifier domainId, final java.util.Map exportMap1)
+	public static Map createInstance(final Identifier creatorId, final Identifier domainId, final java.util.Map<String, Object> exportMap1)
 			throws CreateObjectException {
 		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		final String name1 = (String) exportMap1.get(COLUMN_NAME);
