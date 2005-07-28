@@ -406,7 +406,7 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		CompositeEventList eList = Heap.getEventList();
 		CompositeEventList.Walker w = eList.new Walker();
 
-		clearTable();
+		tModel.clear();
 
 		for (int row = 0; row < nRows; row++, view.toNextRow(w))
 		{
@@ -529,17 +529,10 @@ implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		}
 		setVisible(true);
 	}
-	
-	private void clearTable() {
-		for (Iterator it = tModel.getValues().iterator(); it.hasNext();) {
-				it.next();
-			it.remove();
-			}
-	}
 
 	public void primaryRefAnalysisRemoved() {
 		primaryOpened = false;
-		clearTable();
+		tModel.clear();
 		
 		this.jTable.revalidate();
 		this.jTable.repaint();
