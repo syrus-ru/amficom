@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.142 2005/07/28 10:13:24 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.143 2005/07/28 20:55:56 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/07/28 10:13:24 $
+ * @version $Revision: 1.143 $, $Date: 2005/07/28 20:55:56 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -109,7 +109,7 @@ public final class StorableObjectPool {
 	}
 
 	private static void addObjectPool(final short entityCode, final int objectPoolSize) {
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 		try {
 			final Constructor constructor = objectPoolClass.getConstructor(new Class[] { int.class});
 			final Object obj = constructor.newInstance(new Object[] { new Integer(objectPoolSize)});
