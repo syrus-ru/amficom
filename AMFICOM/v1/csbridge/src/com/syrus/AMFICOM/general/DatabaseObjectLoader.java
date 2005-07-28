@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.27 2005/07/28 10:42:09 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.28 2005/07/28 10:44:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/07/28 10:42:09 $
+ * @version $Revision: 1.28 $, $Date: 2005/07/28 10:44:23 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -86,8 +86,9 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
 		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		if (versionsMap.isEmpty())
+		if (versionsMap.isEmpty()) {
 			return Collections.emptySet();
+		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
@@ -96,8 +97,9 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	}
 
 	public final void delete(final Set<? extends Identifiable> identifiables) {
-		if (identifiables == null || identifiables.isEmpty())
+		if (identifiables == null || identifiables.isEmpty()) {
 			return;
+		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(identifiables);
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
