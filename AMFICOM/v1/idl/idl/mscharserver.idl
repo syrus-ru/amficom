@@ -1,5 +1,5 @@
 /*-
- * $Id: mscharserver.idl,v 1.7 2005/07/28 15:37:00 max Exp $
+ * $Id: mscharserver.idl,v 1.8 2005/07/28 16:47:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ module AMFICOM {
 
 module mscharserver {
 	module corba {
-		interface MscharServer: general::corba::CommonServer {
+		interface MscharServer : general::corba::CommonServer, general::corba::IdentifierGeneratorServer {
 /*-************************************************************
  * MapInfo -- transmit image, cancel rendering, finding.      *
  **************************************************************/
