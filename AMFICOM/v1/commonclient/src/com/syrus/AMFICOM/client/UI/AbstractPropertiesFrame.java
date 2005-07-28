@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractPropertiesFrame.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.2 2005/07/28 10:03:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/28 10:03:02 $
  * @module commonclient_v1
  */
 
@@ -44,6 +45,7 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		this.setIconifiable(true);
 		this.setMaximizable(true);
 		this.setResizable(true);
+		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		this.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 

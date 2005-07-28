@@ -1,5 +1,5 @@
 /*-
- * $Id: ShowWindowCommand.java,v 1.2 2005/06/21 14:24:56 bob Exp $
+ * $Id: ShowWindowCommand.java,v 1.3 2005/07/28 10:03:02 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.beans.PropertyVetoException;
 import javax.swing.JInternalFrame;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/21 14:24:56 $
+ * @version $Revision: 1.3 $, $Date: 2005/07/28 10:03:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -32,6 +32,7 @@ public class ShowWindowCommand extends AbstractCommand {
 			if (!this.internalFrame.isVisible()) {
 				this.internalFrame.setVisible(true);
 			}
+			this.internalFrame.toFront();
 			try {
 				this.internalFrame.setSelected(true);
 			} catch (PropertyVetoException pve) {

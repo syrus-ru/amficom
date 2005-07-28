@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.5 2005/07/11 08:19:41 bass Exp $
+ * $Id: ApplicationModel.java,v 1.6 2005/07/28 10:03:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 08:19:41 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/07/28 10:03:02 $
  * @module generalclient_v1
  */
 public class ApplicationModel {
@@ -290,10 +290,18 @@ public class ApplicationModel {
 
 	/**
 	 * получить св€занную с элементом команду
+	 * @throws NoSuchMethodException 
 	 */
 	public Command getCommand(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
-		return (entry == null) ? VoidCommand.VOID_COMMAND : entry.command;
+		try {
+			ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+			if (entry == null)
+				throw new NoSuchMethodException("Command '" + name + "' not found in ApplicationModel");
+			return entry.command;
+		} catch (NoSuchMethodException e) {
+			Log.errorException(e);
+			return VoidCommand.VOID_COMMAND;
+		}
 	}
 
 	/**
@@ -349,8 +357,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.5 $, $Date: 2005/07/11 08:19:41 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.6 $, $Date: 2005/07/28 10:03:02 $
 	 * @module generalclient_v1
 	 */
 	class ApplicationEntry {

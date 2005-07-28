@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.11 2005/06/17 14:32:06 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.12 2005/07/28 10:03:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -47,7 +48,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/17 14:32:06 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 10:03:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -415,6 +416,12 @@ implements PropertyChangeListener {
 
 		aModel.fireModelChanged();
 
+	}
+	
+	protected void setFramesVisible(boolean b) {
+		for (Component component : this.desktopPane.getComponents()) {
+			component.setVisible(b);
+		}
 	}
 	
 	protected void disposeModule() {
