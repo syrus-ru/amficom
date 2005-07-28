@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.14 2005/07/28 15:32:08 max Exp $
+ * $Id: MscharServerImpl.java,v 1.15 2005/07/28 16:42:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
+import com.syrus.AMFICOM.general.IdentifierGeneratorServerCore;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
@@ -34,11 +34,11 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/28 15:32:08 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/07/28 16:42:01 $
+ * @author $Author: arseniy $
  * @module mscharserver_v1
  */
-public final class MscharServerImpl extends ServerCore implements MscharServerOperations {
+public final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
 	private static final long serialVersionUID = 3762810480783274295L;
 
 	MscharServerImpl() {
@@ -46,24 +46,21 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 				MscharServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
 	}
 
-	public IdlRenderedImage transmitTopologicalImage(
-			final IdlTopologicalImageQuery topologicalImageQuery_Transferable,
-			final IdlSessionKey idlSessionKey)
-			throws AMFICOMRemoteException {
+	public IdlRenderedImage transmitTopologicalImage(final IdlTopologicalImageQuery topologicalImageQueryT,
+			final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			validateAccess(idlSessionKey, userId, domainId);
-			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit "
-					+ '\'', Level.INFO);
-			TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
+			super.validateAccess(idlSessionKey, userId, domainId);
+			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit " + '\'', Level.INFO);
+			final TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQueryT);
 			byte[] image;
 			try {
 				image = MapInfoPool.getImage(topologicalImageQuery, new SessionKey(idlSessionKey));
 			} catch (IllegalDataException e) {
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 			}
-			IdlRenderedImage renderedImageT = new IdlRenderedImage(image);
+			final IdlRenderedImage renderedImageT = new IdlRenderedImage(image);
 			return renderedImageT;
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
@@ -71,16 +68,13 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 			throw super.processDefaultThrowable(t);
 		}
 	}
-	
-	public void stopRenderTopologicalImage(
-			final IdlSessionKey idlSessionKey)
-			throws AMFICOMRemoteException {
+
+	public void stopRenderTopologicalImage(final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			validateAccess(idlSessionKey, userId, domainId);
-			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image"
-					+ '\'', Level.INFO);
+			super.validateAccess(idlSessionKey, userId, domainId);
+			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image" + '\'', Level.INFO);
 			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
@@ -89,62 +83,63 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 		}
 	}
 	
-	public IdlMapFeature[] findFeature(String featureName, IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+	public IdlMapFeature[] findFeature(final String featureName, final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			validateAccess(idlSessionKey, userId, domainId);
+			super.validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Level.INFO);
-			List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
-			IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
+			final List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
+			final IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;
-			for (MapFeature mapFeature: mapFeatures) {
-				idlMapFeatures[i++] = mapFeature.getTransferable();				
+			for (final MapFeature mapFeature : mapFeatures) {
+				idlMapFeatures[i++] = mapFeature.getTransferable();
 			}
 			return idlMapFeatures;
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
-		}	
+		}
 	}
-	
-	public IdlMapDescriptor[] getMapDescriptors(IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+
+	public IdlMapDescriptor[] getMapDescriptors(final IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			validateAccess(idlSessionKey, userId, domainId);
-			MapDescriptorParser parser = new MapDescriptorParser();
+			super.validateAccess(idlSessionKey, userId, domainId);
+			final MapDescriptorParser parser = new MapDescriptorParser();
 			List<MapDescriptor> mapDescriptors = parser.getMapDescriptors();
 			if (mapDescriptors.isEmpty()) {
-				MapDescriptor nullMapDescriptor = new MapDescriptor("", "", "", 0, 0);
-				IdlMapDescriptor nullTransferable = nullMapDescriptor.getTransferable();
-				IdlMapDescriptor[] IdlMapDescriptors = new IdlMapDescriptor[] {nullTransferable};
+				final MapDescriptor nullMapDescriptor = new MapDescriptor("", "", "", 0, 0);
+				final IdlMapDescriptor nullTransferable = nullMapDescriptor.getTransferable();
+				final IdlMapDescriptor[] IdlMapDescriptors = new IdlMapDescriptor[] { nullTransferable };
 				return IdlMapDescriptors;
 			}
-			IdlMapDescriptor[] idlMapDescriptors = new IdlMapDescriptor[mapDescriptors.size()];
+			final IdlMapDescriptor[] idlMapDescriptors = new IdlMapDescriptor[mapDescriptors.size()];
 			int i = 0;
-			for (MapDescriptor descriptor: mapDescriptors) {
+			for (final MapDescriptor descriptor : mapDescriptors) {
 				idlMapDescriptors[i++] = descriptor.getTransferable();
 			}
-			return idlMapDescriptors;	
+			return idlMapDescriptors;
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
 		}
 	}
-	
-	public IdlLayerDescriptor[] getLayerDescriptors(IdlMapDescriptor idlMapDescriptor, IdlSessionKey sessionKey) throws AMFICOMRemoteException {
+
+	public IdlLayerDescriptor[] getLayerDescriptors(final IdlMapDescriptor idlMapDescriptor, final IdlSessionKey sessionKey)
+			throws AMFICOMRemoteException {
 		try {
-			MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
-			LayerDescriptorParser parser = new LayerDescriptorParser();
-			List<LayerDescriptor> layerDescriptors = parser.getLayerFiles(mapDescriptor);
-			IdlLayerDescriptor[] idlLayerDescriptors = new IdlLayerDescriptor[layerDescriptors.size()];
+			final MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
+			final LayerDescriptorParser parser = new LayerDescriptorParser();
+			final List<LayerDescriptor> layerDescriptors = parser.getLayerFiles(mapDescriptor);
+			final IdlLayerDescriptor[] idlLayerDescriptors = new IdlLayerDescriptor[layerDescriptors.size()];
 			if (layerDescriptors.isEmpty()) {
-				LayerDescriptor nullLayerDescriptor = new LayerDescriptor("", "", 0, 0);
-				IdlLayerDescriptor nullTransferable = nullLayerDescriptor.getTransferable();
-				IdlLayerDescriptor[] IdlLayerDescriptors = new IdlLayerDescriptor[] {nullTransferable};
+				final LayerDescriptor nullLayerDescriptor = new LayerDescriptor("", "", 0, 0);
+				final IdlLayerDescriptor nullTransferable = nullLayerDescriptor.getTransferable();
+				final IdlLayerDescriptor[] IdlLayerDescriptors = new IdlLayerDescriptor[] { nullTransferable };
 				return IdlLayerDescriptors;
 			}
 			int i = 0;
-			for (LayerDescriptor layerFile: layerDescriptors) {
+			for (final LayerDescriptor layerFile : layerDescriptors) {
 				idlLayerDescriptors[i++] = layerFile.getTransferable();
 			}
 			return idlLayerDescriptors;
@@ -153,14 +148,15 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 		}
 	}
 
-	public byte[] loadFile(String fileName, long offset, IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+	public byte[] loadFile(final String fileName, final long offset, final IdlSessionKey idlSessionKey)
+			throws AMFICOMRemoteException {
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			validateAccess(idlSessionKey, userId, domainId);
-			byte[] partOfFile = FileLoader.fileToByte(fileName, offset);
+			super.validateAccess(idlSessionKey, userId, domainId);
+			final byte[] partOfFile = FileLoader.fileToByte(fileName, offset);
 			return partOfFile;
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
