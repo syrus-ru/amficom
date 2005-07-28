@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.12 2005/07/28 13:33:52 saa Exp $
+ * $Id: GUIUtil.java,v 1.13 2005/07/28 15:43:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/07/28 13:33:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/28 15:43:28 $
  * @module
  */
 public class GUIUtil
@@ -67,12 +67,14 @@ public class GUIUtil
 	 */
 	public static void processApplicationException(ApplicationException e) {
 		if (e instanceof CommunicationException) {
+			e.printStackTrace();
 			showErrorMessage(MSG_ERROR_COMMUNICATION_EXCEPTION);
 		} else if (e instanceof DatabaseException) {
+			e.printStackTrace();
 			showErrorMessage(MSG_ERROR_DATABASE_EXCEPTION);
 		} else {
-			Log.debugException(e, Log.DEBUGLEVEL03);
 			e.printStackTrace();
+			Log.debugException(e, Log.DEBUGLEVEL03);
 		}
 	}
 
