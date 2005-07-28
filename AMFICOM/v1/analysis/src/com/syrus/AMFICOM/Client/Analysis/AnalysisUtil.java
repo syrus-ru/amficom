@@ -57,7 +57,15 @@ public class AnalysisUtil
 	}
 
 	/**
-	 * определяет measurement по его результату
+	 * проверяет, измерения ли это результат
+	 * @return true, если это результат изменения
+	 */
+	public static boolean hasMeasurementByResult(Result result) {
+		return result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT);
+	}
+	/**
+	 * определяет measurement по его результату. Перед вызовом проверьте
+	 * {@link #hasMeasurementByResult(Result)}
 	 */
 	public static Measurement getMeasurementByResult(Result result) {
 		return (Measurement)result.getAction();
@@ -85,7 +93,7 @@ public class AnalysisUtil
 		if (bs == null)
 			throw new SimpleApplicationException(SimpleApplicationException.KEY_NULL_REFLECTOGRAMMA);
 
-		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+		if (hasMeasurementByResult(result1)) {
 			Measurement m = getMeasurementByResult(result1);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();

@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand
 {
@@ -93,7 +92,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		//    что будет взят MS первичной.
 		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
 		if (primaryTraceResult != null
-				&& primaryTraceResult.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+				&& AnalysisUtil.hasMeasurementByResult(primaryTraceResult)) {
 			Measurement m = AnalysisUtil.getMeasurementByResult(primaryTraceResult);
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);

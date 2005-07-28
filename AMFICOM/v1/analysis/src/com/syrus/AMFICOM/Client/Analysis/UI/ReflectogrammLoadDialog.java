@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.24 2005/07/28 11:51:29 saa Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.25 2005/07/28 11:59:11 saa Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,12 +48,11 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/07/28 11:51:29 $
+ * @version $Revision: 1.25 $, $Date: 2005/07/28 11:59:11 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -247,7 +246,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 		}
 
 		try {
-			if (this.result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			if (AnalysisUtil.hasMeasurementByResult(this.result)) {
 				Measurement measurement = AnalysisUtil.getMeasurementByResult(this.result);
 				Test test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 				bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
