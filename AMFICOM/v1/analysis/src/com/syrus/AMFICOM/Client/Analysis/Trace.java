@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.7 2005/07/27 07:41:29 saa Exp $
+ * $Id: Trace.java,v 1.8 2005/07/28 12:19:06 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,9 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 
@@ -34,7 +36,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/07/27 07:41:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/28 12:19:06 $
  * @module
  */
 public class Trace {
@@ -66,6 +68,7 @@ public class Trace {
 	}
 	/**
 	 * Открывает рефлектограмму без предварительно полученных результатов анализа
+	 * XXX try to use getTraceWithARIfPossible instead
 	 * @param result результат измерения
 	 * @param ap параметры анализа (будут использованы в момент getMTAE())
 	 * @throws SimpleApplicationException если попытались открыть
@@ -77,6 +80,7 @@ public class Trace {
 	}
 	/**
 	 * Открывает рефлектограмму с предварительно полученными результатами анализа
+	 * XXX try to use getTraceWithARIfPossible instead
 	 * @param result результат измерения
 	 * @param ar результат анализа
 	 * @throws SimpleApplicationException если попытались открыть
@@ -85,6 +89,36 @@ public class Trace {
 	public Trace(Result result, AnalysisResult ar)
 	throws SimpleApplicationException {
 		this(result, null, ar);
+	}
+
+	/**
+	 * Создает Trace на основе результата измерения.
+	 * <p>
+	 * Определяет, есть ли у измерения, создавшего данный результат,
+	 * результат анализа.
+	 * <ul>
+	 * <li> Если результат анализа есть, то создает Trace c этим результатом.
+	 * <li> Если результата анализа нет, то создает Trace с проведением анализа
+	 *      и использованием указанных AnalysisParameters.
+	 * </ul>
+	 * @param result результат измерения, содержащий загружаемую рефлектограмму
+	 * @param ap параметры анализа, которые будут использованы в случае,
+	 *   если у измерения нет готовых результатов анализа
+	 * @return Trace
+	 * @throws ApplicationException ошибка работы с pool'ом или сервером
+	 * @throws DataFormatException нарушение целостности загружаемых данных
+	 * @throws SimpleApplicationException попытались открыть
+	 *   результат, не содержащий рефлектограмму
+	 */
+	public static Trace getTraceWithARIfPossible(Result result,
+			AnalysisParameters ap)
+	throws DataFormatException, ApplicationException, SimpleApplicationException {
+		AnalysisResult ar =
+			AnalysisUtil.getAnalysisResultForResultIfPresent(result);
+		if (ar != null)
+			return new Trace(result, ar);
+		else
+			return new Trace(result, ap);
 	}
 
 	public AnalysisResult getAR() {
