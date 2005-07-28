@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.45 2005/07/26 20:10:26 bass Exp $
+ * $Id: CORBAObjectLoader.java,v 1.46 2005/07/28 10:14:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,19 +27,23 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/26 20:10:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/07/28 10:14:58 $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public class CORBAObjectLoader implements ObjectLoader {
 	protected ServerConnectionManager serverConnectionManager;
 
-	protected CORBAObjectLoader (final ServerConnectionManager serverConnectionManager) {
+	public CORBAObjectLoader (final ServerConnectionManager serverConnectionManager) {
 		this.serverConnectionManager = serverConnectionManager;
 	}
 
 
-	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	/**
+	 * Overridden in:
+	 * CMServerObjectLoader
+	 */
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -72,6 +76,10 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
+	/**
+	 * Overridden in:
+	 * CMServerObjectLoader
+	 */
 	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
