@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.29 2005/07/28 15:47:44 max Exp $
+ * $Id: ServerCore.java,v 1.30 2005/07/28 15:59:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,13 +29,13 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.29 $, $Date: 2005/07/28 15:47:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/28 15:59:12 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */
-public class ServerCore implements CommonServer {
+public abstract class ServerCore implements CommonServer {
 	private static final long serialVersionUID = 2873567194611284256L;
 
 	private LoginServerConnectionManager loginServerConnectionManager;
@@ -247,38 +247,6 @@ public class ServerCore implements CommonServer {
 
 
 
-	// /////////////////////////////// IdentifierGeneratorServer /////////////////////////////////////////////
-
-	public final IdlIdentifier getGeneratedIdentifier(final short entityCode) throws AMFICOMRemoteException {
-		try {
-			Log.debugMessage("ServerCore.getGeneratedIdentifier() | Generating an identifier for '"
-					+ ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
-			return IdentifierGenerator.generateIdentifier(entityCode).getTransferable();
-		} catch (final IllegalObjectEntityException ioee) {
-			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
-		} catch (final IdentifierGenerationException ige) {
-			throw this.processDefaultIdentifierGenerationException(ige, entityCode);
-		} catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
-		}
-	}
-
-	public final IdlIdentifier[] getGeneratedIdentifierRange(final short entityCode, final int size) throws AMFICOMRemoteException {
-		try {
-			Log.debugMessage("ServerCore.getGeneratedIdentifierRange() | Generating " + size
-					+ " identifiers for '" + ObjectEntities.codeToString(entityCode) + "'", Level.CONFIG);
-			return Identifier.createTransferables(IdentifierGenerator.generateIdentifierRange(entityCode, size));
-		} catch (final IllegalObjectEntityException ioee) {
-			throw this.processDefaultIllegalObjectEntityException(ioee, entityCode);
-		} catch (final IdentifierGenerationException ige) {
-			throw this.processDefaultIdentifierGenerationException(ige, entityCode);
-		} catch (final Throwable t) {
-			throw this.processDefaultThrowable(t);
-		}
-	}
-
-
-
 	// /////////////////////////////// Verifiable /////////////////////////////////////////////
 
 	public final void verify(final byte b) {
@@ -326,19 +294,4 @@ public class ServerCore implements CommonServer {
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 	}
 
-	private final AMFICOMRemoteException processDefaultIllegalObjectEntityException(final IllegalObjectEntityException ioee,
-			final short entityCode) {
-		Log.debugException(ioee, Level.SEVERE);
-		return new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-				IdlCompletionStatus.COMPLETED_NO,
-				"Illegal object entity: '" + ObjectEntities.codeToString(entityCode) + "'");
-	}
-
-	private final AMFICOMRemoteException processDefaultIdentifierGenerationException(final IdentifierGenerationException ige,
-			final short entityCode) {
-		Log.debugException(ige, Level.SEVERE);
-		return new AMFICOMRemoteException(IdlErrorCode.ERROR_RETRIEVE,
-				IdlCompletionStatus.COMPLETED_NO,
-				"Cannot create identifier for entity: '" + ObjectEntities.codeToString(entityCode) + "' -- " + ige.getMessage());
-	}
 }
