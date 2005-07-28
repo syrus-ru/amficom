@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.3 2005/06/21 15:11:19 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.4 2005/07/28 13:17:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,14 @@ package com.syrus.AMFICOM.client.UI.tree;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
@@ -30,7 +33,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/06/21 15:11:19 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/28 13:17:07 $
  * @module generalclient_v1
  */
 
@@ -38,6 +41,7 @@ public class IconedTreeUI {
 	protected LogicalTreeUI treeUI;
 	JScrollPane scrollPane;
 	IconedTreeToolBar toolBar;
+	protected boolean linkObjects = false;
 	
 	public IconedTreeUI(Item rootItem) {
 		this.treeUI = new LogicalTreeUI(rootItem);
@@ -75,6 +79,9 @@ public class IconedTreeUI {
 	public Item findNode(Item item, Object object, boolean usePopulate) {
 		if (item.getObject().equals(object))
 			return item;
+		if (usePopulate && item instanceof Populatable)
+			((Populatable)item).populate();
+		
 		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
 			Item child = (Item)it.next();
 			if (child.getObject().equals(object))
@@ -82,13 +89,42 @@ public class IconedTreeUI {
 		}
 		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
 			Item child = (Item)it.next();
-			if (usePopulate && child instanceof Populatable)
-				((Populatable)child).populate();
 			Item found = findNode(child, object, usePopulate);
 			if (found != null)
 				return found;
 		}
 		return null;
+	}
+	
+	public Collection findNodes(Item item, Collection objects, boolean usePopulate) {
+		Collection<Item> items = new LinkedList<Item>();
+		fillFoundNodes(item, objects, items, usePopulate);
+		return items;
+	}
+	
+	private void fillFoundNodes(Item item, Collection objects, Collection<Item> items, boolean usePopulate) {
+		if(objects.contains(item.getObject()))
+			items.add(item);
+		if (usePopulate && item instanceof Populatable)
+			((Populatable)item).populate();
+		for(Iterator iter = item.getChildren().iterator(); iter.hasNext();) {
+			Item childNode = (Item )iter.next();
+			fillFoundNodes(childNode, objects, items, usePopulate);
+		}
+	}
+	
+	public void updateRecursively(Item item) {
+		if (item instanceof Populatable) {
+			Populatable populatable = (Populatable)item;
+			if (populatable.isPopulated())
+				populatable.populate();
+			for (Iterator it = item.getChildren().iterator(); it.hasNext();)
+				updateRecursively((Item)it.next());
+		}
+	}
+	
+	public boolean isLinkObjects() {
+		return this.linkObjects;
 	}
 	
 	public class IconedTreeToolBar extends JToolBar {
@@ -109,16 +145,17 @@ public class IconedTreeUI {
 				}
 			});
 			this.add(refreshButton);
-		}
-		
-		public void updateRecursively(Item item) {
-			if (item instanceof Populatable) {
-				Populatable populatable = (Populatable)item;
-				if (populatable.isPopulated())
-					populatable.populate();
-				for (Iterator it = item.getChildren().iterator(); it.hasNext();)
-					updateRecursively((Item)it.next());
-			}
+			
+			final JToggleButton	syncButton = new JToggleButton();
+			syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
+			syncButton.setToolTipText(LangModelGeneral.getString("Button.Synchronize"));
+			syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			syncButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					IconedTreeUI.this.linkObjects = ((JToggleButton)e.getSource()).isSelected();
+				}
+			});
+			this.add(syncButton);
 		}
 	}
 }
