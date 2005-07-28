@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.12 2005/07/11 08:18:57 bass Exp $
+ * $Id: MscharServerImpl.java,v 1.13 2005/07/28 13:20:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
@@ -22,16 +23,17 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServerOperations;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/07/28 13:20:51 $
+ * @author $Author: arseniy $
  * @module mscharserver_v1
  */
-public final class MscharServerImpl extends MscharServerSchemeTransmit {
+public final class MscharServerImpl extends ServerCore implements MscharServerOperations {
 	private static final long serialVersionUID = 3762810480783274295L;
 
 	MscharServerImpl() {
