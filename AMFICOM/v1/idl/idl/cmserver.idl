@@ -1,5 +1,5 @@
 /*-
- * $Id: cmserver.idl,v 1.61 2005/07/28 10:27:21 arseniy Exp $
+ * $Id: cmserver.idl,v 1.62 2005/07/28 16:01:18 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ module AMFICOM {
 module cmserver {
 module corba {
 
-	interface CMServer : general::corba::CommonServer {
+	interface CMServer : general::corba::CommonServer, general::corba::IdentifierGeneratorServer {
 		//Ничего особенного
 	};
 

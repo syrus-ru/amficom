@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.101 2005/07/26 17:23:28 arseniy Exp $
+ * $Id: general.idl,v 1.102 2005/07/28 16:00:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -216,9 +216,7 @@ module general {
 		/**
 		* common interface for all servers
 		*/
-		abstract interface CommonServer :
-				Verifiable,
-				IdentifierGeneratorServer {
+		abstract interface CommonServer : Verifiable {
 #pragma version CommonServer 3.0
 
 			IdlStorableObjectSeq transmitStorableObjects(in IdlIdentifierSeq ids,
