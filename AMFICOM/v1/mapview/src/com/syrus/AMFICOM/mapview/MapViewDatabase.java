@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.32 2005/07/26 13:31:25 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.33 2005/07/28 11:40:06 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -42,11 +41,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/26 13:31:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/07/28 11:40:06 $
+ * @author $Author: max $
  * @module mapview_v1
  */
-public final class MapViewDatabase extends StorableObjectDatabase {
+public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
     // domain_id VARCHAR2(32),
     public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(128),
@@ -77,21 +76,13 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	private static String updateMultipleSQLValues;	
 
 
-	private MapView fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof MapView)
-			return (MapView) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
-	
 	@Override
-	public void retrieve(final StorableObject storableObject)
+	public void retrieve(final MapView storableObject)
 			throws IllegalDataException,
 				ObjectNotFoundException,
 				RetrieveObjectException {
-		final MapView mapView = this.fromStorableObject(storableObject);
-		this.retrieveEntity(mapView);
-		final Set<MapView> maps = Collections.singleton(mapView);
+		this.retrieveEntity(storableObject);
+		final Set<MapView> maps = Collections.singleton(storableObject);
 
 		final java.util.Map<Identifier, Set<Identifier>> schemeIdsMap = super.retrieveLinkedEntityIds(maps,
 				MAPVIEW_SCHEME,
@@ -99,10 +90,10 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 				LINK_COLUMN_SCHEME_ID);
 		for (final Identifier id : schemeIdsMap.keySet()) {
 			final Set<Identifier> schemeIds = schemeIdsMap.get(id);
-			if (id.equals(mapView.getId())) {
+			if (id.equals(storableObject.getId())) {
 				try {
 					final Set<Scheme> schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
-					mapView.setSchemes0(schemes);
+					storableObject.setSchemes0(schemes);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(this.getEntityName() + "Database.retrieve | cannot retrieve schemes", ae);
 				}
@@ -147,24 +138,23 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	
 	
 @Override
-		protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+		protected int setEntityForPreparedStatementTmpl(final MapView storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final MapView mapView = this.fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getDomainId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, mapView.getLongitude());
-		preparedStatement.setDouble(++startParameterNumber, mapView.getLatitude());
-		preparedStatement.setDouble(++startParameterNumber, mapView.getScale());
-		preparedStatement.setDouble(++startParameterNumber, mapView.getDefaultScale());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mapView.getMap().getId());					
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLongitude());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLatitude());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getScale());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getDefaultScale());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMap().getId());					
 		return startParameterNumber;
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final MapView mapView = this.fromStorableObject(storableObject);
+	protected String getUpdateSingleSQLValuesTmpl(final MapView storableObject) throws IllegalDataException {
+		final MapView mapView = storableObject;
 		final String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
@@ -177,7 +167,7 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected MapView updateEntityFromResultSet(final MapView storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -193,7 +183,7 @@ public final class MapViewDatabase extends StorableObjectDatabase {
 						0.0,
 						0.0,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 
 		try {
 			map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),

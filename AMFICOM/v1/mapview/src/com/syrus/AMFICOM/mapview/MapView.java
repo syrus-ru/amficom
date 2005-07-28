@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.46 2005/07/26 13:31:25 arseniy Exp $
+* $Id: MapView.java,v 1.47 2005/07/28 11:40:06 max Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -57,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/07/26 13:31:25 $
+ * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2005/07/28 11:40:06 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -83,8 +82,6 @@ public final class MapView extends DomainMember implements Namable {
 	 */
 	private Set<Scheme> schemes;
 
-	private StorableObjectDatabase	mapViewDatabase;
-
 	/** Список кабелей. */
 	protected transient Set<CablePath> cablePaths = new HashSet<CablePath>();
 	
@@ -102,9 +99,8 @@ public final class MapView extends DomainMember implements Namable {
 	MapView(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
 		try {
-			this.mapViewDatabase.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -140,8 +136,6 @@ public final class MapView extends DomainMember implements Namable {
 
 		this.schemes = new HashSet<Scheme>();
 		this.allElements = new LinkedList<MapElement>();
-
-		this.mapViewDatabase = (MapViewDatabase) DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE);
 	}
 	
 	public static MapView createInstance(final Identifier creatorId,
@@ -192,7 +186,7 @@ public final class MapView extends DomainMember implements Namable {
 
 		final Identifier mapId = new Identifier(mvt.mapId);
 		try {
-			this.map = (Map) StorableObjectPool.getStorableObject(mapId, true);
+			this.map = StorableObjectPool.getStorableObject(mapId, true);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
 		}
