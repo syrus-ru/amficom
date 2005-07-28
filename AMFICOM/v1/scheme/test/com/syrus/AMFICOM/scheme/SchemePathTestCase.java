@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.11 2005/07/25 19:34:53 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.12 2005/07/28 10:00:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,6 @@ import junit.framework.TestSuite;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.EmptyConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -38,8 +36,6 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.resource.EmptyResourceObjectLoader;
-import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -49,7 +45,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/25 19:34:53 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 10:00:03 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -102,9 +98,7 @@ public final class SchemePathTestCase extends TestCase {
 				t.printStackTrace();
 			}
 		});
-		ConfigurationStorableObjectPool.init(new EmptyConfigurationObjectLoader(), StorableObjectResizableLRUMap.class);
-		ResourceStorableObjectPool.init(new EmptyResourceObjectLoader(), StorableObjectResizableLRUMap.class);
-		SchemeStorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
+		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
 			private static final long serialVersionUID = -9123341768454319489L;
@@ -287,7 +281,7 @@ public final class SchemePathTestCase extends TestCase {
 	/**
 	 * @see SchemeMonitoringSolution#setSchemePaths(java.util.Set)
 	 */
-	public void testSetSchemePaths() throws CreateObjectException {
+	public void testSetSchemePaths() throws ApplicationException {
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
