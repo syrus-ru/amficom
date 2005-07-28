@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.7 2005/06/24 09:28:55 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.8 2005/07/28 13:59:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,20 +12,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.AMFICOM.event.Event;
 import com.syrus.AMFICOM.event.EventType;
 import com.syrus.AMFICOM.event.corba.IdlEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
+import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/24 09:28:55 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/07/28 13:59:58 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public class EventServerImplementation extends EventServerPOA {
@@ -55,7 +55,7 @@ public class EventServerImplementation extends EventServerPOA {
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, "Cannot create event -- "
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, "Cannot create event -- "
 					+ coe.getMessage());
 		}
 	}
