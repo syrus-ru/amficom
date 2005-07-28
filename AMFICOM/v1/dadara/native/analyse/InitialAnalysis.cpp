@@ -248,8 +248,9 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 					action = ACTION_IGNORE;
 				} else { // связь взаимно-однозначна
 					assert(minBackIndex >= 0); // Vit: -1 если в обратную сторону ни с кем не пересеклись  
-					if (fabs(cnSplash->f_extr) / sqrt(cnSplash->scale)
-						> fabs(caSplash->f_extr) / sqrt(caSplash->scale)) {
+                    const double exponent = 0.75; // показатель степени для функции поиска оптимального масштаба; лежит в (0;1)
+					if (fabs(cnSplash->f_extr) / pow(cnSplash->scale, exponent)
+						> fabs(caSplash->f_extr) / pow(caSplash->scale, exponent) ) {
 						action = ACTION_REPLACE;
 						replaceIndex = minAccIndex;
 					}
