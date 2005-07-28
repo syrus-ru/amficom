@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.53 2005/07/26 11:53:31 arseniy Exp $
+ * $Id: Mark.java,v 1.54 2005/07/28 10:08:49 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/07/26 11:53:31 $
+ * @author $Author: max $
+ * @version $Revision: 1.54 $, $Date: 2005/07/28 10:08:49 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -68,7 +68,7 @@ public final class Mark extends AbstractNode {
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private PhysicalLink physicalLink;
 
@@ -85,9 +85,8 @@ public final class Mark extends AbstractNode {
 	Mark(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final MarkDatabase database = (MarkDatabase) DatabaseContext.getDatabase(ObjectEntities.MARK_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.MARK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -107,7 +106,7 @@ public final class Mark extends AbstractNode {
 		this.building = mt.building;
 
 		try {
-			this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
+			this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -397,9 +396,9 @@ public final class Mark extends AbstractNode {
 
 		double pathLength = 0;
 
-		final List nodeLinks = getPhysicalLink().getNodeLinks();
-		for (final ListIterator listIterator = nodeLinks.listIterator(); listIterator.hasPrevious();) {
-			final NodeLink nl = (NodeLink) listIterator.previous();
+		final List<NodeLink> nodeLinks = getPhysicalLink().getNodeLinks();
+		for (final ListIterator<NodeLink> listIterator = nodeLinks.listIterator(); listIterator.hasPrevious();) {
+			final NodeLink nl = listIterator.previous();
 			if (nl == this.nodeLink) {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
@@ -454,7 +453,7 @@ public final class Mark extends AbstractNode {
 	 */
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
@@ -471,7 +470,7 @@ public final class Mark extends AbstractNode {
 		}
 	}
 
-	public static Mark createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
+	public static Mark createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
 		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		final String name1 = (String) exportMap1.get(COLUMN_NAME);
 		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -494,7 +493,7 @@ public final class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
+			final PhysicalLink physicalLink1 = StorableObjectPool.getStorableObject(physicalLinkId1, false);
 			final Mark mark = new Mark(
 					id1,
 					creatorId,
