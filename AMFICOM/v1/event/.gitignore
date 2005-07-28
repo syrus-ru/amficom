@@ -19,3 +19,4 @@ build.xml
 cache
 logs
 docs
+.pmd

@@ -20,3 +20,4 @@ Makefile.inc
 .project
 .classpath
 .settings
+.pmd

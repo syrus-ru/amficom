@@ -23,3 +23,4 @@ test
 build.xml
 nbproject
 .nbintdb
+.pmd

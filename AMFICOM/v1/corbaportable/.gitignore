@@ -10,3 +10,4 @@ lib
 .project
 .settings
 Makefile.inc
+.pmd

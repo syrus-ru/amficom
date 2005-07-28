@@ -28,3 +28,4 @@ tmp
 nbproject
 build.xml
 .nbintdb
+.pmd

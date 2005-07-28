@@ -21,3 +21,4 @@ test
 .settings
 .classpath
 .project
+.pmd

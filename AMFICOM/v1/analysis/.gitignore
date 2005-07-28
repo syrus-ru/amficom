@@ -19,3 +19,4 @@ clean.cmd
 work
 common.properties
 .mach
+.pmd

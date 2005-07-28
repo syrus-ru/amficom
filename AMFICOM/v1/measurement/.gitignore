@@ -18,3 +18,4 @@ build.xml
 .settings
 .idl
 .#*
+.pmd

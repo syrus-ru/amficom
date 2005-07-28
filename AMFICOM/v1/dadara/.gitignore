@@ -28,3 +28,4 @@ clean.cmd
 .project
 logs
 .settings
+.pmd

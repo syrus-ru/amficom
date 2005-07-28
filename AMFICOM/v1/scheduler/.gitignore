@@ -20,3 +20,4 @@ common.properties
 .classpath
 .project
 docs
+.pmd
