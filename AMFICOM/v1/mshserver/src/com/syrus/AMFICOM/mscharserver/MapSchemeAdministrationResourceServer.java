@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.10 2005/07/28 15:32:08 max Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.11 2005/07/28 16:45:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/28 15:32:08 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/07/28 16:45:41 $
+ * @author $Author: arseniy $
  * @module mscharserver_v1
  */
 public class MapSchemeAdministrationResourceServer {
@@ -93,6 +93,7 @@ public class MapSchemeAdministrationResourceServer {
 		 * Add shutdown hook.
 		 */
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				shutdown();
 			}

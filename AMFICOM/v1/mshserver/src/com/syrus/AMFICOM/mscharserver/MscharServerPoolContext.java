@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerPoolContext.java,v 1.4 2005/07/28 15:32:08 max Exp $
+ * $Id: MscharServerPoolContext.java,v 1.5 2005/07/28 16:45:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/07/28 15:32:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/07/28 16:45:41 $
  * @module mscharserver_v1
  */
 final class MscharServerPoolContext extends PoolContext {
@@ -44,6 +44,7 @@ final class MscharServerPoolContext extends PoolContext {
 	/**
 	 * @see com.syrus.AMFICOM.general.PoolContext#init()
 	 */
+	@Override
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
 				DATABASE_LOADER_ONLY)).booleanValue();
