@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.61 2005/06/29 14:25:31 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.62 2005/07/28 18:59:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.omg.CORBA.ORB;
-
+import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.ServerProcess;
@@ -29,83 +28,78 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
+import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/06/29 14:25:31 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/28 18:59:16 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
 
 public class MeasurementServer extends SleepButWorkThread {
-	public static final String APPLICATION_NAME = "mserver";
+	private static final String APPLICATION_NAME = "mserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_ID = "ServerID";
-	public static final String KEY_TICK_TIME = "TickTime";
-	public static final String KEY_MAX_FALLS = "MaxFalls";
+	private static final String KEY_DB_HOST_NAME = "DBHostName";
+	private static final String KEY_DB_SID = "DBSID";
+	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	private static final String KEY_SERVER_ID = "ServerID";
+	private static final String KEY_TICK_TIME = "TickTime";
+	private static final String KEY_MAX_FALLS = "MaxFalls";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom";
+	private static final String DB_SID = "amficom";
 	/**
 	 * Database connection timeout, in seconds.
 	 */
-	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_ID = "Server_1";
+	private static final int DB_CONNECTION_TIMEOUT = 120;
+	private static final String DB_LOGIN_NAME = "amficom";
+	private static final String SERVER_ID = "Server_1";
 	/**
 	 * Tick time, in seconds.
 	 */
-	public static final int TICK_TIME = 5;	//sec
+	private static final int TICK_TIME = 5;	//sec
 
 	private static final String PASSWORD = "MServer";
 
 	/*	Error codes for method processFall()	(abort tests, ...)*/
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
 
-
-	/**
-	 * Identifier of this server.
-	 */
-	private static Identifier serverId;
-
 	/**
 	 * Login of the corresponding user.
 	 */
 	static String login;
-
-	/*	Process codename*/
-	private static String processCodename;
 
 	/*	Map of tests to transmit to MCMs	*/
 	private static Map<Identifier, Set<Test>> mcmTestQueueMap;	
@@ -153,25 +147,25 @@ public class MeasurementServer extends SleepButWorkThread {
 		/*	Retrieve info about process*/
 		/*	Retrieve info about user*/
 		/*	Retrieve MCM ids for this server*/
-		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
-		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
+		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
+		final String processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE)).retrieveForServerAndCodename(serverId, processCodename);
+			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
+					processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
-			final MCMDatabase database = (MCMDatabase) DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
-			final Set<Identifier> mcmIds = Identifier.createIdentifiers(database.retrieveForServer(serverId));
+			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 			login = user.getLogin();
 			
 			/*	Create map of test queues*/
 			mcmTestQueueMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Test>>(mcmIds.size()));
-			for (final Iterator<Identifier> it = mcmIds.iterator(); it.hasNext();)
+			for (final Iterator<Identifier> it = mcmIds.iterator(); it.hasNext();) {
 				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet<Test>()));
-	
-			/*	Init database object loader*/
-			DatabaseObjectLoader.init(user.getId());
-	
+			}
+
 			/*	Create session environment*/
 			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
 	
@@ -189,7 +183,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
-			corbaServer.activateServant(new MServerPOATie(new MServerImplementation(), corbaServer.getPoa()), processCodename);
+			corbaServer.activateServant(new MServerPOATie(new MServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
@@ -199,10 +193,10 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
@@ -214,11 +208,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
-		Identifier mcmId;
-		Set testQueue;
-		IdlTest[] testsT;
-		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
+		final MServerServantManager servantManager = MServerSessionEnvironment.getInstance().getMServerServantManager();
 		while (this.running) {
 			/*	Now Measurement Server can get new tests only from database
 			 * (not through direct CORBA operation).
@@ -231,10 +221,10 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 
 			synchronized (mcmTestQueueMap) {
-				for (final Iterator<Identifier> it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
-					mcmId = it.next();
-					testQueue = mcmTestQueueMap.get(mcmId);
+				for (final Identifier mcmId : mcmTestQueueMap.keySet()) {
+					final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
 					if (!testQueue.isEmpty()) {
+						com.syrus.AMFICOM.mcm.corba.MCM mcmRef = null;
 						try {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
 						}
@@ -243,14 +233,25 @@ public class MeasurementServer extends SleepButWorkThread {
 							continue;
 						}
 
-						testsT = createTransferables(servantManager.getCORBAServer().getOrb(), testQueue);
+						IdlStorableObject[] testsT = null;
+						synchronized (testQueue) {
+							testsT = StorableObject.createTransferables(testQueue, servantManager.getCORBAServer().getOrb());
+						}
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
-							mcmRef.receiveTests(testsT);
+							final IdlSessionKey sessionKey = LoginManager.getSessionKeyTransferable();
+							mcmRef.receiveStorableObjects(testsT, sessionKey);
 							testQueue.clear();
 							super.clearFalls();
 						}
 						catch (AMFICOMRemoteException are) {
+							if (are.errorCode.value() == IdlErrorCode._ERROR_ACCESS_VALIDATION) {
+								try {
+									LoginManager.restoreLogin();
+								} catch (ApplicationException ae) {
+									Log.errorException(ae);
+								}
+							}
 							Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
@@ -304,10 +305,9 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 		}
 
-		final Set tests = StorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, cc, true, true);
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(addedTestIds, cc, true, true);
 
-		for (final Iterator it = tests.iterator(); it.hasNext();) {
-			final Test test = (Test) it.next();
+		for (final Test test : tests) {
 			final Identifier mcmId = test.getMCMId();
 
 			final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
@@ -316,34 +316,19 @@ public class MeasurementServer extends SleepButWorkThread {
 					Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
 					testQueue.add(test);
 				}
-				else
+				else {
 					Log.errorMessage("Test '" + test.getId() + "' already added to queue");
+				}
 			}
-			else
+			else {
 				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
-		}
-	}
-
-	private static IdlTest[] createTransferables(final ORB orb, final Set testQueue) {
-		assert !testQueue.isEmpty() : "Test queue is NULL";
-
-		IdlTest[] testsT = new IdlTest[testQueue.size()];
-		int i = 0;
-		Test test;
-		synchronized (testQueue) {
-			for (Iterator it = testQueue.iterator(); it.hasNext(); i++) {
-				test = (Test) it.next();
-				testsT[i] = test.getTransferable(orb);
 			}
 		}
-
-		return testsT;
 	}
 
-	private static void updateTestsStatus(Set<Test> testQueue, TestStatus status) {
+	private static void updateTestsStatus(final Set<Test> testQueue, final TestStatus status) {
 		synchronized (testQueue) {
-			for (final Iterator<Test> it = testQueue.iterator(); it.hasNext();) {
-				final Test test = it.next();
+			for (final Test test : testQueue) {
 				if (test.getStatus().value() != status.value()) {
 					test.setStatus(status);
 				}
@@ -351,7 +336,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 
 		try {
-			StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), true);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -389,8 +374,9 @@ public class MeasurementServer extends SleepButWorkThread {
 
 			StorableObjectPool.truncate(ObjectEntities.TEST_CODE);
 		}
-		else
+		else {
 			Log.errorMessage("abortTests | Collection is NULL or empty");
+		}
 	}
 
 	protected static Set<Identifier> getMCMIds() {
