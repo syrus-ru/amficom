@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.54 2005/07/28 10:25:43 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.55 2005/07/28 11:04:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,34 +28,31 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/07/28 10:25:43 $
+ * @version $Revision: 1.55 $, $Date: 2005/07/28 11:04:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class ClientMeasurementServer {
-	public static final String APPLICATION_NAME = "cmserver";
+	private static final String APPLICATION_NAME = "cmserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_ID = "ServerID";
+	private static final String KEY_DB_HOST_NAME = "DBHostName";
+	private static final String KEY_DB_SID = "DBSID";
+	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	private static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
 	 **********************************************************************/
 
-	public static final String DB_SID = "amficom";
-	/**
-	 * Database connection timeout, in seconds.
-	 */
-	public static final int DB_CONNECTION_TIMEOUT = 120;
-	public static final String DB_LOGIN_NAME = "amficom";
-	public static final String SERVER_ID = "Server_1";
+	private static final String DB_SID = "amficom";
+	private static final int DB_CONNECTION_TIMEOUT = 120; //sec
+	private static final String DB_LOGIN_NAME = "amficom";
+	private static final String SERVER_ID = "Server_1";
 
 	private static final String PASSWORD = "CMServer";
 
