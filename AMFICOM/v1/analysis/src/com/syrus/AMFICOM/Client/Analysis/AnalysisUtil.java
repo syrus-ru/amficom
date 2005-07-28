@@ -103,6 +103,22 @@ public class AnalysisUtil
 		return bs;
 	}
 
+	/**
+	 * Определяет результаты анализа того измерения, результаты которого даны
+	 * на входе
+	 * @param result результаты измерения
+	 * @return результаты анализа либо null, если таковые не были сохранены
+	 * @throws ApplicationException при ошибке работы с пулом или сервером (?)
+	 * @throws DataFormatException при ошибки восстановления данных их потока
+	 */
+	public static AnalysisResult getAnalysisResultForResultIfPresent(Result result)
+	throws DataFormatException, ApplicationException {
+		assert hasMeasurementByResult(result) : "AU.getAnalysisResultForResultIfPresent(): arg must be a result of a measurement";
+		Measurement m = getMeasurementByResult(result);
+		assert m != null : "AU.getAnalysisResultForResultIfPresent(): null measurement";
+		return getAnalysisForMeasurementIfPresent(m); // may return null
+	}
+
 	public static AnalysisResult getAnalysisForMeasurementIfPresent(Measurement m)
 	throws DataFormatException, ApplicationException {
 		LinkedIdsCondition condition1 = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
