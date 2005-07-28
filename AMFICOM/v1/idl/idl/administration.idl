@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.16 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: administration.idl,v 1.17 2005/07/28 14:05:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -86,6 +86,8 @@ module administration {
 					in general::corba::WString128 name,
 					in general::corba::WString256 description);
 		};
+
+		typedef sequence<IdlDomain> IdlDomainSeq;
 
 
 /////////////////////////////////// Server ////////////////////////////////
