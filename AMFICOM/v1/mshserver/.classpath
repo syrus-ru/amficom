@@ -9,14 +9,10 @@
 	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="src" path="/csbridge"/>
 	<classpathentry kind="src" path="/map"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo"/>
 	<classpathentry kind="src" path="/resource"/>
 	<classpathentry kind="src" path="/mapview"/>
-	<classpathentry kind="var" path="EXTLIB/trove.jar"/>
-	<classpathentry kind="var" path="EXTLIB/commons-logging.jar"/>
-	<classpathentry sourcepath="/dom4j/dom4jsrc.zip" kind="var" path="EXTLIB/dom4j-1.6.1.jar"/>
-	<classpathentry kind="var" path="EXTLIB/jaxen-1.1-beta-6.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/leserver_interface.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mscharserver_interface.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
