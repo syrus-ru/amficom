@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.31 2005/07/28 13:21:14 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.32 2005/07/28 19:01:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,16 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/28 13:21:14 $
+ * @version $Revision: 1.32 $, $Date: 2005/07/28 19:01:32 $
  * @author $Author: arseniy $
  * @module csbridge
  */
 public class DatabaseObjectLoader implements ObjectLoader {
-	protected static Identifier userId;
-
-	public static void init(final Identifier userId1) {
-		userId = userId1;
-	}
 
 	/**
 	 * Overridden in:
 	 * CMServerObjectLoader
+	 * MServerObjectLoader
 	 */
 	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -34,6 +30,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 			return Collections.emptySet();
 		}
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
 		assert database != null : ErrorMessages.NON_NULL_EXPECTED;
 		return database.retrieveByIdsByCondition(ids, null);
@@ -42,12 +39,14 @@ public class DatabaseObjectLoader implements ObjectLoader {
 	/**
 	 * Overridden in:
 	 * CMServerObjectLoader
+	 * MServerObjectLoader
 	 */
 	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 		final short entityCode = condition.getEntityCode().shortValue();
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		final StorableObjectDatabase<T> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
@@ -61,6 +60,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		final Map<Identifier, StorableObjectVersion> versionsMap = database.retrieveVersions(ids);
@@ -74,6 +74,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.save(storableObjects);
@@ -92,6 +93,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		return database.getOldVersionIds(versionsMap);
@@ -103,6 +105,7 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		}
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(identifiables);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.delete(identifiables);
