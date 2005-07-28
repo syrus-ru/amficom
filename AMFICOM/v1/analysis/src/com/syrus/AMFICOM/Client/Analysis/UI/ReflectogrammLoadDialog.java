@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.23 2005/07/28 09:15:39 stas Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.24 2005/07/28 11:51:29 saa Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.tree.TreePath;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
@@ -52,8 +53,8 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/07/28 09:15:39 $
- * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2005/07/28 11:51:29 $
+ * @author $Author: saa $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
@@ -247,7 +248,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 
 		try {
 			if (this.result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-				Measurement measurement = (Measurement) this.result.getAction();
+				Measurement measurement = AnalysisUtil.getMeasurementByResult(this.result);
 				Test test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 				bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
 				bs.title = test.getDescription();

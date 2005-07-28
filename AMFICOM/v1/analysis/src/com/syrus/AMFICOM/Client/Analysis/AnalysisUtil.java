@@ -57,6 +57,13 @@ public class AnalysisUtil
 	}
 
 	/**
+	 * определяет measurement по его результату
+	 */
+	public static Measurement getMeasurementByResult(Result result) {
+		return (Measurement)result.getAction();
+	}
+
+	/**
 	 * достаем собственно рефлектограмму из параметры результатов.
 	 * Если рефлектограмма получена в результате измерения, выставляем
 	 * у нее title, meId, measId
@@ -79,7 +86,7 @@ public class AnalysisUtil
 			throw new SimpleApplicationException(SimpleApplicationException.KEY_NULL_REFLECTOGRAMMA);
 
 		if (result1.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)result1.getAction();
+			Measurement m = getMeasurementByResult(result1);
 			bs.title = m.getName();
 			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
 			bs.measurementId = m.getId().getIdentifierString();

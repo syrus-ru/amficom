@@ -94,7 +94,7 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 		Result primaryTraceResult = Heap.getPrimaryTrace().getResult();
 		if (primaryTraceResult != null
 				&& primaryTraceResult.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
-			Measurement m = (Measurement)primaryTraceResult.getAction();
+			Measurement m = AnalysisUtil.getMeasurementByResult(primaryTraceResult);
 			MeasurementSetup ms = m.getSetup();
 			Heap.setContextMeasurementSetup(ms);
 
