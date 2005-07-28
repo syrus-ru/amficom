@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -128,6 +129,8 @@ ActionListener, PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		
+		final SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		
 		this.addComponentListener(new ComponentAdapter() {
 
 			public void componentResized(ComponentEvent e) {
@@ -150,6 +153,16 @@ ActionListener, PropertyChangeListener {
 
 		this.addMouseListener(new MouseAdapter() {
 
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					schedulerModel.unselectTests();
+				} catch (ApplicationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
 			public void mouseReleased(MouseEvent e) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
@@ -163,7 +176,6 @@ ActionListener, PropertyChangeListener {
 				PlanPanel.this.startPosition = null;
 				PlanPanel.this.currentPosition = null;
 				PlanPanel.this.repaint();
-
 			}
 		});
 		this.addMouseMotionListener(new MouseMotionAdapter() {
@@ -564,6 +576,7 @@ ActionListener, PropertyChangeListener {
 			if (component instanceof TimeLine) {
 				TimeLine timeLine = (TimeLine) component;
 				timeLine.updateScale();
+				timeLine.refreshTimeItems();
 			}
 		}
 		this.revalidate();

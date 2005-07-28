@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.11 2005/07/27 08:56:51 bob Exp $
+ * $Id: TimeLine.java,v 1.12 2005/07/28 08:26:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/27 08:56:51 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 08:26:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -49,7 +49,7 @@ public abstract class TimeLine extends JComponent {
 
 	public TimeLine() {
 		
-		this.createComponentListener();
+//		this.createComponentListener();
 		
 		Font font2 = UIManager.getLookAndFeelDefaults().getFont("Button.font");
 		FontMetrics fontMetrics = this.getFontMetrics(font2);
@@ -59,14 +59,14 @@ public abstract class TimeLine extends JComponent {
 		this.titleHeight = fontMetrics.getHeight();
 	}
 
-	private void createComponentListener() {
-		this.addComponentListener(new ComponentAdapter() {
-
-			public void componentResized(ComponentEvent e) {
-				updateScale();
-			}
-		});
-	}	
+//	private void createComponentListener() {
+//		this.addComponentListener(new ComponentAdapter() {
+//
+//			public void componentResized(ComponentEvent e) {
+//				updateScale();
+//			}
+//		});
+//	}	
 	
 	
 	/**
@@ -75,7 +75,7 @@ public abstract class TimeLine extends JComponent {
 	 */
 	public void setEnd(long end) {
 		this.end = end;
-		this.refreshTimeItems();
+//		this.refreshTimeItems();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public abstract class TimeLine extends JComponent {
 	 */
 	public void setStart(long start) {		
 		this.start = start;
-		this.refreshTimeItems();
+//		this.refreshTimeItems();
 	}
 
 	/**

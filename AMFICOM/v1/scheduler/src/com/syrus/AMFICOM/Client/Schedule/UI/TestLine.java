@@ -45,7 +45,6 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -160,50 +159,8 @@ public class TestLine extends TimeLine {
 		// this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST,
 		// this);
 		this.setToolTipText("");
-		
-		new Thread() {
-			@Override
-			public void run() {
-				while(true) {
-					if (refreshTimeItemsRequire && System.currentTimeMillis() > 1000) {
-						refreshTimeItemsRequire = false;
-						lazyRefreshTimeItems();
-					}
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}.start();
-	}
 
-	//
-	// private void createTestLineMouseListener() {
-	// this.addMouseListener(new MouseAdapter() {
-	//
-	// public void mousePressed(MouseEvent e) {
-	// int x = e.getX();
-	// int y = e.getY();
-	// if (SwingUtilities.isLeftMouseButton(e)) {
-	// TestLine.this.selectedTest = null;
-	// if (!TestLine.this.timeItems.isEmpty()) {
-	// if (!selectTest(x, y, TestLine.this.timeItems)) {
-	// if (!selectTest(x, y, TestLine.this.unsavedTestTimeItems)) {
-	// try {
-	// TestLine.this.schedulerModel.setSelectedTest(null);
-	// } catch (ApplicationException e1) {
-	// ModuleMainFrame.showErrorMessage(TestLine.this, e1);
-	// }
-	// }
-	// }
-	// }
-	// }
-	// }
-	// });
-	// }
+	}
 
 	boolean selectTest(	int x,
 						int y,
@@ -713,12 +670,12 @@ public class TestLine extends TimeLine {
 
 	void refreshTimeItems() {
 		
-		this.lastRefreshTimeItemMs = System.currentTimeMillis();
-		this.refreshTimeItemsRequire = true;
-
-	}
-
-	synchronized void lazyRefreshTimeItems() {		
+//		this.lastRefreshTimeItemMs = System.currentTimeMillis();
+//		this.refreshTimeItemsRequire = true;
+//
+//	}
+//
+//	synchronized void lazyRefreshTimeItems() {		
 		
 //		Log.debugMessage("TestLine.refreshTimeItems | ", Log.DEBUGLEVEL01);
 		this.timeItems.clear();
