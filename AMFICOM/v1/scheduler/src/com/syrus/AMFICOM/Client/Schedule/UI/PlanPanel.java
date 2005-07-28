@@ -592,6 +592,7 @@ ActionListener, PropertyChangeListener {
 			Object key = it.next();
 			TestLine line = (TestLine) this.testLines.get(key);
 			line.updateTests();
+			line.refreshTimeItems();
 		}
 	}
 

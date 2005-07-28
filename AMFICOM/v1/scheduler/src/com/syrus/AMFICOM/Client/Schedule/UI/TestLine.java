@@ -533,7 +533,7 @@ public class TestLine extends TimeLine {
 	}
 
 	private void acquireTests() {
-		System.out.println("TestLine.acquireTests()");
+//		System.out.println("TestLine.acquireTests()");
 		// Log.debugMessage("TestLine.acquireTests | test1.size() " +
 		// tests1.size(), Log.FINEST);
 		this.testIds.clear();
