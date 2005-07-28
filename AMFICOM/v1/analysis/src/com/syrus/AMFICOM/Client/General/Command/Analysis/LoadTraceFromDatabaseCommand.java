@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -65,8 +66,17 @@ public class LoadTraceFromDatabaseCommand extends AbstractCommand
 			return;
 
 		// преобразуем выбранный набор результатов в набор рефлектограмм
-		Collection<Trace> traces =
-				AddTraceFromDatabaseCommand.getTracesFromResults(results);
+		Collection<Trace> traces;
+		try {
+			traces = AddTraceFromDatabaseCommand.getTracesFromResults(results);
+		} catch (DataFormatException e) {
+			// ошибка формата данных - отменяем загрузку
+			GUIUtil.showDataFormatError();
+			return;
+		} catch (ApplicationException e) {
+			GUIUtil.processApplicationException(e);
+			return;
+		}
 		// открываем выбранный набор рефлектограмм
 		Heap.openManyTraces(traces);
 

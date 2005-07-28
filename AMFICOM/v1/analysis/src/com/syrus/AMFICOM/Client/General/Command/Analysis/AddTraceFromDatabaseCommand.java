@@ -11,9 +11,11 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
+import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Result;
 
 public class AddTraceFromDatabaseCommand extends AbstractCommand
@@ -50,15 +52,20 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 	 * @return набор Traces, возможно, пустой
 	 * (если пуст исходный набор результатов либо не удалось загрузить ни одну
 	 * рефлектограмму)
+	 * @throws ApplicationException 
+	 * @throws DataFormatException 
 	 */
-	public static Set<Trace> getTracesFromResults(Set<Result> results) {
+	public static Set<Trace> getTracesFromResults(Set<Result> results)
+	throws DataFormatException, ApplicationException {
 		Set<Trace> traces = new HashSet<Trace>(results.size());
 		int totalCounter = 0;
 		int loadProblemsCounter = 0;
 		for (Result result1: results) {
 			totalCounter++;
 			try {
-				traces.add(new Trace(result1, Heap.getMinuitAnalysisParams()));
+				//traces.add(new Trace(result1, Heap.getMinuitAnalysisParams()));
+				traces.add(Trace.getTraceWithARIfPossible(result1,
+						Heap.getMinuitAnalysisParams()));
 			} catch (SimpleApplicationException e) {
 				// ошибка - в результатах анализа нет рефлектограммы
 				loadProblemsCounter++;
@@ -106,7 +113,19 @@ public class AddTraceFromDatabaseCommand extends AbstractCommand
 		if(TraceLoadDialog.showDialog(parent) == JOptionPane.CANCEL_OPTION)
 			return;
 		Set<Result> results = TraceLoadDialog.getResults();
-		Set<Trace> traces = getTracesFromResults(results);
+
+		// пытаемся загрузить рефлектограммы
+		Set<Trace> traces;
+		try {
+			traces = getTracesFromResults(results);
+		} catch (DataFormatException e) {
+			// ошибка формата данных - отменяем загрузку
+			GUIUtil.showDataFormatError();
+			return;
+		} catch (ApplicationException e) {
+			GUIUtil.processApplicationException(e);
+			return;
+		}
 
 		int alreadyLoadedCounter = 0;
 		for (Trace tr: traces) {
