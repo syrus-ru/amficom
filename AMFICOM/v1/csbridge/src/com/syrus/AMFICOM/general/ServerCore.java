@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.28 2005/07/27 16:38:52 arseniy Exp $
+ * $Id: ServerCore.java,v 1.29 2005/07/28 15:47:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/07/27 16:38:52 $
+ * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2005/07/28 15:47:44 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -298,7 +298,7 @@ public class ServerCore implements CommonServer {
 	 * @param domainIdH an "out" parameter.
 	 * @throws AMFICOMRemoteException
 	 */
-	private final void validateAccess(final IdlSessionKey sessionKeyT,
+	protected final void validateAccess(final IdlSessionKey sessionKeyT,
 			final IdlIdentifierHolder userIdH,
 			final IdlIdentifierHolder domainIdH)
 			throws AMFICOMRemoteException {
@@ -321,7 +321,7 @@ public class ServerCore implements CommonServer {
 		return new AMFICOMRemoteException(errorCode, IdlCompletionStatus.COMPLETED_NO, ae.getMessage());
 	}
 
-	private final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
+	protected final AMFICOMRemoteException processDefaultThrowable(final Throwable throwable) {
 		Log.debugException(throwable, Level.SEVERE);
 		return new AMFICOMRemoteException(IdlErrorCode.ERROR_UNKNOWN, IdlCompletionStatus.COMPLETED_PARTIALLY, throwable.getMessage());
 	}
