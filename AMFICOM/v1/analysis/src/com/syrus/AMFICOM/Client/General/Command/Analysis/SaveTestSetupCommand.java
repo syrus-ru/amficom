@@ -78,7 +78,8 @@ public class SaveTestSetupCommand extends AbstractCommand
 				criteriaSet = null;//msTest.getCriteriaSet();
 			}
 		} catch (ApplicationException e) {
-			System.err.println("SaveTestSetupCommand: ApplicationException (criterias)");
+			System.err.println("SaveTestSetupCommand: ApplicationException (criterias):");
+			e.printStackTrace();
 			GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
@@ -94,7 +95,8 @@ public class SaveTestSetupCommand extends AbstractCommand
 				etalonSet = null;
 			}
 		} catch (ApplicationException e1) {
-			System.err.println("SaveTestSetupCommand: ApplicationException (etalon)");
+			System.err.println("SaveTestSetupCommand: ApplicationException (etalon): ");
+			e1.printStackTrace();
 			GUIUtil.showCreateObjectProblemError();
 			return false;
 		}
