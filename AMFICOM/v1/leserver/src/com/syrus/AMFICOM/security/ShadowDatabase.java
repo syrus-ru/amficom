@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.4 2005/07/14 16:08:03 bass Exp $
+ * $Id: ShadowDatabase.java,v 1.5 2005/07/28 13:54:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/07/28 13:54:19 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class ShadowDatabase {
@@ -33,11 +33,11 @@ public final class ShadowDatabase {
 	private static final String COLUMN_PASSWORD = "password";
 	private static final int SIZE_COLUMN_PASSWORD = 64;
 
-	private StringBuffer singleWhereClause(Identifier userId) {
+	private StringBuffer singleWhereClause(final Identifier userId) {
 		return new StringBuffer(COLUMN_USER_ID + StorableObjectDatabase.EQUALS + DatabaseIdentifier.toSQLString(userId));
 	}
 
-	private StringBuffer retrieveQuery(StringBuffer condition) {
+	private StringBuffer retrieveQuery(final StringBuffer condition) {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
 				+ COLUMN_PASSWORD
@@ -51,34 +51,37 @@ public final class ShadowDatabase {
 		return sql;
 	}
 
-	public String retrieve(Identifier userId) throws RetrieveObjectException, ObjectNotFoundException {
+	public String retrieve(final Identifier userId) throws RetrieveObjectException, ObjectNotFoundException {
 		final StringBuffer sql = this.retrieveQuery(this.singleWhereClause(userId));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ShadowDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
-			if (resultSet.next())
+			if (resultSet.next()) {
 				return DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_PASSWORD));
+			}
 			throw new ObjectNotFoundException("Cannot find password for user '"+ userId + "'");
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot retrieve user password " + sqle.getMessage();
+			final String mesg = "Cannot retrieve user password " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
 				try {
-					if (resultSet != null)
+					if (resultSet != null) {
 						resultSet.close();
+					}
 				}
 				finally {
 					try {
-						if (statement != null)
+						if (statement != null){
 							statement.close();
+						}
 					}
 					finally {
 						DatabaseConnection.releaseConnection(connection);
@@ -91,14 +94,16 @@ public final class ShadowDatabase {
 		}
 	}
 
-	public void updateOrInsert(Identifier userId, String password) throws UpdateObjectException {
+	public void updateOrInsert(final Identifier userId, final String password) throws UpdateObjectException {
 		StringBuffer sql = null;
 		try {
-			String oldPassword = this.retrieve(userId);
-			if (oldPassword != null && oldPassword.length() != 0)
+			final String oldPassword = this.retrieve(userId);
+			if (oldPassword != null && oldPassword.length() != 0) {
 				sql = this.updateQuery(userId, password);
-			else
+			}
+			else {
 				sql = this.insertQuery(userId, password);
+			}
 		}
 		catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
@@ -108,7 +113,7 @@ public final class ShadowDatabase {
 		}
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ShadowDatabase.update | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -116,13 +121,14 @@ public final class ShadowDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot set password of user '" + userId + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot set password of user '" + userId + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null)
+				if (statement != null) {
 					statement.close();
+				}
 				statement = null;
 			}
 			catch (SQLException sqle1) {
@@ -134,7 +140,7 @@ public final class ShadowDatabase {
 		}
 	}
 
-	private StringBuffer insertQuery(Identifier userId, String password) {
+	private StringBuffer insertQuery(final Identifier userId, final String password) {
 		return new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_SHADOW
 				+ StorableObjectDatabase.OPEN_BRACKET
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
@@ -145,7 +151,7 @@ public final class ShadowDatabase {
 				+ StorableObjectDatabase.CLOSE_BRACKET);
 	}
 
-	private StringBuffer updateQuery(Identifier userId, String password) {
+	private StringBuffer updateQuery(final Identifier userId, final String password) {
 		return new StringBuffer(StorableObjectDatabase.SQL_UPDATE + TABLE_NAME_SHADOW + StorableObjectDatabase.SQL_SET
 				+ COLUMN_PASSWORD + StorableObjectDatabase.EQUALS
 					+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(password, SIZE_COLUMN_PASSWORD) + StorableObjectDatabase.APOSTROPHE

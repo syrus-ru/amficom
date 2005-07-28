@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.5 2005/07/14 16:08:03 bass Exp $
+ * $Id: UserLoginDatabase.java,v 1.6 2005/07/28 13:54:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/14 16:08:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/07/28 13:54:19 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class UserLoginDatabase {
@@ -47,7 +47,7 @@ public final class UserLoginDatabase {
 	}
 
 	private StringBuffer retrieveQuery(final StringBuffer condition) {
-		StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
+		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
 				+ COLUMN_SESSION_KEY + StorableObjectDatabase.COMMA
 				+ COLUMN_USER_ID + StorableObjectDatabase.COMMA
 				+ COLUMN_DOMAIN_ID + StorableObjectDatabase.COMMA
@@ -68,20 +68,21 @@ public final class UserLoginDatabase {
 	}
 
 	protected UserLogin retrieve(final SessionKey sessionKey) throws RetrieveObjectException, ObjectNotFoundException {
-		Set objects = this.retrieveByCondition(this.singleWhereClause(sessionKey));
-		if (!objects.isEmpty())
-			return (UserLogin) objects.iterator().next();
+		final Set<UserLogin> objects = this.retrieveByCondition(this.singleWhereClause(sessionKey));
+		if (!objects.isEmpty()) {
+			return objects.iterator().next();
+		}
 		throw new ObjectNotFoundException("User login not found");
 	}
 
-	private Set<UserLogin> retrieveByCondition(StringBuffer condition) throws RetrieveObjectException {
-		Set<UserLogin> objects = new HashSet<UserLogin>();
+	private Set<UserLogin> retrieveByCondition(final StringBuffer condition) throws RetrieveObjectException {
+		final Set<UserLogin> objects = new HashSet<UserLogin>();
 
-		StringBuffer sql = this.retrieveQuery(condition);
+		final StringBuffer sql = this.retrieveQuery(condition);
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -96,19 +97,21 @@ public final class UserLoginDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot retrieve user login" + sqle.getMessage();
+			final String mesg = "Cannot retrieve user login" + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
 				try {
-					if (resultSet != null)
+					if (resultSet != null) {
 						resultSet.close();
+					}
 				}
 				finally {
 					try {
-						if (statement != null)
+						if (statement != null) {
 							statement.close();
+						}
 					}
 					finally {
 						DatabaseConnection.releaseConnection(connection);
@@ -140,7 +143,7 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.CLOSE_BRACKET);
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -148,13 +151,14 @@ public final class UserLoginDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot insert user login" + sqle.getMessage();
+			final String mesg = "Cannot insert user login" + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
-				if (statement != null)
+				if (statement != null) {
 					statement.close();
+				}
 				statement = null;
 			}
 			catch (SQLException sqle1) {
@@ -178,7 +182,7 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.update | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -186,7 +190,7 @@ public final class UserLoginDatabase {
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot update user login" + sqle.getMessage();
+			final String mesg = "Cannot update user login" + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
@@ -209,7 +213,7 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		final Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -221,8 +225,9 @@ public final class UserLoginDatabase {
 		}
 		finally {
 			try {
-				if (statement != null)
+				if (statement != null) {
 					statement.close();
+				}
 				statement = null;
 			}
 			catch (SQLException sqle1) {

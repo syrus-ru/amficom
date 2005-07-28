@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKeyGenerator.java,v 1.2 2005/05/18 13:29:31 bass Exp $
+ * $Id: SessionKeyGenerator.java,v 1.3 2005/07/28 13:54:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import com.syrus.AMFICOM.general.Identifier;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/05/18 13:29:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/07/28 13:54:19 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 final class SessionKeyGenerator {
@@ -24,10 +24,11 @@ final class SessionKeyGenerator {
 		assert false;
 	}
 
-	public static SessionKey generateSessionKey(Identifier userId) {
-		StringBuffer stringBuffer = new StringBuffer(userId.toString() + Long.toString(System.currentTimeMillis()));
-		if (stringBuffer.length() > LENGTH)
+	public static SessionKey generateSessionKey(final Identifier userId) {
+		final StringBuffer stringBuffer = new StringBuffer(userId.toString() + Long.toString(System.currentTimeMillis()));
+		if (stringBuffer.length() > LENGTH) {
 			stringBuffer.delete(LENGTH, stringBuffer.length());
+		}
 		return new SessionKey(stringBuffer.toString());
 	}
 }

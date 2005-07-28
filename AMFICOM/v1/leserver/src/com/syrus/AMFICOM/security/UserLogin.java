@@ -1,5 +1,5 @@
 /*
- * $Id: UserLogin.java,v 1.4 2005/06/17 20:11:59 arseniy Exp $
+ * $Id: UserLogin.java,v 1.5 2005/07/28 13:54:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/17 20:11:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/28 13:54:19 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -23,7 +23,11 @@ public final class UserLogin {
 	private Date loginDate;
 	private Date lastActivityDate;
 
-	protected UserLogin(SessionKey sessionKey, Identifier userId, Identifier domainId, Date loginDate, Date lastActivityDate) {
+	protected UserLogin(final SessionKey sessionKey,
+			final Identifier userId,
+			final Identifier domainId,
+			final Date loginDate,
+			final Date lastActivityDate) {
 		this.sessionKey = sessionKey;
 		this.userId = userId;
 		this.domainId = domainId;
@@ -31,8 +35,8 @@ public final class UserLogin {
 		this.lastActivityDate = lastActivityDate;
 	}
 
-	public static UserLogin createInstance(Identifier userId) {
-		Date date = new Date(System.currentTimeMillis());
+	public static UserLogin createInstance(final Identifier userId) {
+		final Date date = new Date(System.currentTimeMillis());
 		return new UserLogin(SessionKeyGenerator.generateSessionKey(userId), userId, Identifier.VOID_IDENTIFIER, date, date);
 	}
 
@@ -48,7 +52,7 @@ public final class UserLogin {
 		return this.domainId;
 	}
 
-	public void setDomainId(Identifier domainId) {
+	public void setDomainId(final Identifier domainId) {
 		this.domainId = domainId;
 		this.updateLastActivityDate();
 	}
