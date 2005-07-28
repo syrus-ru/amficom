@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.3 2005/07/28 10:21:58 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.4 2005/07/28 11:07:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,24 +26,27 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/28 10:21:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/28 11:07:11 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 final class CMServerObjectLoader extends DatabaseObjectLoader {
-	private long refreshTimeout;
 	private CORBAObjectLoader corbaObjectLoader;
+	private long refreshTimeout;
+	private long lastRefreshTime;
 
-	protected CMServerObjectLoader(final long refreshTimeout, final CMServerServantManager cmServerServantManager) {
-		this.refreshTimeout = refreshTimeout;
+	protected CMServerObjectLoader(final CMServerServantManager cmServerServantManager, final long refreshTimeout) {
 		this.corbaObjectLoader = new CORBAObjectLoader(cmServerServantManager);
+		this.refreshTimeout = refreshTimeout;
+		this.lastRefreshTime = System.currentTimeMillis();
 	}
 
 	@Override
-	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -58,6 +62,24 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 				return this.loadStorableObjectsCustom(ids);
 			default:
 				return super.loadStorableObjects(ids);
+		}
+	}
+
+	@Override
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case EVALUATION_CODE:
+			case RESULT_CODE:
+				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
+			default:
+				return super.loadStorableObjectsButIdsByCondition(ids, condition);
 		}
 	}
 
@@ -92,24 +114,6 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		return objects;
 	}
 
-	@Override
-	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
-			final StorableObjectCondition condition) throws ApplicationException {
-		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
-
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		switch (entityCode) {
-			case MEASUREMENT_CODE:
-			case ANALYSIS_CODE:
-			case EVALUATION_CODE:
-			case RESULT_CODE:
-				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
-			default:
-				return super.loadStorableObjectsButIdsByCondition(ids, condition);
-		}
-	}
-
 	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
 		final Set<T> objects = super.loadStorableObjectsButIdsByCondition(ids, condition);
@@ -138,6 +142,14 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		}
 
 		return objects;
+	}
+
+	@Override
+	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
+		if (System.currentTimeMillis() - this.lastRefreshTime <= this.refreshTimeout) {
+			return Collections.emptySet();
+		}
+		return super.getOldVersionIds(versionsMap);
 	}
 
 }
