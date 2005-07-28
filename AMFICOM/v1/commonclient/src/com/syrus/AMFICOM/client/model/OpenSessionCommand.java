@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.14 2005/06/21 07:27:13 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.15 2005/07/28 09:45:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/06/21 07:27:13 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/28 09:45:21 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -72,6 +72,14 @@ public class OpenSessionCommand extends AbstractCommand {
 
 	public OpenSessionCommand(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
+		String loginProperty = System.getProperty(LOGIN_PROPERTY_KEY);
+		String passwordProperty = System.getProperty(PASSWORD_PROPERTY_KEY);
+		if (loginProperty != null) {
+			this.login = loginProperty;
+			this.password = passwordProperty;
+			this.logged = true;
+		}
+
 	}
 
 	public void setParameter(String field,
@@ -85,13 +93,6 @@ public class OpenSessionCommand extends AbstractCommand {
 	}
 
 	public void execute() {
-		String loginProperty = System.getProperty(LOGIN_PROPERTY_KEY);
-		String passwordProperty = System.getProperty(PASSWORD_PROPERTY_KEY);
-		if (loginProperty != null) {
-			this.login = loginProperty;
-			this.password = passwordProperty;
-			this.logged = true;
-		}
 
 		boolean trying = false;
 		do {
