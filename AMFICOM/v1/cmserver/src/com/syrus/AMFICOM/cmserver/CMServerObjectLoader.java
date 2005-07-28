@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.4 2005/07/28 11:07:11 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.5 2005/07/28 17:04:56 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/28 11:07:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/28 17:04:56 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -87,8 +87,9 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		final Set<T> objects = super.loadStorableObjects(ids);
 
 		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
-		if (loadIds.isEmpty())
+		if (loadIds.isEmpty()) {
 			return objects;
+		}
 
 		Set<T> loadedObjects = null;
 		try {
