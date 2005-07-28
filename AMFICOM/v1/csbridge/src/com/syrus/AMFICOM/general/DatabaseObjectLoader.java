@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.29 2005/07/28 10:47:53 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.30 2005/07/28 11:03:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/28 10:47:53 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/28 11:03:12 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -79,7 +79,11 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		database.save(storableObjects);
 	}
 
-	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
+	/**
+	 * Overridden in:
+	 * CMServerObjectLoader
+	 */
+	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
 		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		if (versionsMap.isEmpty()) {
