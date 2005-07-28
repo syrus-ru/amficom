@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.2 2005/07/28 09:15:39 stas Exp $
+ * $Id: TraceLoadDialog.java,v 1.3 2005/07/28 11:44:49 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,15 +27,12 @@ import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.filterclient.MeasurementConditionWrapper;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.newFilter.Filter;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/28 09:15:39 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2005/07/28 11:44:49 $
  * @module analysis_v1
  */
 
