@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.16 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.17 2005/07/28 10:04:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -25,21 +24,15 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 10:04:34 $
  * @module scheme
  */
-public final class CableChannelingItemDatabase extends StorableObjectDatabase {
+public final class CableChannelingItemDatabase extends StorableObjectDatabase<CableChannelingItem> {
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	
-	private CableChannelingItem fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if(storableObject instanceof CableChannelingItem)
-			return (CableChannelingItem) storableObject;
-		throw new IllegalDataException("CableChannelingItemDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -83,16 +76,15 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+			CableChannelingItem storableObject)
 			throws IllegalDataException {
-		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
-		String sql = cableChannelingItem.getRowX() + COMMA
-				+ cableChannelingItem.getPlaceY() + COMMA
-				+ cableChannelingItem.getSequentialNumber() + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getPhysicalLinkId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getStartSiteNodeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getEndSiteNodeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(cableChannelingItem.getParentSchemeCableLinkId());
+		String sql = storableObject.getRowX() + COMMA
+				+ storableObject.getPlaceY() + COMMA
+				+ storableObject.getSequentialNumber() + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getPhysicalLinkId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getStartSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getEndSiteNodeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeCableLinkId());
 		return sql;
 	}
 
@@ -105,20 +97,19 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
+			CableChannelingItem storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		CableChannelingItem cableChannelingItem = fromStorableObject(storableObject);
-		preparedStatement.setDouble(++startParameterNumber, cableChannelingItem.getStartSpare());
-		preparedStatement.setDouble(++startParameterNumber, cableChannelingItem.getEndSpare());
-		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getRowX());
-		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getPlaceY());
-		preparedStatement.setInt(++startParameterNumber, cableChannelingItem.getSequentialNumber());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getPhysicalLinkId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getStartSiteNodeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getEndSiteNodeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, cableChannelingItem.getParentSchemeCableLinkId());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getStartSpare());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getEndSpare());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getRowX());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getPlaceY());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSequentialNumber());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPhysicalLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndSiteNodeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeCableLinkId());
 		return startParameterNumber;
 	}
 
@@ -129,30 +120,27 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase {
 	 * @throws SQLException
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
+	protected CableChannelingItem updateEntityFromResultSet(
+			CableChannelingItem storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		CableChannelingItem cableChannelingItem;
-		if (storableObject == null) {
-			Date created = new Date();
-			cableChannelingItem = new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created,
-					created,
-					null,
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					0d,
-					0d,
-					0,
-					0,
-					0,
-					null,
-					null,
-					null,
-					null);
-		} else {
-			cableChannelingItem = fromStorableObject(storableObject);
-		}
+		Date created = new Date();
+		CableChannelingItem cableChannelingItem = storableObject == null
+				? new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						created,
+						created,
+						null,
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						0d,
+						0d,
+						0,
+						0,
+						0,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
 		cableChannelingItem.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

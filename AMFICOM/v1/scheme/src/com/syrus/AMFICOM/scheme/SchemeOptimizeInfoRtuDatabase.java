@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.9 2005/07/24 17:54:41 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuDatabase.java,v 1.10 2005/07/28 10:04:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,16 +16,15 @@ import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/24 17:54:41 $
+ * @version $Revision: 1.10 $, $Date: 2005/07/28 10:04:34 $
  * @module scheme
  */
-public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase {
+public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase<SchemeOptimizeInfoRtu> {
 	/**
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#getEntityCode()
 	 */
@@ -57,7 +56,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+			SchemeOptimizeInfoRtu storableObject)
 			throws IllegalDataException {
 		throw new UnsupportedOperationException();
 	}
@@ -72,7 +71,7 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
+			SchemeOptimizeInfoRtu storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
@@ -88,8 +87,8 @@ public final class SchemeOptimizeInfoRtuDatabase extends StorableObjectDatabase 
 	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#updateEntityFromResultSet(com.syrus.AMFICOM.general.StorableObject, java.sql.ResultSet)
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
+	protected SchemeOptimizeInfoRtu updateEntityFromResultSet(
+			SchemeOptimizeInfoRtu storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException,
 			SQLException {
 		throw new UnsupportedOperationException();

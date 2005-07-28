@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.14 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.15 2005/07/28 10:04:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -26,21 +25,15 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/07/28 10:04:34 $
  * @module scheme
  */
-public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase {
+public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase<SchemeMonitoringSolution> {
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	
-	private SchemeMonitoringSolution fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if(storableObject instanceof SchemeMonitoringSolution)
-			return (SchemeMonitoringSolution) storableObject;
-		throw new IllegalDataException("SchemeMonitoringSolutionDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -78,15 +71,14 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+			SchemeMonitoringSolution storableObject)
 			throws IllegalDataException {
-		SchemeMonitoringSolution schemeMonitoringSolution = fromStorableObject(storableObject);
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ schemeMonitoringSolution.getPrice() + COMMA
-				+ (schemeMonitoringSolution.isActive() ? 1 : 0) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ storableObject.getPrice() + COMMA
+				+ (storableObject.isActive() ? 1 : 0) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeOptimizeInfoId());
 		return sql;
 	}
 
@@ -99,17 +91,16 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
+			SchemeMonitoringSolution storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		SchemeMonitoringSolution schemeMonitoringSolution = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.getPrice());
-		preparedStatement.setInt(++startParameterNumber, schemeMonitoringSolution.isActive() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemeMonitoringSolution.getParentSchemeOptimizeInfoId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getPrice());
+		preparedStatement.setInt(++startParameterNumber, storableObject.isActive() ? 1 : 0);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeOptimizeInfoId());
 		return startParameterNumber;
 	}
 
@@ -120,28 +111,25 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	 * @throws SQLException
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected SchemeMonitoringSolution updateEntityFromResultSet(SchemeMonitoringSolution storableObject, ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
-		SchemeMonitoringSolution schemeMonitoringSolution;
-		if (storableObject == null) {
-			Date created = new Date();
-			schemeMonitoringSolution = new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet,
-					StorableObjectWrapper.COLUMN_ID),
-					created,
-					created,
-					null,
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					0,
-					false,
-					null,
-					null);
-		} else {
-			schemeMonitoringSolution = fromStorableObject(storableObject);
-		}
+		Date created = new Date();
+		SchemeMonitoringSolution schemeMonitoringSolution = storableObject == null
+				? new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet,
+						StorableObjectWrapper.COLUMN_ID),
+						created,
+						created,
+						null,
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						0,
+						false,
+						null,
+						null)
+				: storableObject;
 		schemeMonitoringSolution.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

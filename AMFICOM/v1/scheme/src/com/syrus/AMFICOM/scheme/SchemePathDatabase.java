@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.16 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemePathDatabase.java,v 1.17 2005/07/28 10:04:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -26,20 +25,14 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 10:04:34 $
  * @module scheme
  */
-public final class SchemePathDatabase extends StorableObjectDatabase {
+public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath> {
 
 	private static String columns;
 	private static String updateMultipleSQLValues;
-
-	private SchemePath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if(storableObject instanceof SchemePath)
-			return (SchemePath) storableObject;
-		throw new IllegalDataException("SchemePathDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected String getColumnsTmpl() {
@@ -74,13 +67,12 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+			SchemePath storableObject)
 			throws IllegalDataException {
-		SchemePath schemePath = fromStorableObject(storableObject);
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getTransmissionPathId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(schemePath.getParentSchemeMonitoringSolutionId());
+		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getTransmissionPathId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeMonitoringSolutionId());
 		return sql;
 	}
 
@@ -93,15 +85,14 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
+			SchemePath storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		SchemePath schemePath = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, schemePath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getTransmissionPathId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, schemePath.getParentSchemeMonitoringSolutionId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTransmissionPathId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeMonitoringSolutionId());
 		return startParameterNumber;
 	}
 
@@ -112,25 +103,22 @@ public final class SchemePathDatabase extends StorableObjectDatabase {
 	 * @throws SQLException
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
+	protected SchemePath updateEntityFromResultSet(
+			SchemePath storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		SchemePath schemePath;
-		if (storableObject == null) {
-			Date created = new Date();
-			schemePath = new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created,
-					created,
-					null,
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					null,
-					null,
-					null);
-		} else {
-			schemePath = fromStorableObject(storableObject);
-		}
+		Date created = new Date();
+		SchemePath schemePath = storableObject == null
+				? new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						created,
+						created,
+						null,
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
 		schemePath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

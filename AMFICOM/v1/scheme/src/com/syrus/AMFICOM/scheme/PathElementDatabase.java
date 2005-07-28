@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementDatabase.java,v 1.15 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: PathElementDatabase.java,v 1.16 2005/07/28 10:04:34 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -26,21 +25,15 @@ import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/07/28 10:04:34 $
  * @module scheme
  */
-public final class PathElementDatabase extends StorableObjectDatabase {
+public final class PathElementDatabase extends StorableObjectDatabase<PathElement> {
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;
 	
-	private PathElement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof PathElement)
-			return (PathElement) storableObject;
-		throw new IllegalDataException("PathElementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -80,16 +73,15 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(
-			StorableObject storableObject)
+			PathElement storableObject)
 			throws IllegalDataException {
-		PathElement pe = fromStorableObject(storableObject);
-		String sql = DatabaseIdentifier.toSQLString(pe.getParentSchemePathId()) + COMMA
-				+ pe.getSequentialNumber() + COMMA
-				+ pe.getKind().value() + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getStartAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getEndAbstractSchemePortId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getSchemeCableThreadId()) + COMMA
-				+ DatabaseIdentifier.toSQLString(pe.getSchemeLinkId());
+		String sql = DatabaseIdentifier.toSQLString(storableObject.getParentSchemePathId()) + COMMA
+				+ storableObject.getSequentialNumber() + COMMA
+				+ storableObject.getKind().value() + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getStartAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getEndAbstractSchemePortId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCableThreadId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeLinkId());
 		return sql;
 	}
 
@@ -102,18 +94,17 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 	 */
 	@Override
 	protected int setEntityForPreparedStatementTmpl(
-			StorableObject storableObject,
+			PathElement storableObject,
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
-		PathElement pe = fromStorableObject(storableObject);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getParentSchemePathId());
-		preparedStatement.setInt(++startParameterNumber, pe.getSequentialNumber());
-		preparedStatement.setInt(++startParameterNumber, pe.getKind().value());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getStartAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getEndAbstractSchemePortId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeCableThreadId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, pe.getSchemeLinkId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemePathId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getSequentialNumber());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getKind().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndAbstractSchemePortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSchemeCableThreadId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSchemeLinkId());
 		return startParameterNumber;
 	}
 
@@ -124,28 +115,25 @@ public final class PathElementDatabase extends StorableObjectDatabase {
 	 * @throws SQLException
 	 */
 	@Override
-	protected StorableObject updateEntityFromResultSet(
-			StorableObject storableObject, ResultSet resultSet)
+	protected PathElement updateEntityFromResultSet(
+			PathElement storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		PathElement pathElement;
-		if (storableObject == null) {
-			Date created = new Date();
-			pathElement = new PathElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-					created,
-					created,
-					null,
-					null,
-					StorableObjectVersion.ILLEGAL_VERSION,
-					null,
-					0,
-					null,
-					null,
-					null,
-					null,
-					null);
-		} else {
-			pathElement = fromStorableObject(storableObject);
-		}
+		Date created = new Date();
+		PathElement pathElement = storableObject == null
+				? pathElement = new PathElement(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+						created,
+						created,
+						null,
+						null,
+						StorableObjectVersion.ILLEGAL_VERSION,
+						null,
+						0,
+						null,
+						null,
+						null,
+						null,
+						null)
+				: storableObject;
 		pathElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
