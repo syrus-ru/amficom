@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.48 2005/07/28 10:41:24 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.49 2005/07/28 19:03:49 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/28 10:41:24 $
+ * @version $Revision: 1.49 $, $Date: 2005/07/28 19:03:49 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -46,6 +46,19 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 
 		final CommonServer server = this.serverConnectionManager.getServerReference();
+		return loadStorableObjects(server, ids);
+	}
+
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final CommonServer server = this.serverConnectionManager.getServerReference();
+		return loadStorableObjectsButIdsByCondition(server, ids, condition);
+	}
+
+	public static final <T extends StorableObject> Set<T> loadStorableObjects(final CommonServer server, final Set<Identifier> ids)
+			throws ApplicationException {
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		int numEfforts = 0;
 		while (true) {
@@ -72,12 +85,9 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
-			final StorableObjectCondition condition)
-			throws ApplicationException {
-		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
-
-		final CommonServer server = this.serverConnectionManager.getServerReference();
+	public static final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final CommonServer server,
+			final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
 		final IdlIdentifier[] idsT = Identifier.createTransferables(ids);
 		final IdlStorableObjectCondition conditionT = condition.getTransferable();
 		int numEfforts = 0;
