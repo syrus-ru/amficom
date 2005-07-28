@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.57 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.58 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -545,48 +545,48 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 * @return an immutable set.
 	 */
 	public Set<SchemeDevice> getSchemeDevices() {
-		return Collections.unmodifiableSet(this.getSchemeDevices0());
-	}
-
-	private Set<SchemeDevice> getSchemeDevices0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeDevices0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true);
 	}
 
 	/**
 	 * @return an immutable set.
 	 */
 	public Set<SchemeElement> getSchemeElements() {
-		return Collections.unmodifiableSet(this.getSchemeElements0());
-	}
-
-	private Set<SchemeElement> getSchemeElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeElements0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeElement> getSchemeElements0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
 	}
 
 	/**
 	 * @return an immutable set.
 	 */
 	public Set<SchemeLink> getSchemeLinks() {
-		return Collections.unmodifiableSet(this.getSchemeLinks0());
-	}
-
-	private Set<SchemeLink> getSchemeLinks0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeLinks0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
 	/**
@@ -594,12 +594,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Set<Scheme> getSchemes() {
 		try {
-			final Set<Scheme> schemes = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true, true);
-			return Collections.unmodifiableSet(schemes);
+			return Collections.unmodifiableSet(this.getSchemes0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<Scheme> getSchemes0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true);
 	}
 
 	Identifier getSiteNodeId() {
@@ -933,14 +936,10 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		super.markAsChanged();
 	}
 
-	public void setScheme(final Scheme scheme) {
-		Set<Scheme> schemes;
-		if (scheme == null) {
-			schemes = Collections.emptySet();
-		} else {
-			schemes = Collections.singleton(scheme);
-		}
-		setSchemes(schemes);
+	public void setScheme(final Scheme scheme) throws ApplicationException {
+		this.setSchemes(scheme == null
+				? Collections.<Scheme>emptySet()
+				: Collections.singleton(scheme));
 	}
 
 	/**
@@ -955,7 +954,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		super.markAsChanged();
 	}
 
-	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
+	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) throws ApplicationException {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
 		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
 		/*
@@ -971,7 +970,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		}
 	}
 
-	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
+	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
 		assert schemeElements != null: NON_NULL_EXPECTED;
 		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
 		/*
@@ -987,7 +986,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		}
 	}
 
-	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
 		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
 		/*
@@ -1005,12 +1004,15 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	/**
 	 * @param schemes
+	 * @throws ApplicationException 
 	 * @see Scheme#setSchemeElements(Set)
-	 * @todo Check for circular depsendencies.
+	 * @todo Check for circular dependencies.
 	 */
-	public void setSchemes(final Set<Scheme> schemes) {
+	public void setSchemes(final Set<Scheme> schemes) throws ApplicationException {
 		assert schemes != null: NON_NULL_EXPECTED;
-		for (final Scheme oldScheme : getSchemes()) {
+		final Set<Scheme> oldSchemes = this.getSchemes0();
+		oldSchemes.removeAll(schemes);
+		for (final Scheme oldScheme : oldSchemes) {
 			this.removeScheme(oldScheme);
 		}
 		for (final Scheme scheme : schemes) {

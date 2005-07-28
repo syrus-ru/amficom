@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.36 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.37 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -81,15 +81,11 @@ public abstract class AbstractSchemeElement
 	 * @param description
 	 * @param parentScheme
 	 */
-	AbstractSchemeElement(final Identifier id,
-			final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final String name,
-			final String description,
-			final Scheme parentScheme) {
+	AbstractSchemeElement(final Identifier id, final Date created,
+			final Date modified, final Identifier creatorId,
+			final Identifier modifierId, 
+			final StorableObjectVersion version, final String name,
+			final String description, final Scheme parentScheme) {
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
@@ -236,11 +232,9 @@ public abstract class AbstractSchemeElement
 	}
 
 	final synchronized void setAttributes(final Date created,
-			final Date modified,
-			final Identifier creatorId,
+			final Date modified, final Identifier creatorId,
 			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final String name,
+			final StorableObjectVersion version, final String name,
 			final String description,
 			final Identifier parentSchemeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.56 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.57 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -347,16 +347,16 @@ public final class SchemeMonitoringSolution
 	}
 
 	public Set<SchemePath> getSchemePaths() {
-		return Collections.unmodifiableSet(this.getSchemePaths0());
-	}
-
-	private Set<SchemePath> getSchemePaths0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemePaths0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemePath> getSchemePaths0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
 	}
 
 	/**
@@ -550,7 +550,7 @@ public final class SchemeMonitoringSolution
 		super.markAsChanged();
 	}
 
-	public void setSchemePaths(final Set<SchemePath> schemePaths) {
+	public void setSchemePaths(final Set<SchemePath> schemePaths) throws ApplicationException {
 		assert schemePaths != null: NON_NULL_EXPECTED;
 		final Set<SchemePath> oldSchemePaths = this.getSchemePaths0();
 		/*

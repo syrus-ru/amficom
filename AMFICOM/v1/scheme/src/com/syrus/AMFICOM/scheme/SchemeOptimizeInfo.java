@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.52 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.53 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -366,42 +366,42 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
-		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
-	}
-
-	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEMONITORINGSOLUTION_CODE), true);
 	}
 
 	public Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus() {
-		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
-	}
-
-	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoRtus0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeOptimizeInfoRtu> getSchemeOptimizeInfoRtus0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFORTU_CODE), true);
 	}
 
 	public Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches() {
-		return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
-	}
-
-	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfoSwitches0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeOptimizeInfoSwitch> getSchemeOptimizeInfoSwitches0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEOPTIMIZEINFOSWITCH_CODE), true);
 	}
 
 	public double getSurvivorRate() {
@@ -637,7 +637,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 		super.markAsChanged();
 	}
 
-	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
 		assert schemeMonitoringSolutions != null: NON_NULL_EXPECTED;
 		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
 		/*
@@ -653,7 +653,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 		}
 	}
 
-	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) {
+	public void setSchemeOptimizeInfoRtus(final Set<SchemeOptimizeInfoRtu> schemeOptimizeInfoRtus) throws ApplicationException {
 		assert schemeOptimizeInfoRtus != null: NON_NULL_EXPECTED;
 		final Set<SchemeOptimizeInfoRtu> oldSchemeOptimizeInfoRtus = this.getSchemeOptimizeInfoRtus0();
 		/*
@@ -669,7 +669,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 		}
 	}
 
-	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) {
+	public void setSchemeOptimizeInfoSwitches(final Set<SchemeOptimizeInfoSwitch> schemeOptimizeInfoSwitches) throws ApplicationException {
 		assert schemeOptimizeInfoSwitches != null: NON_NULL_EXPECTED;
 		final Set<SchemeOptimizeInfoSwitch> oldSchemeOptimizeInfoSwitches = this.getSchemeOptimizeInfoSwitches0();
 		/*

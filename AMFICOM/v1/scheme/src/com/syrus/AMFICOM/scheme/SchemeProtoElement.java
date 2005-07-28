@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.62 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.63 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,8 +77,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -711,7 +711,7 @@ public final class SchemeProtoElement extends StorableObject
 	}
 
 	private Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true, true);
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true);
 	}
 
 	/**
@@ -727,7 +727,7 @@ public final class SchemeProtoElement extends StorableObject
 	}
 
 	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
 	/**
@@ -743,7 +743,7 @@ public final class SchemeProtoElement extends StorableObject
 	}
 
 	private Set<SchemeProtoElement> getSchemeProtoElements0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true);
 	}
 
 	Identifier getSymbolId() {
@@ -1106,21 +1106,18 @@ public final class SchemeProtoElement extends StorableObject
 
 	/**
 	 * @param schemeDevices
+	 * @throws ApplicationException 
 	 */
-	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) {
+	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) throws ApplicationException {
 		assert schemeDevices != null: NON_NULL_EXPECTED;
-		try {
-			final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
-			/*
-			 * Check is made to prevent SchemeDevices from
-			 * permanently losing their parents.
-			 */
-			oldSchemeDevices.removeAll(schemeDevices);
-			for (final SchemeDevice oldSchemeDevice : oldSchemeDevices) {
-				this.removeSchemeDevice(oldSchemeDevice);
-			}
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+		final Set<SchemeDevice> oldSchemeDevices = this.getSchemeDevices0();
+		/*
+		 * Check is made to prevent SchemeDevices from
+		 * permanently losing their parents.
+		 */
+		oldSchemeDevices.removeAll(schemeDevices);
+		for (final SchemeDevice oldSchemeDevice : oldSchemeDevices) {
+			this.removeSchemeDevice(oldSchemeDevice);
 		}
 		for (final SchemeDevice schemeDevice : schemeDevices) {
 			this.addSchemeDevice(schemeDevice);
@@ -1129,21 +1126,18 @@ public final class SchemeProtoElement extends StorableObject
 
 	/**
 	 * @param schemeLinks
+	 * @throws ApplicationException 
 	 */
-	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
-		try {
-			final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
-			/*
-			 * Check is made to prevent SchemeLinks from
-			 * permanently losing their parents.
-			 */
-			oldSchemeLinks.removeAll(schemeLinks);
-			for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
-				this.removeSchemeLink(oldSchemeLink);
-			}
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
+		/*
+		 * Check is made to prevent SchemeLinks from
+		 * permanently losing their parents.
+		 */
+		oldSchemeLinks.removeAll(schemeLinks);
+		for (final SchemeLink oldSchemeLink : oldSchemeLinks) {
+			this.removeSchemeLink(oldSchemeLink);
 		}
 		for (final SchemeLink schemeLink : schemeLinks) {
 			this.addSchemeLink(schemeLink);
@@ -1152,21 +1146,18 @@ public final class SchemeProtoElement extends StorableObject
 
 	/**
 	 * @param schemeProtoElements
+	 * @throws ApplicationException 
 	 */
-	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) {
+	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) throws ApplicationException {
 		assert schemeProtoElements != null: NON_NULL_EXPECTED;
-		try {
-			final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
-			/*
-			 * Check is made to prevent SchemeProtoElements from
-			 * permanently losing their parents.
-			 */
-			oldSchemeProtoElements.removeAll(schemeProtoElements);
-			for (final SchemeProtoElement oldSchemeProtoElement : oldSchemeProtoElements) {
-				this.removeSchemeProtoElement(oldSchemeProtoElement);
-			}
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
+		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
+		/*
+		 * Check is made to prevent SchemeProtoElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeProtoElements.removeAll(schemeProtoElements);
+		for (final SchemeProtoElement oldSchemeProtoElement : oldSchemeProtoElements) {
+			this.removeSchemeProtoElement(oldSchemeProtoElement);
 		}
 		for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
 			this.addSchemeProtoElement(schemeProtoElement);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.57 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.58 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -233,7 +233,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 */
 	private Set<CableChannelingItem> getPathMembers0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true, true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
@@ -294,16 +294,16 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCableThread> getSchemeCableThreads() {
-		return Collections.unmodifiableSet(this.getSchemeCableThreads0());
-	}
-
-	private Set<SchemeCableThread> getSchemeCableThreads0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeCableThreads0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @param sourceSchemeCablePortId
 	 * @param targetSchemeCablePortId
 	 * @param parentSchemeId
-	 * @see AbstractSchemeLink#setAttributes(Date, Date, Identifier, Identifier, long, String, String, double, double, Identifier, Identifier, Identifier, Identifier, Identifier)
+	 * @see AbstractSchemeLink#setAttributes(Date, Date, Identifier, Identifier, StorableObjectVersion, String, String, double, double, Identifier, Identifier, Identifier, Identifier, Identifier)
 	 */
 	@Override
 	synchronized void setAttributes(final Date created,
@@ -488,7 +488,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		super.setParentScheme(parentScheme);
 	}
 
-	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) {
+	public void setSchemeCableThreads(final Set<SchemeCableThread> schemeCableThreads) throws ApplicationException {
 		assert schemeCableThreads != null: NON_NULL_EXPECTED;
 		final Set<SchemeCableThread> oldSchemeCableThreads = this.getSchemeCableThreads0();
 		/*

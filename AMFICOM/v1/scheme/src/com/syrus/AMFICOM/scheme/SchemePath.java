@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.61 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemePath.java,v 1.62 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.61 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -272,7 +272,7 @@ public final class SchemePath extends StorableObject
 	 */
 	private Set<PathElement> getPathMembers0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true, true);
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.56 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.57 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  */
 public final class SchemeDevice extends StorableObject
@@ -424,32 +424,32 @@ public final class SchemeDevice extends StorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeCablePort> getSchemeCablePorts() {
-		return Collections.unmodifiableSet(this.getSchemeCablePorts0());
-	}
-
-	private Set<SchemeCablePort> getSchemeCablePorts0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeCablePorts0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeCablePort> getSchemeCablePorts0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLEPORT_CODE), true);
 	}
 
 	/**
 	 * @return an immutable set.
 	 */
 	public Set<SchemePort> getSchemePorts() {
-		return Collections.unmodifiableSet(this.getSchemePorts0());
-	}
-
-	private Set<SchemePort> getSchemePorts0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemePorts0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemePort> getSchemePorts0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPORT_CODE), true);
 	}
 
 	/**
@@ -621,7 +621,7 @@ public final class SchemeDevice extends StorableObject
 		super.markAsChanged();
 	}
 
-	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) {
+	public void setSchemeCablePorts(final Set<SchemeCablePort> schemeCablePorts) throws ApplicationException {
 		assert schemeCablePorts != null: NON_NULL_EXPECTED;
 		final Set<SchemeCablePort> oldSchemeCablePorts = this.getSchemeCablePorts0();
 		/*
@@ -637,7 +637,7 @@ public final class SchemeDevice extends StorableObject
 		}
 	}
 
-	public void setSchemePorts(final Set<SchemePort> schemePorts) {
+	public void setSchemePorts(final Set<SchemePort> schemePorts) throws ApplicationException {
 		assert schemePorts != null: NON_NULL_EXPECTED;
 		final Set<SchemePort> oldSchemePorts = this.getSchemePorts0();
 		/*

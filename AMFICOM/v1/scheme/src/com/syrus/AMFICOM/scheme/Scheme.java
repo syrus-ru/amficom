@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.60 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: Scheme.java,v 1.61 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -471,16 +471,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set<SchemeCableLink> getSchemeCableLinks() {
-		return Collections.unmodifiableSet(this.getSchemeCableLinks0());
-	}
-
-	private Set<SchemeCableLink> getSchemeCableLinks0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeCableLinks0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeCableLink> getSchemeCableLinks0() throws ApplicationException {
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true);
 	}
 
 	Identifier getSchemeCellId() {
@@ -504,16 +504,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set<SchemeElement> getSchemeElements() {
-		return Collections.unmodifiableSet(this.getSchemeElements0());
-	}
-
-	private Set<SchemeElement> getSchemeElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeElements0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeElement> getSchemeElements0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
 	}
 
 	public IdlKind getKind() {
@@ -522,29 +522,29 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	public Set<SchemeLink> getSchemeLinks() {
-		return Collections.unmodifiableSet(this.getSchemeLinks0());
-	}
-
-	private Set<SchemeLink> getSchemeLinks0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeLinks0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
 	public Set<SchemeOptimizeInfo> getSchemeOptimizeInfos() {
-		return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
-	}
-
-	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeOptimizeInfos0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeOptimizeInfo> getSchemeOptimizeInfos0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEOPTIMIZEINFO_CODE), true);
 	}
 
 	/**
@@ -558,16 +558,16 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @see #getSchemeMonitoringSolutionsRecursively()
 	 */
 	public Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions() {
-		return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
-	}
-
-	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
+			return Collections.unmodifiableSet(this.getSchemeMonitoringSolutions0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeMonitoringSolution> getSchemeMonitoringSolutions0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMEMONITORINGSOLUTION_CODE), true);
 	}
 
 	Identifier getSymbolId() {
@@ -834,7 +834,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) {
+	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) throws ApplicationException {
 		assert schemeCableLinks != null: NON_NULL_EXPECTED;
 		final Set<SchemeCableLink> oldSchemeCableLinks = this.getSchemeCableLinks0();
 		/*
@@ -862,7 +862,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeElements(final Set<SchemeElement> schemeElements) {
+	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
 		assert schemeElements != null: NON_NULL_EXPECTED;
 		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
 		/*
@@ -890,7 +890,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		super.markAsChanged();
 	}
 
-	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) {
+	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
 		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
 		/*
@@ -906,7 +906,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) {
+	public void setSchemeOptimizeInfos(final Set<SchemeOptimizeInfo> schemeOptimizeInfos) throws ApplicationException {
 		assert schemeOptimizeInfos != null: NON_NULL_EXPECTED;
 		final Set<SchemeOptimizeInfo> oldSchemeOptimizeInfos = this.getSchemeOptimizeInfos0();
 		/*
@@ -922,7 +922,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		}
 	}
 
-	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) {
+	public void setSchemeMonitoringSolutions(final Set<SchemeMonitoringSolution> schemeMonitoringSolutions) throws ApplicationException {
 		assert schemeMonitoringSolutions != null : NON_NULL_EXPECTED;
 		final Set<SchemeMonitoringSolution> oldSchemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
 		/*

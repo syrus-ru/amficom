@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.52 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.53 2005/07/28 09:56:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.52 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/07/28 09:56:43 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -353,16 +353,16 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @return an immutable set.
 	 */
 	public Set<SchemeProtoElement> getSchemeProtoElements() {
-		return Collections.unmodifiableSet(this.getSchemeProtoElements0());
-	}
-
-	private Set<SchemeProtoElement> getSchemeProtoElements0() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true, true);
+			return Collections.unmodifiableSet(this.getSchemeProtoElements0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeProtoElement> getSchemeProtoElements0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOELEMENT_CODE), true);
 	}
 
 	/**
@@ -370,12 +370,15 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public Set<SchemeProtoGroup> getSchemeProtoGroups() {
 		try {
-			final Set<SchemeProtoGroup> schemeProtoGroups = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true, true);
-			return Collections.unmodifiableSet(schemeProtoGroups);
+			return Collections.unmodifiableSet(this.getSchemeProtoGroups0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.emptySet();
 		}
+	}
+
+	private Set<SchemeProtoGroup> getSchemeProtoGroups0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPROTOGROUP_CODE), true);
 	}
 
 	Identifier getSymbolId() {
@@ -575,8 +578,9 @@ public final class SchemeProtoGroup extends StorableObject
 	 * or crap will meet the fan.
 	 *
 	 * @param schemeProtoElements
+	 * @throws ApplicationException 
 	 */
-	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) {
+	public void setSchemeProtoElements(final Set<SchemeProtoElement> schemeProtoElements) throws ApplicationException {
 		assert schemeProtoElements != null: NON_NULL_EXPECTED;
 		final Set<SchemeProtoElement> oldSchemeProtoElements = this.getSchemeProtoElements0();
 		/*
@@ -601,9 +605,12 @@ public final class SchemeProtoGroup extends StorableObject
 	 * the new ones (i. e. remove old and add new ones).
 	 *
 	 * @param schemeProtoGroups
+	 * @throws ApplicationException 
 	 */
-	public void setSchemeProtoGroups(final Set<SchemeProtoGroup> schemeProtoGroups) {
+	public void setSchemeProtoGroups(final Set<SchemeProtoGroup> schemeProtoGroups) throws ApplicationException {
 		assert schemeProtoGroups != null: NON_NULL_EXPECTED;
+		final Set<SchemeProtoGroup> oldSchemeProtoGroups = this.getSchemeProtoGroups0();
+		oldSchemeProtoGroups.removeAll(schemeProtoGroups);
 		for (final SchemeProtoGroup oldSchemeProtoGroup : this.getSchemeProtoGroups()) {
 			this.removeSchemeProtoGroup(oldSchemeProtoGroup);
 		}
