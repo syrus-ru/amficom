@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.47 2005/07/28 10:18:20 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.48 2005/07/28 10:41:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/07/28 10:18:20 $
+ * @version $Revision: 1.48 $, $Date: 2005/07/28 10:41:24 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -39,7 +39,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 	}
 
 
-	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
 			return Collections.emptySet();
@@ -72,7 +72,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
@@ -175,7 +175,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
+	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
 		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (versionsMap.isEmpty()) {
 			return Collections.emptySet();
@@ -213,7 +213,7 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException {
+	public final void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException {
 		assert identifiables != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (identifiables.isEmpty()) {
 			return;
