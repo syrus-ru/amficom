@@ -629,7 +629,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.measurementSetupIdMap.clear();
 		}
 		StorableObjectPool.refresh();
-		StorableObjectPool.refresh();
 
 		Date startDate = new Date(startTime);
 		Date endDate = new Date(endTime);
