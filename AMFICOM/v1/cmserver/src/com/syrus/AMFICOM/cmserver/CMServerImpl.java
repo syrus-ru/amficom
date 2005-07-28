@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.116 2005/07/28 15:15:43 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.117 2005/07/28 16:02:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,15 +10,15 @@ package com.syrus.AMFICOM.cmserver;
 
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
-import com.syrus.AMFICOM.general.ServerCore;
+import com.syrus.AMFICOM.general.IdentifierGeneratorServerCore;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/07/28 15:15:43 $
+ * @version $Revision: 1.117 $, $Date: 2005/07/28 16:02:12 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
-final class CMServerImpl extends ServerCore implements CMServerOperations {
+final class CMServerImpl extends IdentifierGeneratorServerCore implements CMServerOperations {
 	private static final long serialVersionUID = 3760563104903672628L;
 
 	CMServerImpl() {
