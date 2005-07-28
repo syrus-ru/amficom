@@ -1,5 +1,5 @@
 /*
- * $Id: SMSAlerter.java,v 1.3 2005/07/13 19:27:08 arseniy Exp $
+ * $Id: SMSAlerter.java,v 1.4 2005/07/28 14:01:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/13 19:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/28 14:01:52 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -22,7 +22,10 @@ final class SMSAlerter extends Alerter {
 	}
 
 	@Override
-	protected void notifyUser(Identifier userId) throws EventNotificationException {
+	protected void notifyUser(final Identifier userId) throws EventNotificationException {
+		/**
+		 * @todo implement
+		 */
 	}
 
 }

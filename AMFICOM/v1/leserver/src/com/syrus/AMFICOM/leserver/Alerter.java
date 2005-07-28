@@ -1,5 +1,5 @@
 /*
- * $Id: Alerter.java,v 1.3 2005/07/03 19:16:18 bass Exp $
+ * $Id: Alerter.java,v 1.4 2005/07/28 14:01:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/03 19:16:18 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/07/28 14:01:52 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 abstract class Alerter {
@@ -27,18 +27,19 @@ abstract class Alerter {
 		alertersMap = Collections.synchronizedMap(new HashMap<AlertKind, Alerter>());
 	}
 
-	static void registerAlerter(AlertKind alertKind, Alerter alerter) {
+	static void registerAlerter(final AlertKind alertKind, final Alerter alerter) {
 		alertersMap.put(alertKind, alerter);
 	}
 
-	protected static Alerter getAlerter(AlertKind alertKind) {
+	protected static Alerter getAlerter(final AlertKind alertKind) {
 		Alerter alerter = alertersMap.get(alertKind);
-		if (alerter == null)
+		if (alerter == null) {
 			alerter = createAlerter(alertKind);
+		}
 		return alerter;
 	}
 
-	private static Alerter createAlerter(AlertKind alertKind) {
+	private static Alerter createAlerter(final AlertKind alertKind) {
 		switch (alertKind.value()) {
 			case AlertKind._ALERT_KIND_EMAIL:
 				return new EMailAlerter();
@@ -49,9 +50,11 @@ abstract class Alerter {
 		}
 	}
 
-	void notifyUserIfLoggedIn(Identifier userId) throws EventNotificationException {
-		CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
-		
+	void notifyUserIfLoggedIn(final Identifier userId) throws EventNotificationException {
+		final CORBAServer corbaServer = LEServerSessionEnvironment.getInstance().getLEServerServantManager().getCORBAServer();
+		/**
+		 * @todo implement
+		 */
 	}
 
 	protected abstract void notifyUser(Identifier userId) throws EventNotificationException;
