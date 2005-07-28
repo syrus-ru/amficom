@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.9 2005/07/11 08:18:57 bass Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.10 2005/07/28 15:32:08 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerPOATie;
 import com.syrus.util.Application;
@@ -30,8 +31,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/11 08:18:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/07/28 15:32:08 $
+ * @author $Author: max $
  * @module mscharserver_v1
  */
 public class MapSchemeAdministrationResourceServer {
@@ -128,7 +129,8 @@ public class MapSchemeAdministrationResourceServer {
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
-			final ServerProcess serverProcess = ((ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE)).retrieveForServerAndCodename(serverId, processCodename);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId, processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			login = user.getLogin();
 

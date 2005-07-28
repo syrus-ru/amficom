@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.13 2005/07/28 13:20:51 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.14 2005/07/28 15:32:08 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,63 +8,42 @@
 
 package com.syrus.AMFICOM.mscharserver;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ServerCore;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifierHolder;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.CompletionStatus;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.ErrorCode;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlCompletionStatus;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
+import com.syrus.AMFICOM.map.LayerDescriptor;
+import com.syrus.AMFICOM.map.MapDescriptor;
 import com.syrus.AMFICOM.map.MapFeature;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
+import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerOperations;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
+import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/28 13:20:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/07/28 15:32:08 $
+ * @author $Author: max $
  * @module mscharserver_v1
  */
 public final class MscharServerImpl extends ServerCore implements MscharServerOperations {
 	private static final long serialVersionUID = 3762810480783274295L;
 
 	MscharServerImpl() {
-		super(MscharServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
-	}
-
-	/**
-	 * @param sessionKey
-	 * @param userId
-	 * @param domainId
-	 * @throws AMFICOMRemoteException
-	 * @see com.syrus.AMFICOM.general.ServerCore#validateAccess(IdlSessionKey, IdlIdentifierHolder, IdlIdentifierHolder)
-	 */
-	protected void validateAccess(final IdlSessionKey sessionKey,
-			final IdlIdentifierHolder userId,
-			final IdlIdentifierHolder domainId)
-			throws AMFICOMRemoteException {
-		try {
-			MscharServerSessionEnvironment.getInstance()
-					.getMscharServerServantManager()
-					.getLoginServerReference()
-					.validateAccess(sessionKey, userId, domainId);
-		} catch (final CommunicationException ce) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_NO, ce.getMessage());
-		} catch (final AMFICOMRemoteException are) {
-			//-Pass AMFICOMRemoteException upward -- do not catch it by 'throw Throwable' below
-			throw are;
-		} catch (final Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ACCESS_VALIDATION, CompletionStatus.COMPLETED_PARTIALLY, t.getMessage());
-		}
+		super(MscharServerSessionEnvironment.getInstance().getConnectionManager(), 
+				MscharServerSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb());
 	}
 
 	public IdlRenderedImage transmitTopologicalImage(
@@ -74,7 +53,7 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			//validateAccess(idlSessionKey, userId, domainId);
+			validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit "
 					+ '\'', Level.INFO);
 			TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQuery_Transferable);
@@ -82,7 +61,7 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 			try {
 				image = MapInfoPool.getImage(topologicalImageQuery, new SessionKey(idlSessionKey));
 			} catch (IllegalDataException e) {
-				throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
+				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 			}
 			IdlRenderedImage renderedImageT = new IdlRenderedImage(image);
 			return renderedImageT;
@@ -99,12 +78,12 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			//validateAccess(idlSessionKey, userId, domainId);
+			validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image"
 					+ '\'', Level.INFO);
 			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_DATA, CompletionStatus.COMPLETED_NO, e.getMessage());
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
 		}
@@ -114,18 +93,77 @@ public final class MscharServerImpl extends ServerCore implements MscharServerOp
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			//validateAccess(idlSessionKey, userId, domainId);
+			validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Level.INFO);
 			List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
 			IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
 			int i = 0;
 			for (MapFeature mapFeature: mapFeatures) {
-				i++;
-				idlMapFeatures[i] = mapFeature.getTransferable();				
+				idlMapFeatures[i++] = mapFeature.getTransferable();				
 			}
 			return idlMapFeatures;
 		} catch (final Throwable t) {
 			throw super.processDefaultThrowable(t);
 		}	
+	}
+	
+	public IdlMapDescriptor[] getMapDescriptors(IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			validateAccess(idlSessionKey, userId, domainId);
+			MapDescriptorParser parser = new MapDescriptorParser();
+			List<MapDescriptor> mapDescriptors = parser.getMapDescriptors();
+			if (mapDescriptors.isEmpty()) {
+				MapDescriptor nullMapDescriptor = new MapDescriptor("", "", "", 0, 0);
+				IdlMapDescriptor nullTransferable = nullMapDescriptor.getTransferable();
+				IdlMapDescriptor[] IdlMapDescriptors = new IdlMapDescriptor[] {nullTransferable};
+				return IdlMapDescriptors;
+			}
+			IdlMapDescriptor[] idlMapDescriptors = new IdlMapDescriptor[mapDescriptors.size()];
+			int i = 0;
+			for (MapDescriptor descriptor: mapDescriptors) {
+				idlMapDescriptors[i++] = descriptor.getTransferable();
+			}
+			return idlMapDescriptors;	
+		} catch (final Throwable t) {
+			throw super.processDefaultThrowable(t);
+		}
+	}
+	
+	public IdlLayerDescriptor[] getLayerDescriptors(IdlMapDescriptor idlMapDescriptor, IdlSessionKey sessionKey) throws AMFICOMRemoteException {
+		try {
+			MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
+			LayerDescriptorParser parser = new LayerDescriptorParser();
+			List<LayerDescriptor> layerDescriptors = parser.getLayerFiles(mapDescriptor);
+			IdlLayerDescriptor[] idlLayerDescriptors = new IdlLayerDescriptor[layerDescriptors.size()];
+			if (layerDescriptors.isEmpty()) {
+				LayerDescriptor nullLayerDescriptor = new LayerDescriptor("", "", 0, 0);
+				IdlLayerDescriptor nullTransferable = nullLayerDescriptor.getTransferable();
+				IdlLayerDescriptor[] IdlLayerDescriptors = new IdlLayerDescriptor[] {nullTransferable};
+				return IdlLayerDescriptors;
+			}
+			int i = 0;
+			for (LayerDescriptor layerFile: layerDescriptors) {
+				idlLayerDescriptors[i++] = layerFile.getTransferable();
+			}
+			return idlLayerDescriptors;
+		} catch (final Throwable t) {
+			throw super.processDefaultThrowable(t);
+		}
+	}
+
+	public byte[] loadFile(String fileName, long offset, IdlSessionKey idlSessionKey) throws AMFICOMRemoteException {
+		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			validateAccess(idlSessionKey, userId, domainId);
+			byte[] partOfFile = FileLoader.fileToByte(fileName, offset);
+			return partOfFile;
+		} catch (IOException e) {
+			throw new AMFICOMRemoteException(IdlErrorCode.ERROR_ILLEGAL_DATA, IdlCompletionStatus.COMPLETED_NO, e.getMessage());
+		} catch (final Throwable t) {
+			throw super.processDefaultThrowable(t);
+		}
 	}
 }

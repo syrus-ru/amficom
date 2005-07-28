@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerObjectLoader.java,v 1.1 2005/07/28 13:20:51 arseniy Exp $
+ * $Id: MscharServerObjectLoader.java,v 1.2 2005/07/28 15:32:08 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,14 +17,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/28 13:20:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/07/28 15:32:08 $
+ * @author $Author: max $
  * @module mscharserver
  */
 final class MscharServerObjectLoader extends DatabaseObjectLoader {
 	private long refreshTimeout;
 	private long lastRefreshTime;
-
+	
+	protected MscharServerObjectLoader(final long refreshTimeout) {
+		this.refreshTimeout = refreshTimeout;
+		this.lastRefreshTime = System.currentTimeMillis();
+	}
+	
 	@Override
 	public Set<Identifier> getOldVersionIds(Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
 		if (System.currentTimeMillis() - this.lastRefreshTime <= this.refreshTimeout) {
