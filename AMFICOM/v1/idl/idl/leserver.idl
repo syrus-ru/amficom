@@ -1,5 +1,5 @@
 /*-
- * $Id: leserver.idl,v 1.2 2005/07/10 13:49:38 bass Exp $
+ * $Id: leserver.idl,v 1.3 2005/07/28 14:04:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,27 +25,27 @@ module corba {
 
 	interface LoginServer : general::corba::Verifiable {
 
-		security::corba::SessionKey login(in general::corba::WString32 login,
+		security::corba::IdlSessionKey login(in general::corba::WString32 login,
 			in general::corba::WString32 password,
-			out general::corba::Identifier user_id)
+			out general::corba::IdlIdentifier userId)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void logout(in security::corba::SessionKey sessionKeyT)
+		void logout(in security::corba::IdlSessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		administration::corba::DomainSeq transmitAvailableDomains(in security::corba::SessionKey sessionKeyT)
+		administration::corba::IdlDomainSeq transmitAvailableDomains(in security::corba::IdlSessionKey sessionKeyT)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void selectDomain(in security::corba::SessionKey sessionKeyT, in general::corba::Identifier domain_id)
+		void selectDomain(in security::corba::IdlSessionKey sessionKeyT, in general::corba::IdlIdentifier domainId)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void validateAccess(in security::corba::SessionKey sessionKeyT,
-			out general::corba::Identifier user_id,
-			out general::corba::Identifier domain_id)
+		void validateAccess(in security::corba::IdlSessionKey sessionKeyT,
+			out general::corba::IdlIdentifier userId,
+			out general::corba::IdlIdentifier domainId)
 			raises (general::corba::AMFICOMRemoteException);
 
-		void setPassword(in security::corba::SessionKey sessionKeyT,
-			in general::corba::Identifier user_id,
+		void setPassword(in security::corba::IdlSessionKey sessionKeyT,
+			in general::corba::IdlIdentifier userId,
 			in general::corba::WString32 password)
 			raises (general::corba::AMFICOMRemoteException);
 		
@@ -53,12 +53,7 @@ module corba {
 
 
 	interface EventServer : general::corba::Verifiable {
-
-#ifdef STRICT
-		void eventGeneration(in event::corba::Event event_)
-#else // STRICT
-		void eventGeneration(in event::corba::Event event)
-#endif // STRICT
+		void eventGeneration(in event::corba::IdlEvent event)
 			raises (general::corba::AMFICOMRemoteException);
 	};
 
