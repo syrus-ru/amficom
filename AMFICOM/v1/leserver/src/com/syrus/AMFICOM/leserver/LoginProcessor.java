@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.11 2005/07/13 19:27:08 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.12 2005/07/28 14:01:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/13 19:27:08 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 14:01:03 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -33,7 +33,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	public static final String KEY_MAX_USER_UNACTIVITY_PERIOD = "MaxUserUnactivityPeriod";
 
 	public static final int LOGIN_PROCESSOR_TICK_TIME = 5;	//sec
-	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//hour
+	public static final int MAX_USER_UNACTIVITY_PERIOD = 1;	//minutes
 
 	private static Map<SessionKey, UserLogin> loginMap;
 	private long maxUserUnactivityPeriod;
@@ -47,7 +47,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		if (loginMap == null)
 			loginMap = Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
 
-		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 60 * 1000;
+		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
 		this.userLoginDatabase = new UserLoginDatabase();
 		this.running = true;
 
@@ -86,7 +86,7 @@ final class LoginProcessor extends SleepButWorkThread {
 					final Date lastActivityDate = userLogin.getLastActivityDate();
 					if (System.currentTimeMillis() - lastActivityDate.getTime() >= this.maxUserUnactivityPeriod) {
 						Log.debugMessage("User '" + userLogin.getUserId() + "' unactive more, than "
-								+ (this.maxUserUnactivityPeriod / (60 * 60 * 1000)) + " hours. Deleting login", Log.DEBUGLEVEL06);
+								+ (this.maxUserUnactivityPeriod / (60 * 1000)) + " minutes. Deleting login", Log.DEBUGLEVEL06);
 						this.userLoginDatabase.delete(userLogin);
 						it.remove();
 					}
