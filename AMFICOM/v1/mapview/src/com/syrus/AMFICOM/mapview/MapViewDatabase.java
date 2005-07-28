@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.33 2005/07/28 11:40:06 max Exp $
+ * $Id: MapViewDatabase.java,v 1.34 2005/07/28 14:42:31 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/28 11:40:06 $
- * @author $Author: max $
+ * @version $Revision: 1.34 $, $Date: 2005/07/28 14:42:31 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -207,7 +207,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}
 
 	@Override
-	public void insert(final Set storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<MapView> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateSchemeIds(storableObjects);
@@ -217,7 +217,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}
 
 	@Override
-	public void update(final Set storableObjects) throws UpdateObjectException {
+	public void update(final Set<MapView> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateSchemeIds(storableObjects);
 	}	
@@ -285,7 +285,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}
 			
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected Set<MapView> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<MapView> maps = super.retrieveByCondition(conditionQuery);
 		
 		final java.util.Map<Identifier, MapView> mapIds = new HashMap<Identifier, MapView>();
