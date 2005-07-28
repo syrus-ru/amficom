@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.14 2005/07/20 06:04:43 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.15 2005/07/28 19:45:42 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/07/20 06:04:43 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/07/28 19:45:42 $
  * @module commonclient_v1
  */
 
@@ -79,11 +78,11 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	protected ApplicationContext aContext;
 	protected CharacteristicTypeSort selectedTypeSort;
-	protected Map characteristics = new HashMap();
-	protected Set editableSorts = new HashSet();
-	protected Map typeSortsCharacterizedIds = new HashMap();
-	protected Map addedCharacteristics = new HashMap();
-	protected Map removedCharacteristics = new HashMap();
+	protected Map<Identifier, List<Characteristic>> characteristics = new HashMap<Identifier, List<Characteristic>>();
+	protected Set<CharacteristicTypeSort> editableSorts = new HashSet<CharacteristicTypeSort>();
+	protected Map<CharacteristicTypeSort, CharacterizableObject> typeSortsCharacterizedIds = new HashMap<CharacteristicTypeSort, CharacterizableObject>();
+	protected Map<CharacterizableObject, List<Characteristic>> addedCharacteristics = new HashMap<CharacterizableObject, List<Characteristic>>();
+	protected Map<CharacterizableObject, List<Characteristic>> removedCharacteristics = new HashMap<CharacterizableObject, List<Characteristic>>();
 
 	JPanel pnPanel0 = new JPanel();
 	PropsADToolBar toolBar;
@@ -105,7 +104,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	private class CharacteristicTypeSortRenderer extends JLabel implements ListCellRenderer {
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-			CharacteristicTypeSort sort = (CharacteristicTypeSort)value;
+			final CharacteristicTypeSort sort = (CharacteristicTypeSort)value;
 			String name;
 			switch (sort.value()) {
 				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
@@ -141,17 +140,17 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
-	public CharacteristicsPanel(List characteristics, Identifier characterizedId) {
+	public CharacteristicsPanel(final List<Characteristic> characteristics, final Identifier characterizedId) {
 		this();
-		addCharacteristics(characteristics, characterizedId);
+		this.addCharacteristics(characteristics, characterizedId);
 	}
 
-	public CharacteristicsPanel(Characteristic[] characteristics, Identifier characterizedId) {
+	public CharacteristicsPanel(final Characteristic[] characteristics, final Identifier characterizedId) {
 		this();
-		addCharacteristics(characteristics, characterizedId);
+		this.addCharacteristics(characteristics, characterizedId);
 	}
 
-	public void setContext(ApplicationContext aContext) {
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
@@ -182,8 +181,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 			}
 		});
 
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		this.pnPanel0.setLayout(gbPanel0);
 
 		gbcPanel0.gridx = 0;
@@ -226,7 +225,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.pnPanel0.add(tablePane);
 	}
 	
-	public void setEditable(boolean editable) {
+	public void setEditable(final boolean editable) {
 		this.wtModel.setColumnEditable(1, editable);
 	}
 
@@ -243,29 +242,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-/*@todo Посоветовать Владимиру Александровичу это всё снести 
- * 
-		for (Iterator tits = this.typeSortsCharacterizedIds.values().iterator(); tits.hasNext();) {
-			Object obj = tits.next();
-			if (obj instanceof CharacterizableObject) {
-				Characterizable characterizable = ((CharacterizableObject) obj).characterizable;
-				List added = (List) this.addedCharacteristics.get(obj);
-				if (added != null) {
-					for (Iterator it = added.iterator(); it.hasNext();) {
-						characterizable.addCharacteristic((Characteristic) it.next());
-					}
-				}
-				List removed = (List) this.removedCharacteristics.get(obj);
-				if (removed != null) {
-					for (Iterator it = removed.iterator(); it.hasNext();) {
-						characterizable.removeCharacteristic((Characteristic) it.next());
-					}
-				}
-			}
-		}
-		*/
 		try {
-			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
@@ -273,16 +251,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	public boolean save() {
 		try {
-			Set removedIds = new HashSet();
-			for (Iterator it = this.removedCharacteristics.values().iterator(); it.hasNext();) {
-				List removed = (List) it.next();
-				for (Iterator it2 = removed.iterator(); it2.hasNext();) {
-					Characteristic ch = (Characteristic) it2.next();
+			final Set<Identifier> removedIds = new HashSet<Identifier>();
+			for (final List<Characteristic> removed : this.removedCharacteristics.values()) {
+				for (final Characteristic ch : removed) {
 					removedIds.add(ch.getId());
 				}
 			}
 			StorableObjectPool.delete(removedIds);
-			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, true);
+			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 			return false;
@@ -290,55 +266,52 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		return true;
 	}
 
-	public void addCharacteristics(final Collection chars,
-			Identifier characterizedId) {
+	public void addCharacteristics(final List<Characteristic> chars, final Identifier characterizedId) {
 		this.characteristics.put(characterizedId, chars);
 		elementSelected(this.selectedTypeSort);
 	}
 
-	public void addCharacteristics(Characteristic[] chars,
-			Identifier characterizedId) {
+	public void addCharacteristics(final Characteristic[] chars, final Identifier characterizedId) {
 		this.characteristics.put(characterizedId, Arrays.asList(chars));
 		elementSelected(this.selectedTypeSort);
 	}
 
-	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
-			Characterizable characterizable,
-			Identifier characterizableId, boolean isEditable) {
-		this.typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(
-				characterizable, characterizableId));
-		if (isEditable)
+	public void setTypeSortMapping(final CharacteristicTypeSort typeSort,
+			final Characterizable characterizable,
+			final Identifier characterizableId,
+			final boolean isEditable) {
+		this.typeSortsCharacterizedIds.put(typeSort, new CharacterizableObject(characterizable, characterizableId));
+		if (isEditable) {
 			this.editableSorts.add(typeSort);
-		else
+		}
+		else {
 			this.editableSorts.remove(typeSort);
+		}
 	}
 
-	void setPropsEditable(boolean b) {
+	void setPropsEditable(final boolean b) {
 		this.toolBar.setAddButtonEnabled(b && this.selectedTypeSort != null);
-		this.toolBar.setCancelButtonEnabled(!this.wTable.getSelectionModel()
-				.isSelectionEmpty() && b);
+		this.toolBar.setCancelButtonEnabled(!this.wTable.getSelectionModel().isSelectionEmpty() && b);
 		this.toolBar.setCommitButtonEnabled(b);
 		this.wtModel.setColumnEditable(1, b);
 	}
 
-	void elementSelected(CharacteristicTypeSort selected_type) {
-		if (selected_type == null) {
+	void elementSelected(final CharacteristicTypeSort selectedType) {
+		if (selectedType == null) {
 			showNoSelection();
 			return;
 		}
 
 		this.wtModel.clear();
-		Collection chars2add = new LinkedList();
-		for (Iterator it = this.characteristics.values().iterator(); it.hasNext();) {
-			Collection chars = (Collection) it.next();
-			if (chars != null)
-				for (Iterator it2 = chars.iterator(); it2.hasNext();) {
-					Characteristic ch = (Characteristic) it2.next();
-					if (((CharacteristicType) ch.getType()).getSort().equals(
-							selected_type)) {
+		final Collection<Characteristic> chars2add = new LinkedList<Characteristic>();
+		for (final List<Characteristic> chars : this.characteristics.values()) {
+			if (chars != null) {
+				for (final Characteristic ch : chars) {
+					if (((CharacteristicType) ch.getType()).getSort().equals(selectedType)) {
 						chars2add.add(ch);
 					}
 				}
+			}
 		}
 		this.wtModel.setValues(chars2add);
 		setPropsEditable(this.editableSorts.contains(this.selectedTypeSort));
@@ -349,16 +322,14 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		setPropsEditable(false);
 	}
 
-	void item_stateChanged(ItemEvent e) {
+	void item_stateChanged(final ItemEvent e) {
 		this.selectedTypeSort = (CharacteristicTypeSort) e.getItem();
 		setPropsEditable(this.editableSorts.contains(this.selectedTypeSort));
 		elementSelected(this.selectedTypeSort);
 	}
 
-	void setCharacteristicValue(Collection characteristics, String name,
-			String value) {
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			Characteristic ch = (Characteristic) it.next();
+	void setCharacteristicValue(final Collection<Characteristic> characteristics, final String name, final String value) {
+		for (final Characteristic ch : characteristics) {
 			if (ch.getName().equals(name)) {
 				ch.setValue(value);
 				break;
@@ -367,18 +338,18 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	Collection getCharacteristics() {
-		CharacterizableObject obj = (CharacterizableObject) this.typeSortsCharacterizedIds
-				.get(this.selectedTypeSort);
+		final CharacterizableObject obj = this.typeSortsCharacterizedIds.get(this.selectedTypeSort);
 		if (obj == null) {
 			Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " + this.selectedTypeSort, Level.FINER); //$NON-NLS-1$
 			return null;
 		}
-		Identifier characterizedId = obj.characterizableId;
-		Collection chars = (Collection) this.characteristics.get(characterizedId);
-		Collection newChars = (Collection) this.addedCharacteristics.get(obj);
-		if (newChars == null)
+		final Identifier characterizedId = obj.characterizableId;
+		final Collection<Characteristic> chars = this.characteristics.get(characterizedId);
+		final Collection<Characteristic> newChars = this.addedCharacteristics.get(obj);
+		if (newChars == null) {
 			return chars;
-		Collection allChars = new ArrayList(chars.size() + newChars.size());
+		}
+		final Collection<Characteristic> allChars = new ArrayList<Characteristic>(chars.size() + newChars.size());
 		allChars.addAll(chars);
 		allChars.addAll(newChars);
 		return allChars;
@@ -386,9 +357,9 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	
 	class PropsADToolBar extends JPanel {
 		private static final long serialVersionUID = 3544392491714752818L;
-		JButton addButton = new JButton();
-		JButton deleteButton = new JButton();
-		JButton commitButton = new JButton();
+		final JButton addButton = new JButton();
+		final JButton deleteButton = new JButton();
+		final JButton commitButton = new JButton();
 
 		public PropsADToolBar() {
 			
@@ -410,33 +381,38 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 					if (CharacteristicsPanel.this.selectedTypeSort == null) {
 						return;
 					}
-					Object object = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
+					final CharacterizableObject object = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
 					if (object == null) {
 						Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort "  //$NON-NLS-1$
 										+ CharacteristicsPanel.this.selectedTypeSort, Level.FINER);
 						return;
 					}
 
-					CharacteristicAddDialog frame = new CharacteristicAddDialog(Environment.getActiveWindow(), "Add characteristic");
+					final CharacteristicAddDialog frame = new CharacteristicAddDialog(Environment.getActiveWindow(), "Add characteristic");
 					if (frame.showDialog(CharacteristicsPanel.this.selectedTypeSort, CharacteristicsPanel.this.wtModel.getValues()) == JOptionPane.OK_OPTION) {
-						CharacteristicType type = frame.getCharacteristicType();
-						Identifier userId = LoginManager.getUserId();
+						final CharacteristicType type = frame.getCharacteristicType();
+						final Identifier userId = LoginManager.getUserId();
 
-						if (object instanceof CharacterizableObject) {
-							final Characterizable characterizable = ((CharacterizableObject) object).characterizable;
+						if (object != null) {
+							final Characterizable characterizable = object.characterizable;
 
 							try {
-								Characteristic ch = Characteristic.createInstance(userId, type,
-										type.getName(), type.getDescription(), "", characterizable, true,
+								final Characteristic ch = Characteristic.createInstance(userId,
+										type,
+										type.getName(),
+										type.getDescription(),
+										"",
+										characterizable,
+										true,
 										true);
-								List added = (List) CharacteristicsPanel.this.addedCharacteristics.get(object);
+								List<Characteristic> added = CharacteristicsPanel.this.addedCharacteristics.get(object);
 								if (added == null) {
-									added = new LinkedList();
+									added = new LinkedList<Characteristic>();
 									CharacteristicsPanel.this.addedCharacteristics.put(object, added);
 								}
 								added.add(ch);
 
-								int n = CharacteristicsPanel.this.wtModel.addObject(ch);
+								final int n = CharacteristicsPanel.this.wtModel.addObject(ch);
 								CharacteristicsPanel.this.wTable.setRowSelectionInterval(n, n);
 							} catch (CreateObjectException ex) {
 								ex.printStackTrace();
@@ -455,43 +431,44 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 			this.deleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 
-					int n = CharacteristicsPanel.this.wTable.getSelectedRow();
-					if (n == -1)
+					final int n = CharacteristicsPanel.this.wTable.getSelectedRow();
+					if (n == -1) {
 						return;
+					}
 
 					if (CharacteristicsPanel.this.selectedTypeSort == null) {
 						return;
 					}
-					Object obj = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
+					final CharacterizableObject obj = CharacteristicsPanel.this.typeSortsCharacterizedIds.get(CharacteristicsPanel.this.selectedTypeSort);
 					if (obj == null) {
 						Log.debugMessage("CharacterizedObject not set for CharacteristicTypeSort " //$NON-NLS-1$
 										+ CharacteristicsPanel.this.selectedTypeSort, Level.FINER);
 						return;
 					}
 
-					Characteristic characteristic = (Characteristic)CharacteristicsPanel.this.wtModel.getObject(n);
+					final Characteristic characteristic = (Characteristic) CharacteristicsPanel.this.wtModel.getObject(n);
 
-						List added = (List) CharacteristicsPanel.this.addedCharacteristics.get(obj);
-						if (added != null && added.contains(characteristic)) {
-							added.remove(characteristic);
-							if (added.isEmpty()) {
-								CharacteristicsPanel.this.addedCharacteristics.remove(obj);
-							}
-						} else {
-							List removed = (List) CharacteristicsPanel.this.removedCharacteristics.get(obj);
-							if (removed == null) {
-								removed = new LinkedList();
-								CharacteristicsPanel.this.removedCharacteristics.put(obj, removed);
-							}
-							removed.add(characteristic);
+					final List<Characteristic> added = CharacteristicsPanel.this.addedCharacteristics.get(obj);
+					if (added != null && added.contains(characteristic)) {
+						added.remove(characteristic);
+						if (added.isEmpty()) {
+							CharacteristicsPanel.this.addedCharacteristics.remove(obj);
 						}
+					} else {
+						List<Characteristic> removed = CharacteristicsPanel.this.removedCharacteristics.get(obj);
+						if (removed == null) {
+							removed = new LinkedList<Characteristic>();
+							CharacteristicsPanel.this.removedCharacteristics.put(obj, removed);
+						}
+						removed.add(characteristic);
+					}
 
-						CharacteristicsPanel.this.wtModel.removeObject(n);
-						CharacteristicsPanel.this.wTable.revalidate();
+					CharacteristicsPanel.this.wtModel.removeObject(n);
+					CharacteristicsPanel.this.wTable.revalidate();
 				
 				}
 			});
-			
+
 			this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 			this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 			this.commitButton.setFocusPainted(false);
@@ -509,15 +486,15 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 			this.add(this.commitButton);
 		}
 
-		public void setAddButtonEnabled(boolean b) {
+		public void setAddButtonEnabled(final boolean b) {
 			this.addButton.setEnabled(b);
 		}
 
-		public void setCancelButtonEnabled(boolean b) {
+		public void setCancelButtonEnabled(final boolean b) {
 			this.deleteButton.setEnabled(b);
 		}
 		
-		public void setCommitButtonEnabled(boolean b) {
+		public void setCommitButtonEnabled(final boolean b) {
 			this.commitButton.setEnabled(b);
 		}
 	}
