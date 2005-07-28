@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.55 2005/07/28 11:04:16 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.56 2005/07/28 19:05:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
@@ -28,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/07/28 11:04:16 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/28 19:05:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -112,9 +111,6 @@ public class ClientMeasurementServer {
 			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId, processCodename);
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			login = user.getLogin();
-
-			/*	Init database object loader*/
-			DatabaseObjectLoader.init(user.getId());
 
 			/*	Create session environment*/
 			CMServerSessionEnvironment.createInstance(server.getHostName());

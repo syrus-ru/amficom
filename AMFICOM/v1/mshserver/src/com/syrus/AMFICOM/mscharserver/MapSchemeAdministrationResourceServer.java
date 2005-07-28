@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.11 2005/07/28 16:45:41 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.12 2005/07/28 19:05:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
@@ -31,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/28 16:45:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 19:05:38 $
  * @author $Author: arseniy $
  * @module mscharserver_v1
  */
@@ -135,11 +134,6 @@ public class MapSchemeAdministrationResourceServer {
 			final SystemUser user = new SystemUser(serverProcess.getUserId());
 			login = user.getLogin();
 
-			/*
-			 * Init database object loader.
-			 */
-			DatabaseObjectLoader.init(user.getId());
-			
 			/*
 			 * Mapinfo pool init.
 			 */
