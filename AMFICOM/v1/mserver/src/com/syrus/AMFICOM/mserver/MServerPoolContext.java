@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.5 2005/07/13 19:29:27 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.6 2005/07/28 18:57:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,43 +8,32 @@
 
 package com.syrus.AMFICOM.mserver;
 
-import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
-import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/13 19:29:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/28 18:57:50 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
 final class MServerPoolContext extends PoolContext {
-	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
-	public static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
-	public static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
-	public static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
+	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
+	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
+	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	private static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
 
-	public static final int GENERAL_POOL_SIZE = 1000;
-	public static final int ADMINISTRATION_POOL_SIZE = 1000;
-	public static final int CONFIGURATION_POOL_SIZE = 1000;
-	public static final int MEASUREMENT_POOL_SIZE = 1000;
+	private static final int GENERAL_POOL_SIZE = 1000;
+	private static final int ADMINISTRATION_POOL_SIZE = 1000;
+	private static final int CONFIGURATION_POOL_SIZE = 1000;
+	private static final int MEASUREMENT_POOL_SIZE = 1000;
 
 	@Override
 	public void init() {
-		final GeneralObjectLoader generalObjectLoader = new DatabaseGeneralObjectLoader();
-		final AdministrationObjectLoader administrationObjectLoader = new DatabaseAdministrationObjectLoader();
-		final ConfigurationObjectLoader configurationObjectLoader = new DatabaseConfigurationObjectLoader();
-		final MeasurementObjectLoader measurementObjectLoader = new MServerMeasurementObjectLoader();
+		final ObjectLoader objectLoader = new MServerObjectLoader();
 
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 
@@ -53,10 +42,11 @@ final class MServerPoolContext extends PoolContext {
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
 		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
 
-		GeneralStorableObjectPool.init(generalObjectLoader, lruMapClass, generalPoolSize);
-		AdministrationStorableObjectPool.init(administrationObjectLoader, lruMapClass, administrationPoolSize);
-		ConfigurationStorableObjectPool.init(configurationObjectLoader, lruMapClass, configurationPoolSize);
-		MeasurementStorableObjectPool.init(measurementObjectLoader, lruMapClass, measurementPoolSize);
+		StorableObjectPool.init(objectLoader, lruMapClass);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
 	}
 
 }
