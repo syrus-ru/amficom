@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.15 2005/07/28 16:42:01 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.16 2005/07/28 16:45:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/28 16:42:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/28 16:45:26 $
  * @author $Author: arseniy $
  * @module mscharserver_v1
  */
@@ -125,9 +125,12 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		}
 	}
 
-	public IdlLayerDescriptor[] getLayerDescriptors(final IdlMapDescriptor idlMapDescriptor, final IdlSessionKey sessionKey)
+	public IdlLayerDescriptor[] getLayerDescriptors(final IdlMapDescriptor idlMapDescriptor, final IdlSessionKey idlSessionKey)
 			throws AMFICOMRemoteException {
 		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			super.validateAccess(idlSessionKey, userId, domainId);
 			final MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
 			final LayerDescriptorParser parser = new LayerDescriptorParser();
 			final List<LayerDescriptor> layerDescriptors = parser.getLayerFiles(mapDescriptor);
