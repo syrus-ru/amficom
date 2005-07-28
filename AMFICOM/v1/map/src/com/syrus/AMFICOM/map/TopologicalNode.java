@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.55 2005/07/28 10:07:11 max Exp $
+ * $Id: TopologicalNode.java,v 1.56 2005/07/28 14:47:31 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: max $
- * @version $Revision: 1.55 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/07/28 14:47:31 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -62,7 +62,7 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	 * набор параметров дл€ экспорта. инициализируетс€ только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	/**
 	 * ‘лаг показывающий закрыт ли узел true значит что из узла выходит две линии,
@@ -328,9 +328,9 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	/**
 	 * {@inheritDoc}
 	 */
-	public java.util.Map getExportMap() {
+	public java.util.Map<String, Object> getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);

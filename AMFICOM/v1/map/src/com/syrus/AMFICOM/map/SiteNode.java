@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.58 2005/07/28 10:07:11 max Exp $
+ * $Id: SiteNode.java,v 1.59 2005/07/28 14:47:31 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: max $
- * @version $Revision: 1.58 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/07/28 14:47:31 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -82,7 +82,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private SiteNodeType type;
 
@@ -318,9 +318,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	/**
 	 * {@inheritDoc}
 	 */
-	public java.util.Map getExportMap() {
+	public java.util.Map<String, Object> getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			try {
@@ -343,7 +343,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	public static SiteNode createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
+	public static SiteNode createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
 		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		final String name1 = (String) exportMap1.get(COLUMN_NAME);
 		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
