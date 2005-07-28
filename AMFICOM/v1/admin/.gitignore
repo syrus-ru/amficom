@@ -18,3 +18,4 @@ javadoc.xml
 build.xml
 nbproject
 .nbintdb
+.pmd
