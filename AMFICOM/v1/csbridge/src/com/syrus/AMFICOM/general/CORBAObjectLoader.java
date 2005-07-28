@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.46 2005/07/28 10:14:58 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.47 2005/07/28 10:18:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/07/28 10:14:58 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/28 10:18:20 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -39,10 +39,6 @@ public class CORBAObjectLoader implements ObjectLoader {
 	}
 
 
-	/**
-	 * Overridden in:
-	 * CMServerObjectLoader
-	 */
 	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
 		if (ids.isEmpty()) {
@@ -76,10 +72,6 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	/**
-	 * Overridden in:
-	 * CMServerObjectLoader
-	 */
 	public <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition)
 			throws ApplicationException {
