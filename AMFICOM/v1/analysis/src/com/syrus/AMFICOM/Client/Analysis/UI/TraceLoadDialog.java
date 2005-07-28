@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceLoadDialog.java,v 1.1 2005/07/19 13:21:53 stas Exp $
+ * $Id: TraceLoadDialog.java,v 1.2 2005/07/28 09:15:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/19 13:21:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/28 09:15:39 $
  * @module analysis_v1
  */
 
@@ -57,8 +57,7 @@ public class TraceLoadDialog {
 	public static int showDialog(JFrame frame) {
 		if (treeFilterUI == null) {
 			selectedResults = new HashSet<Result>();
-			ResultChildrenFactory.getInstance().setDomainId(LoginManager.getDomainId());
-			Item root = ResultChildrenFactory.getRoot();
+			Item root = new ResultChildrenFactory().getRoot();
 			
 			treeUI = new IconedTreeUI(root);
 			treeUI.getTree().expandPath(new TreePath(root));

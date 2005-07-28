@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.22 2005/07/19 17:55:02 arseniy Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.23 2005/07/28 09:15:39 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -36,13 +37,11 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.Populatable;
-import com.syrus.AMFICOM.logic.PopulatableItem;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Parameter;
@@ -53,11 +52,12 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/07/19 17:55:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/07/28 09:15:39 $
+ * @author $Author: stas $
  * @module analysis_v1
  */
 public class ReflectogrammLoadDialog extends JDialog {
+	private static final long serialVersionUID = 3544388106469259320L;
 
 	JButton						okButton;
 	Result						result;
@@ -70,8 +70,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 	private JButton				cancelButton;
 	private JButton				updateButton	= new JButton();
 	
-	ChildrenFactory childrenFactory;
-	IconPopulatableItem rootItem;
+	ResultChildrenFactory childrenFactory;
+	PopulatableIconedNode rootItem;
 	LogicalTreeUI treeUI;
 
 	public ReflectogrammLoadDialog(ApplicationContext aContext) {
@@ -131,8 +131,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 						
 //				ReflectogrammLoadDialog.this.setTree();
 				TreePath selectedPath = ReflectogrammLoadDialog.this.treeUI.getTree().getSelectionModel().getSelectionPath();
-				PopulatableItem itemToRefresh = selectedPath != null 
-						? (PopulatableItem)selectedPath.getLastPathComponent()
+				PopulatableIconedNode itemToRefresh = selectedPath != null 
+						? (PopulatableIconedNode)selectedPath.getLastPathComponent()
 						: ReflectogrammLoadDialog.this.rootItem;
 				
 				updateRecursively(itemToRefresh);
@@ -183,9 +183,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 				Domain domain = (Domain)StorableObjectPool.getStorableObject(this.domainId, true);
 
 //				childrenFactory = ArchiveChildrenFactory.getInstance();
-				this.childrenFactory = ResultChildrenFactory.getInstance();
-				((ResultChildrenFactory) this.childrenFactory).setDomainId(this.domainId);
-				this.rootItem = new IconPopulatableItem();
+				this.childrenFactory = new ResultChildrenFactory();
+				this.rootItem = (PopulatableIconedNode)this.childrenFactory.getRoot();
 				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
 				this.rootItem.setName(LangModelAnalyse.getString("Archive"));
 				this.rootItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
@@ -216,7 +215,6 @@ public class ReflectogrammLoadDialog extends JDialog {
 				getContentPane().add(this.scrollPane, BorderLayout.CENTER);
 				setTitle(LangModelAnalyse.getString("Choose reflectogram") + " (" + domain.getName() + ")");
 			}
-			this.rootItem.removeAllChildren();
 			this.rootItem.populate();
 
 		} catch (ApplicationException ex) {

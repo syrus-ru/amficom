@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.4 2005/07/22 14:00:47 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.5 2005/07/28 09:15:39 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -67,13 +68,13 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/22 14:00:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/28 09:15:39 $
  * @module analysis_v1
  */
 
 public class ResultChildrenFactory implements ChildrenFactory {
 
-	private static final String	ROOT	= "root";
+	private static final String	ROOT	= "result.root";
 	private static final String	MONITOREDELEMENTS	= "monitoredelements";
 	private static final String	MEASUREMENTSETUPS	= "measurementsetups";
 	private static final String	DATES	= "dates";
@@ -86,28 +87,20 @@ public class ResultChildrenFactory implements ChildrenFactory {
 	static SimpleDateFormat shortDate = new SimpleDateFormat("dd.MM"); 
 	
 	private Calendar	calendar;
+
+	private PopulatableIconedNode root;
 	
-	private static ResultChildrenFactory	instance;
-	private Identifier	domainId;
-	private static Item root;
-	
-	private ResultChildrenFactory() {
+	public ResultChildrenFactory() {
 		this.calendar = Calendar.getInstance();
 	}
 	
-	public static ResultChildrenFactory getInstance() {
-		if (instance == null)
-			instance = new ResultChildrenFactory();
-		return instance;
+	public static String getRootObject() {
+		return ROOT;
 	}
 	
-	public void setDomainId(Identifier domainId) {
-		this.domainId = domainId;
-	}
-	
-	public static Item getRoot() {
+	public PopulatableIconedNode getRoot() {
 		if (root == null) {
-			root = new PopulatableIconedNode(getInstance(), ROOT, ROOT, true);
+			root = new PopulatableIconedNode(this, ROOT, LangModelAnalyse.getString(ROOT), true);
 		}
 		return root;
 	}
@@ -140,7 +133,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 //					item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
 					item2.setName(LangModelAnalyse.getString("monitoredElements"));
 					item2.setChildrenFactory(this);
-					item2.setDefaultCondition(new LinkedIdsCondition(this.domainId, ObjectEntities.MONITOREDELEMENT_CODE));
+					item2.setDefaultCondition(new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.MONITOREDELEMENT_CODE));
 					item2.setFilter(new Filter(new MonitoredElementConditionWrapper(), null));
 					item.addChild(item2);
 				}
