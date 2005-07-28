@@ -87,8 +87,9 @@ public class AnalysisUtil
 
 		return bs;
 	}
-	
-	public static AnalysisResult getAnalysisForMeasurement(Measurement m) throws DataFormatException, ApplicationException {
+
+	public static AnalysisResult getAnalysisForMeasurementIfPresent(Measurement m)
+	throws DataFormatException, ApplicationException {
 		LinkedIdsCondition condition1 = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_CODE);
 		Set<Analysis> analyse = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		for (Analysis analysis : analyse) {
@@ -102,7 +103,16 @@ public class AnalysisUtil
 				}
 			}
 		}
-		throw new ApplicationException("No AnalysisResult found for Measurement " + m.getName());
+		return null;
+	}
+
+	public static AnalysisResult getAnalysisForMeasurement(Measurement m)
+	throws DataFormatException, ApplicationException {
+		AnalysisResult ar = getAnalysisForMeasurementIfPresent(m);
+		if (ar == null) {
+			throw new ApplicationException("No AnalysisResult found for Measurement " + m.getName());
+		}
+		return ar;
 	}
 
 	public static ParameterType getParameterType(String codename,
