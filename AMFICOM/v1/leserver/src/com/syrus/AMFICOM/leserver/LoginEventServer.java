@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.21 2005/07/07 19:42:26 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.22 2005/07/28 14:00:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,28 +17,29 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/07 19:42:26 $
+ * @version $Revision: 1.22 $, $Date: 2005/07/28 14:00:12 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class LoginEventServer {
-	public static final String APPLICATION_NAME = "leserver";
+	private static final String APPLICATION_NAME = "leserver";
 
 	/*-********************************************************************
 	 * Keys.                                                              *
 	 **********************************************************************/
 
-	public static final String KEY_DB_HOST_NAME = "DBHostName";
-	public static final String KEY_DB_SID = "DBSID";
-	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
-	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	public static final String KEY_SERVER_ID = "ServerID";
+	private static final String KEY_DB_HOST_NAME = "DBHostName";
+	private static final String KEY_DB_SID = "DBSID";
+	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	private static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
@@ -69,8 +70,10 @@ public final class LoginEventServer {
 		startup();
 
 		/*	Start Login Processor*/
-		LoginProcessor loginProcessor = new LoginProcessor();
+		final LoginProcessor loginProcessor = new LoginProcessor();
 		loginProcessor.start();
+
+		/*	@todo: Start Event Processor*/
 
 		/*
 		 * Add shutdown hook.
@@ -101,12 +104,14 @@ public final class LoginEventServer {
 					ServerProcessWrapper.LOGIN_PROCESS_CODENAME);
 			eventProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 					ServerProcessWrapper.EVENT_PROCESS_CODENAME);
-			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
+			final ServerProcessDatabase serverProcessDatabase = (ServerProcessDatabase) storableObjectDatabase;
 			final ServerProcess loginServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, loginProcessCodename);
 			final ServerProcess eventServerProcess = serverProcessDatabase.retrieveForServerAndCodename(serverId, eventProcessCodename);
 			// TODO something with loginServerProcess and eventServerProcess
-			if (loginServerProcess == null || eventServerProcess == null)
+			if (loginServerProcess == null || eventServerProcess == null) {
 				throw new ApplicationException("Cannot find login server process or event server process");
+			}
 	
 			/*	Init session environment
 			 * NOTE: No logging in*/
@@ -125,10 +130,10 @@ public final class LoginEventServer {
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
@@ -145,7 +150,7 @@ public final class LoginEventServer {
 	}
 
 	protected static void shutdown() {
-		LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
+		final LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
 		leServerSessionEnvironment.getPoolContext().serialize();
 
 		DatabaseConnection.closeConnection();
