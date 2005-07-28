@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.27 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: AbstractSchemeLink.java,v 1.28 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -86,7 +86,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	Identifier targetAbstractSchemePortId;
 
-	boolean abstractLinkTypeSet = false;
+	transient boolean abstractLinkTypeSet = false;
 
 	/**
 	 * @param id
@@ -263,13 +263,13 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			return;
 		}
 
-		if (this.abstractLinkId.isVoid())
+		if (this.abstractLinkId.isVoid()) {
 			/*
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
 			this.abstractLinkTypeId = VOID_IDENTIFIER;
-		else if (newLinkId.isVoid())
+		} else if (newLinkId.isVoid()) {
 			/*
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
@@ -277,6 +277,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			 * there already is object-type value to preserve).
 			 */
 			this.abstractLinkTypeId = this.getAbstractLink().getType().getId();
+		}
 		this.abstractLinkId = newLinkId;
 		super.markAsChanged();
 	}
@@ -290,9 +291,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		assert this.assertAbstractLinkTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 		assert abstractLinkType != null: NON_NULL_EXPECTED;
 
-		if (!this.abstractLinkId.isVoid())
-			this.getAbstractLink().setType(abstractLinkType);
-		else {
+		if (this.abstractLinkId.isVoid()) {
 			final Identifier newAbstractLinkTypeId = abstractLinkType.getId();
 			if (this.abstractLinkTypeId.equals(newAbstractLinkTypeId)) {
 				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
@@ -300,6 +299,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			}
 			this.abstractLinkTypeId = newAbstractLinkTypeId;
 			super.markAsChanged();
+		} else {
+			this.getAbstractLink().setType(abstractLinkType);
 		}
 	}
 
@@ -307,8 +308,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @see #opticalLength
 	 */
 	public final void setOpticalLength(final double opticalLength) {
-		if (this.opticalLength == opticalLength)
+		if (this.opticalLength == opticalLength) {
 			return;
+		}
 		this.opticalLength = opticalLength;
 		super.markAsChanged();
 	}
@@ -317,8 +319,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * @see #physicalLength
 	 */
 	public final void setPhysicalLength(final double physicalLength) {
-		if (this.physicalLength == physicalLength)
+		if (this.physicalLength == physicalLength) {
 			return;
+		}
 		this.physicalLength = physicalLength;
 		super.markAsChanged();
 	}
@@ -336,8 +339,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		final Identifier newSourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
 		assert newSourceAbstractSchemePortId.isVoid()
 				|| !newSourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId))
+		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId)) {
 			return;
+		}
 		this.sourceAbstractSchemePortId = newSourceAbstractSchemePortId;
 		super.markAsChanged();
 	}
@@ -355,13 +359,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		final Identifier newTargetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
 		assert newTargetAbstractSchemePortId.isVoid()
 				|| !newTargetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId))
+		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId)) {
 			return;
+		}
 		this.targetAbstractSchemePortId = newTargetAbstractSchemePortId;
 		super.markAsChanged();
 	}
 
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -375,21 +380,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			final Identifier sourceAbstractSchemePortId,
 			final Identifier targetAbstractSchemePortId,
 			final Identifier parentSchemeId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
-
-		assert abstractLinkTypeId != null : NON_NULL_EXPECTED;
-		assert abstractLinkId != null : NON_NULL_EXPECTED;
-		assert abstractLinkTypeId.isVoid() ^ abstractLinkId.isVoid();
-
-		assert sourceAbstractSchemePortId != null : NON_NULL_EXPECTED;
-		assert targetAbstractSchemePortId != null : NON_NULL_EXPECTED;
-
-		this.physicalLength = physicalLength;
-		this.opticalLength = opticalLength;
-		this.abstractLinkTypeId = abstractLinkTypeId;
-		this.abstractLinkId = abstractLinkId;
-		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
-		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
+	
+			assert abstractLinkTypeId != null : NON_NULL_EXPECTED;
+			assert abstractLinkId != null : NON_NULL_EXPECTED;
+			assert abstractLinkTypeId.isVoid() ^ abstractLinkId.isVoid();
+	
+			assert sourceAbstractSchemePortId != null : NON_NULL_EXPECTED;
+			assert targetAbstractSchemePortId != null : NON_NULL_EXPECTED;
+	
+			this.physicalLength = physicalLength;
+			this.opticalLength = opticalLength;
+			this.abstractLinkTypeId = abstractLinkTypeId;
+			this.abstractLinkId = abstractLinkId;
+			this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
+			this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+		}
 	}
 
 	/**
@@ -450,8 +457,9 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * Invoked by modifier methods.
 	 */
 	private boolean assertAbstractLinkTypeSetNonStrict() {
-		if (this.abstractLinkTypeSet)
+		if (this.abstractLinkTypeSet) {
 			return this.assertAbstractLinkTypeSetStrict();
+		}
 		this.abstractLinkTypeSet = true;
 		return this.abstractLinkId != null
 				&& this.abstractLinkTypeId != null

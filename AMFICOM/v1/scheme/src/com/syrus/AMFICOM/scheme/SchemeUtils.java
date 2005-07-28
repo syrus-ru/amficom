@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.32 2005/07/25 12:20:48 bass Exp $
+ * $Id: SchemeUtils.java,v 1.33 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * removed Œ¡»’ .
  *
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/07/25 12:20:48 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -49,12 +49,15 @@ public class SchemeUtils {
 
 	static double getKu(final PathElement pathElement) {
 		switch (pathElement.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-			case _SCHEME_LINK:
-				AbstractSchemeLink link = (AbstractSchemeLink)pathElement.getAbstractSchemeElement();
-				return link.getOpticalLength() / link.getPhysicalLength();
-			default:
-				return 1;
+		case _SCHEME_CABLE_LINK:
+			/*
+			 * Fall through.
+			 */
+		case _SCHEME_LINK:
+			final AbstractSchemeLink link = (AbstractSchemeLink)pathElement.getAbstractSchemeElement();
+			return link.getOpticalLength() / link.getPhysicalLength();
+		default:
+			return 1;
 		}
 	}
 
@@ -81,7 +84,7 @@ public class SchemeUtils {
 
 	// return all top level elements at scheme and at inner schemes
 	public static Set<SchemeElement> getTopologicalElements(final Scheme scheme) {
-		Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
 			if (schemeElement.getSchemes().isEmpty()) {
 				schemeElements.add(schemeElement);
@@ -197,8 +200,9 @@ public class SchemeUtils {
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
 			final Scheme scheme1 = schemeElement1.getScheme();
-			if ((scheme1 == null && isSchemeElementContainsElement(schemeElement1, schemeElement)) || isSchemeContainsElement(scheme1, schemeElement))
+			if ((scheme1 == null && isSchemeElementContainsElement(schemeElement1, schemeElement)) || isSchemeContainsElement(scheme1, schemeElement)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -282,7 +286,7 @@ public class SchemeUtils {
 		return false;
 	}
 
-	public static String parseThreadName(String name) {
+	public static String parseThreadName(final String name) {
 		final int pos = name.lastIndexOf(SEPARATOR);
 		return pos == name.length() || pos == -1 ? name : name.substring(pos + 1);
 	}
@@ -295,21 +299,26 @@ public class SchemeUtils {
 		return length;
 	}
 
-	static double getOpticalLength(PathElement pe) {
-		switch (pe.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-			case _SCHEME_LINK:
-				return ((AbstractSchemeLink)pe.getAbstractSchemeElement()).getOpticalLength();
-			default:
-				return 0;
+	static double getOpticalLength(final PathElement pathElement) {
+		switch (pathElement.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+			/*
+			 * Fall through.
+			 */
+		case _SCHEME_LINK:
+			return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).getOpticalLength();
+		default:
+			return 0;
 		}
 	}
 
-	static void setOpticalLength(PathElement pe, double d) {
-		switch (pe.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-			case _SCHEME_LINK:
-				((AbstractSchemeLink)pe.getAbstractSchemeElement()).setOpticalLength(d);
+	static void setOpticalLength(final PathElement pathElement, final double d) {
+		switch (pathElement.getKind().value()) {
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setOpticalLength(d);
+		default:
+			break;
 		}
 	}
 
@@ -323,20 +332,25 @@ public class SchemeUtils {
 
 	public static double getPhysicalLength(final PathElement pathElement) {
 		switch (pathElement.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-			case _SCHEME_LINK:
-				return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).
-						getPhysicalLength();
-			default:
-				return 0;
+		case _SCHEME_CABLE_LINK:
+			/*
+			 * Fall through.
+			 */
+		case _SCHEME_LINK:
+			return ((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).
+					getPhysicalLength();
+		default:
+			return 0;
 		}
 	}
 
-	public static void setPhysicalLength(final PathElement pathElement, double d) {
+	public static void setPhysicalLength(final PathElement pathElement, final double d) {
 		switch (pathElement.getKind().value()) {
-			case _SCHEME_CABLE_LINK:
-			case _SCHEME_LINK:
-				((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setPhysicalLength(d);
+		case _SCHEME_CABLE_LINK:
+		case _SCHEME_LINK:
+			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setPhysicalLength(d);
+		default:
+			break;
 		}
 	}
 }

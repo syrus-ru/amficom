@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementDatabase.java,v 1.17 2005/07/28 12:18:45 bass Exp $
+ * $Id: SchemeProtoElementDatabase.java,v 1.18 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/28 12:18:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemeProtoElementDatabase extends StorableObjectDatabase<SchemeProtoElement> {
@@ -94,7 +94,7 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(SchemeProtoElement storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentTypeId()) + COMMA
@@ -103,7 +103,6 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCellId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeProtoGroupId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeProtoElementId());
-		return sql;
 	}
 
 	/**
@@ -138,8 +137,8 @@ public final class SchemeProtoElementDatabase extends StorableObjectDatabase<Sch
 	@Override
 	protected SchemeProtoElement updateEntityFromResultSet(SchemeProtoElement storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Date created = new Date();
-		SchemeProtoElement spe = storableObject == null
+		final Date created = new Date();
+		final SchemeProtoElement spe = (storableObject == null)
 				? new SchemeProtoElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,

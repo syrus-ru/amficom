@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.18 2005/07/28 12:18:45 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.19 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/28 12:18:45 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath> {
@@ -79,11 +79,10 @@ public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath>
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemePath storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getTransmissionPathId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeMonitoringSolutionId());
-		return sql;
 	}
 
 	/**
@@ -116,8 +115,8 @@ public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath>
 	protected SchemePath updateEntityFromResultSet(
 			SchemePath storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Date created = new Date();
-		SchemePath schemePath = storableObject == null
+		final Date created = new Date();
+		final SchemePath schemePath = (storableObject == null)
 				? new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,

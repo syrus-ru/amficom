@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.16 2005/07/28 12:18:46 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.17 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 12:18:46 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase<SchemeMonitoringSolution> {
@@ -85,13 +85,12 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemeMonitoringSolution storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getPrice() + COMMA
 				+ (storableObject.isActive() ? 1 : 0) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeOptimizeInfoId());
-		return sql;
 	}
 
 	/**
@@ -126,8 +125,8 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	protected SchemeMonitoringSolution updateEntityFromResultSet(SchemeMonitoringSolution storableObject, ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
-		Date created = new Date();
-		SchemeMonitoringSolution schemeMonitoringSolution = storableObject == null
+		final Date created = new Date();
+		final SchemeMonitoringSolution schemeMonitoringSolution = (storableObject == null)
 				? new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet,
 						COLUMN_ID),
 						created,

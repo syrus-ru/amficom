@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.6 2005/07/24 17:10:19 bass Exp $
+ * $Id: PathElementWrapper.java,v 1.7 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/07/28 17:42:35 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -42,39 +42,40 @@ public final class PathElementWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
 	public static PathElementWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new PathElementWrapper();
+		}
 		return instance;
 	}
 }

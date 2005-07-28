@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.63 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.64 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.64 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -105,11 +105,11 @@ public final class SchemeProtoElement extends StorableObject
 
 	Identifier parentSchemeProtoElementId;
 
-	private boolean parentSet = false;
+	private transient boolean parentSet = false;
 
-	private ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
+	private final transient ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
-	private Map<Identifier, Identifier> idMap;
+	private transient Map<Identifier, Identifier> idMap;
 
 	/**
 	 * @param id
@@ -450,8 +450,8 @@ public final class SchemeProtoElement extends StorableObject
 			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
 			final SchemeImageResource ugoCell = this.getUgoCell0();
 			final SchemeImageResource schemeCell = this.getSchemeCell0();
-			clone.ugoCellId = ugoCell == null ? VOID_IDENTIFIER : ugoCell.clone().getId();
-			clone.schemeCellId = schemeCell == null ? VOID_IDENTIFIER : schemeCell.clone().getId();
+			clone.ugoCellId = (ugoCell == null) ? VOID_IDENTIFIER : ugoCell.clone().getId();
+			clone.schemeCellId = (schemeCell == null) ? VOID_IDENTIFIER : schemeCell.clone().getId();
 
 			if (clone.idMap == null) {
 				clone.idMap = new HashMap<Identifier, Identifier>();
@@ -604,8 +604,9 @@ public final class SchemeProtoElement extends StorableObject
 	public Item getParent() {
 		final SchemeProtoGroup parentSchemeProtoGroup = getParentSchemeProtoGroup();
 		if (parentSchemeProtoGroup == null) {
-			if (getParentSchemeProtoElement() == null)
+			if (getParentSchemeProtoElement() == null) {
 				throw new UnsupportedOperationException(EXACTLY_ONE_PARENT_REQUIRED);
+			}
 			throw new UnsupportedOperationException(OUT_OF_LIBRARY_HIERARCHY);
 		}
 		return parentSchemeProtoGroup;
@@ -889,7 +890,7 @@ public final class SchemeProtoElement extends StorableObject
 	 * @param parentSchemeProtoGroupId
 	 * @param parentSchemeProtoElementId
 	 */
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -903,31 +904,33 @@ public final class SchemeProtoElement extends StorableObject
 			final Identifier schemeCellId,
 			final Identifier parentSchemeProtoGroupId,
 			final Identifier parentSchemeProtoElementId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-		assert label != null : NON_NULL_EXPECTED;
-		assert equipmentTypeId != null : NON_NULL_EXPECTED;
-		assert symbolId != null : NON_NULL_EXPECTED;
-		assert ugoCellId != null : NON_NULL_EXPECTED;
-		assert schemeCellId != null : NON_NULL_EXPECTED;
-
-		assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
-		assert parentSchemeProtoGroupId.isVoid() ^ parentSchemeProtoElementId.isVoid();
-
-		this.name = name;
-		this.description = description;
-		this.label = label;
-		this.equipmentTypeId = equipmentTypeId;
-		this.symbolId = symbolId;
-		this.ugoCellId = ugoCellId;
-		this.schemeCellId = schemeCellId;
-		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
-		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
-
-		this.parentSet = true;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert description != null : NON_NULL_EXPECTED;
+			assert label != null : NON_NULL_EXPECTED;
+			assert equipmentTypeId != null : NON_NULL_EXPECTED;
+			assert symbolId != null : NON_NULL_EXPECTED;
+			assert ugoCellId != null : NON_NULL_EXPECTED;
+			assert schemeCellId != null : NON_NULL_EXPECTED;
+	
+			assert parentSchemeProtoGroupId != null : NON_NULL_EXPECTED;
+			assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+			assert parentSchemeProtoGroupId.isVoid() ^ parentSchemeProtoElementId.isVoid();
+	
+			this.name = name;
+			this.description = description;
+			this.label = label;
+			this.equipmentTypeId = equipmentTypeId;
+			this.symbolId = symbolId;
+			this.ugoCellId = ugoCellId;
+			this.schemeCellId = schemeCellId;
+			this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
+			this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+	
+			this.parentSet = true;
+		}
 	}
 
 	/**
@@ -936,8 +939,9 @@ public final class SchemeProtoElement extends StorableObject
 	public void setDescription(final String description) {
 		assert this.description != null: OBJECT_NOT_INITIALIZED;
 		assert description != null: NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -947,8 +951,9 @@ public final class SchemeProtoElement extends StorableObject
 	 */
 	public void setEquipmentType(final EquipmentType equipmentType) {
 		final Identifier newEquipmentTypeId = Identifier.possiblyVoid(equipmentType);
-		if (this.equipmentTypeId.equals(newEquipmentTypeId))
+		if (this.equipmentTypeId.equals(newEquipmentTypeId)) {
 			return;
+		}
 		this.equipmentTypeId = newEquipmentTypeId;
 		super.markAsChanged();
 	}
@@ -960,8 +965,9 @@ public final class SchemeProtoElement extends StorableObject
 	public void setLabel(final String label) {
 		assert this.label != null: OBJECT_NOT_INITIALIZED;
 		assert label != null: NON_NULL_EXPECTED;
-		if (this.label.equals(label))
+		if (this.label.equals(label)) {
 			return;
+		}
 		this.label = label;
 		super.markAsChanged();
 	}
@@ -972,8 +978,9 @@ public final class SchemeProtoElement extends StorableObject
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0: OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
@@ -998,8 +1005,9 @@ public final class SchemeProtoElement extends StorableObject
 	 */
 	public void setParent(final Library library) {
 		if (getParentSchemeProtoGroup() == null) {
-			if (getParentSchemeProtoElement() == null)
+			if (getParentSchemeProtoElement() == null) {
 				throw new UnsupportedOperationException(EXACTLY_ONE_PARENT_REQUIRED);
+			}
 			throw new UnsupportedOperationException(OUT_OF_LIBRARY_HIERARCHY);
 		}
 		setParentSchemeProtoGroup((SchemeProtoGroup) library);
@@ -1032,8 +1040,9 @@ public final class SchemeProtoElement extends StorableObject
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
-			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
+			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
 				return;
+			}
 		} else {
 			/*
 			 * Moving from a group to an element.
@@ -1076,8 +1085,9 @@ public final class SchemeProtoElement extends StorableObject
 				return;
 			}
 			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
-			if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId))
+			if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
 				return;
+			}
 		} else {
 			/*
 			 * Moving from an element to a group.
@@ -1098,8 +1108,9 @@ public final class SchemeProtoElement extends StorableObject
 	 */
 	public void setSchemeCell(final SchemeImageResource schemeCell) {
 		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
-		if (this.schemeCellId.equals(newSchemeCellId))
+		if (this.schemeCellId.equals(newSchemeCellId)) {
 			return;
+		}
 		this.schemeCellId = newSchemeCellId;
 		super.markAsChanged();
 	}
@@ -1170,8 +1181,9 @@ public final class SchemeProtoElement extends StorableObject
 	 */
 	public void setSymbol(final BitmapImageResource symbol) {
 		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
-		if (this.symbolId.equals(newSymbolId))
+		if (this.symbolId.equals(newSymbolId)) {
 			return;
+		}
 		this.symbolId = newSymbolId;
 		super.markAsChanged();
 	}
@@ -1182,8 +1194,9 @@ public final class SchemeProtoElement extends StorableObject
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {
 		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
-		if (this.ugoCellId.equals(newUgoCellId))
+		if (this.ugoCellId.equals(newUgoCellId)) {
 			return;
+		}
 		this.ugoCellId = newUgoCellId;
 		super.markAsChanged();
 	}
@@ -1222,8 +1235,9 @@ public final class SchemeProtoElement extends StorableObject
 	 * Invoked by modifier methods.
 	 */
 	private boolean assertParentSetNonStrict() {
-		if (this.parentSet)
+		if (this.parentSet) {
 			return this.assertParentSetStrict();
+		}
 		this.parentSet = true;
 		return this.parentSchemeProtoGroupId != null
 				&& this.parentSchemeProtoElementId != null
@@ -1252,8 +1266,9 @@ public final class SchemeProtoElement extends StorableObject
 			return schemeDeviceIterator.next().getSchemeCablePorts();
 		}
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
-		for (; schemeDeviceIterator.hasNext();)
+		while (schemeDeviceIterator.hasNext()) {
 			schemeCablePorts.addAll(schemeDeviceIterator.next().getSchemeCablePorts());
+		}
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
@@ -1264,11 +1279,13 @@ public final class SchemeProtoElement extends StorableObject
 	public Set<SchemePort> getSchemePortsRecursively() {
 		final Set<SchemeDevice> schemeDevices = getSchemeDevices();
 		final Iterator<SchemeDevice> schemeDeviceIterator = schemeDevices.iterator();
-		if (schemeDevices.size() == 1)
+		if (schemeDevices.size() == 1) {
 			return schemeDeviceIterator.next().getSchemePorts();
+		}
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
-		for (; schemeDeviceIterator.hasNext();)
+		while (schemeDeviceIterator.hasNext()) {
 			schemePorts.addAll(schemeDeviceIterator.next().getSchemePorts());
+		}
 		return Collections.unmodifiableSet(schemePorts);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.15 2005/07/28 12:18:45 bass Exp $
+ * $Id: SchemeElementDatabase.java,v 1.16 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/28 12:18:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -104,7 +104,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemeElement storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentTypeId()) + COMMA
@@ -116,7 +116,6 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 				+ DatabaseIdentifier.toSQLString(storableObject.getSchemeCellId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeElementId());
-		return sql;
 	}
 
 	/**
@@ -158,7 +157,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 			SchemeElement storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final Date created = new Date();
-		SchemeElement schemeElement = storableObject == null
+		SchemeElement schemeElement = (storableObject == null)
 				? schemeElement = new SchemeElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.62 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemePath.java,v 1.63 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.63 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -639,7 +639,7 @@ public final class SchemePath extends StorableObject
 	public PathElement getPreviousPathElement(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 		final SortedSet<PathElement> pathElements = getPathMembers().headSet(pathElement);
-		return pathElements.isEmpty() ? null : (PathElement) pathElements.last();
+		return pathElements.isEmpty() ? null : pathElements.last();
 	}
 
 	/**
@@ -689,7 +689,7 @@ public final class SchemePath extends StorableObject
 	 * @param opticalLength
 	 */
 	private void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength) {
-		int greaterThan = endPathElement.compareTo(startPathElement);
+		final int greaterThan = endPathElement.compareTo(startPathElement);
 		assert greaterThan != 0;
 		if (greaterThan < 0) {
 			setOpticalLength(endPathElement, startPathElement, opticalLength);
@@ -702,8 +702,10 @@ public final class SchemePath extends StorableObject
 		double oldOpticalLength = 0;
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			oldOpticalLength += SchemeUtils.getOpticalLength(pathElement);
-			if (pathElement == endPathElement)
+//			if (pathElement == endPathElement) {}
+			if (pathElement.getId().equals(endPathElement.getId())) {
 				break;
+			}
 		}
 		if (oldOpticalLength == 0)
 			return;

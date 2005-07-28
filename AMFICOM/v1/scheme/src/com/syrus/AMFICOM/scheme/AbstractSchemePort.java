@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.43 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.44 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.43 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -82,7 +82,7 @@ public abstract class AbstractSchemePort
 
 	Identifier parentSchemeDeviceId;
 
-	boolean portTypeSet = false;
+	transient boolean portTypeSet = false;
 
 	/**
 	 * @param id
@@ -290,7 +290,7 @@ public abstract class AbstractSchemePort
 	 * @param measurementPortId
 	 * @param parentSchemeDeviceId
 	 */
-	final synchronized void setAttributes(final Date created,
+	final void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -302,26 +302,28 @@ public abstract class AbstractSchemePort
 			final Identifier portId,
 			final Identifier measurementPortId,
 			final Identifier parentSchemeDeviceId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-		assert directionType != null : NON_NULL_EXPECTED;
-
-		assert portTypeId != null : NON_NULL_EXPECTED;
-		assert portId != null : NON_NULL_EXPECTED;
-		assert portTypeId.isVoid() ^ portId.isVoid();
-
-		assert measurementPortId != null : NON_NULL_EXPECTED;
-		assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid() : NON_VOID_EXPECTED;
-
-		this.name = name;
-		this.description = description;
-		this.directionType = directionType;
-		this.portTypeId = portTypeId;
-		this.portId = portId;
-		this.measurementPortId = measurementPortId;
-		this.parentSchemeDeviceId = parentSchemeDeviceId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert description != null : NON_NULL_EXPECTED;
+			assert directionType != null : NON_NULL_EXPECTED;
+	
+			assert portTypeId != null : NON_NULL_EXPECTED;
+			assert portId != null : NON_NULL_EXPECTED;
+			assert portTypeId.isVoid() ^ portId.isVoid();
+	
+			assert measurementPortId != null : NON_NULL_EXPECTED;
+			assert parentSchemeDeviceId != null && !parentSchemeDeviceId.isVoid() : NON_VOID_EXPECTED;
+	
+			this.name = name;
+			this.description = description;
+			this.directionType = directionType;
+			this.portTypeId = portTypeId;
+			this.portId = portId;
+			this.measurementPortId = measurementPortId;
+			this.parentSchemeDeviceId = parentSchemeDeviceId;
+		}
 	}
 
 	/**
@@ -330,8 +332,9 @@ public abstract class AbstractSchemePort
 	public final void setDirectionType(final IdlDirectionType directionType) {
 		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
 		assert directionType != null: NON_NULL_EXPECTED;
-		if (this.directionType.value() == directionType.value())
+		if (this.directionType.value() == directionType.value()) {
 			return;
+		}
 		this.directionType = directionType;
 		super.markAsChanged();
 	}
@@ -342,8 +345,9 @@ public abstract class AbstractSchemePort
 	public final void setDescription(final String description) {
 		assert this.description != null: OBJECT_NOT_INITIALIZED;
 		assert description != null: NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -353,8 +357,9 @@ public abstract class AbstractSchemePort
 	 */
 	public final void setMeasurementPort(final MeasurementPort measurementPort) {
 		final Identifier newMeasurementPortId = Identifier.possiblyVoid(measurementPort);
-		if (this.measurementPortId.equals(newMeasurementPortId))
+		if (this.measurementPortId.equals(newMeasurementPortId)) {
 			return;
+		}
 		this.measurementPortId = newMeasurementPortId;
 		super.markAsChanged();
 	}
@@ -365,8 +370,9 @@ public abstract class AbstractSchemePort
 	public final void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
@@ -383,8 +389,9 @@ public abstract class AbstractSchemePort
 			return;
 		}
 		final Identifier newParentSchemeDeviceId = parentSchemeDevice.getId();
-		if (this.parentSchemeDeviceId.equals(newParentSchemeDeviceId))
+		if (this.parentSchemeDeviceId.equals(newParentSchemeDeviceId)) {
 			return;
+		}
 		this.parentSchemeDeviceId = newParentSchemeDeviceId;
 		super.markAsChanged();
 	}
@@ -403,13 +410,13 @@ public abstract class AbstractSchemePort
 			return;
 		}
 
-		if (this.portId.isVoid())
+		if (this.portId.isVoid()) {
 			/*
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
 			this.portTypeId = VOID_IDENTIFIER;
-		else if (newPortId.isVoid())
+		} else if (newPortId.isVoid()) {
 			/*
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
@@ -417,6 +424,7 @@ public abstract class AbstractSchemePort
 			 * there already is object-type value to preserve).
 			 */
 			this.portTypeId = this.getPort().getType().getId();
+		}
 		this.portId = newPortId;
 		super.markAsChanged();
 	}
@@ -428,9 +436,7 @@ public abstract class AbstractSchemePort
 		assert this.assertPortTypeSetNonStrict(): OBJECT_BADLY_INITIALIZED;
 		assert portType != null: NON_NULL_EXPECTED;
 
-		if (!this.portId.isVoid())
-			this.getPort().setType(portType);
-		else {
+		if (this.portId.isVoid()) {
 			final Identifier newPortTypeId = portType.getId();
 			if (this.portTypeId.equals(newPortTypeId)) {
 				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
@@ -438,6 +444,8 @@ public abstract class AbstractSchemePort
 			}
 			this.portTypeId = newPortTypeId;
 			super.markAsChanged();
+		} else {
+			this.getPort().setType(portType);
 		}
 	}
 
@@ -482,8 +490,9 @@ public abstract class AbstractSchemePort
 	 * Invoked by modifier methods.
 	 */
 	private boolean assertPortTypeSetNonStrict() {
-		if (this.portTypeSet)
+		if (this.portTypeSet) {
 			return this.assertPortTypeSetStrict();
+		}
 		this.portTypeSet = true;
 		return this.portId != null
 				&& this.portTypeId != null

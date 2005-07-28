@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.17 2005/07/28 12:18:45 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.18 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/28 12:18:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemeCableLinkDatabase extends StorableObjectDatabase<SchemeCableLink> {
@@ -94,7 +94,7 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemeCableLink storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getPhysicalLength() + COMMA
 				+ storableObject.getOpticalLength() + COMMA
@@ -103,7 +103,6 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 				+ DatabaseIdentifier.toSQLString(storableObject.getSourceAbstractSchemePortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getTargetAbstractSchemePortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeId());
-		return sql;
 	}
 
 	/**
@@ -141,8 +140,8 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 	protected SchemeCableLink updateEntityFromResultSet(
 			SchemeCableLink storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Date created = new Date();
-		SchemeCableLink schemeCableLink = storableObject == null
+		final Date created = new Date();
+		final SchemeCableLink schemeCableLink = (storableObject == null)
 				? new SchemeCableLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,

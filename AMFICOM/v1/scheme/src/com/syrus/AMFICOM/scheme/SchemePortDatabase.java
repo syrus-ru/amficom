@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.18 2005/07/28 12:18:46 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.19 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/28 12:18:46 $
+ * @version $Revision: 1.19 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort> {
@@ -90,13 +90,12 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemePort storableObject)
 			throws IllegalDataException {
-		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getDirectionType().value() + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getPortTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getMeasurementPortId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeDeviceId());
-		return sql;
 	}
 
 	/**
@@ -132,8 +131,8 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 	protected SchemePort updateEntityFromResultSet(
 			SchemePort storableObject, ResultSet resultSet)
 			throws IllegalDataException, SQLException {
-		Date created = new Date();
-		SchemePort schemePort = storableObject == null
+		final Date created = new Date();
+		final SchemePort schemePort = (storableObject == null)
 				? new SchemePort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.8 2005/07/24 17:10:19 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.9 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/28 17:42:35 $
  * @author $Author: bass $
  * @module scheme
  */
 public final class CableChannelingItemWrapper extends StorableObjectWrapper {
-	
-	//TODO: insert creation sql
-	
 	public static final String COLUMN_START_SPARE = "start_spare";
 	public static final String COLUMN_END_SPARE = "end_spare";
 	public static final String COLUMN_ROW_X = "row_x";
@@ -36,39 +33,40 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
 	@Override
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Object object, final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	public void setValue(final Object object, final String key, final Object value) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
 	public static CableChannelingItemWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CableChannelingItemWrapper();
+		}
 		return instance;
 	}
 }

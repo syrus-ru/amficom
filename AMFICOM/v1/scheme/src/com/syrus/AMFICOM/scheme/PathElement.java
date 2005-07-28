@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.55 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: PathElement.java,v 1.56 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.55 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -596,9 +596,10 @@ public final class PathElement extends StorableObject
 		} else {
 			Log.debugMessage("PathElement.getSchemeElement() | Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
 					SEVERE);
-			parentSchemeDevice = null;
+			return null;
 		}
-		return parentSchemeDevice == null ? null : parentSchemeDevice.getParentSchemeElement();
+		assert parentSchemeDevice != null;
+		return parentSchemeDevice.getParentSchemeElement();
 	}
 
 	Identifier getSchemeLinkId() {

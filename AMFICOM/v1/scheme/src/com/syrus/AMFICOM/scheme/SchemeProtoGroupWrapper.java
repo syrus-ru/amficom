@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.8 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.9 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/28 17:42:35 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -35,7 +35,9 @@ public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 
 	private static SchemeProtoGroupWrapper instance;
 
-	private List<String> keys;
+	// @PMD:REVIEWED:BeanMembersShouldSerialize: by bass on 28.07.05 20:19
+	// @PMD:REVIEWED:BeanMembersShouldSerialize: by bass on 28.07.05 20:19
+	private final List<String> keys;
 
 	private SchemeProtoGroupWrapper() {
 		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {

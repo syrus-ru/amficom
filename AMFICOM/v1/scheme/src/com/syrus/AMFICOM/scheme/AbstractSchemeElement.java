@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.37 2005/07/28 09:56:43 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.38 2005/07/28 17:42:35 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.37 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.38 $, $Date: 2005/07/28 17:42:35 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -174,8 +174,9 @@ public abstract class AbstractSchemeElement
 	public final void setDescription(final String description) {
 		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		assert description != null : NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -186,8 +187,9 @@ public abstract class AbstractSchemeElement
 	public final void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
@@ -204,8 +206,9 @@ public abstract class AbstractSchemeElement
 			return;
 		}
 		final Identifier newParentSchemeId = parentScheme.getId();
-		if (this.parentSchemeId.equals(newParentSchemeId))
+		if (this.parentSchemeId.equals(newParentSchemeId)) {
 			return;
+		}
 		this.parentSchemeId = newParentSchemeId;
 		super.markAsChanged();
 	}
@@ -231,21 +234,23 @@ public abstract class AbstractSchemeElement
 		this.parentSchemeId = new Identifier(parentSchemeId1);
 	}
 
-	final synchronized void setAttributes(final Date created,
+	final void setAttributes(final Date created,
 			final Date modified, final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version, final String name,
 			final String description,
 			final Identifier parentSchemeId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert parentSchemeId != null: NON_NULL_EXPECTED;
-
-		this.name = name;
-		this.description = description;
-		this.parentSchemeId = parentSchemeId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+			assert description != null: NON_NULL_EXPECTED;
+			assert parentSchemeId != null: NON_NULL_EXPECTED;
+	
+			this.name = name;
+			this.description = description;
+			this.parentSchemeId = parentSchemeId;
+		}
 	}
 
 	/*-********************************************************************
@@ -267,7 +272,7 @@ public abstract class AbstractSchemeElement
 	/**
 	 * Transient attribute
 	 */
-	public final void setAlarmed(boolean alarmed) {
+	public final void setAlarmed(final boolean alarmed) {
 		this.alarmed = alarmed;
 	}
 }
