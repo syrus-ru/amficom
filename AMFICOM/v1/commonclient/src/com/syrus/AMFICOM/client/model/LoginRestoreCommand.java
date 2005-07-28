@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.1 2005/06/17 12:39:55 bob Exp $
+* $Id: LoginRestoreCommand.java,v 1.2 2005/07/28 09:45:34 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/06/17 12:39:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/28 09:45:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -34,6 +34,7 @@ implements LoginRestorer{
 		super(dispatcher);
 	}
 
+	@Override
 	protected boolean logging() 
 	throws CommunicationException, IllegalDataException, LoginException {
 		if (!this.logged && !this.showOpenSessionDialog(
@@ -43,9 +44,10 @@ implements LoginRestorer{
 			super.logged = true;
 			super.disposeDialog();			
 		}
-		return true;
+		return super.logged;
 	}
 	
+	@Override
 	protected String getDialogTitle() {
 		return LangModelGeneral.getString("Login.ReLogin");
 	}	
@@ -66,12 +68,14 @@ implements LoginRestorer{
 		return value;
 	}
 	
+	@Override
 	protected void createUIItems() {
 		super.createUIItems();
 		super.loginTextField.setEditable(false);
 	}
 	
 	public boolean restoreLogin() {
+		super.logged = false;
 		try {
 			SystemUser user = 
 				(SystemUser) StorableObjectPool.getStorableObject(
@@ -81,6 +85,7 @@ implements LoginRestorer{
 		} catch (ApplicationException e) {
 			return false;
 		}
+		super.password = null;
 		super.execute();
 		return super.logged;
 	}	
