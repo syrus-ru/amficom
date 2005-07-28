@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.29 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: MarkDatabase.java,v 1.30 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,11 +25,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class MarkDatabase extends StorableObjectDatabase {
+public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 	 public static final int SIZE_CITY_COLUMN = 128;
     public static final int SIZE_STREET_COLUMN = 128;
     public static final int SIZE_BUILDING_COLUMN = 128;
@@ -38,12 +37,6 @@ public final class MarkDatabase extends StorableObjectDatabase {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
-
-	private Mark fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Mark)
-			return (Mark) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -84,39 +77,37 @@ public final class MarkDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Mark storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Mark mark = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, mark.getLocation().getX());
-		preparedStatement.setDouble(++startParameterNumber, mark.getLocation().getY());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, mark.getPhysicalLink().getId());
-		preparedStatement.setDouble(++startParameterNumber, mark.getDistance());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getCity(), SIZE_CITY_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getStreet(), SIZE_STREET_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, mark.getBuilding(), SIZE_BUILDING_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPhysicalLink().getId());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getDistance());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStreet(), SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getBuilding(), SIZE_BUILDING_COLUMN);
 		return startParameterNumber;
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Mark mark = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mark.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ mark.getLocation().getX() + COMMA
-			+ mark.getLocation().getY() + COMMA
-			+ DatabaseIdentifier.toSQLString(mark.getPhysicalLink().getId()) + COMMA
-			+ mark.getDistance() + COMMA
-			+ DatabaseString.toQuerySubString(mark.getCity(), SIZE_CITY_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(mark.getStreet(), SIZE_STREET_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(mark.getBuilding(), SIZE_BUILDING_COLUMN);
+	protected String getUpdateSingleSQLValuesTmpl(final Mark storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getLocation().getX() + COMMA
+			+ storableObject.getLocation().getY() + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getPhysicalLink().getId()) + COMMA
+			+ storableObject.getDistance() + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getCity(), SIZE_CITY_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getStreet(), SIZE_STREET_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), SIZE_BUILDING_COLUMN);
 		return values;
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Mark updateEntityFromResultSet(final Mark storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -132,11 +123,11 @@ public final class MarkDatabase extends StorableObjectDatabase {
 				0.0,
 				null,
 				null,
-				null) : fromStorableObject(storableObject);
+				null) : storableObject;
 				
 		PhysicalLink physicalLink;
 		try {
-			physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
+			physicalLink = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 		} catch (ApplicationException ae) {
 			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.29 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.30 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,21 +22,15 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
+public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<PhysicalLinkType> {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
 
-	private PhysicalLinkType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof PhysicalLinkType)
-			return (PhysicalLinkType) storableObject;
-		throw new IllegalDataException("PhysicalLinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
 	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.PHYSICALLINK_TYPE_CODE;
@@ -69,31 +62,29 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final PhysicalLinkType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLinkType.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, physicalLinkType.getBindingDimension().getWidth());
-		preparedStatement.setInt(++startParameterNumber, physicalLinkType.getBindingDimension().getHeight());		
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getBindingDimension().getWidth());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getBindingDimension().getHeight());		
 		return startParameterNumber;
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final PhysicalLinkType physicalLinkType = this.fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ physicalLinkType.getBindingDimension().getWidth() + COMMA
-			+ physicalLinkType.getBindingDimension().getHeight();
+	protected String getUpdateSingleSQLValuesTmpl(final PhysicalLinkType storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getBindingDimension().getWidth() + COMMA
+			+ storableObject.getBindingDimension().getHeight();
 		return values;
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected PhysicalLinkType updateEntityFromResultSet(final PhysicalLinkType storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
 		final PhysicalLinkType physicalLinkType = (storableObject == null)
@@ -105,7 +96,7 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 		physicalLinkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

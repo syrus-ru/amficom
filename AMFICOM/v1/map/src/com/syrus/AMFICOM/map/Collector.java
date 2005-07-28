@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.58 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: Collector.java,v 1.59 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -47,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.58 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.59 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -67,7 +66,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -82,9 +81,8 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		super(id);
 		this.physicalLinks = new HashSet<PhysicalLink>();
 
-		final CollectorDatabase database = (CollectorDatabase) DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.COLLECTOR_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -345,15 +343,14 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 */
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			Collection physicalLinkIds = new HashSet(getPhysicalLinks().size());
-			for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
-				PhysicalLink link = (PhysicalLink) it.next();
+			Collection<Identifier> physicalLinkIds = new HashSet<Identifier>(getPhysicalLinks().size());
+			for (PhysicalLink link : getPhysicalLinks()) {
 				physicalLinkIds.add(link.getId());
 			}
 			exportMap.put(COLUMN_LINKS, physicalLinkIds);
@@ -361,7 +358,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	public static Collector createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
+	public static Collector createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
 		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		final String name1 = (String) exportMap1.get(COLUMN_NAME);
 		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
@@ -373,7 +370,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		try {
 			final Collector collector = new Collector(id1, creatorId, StorableObjectVersion.createInitial(), name1, description1);
 			for (final Identifier physicalLinkId : physicalLinkIds1) {
-				final PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
+				final PhysicalLink physicalLink = StorableObjectPool.getStorableObject(physicalLinkId, false);
 				collector.addPhysicalLink(physicalLink);
 			}
 
@@ -443,7 +440,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		for (int i = 0; i < xmlUIDsArray.length; i++) {
 			final Identifier physicalLinkId = clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE,
 					xmlUIDsArray[i].getStringValue());
-			final PhysicalLink physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId, false);
+			final PhysicalLink physicalLink = StorableObjectPool.getStorableObject(physicalLinkId, false);
 			this.addPhysicalLink(physicalLink);
 		}
 	}

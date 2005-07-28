@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.57 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: SiteNode.java,v 1.58 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.58 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -93,9 +93,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	SiteNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final SiteNodeDatabase database = (SiteNodeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SITENODE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

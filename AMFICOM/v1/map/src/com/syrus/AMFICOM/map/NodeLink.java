@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.60 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: NodeLink.java,v 1.61 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.61 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -67,7 +67,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private PhysicalLink physicalLink;
@@ -82,9 +82,8 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	NodeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final NodeLinkDatabase database = (NodeLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.NODELINK_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.NODELINK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -166,10 +165,10 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.name = nlt.name;
 		this.length = nlt.length;
 
-		this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
+		this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
 
-		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+		this.startNode = StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
+		this.endNode = StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 	}
 
 	/**
@@ -359,7 +358,8 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.setEndNode(mnles.endNode);
 
 		try {
-			setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
+			PhysicalLink physicalLink = StorableObjectPool.getStorableObject(mnles.physicalLinkId, false);
+			setPhysicalLink(physicalLink);
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -401,7 +401,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
@@ -414,7 +414,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		}
 	}
 
-	public static NodeLink createInstance(final Identifier creatorId, final java.util.Map exportMap1) throws CreateObjectException {
+	public static NodeLink createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
 		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		final String name1 = (String) exportMap1.get(COLUMN_NAME);
 		final double length1 = Double.parseDouble((String) exportMap1.get(COLUMN_LENGTH));
@@ -431,9 +431,9 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final PhysicalLink physicalLink1 = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			final AbstractNode startNode1 = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
-			final AbstractNode endNode1 = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+			final PhysicalLink physicalLink1 = StorableObjectPool.getStorableObject(physicalLinkId1, false);
+			final AbstractNode startNode1 =  StorableObjectPool.getStorableObject(startNodeId1, true);
+			final AbstractNode endNode1 = StorableObjectPool.getStorableObject(endNodeId1, true);
 			final NodeLink nodeLink1 = new NodeLink(id1,
 					creatorId,
 					StorableObjectVersion.createInitial(),
@@ -520,9 +520,9 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		final Identifier endNodeId1 = clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE,
 				xmlNodeLink.getEndnodeuid().getStringValue());
 
-		this.physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(physicalLinkId1, false);
-		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
-		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, false);
+		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
+		this.endNode = StorableObjectPool.getStorableObject(endNodeId1, true);
 		this.physicalLink.addNodeLink(this);
 	}
 

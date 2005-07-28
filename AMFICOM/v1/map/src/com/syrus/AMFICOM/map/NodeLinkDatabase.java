@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.30 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: NodeLinkDatabase.java,v 1.31 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,21 +25,15 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class NodeLinkDatabase extends StorableObjectDatabase {
+public final class NodeLinkDatabase extends StorableObjectDatabase<NodeLink> {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
 
-	private NodeLink fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof TopologicalNode)
-			return (NodeLink) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-	
 	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.NODELINK_CODE;
@@ -72,31 +65,29 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final NodeLink storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final NodeLink nodeLink = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, nodeLink.getName(), SIZE_NAME_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, nodeLink.getPhysicalLink().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, nodeLink.getStartNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, nodeLink.getEndNode().getId());
-		preparedStatement.setDouble(++startParameterNumber, nodeLink.getLength());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getPhysicalLink().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNode().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNode().getId());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLength());
 		return startParameterNumber;
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final NodeLink nodeLink = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(nodeLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(nodeLink.getPhysicalLink().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(nodeLink.getStartNode().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(nodeLink.getEndNode().getId()) + COMMA
-			+ nodeLink.getLength();
+	protected String getUpdateSingleSQLValuesTmpl(final NodeLink storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getPhysicalLink().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getStartNode().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getEndNode().getId()) + COMMA
+			+ storableObject.getLength();
 		return values;
 	}
 	
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected NodeLink updateEntityFromResultSet(final NodeLink storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -109,18 +100,18 @@ public final class NodeLinkDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						0.0)
-					: fromStorableObject(storableObject);
+					: storableObject;
 
 		PhysicalLink physicalLink;
 		AbstractNode startNode;
 		AbstractNode endNode;
 
 		try {
-			physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			physicalLink = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
-			startNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			startNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					NodeLinkWrapper.COLUMN_START_NODE_ID), true);
-			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			endNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					NodeLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();

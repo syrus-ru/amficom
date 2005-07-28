@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.28 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.29 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,20 +22,14 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class SiteNodeTypeDatabase extends StorableObjectDatabase {
+public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
-
-	private SiteNodeType fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof SiteNodeType)
-			return (SiteNodeType) storableObject;
-		throw new IllegalDataException("SiteNodeTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -68,31 +61,29 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final SiteNodeType storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final SiteNodeType siteNodeType = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNodeType.getCodename(), SIZE_CODENAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNodeType.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, siteNodeType.getImageId());
-		preparedStatement.setInt(++startParameterNumber, siteNodeType.isTopological() ? 1 : 0);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.isTopological() ? 1 : 0);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final SiteNodeType siteNodeType = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(siteNodeType.getImageId()) + COMMA
-			+ (siteNodeType.isTopological() ? 1 : 0);
+	protected String getUpdateSingleSQLValuesTmpl(final SiteNodeType storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getImageId()) + COMMA
+			+ (storableObject.isTopological() ? 1 : 0);
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected SiteNodeType updateEntityFromResultSet(final SiteNodeType storableObject, final ResultSet resultSet)
 	throws IllegalDataException, SQLException {
 		SiteNodeType siteNodeType = (storableObject == null)
 				? new SiteNodeType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
@@ -104,7 +95,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						false)
-					: fromStorableObject(storableObject);
+					: storableObject;
 		siteNodeType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

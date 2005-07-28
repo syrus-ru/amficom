@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.38 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.39 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -40,30 +38,22 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class CollectorDatabase extends StorableObjectDatabase {
+public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
 
 	private static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
 
-	 private Collector fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Collector)
-			return (Collector) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: "
-				+ storableObject.getClass().getName());
-	}
-
-	 @Override
-	public void retrieve(final StorableObject storableObject)
+	@Override
+	public void retrieve(final Collector storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Collector collector = this.fromStorableObject(storableObject);
-		super.retrieveEntity(collector);
-		this.retrievePhysicalLinks(Collections.singleton(collector));
+		super.retrieveEntity(storableObject);
+		this.retrievePhysicalLinks(Collections.singleton(storableObject));
 	}
 
 	private void retrievePhysicalLinks(final Set<Collector> collectors) throws RetrieveObjectException {
@@ -107,25 +97,23 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final Collector storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final Collector collector = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final Collector collector = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+	protected String getUpdateSingleSQLValuesTmpl(final Collector storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected Collector updateEntityFromResultSet(final Collector storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
 		final Collector collector = (storableObject == null)
@@ -134,7 +122,7 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 						StorableObjectVersion.ILLEGAL_VERSION,
 						null,
 						null)
-					: fromStorableObject(storableObject);
+					: storableObject;
 
 		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -147,7 +135,7 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<Collector> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
@@ -157,22 +145,16 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	public void update(final Set<Collector> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updatePhysicalLinks(storableObjects);
 	}	
 
-	private void updatePhysicalLinks(final Set collectors) throws UpdateObjectException {
+	private void updatePhysicalLinks(final Set<Collector> collectors) throws UpdateObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		final java.util.Map<Identifier, Set<Identifier>> collectorIdPhysicalLinkIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (Iterator it = collectors.iterator(); it.hasNext();) {
-			Collector collector;
-			try {
-				collector = this.fromStorableObject((StorableObject) it.next());
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
-			}
+		for (Collector collector: collectors) {
 			final Set<PhysicalLink> physicalLinks = collector.getPhysicalLinks();
 			final Set<Identifier> physicalLinkIds = Identifier.createIdentifiers(physicalLinks);
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
@@ -219,7 +201,7 @@ public final class CollectorDatabase extends StorableObjectDatabase {
 	}	
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected Set<Collector> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<Collector> collection = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(collection);
 		return collection;

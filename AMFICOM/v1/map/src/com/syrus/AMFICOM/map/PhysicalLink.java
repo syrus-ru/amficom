@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.76 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.77 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.76 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.77 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -86,7 +86,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
-	private static java.util.Map exportMap = null;
+	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -117,9 +117,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		PhysicalLinkDatabase database = (PhysicalLinkDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -267,10 +266,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = plt.leftToRight;
 		this.topToBottom = plt.topToBottom;
 
-		this.physicalLinkType = (PhysicalLinkType) StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
+		this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
 
-		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+		this.startNode = StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
+		this.endNode = StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
 		this.selected = false;
 
@@ -811,8 +810,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		double y = 0.0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
 
-		for (Iterator it = getNodeLinks().iterator(); it.hasNext();) {
-			NodeLink mnle = (NodeLink) it.next();
+		for (NodeLink mnle: getNodeLinks()) {
 			DoublePoint an = mnle.getLocation();
 			x += an.getX();
 			y += an.getY();
@@ -846,13 +844,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.setEndNode(mples.endNode);
 
 		this.nodeLinks = new ArrayList<NodeLink>(mples.nodeLinks.size());
-		for (final Iterator it = mples.nodeLinks.iterator(); it.hasNext();) {
-			final NodeLink mnle = (NodeLink) it.next();
+		for (final NodeLink mnle: mples.nodeLinks) {
 			mnle.setPhysicalLink(this);
 //			this.nodeLinks.add(mnle);
 		}
 		try {
-			setType((PhysicalLinkType) (StorableObjectPool.getStorableObject(mples.mapProtoId, true)));
+			setType(StorableObjectPool.<PhysicalLinkType>getStorableObject(mples.mapProtoId, true));
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -873,7 +870,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public java.util.Map getExportMap() {
 		if (exportMap == null)
-			exportMap = new HashMap();
+			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
@@ -889,7 +886,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 	}
 
-	public static PhysicalLink createInstance(final Identifier creatorId, final java.util.Map exportMap1)
+	public static PhysicalLink createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1)
 			throws CreateObjectException {
 		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
 		String name1 = (String) exportMap1.get(COLUMN_NAME);
@@ -935,8 +932,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			}
 			physicalLinkType1 = (PhysicalLinkType) objects.iterator().next();
 
-			final AbstractNode startNode1 = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
-			final AbstractNode endNode1 = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+			final AbstractNode startNode1 = StorableObjectPool.getStorableObject(startNodeId1, true);
+			final AbstractNode endNode1 = StorableObjectPool.getStorableObject(endNodeId1, true);
 			final PhysicalLink link1 = new PhysicalLink(id1,
 					creatorId,
 					StorableObjectVersion.createInitial(),
@@ -1034,8 +1031,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			System.out.println("End node 507133 id " + endNodeId1.toString());
 		}
 		
-		this.startNode = (AbstractNode) StorableObjectPool.getStorableObject(startNodeId1, true);
-		this.endNode = (AbstractNode) StorableObjectPool.getStorableObject(endNodeId1, true);
+		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
+		this.endNode = StorableObjectPool.getStorableObject(endNodeId1, true);
 
 		String typeCodeName1 = xmlPhysicalLink.getPhysicallinktypeuid().toString();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,

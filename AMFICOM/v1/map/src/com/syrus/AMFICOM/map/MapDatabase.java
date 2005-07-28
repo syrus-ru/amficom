@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.37 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.38 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,11 +40,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class MapDatabase extends StorableObjectDatabase {
+public final class MapDatabase extends StorableObjectDatabase<Map> {
 	 // linked tables ::
     private static final String MAP_COLLECTOR 			= "MapCollector";
     private static final String MAP_MARK 				= "MapMark";
@@ -105,26 +105,19 @@ public final class MapDatabase extends StorableObjectDatabase {
 		return tableName;
 	}
 
-	private Map fromStorableObject(StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof Map)
-			return (Map) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final Map map = this.fromStorableObject(storableObject);
-		this.retrieveEntity(map);
-		final Set<Map> maps = Collections.singleton(map);
+	public void retrieve(Map storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		this.retrieveEntity(storableObject);
+		final Set<Map> maps = Collections.singleton(storableObject);
 		
 		{
 			final java.util.Map<Identifier, Set<Identifier>> collectors = this.retrieveLinkedObjects(maps, _MAP_COLLECTOR);
 			for (final Identifier id : collectors.keySet()) {
 				final Set<Identifier> collectorIds = collectors.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<Collector> loadedCollectors = StorableObjectPool.getStorableObjects(collectorIds, true);
-						map.setCollectors0(loadedCollectors);
+						storableObject.setCollectors0(loadedCollectors);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -136,10 +129,10 @@ public final class MapDatabase extends StorableObjectDatabase {
 			final java.util.Map<Identifier, Set<Identifier>> marks = this.retrieveLinkedObjects(maps, _MAP_MARK);
 			for (final Identifier id : marks.keySet()) {
 				final Set<Identifier> markIds = marks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<Mark> loadedMarks = StorableObjectPool.getStorableObjects(markIds, true);
-						map.setMarks0(loadedMarks);
+						storableObject.setMarks0(loadedMarks);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -151,10 +144,10 @@ public final class MapDatabase extends StorableObjectDatabase {
 			final java.util.Map<Identifier, Set<Identifier>> nodeLinks = this.retrieveLinkedObjects(maps, _MAP_NODE_LINK);
 			for (final Identifier id : nodeLinks.keySet()) {
 				final Set<Identifier> nodeLinkIds = nodeLinks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<NodeLink> loadedNodeLinks = StorableObjectPool.getStorableObjects(nodeLinkIds, true);
-						map.setNodeLinks0(loadedNodeLinks);
+						storableObject.setNodeLinks0(loadedNodeLinks);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -166,10 +159,10 @@ public final class MapDatabase extends StorableObjectDatabase {
 			final java.util.Map<Identifier, Set<Identifier>> physicalLinks = this.retrieveLinkedObjects(maps, _MAP_PHYSICAL_LINK);
 			for (final Identifier id : physicalLinks.keySet()) {
 				final Set<Identifier> physicalLinkIds = physicalLinks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<PhysicalLink> loadedPhysicalLinks = StorableObjectPool.getStorableObjects(physicalLinkIds, true);
-						map.setPhysicalLinks0(loadedPhysicalLinks);
+						storableObject.setPhysicalLinks0(loadedPhysicalLinks);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -181,10 +174,10 @@ public final class MapDatabase extends StorableObjectDatabase {
 			final java.util.Map<Identifier, Set<Identifier>> siteNodes = this.retrieveLinkedObjects(maps, _MAP_SITE_NODE);
 			for (final Identifier id : siteNodes.keySet()) {
 				final Set<Identifier> siteNodeIds = siteNodes.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<SiteNode> loadedSiteNodes = StorableObjectPool.getStorableObjects(siteNodeIds, true);
-						map.setSiteNodes0(loadedSiteNodes);
+						storableObject.setSiteNodes0(loadedSiteNodes);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -196,10 +189,10 @@ public final class MapDatabase extends StorableObjectDatabase {
 			final java.util.Map<Identifier, Set<Identifier>> topologicalNodes = this.retrieveLinkedObjects(maps, _MAP_TOPOLOGICAL_NODE);
 			for (final Identifier id : topologicalNodes.keySet()) {
 				final Set<Identifier> topologicalNodeIds = topologicalNodes.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(storableObject.getId())) {
 					try {
 						final Set<TopologicalNode> loadedTopologicalNodes = StorableObjectPool.getStorableObjects(topologicalNodeIds, true);
-						map.setTopologicalNodes0(loadedTopologicalNodes);
+						storableObject.setTopologicalNodes0(loadedTopologicalNodes);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -246,26 +239,24 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
+	protected int setEntityForPreparedStatementTmpl(Map storableObject, PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
-		final Map map = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, map.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, map.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, map.getDomainId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
-		final Map map = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(map.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(map.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(map.getDomainId());
+	protected String getUpdateSingleSQLValuesTmpl(Map storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getDomainId());
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+	protected Map updateEntityFromResultSet(Map storableObject, ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
 		final Map map = (storableObject == null)
@@ -275,7 +266,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 						null,
 						null,
 						null)
-					: fromStorableObject(storableObject);
+					: storableObject;
 
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -289,7 +280,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void insert(final Set<? extends StorableObject> storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(final Set<Map> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insert(storableObjects);
 		try {
 			this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
@@ -304,7 +295,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	public void update(final Set<? extends StorableObject> storableObjects) throws UpdateObjectException {
+	public void update(final Set<Map> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 		this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
 		this.updateLinkedObjectIds(storableObjects, _MAP_MARK);
@@ -314,7 +305,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
 	}	
 
-	private void updateLinkedObjectIds(final Set<? extends StorableObject> maps, final int linkedTable)
+	private void updateLinkedObjectIds(final Set<Map> maps, final int linkedTable)
 			throws UpdateObjectException {
 		if (maps == null || maps.isEmpty())
 			return;
@@ -329,32 +320,26 @@ public final class MapDatabase extends StorableObjectDatabase {
 
 		final java.util.Map<Identifier, Set<Identifier>> mapIdLinkedObjectIds = new HashMap<Identifier, Set<Identifier>>();
 
-		for (final StorableObject storableObject : maps) {
-			Map map;
-			try {
-				map = this.fromStorableObject(storableObject);
-			} catch (IllegalDataException e) {
-				throw new UpdateObjectException(e);
-			}
+		for (final Map storableObject : maps) {
 			Set<? extends StorableObject> linkedObjectList;
 			switch (linkedTable) {
 				case _MAP_COLLECTOR:
-					linkedObjectList = map.getCollectors();
+					linkedObjectList = storableObject.getCollectors();
 					break;
 				case _MAP_MARK:
-					linkedObjectList = map.getMarks();
+					linkedObjectList = storableObject.getMarks();
 					break;
 				case _MAP_NODE_LINK:
-					linkedObjectList = map.getNodeLinks();
+					linkedObjectList = storableObject.getNodeLinks();
 					break;
 				case _MAP_PHYSICAL_LINK:
-					linkedObjectList = map.getPhysicalLinks();
+					linkedObjectList = storableObject.getPhysicalLinks();
 					break;
 				case _MAP_SITE_NODE:
-					linkedObjectList = map.getSiteNodes();
+					linkedObjectList = storableObject.getSiteNodes();
 					break;
 				case _MAP_TOPOLOGICAL_NODE:
-					linkedObjectList = map.getTopologicalNodes();
+					linkedObjectList = storableObject.getTopologicalNodes();
 					break;
 				default:
 					throw new UpdateObjectException(this.getEntityName()
@@ -366,7 +351,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 				linkedObjectIds.add(storableObject2.getId());
 			}
 
-			mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
+			mapIdLinkedObjectIds.put(storableObject.getId(), linkedObjectIds);
 		}
 
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
@@ -387,7 +372,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 		for (final Identifiable identifiable : ids) {
 			final Identifier mapId = identifiable.getId();
 			try {
-				final Map map = (Map) StorableObjectPool.getStorableObject(mapId, true);
+				final Map map = StorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
 			} catch (ApplicationException ae) {
 				Log.errorMessage(this.getEntityName() + "Database.delete | Couldn't found map for " + mapId);
@@ -479,7 +464,7 @@ public final class MapDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+	protected Set<Map> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<Map> maps = super.retrieveByCondition(conditionQuery);
 		
 		final java.util.Map<Identifier, Map> mapIds = new HashMap<Identifier, Map>();

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.32 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.33 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,26 +35,19 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class TopologicalNodeDatabase extends StorableObjectDatabase {
+public final class TopologicalNodeDatabase extends StorableObjectDatabase<TopologicalNode> {
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
 
-	private TopologicalNode fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof TopologicalNode)
-			return (TopologicalNode) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
-
 	@Override
-	public void retrieve(final StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
-		this.retrieveEntity(topologicalNode);		
-		this.retrievePhysicalLink(topologicalNode);
+	public void retrieve(final TopologicalNode storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		this.retrieveEntity(storableObject);		
+		this.retrievePhysicalLink(storableObject);
 	}	
 
 	private void retrievePhysicalLink(final TopologicalNode node) throws RetrieveObjectException, ObjectNotFoundException{
@@ -257,31 +249,29 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final TopologicalNode storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, topologicalNode.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, topologicalNode.getLocation().getX());
-		preparedStatement.setDouble(++startParameterNumber, topologicalNode.getLocation().getY());
-		preparedStatement.setInt(++startParameterNumber, topologicalNode.isActive() ? 1 : 0);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getY());
+		preparedStatement.setInt(++startParameterNumber, storableObject.isActive() ? 1 : 0);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final TopologicalNode topologicalNode = this.fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ topologicalNode.getLocation().getX() + COMMA
-			+ topologicalNode.getLocation().getY() + COMMA
-			+ (topologicalNode.isActive() ? 1 : 0);
+	protected String getUpdateSingleSQLValuesTmpl(final TopologicalNode storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getLocation().getX() + COMMA
+			+ storableObject.getLocation().getY() + COMMA
+			+ (storableObject.isActive() ? 1 : 0);
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected TopologicalNode updateEntityFromResultSet(final TopologicalNode storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				SQLException {
 		final TopologicalNode topologicalNode = (storableObject == null)
@@ -293,7 +283,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase {
 						0.0,
 						0.0,
 						false)
-					: this.fromStorableObject(storableObject);
+					: storableObject;
 
 		topologicalNode.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -309,8 +299,8 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected Set retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
-		final Set objects = super.retrieveByCondition(conditionQuery);
+	protected Set<TopologicalNode> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		final Set<TopologicalNode> objects = super.retrieveByCondition(conditionQuery);
 		this.retrievePhysicalLinks(objects);
 		return objects;
 	}

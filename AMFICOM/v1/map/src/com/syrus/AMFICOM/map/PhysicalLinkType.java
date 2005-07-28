@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.57 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.58 2005/07/28 10:07:11 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.58 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -90,9 +90,8 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final PhysicalLinkTypeDatabase database = (PhysicalLinkTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.PHYSICALLINK_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}

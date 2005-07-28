@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.31 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.32 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -25,23 +24,17 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class PhysicalLinkDatabase extends StorableObjectDatabase {
+public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
 	private static final int LEFT_RIGHT = 0x01;
     private static final int TOP_BOTTOM = 0x02;
 
 	private static String columns;
 	
 	private static String updateMultipleSQLValues;
-	
-	private PhysicalLink fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof PhysicalLink)
-			return (PhysicalLink) storableObject;
-		throw new IllegalDataException(this.getEntityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 	
 	@Override
 	protected short getEntityCode() {		
@@ -86,43 +79,41 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final PhysicalLink storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final PhysicalLink physicalLink = fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, physicalLink.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-		preparedStatement.setInt(++startParameterNumber, physicalLink.getDimensionX());
-		preparedStatement.setInt(++startParameterNumber, physicalLink.getDimensionY());			
-		preparedStatement.setInt(++startParameterNumber, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, physicalLink.getStartNode().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, physicalLink.getEndNode().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionX());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getDimensionY());			
+		preparedStatement.setInt(++startParameterNumber, (storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0) );
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getStartNode().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEndNode().getId());
 		return startParameterNumber;
 	}
 	
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final PhysicalLink physicalLink = fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(physicalLink.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(physicalLink.getType().getId()) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN) + COMMA
-			+ physicalLink.getDimensionX() + COMMA
-			+ physicalLink.getDimensionY() + COMMA
-			+ ((physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA
-			+ DatabaseIdentifier.toSQLString(physicalLink.getStartNode().getId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(physicalLink.getEndNode().getId());
+	protected String getUpdateSingleSQLValuesTmpl(final PhysicalLink storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN) + COMMA
+			+ storableObject.getDimensionX() + COMMA
+			+ storableObject.getDimensionY() + COMMA
+			+ ((storableObject.isTopToBottom() ? TOP_BOTTOM : 0) | (storableObject.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getStartNode().getId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getEndNode().getId());
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected PhysicalLink updateEntityFromResultSet(final PhysicalLink storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -141,17 +132,17 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase {
 				0,
 				0,
 				false,
-				false) : fromStorableObject(storableObject);
+				false) : storableObject;
 
 		PhysicalLinkType type;
 		AbstractNode startNode;
 		AbstractNode endNode;
 		try {
-			type = (PhysicalLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			type = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID), true);
-			startNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			startNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					PhysicalLinkWrapper.COLUMN_START_NODE_ID), true);
-			endNode = (AbstractNode) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			endNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.31 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: SiteNodeDatabase.java,v 1.32 2005/07/28 10:07:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,20 +25,14 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/07/26 11:41:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: max $
  * @module map_v1
  */
-public final class SiteNodeDatabase extends StorableObjectDatabase {
+public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 	private static String columns;
 
 	private static String updateMultipleSQLValues;
-
-	private SiteNode fromStorableObject(final StorableObject storableObject) throws IllegalDataException {
-		if (storableObject instanceof SiteNode)
-			return (SiteNode) storableObject;
-		throw new IllegalDataException("SiteNodeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
-	}
 
 	@Override
 	protected short getEntityCode() {		
@@ -79,39 +72,37 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final StorableObject storableObject,
+	protected int setEntityForPreparedStatementTmpl(final SiteNode storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		final SiteNode siteNode = this.fromStorableObject(storableObject);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getName(), SIZE_NAME_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, siteNode.getLocation().getX());
-		preparedStatement.setDouble(++startParameterNumber, siteNode.getLocation().getY());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, siteNode.getImageId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, siteNode.getType().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getX());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return startParameterNumber;
 	}
 
 	@Override
-	protected String getUpdateSingleSQLValuesTmpl(final StorableObject storableObject) throws IllegalDataException {
-		final SiteNode siteNode = this.fromStorableObject(storableObject);
-		final String values = APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ siteNode.getLocation().getX() + COMMA
-			+ siteNode.getLocation().getY() + COMMA
-			+ DatabaseIdentifier.toSQLString(siteNode.getImageId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(siteNode.getType().getId()) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+	protected String getUpdateSingleSQLValuesTmpl(final SiteNode storableObject) throws IllegalDataException {
+		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+			+ storableObject.getLocation().getX() + COMMA
+			+ storableObject.getLocation().getY() + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getImageId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return values;
 	}
 
 	@Override
-	protected StorableObject updateEntityFromResultSet(final StorableObject storableObject, final ResultSet resultSet)
+	protected SiteNode updateEntityFromResultSet(final SiteNode storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
 				RetrieveObjectException,
 				SQLException {
@@ -127,11 +118,11 @@ public final class SiteNodeDatabase extends StorableObjectDatabase {
 				0.0,
 				null,
 				null,
-				null) : this.fromStorableObject(storableObject);
+				null) : storableObject;
 
 		SiteNodeType type;
 		try {
-			type = (SiteNodeType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+			type = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
 		} catch (ApplicationException ae) {
 			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();

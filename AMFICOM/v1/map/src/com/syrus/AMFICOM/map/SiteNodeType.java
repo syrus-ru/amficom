@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.51 2005/07/26 12:07:03 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.52 2005/07/28 10:07:11 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.51 $, $Date: 2005/07/26 12:07:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.52 $, $Date: 2005/07/28 10:07:11 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  */
@@ -84,9 +84,8 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		final SiteNodeTypeDatabase database = (SiteNodeTypeDatabase) DatabaseContext.getDatabase(ObjectEntities.SITENODE_TYPE_CODE);
 		try {
-			database.retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.SITENODE_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -289,7 +288,7 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 
 		String imageCodeName = "";
 		try {
-			final AbstractImageResource ir = (AbstractImageResource) StorableObjectPool.getStorableObject(this.getImageId(), false);
+			final AbstractImageResource ir = StorableObjectPool.getStorableObject(this.getImageId(), false);
 			if (ir instanceof FileImageResource) {
 				imageCodeName = ((FileImageResource) ir).getCodename();
 			}
