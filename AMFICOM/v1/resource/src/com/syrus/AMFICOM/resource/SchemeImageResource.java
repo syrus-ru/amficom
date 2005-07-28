@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.30 2005/07/26 08:51:42 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.31 2005/07/28 18:07:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/07/26 08:51:42 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/28 18:07:47 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource implements Cloneable {
@@ -222,7 +222,7 @@ public final class SchemeImageResource extends AbstractImageResource implements 
 		ObjectInputStream in = null;
 		try {
 			in = new ObjectInputStream(new GZIPInputStream(new ByteArrayInputStream(packedData)));
-			return (List<Object>) in.readObject();
+			return (List) in.readObject();
 		} finally {
 			if (in != null)
 				in.close();

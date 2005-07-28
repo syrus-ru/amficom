@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.29 2005/07/27 14:32:36 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.30 2005/07/28 18:03:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.29 $, $Date: 2005/07/27 14:32:36 $
+ * @version $Revision: 1.30 $, $Date: 2005/07/28 18:03:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -155,6 +155,7 @@ public class StorableObjectXML {
 		storableObject.cleanupUpdate();
 	}
 
+	@SuppressWarnings("unchecked")
 	private <T extends StorableObject> T getStorableObject(final Identifier identifier, final String className) throws IllegalDataException {
 		final short entityCode = identifier.getMajor();
 		String clazzName;

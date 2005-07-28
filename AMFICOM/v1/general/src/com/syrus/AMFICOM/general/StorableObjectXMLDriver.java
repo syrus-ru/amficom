@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.23 2005/07/25 18:05:10 arseniy Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.24 2005/07/28 18:03:00 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.23 $, $Date: 2005/07/25 18:05:10 $
+ * @version $Revision: 1.24 $, $Date: 2005/07/28 18:03:00 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -321,9 +321,9 @@ public class StorableObjectXMLDriver {
 			element.appendChild(text);
 		} else if (object instanceof Collection) {
 			/* TODO replace for java.util.Set*/
-			final Collection collection = (Collection) object;
+			final Collection<?> collection = (Collection) object;
 			className = Collection.class.getName();
-			final Set set = new HashSet(collection);
+			final Set<Object> set = new HashSet<Object>(collection);
 			for (final Iterator it = set.iterator(); it.hasNext();) {
 				this.addObject(element, key + "item", it.next());
 			}
