@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/07/10 13:41:30 bass Exp $
+# $Id: Makefile,v 1.20 2005/07/28 15:01:40 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -16,28 +16,12 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/event/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java)
 
 
 $(LIBNAME): .mach
 	$(JAR) cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/general \
-		-C $(CLASSDIR) com/syrus/AMFICOM/administration \
-		-C $(CLASSDIR) com/syrus/AMFICOM/configuration \
-		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
-		-C $(CLASSDIR) com/syrus/AMFICOM/event \
-		-C $(CLASSDIR) com/syrus/AMFICOM/resource \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map \
-		-C $(CLASSDIR) com/syrus/AMFICOM/scheme \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mapview
+		-C $(CLASSDIR) com/syrus/AMFICOM/general 
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
