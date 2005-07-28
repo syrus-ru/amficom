@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemDatabase.java,v 1.17 2005/07/28 10:04:34 bass Exp $
+ * $Id: CableChannelingItemDatabase.java,v 1.18 2005/07/28 12:18:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,22 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_END_SPARE;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_PLACE_Y;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_ROW_X;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID;
+import static com.syrus.AMFICOM.scheme.CableChannelingItemWrapper.COLUMN_START_SPARE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,13 +35,12 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/28 12:18:46 $
  * @module scheme
  */
 public final class CableChannelingItemDatabase extends StorableObjectDatabase<CableChannelingItem> {
@@ -36,15 +51,15 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = CableChannelingItemWrapper.COLUMN_START_SPARE + COMMA
-					+ CableChannelingItemWrapper.COLUMN_END_SPARE + COMMA
-					+ CableChannelingItemWrapper.COLUMN_ROW_X + COMMA
-					+ CableChannelingItemWrapper.COLUMN_PLACE_Y + COMMA
-					+ CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER + COMMA
-					+ CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
-					+ CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID + COMMA
-					+ CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID + COMMA
-					+ CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
+			columns = COLUMN_START_SPARE + COMMA
+					+ COLUMN_END_SPARE + COMMA
+					+ COLUMN_ROW_X + COMMA
+					+ COLUMN_PLACE_Y + COMMA
+					+ COLUMN_SEQUENTIAL_NUMBER + COMMA
+					+ COLUMN_PHYSICAL_LINK_ID + COMMA
+					+ COLUMN_START_SITE_NODE_ID + COMMA
+					+ COLUMN_END_SITE_NODE_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
 		}
 		return columns;
 	}
@@ -125,12 +140,12 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		CableChannelingItem cableChannelingItem = storableObject == null
-				? new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new CableChannelingItem(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						0d,
 						0d,
 						0,
@@ -141,20 +156,20 @@ public final class CableChannelingItemDatabase extends StorableObjectDatabase<Ca
 						null,
 						null)
 				: storableObject;
-		cableChannelingItem.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				resultSet.getDouble(CableChannelingItemWrapper.COLUMN_START_SPARE),
-				resultSet.getDouble(CableChannelingItemWrapper.COLUMN_END_SPARE),
-				resultSet.getInt(CableChannelingItemWrapper.COLUMN_ROW_X),
-				resultSet.getInt(CableChannelingItemWrapper.COLUMN_PLACE_Y),
-				resultSet.getInt(CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER),
-				DatabaseIdentifier.getIdentifier(resultSet, CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID));
+		cableChannelingItem.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				resultSet.getDouble(COLUMN_START_SPARE),
+				resultSet.getDouble(COLUMN_END_SPARE),
+				resultSet.getInt(COLUMN_ROW_X),
+				resultSet.getInt(COLUMN_PLACE_Y),
+				resultSet.getInt(COLUMN_SEQUENTIAL_NUMBER),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_SITE_NODE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_SITE_NODE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_CABLE_LINK_ID));
 		return cableChannelingItem;
 	}
 }

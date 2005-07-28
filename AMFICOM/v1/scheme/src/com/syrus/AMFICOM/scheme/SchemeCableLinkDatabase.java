@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkDatabase.java,v 1.16 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemeCableLinkDatabase.java,v 1.17 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,22 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_CABLE_LINK_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_OPTICAL_LENGTH;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_PHYSICAL_LENGTH;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +35,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemeCableLinkDatabase extends StorableObjectDatabase<SchemeCableLink> {
@@ -37,15 +52,15 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_PHYSICAL_LENGTH + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_OPTICAL_LENGTH + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_CABLE_LINK_ID + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID + COMMA
-					+ SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_PHYSICAL_LENGTH + COMMA
+					+ COLUMN_OPTICAL_LENGTH + COMMA
+					+ COLUMN_CABLE_LINK_TYPE_ID + COMMA
+					+ COLUMN_CABLE_LINK_ID + COMMA
+					+ COLUMN_SOURCE_SCHEME_CABLE_PORT_ID + COMMA
+					+ COLUMN_TARGET_SCHEME_CABLE_PORT_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_ID;
 		}
 		return columns;
 	}
@@ -128,12 +143,12 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		SchemeCableLink schemeCableLink = storableObject == null
-				? new SchemeCableLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemeCableLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						0d,
@@ -144,20 +159,20 @@ public final class SchemeCableLinkDatabase extends StorableObjectDatabase<Scheme
 						null,
 						null)
 				: storableObject;
-		schemeCableLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				resultSet.getDouble(SchemeCableLinkWrapper.COLUMN_PHYSICAL_LENGTH),
-				resultSet.getDouble(SchemeCableLinkWrapper.COLUMN_OPTICAL_LENGTH),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_CABLE_LINK_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_CABLE_LINK_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID));
+		schemeCableLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getDouble(COLUMN_PHYSICAL_LENGTH),
+				resultSet.getDouble(COLUMN_OPTICAL_LENGTH),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CABLE_LINK_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CABLE_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SOURCE_SCHEME_CABLE_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TARGET_SCHEME_CABLE_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ID));
 		return schemeCableLink;
 	}
 }

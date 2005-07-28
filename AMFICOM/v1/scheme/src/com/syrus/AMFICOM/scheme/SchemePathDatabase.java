@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathDatabase.java,v 1.17 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemePathDatabase.java,v 1.18 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,17 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID;
+import static com.syrus.AMFICOM.scheme.SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +30,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath> {
@@ -37,10 +47,10 @@ public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath>
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID + COMMA
-					+ SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_TRANSMISSION_PATH_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID;
 		}
 		return columns;
 	}
@@ -108,26 +118,26 @@ public final class SchemePathDatabase extends StorableObjectDatabase<SchemePath>
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		SchemePath schemePath = storableObject == null
-				? new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemePath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
 						null)
 				: storableObject;
-		schemePath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_TRANSMISSION_PATH_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID));
+		schemePath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TRANSMISSION_PATH_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID));
 		return schemePath;
 	}
 }

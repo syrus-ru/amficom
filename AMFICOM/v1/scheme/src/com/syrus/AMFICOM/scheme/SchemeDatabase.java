@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDatabase.java,v 1.19 2005/07/28 10:04:33 bass Exp $
+ * $Id: SchemeDatabase.java,v 1.20 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,26 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_DOMAIN_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_HEIGHT;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_KIND;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_LABEL;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_MAP_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_SCHEME_CELL_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_SYMBOL_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_UGO_CELL_ID;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.COLUMN_WIDTH;
+import static com.syrus.AMFICOM.scheme.SchemeWrapper.SIZE_LABEL_COLUMN;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +39,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -27,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/07/28 10:04:33 $
+ * @version $Revision: 1.20 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
@@ -38,18 +57,18 @@ public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeWrapper.COLUMN_LABEL + COMMA
-					+ SchemeWrapper.COLUMN_WIDTH + COMMA
-					+ SchemeWrapper.COLUMN_HEIGHT + COMMA
-					+ SchemeWrapper.COLUMN_DOMAIN_ID + COMMA
-					+ SchemeWrapper.COLUMN_MAP_ID + COMMA
-					+ SchemeWrapper.COLUMN_SYMBOL_ID + COMMA
-					+ SchemeWrapper.COLUMN_UGO_CELL_ID + COMMA
-					+ SchemeWrapper.COLUMN_SCHEME_CELL_ID + COMMA
-					+ SchemeWrapper.COLUMN_KIND + COMMA
-					+ SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_LABEL + COMMA
+					+ COLUMN_WIDTH + COMMA
+					+ COLUMN_HEIGHT + COMMA
+					+ COLUMN_DOMAIN_ID + COMMA
+					+ COLUMN_MAP_ID + COMMA
+					+ COLUMN_SYMBOL_ID + COMMA
+					+ COLUMN_UGO_CELL_ID + COMMA
+					+ COLUMN_SCHEME_CELL_ID + COMMA
+					+ COLUMN_KIND + COMMA
+					+ COLUMN_PARENT_SCHEME_ELEMENT_ID;
 		}
 		return columns;
 	}
@@ -88,7 +107,7 @@ public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
 			throws IllegalDataException {
 		String sql = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getWidth() + COMMA
 				+ storableObject.getHeight() + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getDomainId()) + COMMA
@@ -116,7 +135,7 @@ public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
 			SQLException {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SchemeWrapper.SIZE_LABEL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SIZE_LABEL_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, storableObject.getWidth());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getHeight());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
@@ -141,12 +160,12 @@ public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		Scheme scheme = storableObject == null
-				? new Scheme(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new Scheme(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -160,23 +179,23 @@ public final class SchemeDatabase extends StorableObjectDatabase<Scheme> {
 						null,
 						null)
 				: storableObject;
-		scheme.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(SchemeWrapper.COLUMN_LABEL)),
-				resultSet.getInt(SchemeWrapper.COLUMN_WIDTH),
-				resultSet.getInt(SchemeWrapper.COLUMN_HEIGHT),
-				IdlKind.from_int(resultSet.getInt(SchemeWrapper.COLUMN_KIND)),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_DOMAIN_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_MAP_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SYMBOL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_UGO_CELL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_SCHEME_CELL_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+		scheme.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LABEL)),
+				resultSet.getInt(COLUMN_WIDTH),
+				resultSet.getInt(COLUMN_HEIGHT),
+				IdlKind.from_int(resultSet.getInt(COLUMN_KIND)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MAP_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SYMBOL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_UGO_CELL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SCHEME_CELL_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ELEMENT_ID));
 		return scheme;
 	}
 }

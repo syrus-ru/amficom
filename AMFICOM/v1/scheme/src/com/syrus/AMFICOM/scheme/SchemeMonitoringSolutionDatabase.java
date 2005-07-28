@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionDatabase.java,v 1.15 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemeMonitoringSolutionDatabase.java,v 1.16 2005/07/28 12:18:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,19 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE;
+import static com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID;
+import static com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID;
+import static com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +32,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.16 $, $Date: 2005/07/28 12:18:46 $
  * @module scheme
  */
 public final class SchemeMonitoringSolutionDatabase extends StorableObjectDatabase<SchemeMonitoringSolution> {
@@ -37,12 +49,12 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID + COMMA
-					+ SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_PRICE_USD + COMMA
+					+ COLUMN_ACTIVE + COMMA
+					+ COLUMN_PARENT_SCHEME_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID;
 		}
 		return columns;
 	}
@@ -117,12 +129,12 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 		Date created = new Date();
 		SchemeMonitoringSolution schemeMonitoringSolution = storableObject == null
 				? new SchemeMonitoringSolution(DatabaseIdentifier.getIdentifier(resultSet,
-						StorableObjectWrapper.COLUMN_ID),
+						COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						0,
@@ -130,17 +142,17 @@ public final class SchemeMonitoringSolutionDatabase extends StorableObjectDataba
 						null,
 						null)
 				: storableObject;
-		schemeMonitoringSolution.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_PRICE_USD),
-				resultSet.getInt(SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) != 0,
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID));
+		schemeMonitoringSolution.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getInt(COLUMN_PRICE_USD),
+				resultSet.getInt(COLUMN_ACTIVE) != 0,
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID));
 		return schemeMonitoringSolution;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.17 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.18 2005/07/28 12:18:46 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,20 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemePortWrapper.COLUMN_DIRECTION_TYPE;
+import static com.syrus.AMFICOM.scheme.SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID;
+import static com.syrus.AMFICOM.scheme.SchemePortWrapper.COLUMN_PARENT_DEVICE_ID;
+import static com.syrus.AMFICOM.scheme.SchemePortWrapper.COLUMN_PORT_ID;
+import static com.syrus.AMFICOM.scheme.SchemePortWrapper.COLUMN_PORT_TYPE_ID;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,7 +33,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -27,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/07/28 12:18:46 $
  * @module scheme
  */
 public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort> {
@@ -38,13 +51,13 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemePortWrapper.COLUMN_DIRECTION_TYPE + COMMA
-					+ SchemePortWrapper.COLUMN_PORT_TYPE_ID + COMMA
-					+ SchemePortWrapper.COLUMN_PORT_ID + COMMA
-					+ SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID + COMMA
-					+ SchemePortWrapper.COLUMN_PARENT_DEVICE_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_DIRECTION_TYPE + COMMA
+					+ COLUMN_PORT_TYPE_ID + COMMA
+					+ COLUMN_PORT_ID + COMMA
+					+ COLUMN_MEASUREMENT_PORT_ID + COMMA
+					+ COLUMN_PARENT_DEVICE_ID;
 		}
 		return columns;
 	}
@@ -121,12 +134,12 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		SchemePort schemePort = storableObject == null
-				? new SchemePort(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemePort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -135,18 +148,18 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 						null,
 						null)
 				: storableObject;
-		schemePort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				IdlDirectionType.from_int(resultSet.getInt(SchemePortWrapper.COLUMN_DIRECTION_TYPE)),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemePortWrapper.COLUMN_PARENT_DEVICE_ID));
+		schemePort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				IdlDirectionType.from_int(resultSet.getInt(COLUMN_DIRECTION_TYPE)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PORT_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_DEVICE_ID));
 		return schemePort;
 	}
 }

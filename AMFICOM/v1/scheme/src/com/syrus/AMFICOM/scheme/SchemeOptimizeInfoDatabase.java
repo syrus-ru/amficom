@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoDatabase.java,v 1.16 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemeOptimizeInfoDatabase.java,v 1.17 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,28 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_ITERATIONS;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_LEN_MARGIN;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_MUTATION_DEGREE;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_MUTATION_RATE;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_NODES_CUT_PROB;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_NODES_SPLICE_PROB;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_OPTIMIZATION_MODE;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_PRICE;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_RTU_CREATE_PROB;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_RTU_DELETE_PROB;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_SURVIVOR_RATE;
+import static com.syrus.AMFICOM.scheme.SchemeOptimizeInfoWrapper.COLUMN_WAVE_LENGTH;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +41,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<SchemeOptimizeInfo> {
@@ -37,21 +58,21 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<Sch
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_OPTIMIZATION_MODE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_ITERATIONS + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_PRICE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_WAVE_LENGTH + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_LEN_MARGIN + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_MUTATION_RATE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_MUTATION_DEGREE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_RTU_DELETE_PROB + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_RTU_CREATE_PROB + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_NODES_SPLICE_PROB + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_NODES_CUT_PROB + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_SURVIVOR_RATE + COMMA
-					+ SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_OPTIMIZATION_MODE + COMMA
+					+ COLUMN_ITERATIONS + COMMA
+					+ COLUMN_PRICE + COMMA
+					+ COLUMN_WAVE_LENGTH + COMMA
+					+ COLUMN_LEN_MARGIN + COMMA
+					+ COLUMN_MUTATION_RATE + COMMA
+					+ COLUMN_MUTATION_DEGREE + COMMA
+					+ COLUMN_RTU_DELETE_PROB + COMMA
+					+ COLUMN_RTU_CREATE_PROB + COMMA
+					+ COLUMN_NODES_SPLICE_PROB + COMMA
+					+ COLUMN_NODES_CUT_PROB + COMMA
+					+ COLUMN_SURVIVOR_RATE + COMMA
+					+ COLUMN_PARENT_SCHEME_ID;
 					
 		}
 		return columns;
@@ -153,12 +174,12 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<Sch
 				SQLException {
 		Date created = new Date();
 		SchemeOptimizeInfo schemeOptimizeInfo = storableObject == null
-				? new SchemeOptimizeInfo(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemeOptimizeInfo(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						0,
@@ -175,26 +196,26 @@ public final class SchemeOptimizeInfoDatabase extends StorableObjectDatabase<Sch
 						0d,
 						null)
 				: storableObject;
-		schemeOptimizeInfo.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				resultSet.getInt(SchemeOptimizeInfoWrapper.COLUMN_OPTIMIZATION_MODE),
-				resultSet.getInt(SchemeOptimizeInfoWrapper.COLUMN_ITERATIONS),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_PRICE),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_WAVE_LENGTH),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_LEN_MARGIN),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_MUTATION_RATE),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_MUTATION_DEGREE),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_RTU_DELETE_PROB),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_RTU_CREATE_PROB),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_NODES_SPLICE_PROB),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_NODES_CUT_PROB),
-				resultSet.getDouble(SchemeOptimizeInfoWrapper.COLUMN_SURVIVOR_RATE),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID));
+		schemeOptimizeInfo.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getInt(COLUMN_OPTIMIZATION_MODE),
+				resultSet.getInt(COLUMN_ITERATIONS),
+				resultSet.getDouble(COLUMN_PRICE),
+				resultSet.getDouble(COLUMN_WAVE_LENGTH),
+				resultSet.getDouble(COLUMN_LEN_MARGIN),
+				resultSet.getDouble(COLUMN_MUTATION_RATE),
+				resultSet.getDouble(COLUMN_MUTATION_DEGREE),
+				resultSet.getDouble(COLUMN_RTU_DELETE_PROB),
+				resultSet.getDouble(COLUMN_RTU_CREATE_PROB),
+				resultSet.getDouble(COLUMN_NODES_SPLICE_PROB),
+				resultSet.getDouble(COLUMN_NODES_CUT_PROB),
+				resultSet.getDouble(COLUMN_SURVIVOR_RATE),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ID));
 		return schemeOptimizeInfo;
 	}
 }

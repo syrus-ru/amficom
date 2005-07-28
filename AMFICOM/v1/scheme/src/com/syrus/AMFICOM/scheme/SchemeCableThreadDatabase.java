@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.14 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.15 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,20 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_CABLE_THREAD_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +33,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemeCableThreadDatabase extends StorableObjectDatabase<SchemeCableThread> {
@@ -37,13 +50,13 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeCableThreadWrapper.COLUMN_CABLE_THREAD_TYPE_ID + COMMA
-					+ SchemeCableThreadWrapper.COLUMN_LINK_ID + COMMA
-					+ SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID + COMMA
-					+ SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID + COMMA
-					+ SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_CABLE_THREAD_TYPE_ID + COMMA
+					+ COLUMN_LINK_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_CABLE_LINK_ID + COMMA
+					+ COLUMN_SOURCE_SCHEME_PORT_ID + COMMA
+					+ COLUMN_TARGET_SCHEME_PORT_ID;
 		}
 		return columns;
 	}
@@ -120,12 +133,12 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		SchemeCableThread schemeCableThread = storableObject == null
-				? new SchemeCableThread(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemeCableThread(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						null,
@@ -134,18 +147,18 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 						null,
 						null)
 				: storableObject;
-		schemeCableThread.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableThreadWrapper.COLUMN_CABLE_THREAD_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableThreadWrapper.COLUMN_LINK_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID));
+		schemeCableThread.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CABLE_THREAD_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_CABLE_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SOURCE_SCHEME_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TARGET_SCHEME_PORT_ID));
 		return schemeCableThread;
 	}
 }

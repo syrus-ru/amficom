@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkDatabase.java,v 1.16 2005/07/28 10:04:34 bass Exp $
+ * $Id: SchemeLinkDatabase.java,v 1.17 2005/07/28 12:18:45 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,25 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectVersion.ILLEGAL_VERSION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CREATOR_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_LINK_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_LINK_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_OPTICAL_LENGTH;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_PHYSICAL_LENGTH;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_SITE_NODE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID;
+import static com.syrus.AMFICOM.scheme.SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,14 +38,13 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 10:04:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/28 12:18:45 $
  * @module scheme
  */
 public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink> {
@@ -37,18 +55,18 @@ public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink>
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-					+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-					+ SchemeLinkWrapper.COLUMN_PHYSICAL_LENGTH + COMMA
-					+ SchemeLinkWrapper.COLUMN_OPTICAL_LENGTH + COMMA
-					+ SchemeLinkWrapper.COLUMN_LINK_TYPE_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_LINK_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_SITE_NODE_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID + COMMA
-					+ SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID;
+			columns = COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION + COMMA
+					+ COLUMN_PHYSICAL_LENGTH + COMMA
+					+ COLUMN_OPTICAL_LENGTH + COMMA
+					+ COLUMN_LINK_TYPE_ID + COMMA
+					+ COLUMN_LINK_ID + COMMA
+					+ COLUMN_SITE_NODE_ID + COMMA
+					+ COLUMN_SOURCE_SCHEME_PORT_ID + COMMA
+					+ COLUMN_TARGET_SCHEME_PORT_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_ELEMENT_ID + COMMA
+					+ COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID;
 		}
 		return columns;
 	}
@@ -140,12 +158,12 @@ public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink>
 			throws IllegalDataException, SQLException {
 		Date created = new Date();
 		SchemeLink schemeLink = storableObject == null
-				? new SchemeLink(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
+				? new SchemeLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 						created,
 						created,
 						null,
 						null,
-						StorableObjectVersion.ILLEGAL_VERSION,
+						ILLEGAL_VERSION,
 						null,
 						null,
 						0d,
@@ -159,23 +177,23 @@ public final class SchemeLinkDatabase extends StorableObjectDatabase<SchemeLink>
 						null,
 						null)
 				: storableObject;
-		schemeLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				resultSet.getDouble(SchemeLinkWrapper.COLUMN_PHYSICAL_LENGTH),
-				resultSet.getDouble(SchemeLinkWrapper.COLUMN_OPTICAL_LENGTH),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_LINK_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_LINK_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_SITE_NODE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID));
+		schemeLink.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+				DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+				resultSet.getDouble(COLUMN_PHYSICAL_LENGTH),
+				resultSet.getDouble(COLUMN_OPTICAL_LENGTH),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SITE_NODE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SOURCE_SCHEME_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TARGET_SCHEME_PORT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_ELEMENT_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID));
 		return schemeLink;
 	}
 }
