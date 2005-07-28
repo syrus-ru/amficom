@@ -15,7 +15,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -38,16 +37,15 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
-import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
@@ -251,7 +249,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
 											Test test1 = (Test) it.next();
 											TableFrame.this.schedulerModel.removeTest(test1);
-											model.getValues().remove(test1);
+											model.removeObject(test1);
 
 										}
 										table.revalidate();
