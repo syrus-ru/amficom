@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.11 2005/07/22 10:22:28 saa Exp $
+ * $Id: GUIUtil.java,v 1.12 2005/07/28 13:33:52 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,14 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/07/22 10:22:28 $
+ * @version $Revision: 1.12 $, $Date: 2005/07/28 13:33:52 $
  * @module
  */
 public class GUIUtil
@@ -32,6 +36,9 @@ public class GUIUtil
 	private static final String MSG_CREATE_OBJECT_PROBLEM = "createObjectProblem";
 	private static final String MSG_ERROR_DATA_FORMAT = "errorDataReceivedUnrecognized";
 	public static final String MSG_ERROR_DATABASE_FLUSH_ERROR = "errorDataBaseFlush";
+
+	private static final String MSG_ERROR_COMMUNICATION_EXCEPTION = "errorCommunicationException";
+	private static final String MSG_ERROR_DATABASE_EXCEPTION = "errorDatabaseException";
 
 	public static final String MSG_ERROR_MALFORMED_ETALON = "errorMalformedEtalon";
 	public static final String MSG_ERROR_EMPTY_NAME_ENTERED = "errorEmptyNameEntered";
@@ -51,6 +58,22 @@ public class GUIUtil
 	}
 	public static void showDataFormatError() {
 		showErrorMessage(MSG_ERROR_DATA_FORMAT);
+	}
+
+	/**
+	 * "Отрабатывает" ApplicationException:
+	 * выводит сообщение на экран и/или делает запись в Log
+	 * @param e
+	 */
+	public static void processApplicationException(ApplicationException e) {
+		if (e instanceof CommunicationException) {
+			showErrorMessage(MSG_ERROR_COMMUNICATION_EXCEPTION);
+		} else if (e instanceof DatabaseException) {
+			showErrorMessage(MSG_ERROR_DATABASE_EXCEPTION);
+		} else {
+			Log.debugException(e, Log.DEBUGLEVEL03);
+			e.printStackTrace();
+		}
 	}
 
 	public static void showErrorMessage(String codestring)
