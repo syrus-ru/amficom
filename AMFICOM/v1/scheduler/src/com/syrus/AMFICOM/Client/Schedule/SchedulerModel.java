@@ -802,7 +802,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						try {
 							java.util.Set measurementSetupIds = (java.util.Set) (SchedulerModel.this.measurementSetupIdMap != null
 									? SchedulerModel.this.measurementSetupIdMap.get(idSet1) : null);
-							java.util.Set measurementSetups = null;
+							Set<MeasurementSetup> measurementSetups = null;
 							if (measurementSetupIds == null) {
 								measurementSetups = StorableObjectPool.getStorableObjectsByCondition(condition1, true,
 									true);
@@ -818,6 +818,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							} else {
 								measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
 							}
+							
+							for(MeasurementSetup measurementSetup : measurementSetups) {
+								System.out.println("refreshMeasurementSetups | " + measurementSetup.getId() + ", " + measurementSetup.getDescription());
+							}
+							
 							SchedulerModel.this.dispatcher
 									.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUPS,
 																				null, measurementSetups));
