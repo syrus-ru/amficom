@@ -16,3 +16,6 @@ IdlSiteNode.java
 IdlSiteNodeType.java
 IdlTopologicalImageQuery.java
 IdlTopologicalNode.java
+IdlLayerDescriptor.java
+IdlMapDescriptor.java
+IdlMapView.java

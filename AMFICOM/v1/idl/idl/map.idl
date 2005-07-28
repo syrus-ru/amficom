@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.27 2005/07/24 18:07:44 bass Exp $
+ * $Id: map.idl,v 1.28 2005/07/28 15:37:00 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -327,7 +327,24 @@ module map {
 		};
 		typedef sequence<IdlMapFeature> IdlMapFeatureSeq;
 
-
+		struct IdlMapDescriptor {
+			wstring name;
+			wstring fileName;
+			wstring filePathName;
+			
+			long long length;
+			long long lastModified;
+		};
+		typedef sequence<IdlMapDescriptor> IdlMapDescriptorSeq;
+		
+		struct IdlLayerDescriptor {
+			wstring fileName;
+			wstring pathName;
+			
+			long long length;
+			long long lastModified;
+		};
+		typedef sequence<IdlLayerDescriptor> IdlLayerDescriptorSeq;
 	};
 };
 

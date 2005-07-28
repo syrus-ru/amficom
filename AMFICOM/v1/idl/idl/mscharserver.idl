@@ -1,5 +1,5 @@
 /*-
- * $Id: mscharserver.idl,v 1.6 2005/07/28 13:22:05 arseniy Exp $
+ * $Id: mscharserver.idl,v 1.7 2005/07/28 15:37:00 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,21 @@ module mscharserver {
 					in wstring searchName,
 					in security::corba::IdlSessionKey idlSessionKey)
 					raises (general::corba::AMFICOMRemoteException);
+/*-************************************************************
+ * Mapinfo -- files syncronization                            *
+ **************************************************************/
+ 			map::corba::IdlMapDescriptorSeq getMapDescriptors(
+ 					in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
+ 			map::corba::IdlLayerDescriptorSeq getLayerDescriptors(
+ 					in map::corba::IdlMapDescriptor IdlMapDescriptor,
+ 					in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
+ 			::CORBA::OctetSeq loadFile(
+ 					in wstring pathName,
+ 					in long long offset,
+ 					in security::corba::IdlSessionKey IdlSessionKey)
+ 					raises (general::corba::AMFICOMRemoteException);
 		};
 	};
 };
