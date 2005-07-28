@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.57 2005/07/27 11:58:34 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.58 2005/07/28 15:42:01 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,12 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/07/27 11:58:34 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/28 15:42:01 $
  * @author $Author: saa $
  * @module mcm_v1
  */
 
 //*
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -44,9 +43,9 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
@@ -179,6 +178,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 	}
 
 	public Parameter[] analyse() throws AnalysisException {
+		Log.debugMessage("DadaraAnalysisManager.analyse | entered", Log.DEBUGLEVEL07);
+
 		// output parameters (not Parameter[] yet)
 		Map<String,byte[]> outParameters = new HashMap<String,byte[]>(); // Map <String codename, byte[] rawData>
 		
@@ -193,7 +194,12 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		// Получаем эталон (может быть null, тогда сравнение не проводим)
 		Etalon etalon = obtainEtalon();
 
+		Log.debugMessage("DadaraAnalysisManager.analyse | bs = " + bs, Log.DEBUGLEVEL08);
+		Log.debugMessage("DadaraAnalysisManager.analyse | ap = " + ap, Log.DEBUGLEVEL08);
+		Log.debugMessage("DadaraAnalysisManager.analyse | etalon = " + etalon, Log.DEBUGLEVEL08);
+
 		// === Обрабатываем входные данные, анализируем, сравниваем ===
+		Log.debugMessage("DadaraAnalysisManager.analyse | starting analysis", Log.DEBUGLEVEL07);
 
 		// проводим анализ
 		AnalysisResult ar = CoreAnalysisManager.performAnalysis(bs, ap);
@@ -205,6 +211,8 @@ public class DadaraAnalysisManager implements AnalysisManager {
 			alarmList = CoreAnalysisManager.compareAndMakeAlarms(ar, etalon);
 		else
 			alarmList = null;
+
+		Log.debugMessage("DadaraAnalysisManager.analyse | alarmList = " + alarmList, Log.DEBUGLEVEL08);
 
 		// добавляем AnalysisResult в результаты анализа
 		outParameters.put(CODENAME_ANALYSIS_RESULT, ar.toByteArray());
@@ -223,6 +231,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		try {
 			for (final Iterator<String> it = outParameters.keySet().iterator(); it.hasNext(); i++) {
 				final String codename = it.next();
+				Log.debugMessage("DadaraAnalysisManager.analyse | processing output parameter " + codename, Log.DEBUGLEVEL07);
 				final Identifier parameterTypeId = OUT_PARAMETER_TYPE_IDS_MAP.get(codename);
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				if (parameterType != null) {
@@ -241,6 +250,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 			throw new AnalysisException("Cannot load parameter types -- " + ae.getMessage(), ae);
 		}
 
+		Log.debugMessage("DadaraAnalysisManager.analyse | done, returning Parameter[" + ret.length + "]", Log.DEBUGLEVEL07);
 		return ret;
 	}
 }
