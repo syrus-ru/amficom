@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.64 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.65 2005/07/29 13:07:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -78,13 +79,13 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.65 $, $Date: 2005/07/29 13:07:00 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends StorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		Cloneable, LibraryEntry {
+		CloneableStorableObject, LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -109,7 +110,7 @@ public final class SchemeProtoElement extends StorableObject
 
 	private final transient ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
-	private transient Map<Identifier, Identifier> idMap;
+	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -448,30 +449,47 @@ public final class SchemeProtoElement extends StorableObject
 	public SchemeProtoElement clone() throws CloneNotSupportedException {
 		try {
 			final SchemeProtoElement clone = (SchemeProtoElement) super.clone();
-			final SchemeImageResource ugoCell = this.getUgoCell0();
-			final SchemeImageResource schemeCell = this.getSchemeCell0();
-			clone.ugoCellId = (ugoCell == null) ? VOID_IDENTIFIER : ugoCell.clone().getId();
-			clone.schemeCellId = (schemeCell == null) ? VOID_IDENTIFIER : schemeCell.clone().getId();
 
-			if (clone.idMap == null) {
-				clone.idMap = new HashMap<Identifier, Identifier>();
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
 			}
 
-			clone.idMap.put(this.id, clone.id);
+			clone.clonedIdMap.put(this.id, clone.id);
 
+			final SchemeImageResource ugoCell = this.getUgoCell0();
+			if (ugoCell == null) {
+				clone.setUgoCell(null);
+			} else {
+				final SchemeImageResource ugoCellClone = ugoCell.clone();
+				clone.clonedIdMap.putAll(ugoCellClone.getClonedIdMap());
+				clone.setUgoCell(ugoCellClone);
+			}
+			final SchemeImageResource schemeCell = this.getSchemeCell0();
+			if (schemeCell == null) {
+				clone.setSchemeCell(null);
+			} else {
+				final SchemeImageResource schemeCellClone = schemeCell.clone();
+				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
+				clone.setSchemeCell(schemeCellClone);
+			}
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
 			for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
-				clone.idMap.putAll(schemeDeviceClone.getIdMap());
+				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
 				clone.addSchemeDevice(schemeDeviceClone);
 			}
 			for (final SchemeLink schemeLink : this.getSchemeLinks0()) {
 				final SchemeLink schemeLinkClone = schemeLink.clone();
-				clone.idMap.putAll(schemeLinkClone.getIdMap());
+				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				clone.addSchemeLink(schemeLinkClone);
 			}
 			for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0()) {
 				final SchemeProtoElement schemeProtoElementClone = schemeProtoElement.clone();
-				clone.idMap.putAll(schemeProtoElementClone.getIdMap());
+				clone.clonedIdMap.putAll(schemeProtoElementClone.getClonedIdMap());
 				clone.addSchemeProtoElement(schemeProtoElementClone);
 			}
 			return clone;
@@ -1290,16 +1308,11 @@ public final class SchemeProtoElement extends StorableObject
 	}
 
 	/**
-	 * @see SchemeCellContainer#getIdMap()
+	 * @see CloneableStorableObject#getClonedIdMap()
 	 */
-	public Map<Identifier, Identifier> getIdMap() {
-		if (this.idMap == null || this.idMap.isEmpty()) {
-			return Collections.emptyMap();
-		}
-		try {
-			return new HashMap<Identifier, Identifier>(this.idMap);
-		} finally {
-			this.idMap.clear();
-		}
+	public Map<Identifier, Identifier> getClonedIdMap() {
+		return (this.clonedIdMap == null)
+				? Collections.<Identifier, Identifier>emptyMap()
+				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

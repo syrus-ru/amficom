@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.50 2005/07/29 08:23:32 bass Exp $
+ * $Id: Characteristic.java,v 1.51 2005/07/29 13:07:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,11 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -19,12 +22,12 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/07/29 08:23:32 $
+ * @version $Revision: 1.51 $, $Date: 2005/07/29 13:07:00 $
  * @author $Author: bass $
  * @module general
  */
 public final class Characteristic extends StorableObject
-		implements TypedObject, Cloneable {
+		implements TypedObject, CloneableStorableObject {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -34,6 +37,8 @@ public final class Characteristic extends StorableObject
 	private Identifier characterizableId;
 	private boolean editable;
 	private boolean visible;
+
+	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -343,6 +348,9 @@ public final class Characteristic extends StorableObject
 		return dependencies;
 	}
 
+	/**
+	 * @see Object#clone()
+	 */
 	@Override
 	public Characteristic clone() {
 		try {
@@ -352,7 +360,15 @@ public final class Characteristic extends StorableObject
 			 * characterizableId is updated from within that code,
 			 * and not here. 
 			 */
-			return (Characteristic) super.clone();
+			final Characteristic clone = (Characteristic) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			return clone;
 		} catch (final CloneNotSupportedException cnse) {
 			/*-
 			 * Never.
@@ -360,5 +376,14 @@ public final class Characteristic extends StorableObject
 			assert false;
 			return null;
 		}
+	}
+
+	/**
+	 * @see CloneableStorableObject#getClonedIdMap()
+	 */
+	public Map<Identifier, Identifier> getClonedIdMap() {
+		return (this.clonedIdMap == null)
+				? Collections.<Identifier, Identifier>emptyMap()
+				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

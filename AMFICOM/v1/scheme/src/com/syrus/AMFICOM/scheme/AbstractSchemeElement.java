@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.38 2005/07/28 17:42:35 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.39 2005/07/29 13:07:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,13 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -44,12 +46,12 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.39 $, $Date: 2005/07/29 13:07:00 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
 		extends StorableObject
-		implements Describable, Characterizable, Cloneable {
+		implements Describable, Characterizable, CloneableStorableObject {
 	static final long serialVersionUID = 4644766113809681630L;
 
 	private String name;
@@ -62,6 +64,8 @@ public abstract class AbstractSchemeElement
 	 *       and SchemeLink may be enclosed not by Scheme only.
 	 */
 	Identifier parentSchemeId;
+
+	transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -274,5 +278,14 @@ public abstract class AbstractSchemeElement
 	 */
 	public final void setAlarmed(final boolean alarmed) {
 		this.alarmed = alarmed;
+	}
+
+	/**
+	 * @see CloneableStorableObject#getClonedIdMap()
+	 */
+	public final Map<Identifier, Identifier> getClonedIdMap() {
+		return (this.clonedIdMap == null)
+				? Collections.<Identifier, Identifier>emptyMap()
+				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

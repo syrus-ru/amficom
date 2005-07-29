@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.61 2005/07/28 09:56:43 bass Exp $
+ * $Id: Scheme.java,v 1.62 2005/07/29 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.62 $, $Date: 2005/07/29 13:06:59 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -96,18 +96,18 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	private Identifier schemeCellId;
 
 	Identifier parentSchemeElementId;
-	
+
 	/*-********************************************************************
 	 * Conditions used to implement #getCurrentSchemeMonitoringSolution() *
 	 **********************************************************************/
 
-	private TypicalCondition currentSolutionTypicalCondition;
+	private transient TypicalCondition currentSolutionTypicalCondition;
 
-	private LinkedIdsCondition currentSolutionLinkedIdsCondition;
+	private transient LinkedIdsCondition currentSolutionLinkedIdsCondition;
 
-	private CompoundCondition currentSolutionCompoundCondition0; 
+	private transient CompoundCondition currentSolutionCompoundCondition0; 
 
-	private CompoundCondition currentSolutionCompoundCondition1; 
+	private transient CompoundCondition currentSolutionCompoundCondition1; 
 
 	/**
 	 * @param id
@@ -988,14 +988,6 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 		this.ugoCellId = new Identifier(scheme.ugoCellId);
 		this.schemeCellId = new Identifier(scheme.schemeCellId);
 		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
-	}
-
-	/**
-	 * @see SchemeCellContainer#getIdMap()
-	 * @todo Implement.
-	 */
-	public java.util.Map<Identifier, Identifier> getIdMap() {
-		return Collections.emptyMap();
 	}
 
 	/*-********************************************************************

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.58 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeElement.java,v 1.59 2005/07/29 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,6 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -69,7 +68,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/29 13:06:59 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -1099,14 +1098,6 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return this.equipmentId != null
 				&& this.equipmentTypeId != null
 				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
-	}
-
-	/**
-	 * @see SchemeCellContainer#getIdMap()
-	 * @todo Implement.
-	 */
-	public Map<Identifier, Identifier> getIdMap() {
-		return Collections.emptyMap();
 	}
 
 	public Set<SchemeCablePort> getSchemeCablePorts() {

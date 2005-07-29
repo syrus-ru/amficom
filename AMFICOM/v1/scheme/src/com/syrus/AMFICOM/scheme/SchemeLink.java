@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.51 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeLink.java,v 1.52 2005/07/29 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -64,7 +63,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/29 13:06:59 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -957,12 +956,5 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.siteNodeId = new Identifier(schemeLink.siteNodeId);
 		this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
 		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
-	}
-
-	/**
-	 * @todo Implement.
-	 */
-	Map<Identifier, Identifier> getIdMap() {
-		return Collections.emptyMap();
 	}
 }

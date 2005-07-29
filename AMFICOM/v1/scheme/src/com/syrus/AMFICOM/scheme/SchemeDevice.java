@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.57 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeDevice.java,v 1.58 2005/07/29 13:06:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -63,11 +65,11 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.58 $, $Date: 2005/07/29 13:06:59 $
  * @module scheme
  */
 public final class SchemeDevice extends StorableObject
-		implements Describable, Characterizable, Cloneable {
+		implements Describable, Characterizable, CloneableStorableObject {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -78,7 +80,9 @@ public final class SchemeDevice extends StorableObject
 
 	Identifier parentSchemeProtoElementId;
 
-	private boolean parentSet = false;
+	private transient boolean parentSet = false;
+
+	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -304,11 +308,36 @@ public final class SchemeDevice extends StorableObject
 
 	@Override
 	public SchemeDevice clone() throws CloneNotSupportedException {
-		final SchemeDevice schemeDevice = (SchemeDevice) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeDevice;
+		try {
+			final SchemeDevice clone = (SchemeDevice) super.clone();
+	
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+	
+			clone.clonedIdMap.put(this.id, clone.id);
+	
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			for (final SchemePort schemePort : this.getSchemePorts0()) {
+				final SchemePort schemePortClone = schemePort.clone();
+				clone.clonedIdMap.putAll(schemePortClone.getClonedIdMap());
+				clone.addSchemePort(schemePortClone);
+			}
+			for (final SchemeCablePort schemeCablePort : this.getSchemeCablePorts0()) {
+				final SchemeCablePort schemeCablePortClone = schemeCablePort.clone();
+				clone.clonedIdMap.putAll(schemeCablePortClone.getClonedIdMap());
+				clone.addSchemeCablePort(schemeCablePortClone);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	/**
@@ -506,7 +535,7 @@ public final class SchemeDevice extends StorableObject
 	 * @param parentSchemeProtoElementId
 	 * @param parentSchemeElementId
 	 */
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -515,18 +544,20 @@ public final class SchemeDevice extends StorableObject
 			final String description,
 			final Identifier parentSchemeProtoElementId,
 			final Identifier parentSchemeElementId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
-		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
-		assert parentSchemeProtoElementId.isVoid() ^ parentSchemeElementId.isVoid();
-
-		this.name = name;
-		this.description = description;
-		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
-		this.parentSchemeElementId = parentSchemeElementId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert description != null : NON_NULL_EXPECTED;
+			assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+			assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+			assert parentSchemeProtoElementId.isVoid() ^ parentSchemeElementId.isVoid();
+	
+			this.name = name;
+			this.description = description;
+			this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+			this.parentSchemeElementId = parentSchemeElementId;
+		}
 	}
 
 	/**
@@ -535,8 +566,9 @@ public final class SchemeDevice extends StorableObject
 	public void setDescription(final String description) {
 		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		assert description != null : NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -547,8 +579,9 @@ public final class SchemeDevice extends StorableObject
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
@@ -570,8 +603,9 @@ public final class SchemeDevice extends StorableObject
 				return;
 			}
 			newParentSchemeElementId = parentSchemeElement.getId();
-			if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+			if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
 				return;
+			}
 		} else {
 			/*
 			 * Moving from a protoelement to an element.
@@ -604,8 +638,9 @@ public final class SchemeDevice extends StorableObject
 				return;
 			}
 			newParentSchemeProtoElementId = parentSchemeProtoElement.getId();
-			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId))
+			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
 				return;
+			}
 		} else {
 			/*
 			 * Moving from an element to a protoelement.
@@ -680,8 +715,9 @@ public final class SchemeDevice extends StorableObject
 	 * Invoked by modifier methods.
 	 */
 	private boolean assertParentSetNonStrict() {
-		if (this.parentSet)
+		if (this.parentSet) {
 			return this.assertParentSetStrict();
+		}
 		this.parentSet = true;
 		return this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
@@ -700,9 +736,11 @@ public final class SchemeDevice extends StorableObject
 	}
 
 	/**
-	 * @todo Implement.
+	 * @see CloneableStorableObject#getClonedIdMap()
 	 */
-	Map<Identifier, Identifier> getIdMap() {
-		return Collections.emptyMap();
+	public Map<Identifier, Identifier> getClonedIdMap() {
+		return (this.clonedIdMap == null)
+				? Collections.<Identifier, Identifier>emptyMap()
+				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

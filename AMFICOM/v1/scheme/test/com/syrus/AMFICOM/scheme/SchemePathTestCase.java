@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.12 2005/07/28 10:00:03 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.13 2005/07/29 13:07:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.scheme;
+
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.RESOURCE_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.SCHEME_GROUP_CODE;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -45,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/28 10:00:03 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/29 13:07:00 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -99,6 +103,9 @@ public final class SchemePathTestCase extends TestCase {
 			}
 		});
 		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
+		StorableObjectPool.addObjectPoolGroup(CONFIGURATION_GROUP_CODE, 20);
+		StorableObjectPool.addObjectPoolGroup(RESOURCE_GROUP_CODE, 20);
+		StorableObjectPool.addObjectPoolGroup(SCHEME_GROUP_CODE, 20);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
 			private static final long serialVersionUID = -9123341768454319489L;
@@ -359,7 +366,7 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoGroupId());
 		System.out.println("\t\t" + schemeProtoElement0.getParentSchemeProtoElementId());
 		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement0.getSchemeProtoElements()) {
-			assertTrue(schemeProtoElement.getIdMap().isEmpty());
+			assertTrue(schemeProtoElement.getClonedIdMap().isEmpty());
 			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
 		}
 		System.out.println(schemeProtoElement2.getId());
@@ -373,17 +380,14 @@ public final class SchemePathTestCase extends TestCase {
 		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoGroupId());
 		System.out.println("\t\t" + schemeProtoElement2.getParentSchemeProtoElementId());
 		for (final SchemeProtoElement schemeProtoElement : schemeProtoElement2.getSchemeProtoElements()) {
-			assertTrue(schemeProtoElement.getIdMap().isEmpty());
 			System.out.println("\t\t" + schemeProtoElement.getId() + ": " + schemeProtoElement.getName());
 		}
-		assertTrue(schemeProtoElement0.getIdMap().isEmpty());
-		assertTrue(schemeProtoElement0.getIdMap().isEmpty());
-		final Map<Identifier, Identifier> idMap = schemeProtoElement2.getIdMap();
+		assertTrue(schemeProtoElement0.getClonedIdMap().isEmpty());
+		assertTrue(schemeProtoElement0.getClonedIdMap().isEmpty());
+		final Map<Identifier, Identifier> idMap = schemeProtoElement2.getClonedIdMap();
 		for (final Identifier key : idMap.keySet()) {
 			System.out.println(key + ":\t" + idMap.get(key));
 		}
-		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
-		assertTrue(schemeProtoElement2.getIdMap().isEmpty());
 	}
 
 	/**

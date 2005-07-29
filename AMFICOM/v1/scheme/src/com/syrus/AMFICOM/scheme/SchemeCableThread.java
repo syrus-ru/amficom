@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.54 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.55 2005/07/29 13:07:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -38,6 +39,7 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -60,12 +62,12 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.54 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.55 $, $Date: 2005/07/29 13:07:00 $
  * @module scheme
  */
 public final class SchemeCableThread extends StorableObject
-		implements Describable, Characterizable, Cloneable {
+		implements Describable, Characterizable, CloneableStorableObject {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -81,6 +83,9 @@ public final class SchemeCableThread extends StorableObject
 	Identifier targetSchemePortId;
 
 	Identifier parentSchemeCableLinkId;
+
+
+	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -562,5 +567,14 @@ public final class SchemeCableThread extends StorableObject
 		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
 		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
 		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
+	}
+
+	/**
+	 * @see CloneableStorableObject#getClonedIdMap()
+	 */
+	public Map<Identifier, Identifier> getClonedIdMap() {
+		return (this.clonedIdMap == null)
+				? Collections.<Identifier, Identifier>emptyMap()
+				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }
