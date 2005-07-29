@@ -192,10 +192,13 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 
 	public void bsHashRemovedAll() {
 		List<TraceResource> values = tModel.getValues();
-		for (Iterator<TraceResource> it = values.iterator(); it.hasNext();) {
-			TraceResource tr = it.next();	
+		// NB: необходимо преобразовать к массиву, т.к. список, возвращенный
+		// getValues(), может изменяться во время удаления объектов,
+		// что приведет к ConcurrentModificationException
+		TraceResource[] va = values.toArray(new TraceResource[values.size()]);
+		for (TraceResource tr: va) {
 			tr.removePropertyChangeListener(this);
-			it.remove();
+			tModel.removeObject(tr);
 		}
 		traces.clear();
 		setVisible(false);
