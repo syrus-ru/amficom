@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.63 2005/07/28 11:24:17 max Exp $
+ * $Id: Map.java,v 1.64 2005/07/29 12:56:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,11 +49,12 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: max $
- * @version $Revision: 1.63 $, $Date: 2005/07/28 11:24:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.64 $, $Date: 2005/07/29 12:56:04 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
+ * @todo make mapLibraries persistent
  */
 public final class Map extends DomainMember implements Namable, XMLBeansTransferable {
 
@@ -86,16 +87,16 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	private Set<Mark> marks;
 	private Set<Collector> collectors;
 
-	protected transient Set<Map> maps;
-	protected transient Set<AbstractNode> externalNodes;
+	protected Set<Map> maps;
+	protected Set<AbstractNode> externalNodes;
+	protected Set<MapLibrary> mapLibraries;
 
-	protected transient Set<MapElement> selectedElements;
 	/**
 	 * Сортированный список всех элементов топологической схемы
 	 */
 	protected transient List<MapElement> allElements;
 	protected transient Set<AbstractNode> nodeElements;
-
+	protected transient Set<MapElement> selectedElements;
 
 	Map(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -133,6 +134,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.collectors = new HashSet<Collector>();
 
 		this.maps = new HashSet<Map>();
+		this.mapLibraries = new HashSet<MapLibrary>();
 		this.selectedElements = new HashSet<MapElement>();
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
@@ -360,6 +362,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
+	public Set getMapLibraries() {
+		return Collections.unmodifiableSet(this.mapLibraries);
+	}
+
 	public Set getMaps() {
 		return Collections.unmodifiableSet(this.maps);
 	}
@@ -567,6 +573,16 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		if (node == null)
 			node = this.getMark(nodeId);
 		return null;
+	}
+
+	public void addMapLibrary(final MapLibrary mapLibrary) {
+		this.mapLibraries.add(mapLibrary);
+		super.markAsChanged();
+	}
+
+	public void removeMapLibrary(final MapLibrary mapLibrary) {
+		this.mapLibraries.remove(mapLibrary);
+		super.markAsChanged();
 	}
 
 	public void addMap(final Map map) {
