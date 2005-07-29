@@ -125,6 +125,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		try {
 			StorableObjectPool.flush(ObjectEntities.MEASUREMENTSETUP_CODE, LoginManager.getUserId(), true);
 		} catch(ApplicationException ex) {
+			ex.printStackTrace();
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_DATABASE_FLUSH_ERROR);
 		}
 
