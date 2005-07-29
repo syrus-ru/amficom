@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.143 2005/07/28 20:55:56 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.144 2005/07/29 12:39:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.143 $, $Date: 2005/07/28 20:55:56 $
+ * @version $Revision: 1.144 $, $Date: 2005/07/29 12:39:22 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -309,10 +309,10 @@ public final class StorableObjectPool {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert condition != null : ErrorMessages.NON_NULL_EXPECTED;
 
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		assert entityCode == condition.getEntityCode().shortValue() : "Condition entity code: " + condition.getEntityCode()
-				+ ", ids entity code: " + entityCode;
+		assert (ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids)) : "Condition entity code: "
+				+ condition.getEntityCode() + ", ids entity code: " + StorableObject.getEntityCodeOfIdentifiables(ids);
 
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Requested but: " + ids
 				+ ", for condition: " + condition, Log.DEBUGLEVEL10);
