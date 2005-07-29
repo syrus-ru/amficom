@@ -59,12 +59,10 @@ import com.syrus.AMFICOM.measurement.AnalysisTypeWrapper;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.MeasurementSetupController;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
-import com.syrus.util.WrapperComparator;
 
 public class TestParametersPanel implements PropertyChangeListener {
 
@@ -76,7 +74,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 	WrapperedComboBox		evaluationComboBox;
 
 	JPanel					switchPanel;
-	List<MeasurementSetup>					msList;
+	List<MeasurementSetup>	msList;
+	List<MeasurementSetup>	msListAnalysisOnly;
 
 	WrapperedList			testSetups;
 
@@ -153,20 +152,20 @@ public class TestParametersPanel implements PropertyChangeListener {
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.switchPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		final ActionListener listener = new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				updateMeasurementSetups();
-				setMeasurementSetups(TestParametersPanel.this.msList);
-			}
-		};
-
 		{
 			this.useAnalysisSetups = new JRadioButton(LangModelSchedule.getString("with analysis parameters"));
 			this.useAnalysisSetups.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					listener.actionPerformed(e);
+					WrapperedListModel wrapperedListModel = (WrapperedListModel) testSetups.getModel();
+					Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
+					int selectedIndex = testSetups.getSelectedIndex();
+					testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
+					wrapperedListModel.setElements(msListAnalysisOnly);
+					if (selectedValue != null) {
+						testSetups.setSelectedValue(selectedValue, true);
+					}
+					
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 				}
 			});
@@ -174,7 +173,15 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.useWOAnalysisSetups.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					listener.actionPerformed(e);
+					WrapperedListModel wrapperedListModel = (WrapperedListModel) testSetups.getModel();
+					Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
+					int selectedIndex = testSetups.getSelectedIndex();
+					testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
+					wrapperedListModel.setElements(msList);
+					if (selectedValue != null) {
+						testSetups.setSelectedValue(selectedValue, true);
+					}
+
 					if (TestParametersPanel.this.useAnalysisBox.isSelected()) {
 						TestParametersPanel.this.useAnalysisBox.doClick();
 					} else {
@@ -293,8 +300,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
-				final MeasurementSetup measurementSetup1 = (MeasurementSetup) TestParametersPanel.this.testSetups
-						.getSelectedValue();
+				final MeasurementSetup measurementSetup1 = 
+					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				if (measurementSetup1 != null) {
 
 					java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
@@ -413,17 +420,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
 //		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
-//				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);
-		
-		
-		
-//		try {
-//			throw new Exception();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
+//				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
+
 		this.testSetups.setSelectedValue(null, false);
 			
 //		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
@@ -445,87 +443,81 @@ public class TestParametersPanel implements PropertyChangeListener {
 		
 //		Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetupId " + measurementSetupId, Log.FINEST);
 
-		if (!this.msList.contains(measurementSetup)) {
-			this.msList.add(measurementSetup);
+		{
+			boolean exist = false;
+			for(MeasurementSetup ms : this.msList) {
+				if (ms.getId().equals(this.measurementSetupId)) {
+					exist = true;
+					break;
+				}
+			}
+			if (!exist) {
+				this.msList.add(measurementSetup);
+				// if total list doesn't contains ms, and ms with analysis - add to analysis ms list
+				if(measurementSetup.getCriteriaSet() != null &&
+						measurementSetup.getEtalon() != null &&
+						measurementSetup.getThresholdSet() != null) {
+					this.msListAnalysisOnly.add(measurementSetup);
+				}
+			}
 		}
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
-		// testSetups " + testSetups.getSelectedValue(), Log.FINEST);
-		// this.testSetups.setSelectedValue(null, true);
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
-		// testSetups " + testSetups.getSelectedValue(), Log.FINEST);
-		// {
-		// int i,c;
-		// ListModel dm = testSetups.getModel();
-		// for(i=0,c=dm.getSize();i<c;i++) {
-		// MeasurementSetup measurementSetup1 = (MeasurementSetup)
-		// dm.getElementAt(i);
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
-		// measurementSetup:" + measurementSetup.getId() + ", " +
-		// measurementSetup1.getId(), Log.FINEST);
-		// if(measurementSetup.equals(measurementSetup1)){
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup | eq!",
-		// Log.FINEST);
-		// break;
-		// }
-		// }
-		// }
-		//		
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
-		// testSetups " + testSetups.getSelectedValue(), Log.FINEST);
-		// this.testSetups.setSelectedValue(measurementSetup, true);
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetup |
-		// this.testSetups.getSelectedIndex() " +
-		// this.testSetups.getSelectedIndex(), Log.FINEST);
+		
 		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedIndex() < 0
 				&& this.parametersTestPanel != null) {
-//			if (this.tabbedPane.getSelectedIndex() == 0) {
-//				new Thread() {
-//
-//					public synchronized void start() {
-//						TestParametersPanel.this.parametersTestPanel.setSet(measurementSetup.getParameterSet());
-//					}
-//				}.start();
-//			} else {
-//				this.parametersTestPanel.setSet(measurementSetup.getParameterSet());
-//			}
 			this.useWOAnalysisSetups.doClick();
-//			this.measurementSetupId = measurementSetup.getId();
-//			System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
-//			this.testSetups.setSelectedValue(measurementSetup, true);
-//			System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
-			
 			this.tabbedPane.setSelectedIndex(1);
 		} else {
 			this.tabbedPane.setSelectedIndex(0);
 		}
 	}
 
-	public void setMeasurementSetups(Collection measurementSetups) {
+	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
 		
 //		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
 		
-		if (this.msList == null)
+		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
-		else {
-			// year! really equals links to the same object
-			if (this.msList != measurementSetups)
-				this.msList.clear();
+		} else {
+			this.msList.clear();
 		}
-		// year! really equals links to the same object
-		if (this.msList != measurementSetups)
-			this.msList.addAll(measurementSetups);
+		
+		if (this.msListAnalysisOnly == null) {
+			this.msListAnalysisOnly = new LinkedList<MeasurementSetup>();
+		} else {
+			this.msListAnalysisOnly.clear();
+		}
 
-		Collections.sort(this.msList, new WrapperComparator(MeasurementSetupController.getInstance(),
-															MeasurementSetupController.KEY_NAME, true));
-		WrapperedListModel wrapperedListModel = (WrapperedListModel) this.testSetups.getModel();
-		wrapperedListModel.removeAllElements();
-		for (Iterator it = this.msList.iterator(); it.hasNext();) {
-			MeasurementSetup measurementSetup1 = (MeasurementSetup) it.next();
-			if (!this.useAnalysisSetups.isSelected() || measurementSetup1.getCriteriaSet() != null
-					|| measurementSetup1.getThresholdSet() != null || measurementSetup1.getEtalon() != null) {
-				wrapperedListModel.addElement(measurementSetup1);
+		this.msList.addAll(measurementSetups);
+		// year! really equals links to the same object
+		for(MeasurementSetup measurementSetup : measurementSetups) {
+			if(measurementSetup.getCriteriaSet() != null ||
+					measurementSetup.getEtalon() != null ||
+					measurementSetup.getThresholdSet() != null) {
+				this.msListAnalysisOnly.add(measurementSetup);
 			}
 		}
+
+//		Collections.sort(this.msList, new WrapperComparator(MeasurementSetupController.getInstance(),
+//															MeasurementSetupController.KEY_NAME, true));
+		WrapperedListModel wrapperedListModel = (WrapperedListModel) this.testSetups.getModel();
+
+		int selectedIndex = this.testSetups.getSelectedIndex();
+		this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
+		
+		if (this.useAnalysisSetups.isSelected()) {
+			wrapperedListModel.setElements(this.msListAnalysisOnly);
+		} else {
+			wrapperedListModel.setElements(this.msList);
+		}
+		
+//		wrapperedListModel.removeAllElements();
+//		for (Iterator it = this.msList.iterator(); it.hasNext();) {
+//			MeasurementSetup measurementSetup1 = (MeasurementSetup) it.next();
+//			if (!this.useAnalysisSetups.isSelected() || measurementSetup1.getCriteriaSet() != null
+//					|| measurementSetup1.getThresholdSet() != null || measurementSetup1.getEtalon() != null) {
+//				wrapperedListModel.addElement(measurementSetup1);
+//			}
+//		}
 
 		this.testSetups.setEnabled(true);
 		this.useAnalysisSetups.setEnabled(true);
@@ -553,12 +545,12 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	public void updateMeasurementSetups() {
-		if (this.msList == null) {
-			this.schedulerModel.refreshMeasurementSetups();
-			return;
-		}
-	}
+//	public void updateMeasurementSetups() {
+//		if (this.msList == null) {
+//			this.schedulerModel.refreshMeasurementSetups();
+//			return;
+//		}
+//	}
 
 	public void setSet(ParameterSet set) {
 		if (set != null && this.parametersTestPanel != null) {
@@ -634,7 +626,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.setMeasurementSetup((MeasurementSetup) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
-			this.setMeasurementSetups((Collection) newValue);
+			this.setMeasurementSetups((Collection<MeasurementSetup>) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
 			this.setSet((ParameterSet) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
