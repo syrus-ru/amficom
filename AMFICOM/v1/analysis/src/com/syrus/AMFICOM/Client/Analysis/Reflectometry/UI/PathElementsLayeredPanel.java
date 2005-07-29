@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementsLayeredPanel.java,v 1.8 2005/05/25 15:15:08 stas Exp $
+ * $Id: PathElementsLayeredPanel.java,v 1.9 2005/07/29 13:14:20 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/05/25 15:15:08 $
- * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/07/29 13:14:20 $
+ * @author $Author: saa $
  * @module analysis_v1
  */
 
@@ -67,19 +67,19 @@ class PathElementsToolBar extends AnalysisToolBar
 
 	JToggleButton pathElementsTButton = new JToggleButton();
 
-	protected static String[] buttons = new String[]
-	{
-		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana, SEPARATOR, cA, cB, SEPARATOR, events, modeled, SEPARATOR
+	private static String[] buttons = new String[] {
+ 		EX, DX, EY, DY, FIX, SEPARATOR, loss, ref, noana,
+ 		SEPARATOR, cA, cB,
+ 		SEPARATOR, trace, modeled, events
 		//, pe
-	};
+ 	};
 
-	public PathElementsToolBar (PathElementsLayeredPanel panel)
-	{
+	public PathElementsToolBar (PathElementsLayeredPanel panel) {
 		super(panel);
 	}
 
-	protected String[] getButtons()
-	{
+	@Override
+	protected String[] getButtons() {
 		return buttons;
 	}
 
