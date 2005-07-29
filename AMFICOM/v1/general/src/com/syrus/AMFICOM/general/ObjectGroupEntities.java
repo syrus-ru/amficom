@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.21 2005/07/26 18:09:04 bass Exp $
+ * $Id: ObjectGroupEntities.java,v 1.22 2005/07/29 12:39:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,12 +7,13 @@
  */
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/26 18:09:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/07/29 12:39:51 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -93,7 +94,80 @@ public final class ObjectGroupEntities {
 	 */
 	public static short[] getEntityCodes(final short groupCode) {
 		assert isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
-		return new short[] {1};
+		switch (groupCode) {
+			case GENERAL_GROUP_CODE:
+				return new short[] { PARAMETER_TYPE_CODE, CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE };
+			case ADMINISTRATION_GROUP_CODE:
+				return new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, SERVER_CODE, MCM_CODE, SERVERPROCESS_CODE };
+			case CONFIGURATION_GROUP_CODE:
+				return new short[] { EQUIPMENT_TYPE_CODE,
+						PORT_TYPE_CODE,
+						MEASUREMENTPORT_TYPE_CODE,
+						TRANSPATH_TYPE_CODE,
+						LINK_TYPE_CODE,
+						CABLELINK_TYPE_CODE,
+						CABLETHREAD_TYPE_CODE,
+						EQUIPMENT_CODE,
+						PORT_CODE,
+						MEASUREMENTPORT_CODE,
+						TRANSPATH_CODE,
+						KIS_CODE,
+						MONITOREDELEMENT_CODE,
+						LINK_CODE,
+						CABLELINK_CODE,
+						CABLETHREAD_CODE };
+			case MEASUREMENT_GROUP_CODE:
+				return new short[] { MEASUREMENT_TYPE_CODE,
+						ANALYSIS_TYPE_CODE,
+						EVALUATION_TYPE_CODE,
+						MODELING_TYPE_CODE,
+						MEASUREMENT_CODE,
+						ANALYSIS_CODE,
+						EVALUATION_CODE,
+						MODELING_CODE,
+						MEASUREMENTSETUP_CODE,
+						RESULT_CODE,
+						PARAMETERSET_CODE,
+						TEST_CODE,
+						CRONTEMPORALPATTERN_CODE,
+						INTERVALSTEMPORALPATTERN_CODE,
+						PERIODICALTEMPORALPATTERN_CODE };
+			case EVENT_GROUP_CODE:
+				return new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE };
+			case RESOURCE_GROUP_CODE:
+				return new short[] { IMAGERESOURCE_CODE };
+			case MAP_GROUP_CODE:
+				return new short[] { SITENODE_CODE,
+						TOPOLOGICALNODE_CODE,
+						NODELINK_CODE,
+						MARK_CODE,
+						PHYSICALLINK_CODE,
+						COLLECTOR_CODE,
+						MAP_CODE };
+			case SCHEME_GROUP_CODE:
+				return new short[] { CABLECHANNELINGITEM_CODE,
+						PATHELEMENT_CODE,
+						SCHEME_CODE,
+						SCHEMECABLELINK_CODE,
+						SCHEMECABLEPORT_CODE,
+						SCHEMECABLETHREAD_CODE,
+						SCHEMEDEVICE_CODE,
+						SCHEMEELEMENT_CODE,
+						SCHEMELINK_CODE,
+						SCHEMEMONITORINGSOLUTION_CODE,
+						SCHEMEOPTIMIZEINFO_CODE,
+						SCHEMEOPTIMIZEINFOSWITCH_CODE,
+						SCHEMEOPTIMIZEINFORTU_CODE,
+						SCHEMEPATH_CODE,
+						SCHEMEPORT_CODE,
+						SCHEMEPROTOELEMENT_CODE,
+						SCHEMEPROTOGROUP_CODE };
+			case MAPVIEW_GROUP_CODE:
+				return new short[] { MAPVIEW_CODE };
+			default:
+				assert false : ErrorMessages.ILLEGAL_GROUP_CODE + ": " + groupCode;
+				return null;
+		}
 	}
 
 	/**
