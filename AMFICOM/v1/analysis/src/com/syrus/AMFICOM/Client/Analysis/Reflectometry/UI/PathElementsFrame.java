@@ -7,7 +7,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.Identifier;
@@ -18,17 +17,16 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
 
-public class PathElementsFrame extends AnalysisFrame
-{
+public class PathElementsFrame extends AnalysisFrame {
+	private static final long serialVersionUID = 4137589435411835248L;
 	ApplicationContext aContext;
-	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher, AnalysisLayeredPanel panel)
-	{
+
+	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher, AnalysisLayeredPanel panel) {
 		super(dispatcher, panel);
 		this.aContext = aContext;
 	}
 
-	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher)
-	{
+	public PathElementsFrame(ApplicationContext aContext, Dispatcher dispatcher) {
 		this(aContext, dispatcher, new PathElementsLayeredPanel(dispatcher));
 	}
 
@@ -39,39 +37,34 @@ public class PathElementsFrame extends AnalysisFrame
 		double[] y = bs.getTraceData();
 
 		SchemePath path = null;
-		try
-		{
-			MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
-							new Identifier(bs.monitoredElementId), true);
+		try {
+			MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(bs.monitoredElementId), true);
 
 			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-				LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
-						ObjectEntities.SCHEMEPATH_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.SCHEMEPATH_CODE);
 				Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 				Collection tpathIds = me.getMonitoredDomainMemberIds();
-				for (Iterator it = paths.iterator(); it.hasNext(); ) {
-					SchemePath sp = (SchemePath)it.next();
+				for (Iterator it = paths.iterator(); it.hasNext();) {
+					SchemePath sp = (SchemePath) it.next();
 					/**
 					 * @todo remove comment when SchemePath moves to new TransmissionPath
 					 */
-					if(sp.getTransmissionPath() != null && tpathIds.contains(sp.getTransmissionPath().getId()))
-					{
+					if (sp.getTransmissionPath() != null && tpathIds.contains(sp.getTransmissionPath().getId())) {
 						path = sp;
 						break;
 					}
 				}
 			}
 			setTitle(me.getName());
-		} catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			setTitle(LangModelAnalyse.getString("analysisTitle"));
 		}
 
-		PathElementsPanel p = new PathElementsPanel(
-				(PathElementsLayeredPanel)panel, dispatcher, y, deltaX);
-		if (path != null)
+		PathElementsPanel p = new PathElementsPanel((PathElementsLayeredPanel) this.panel, this.dispatcher, y, deltaX);
+		if (path != null) {
 			p.setPath(path);
+		}
 		return p;
 	}
 }

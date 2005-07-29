@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.ParameterSet;
@@ -28,34 +28,31 @@ public class SaveTestSetupCommand extends AbstractCommand
 
 	private long type; 
 
-	public SaveTestSetupCommand(ApplicationContext aContext, long type)
-	{
+	public SaveTestSetupCommand(ApplicationContext aContext, long type) {
 		this.aContext = aContext;
 		this.type = type;
 	}
 
-	public Object clone()
-	{
-		return new SaveTestSetupCommand(aContext, type);
+	@Override
+	public Object clone() {
+		return new SaveTestSetupCommand(this.aContext, this.type);
 	}
 
 	public static boolean createNewMSAndSave(String name, ApplicationContext aContext, long type) {
 		MeasurementSetup msTest = Heap.getContextMeasurementSetup();
 
 		// XXX: нужна ли здесь эта проверка?
-		if (msTest.getParameterSet() == null)
-		{
+		if (msTest.getParameterSet() == null) {
 			GUIUtil.showErrorMessage("noTestArgumentsError");
 			return false;
 		}
 
 		// XXX: вижу непонятный мне код -- saa
-		if (msTest.getDescription().equals(""))
-		{
-			String s = JOptionPane.showInputDialog(
-					Environment.getActiveWindow(),
+		if (msTest.getDescription().equals("")) {
+			String s = JOptionPane.showInputDialog(Environment.getActiveWindow(),
 					LangModelAnalyse.getString("testsetup"),
-					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
+					LangModelAnalyse.getString("newname"),
+					JOptionPane.OK_CANCEL_OPTION);
 			msTest.setDescription(s); // FIXME: этак делать не велено(?)
 		}
 
@@ -126,9 +123,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 		 * @todo use flush(false) to non forced saving
 		 */
 		try {
-			StorableObjectPool.flushGroup(
-					ObjectGroupEntities.MEASUREMENT_GROUP_CODE,
-					true);
+			StorableObjectPool.flush(ObjectEntities.MEASUREMENTSETUP_CODE, LoginManager.getUserId(), true);
 		} catch(ApplicationException ex) {
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_DATABASE_FLUSH_ERROR);
 		}
@@ -158,19 +153,20 @@ public class SaveTestSetupCommand extends AbstractCommand
 		return true;
 	}
 
-	public void execute()
-	{
-		if (checkStrangeConditions() == false)
+	@Override
+	public void execute() {
+		if (checkStrangeConditions() == false) {
 			return;
+		}
 
-		String name = Heap.getNewMSName();
-		if (name == null)
-		{
+		final String name = Heap.getNewMSName();
+		if (name == null) {
 			GUIUtil.showErrorMessage("noTestSetupNameError");
 			return;
 		}
 
-		if (createNewMSAndSave(name, aContext, type))
+		if (createNewMSAndSave(name, this.aContext, this.type)) {
 			Heap.setNewMSName(null); // success
+		}
 	}
 }
