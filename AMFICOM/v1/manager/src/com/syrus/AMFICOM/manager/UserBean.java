@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.4 2005/07/26 14:42:05 bob Exp $
+ * $Id: UserBean.java,v 1.5 2005/07/29 12:12:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,7 @@ package com.syrus.AMFICOM.manager;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
@@ -31,17 +30,15 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/26 14:42:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/29 12:12:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBean extends AbstractBean {
+public class UserBean extends Bean {
 
 	List<String>	names;
 	
-	private List<PropertyChangeListener>						propertyChangeListeners;
-
 	private String	nature;	
 
 	private String	fullName;
@@ -129,7 +126,9 @@ public class UserBean extends AbstractBean {
 					GraphConstants.setValue(attributeMap, string);
 					Map viewMap = new Hashtable();
 					viewMap.put(cell, attributeMap);
-					graphText.getGraph().getModel().edit(viewMap, null, null, null);
+					JGraph graph = graphText.getGraph();
+					graph.getModel().edit(viewMap, null, null, null);
+					graph.getSelectionModel().setSelectionCell(cell);
 				}
 			});
 			return popupMenu;
@@ -165,29 +164,6 @@ public class UserBean extends AbstractBean {
 			this.nature = nature;
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_NATURE, oldValue, nature));
 		}		
-	}
-	
-	private void firePropertyChangeEvent(PropertyChangeEvent event) {
-		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.isEmpty()) {
-			for (PropertyChangeListener listener : this.propertyChangeListeners) {
-				listener.propertyChange(event);
-			}
-		}
-	}
-
-	public synchronized void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-		if (this.propertyChangeListeners == null) {
-			this.propertyChangeListeners = new LinkedList<PropertyChangeListener>();
-		}
-		if (!this.propertyChangeListeners.contains(propertyChangeListener)) {
-			this.propertyChangeListeners.add(propertyChangeListener);
-		}
-	}
-
-	public synchronized void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
-		if (this.propertyChangeListeners != null && !this.propertyChangeListeners.contains(propertyChangeListener)) {
-			this.propertyChangeListeners.remove(propertyChangeListener);
-		}
 	}
 	
 	@Override

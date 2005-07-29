@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.8 2005/07/25 05:58:53 bob Exp $
+ * $Id: AbstractBean.java,v 1.9 2005/07/29 12:12:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/07/29 12:12:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -88,11 +88,11 @@ public abstract class AbstractBean {
 		this.codeName = codeName;
 	}
 	
-	protected final String getName() {
+	public final String getName() {
 		return this.name;
 	}
 	
-	protected final void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

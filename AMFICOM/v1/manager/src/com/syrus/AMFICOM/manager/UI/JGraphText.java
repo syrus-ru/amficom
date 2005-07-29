@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.14 2005/07/26 14:42:37 bob Exp $
+ * $Id: JGraphText.java,v 1.15 2005/07/29 12:12:34 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/26 14:42:37 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/29 12:12:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -23,9 +23,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +80,7 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
+import com.syrus.AMFICOM.manager.Bean;
 import com.syrus.AMFICOM.manager.DomainBeanFactory;
 import com.syrus.AMFICOM.manager.LangModelManager;
 import com.syrus.AMFICOM.manager.MCMBeanFactory;
@@ -234,6 +238,11 @@ public class JGraphText implements GraphSelectionListener {
 		DefaultGraphCell arm1 = this.createChild(net1, armBeanFactory.getShortName() + "-" + 1, 
 			armBeanFactory.createBean(), 0, 350, 0, 0, armBeanFactory.getImage());
 		
+		RTUBeanFactory rtuBeanFactory = RTUBeanFactory.getInstance();
+		
+		DefaultGraphCell rtu1 = this.createChild(net1, rtuBeanFactory.getShortName() + "-" + 1, 
+			rtuBeanFactory.createBean(), 450, 20, 0, 0, rtuBeanFactory.getImage());
+		
 		UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
 		
 		DefaultGraphCell user1 = this.createChild(arm1, userBeanFactory.getShortName() + "-" + 1, 
@@ -249,6 +258,7 @@ public class JGraphText implements GraphSelectionListener {
 			new GraphModelListener() {
 			public void graphChanged(GraphModelEvent e) {
 				GraphModelChange change = e.getChange();
+				
 //				boolean direct = JGraphText.this.treeModel.isDirect();
 //				Object[] inserted = change.getInserted();
 //				if (inserted != null) {
@@ -366,6 +376,13 @@ public class JGraphText implements GraphSelectionListener {
 							if (pathToRoot != null) {
 								JGraphText.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
 							}
+						} else if (!model.isEdge(changedObject)) {
+							DefaultGraphCell defaultGraphCell = (DefaultGraphCell)changedObject;
+							MPort port = (MPort) defaultGraphCell.getChildAt(0);
+							AbstractBean bean = port.getBean();
+							if (bean != null) {
+								bean.setName((String) defaultGraphCell.getUserObject());
+							}
 						}
 					}
 				}
@@ -471,53 +488,7 @@ public class JGraphText implements GraphSelectionListener {
 			
 
 		}
-	}
-	
-//	JPanel _getPanel() {
-//		if (this.panel == null) {
-//			this.panel = new JPanel(new GridBagLayout());
-//			
-//			GridBagConstraints gbc = new GridBagConstraints();
-//			
-//			gbc.fill = GridBagConstraints.BOTH;
-//			gbc.weightx = 1.0;
-//			gbc.weighty = 0.0;
-//			gbc.gridwidth = GridBagConstraints.REMAINDER;
-//			
-//			JComboBox box = this.createPerspecives();
-//			this.panel.add(box, gbc);
-//			this.panel.add(this.createToolBar(), gbc);
-//			
-//			gbc.weightx = 0.0;
-//			gbc.weighty = 1.0;
-//			gbc.gridwidth = GridBagConstraints.RELATIVE;
-//			
-//			
-//			
-//			this.panel.add(this.createEntityToolBar(), gbc);
-//			
-//			gbc.weightx = 1.0;
-//			gbc.gridwidth = GridBagConstraints.REMAINDER;
-//			gbc.gridheight = GridBagConstraints.RELATIVE;
-//			JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(this.tree), new JScrollPane(this.graph));
-//			splitPane.setDividerLocation(200);
-//			this.panel.add(splitPane, gbc);
-//			
-//			this.propertyPanel = new JPanel(new GridBagLayout());
-//			this.gbc2 = new GridBagConstraints();
-//			this.gbc2.fill = GridBagConstraints.BOTH;
-//			this.gbc2.weightx = 1.0;
-//			this.gbc2.weighty = 1.0;
-//			this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
-//			
-//			gbc.gridheight = GridBagConstraints.REMAINDER;	
-//			this.panel.add(this.propertyPanel, gbc);
-//			
-//			box.setSelectedIndex(0);
-//		}
-//		
-//		return this.panel;
-//	}
+	}	
 	
 	private JToolBar createPerspecives() {		
 		
@@ -540,11 +511,6 @@ public class JGraphText implements GraphSelectionListener {
 
 					mcmButton.setEnabled(false);
 					
-//					treeModel.removeAllAvailableCodenames();
-//					treeModel.addAvailableCodename("Domain");
-//					treeModel.addAvailableCodename("Net");
-					
-//					graph.showOnlyDescendants((DefaultGraphCell) cell);
 					showOnly(new String[] {"Net", "Domain"});
 					treeModel.setRoot(null);
 					
@@ -1005,7 +971,7 @@ public class JGraphText implements GraphSelectionListener {
 				this.createEdgeAttributes(edge);
 				
 				GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-				System.out.println("JGraphText.createChild() | insert " + edge + "\n\t"+source+" -> " + target);
+//				System.out.println("JGraphText.createChild() | insert " + edge + "\n\t"+source+" -> " + target);
 				graphLayoutCache.insert(edge);		
 				graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
 				
@@ -1041,7 +1007,7 @@ public class JGraphText implements GraphSelectionListener {
 	         	             			double y, double w, double h, Icon image) {
 		DefaultGraphCell cell = this.createVertex(name, object, x, y, w, h, image);
  		GraphLayoutCache cache = this.graph.getGraphLayoutCache();
- 		System.out.println("JGraphText.createChild() | insert " + cell);
+// 		System.out.println("JGraphText.createChild() | insert " + cell);
 		cache.insert(cell);	
 
 // 		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
@@ -1068,14 +1034,12 @@ public class JGraphText implements GraphSelectionListener {
 
 
 	public void valueChanged(GraphSelectionEvent e) {
-
 //		try {
 //			throw new Exception();
 //		} catch (Exception e1) {
 //			// TODO Auto-generated catch block
 //			e1.printStackTrace();
-//		}
-		
+//		}		
 		final Object cell = e.getCell();
 		final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
 //		System.out.println(".valueChanged() | " + cell + '[' + cell.getClass().getName() + ']');
@@ -1158,9 +1122,7 @@ public class JGraphText implements GraphSelectionListener {
 				final GraphSelectionModel selectionModel = JGraphText.this.graph.getSelectionModel();
 				if (e.isAddedPath()) {
 					selectionModel.setSelectionCell(lastPathComponent);
-				} else {
-					selectionModel.clearSelection();
-				}
+				} 
 			}
 		});
 	}
@@ -1230,7 +1192,7 @@ public class JGraphText implements GraphSelectionListener {
 											final Icon image) {
 
 		// Create vertex with the given name
-		DefaultGraphCell cell = new DefaultGraphCell(name);
+		final DefaultGraphCell cell = new DefaultGraphCell(name);
 
 		// Set bounds
 		GraphConstants.setBounds(cell.getAttributes(),
@@ -1247,6 +1209,25 @@ public class JGraphText implements GraphSelectionListener {
 		// Add a Port
 		MPort port = new MPort(object);
 		cell.add(port);
+		
+		if (object instanceof Bean) {
+			Bean bean = (Bean)object;
+			bean.addPropertyChangeListener(new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					// TODO use const instead of "name"
+					if (evt.getPropertyName().equals("name")) {
+						AttributeMap attributeMap = new AttributeMap();
+						GraphConstants.setValue(attributeMap, evt.getNewValue());
+						Map viewMap = new Hashtable();
+						viewMap.put(cell, attributeMap);
+						graph.getModel().edit(viewMap, null, null, null);
+					}
+					
+				}
+			});
+		}
+		
 		return cell;
 	}
 	
@@ -1324,7 +1305,6 @@ public class JGraphText implements GraphSelectionListener {
 				if (cell == null) {
 					return;
 				}
-				System.out.println("MyMarqueeHandler.mousePressed() | cell:" + cell);
 				if (cell.getAllowsChildren()) {
 					MPort port = (MPort) cell.getChildAt(0);
 					Object userObject = port.getUserObject();

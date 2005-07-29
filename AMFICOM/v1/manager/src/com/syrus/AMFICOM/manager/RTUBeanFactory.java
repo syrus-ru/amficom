@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.4 2005/07/19 09:49:00 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.5 2005/07/29 12:12:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,21 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/07/29 12:12:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager_v1
@@ -21,6 +32,12 @@ public class RTUBeanFactory extends AbstractBeanFactory {
 	private static RTUBeanFactory instance;
 	
 	private Validator validator;
+	
+	private PropertyChangeListener	listener;
+
+	WrapperedPropertyTable	table;
+
+	private JPanel	panel;
 	
 	private RTUBeanFactory() {
 		super("Entity.RemoteTestUnit", 
@@ -42,10 +59,49 @@ public class RTUBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		AbstractBean bean = new AbstractBean() {};
+		RTUBean bean = new RTUBean();
+		bean.setName("RTU" + (++super.count));
 		bean.setCodeName("RTU");
 		bean.setValidator(this.getValidator());
-		bean.setName("RTU" + (++this.count));
+		
+		if (this.table == null) {
+			final RTUBeanWrapper wrapper = RTUBeanWrapper.getInstance();
+	
+			this.table = 
+				new WrapperedPropertyTable(wrapper, 
+					bean, 
+					new String[] { KEY_NAME, 
+							KEY_DESCRIPTION, 
+							KEY_MCM_ID,
+							KEY_HOSTNAME,
+							KEY_PORT}
+				);
+			this.table.setDefaultTableCellRenderer();			
+	
+			this.listener = new PropertyChangeListener() {
+				public void propertyChange(PropertyChangeEvent evt) {
+					WrapperedPropertyTableModel model = (WrapperedPropertyTableModel)RTUBeanFactory.this.table.getModel();
+					model.fireTableDataChanged();
+				}
+			};
+			
+			
+			this.panel = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			gbc.weightx = 1.0;
+			gbc.weighty = 1.0;
+			this.panel.add(this.table.getTableHeader(), gbc);		
+			this.panel.add(new JScrollPane(this.table), gbc);
+
+		}
+		
+		bean.table = this.table;
+		bean.addPropertyChangeListener(this.listener);
+		
+		bean.setPropertyPanel(this.panel);
+		
 		return bean;
 	}
 	

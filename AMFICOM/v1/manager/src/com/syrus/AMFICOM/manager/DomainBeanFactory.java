@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.5 2005/07/26 14:42:50 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.6 2005/07/29 12:12:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/26 14:42:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/29 12:12:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
