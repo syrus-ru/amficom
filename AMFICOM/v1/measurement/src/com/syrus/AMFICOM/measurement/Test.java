@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.140 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: Test.java,v 1.141 2005/07/29 16:15:49 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.140 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.141 $, $Date: 2005/07/29 16:15:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -271,8 +272,7 @@ public final class Test extends StorableObject {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.timeStamps != null
-				&& this.timeStamps.isValid()
+				&& this.timeStamps != null && this.timeStamps.isValid()
 				&& this.measurementTypeId != null
 				&& this.analysisTypeId != null
 				&& this.evaluationTypeId != null
@@ -545,8 +545,9 @@ public final class Test extends StorableObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		if (this.timeStamps.temporalPatternId != null)
+		if (this.temporalType == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL && !this.timeStamps.temporalPatternId.isVoid()) {
 			dependencies.add(this.timeStamps.temporalPatternId);
+		}
 
 		dependencies.addAll(this.measurementSetupIds);
 		dependencies.add(this.measurementTypeId);
@@ -577,7 +578,7 @@ public final class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = startTime;
 					this.endTime = null;
-					this.temporalPatternId = null;
+					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					this.startTime = startTime;
@@ -587,13 +588,15 @@ public final class Test extends StorableObject {
 						Log.errorMessage("ERROR: End time is NULL");
 						this.endTime = this.startTime;
 					}
-					if (this.temporalPatternId == null)
+					if (this.temporalPatternId == null) {
 						Log.errorMessage("ERROR: Temporal pattern is NULL");
+						this.temporalPatternId = VOID_IDENTIFIER;
+					}
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					this.startTime = startTime;
 					this.endTime = endTime;
-					this.temporalPatternId = null;
+					this.temporalPatternId = VOID_IDENTIFIER;
 					if (this.endTime == null) {
 						Log.errorMessage("ERROR: End time is NULL");
 						this.endTime = this.startTime;
@@ -611,7 +614,7 @@ public final class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					this.startTime = new Date(ttst.startTime());
 					this.endTime = null;
-					this.temporalPatternId = null;
+					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					PeriodicalTestTimeStamps ptts = ttst.ptts();
@@ -623,7 +626,7 @@ public final class Test extends StorableObject {
 					ContinuousTestTimeStamps ctts = ttst.ctts();
 					this.startTime = new Date(ctts.startTime);
 					this.endTime = new Date(ctts.endTime);
-					this.temporalPatternId = null;
+					this.temporalPatternId = VOID_IDENTIFIER;
 					break;
 				default:
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + this.discriminator);
@@ -676,7 +679,7 @@ public final class Test extends StorableObject {
 
 		@Override
 		public int hashCode() {
-			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+			final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 			hashCodeGenerator.addInt(this.discriminator);
 			hashCodeGenerator.addObject(this.startTime);
 			hashCodeGenerator.addObject(this.endTime);
@@ -686,40 +689,48 @@ public final class Test extends StorableObject {
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			boolean equals = (this==obj);
-			if ((!equals)&&(obj instanceof TestTimeStamps)) {
-				TestTimeStamps stamps = (TestTimeStamps)obj;
-				if ((stamps.discriminator==this.discriminator)&&
-					(stamps.startTime==this.startTime)&&	
-					(stamps.endTime==this.endTime)&&
-					(stamps.temporalPatternId.equals(this.temporalPatternId)))
+		public boolean equals(final Object obj) {
+			boolean equals = (this == obj);
+			if ((!equals) && (obj instanceof TestTimeStamps)) {
+				TestTimeStamps stamps = (TestTimeStamps) obj;
+				if ((stamps.discriminator == this.discriminator)
+						&& (stamps.startTime == this.startTime)
+						&& (stamps.endTime == this.endTime)
+						&& (stamps.temporalPatternId.equals(this.temporalPatternId)))
 					equals = true;
 			}
 			return equals;
 		}
+
 		public Date getEndTime() {
 			return this.endTime;
 		}
+
 		public Date getStartTime() {
 			return this.startTime;
 		}
+
 		public Identifier getTemporalPatternId() {
 			return this.temporalPatternId;
 		}
+
 		public TestTemporalType getTestTemporalType() {
 			return TestTemporalType.from_int(this.discriminator);
 		}
-		public void setEndTime(Date endTime) {
+
+		public void setEndTime(final Date endTime) {
 			this.endTime = endTime;
 		}
-		public void setStartTime(Date startTime) {
+
+		public void setStartTime(final Date startTime) {
 			this.startTime = startTime;
 		}
-		public void setTemporalPatternId(Identifier temporalPatternId) {
+
+		public void setTemporalPatternId(final Identifier temporalPatternId) {
 			this.temporalPatternId = temporalPatternId;
 		}
-		public void setTestTemporalType(TestTemporalType temporalType) {
+
+		public void setTestTemporalType(final TestTemporalType temporalType) {
 			this.discriminator = temporalType.value();
 		}
 	}
