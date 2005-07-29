@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.15 2005/07/28 09:45:21 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.16 2005/07/29 14:41:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,14 +37,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.util.ApplicationProperties;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/07/28 09:45:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/07/29 14:41:51 $
  * @module generalclient_v1
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -82,8 +80,8 @@ public class OpenSessionCommand extends AbstractCommand {
 
 	}
 
-	public void setParameter(String field,
-	                         Object value) {
+	@Override
+	public void setParameter(String field, Object value) {
 		if (field.equals("dispatcher"))
 			this.setDispatcher((Dispatcher) value);
 	}
@@ -92,22 +90,13 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.dispatcher = dispatcher;
 	}
 
+	@Override
 	public void execute() {
 
 		boolean trying = false;
 		do {
 			try {
 				trying = this.logging();
-			} catch (IllegalDataException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						LangModelGeneral.getString("StatusBar.IllegalSessionKind"), 
-						LangModelGeneral.getString("Error.OpenSession"),
-						JOptionPane.ERROR_MESSAGE, 
-						null);
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
-						StatusMessageEvent.STATUS_PROGRESS_BAR,
-						false));
-				this.logged = false;
 			} catch (CommunicationException e) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 						LangModelGeneral.getString("Error.ServerConnection"), 
@@ -132,49 +121,37 @@ public class OpenSessionCommand extends AbstractCommand {
 			}			
 		} while (!trying);
 	}
-	
-	protected boolean logging()	
-	throws CommunicationException, IllegalDataException, LoginException {
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(
-			this, 
-			StatusMessageEvent.STATUS_MESSAGE,
-			LangModelGeneral.getString("StatusBar.OpeningSession")));
-		this.dispatcher.firePropertyChange(new ContextChangeEvent(
-				this, 
-				ContextChangeEvent.SESSION_CHANGING_EVENT));
-	
+
+	protected boolean logging() throws CommunicationException, LoginException {
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModelGeneral.getString("StatusBar.OpeningSession")));
+		this.dispatcher.firePropertyChange(new ContextChangeEvent(this, ContextChangeEvent.SESSION_CHANGING_EVENT));
+
 		if (!this.logged) {
-			boolean wannaNotLogin = !this.showOpenSessionDialog(
-					Environment.getActiveWindow());
+			boolean wannaNotLogin = !this.showOpenSessionDialog(Environment.getActiveWindow());
 			if (wannaNotLogin) {
-				this.dispatcher.firePropertyChange(new StatusMessageEvent(
-					this, 
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModelGeneral.getString("StatusBar.Aborted")));
+				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+						StatusMessageEvent.STATUS_MESSAGE,
+						LangModelGeneral.getString("StatusBar.Aborted")));
 				return wannaNotLogin;
 			}
 		}
-		
-		final Dispatcher dispatcher1 =  this.dispatcher;
-		final ClientSessionEnvironment clientSessionEnvironment =
-			ClientSessionEnvironment.getInstance(
-				ApplicationProperties.getInt(
-					ClientSessionEnvironment.SESSION_KIND_KEY,	-1));
 
-		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
-			StatusMessageEvent.STATUS_MESSAGE,
-			LangModelGeneral.getString("StatusBar.InitStartupData")));
+		final Dispatcher dispatcher1 = this.dispatcher;
+		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 
-		this.dispatcher.firePropertyChange(
-			new StatusMessageEvent(this, 
-					StatusMessageEvent.STATUS_PROGRESS_BAR,
-					true));
-		
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModelGeneral.getString("StatusBar.InitStartupData")));
+
+		this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+
 		clientSessionEnvironment.login(this.login, this.password);
 		final Set availableDomains = LoginManager.getAvailableDomains();
 		this.disposeDialog();
 		this.logged = true;
-	
+
 		CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 			public void run() {
@@ -194,9 +171,7 @@ public class OpenSessionCommand extends AbstractCommand {
 				// Берем сохраненный локально с прошлой сессии домен
 				Identifier domainId = Environment.getDomainId();
 
-				for (final Iterator iterator = 
-						availableDomains.iterator(); 
-						iterator.hasNext();) {
+				for (final Iterator iterator = availableDomains.iterator(); iterator.hasNext();) {
 					Domain domain = (Domain) iterator.next();
 					if (domain.getId().equals(domainId)) {
 						try {

@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.2 2005/07/28 09:45:34 bob Exp $
+* $Id: LoginRestoreCommand.java,v 1.3 2005/07/29 14:41:51 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
@@ -22,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/28 09:45:34 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/07/29 14:41:51 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
  */
@@ -35,52 +34,47 @@ implements LoginRestorer{
 	}
 
 	@Override
-	protected boolean logging() 
-	throws CommunicationException, IllegalDataException, LoginException {
-		if (!this.logged && !this.showOpenSessionDialog(
-				Environment.getActiveWindow())) {
+	protected boolean logging() throws CommunicationException, LoginException {
+		if (!this.logged && !this.showOpenSessionDialog(Environment.getActiveWindow())) {
 			super.logged = false;
 		} else {
 			super.logged = true;
-			super.disposeDialog();			
+			super.disposeDialog();
 		}
 		return super.logged;
 	}
-	
+
 	@Override
 	protected String getDialogTitle() {
 		return LangModelGeneral.getString("Login.ReLogin");
 	}	
-	
+
 	public String getLogin() {
 		assert super.logged : ErrorMessages.NATURE_INVALID;
-		
+
 		String value = super.login;
 		super.login = null;
 		return value;
 	}
-	
+
 	public String getPassword() {
 		assert super.logged : ErrorMessages.NATURE_INVALID;
-	
+
 		String value = super.password;
 		super.password = null;
 		return value;
 	}
-	
+
 	@Override
 	protected void createUIItems() {
 		super.createUIItems();
 		super.loginTextField.setEditable(false);
 	}
-	
+
 	public boolean restoreLogin() {
 		super.logged = false;
 		try {
-			SystemUser user = 
-				(SystemUser) StorableObjectPool.getStorableObject(
-					LoginManager.getUserId(), 
-					true);
+			SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
 			super.login = user.getLogin();
 		} catch (ApplicationException e) {
 			return false;
@@ -88,6 +82,6 @@ implements LoginRestorer{
 		super.password = null;
 		super.execute();
 		return super.logged;
-	}	
+	}
 }
 

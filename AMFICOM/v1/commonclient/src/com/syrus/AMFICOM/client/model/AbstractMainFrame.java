@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.12 2005/07/28 10:03:02 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.13 2005/07/29 14:41:51 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -45,11 +44,10 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/28 10:03:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/07/29 14:41:51 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -147,25 +145,14 @@ implements PropertyChangeListener {
 			if (cce.isSessionOpened()) {
 				this.setSessionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Ready"));
-				
-				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(
-						ResourceKeys.SIMPLE_DATE_FORMAT);
-				try {
-					final ClientSessionEnvironment clientSessionEnvironment = 
-						ClientSessionEnvironment.getInstance(
-							ApplicationProperties.getInt(
-								ClientSessionEnvironment.SESSION_KIND_KEY,
-								-1));
-					this.statusBar.setText(StatusBar.FIELD_SESSION, 
-						sdf.format(
-							clientSessionEnvironment.getSessionEstablishDate()));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
 
-					SystemUser user = 
-						(SystemUser) StorableObjectPool.getStorableObject(
-							LoginManager.getUserId(), 
-							true);
+				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				try {
+					final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+					this.statusBar.setText(StatusBar.FIELD_SESSION, sdf.format(clientSessionEnvironment.getSessionEstablishDate()));
+
+					SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
 					this.statusBar.setText(StatusBar.FIELD_USER, user.getName());
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
@@ -175,48 +162,29 @@ implements PropertyChangeListener {
 			if (cce.isSessionClosed()) {
 				this.setSessionClosed();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Ready"));				
-				this.statusBar.setText(StatusBar.FIELD_SESSION, 
-						LangModelGeneral.getString("StatusBar.NoSession"));
-				this.statusBar.setText(StatusBar.FIELD_USER, 
-						LangModelGeneral.getString("StatusBar.NoUser"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				this.statusBar.setText(StatusBar.FIELD_SESSION, LangModelGeneral.getString("StatusBar.NoSession"));
+				this.statusBar.setText(StatusBar.FIELD_USER, LangModelGeneral.getString("StatusBar.NoUser"));
 			}
 			if (cce.isConnectionOpened()) {
 				this.setConnectionOpened();
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Ready"));
-				try {
-					final ClientSessionEnvironment clientSessionEnvironment = 
-						ClientSessionEnvironment.getInstance(
-							ApplicationProperties.getInt(
-								ClientSessionEnvironment.SESSION_KIND_KEY, -1));
-					this.statusBar.setText(StatusBar.FIELD_SERVER, 
-							clientSessionEnvironment.getServerName());
-				} catch (ApplicationException ce) {
-					// TODO Auto-generated catch block
-					ce.printStackTrace();
-				}
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Ready"));
+				final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+				this.statusBar.setText(StatusBar.FIELD_SERVER, clientSessionEnvironment.getServerName());
 			}
 			if (cce.isConnectionClosed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, 
-						LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
 
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Disconnected"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, 
-						LangModelGeneral.getString("StatusBar.NoConnection"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Disconnected"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.NoConnection"));
 
 				this.setConnectionClosed();
 			}
 			if (cce.isConnectionFailed()) {
-				this.statusBar.setText(StatusBar.FIELD_STATUS, 
-						LangModelGeneral.getString("StatusBar.Error"));
-				this.statusBar.setText(StatusBar.FIELD_SERVER, 
-						LangModelGeneral.getString("StatusBar.ConnectionError"));
+				this.statusBar.setText(StatusBar.FIELD_STATUS, LangModelGeneral.getString("StatusBar.Error"));
+				this.statusBar.setText(StatusBar.FIELD_SERVER, LangModelGeneral.getString("StatusBar.ConnectionError"));
 
 				this.setConnectionFailed();
 			}
@@ -339,6 +307,7 @@ implements PropertyChangeListener {
 		}
 	}
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		super.processWindowEvent(e);
 		int id = e.getID();
