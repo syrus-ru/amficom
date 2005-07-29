@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.77 2005/07/28 10:07:11 max Exp $
+ * $Id: PhysicalLink.java,v 1.78 2005/07/29 12:57:21 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: max $
- * @version $Revision: 1.77 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.78 $, $Date: 2005/07/29 12:57:21 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -99,15 +99,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private String street;
 	private String building;
 
-	private int dimensionX;
-	private int dimensionY;
-
 	private boolean leftToRight;
 	private boolean topToBottom;
 
 	private transient List<NodeLink> nodeLinks = null;
 	protected transient boolean selected = false;
-	protected transient boolean selectionVisible = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
 	protected transient PhysicalLinkBinding binding = null;
@@ -161,8 +157,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		this.dimensionX = dimensionX;
-		this.dimensionY = dimensionY;
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 
@@ -170,10 +164,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		this.selected = false;
 
-		if (physicalLinkType == null) {
-			this.binding = new PhysicalLinkBinding(new IntDimension(0, 0));
-		}
-		else {
+		if (physicalLinkType == null)
+			this.binding = new PhysicalLinkBinding(new IntDimension(dimensionX, dimensionY));
+		else
 			this.binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
 		}
 	}
@@ -261,8 +254,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.city = plt.city;
 		this.street = plt.street;
 		this.building = plt.building;
-		this.dimensionX = plt.dimensionX;
-		this.dimensionY = plt.dimensionY;
 		this.leftToRight = plt.leftToRight;
 		this.topToBottom = plt.topToBottom;
 
@@ -273,7 +264,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		this.selected = false;
 
-		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
+		this.binding = new PhysicalLinkBinding(new IntDimension(plt.dimensionX, plt.dimensionY));
 	}
 
 	@Override
@@ -287,7 +278,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	@Override
 	public IdlPhysicalLink getTransferable(final ORB orb) {
-		final IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
+		IdlIdentifier[] nodeLinkIds = new IdlIdentifier[0];
+		
+		int dimensionX = this.binding.getDimension().getWidth();
+		int dimensionY = this.binding.getDimension().getHeight();
 
 		return IdlPhysicalLinkHelper.init(orb,
 				this.id.getTransferable(),
@@ -304,8 +298,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				this.city,
 				this.street,
 				this.building,
-				this.dimensionX,
-				this.dimensionY,
+				dimensionX,
+				dimensionY,
 				this.leftToRight,
 				this.topToBottom,
 				nodeLinkIds);
@@ -360,20 +354,24 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public int getDimensionX() {
-		return this.dimensionX;
+		return this.binding.getDimension().getWidth();
 	}
 
 	public void setDimensionX(final int dimensionX) {
-		this.dimensionX = dimensionX;
+		IntDimension dimension = this.binding.getDimension();
+		dimension.setWidth(dimensionX);
+		this.binding.setDimension(dimension);
 		super.markAsChanged();
 	}
 
 	public int getDimensionY() {
-		return this.dimensionY;
+		return this.binding.getDimension().getHeight();
 	}
 
 	public void setDimensionY(final int dimensionY) {
-		this.dimensionY = dimensionY;
+		IntDimension dimension = this.binding.getDimension();
+		dimension.setHeight(dimensionY);
+		this.binding.setDimension(dimension);
 		super.markAsChanged();
 	}
 
@@ -525,12 +523,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.city = city;
 		this.street = street;
 		this.building = building;
-		this.dimensionX = dimensionX;
-		this.dimensionY = dimensionY;
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 		this.startNode = startNode;
 		this.endNode = endNode;
+		
+		this.binding.setDimension(new IntDimension(dimensionX, dimensionY));
 	}
 
 	/**
@@ -857,14 +855,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.nodeLinksSorted = false;
 	}
 
-	public void setSelectionVisible(boolean selectionVisible) {
-		this.selectionVisible = selectionVisible;
-	}
-
-	public boolean isSelectionVisible() {
-		return this.selectionVisible;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1056,8 +1046,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		
 		this.physicalLinkType = (PhysicalLinkType) objects.iterator().next();
 
-		this.dimensionX = this.physicalLinkType.getBindingDimension().getWidth();
-		this.dimensionY = this.physicalLinkType.getBindingDimension().getHeight();
 		this.leftToRight = true;
 		this.topToBottom = true;
 		this.binding = new PhysicalLinkBinding(this.physicalLinkType.getBindingDimension());
