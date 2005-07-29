@@ -2,6 +2,7 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,9 +14,10 @@ import javax.swing.MutableComboBoxModel;
 
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Wrapper;
+import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/10 07:04:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/07/29 07:22:35 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -23,9 +25,9 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 
 	private static final long	serialVersionUID	= -1607982236171940302L;
 
-	private Object				selectedObject;
+	protected Object			selectedObject;
 
-	private List				objects;
+	protected List				objects;
 
 	/**
 	 * Wrapper of Model (ObjectResource) will be used for sorting. see
@@ -36,7 +38,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	protected String			key;
 	
 	protected String			compareKey;
-
+	
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
@@ -45,7 +47,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		this(wrapper, new LinkedList(), key, compareKey);
 
 	}
-
+	
 	public WrapperedListModel(Wrapper wrapper, List objects, String key, String compareKey) {
 		this.wrapper = wrapper;
 		this.key = key;
@@ -152,27 +154,48 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	// implements javax.swing.MutableComboBoxModel
 	public void addElement(Object anObject) {
 		this.objects.add(anObject);
-		fireIntervalAdded(this, this.objects.size() - 1, this.objects.size() - 1);
+		this.sort();
+		super.fireIntervalAdded(this, this.objects.size() - 1, this.objects.size() - 1);
 		if (this.objects.size() == 1 && this.selectedObject == null && anObject != null) {
-			setSelectedItem(anObject);
+			this.setSelectedItem(anObject);
 		}
 	}
 
-	public void addElements(final Collection _objects) {
+	public void addElements(final Collection objects) {
 		
-		assert _objects != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert objects != null : ErrorMessages.NON_NULL_EXPECTED;
 		
-		if (_objects.size() == 0)
+		if (objects.size() == 0)
 			return;
-		this.objects.addAll(_objects);
-		fireIntervalAdded(this, this.objects.size() - _objects.size(), this.objects.size() - 1);
+		this.objects.addAll(objects);
+		fireIntervalAdded(this, this.objects.size() - objects.size(), this.objects.size() - 1);
+	}
+	
+	public final void setElements(final Collection objects) {
+		this.objects.clear();
+		if (objects != null) {
+			this.objects.addAll(objects);
+			
+			this.sort();
+			
+			int size = this.objects.size();
+			super.fireContentsChanged(this, 0, size > 0 ? size - 1 : 0);
+		}
+	}
+
+	private void sort() {
+		if (this.objects != null) {
+			Collections.sort(this.objects, new WrapperComparator(this.wrapper, this.key, true));
+			super.fireContentsChanged(this, 0, objects.size());
+		}
+		
 	}
 
 	// implements javax.swing.MutableComboBoxModel
 	public void insertElementAt(final Object anObject,
 								int index) {
 		this.objects.add(index, anObject);
-		fireIntervalAdded(this, index, index);
+		super.fireIntervalAdded(this, index, index);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
@@ -212,4 +235,5 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 			this.selectedObject = null;
 		}
 	}
+
 }
