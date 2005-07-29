@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.1 2005/07/29 12:49:44 arseniy Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.2 2005/07/29 13:53:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/29 12:49:44 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/29 13:53:21 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -43,13 +43,24 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 		return corbaObjectLoader;
 	}
 
+	private CORBAObjectLoader getCORBAObjectLoader(final Short entityCode) throws IllegalDataException {
+		final short groupCode = ObjectGroupEntities.getGroupCode(entityCode);
+		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
+		final CORBAObjectLoader corbaObjectLoader = this.corbaObjectLoadersMap.get(new Short(groupCode));
+		if (corbaObjectLoader == null) {
+			throw new IllegalDataException("CORBA loader for group '" + ObjectGroupEntities.codeToString(groupCode) + "'/" + groupCode
+					+ " is not registered");
+		}
+		return corbaObjectLoader;
+	}
+
 	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
 		return this.getCORBAObjectLoader(ids).loadStorableObjects(ids);
 	}
 
 	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws ApplicationException {
-		return this.getCORBAObjectLoader(ids).loadStorableObjectsButIdsByCondition(ids, condition);
+		return this.getCORBAObjectLoader(condition.getEntityCode()).loadStorableObjectsButIdsByCondition(ids, condition);
 	}
 
 	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
