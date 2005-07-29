@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.16 2005/07/19 15:21:07 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.17 2005/07/29 14:31:46 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,36 +8,35 @@
 
 package com.syrus.AMFICOM.general;
 
-import gnu.trove.TIntObjectHashMap;
-
 import java.beans.PropertyChangeListener;
-import java.util.Date;
-import java.util.logging.Level;
 
-import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/19 15:21:07 $
+ * @version $Revision: 1.17 $, $Date: 2005/07/29 14:31:46 $
  * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 
-	// TODO enum SessionKind
-	public static final int				SESSION_KIND_MEASUREMENT	= 1;
-	public static final int				SESSION_KIND_MAPSCHEME		= 2;
-	// Other kinds -- Map, Scheme, Resources, etc.
+	public enum SessionKind {
+		UNKNOWN, MEASUREMENT, MAPSCHEME;
 
-	public static final String			SESSION_KIND_KEY			= "SessionKind";
+		public static SessionKind fromInt(final int value) {
+			switch (value) {
+				case 1:
+					return MEASUREMENT;
+				case 2:
+					return MAPSCHEME;
+				default:
+					return UNKNOWN;
+			}
+		}
+	}
 
-	public static final String			XMLSESSION_KEY				= "XMLSession";
-	public static final String			XML_PATH_KEY				= "XMLPath";
+	public static final String SESSION_KIND_KEY = "SessionKind";
 
-	private String						xmlPath;
-
-	private static TIntObjectHashMap kindInstanceMap;
-	private static LoginRestorer loginRestorer;
+	private static ClientSessionEnvironment instance;
 
 	private ClientSessionEnvironment(final ClientServantManager clientServantManager,
 			final ClientPoolContext clientPoolContext,
@@ -45,147 +44,78 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 		super(clientServantManager, clientPoolContext, loginRestorer);
 	}
 
-	private ClientSessionEnvironment(final BaseConnectionManager baseConnectionManager,
-			final ClientPoolContext clientPoolContext,
-			final String xmlPath) {
-		super(baseConnectionManager, clientPoolContext, null);
-		this.xmlPath = xmlPath;
-	}
-
 	public ClientServantManager getClientServantManager() {
 		return (ClientServantManager) super.baseConnectionManager;
 	}
 
-	public String getServerName() {
-		if (this.xmlPath == null) { return super.baseConnectionManager.getCORBAServer().getRootContextName(); }
-		return "XML:" + this.xmlPath;
+	public final String getServerName() {
+		return super.baseConnectionManager.getCORBAServer().getRootContextName();
 	}
 
-	public static void setLoginRestorer(LoginRestorer loginRestorer1) {
-		loginRestorer = loginRestorer1;
-	}
-
-	public static ClientSessionEnvironment getInstance(int sessionKind) throws CommunicationException, IllegalDataException {
-		if (kindInstanceMap == null) {
-			kindInstanceMap = new TIntObjectHashMap(2);
-		}
-
-		ClientSessionEnvironment instance = (ClientSessionEnvironment) kindInstanceMap.get(sessionKind);
-
-		if (instance == null) {
-			instance = createInstance(sessionKind);
-			kindInstanceMap.put(sessionKind, instance);
-		}
-
+	public static ClientSessionEnvironment getInstance() {
 		return instance;
 	}
 
-	private static ClientSessionEnvironment createInstance(int sessionKind) throws CommunicationException, IllegalDataException {
-		ClientSessionEnvironment instance = null;
+	public static void createInstance(final SessionKind sessionKind, final LoginRestorer loginRestorer)
+			throws CommunicationException, IllegalDataException {
 		switch (sessionKind) {
-			case SESSION_KIND_MEASUREMENT:
-				instance = createMeasurementSession();
+			case MEASUREMENT:
+				createMeasurementSession(loginRestorer);
 				break;
-			case SESSION_KIND_MAPSCHEME:
-				instance = createMapSchemeSession();
+			case MAPSCHEME:
+				createMapSchemeSession(loginRestorer);
 				break;
 			default:
-				String msg = "Unknown kind of session -- " + sessionKind;
+				final String msg = "Unknown kind of session -- " + sessionKind;
 				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 		}
 
 		/* Print available objects -- for debugging purpose */
-		if (instance != null && instance.xmlPath == null) {
+		if (instance != null) {
 			instance.baseConnectionManager.getCORBAServer().printNamingContext();
 		}
-
-		return instance;
 	}
 
-	@Override
-	public void login(	String login,
-						String password) throws CommunicationException, LoginException {
-		if (this.xmlPath == null) {
-			super.login(login, password);
-		} else {
-			LoginManager.login(login, password);
-			IdentifierPool.deserialize();
-			super.poolContext.deserialize();
-
-			super.sessionEstablishDate = new Date(System.currentTimeMillis());
-			super.sessionEstablished = true;
-		}
+	public void addPropertyListener(final PropertyChangeListener listener) {
+		this.getClientServantManager().addPropertyListener(listener);
 	}
 
-	@Override
-	public void logout() throws CommunicationException, LoginException {
-		if (this.xmlPath == null) {
-			super.logout();
-		} else {
-
-			this.logout0();
-
-			this.sessionEstablishDate = null;
-			this.sessionEstablished = false;
-		}
+	public void removePropertyListener(final PropertyChangeListener listener) {
+		this.getClientServantManager().removePropertyListener(listener);
 	}
 
-	public void addPropertyListener(PropertyChangeListener listener) {
-		if (this.xmlPath == null) {
-			this.getClientServantManager().addPropertyListener(listener);
-		}
+	private static void createMeasurementSession(final LoginRestorer loginRestorer) throws CommunicationException {
+		final ClientServantManager mClientServantManager = MClientServantManager.create();
+
+		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, mClientServantManager);
+
+		final ClientPoolContext clientPoolContext = new MClientPoolContext(objectLoader);
+
+		instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
 	}
 
-	public void removePropertyListener(PropertyChangeListener listener) {
-		if (this.xmlPath == null) {
-			this.getClientServantManager().removePropertyListener(listener);
-		}
+	private static void createMapSchemeSession(final LoginRestorer loginRestorer) throws CommunicationException {
+		final MClientServantManager mClientServantManager = MClientServantManager.create();
+		final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+
+		final MultiServantCORBAObjectLoader objectLoader = new MultiServantCORBAObjectLoader();
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.GENERAL_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, mClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.RESOURCE_GROUP_CODE, mscharClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAP_GROUP_CODE, mscharClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.SCHEME_GROUP_CODE, mscharClientServantManager);
+		objectLoader.addCORBAObjectLoader(ObjectGroupEntities.MAPVIEW_GROUP_CODE, mscharClientServantManager);
+
+		final ClientPoolContext clientPoolContext = new MscharClientPoolContext(objectLoader);
+
+		instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
 	}
 
-	private static ClientSessionEnvironment createMeasurementSession() throws CommunicationException {
-		ClientSessionEnvironment instance = null;
-
-		String xmlSession = ApplicationProperties.getString(XMLSESSION_KEY, "false");
-		boolean usingXMLSession = xmlSession.equalsIgnoreCase("true") || xmlSession.equalsIgnoreCase("yes");
-		if (!usingXMLSession) {
-			ClientServantManager mClientServantManager = MClientServantManager.create();
-			ClientPoolContext clientPoolContext = new MClientPoolContext(mClientServantManager);
-			instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, loginRestorer);
-		} else {
-			final String xmlPath = ApplicationProperties.getString(XML_PATH_KEY, null);
-			Log.debugMessage("ClientSessionEnvironment.createMeasurementSession | xmlPath " + xmlPath, Level.FINEST);
-			MClientXMLServantManager mClientServantManager = MClientXMLServantManager.create();
-			ClientPoolContext clientPoolContext = new MClientPoolContext(xmlPath);
-			instance = new ClientSessionEnvironment(mClientServantManager, clientPoolContext, xmlPath);
-		}
-
-		return instance;
-	}
-
-	private static ClientSessionEnvironment createMapSchemeSession() throws CommunicationException {
-		ClientSessionEnvironment instance = null;
-
-		String xmlSession = ApplicationProperties.getString(XMLSESSION_KEY, "false");
-		boolean usingXMLSession = xmlSession.equalsIgnoreCase("true") || xmlSession.equalsIgnoreCase("yes");
-		if (usingXMLSession) {
-			// final String xmlPath =
-			// ApplicationProperties.getString(XML_PATH_KEY, null);
-			// TODO init MClientXMLServantManager and
-			// MscharClientXMLServantManager
-		} else {
-			MClientServantManager mClientServantManager = MClientServantManager.create();
-			MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
-			ClientPoolContext clientPoolContext = new MscharClientPoolContext(mClientServantManager,
-																				mscharClientServantManager);
-			instance = new ClientSessionEnvironment(mscharClientServantManager, clientPoolContext, loginRestorer);
-
-		}
-
-		return instance;
-	}
-	//
-	// public static ClientSessionEnvironment getInstance() {
-	// return instance;
-	// }
 }
