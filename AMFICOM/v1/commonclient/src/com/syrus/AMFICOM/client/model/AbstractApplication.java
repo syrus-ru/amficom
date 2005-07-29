@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.10 2005/07/28 13:17:07 bob Exp $
+ * $Id: AbstractApplication.java,v 1.11 2005/07/29 14:36:37 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,13 +45,15 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginRestorer;
+import com.syrus.AMFICOM.general.XMLSessionEnvironment;
+import com.syrus.AMFICOM.general.ClientSessionEnvironment.SessionKind;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/28 13:17:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/07/29 14:36:37 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
  */
@@ -66,6 +68,9 @@ public abstract class AbstractApplication {
 	public static final String		LOOK_AND_FEEL_METAL			= "Metal";
 	public static final String		LOOK_AND_FEEL_MOTIF			= "Motif";
 	public static final String		LOOK_AND_FEEL_WINDOWS		= "Windows";
+
+	public static final String XMLSESSION_KEY = "XMLSession";
+	public static final String XML_PATH_KEY = "XMLPath";
 
 	protected ApplicationContext	aContext;
 
@@ -341,51 +346,54 @@ public abstract class AbstractApplication {
 			synchronized (this) {
 				if (loginRestorer == null) {
 					loginRestorer = new LoginRestoreCommand(null);
-					ClientSessionEnvironment.setLoginRestorer(loginRestorer);
 				}
 			}			
 		}
 
-		ClientSessionEnvironment clientSessionEnvironment1;
-		try {
-			clientSessionEnvironment1 = 
-				ClientSessionEnvironment.getInstance(
-					ApplicationProperties.getInt(
-						ClientSessionEnvironment.SESSION_KIND_KEY, -1));
-		} catch (CommunicationException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
-				StatusMessageEvent.STATUS_SERVER, 
-				LangModelGeneral.getString("StatusBar.ConnectionError")));
-			return;
-		} catch (IllegalDataException e) {
-			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
-				StatusMessageEvent.STATUS_SERVER, 
-				LangModelGeneral.getString("StatusBar.IllegalSessionKind")));
-			return;
-		}
-		final ClientSessionEnvironment clientSessionEnvironment = 
-				clientSessionEnvironment1;
-
-		final Dispatcher dispatcher1 = this.dispatcher;
-
-		PropertyChangeListener connectionListener = new PropertyChangeListener() {
-
-			public void propertyChange(PropertyChangeEvent evt) {
-				Boolean boolean1 = (Boolean) evt.getNewValue();
-				if (boolean1.booleanValue()) {
-					dispatcher1.firePropertyChange(new StatusMessageEvent(this, 
-						StatusMessageEvent.STATUS_SERVER,
-						clientSessionEnvironment.getServerName()));
-				} else {
-					dispatcher1.firePropertyChange(new StatusMessageEvent(this, 
+		final String xmlSession = ApplicationProperties.getString(XMLSESSION_KEY, "false");
+		boolean usingXMLSession = xmlSession.equalsIgnoreCase("true") || xmlSession.equalsIgnoreCase("yes");
+		if (!usingXMLSession) {
+			final int kind = ApplicationProperties.getInt(ClientSessionEnvironment.SESSION_KIND_KEY, -1);
+			final SessionKind sessionKind = SessionKind.fromInt(kind);
+			try {
+				ClientSessionEnvironment.createInstance(sessionKind, loginRestorer);				
+			} catch (CommunicationException ce) {
+				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_SERVER,
 						LangModelGeneral.getString("StatusBar.ConnectionError")));
-				}
-
+				return;
+			} catch (IllegalDataException ide) {
+				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
+						StatusMessageEvent.STATUS_SERVER,
+						LangModelGeneral.getString("StatusBar.IllegalSessionKind")));
+				return;
 			}
-		};
 
-		clientSessionEnvironment.addPropertyListener(connectionListener);
+			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
+
+			PropertyChangeListener connectionListener = new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					final Boolean boolean1 = (Boolean) evt.getNewValue();
+					if (boolean1.booleanValue()) {
+						AbstractApplication.this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
+							StatusMessageEvent.STATUS_SERVER,
+							clientSessionEnvironment.getServerName()));
+					} else {
+						AbstractApplication.this.dispatcher.firePropertyChange(new StatusMessageEvent(this, 
+							StatusMessageEvent.STATUS_SERVER,
+							LangModelGeneral.getString("StatusBar.ConnectionError")));
+					}
+
+				}
+			};
+
+			clientSessionEnvironment.addPropertyListener(connectionListener);
+		} else {
+			XMLSessionEnvironment.createInstance();
+			this.dispatcher.firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_SERVER, "XML"));
+		}
+
 	}
 
 	private final boolean isLaunchable() {
