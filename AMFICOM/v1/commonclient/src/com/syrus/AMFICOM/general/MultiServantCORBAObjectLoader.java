@@ -1,0 +1,71 @@
+/*-
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.1 2005/07/29 12:49:44 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+package com.syrus.AMFICOM.general;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2005/07/29 12:49:44 $
+ * @author $Author: arseniy $
+ * @module commonclient
+ */
+public final class MultiServantCORBAObjectLoader implements ObjectLoader {
+	private Map<Short, CORBAObjectLoader> corbaObjectLoadersMap;
+
+	public MultiServantCORBAObjectLoader() {
+		this.corbaObjectLoadersMap = new HashMap<Short, CORBAObjectLoader>();
+	}
+
+	public void addCORBAObjectLoader(final Short groupCode, final ServerConnectionManager serverConnectionManager) {
+		final CORBAObjectLoader corbaObjectLoader = new CORBAObjectLoader(serverConnectionManager);
+		this.corbaObjectLoadersMap.put(groupCode, corbaObjectLoader);
+	}
+
+	public void addCORBAObjectLoader(final short groupCode, final ServerConnectionManager serverConnectionManager) {
+		this.addCORBAObjectLoader(new Short(groupCode), serverConnectionManager);
+	}
+
+	private CORBAObjectLoader getCORBAObjectLoader(final Set<? extends Identifiable> identifiables) throws IllegalDataException {
+		final short groupCode = StorableObject.getGroupCodeOfIdentifiables(identifiables);
+		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
+		final CORBAObjectLoader corbaObjectLoader = this.corbaObjectLoadersMap.get(new Short(groupCode));
+		if (corbaObjectLoader == null) {
+			throw new IllegalDataException("CORBA loader for group '" + ObjectGroupEntities.codeToString(groupCode) + "'/" + groupCode
+					+ " is not registered");
+		}
+		return corbaObjectLoader;
+	}
+
+	public final <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+		return this.getCORBAObjectLoader(ids).loadStorableObjects(ids);
+	}
+
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		return this.getCORBAObjectLoader(ids).loadStorableObjectsButIdsByCondition(ids, condition);
+	}
+
+	public final Map<Identifier, StorableObjectVersion> getRemoteVersions(final Set<Identifier> ids) throws ApplicationException {
+		return this.getCORBAObjectLoader(ids).getRemoteVersions(ids);
+	}
+
+	public final void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
+		this.getCORBAObjectLoader(storableObjects).saveStorableObjects(storableObjects);
+	}
+
+	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
+			throws ApplicationException {
+		return this.getCORBAObjectLoader(versionsMap.keySet()).getOldVersionIds(versionsMap);
+	}
+
+	public final void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException {
+		this.getCORBAObjectLoader(identifiables).delete(identifiables);
+	}
+}
