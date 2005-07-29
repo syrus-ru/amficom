@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.49 2005/07/27 12:03:43 bass Exp $
+ * $Id: Characteristic.java,v 1.50 2005/07/29 08:23:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/07/27 12:03:43 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/29 08:23:32 $
  * @author $Author: bass $
- * @module general_v1
+ * @module general
  */
 public final class Characteristic extends StorableObject
 		implements TypedObject, Cloneable {
@@ -188,7 +188,7 @@ public final class Characteristic extends StorableObject
 				this.type.getId().getTransferable(),
 				this.name,
 				this.description,
-				(this.value != null) ? this.value : "",
+				(this.value == null) ? "" : this.value,
 				this.characterizableId.getTransferable(),
 				this.editable,
 				this.visible);
@@ -287,7 +287,7 @@ public final class Characteristic extends StorableObject
 	public Identifier getCharacterizableId() {
 		return this.characterizableId;
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -303,7 +303,7 @@ public final class Characteristic extends StorableObject
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setAttributes(final Date created,
+	protected void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -315,18 +315,20 @@ public final class Characteristic extends StorableObject
 			final Identifier characterizableId,
 			final boolean editable,
 			final boolean visible) {
-		super.setAttributes(created,
-				modified,
-				creatorId,
-				modifierId,
-				version);
-		this.type = type;
-		this.name = name;
-		this.description = description;
-		this.value = value;
-		this.characterizableId = characterizableId;
-		this.editable = editable;
-		this.visible = visible;
+		synchronized (this) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId,
+					version);
+			this.type = type;
+			this.name = name;
+			this.description = description;
+			this.value = value;
+			this.characterizableId = characterizableId;
+			this.editable = editable;
+			this.visible = visible;
+		}
 	}
 
 	/**
@@ -335,9 +337,28 @@ public final class Characteristic extends StorableObject
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);
 		return dependencies;
-	}	
+	}
+
+	@Override
+	public Characteristic clone() {
+		try {
+			/*-
+			 * Since this method is usually invoked when a parent
+			 * of this characteristic clones itself,
+			 * characterizableId is updated from within that code,
+			 * and not here. 
+			 */
+			return (Characteristic) super.clone();
+		} catch (final CloneNotSupportedException cnse) {
+			/*-
+			 * Never.
+			 */
+			assert false;
+			return null;
+		}
+	}
 }
