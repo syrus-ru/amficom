@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.58 2005/07/28 10:07:11 max Exp $
+ * $Id: PhysicalLinkType.java,v 1.59 2005/07/29 12:58:25 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.logic.Library;
+import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
 
@@ -46,14 +48,17 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: max $
- * @version $Revision: 1.58 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.59 $, $Date: 2005/07/29 12:58:25 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
- * @todo make 'sort' transient (update database scheme as well)
+ * @todo make 'sort' persistent (update database scheme as well)
+ * @todo make 'mapLibrary' persistent
+ * @todo make 'bindingDimension' persistent
  */
-public final class PhysicalLinkType extends StorableObjectType implements Characterizable, Namable, XMLBeansTransferable {
+public final class PhysicalLinkType extends StorableObjectType 
+		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
 	/** тоннель */
 	public static final String DEFAULT_TUNNEL = "tunnel";
@@ -73,19 +78,21 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 	 */
 	private static final long serialVersionUID = 3690191057812271924L;
 
-	private transient PhysicalLinkTypeSort sort;
+	private PhysicalLinkTypeSort sort;
 
 	private String name;
 
 	/**
 	 * –азмерность тоннел€. ƒл€ тоннел€ обозначает размерность матрицы труб в
 	 * разрезе, дл€ участка коллектора - число полок и мест на полках
-	 * 
-	 * @todo добавить сохранение в Ѕƒ
+	 *
+	 * @todo добавить сохранение в Ѕƒ (make persistent)
 	 */
 	private IntDimension bindingDimension;
 
-	private transient boolean topological = true;
+	private MapLibrary mapLibrary;
+	
+	private boolean topological = true;
 
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -366,5 +373,23 @@ public final class PhysicalLinkType extends StorableObjectType implements Charac
 			System.out.println(xmlPhysicalLinkType);
 			throw new CreateObjectException("PhysicalLinkType.createInstance |  ", e);
 		}
+	}
+
+	MapLibrary library;
+	
+	public void setParent(Library library) {
+		this.library = (MapLibrary)library;
+	}
+
+	public Library getParent() {
+		return this.library;
+	}
+
+	public MapLibrary getMapLibrary() {
+		return this.mapLibrary;
+	}
+
+	public void setMapLibrary(MapLibrary mapLibrary) {
+		this.mapLibrary = mapLibrary;
 	}
 }

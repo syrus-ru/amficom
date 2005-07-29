@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.52 2005/07/28 10:07:11 max Exp $
+ * $Id: SiteNodeType.java,v 1.53 2005/07/29 12:59:12 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.logic.Library;
+import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
@@ -55,12 +57,14 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: max $
- * @version $Revision: 1.52 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.53 $, $Date: 2005/07/29 12:59:12 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
+ * @todo make 'mapLibrary' persistent
  */
-public final class SiteNodeType extends StorableObjectType implements Characterizable, Namable, XMLBeansTransferable {
+public final class SiteNodeType extends StorableObjectType 
+		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
 	public static final String DEFAULT_WELL = "well";
 	public static final String DEFAULT_PIQUET = "piquet";
@@ -79,8 +83,10 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 	private String name;
 	private boolean topological;
 
-	private transient SiteNodeTypeSort sort;
+	private SiteNodeTypeSort sort;
 
+	private MapLibrary mapLibrary;
+	
 	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -372,5 +378,22 @@ public final class SiteNodeType extends StorableObjectType implements Characteri
 		}
 	}
 
+	MapLibrary library;
+	
+	public void setParent(Library library) {
+		this.library = (MapLibrary)library;
+	}
+
+	public Library getParent() {
+		return this.library;
+	}
+
+	public MapLibrary getMapLibrary() {
+		return this.mapLibrary;
+	}
+
+	public void setMapLibrary(MapLibrary mapLibrary) {
+		this.mapLibrary = mapLibrary;
+	}
 	
 }
