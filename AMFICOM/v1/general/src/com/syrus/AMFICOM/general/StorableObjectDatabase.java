@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.171 2005/07/29 12:10:18 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.172 2005/07/29 16:15:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.171 $, $Date: 2005/07/29 12:10:18 $
+ * @version $Revision: 1.172 $, $Date: 2005/07/29 16:15:08 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -562,7 +562,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				CreateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert StorableObject.getGroupCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final String sql = SQL_INSERT_INTO + this.getEntityName() + OPEN_BRACKET
 				+ this.getColumns(ExecuteMode.MODE_INSERT)
@@ -706,7 +706,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				UpdateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert StorableObject.getGroupCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);
 		final Set<Identifier> dbIds = this.retrievePresentInDatabaseIds(ids);
@@ -733,7 +733,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	protected final void updateEntities(final Set<T> storableObjects) throws UpdateObjectException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert !storableObjects.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
-		assert StorableObject.getGroupCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert StorableObject.getEntityCodeOfIdentifiables(storableObjects) == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
 		final String[] cols = this.getColumns(ExecuteMode.MODE_UPDATE).split(COMMA);
 		final String[] values = this.getUpdateMultipleSQLValues().split(COMMA);
