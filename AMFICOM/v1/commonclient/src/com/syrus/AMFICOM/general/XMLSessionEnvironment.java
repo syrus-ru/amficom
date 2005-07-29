@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.1 2005/05/16 15:56:28 arseniy Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.2 2005/07/29 14:33:41 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,9 @@
  */
 package com.syrus.AMFICOM.general;
 
+
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/16 15:56:28 $
+ * @version $Revision: 1.2 $, $Date: 2005/07/29 14:33:41 $
  * @author $Author: arseniy $
  * @module commonclient_v1
  */
@@ -17,8 +18,9 @@ public final class XMLSessionEnvironment {
 
 	private static XMLSessionEnvironment instance;
 
-	private XMLSessionEnvironment(XMLPoolContext poolContext) {
+	private XMLSessionEnvironment(final XMLPoolContext poolContext) {
 		this.poolContext = poolContext;
+		this.poolContext.init();
 
 		//NOTE No initialization of IdentifierPool. Cannot generate identifiers.
 	}
@@ -38,4 +40,5 @@ public final class XMLSessionEnvironment {
 	public static XMLSessionEnvironment getInstance() {
 		return instance;
 	}
+	
 }
