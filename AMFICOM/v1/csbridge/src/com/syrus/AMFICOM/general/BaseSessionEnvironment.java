@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.12 2005/07/12 15:10:39 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.13 2005/07/29 14:18:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/12 15:10:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/29 14:18:13 $
  * @author $Author: arseniy $
  * @module csbridge_v1
  */
@@ -71,7 +71,7 @@ public abstract class BaseSessionEnvironment {
 		return this.sessionEstablished;
 	}
 
-	public void login(String login, String password) throws CommunicationException, LoginException {
+	public final void login(String login, String password) throws CommunicationException, LoginException {
 		LoginManager.login(login, password);
 		IdentifierPool.deserialize();
 		this.poolContext.deserialize();
@@ -82,7 +82,7 @@ public abstract class BaseSessionEnvironment {
 		this.sessionEstablished = true;
 	}
 
-	public void logout() throws CommunicationException, LoginException {
+	public final void logout() throws CommunicationException, LoginException {
 		this.baseConnectionManager.getCORBAServer().removeShutdownHook(this.logoutShutdownHook);
 
 		this.logout0();
