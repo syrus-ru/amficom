@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -33,66 +32,46 @@ public class PathElementsFrame extends AnalysisFrame
 		this(aContext, dispatcher, new PathElementsLayeredPanel(dispatcher));
 	}
 
-	public void addTrace (String id)
-	{
-		if (traces.get(id) != null)
-			return;
-		SimpleGraphPanel p;
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-		if (bs == null)
-			return;
-
+	
+	@Override
+	protected AnalysisPanel createSpecificAnalysisPanel(BellcoreStructure bs) {
 		double deltaX = bs.getResolution();
 		double[] y = bs.getTraceData();
 
-		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
+		SchemePath path = null;
+		try
 		{
-			SchemePath path = null;
+			MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
+							new Identifier(bs.monitoredElementId), true);
 
-			try
-			{
-				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
-								new Identifier(bs.monitoredElementId), true);
+			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+				LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
+						ObjectEntities.SCHEMEPATH_CODE);
+				Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-					LinkedIdsCondition condition = new LinkedIdsCondition(LoginManager.getDomainId(),
-							ObjectEntities.SCHEMEPATH_CODE);
-					Set paths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-					Collection tpathIds = me.getMonitoredDomainMemberIds();
-					for (Iterator it = paths.iterator(); it.hasNext(); ) {
-						SchemePath sp = (SchemePath)it.next();
-						/**
-						 * @todo remove comment when SchemePath moves to new TransmissionPath
-						 */
-						if(sp.getTransmissionPath() != null && tpathIds.contains(sp.getTransmissionPath().getId()))
-						{
-							path = sp;
-							break;
-						}
+				Collection tpathIds = me.getMonitoredDomainMemberIds();
+				for (Iterator it = paths.iterator(); it.hasNext(); ) {
+					SchemePath sp = (SchemePath)it.next();
+					/**
+					 * @todo remove comment when SchemePath moves to new TransmissionPath
+					 */
+					if(sp.getTransmissionPath() != null && tpathIds.contains(sp.getTransmissionPath().getId()))
+					{
+						path = sp;
+						break;
 					}
 				}
-				setTitle(me.getName());
-			} catch(Exception ex)
-			{
-				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
+			setTitle(me.getName());
+		} catch(Exception ex)
+		{
+			setTitle(LangModelAnalyse.getString("analysisTitle"));
+		}
 
-			p = new PathElementsPanel((PathElementsLayeredPanel)panel, dispatcher, y, deltaX);
-			((PathElementsPanel)p).updEvents(id);
-			((PathElementsPanel)p).updateNoiseLevel();
-			((PathElementsPanel)p).draw_noise_level = true;
-
-			if (path != null)
-				((PathElementsPanel)p).setPath(path);
-		} else
-			p = new SimpleGraphPanel(y, deltaX);
-		p.setColorModel(id);
-		((PathElementsLayeredPanel)panel).addGraphPanel(p);
-		((PathElementsLayeredPanel)panel).updPaintingMode();
-		panel.updScale2fit();
-		traces.put(id, p);
-
-		setVisible(true);
+		PathElementsPanel p = new PathElementsPanel(
+				(PathElementsLayeredPanel)panel, dispatcher, y, deltaX);
+		if (path != null)
+			p.setPath(path);
+		return p;
 	}
 }

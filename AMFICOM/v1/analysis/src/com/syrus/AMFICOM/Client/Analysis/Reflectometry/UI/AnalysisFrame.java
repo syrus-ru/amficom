@@ -75,6 +75,13 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		((AnalysisLayeredPanel)panel).updMarkers();
 	}
 
+	protected AnalysisPanel createSpecificAnalysisPanel(BellcoreStructure bs) {
+		double deltaX = bs.getResolution();
+		double[] y = bs.getTraceData();
+		return new AnalysisPanel((AnalysisLayeredPanel)panel,
+				dispatcher, y, deltaX);
+	}
+
 	protected void addTrace (String id)
 	{
 		removeOneTrace(id);
@@ -83,9 +90,6 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		if (bs == null)
 			return;
-
-		double deltaX = bs.getResolution();
-		double[] y = bs.getTraceData();
 
 		AnalysisLayeredPanel ppp = (AnalysisLayeredPanel)panel;
 
@@ -101,7 +105,7 @@ implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
 			}
 
-			p = new AnalysisPanel(ppp, dispatcher, y, deltaX);
+			p = createSpecificAnalysisPanel(bs);
 			((AnalysisPanel)p).updEvents(id);
 			((AnalysisPanel)p).updateNoiseLevel();
 			((AnalysisPanel)p).draw_noise_level = true;
