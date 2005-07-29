@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.5 2005/07/28 18:21:32 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.6 2005/07/29 14:05:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mcm.corba.MCM;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/28 18:21:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/29 14:05:39 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -63,7 +63,8 @@ final class MServerObjectLoader extends DatabaseObjectLoader {
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		switch (entityCode) {
 			case MEASUREMENT_CODE:

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.5 2005/07/28 17:04:56 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.6 2005/07/29 14:05:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/28 17:04:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/07/29 14:05:17 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -70,7 +70,8 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 			final StorableObjectCondition condition) throws ApplicationException {
 		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
 
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
