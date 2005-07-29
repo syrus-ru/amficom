@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.72 2005/06/22 15:05:21 bass Exp $
+ * $Id: ObjectEntities.java,v 1.73 2005/07/29 12:09:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/06/22 15:05:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/07/29 12:09:43 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -34,6 +34,7 @@ public final class ObjectEntities {
 	public static final String EQUIPMENT_TYPE = "EquipmentType";
 	public static final String PORT_TYPE = "PortType";
 	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
+	public static final String TRANSPATH_TYPE = "TransmissionPathType";
 	public static final String LINK_TYPE = "LinkType";
 	public static final String CABLELINK_TYPE = "CableLinkType";
 	public static final String CABLETHREAD_TYPE = "CableThreadType";
@@ -49,7 +50,6 @@ public final class ObjectEntities {
 	public static final String MODELING_TYPE = "ModelingType";
 	public static final String MODTYPPARTYPLINK = "ModTypParTypLink";
 //	public static final String KIS_TYPE = "KISType";
-	public static final String TRANSPATH_TYPE = "TransmissionPathType";
 
 	public static final String SITENODE_TYPE = "SiteNodeType";
 	public static final String PHYSICALLINK_TYPE = "PhysicalLinkType";
