@@ -1,5 +1,5 @@
 /*
- * $Id: MscharClientPoolContext.java,v 1.7 2005/07/28 19:45:42 arseniy Exp $
+ * $Id: MscharClientPoolContext.java,v 1.8 2005/07/29 14:28:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/28 19:45:42 $
+ * @version $Revision: 1.8 $, $Date: 2005/07/29 14:28:03 $
  * @author $Author: arseniy $
  * @module commonclient_v1
  */
@@ -26,19 +26,8 @@ final class MscharClientPoolContext extends ClientPoolContext {
 	private static final int SCHEME_POOL_SIZE = 1000;
 	private static final int MAP_VIEW_POOL_SIZE = 1000;
 
-	/**
-	 * @todo Implement multi-servant work
-	 */
-	private MscharClientServantManager	mscharClientServantManager;
-
-	public MscharClientPoolContext(final MClientServantManager mClientServantManager,
-			final MscharClientServantManager mscharClientServantManager) {
-		super(mClientServantManager);
-		this.mscharClientServantManager = mscharClientServantManager;
-	}
-
-	public MscharClientPoolContext(final String xmlPath) {
-		super(xmlPath);
+	public MscharClientPoolContext(final ObjectLoader objectLoader) {
+		super(objectLoader);
 	}
 
 	@Override

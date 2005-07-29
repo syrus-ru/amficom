@@ -1,5 +1,5 @@
 /*
- * $Id: MClientPoolContext.java,v 1.12 2005/07/28 19:45:42 arseniy Exp $
+ * $Id: MClientPoolContext.java,v 1.13 2005/07/29 14:28:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/28 19:45:42 $
+ * @version $Revision: 1.13 $, $Date: 2005/07/29 14:28:03 $
  * @author $Author: arseniy $
  * @module commonclient_v1
  */
@@ -19,12 +19,8 @@ final class MClientPoolContext extends ClientPoolContext {
 
 	private static final int MEASUREMENT_POOL_SIZE = 1000;
 
-	public MClientPoolContext(final ServerConnectionManager mClientServantManager) {
-		super(mClientServantManager);
-	}
-
-	public MClientPoolContext(final String xmlPath) {
-		super(xmlPath);
+	public MClientPoolContext(final ObjectLoader objectLoader) {
+		super(objectLoader);
 	}
 
 	@Override
