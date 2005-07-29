@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.27 2005/07/26 08:51:42 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.28 2005/07/29 11:56:03 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,17 +26,19 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourceHelper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceData;
+import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.IdlFileImageResourceData;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/07/26 08:51:42 $
+ * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2005/07/29 11:56:03 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
 	private static final long serialVersionUID = -3374486515234713818L;
 
 	private String fileName;
+	private String codeName;
 
 	FileImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -54,6 +56,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	FileImageResource(final Identifier id,
 			final Identifier creatorId,
 			final StorableObjectVersion version,
+			final String codeName,
 			final String fileName) {
 		super(id,
 			new Date(System.currentTimeMillis()),
@@ -62,13 +65,15 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			creatorId,
 			version);
 		this.fileName = fileName;
+		this.codeName = codeName;
 	}
 
-	public static FileImageResource createInstance(final Identifier creatorId, final String fileName) throws CreateObjectException {
+	public static FileImageResource createInstance(final Identifier creatorId, final String codeName ,final String fileName) throws CreateObjectException {
 		try {
 			final FileImageResource fileImageResource = new FileImageResource(IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
+					codeName,
 					fileName);
 
 			assert fileImageResource.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -86,13 +91,13 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	 */
 	@Override
 	public String getCodename() {
-		return getFileName();
+		return this.codeName;
 	}
 	
 	
 	@Override
 	public void setCodename(final String codename) {
-		this.setFileName(codename);
+		this.setCodeName(codename);
 	}
 	
 	public String getFileName() {
@@ -113,8 +118,11 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	 */
 	@Override
 	public IdlImageResource getTransferable(final ORB orb) {
+		final IdlFileImageResourceData fileImageResourceData = new IdlFileImageResourceData();
+		fileImageResourceData.codename = this.codeName;
+		fileImageResourceData.fileName = this.fileName;
 		final IdlImageResourceData imageResourceData = new IdlImageResourceData();
-		imageResourceData.fileName(this.fileName);
+		imageResourceData.fileImageResourceData(fileImageResourceData);
 		return IdlImageResourceHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -125,6 +133,11 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 				imageResourceData);
 	}
 
+	public void setCodeName(final String codeName) {
+		setCodeName0(codeName);
+		this.markAsChanged();
+	}
+	
 	public void setFileName(final String fileName) {
 		setFileName0(fileName);
 		this.markAsChanged();
@@ -135,11 +148,17 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final String codeName,
 			final String fileName) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.fileName = fileName;
+		this.codeName = codeName;
 	}
 
+	protected void setCodeName0(final String codeName) {
+		this.codeName = codeName;
+	}
+	
 	protected void setFileName0(final String fileName) {
 		this.fileName = fileName;
 	}
@@ -156,6 +175,8 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 		final IdlImageResourceData imageResourceData = idlImageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._FILE;
-		this.fileName = imageResourceData.fileName();
+		final IdlFileImageResourceData fileImageResourceData = imageResourceData.fileImageResourceData(); 
+		this.codeName = fileImageResourceData.codename;
+		this.fileName = fileImageResourceData.fileName;
 	}
 }

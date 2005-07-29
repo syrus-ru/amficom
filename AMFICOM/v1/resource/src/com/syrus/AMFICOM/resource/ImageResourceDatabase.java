@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.31 2005/07/27 18:33:34 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.32 2005/07/29 11:56:03 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,14 +35,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/07/27 18:33:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2005/07/29 11:56:03 $
  * @module resource_v1
  */
 
 public final class ImageResourceDatabase extends StorableObjectDatabase<AbstractImageResource> {
 	// table :: ImageResource
-	private static final int SIZE_CODENAME_COLUMN_IR = 256;
+	private static final int SIZE_CODENAME_COLUMN_IR = 32;
+	private static final int SIZE_FILENAME_COLUMN_IR = 256;
 
 	/**
 	 * codename  VARCHAR2(256)
@@ -129,6 +130,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ ImageResourceWrapper.COLUMN_FILENAME + COMMA
 				+ COLUMN_SORT;
 		}
 		return columns;
@@ -138,6 +140,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+			+ QUESTION + COMMA
 			+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -148,10 +151,12 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			throws IllegalDataException {
 		final ImageResourceSort sort = storableObject.getSort();
 		String codename = null;
+		String fileName = null;
 		if(storableObject instanceof BitmapImageResource) {
 			codename = ((BitmapImageResource) storableObject).getCodename();
 		} else if (storableObject instanceof FileImageResource) {
 			codename = ((FileImageResource) storableObject).getCodename();
+			codename = ((FileImageResource) storableObject).getFileName();
 		} else if (storableObject instanceof SchemeImageResource) {
 			// Do nothing
 		} else {
@@ -160,6 +165,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 		}
 
 		final String sql = APOSTROPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN_IR) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(fileName, SIZE_FILENAME_COLUMN_IR) + APOSTROPHE + COMMA
 				+ sort.value();
 		return sql;
 	}
@@ -193,6 +199,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 					fileImageResource = new FileImageResource(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 							null,
 							StorableObjectVersion.ILLEGAL_VERSION,
+							null,
 							null);
 				} else {
 					fileImageResource = (FileImageResource) storableObject;
@@ -202,7 +209,8 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 						new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)));
+						DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+						DatabaseString.fromQuerySubString(resultSet.getString(ImageResourceWrapper.COLUMN_FILENAME)));
 				return fileImageResource;
 			} else if (sort == ImageResourceSort._SCHEME) {
 				SchemeImageResource schemeImageResource;
@@ -240,16 +248,22 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 						++startParameterNumber,
 						bitmapImageResource.getCodename(),
 						SIZE_CODENAME_COLUMN_IR);
+				DatabaseString.setString(preparedStatement,	++startParameterNumber,	"", SIZE_FILENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._BITMAP);
 			} else if (sort == ImageResourceSort._FILE) {
 				FileImageResource fileImageResource = (FileImageResource) storableObject;
 				DatabaseString.setString(preparedStatement,
 						++startParameterNumber,
-						fileImageResource.getFileName(),
+						fileImageResource.getCodename(),
 						SIZE_CODENAME_COLUMN_IR);
+				DatabaseString.setString(preparedStatement,
+						++startParameterNumber,
+						fileImageResource.getFileName(),
+						SIZE_FILENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._FILE);
 			} else if (sort == ImageResourceSort._SCHEME) {
 				DatabaseString.setString(preparedStatement, ++startParameterNumber, "", SIZE_CODENAME_COLUMN_IR);
+				DatabaseString.setString(preparedStatement,	++startParameterNumber,	"", SIZE_FILENAME_COLUMN_IR);
 				preparedStatement.setInt(++startParameterNumber, ImageResourceSort._SCHEME);
 			} else {
 				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort);
