@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
+-- $Id: test.sql,v 1.13 2005/07/29 16:06:28 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -20,7 +20,6 @@ CREATE TABLE Test (
 --
  status NUMBER(2, 0) NOT NULL,
  monitored_element_id NOT NULL,
- return_type NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256 CHAR),
  number_of_measurements NUMBER(10) NOT NULL,
 --
