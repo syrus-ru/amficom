@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.49 2005/07/28 19:03:49 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.50 2005/07/29 12:24:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/07/28 19:03:49 $
+ * @version $Revision: 1.50 $, $Date: 2005/07/29 12:24:38 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -185,7 +185,8 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
+	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
+			throws ApplicationException {
 		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (versionsMap.isEmpty()) {
 			return Collections.emptySet();
