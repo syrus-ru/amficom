@@ -124,8 +124,8 @@ public class MathRef
 	{
 		if (peak <= 0)
 			return MINF_DESIGNATION;
-		double ret = (-sigma + 10.0*Math.log(Math.pow(10.0, peak/5.0) - 1)
-				/ Math.log(10));
+		double ret = -sigma
+				+ 10.0 * Math.log(Math.pow(10.0, peak/5.0) - 1) / Math.log(10.0);
 		if (ret < MINF_DESIGNATION)
 			return MINF_DESIGNATION;
 		return ret;
