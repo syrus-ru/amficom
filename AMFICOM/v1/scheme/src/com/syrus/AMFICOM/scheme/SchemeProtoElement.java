@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.65 2005/07/29 13:07:00 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.66 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,16 +40,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -61,7 +60,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -79,13 +77,13 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.66 $, $Date: 2005/07/31 17:08:10 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
-public final class SchemeProtoElement extends StorableObject
+public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		CloneableStorableObject, LibraryEntry {
+		LibraryEntry {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -109,8 +107,6 @@ public final class SchemeProtoElement extends StorableObject
 	private transient boolean parentSet = false;
 
 	private final transient ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
-
-	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -1305,14 +1301,5 @@ public final class SchemeProtoElement extends StorableObject
 			schemePorts.addAll(schemeDeviceIterator.next().getSchemePorts());
 		}
 		return Collections.unmodifiableSet(schemePorts);
-	}
-
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

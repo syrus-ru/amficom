@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.62 2005/07/29 13:06:59 bass Exp $
+ * $Id: Scheme.java,v 1.63 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/07/29 13:06:59 $
+ * @version $Revision: 1.63 $, $Date: 2005/07/31 17:08:10 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -304,7 +304,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	}
 
 	@Override
-	public Scheme clone() {
+	public Scheme clone() throws CloneNotSupportedException {
 		final Scheme scheme = (Scheme) super.clone();
 		/**
 		 * @todo Update the newly created object.

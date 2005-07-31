@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.45 2005/07/29 13:07:00 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.46 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,22 +29,20 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -54,12 +52,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.45 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.46 $, $Date: 2005/07/31 17:08:10 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
-		extends StorableObject
-		implements Describable, Characterizable, CloneableStorableObject {
+		extends AbstractCloneableStorableObject
+		implements Describable, Characterizable {
 	private static final long serialVersionUID = 6943625949984422779L;
 
 	private String name;
@@ -85,8 +83,6 @@ public abstract class AbstractSchemePort
 	Identifier parentSchemeDeviceId;
 
 	transient boolean portTypeSet = false;
-
-	transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -512,14 +508,5 @@ public abstract class AbstractSchemePort
 		return this.portId != null
 				&& this.portTypeId != null
 				&& (this.portId.isVoid() ^ this.portTypeId.isVoid());
-	}
-
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public final Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

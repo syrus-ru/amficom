@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.51 2005/07/29 13:07:00 bass Exp $
+ * $Id: Characteristic.java,v 1.52 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,9 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -22,12 +20,12 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.52 $, $Date: 2005/07/31 17:08:10 $
  * @author $Author: bass $
  * @module general
  */
-public final class Characteristic extends StorableObject
-		implements TypedObject, CloneableStorableObject {
+public final class Characteristic extends AbstractCloneableStorableObject
+		implements TypedObject {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -37,8 +35,6 @@ public final class Characteristic extends StorableObject
 	private Identifier characterizableId;
 	private boolean editable;
 	private boolean visible;
-
-	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -352,38 +348,21 @@ public final class Characteristic extends StorableObject
 	 * @see Object#clone()
 	 */
 	@Override
-	public Characteristic clone() {
-		try {
-			/*-
-			 * Since this method is usually invoked when a parent
-			 * of this characteristic clones itself,
-			 * characterizableId is updated from within that code,
-			 * and not here. 
-			 */
-			final Characteristic clone = (Characteristic) super.clone();
+	public Characteristic clone() throws CloneNotSupportedException {
+		/*-
+		 * Since this method is usually invoked when a parent
+		 * of this characteristic clones itself,
+		 * characterizableId is updated from within that code,
+		 * and not here. 
+		 */
+		final Characteristic clone = (Characteristic) super.clone();
 
-			if (clone.clonedIdMap == null) {
-				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
-			}
-
-			clone.clonedIdMap.put(this.id, clone.id);
-
-			return clone;
-		} catch (final CloneNotSupportedException cnse) {
-			/*-
-			 * Never.
-			 */
-			assert false;
-			return null;
+		if (clone.clonedIdMap == null) {
+			clone.clonedIdMap = new HashMap<Identifier, Identifier>();
 		}
-	}
 
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
+		clone.clonedIdMap.put(this.id, clone.id);
+
+		return clone;
 	}
 }

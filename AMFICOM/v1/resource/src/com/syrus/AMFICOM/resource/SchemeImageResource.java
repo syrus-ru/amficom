@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.32 2005/07/29 13:07:00 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.33 2005/07/31 17:08:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,22 +17,18 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
@@ -43,18 +39,15 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.33 $, $Date: 2005/07/31 17:08:09 $
  * @module resource
  */
-public final class SchemeImageResource extends AbstractImageResource
-		implements CloneableStorableObject {
+public final class SchemeImageResource extends AbstractCloneableImageResource {
 	private static final long serialVersionUID = -5633433107083921318L;
 
 	private byte image[];
 
-	private transient Map<Identifier, Identifier> clonedIdMap;
-
-	SchemeImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	SchemeImageResource(final Identifier id) throws ApplicationException {
 		super(id);
 	}
 
@@ -251,33 +244,16 @@ public final class SchemeImageResource extends AbstractImageResource
 	}
 
 	@Override
-	public SchemeImageResource clone() {
-		try {
-			final SchemeImageResource clone = (SchemeImageResource) super.clone();
+	public SchemeImageResource clone() throws CloneNotSupportedException {
+		final SchemeImageResource clone = (SchemeImageResource) super.clone();
 
-			if (clone.clonedIdMap == null) {
-				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
-			}
-
-			clone.clonedIdMap.put(this.id, clone.id);
-
-			clone.image = this.image.clone();
-			return clone;
-		} catch (final CloneNotSupportedException cnse) {
-			/*
-			 * Never.
-			 */
-			assert false;
-			return null;
+		if (clone.clonedIdMap == null) {
+			clone.clonedIdMap = new HashMap<Identifier, Identifier>();
 		}
-	}
 
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
+		clone.clonedIdMap.put(this.id, clone.id);
+
+		clone.image = this.image.clone();
+		return clone;
 	}
 }

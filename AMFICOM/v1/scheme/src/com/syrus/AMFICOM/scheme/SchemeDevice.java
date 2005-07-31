@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.58 2005/07/29 13:06:59 bass Exp $
+ * $Id: SchemeDevice.java,v 1.59 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,15 +33,14 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -53,7 +52,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -65,11 +63,11 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/29 13:06:59 $
+ * @version $Revision: 1.59 $, $Date: 2005/07/31 17:08:10 $
  * @module scheme
  */
-public final class SchemeDevice extends StorableObject
-		implements Describable, Characterizable, CloneableStorableObject {
+public final class SchemeDevice extends AbstractCloneableStorableObject
+		implements Describable, Characterizable {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -81,8 +79,6 @@ public final class SchemeDevice extends StorableObject
 	Identifier parentSchemeProtoElementId;
 
 	private transient boolean parentSet = false;
-
-	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -733,14 +729,5 @@ public final class SchemeDevice extends StorableObject
 		return this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
-	}
-
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }

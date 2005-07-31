@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.83 2005/07/26 18:50:15 arseniy Exp $
+ * $Id: StorableObject.java,v 1.84 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.83 $, $Date: 2005/07/26 18:50:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/07/31 17:08:10 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -266,6 +266,15 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		this.version = version;
 	}
 
+	/**
+	 * for descendsants that inherit {@link CloneableStorableObject} and
+	 * thus <em>do support</em> cloning, {@link #creatorId} and
+	 * {@link #modifierId} of a newly created object are set to the same
+	 * values as those of the original one. 
+	 *
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 */
 	@Override
 	protected StorableObject clone() throws CloneNotSupportedException {
 		final StorableObject clone = (StorableObject) super.clone();
@@ -278,14 +287,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		final Date cloneCreated = new Date();
 		clone.created = cloneCreated;
 		clone.modified = cloneCreated;
-
-		/**
-		 * @todo Initialize creatorId and modifierId with values from
-		 *       current session, if this session is available. In the
-		 *       general case, this can't be done.
-		 */
-		clone.creatorId = this.creatorId;
-		clone.modifierId = this.modifierId;
 
 		/*
 		 * Initialize version vith 0L, like for all newly created

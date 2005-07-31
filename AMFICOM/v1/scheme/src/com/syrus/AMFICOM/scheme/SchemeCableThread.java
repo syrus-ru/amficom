@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.55 2005/07/29 13:07:00 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.56 2005/07/31 17:08:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,17 +29,16 @@ import static java.util.logging.Level.WARNING;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CloneableStorableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -51,7 +50,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -63,11 +61,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.56 $, $Date: 2005/07/31 17:08:10 $
  * @module scheme
  */
-public final class SchemeCableThread extends StorableObject
-		implements Describable, Characterizable, CloneableStorableObject {
+public final class SchemeCableThread extends AbstractCloneableStorableObject
+		implements Describable, Characterizable {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -83,9 +81,6 @@ public final class SchemeCableThread extends StorableObject
 	Identifier targetSchemePortId;
 
 	Identifier parentSchemeCableLinkId;
-
-
-	private transient Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id
@@ -567,14 +562,5 @@ public final class SchemeCableThread extends StorableObject
 		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
 		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
 		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
-	}
-
-	/**
-	 * @see CloneableStorableObject#getClonedIdMap()
-	 */
-	public Map<Identifier, Identifier> getClonedIdMap() {
-		return (this.clonedIdMap == null)
-				? Collections.<Identifier, Identifier>emptyMap()
-				: Collections.unmodifiableMap(this.clonedIdMap);
 	}
 }
