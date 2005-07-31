@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.28 2005/07/29 11:56:03 max Exp $
+ * $Id: FileImageResource.java,v 1.29 2005/07/31 17:06:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
@@ -30,8 +28,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.28 $, $Date: 2005/07/29 11:56:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $, $Date: 2005/07/31 17:06:43 $
  * @module resource_v1
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -40,7 +38,7 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 	private String fileName;
 	private String codeName;
 
-	FileImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	FileImageResource(final Identifier id) throws ApplicationException {
 		super(id);
 	}
 

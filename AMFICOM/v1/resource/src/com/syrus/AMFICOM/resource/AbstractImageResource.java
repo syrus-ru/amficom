@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.19 2005/07/27 18:33:34 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.20 2005/07/31 17:06:43 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -29,8 +28,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/07/27 18:33:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/07/31 17:06:43 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -39,7 +38,7 @@ public abstract class AbstractImageResource extends StorableObject {
 	/**
 	 * Server-side constructor. Shouldn't be invoked by clients.
 	 */
-	protected AbstractImageResource(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+	protected AbstractImageResource(final Identifier id) throws ApplicationException {
 		super(id);
 
 		try {
