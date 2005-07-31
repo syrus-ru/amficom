@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.30 2005/07/25 12:10:38 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.31 2005/07/31 19:11:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/07/25 12:10:38 $
+ * @version $Revision: 1.31 $, $Date: 2005/07/31 19:11:08 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -58,10 +58,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@SuppressWarnings("unused")
 	private boolean checkDomain(final DomainMember domainMember) {
 		try {
-			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			final Domain dmDomain = StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Identifier id : this.linkedIds) {
 				if (id.getMajor() == DOMAIN_CODE
-						&& dmDomain.isChild((Domain) StorableObjectPool.getStorableObject(id, true))) {
+						&& dmDomain.isChild(StorableObjectPool.<Domain>getStorableObject(id, true))) {
 					return true;
 				}
 			}

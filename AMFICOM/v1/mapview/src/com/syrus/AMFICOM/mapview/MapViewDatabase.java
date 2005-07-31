@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.34 2005/07/28 14:42:31 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.35 2005/07/31 19:11:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/28 14:42:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/07/31 19:11:06 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -254,7 +254,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		for (final Identifiable identifiable : ids) {
 			final Identifier mapId = identifiable.getId();
 			try {
-				final MapView mapView = (MapView) StorableObjectPool.getStorableObject(mapId, true);
+				final MapView mapView = StorableObjectPool.getStorableObject(mapId, true);
 				schemeIds.addAll(Identifier.createIdentifiers(mapView.getSchemes()));
 			} catch (ApplicationException ae) {
 				Log.errorException(ae);

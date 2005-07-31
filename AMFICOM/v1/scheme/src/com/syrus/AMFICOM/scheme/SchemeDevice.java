@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.59 2005/07/31 17:08:10 bass Exp $
+ * $Id: SchemeDevice.java,v 1.60 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -407,7 +407,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public SchemeElement getParentSchemeElement() {
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -438,7 +438,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
 		try {
-			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

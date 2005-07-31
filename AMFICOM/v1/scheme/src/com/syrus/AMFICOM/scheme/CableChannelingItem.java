@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.47 2005/07/26 12:52:23 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.48 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2005/07/26 12:52:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -253,7 +253,7 @@ public final class CableChannelingItem
 	 */
 	public SiteNode getEndSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.getEndSiteNodeId(), true);
+			return StorableObjectPool.getStorableObject(this.getEndSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -278,7 +278,7 @@ public final class CableChannelingItem
 	 */
 	public SchemeCableLink getParentPathOwner() {
 		try {
-			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -296,7 +296,7 @@ public final class CableChannelingItem
 	 */
 	public PhysicalLink getPhysicalLink() {
 		try {
-			return (PhysicalLink) StorableObjectPool.getStorableObject(this.getPhysicalLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getPhysicalLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -336,7 +336,7 @@ public final class CableChannelingItem
 	 */
 	public SiteNode getStartSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.getStartSiteNodeId(), true);
+			return StorableObjectPool.getStorableObject(this.getStartSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

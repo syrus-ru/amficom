@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.53 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.54 2005/07/31 19:11:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/31 19:11:08 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -342,7 +342,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		try {
-			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -394,7 +394,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public BitmapImageResource getSymbol() {
 		try {
-			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
+			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.46 2005/07/31 17:08:10 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.47 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.47 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -202,7 +202,7 @@ public abstract class AbstractSchemePort
 	 */
 	public final MeasurementPort getMeasurementPort() {
 		try {
-			return (MeasurementPort) StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
+			return StorableObjectPool.getStorableObject(this.getMeasurementPortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -229,7 +229,7 @@ public abstract class AbstractSchemePort
 	 */
 	public final SchemeDevice getParentSchemeDevice() {
 		try {
-			return (SchemeDevice) StorableObjectPool.getStorableObject(this.getParentSchemeDeviceId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeDeviceId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -249,7 +249,7 @@ public abstract class AbstractSchemePort
 	 */
 	public Port getPort() {
 		try {
-			return (Port) StorableObjectPool.getStorableObject(this.getPortId(), true);
+			return StorableObjectPool.getStorableObject(this.getPortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -268,7 +268,7 @@ public abstract class AbstractSchemePort
 	public final PortType getPortType() {
 		try {
 			return this.getPortId().isVoid()
-					? (PortType) StorableObjectPool.getStorableObject(this.getPortTypeId(), true)
+					? StorableObjectPool.<PortType>getStorableObject(this.getPortTypeId(), true)
 					: this.getPort().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);

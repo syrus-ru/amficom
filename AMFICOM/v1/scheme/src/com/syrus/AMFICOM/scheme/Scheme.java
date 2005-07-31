@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.64 2005/07/31 18:57:56 bass Exp $
+ * $Id: Scheme.java,v 1.65 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/07/31 18:57:56 $
+ * @version $Revision: 1.65 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -483,7 +483,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public Map getMap() {
 		try {
-			return (Map) StorableObjectPool.getStorableObject(this.getMapId(), true);
+			return StorableObjectPool.getStorableObject(this.getMapId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -509,7 +509,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public SchemeElement getParentSchemeElement() {
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -555,7 +555,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws ApplicationException
 	 */
 	private SchemeImageResource getSchemeCell0() throws ApplicationException {
-		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
+		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
 	public Set<SchemeElement> getSchemeElements() {
@@ -638,7 +638,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 */
 	public BitmapImageResource getSymbol() {
 		try {
-			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
+			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -697,7 +697,7 @@ public final class Scheme extends AbstractCloneableDomainMember implements Descr
 	 * @throws ApplicationException
 	 */
 	private SchemeImageResource getUgoCell0() throws ApplicationException {
-		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
+		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
 	public int getWidth() {

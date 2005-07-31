@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.59 2005/07/28 14:47:31 arseniy Exp $
+ * $Id: SiteNode.java,v 1.60 2005/07/31 19:11:06 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2005/07/28 14:47:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/07/31 19:11:06 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -111,7 +111,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.building = snt.building;
 
 		try {
-			this.type = (SiteNodeType) StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
+			this.type = StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -333,7 +333,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				exportMap.put(COLUMN_CITY, this.city);
 				exportMap.put(COLUMN_STREET, this.street);
 				exportMap.put(COLUMN_BUILDING, this.building);
-				final AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource) StorableObjectPool.getStorableObject(this.imageId,
+				final AbstractBitmapImageResource imageResource = StorableObjectPool.getStorableObject(this.imageId,
 						false);
 				exportMap.put(COLUMN_IMAGE, imageResource.getCodename());
 			} catch (ApplicationException e) {

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.33 2005/07/28 10:07:11 max Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.34 2005/07/31 19:11:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/28 10:07:11 $
- * @author $Author: max $
+ * @version $Revision: 1.34 $, $Date: 2005/07/31 19:11:06 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class TopologicalNodeDatabase extends StorableObjectDatabase<TopologicalNode> {
@@ -65,7 +65,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase<Topolo
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				try {
-					node.setPhysicalLink((PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					node.setPhysicalLink(StorableObjectPool.<PhysicalLink>getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							StorableObjectWrapper.COLUMN_ID), true));
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -181,7 +181,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase<Topolo
 				if (physicalLink != null)
 					continue;
 				try {
-					physicalLink = (PhysicalLink) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
+					physicalLink = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 							NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 				} catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);

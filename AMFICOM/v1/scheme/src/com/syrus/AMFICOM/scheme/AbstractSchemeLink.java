@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.28 2005/07/28 17:42:35 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.29 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.29 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -159,7 +159,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public AbstractLink getAbstractLink() {
 		try {
-			return (AbstractLink) StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getAbstractLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -179,7 +179,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	public AbstractLinkType getAbstractLinkType() {
 		try {
 			return this.getAbstractLinkId().isVoid()
-					? (AbstractLinkType) StorableObjectPool.getStorableObject(this.getAbstractLinkTypeId(), true)
+					? StorableObjectPool.<AbstractLinkType>getStorableObject(this.getAbstractLinkTypeId(), true)
 					: this.getAbstractLink().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
@@ -220,7 +220,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public AbstractSchemePort getSourceAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getSourceAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -242,7 +242,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	public AbstractSchemePort getTargetAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getTargetAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

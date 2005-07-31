@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.59 2005/07/29 13:06:59 bass Exp $
+ * $Id: SchemeElement.java,v 1.60 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/07/29 13:06:59 $
+ * @version $Revision: 1.60 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -417,7 +417,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public Equipment getEquipment() {
 		try {
-			return (Equipment) StorableObjectPool.getStorableObject(this.getEquipmentId(), true);
+			return StorableObjectPool.getStorableObject(this.getEquipmentId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -436,7 +436,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	public EquipmentType getEquipmentType() {
 		try {
 			return this.getEquipmentId().isVoid()
-					? (EquipmentType) StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true)
+					? StorableObjectPool.<EquipmentType>getStorableObject(this.getEquipmentTypeId(), true)
 					: this.getEquipment().getType();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
@@ -455,7 +455,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public KIS getKis() {
 		try {
-			return (KIS) StorableObjectPool.getStorableObject(this.getKisId(), true);
+			return StorableObjectPool.getStorableObject(this.getKisId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -501,7 +501,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SchemeElement getParentSchemeElement() {
 		try {
-			return (SchemeElement) StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -533,7 +533,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SchemeImageResource getSchemeCell() {
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
+			return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -615,7 +615,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SiteNode getSiteNode() {
 		try {
-			return (SiteNode) StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
+			return StorableObjectPool.getStorableObject(this.getSiteNodeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -635,7 +635,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public BitmapImageResource getSymbol() {
 		try {
-			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
+			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -682,7 +682,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	 */
 	public SchemeImageResource getUgoCell() {
 		try {
-			return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
+			return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

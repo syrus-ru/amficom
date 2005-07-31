@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.63 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemePath.java,v 1.64 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.64 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -256,7 +256,7 @@ public final class SchemePath extends StorableObject
 	 */
 	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
 		try {
-			return (SchemeMonitoringSolution) StorableObjectPool.getStorableObject(this.getParentSchemeMonitoringSolutionId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeMonitoringSolutionId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -309,7 +309,7 @@ public final class SchemePath extends StorableObject
 	 */
 	public TransmissionPath getTransmissionPath() {
 		try {
-			return (TransmissionPath) StorableObjectPool.getStorableObject(this.getTransmissionPathId(), true);
+			return StorableObjectPool.getStorableObject(this.getTransmissionPathId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

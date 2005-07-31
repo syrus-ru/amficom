@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.56 2005/07/31 17:08:10 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.57 2005/07/31 19:11:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/31 19:11:08 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -224,7 +224,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public CableThreadType getCableThreadType() {
 		try {
-			return (CableThreadType) StorableObjectPool.getStorableObject(this.getCableThreadTypeId(), true);
+			return StorableObjectPool.getStorableObject(this.getCableThreadTypeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -286,7 +286,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public Link getLink() {
 		try {
-			return (Link) StorableObjectPool.getStorableObject(this.getLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -313,7 +313,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public SchemeCableLink getParentSchemeCableLink() {
 		try {
-			return (SchemeCableLink) StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeCableLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -355,7 +355,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public SchemePort getSourceSchemePort() {
 		try {
-			return (SchemePort) StorableObjectPool.getStorableObject(this.getSourceSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getSourceSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -376,7 +376,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	public SchemePort getTargetSchemePort() {
 		try {
-			return (SchemePort) StorableObjectPool.getStorableObject(this.getTargetSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getTargetSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

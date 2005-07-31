@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.53 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.54 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.54 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -346,7 +346,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 */
 	public Scheme getParentScheme() {
 		try {
-			return (Scheme) StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;

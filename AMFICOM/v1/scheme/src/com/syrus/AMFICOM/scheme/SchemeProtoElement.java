@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.66 2005/07/31 17:08:10 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.67 2005/07/31 19:11:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.67 $, $Date: 2005/07/31 19:11:07 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -567,7 +567,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public EquipmentType getEquipmentType() {
 		try {
-			return (EquipmentType) StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
+			return StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -648,7 +648,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public SchemeProtoElement getParentSchemeProtoElement() {
 		try {
-			return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoElementId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -677,7 +677,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public SchemeProtoGroup getParentSchemeProtoGroup() {
 		try {
-			return (SchemeProtoGroup) StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemeProtoGroupId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -710,7 +710,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws ApplicationException
 	 */
 	private SchemeImageResource getSchemeCell0() throws ApplicationException {
-		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
+		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
 	/**
@@ -774,7 +774,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public BitmapImageResource getSymbol() {
 		try {
-			return (BitmapImageResource) StorableObjectPool.getStorableObject(this.getSymbolId(), true);
+			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -831,7 +831,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws ApplicationException
 	 */
 	private SchemeImageResource getUgoCell0() throws ApplicationException {
-		return (SchemeImageResource) StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
+		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
 	/**

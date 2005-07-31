@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.56 2005/07/28 17:42:35 bass Exp $
+ * $Id: PathElement.java,v 1.57 2005/07/31 19:11:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.57 $, $Date: 2005/07/31 19:11:08 $
  * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -514,7 +514,7 @@ public final class PathElement extends StorableObject
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getEndAbstractSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getEndAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -546,7 +546,7 @@ public final class PathElement extends StorableObject
 	 */
 	public SchemePath getParentPathOwner() {
 		try {
-			return (SchemePath) StorableObjectPool.getStorableObject(this.getParentSchemePathId(), true);
+			return StorableObjectPool.getStorableObject(this.getParentSchemePathId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -577,7 +577,7 @@ public final class PathElement extends StorableObject
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 
 		try {
-			return (SchemeCableThread) StorableObjectPool.getStorableObject(this.getSchemeCableThreadId(), true);
+			return StorableObjectPool.getStorableObject(this.getSchemeCableThreadId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -617,7 +617,7 @@ public final class PathElement extends StorableObject
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 
 		try {
-			return (SchemeLink) StorableObjectPool.getStorableObject(this.getSchemeLinkId(), true);
+			return StorableObjectPool.getStorableObject(this.getSchemeLinkId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -667,7 +667,7 @@ public final class PathElement extends StorableObject
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
 
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.getStartAbstractSchemePortId(), true);
+			return StorableObjectPool.getStorableObject(this.getStartAbstractSchemePortId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
