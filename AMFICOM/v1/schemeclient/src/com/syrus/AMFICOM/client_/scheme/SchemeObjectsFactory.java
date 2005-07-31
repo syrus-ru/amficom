@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.14 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.15 2005/07/31 19:25:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/24 18:13:40 $
+ * @version $Revision: 1.15 $, $Date: 2005/07/31 19:25:52 $
  * @module schemeclient_v1
  */
 
@@ -172,10 +172,10 @@ public class SchemeObjectsFactory {
 		schemeElement.setEquipment(eq);
 		
 		Identifier equipmentId = eq.getId();
-		for (SchemePort sp : schemeElement.getSchemePorts()) {
+		for (SchemePort sp : schemeElement.getSchemePortsRecursively()) {
 			createPort(sp, equipmentId);
 		}
-		for (SchemeCablePort sp : schemeElement.getSchemeCablePorts()) {
+		for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively()) {
 			createPort(sp, equipmentId);
 		}
 		for (SchemeLink sl : schemeElement.getSchemeLinks()) {

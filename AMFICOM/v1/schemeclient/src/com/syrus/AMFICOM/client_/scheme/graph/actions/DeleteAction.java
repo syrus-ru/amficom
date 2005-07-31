@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.6 2005/07/11 12:31:38 stas Exp $
+ * $Id: DeleteAction.java,v 1.7 2005/07/31 19:25:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/07/31 19:25:52 $
  * @module schemeclient_v1
  */
 
@@ -187,10 +187,10 @@ public class DeleteAction extends AbstractAction {
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
 				this.objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
-			for (Iterator it = element.getSchemePorts().iterator(); it.hasNext();) {
+			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
 				this.objectsToDelete.add(((SchemePort)it.next()).getId());
 			}
-			for (Iterator it = element.getSchemeCablePorts().iterator(); it.hasNext();) {
+			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
 				this.objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {

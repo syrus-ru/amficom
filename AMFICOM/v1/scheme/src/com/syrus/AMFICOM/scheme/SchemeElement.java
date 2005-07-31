@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.60 2005/07/31 19:11:07 bass Exp $
+ * $Id: SchemeElement.java,v 1.61 2005/07/31 19:25:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.61 $, $Date: 2005/07/31 19:25:53 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -1100,7 +1100,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
 	}
 
-	public Set<SchemeCablePort> getSchemeCablePorts() {
+	public Set<SchemeCablePort> getSchemeCablePortsRecursively() {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
 		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
 			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts());
@@ -1108,7 +1108,7 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
-	public Set<SchemePort> getSchemePorts() {
+	public Set<SchemePort> getSchemePortsRecursively() {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
 		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
 			schemePorts.addAll(schemeDevice.getSchemePorts());

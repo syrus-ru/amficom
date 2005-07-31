@@ -339,7 +339,7 @@ public class PathBuilder
 				return null;
 			}
 
-			for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
+			for (Iterator it = se.getSchemePortsRecursively().iterator(); it.hasNext();)
 			{
 				SchemePort p = (SchemePort)it.next();
 				final MeasurementPort measurementPort = p.getMeasurementPort();
@@ -381,7 +381,7 @@ public class PathBuilder
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (pe.getEndAbstractSchemePort() != null)
 				{
-					for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemePortsRecursively().iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
 						if (port.equals(pe.getEndAbstractSchemePort()))
@@ -389,7 +389,7 @@ public class PathBuilder
 					}
 				} else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
-					for (Iterator it = se.getSchemePorts().iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemePortsRecursively().iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
 						if (port.equals(link.getSourceAbstractSchemePort()) ||
@@ -441,7 +441,7 @@ public class PathBuilder
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (pe.getEndAbstractSchemePort() != null)
 				{
-					for (Iterator it = se.getSchemeCablePorts().iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemeCablePortsRecursively().iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
 						if (port.equals(pe.getEndAbstractSchemePort()))
@@ -455,7 +455,7 @@ public class PathBuilder
 					}
 				} else //в противном случае ищем по общему порту предыдущего эл-та и линка
 				{
-					for (Iterator it = se.getSchemeCablePorts().iterator(); it.hasNext();)
+					for (Iterator it = se.getSchemeCablePortsRecursively().iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
 						if (port.equals(link.getSourceAbstractSchemePort()) ||

@@ -513,7 +513,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private boolean startsAt(
 			final SchemeCableLink schemeCableLink,
 			final SchemeElement schemeElement) {
-		final Set schemeCablePorts = schemeElement.getSchemeCablePorts();
+		final Set schemeCablePorts = schemeElement.getSchemeCablePortsRecursively();
 		return schemeCablePorts.contains(schemeCableLink.getSourceAbstractSchemePort())
 			|| schemeCablePorts.contains(schemeCableLink.getTargetAbstractSchemePort());
 	}
