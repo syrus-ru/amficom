@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.4 2005/07/13 16:12:24 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.5 2005/08/01 14:52:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.administration.corba.IdlMCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -22,6 +21,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -90,10 +90,7 @@ public final class MCMSetup {
 		final IdlMCM idlMCM = retrieveIdlMCM();
 
 		/*Init database loader with retrieved from server identifier of the user, corresponding to this MCM.*/
-		Identifier id = new Identifier(idlMCM.userId);
-		DatabaseObjectLoader.init(id);
-
-		id = new Identifier(idlMCM.creatorId);
+		Identifier id = new Identifier(idlMCM.creatorId);
 		StorableObjectPool.getStorableObject(id, true);
 
 		id = new Identifier(idlMCM.modifierId);
@@ -114,16 +111,16 @@ public final class MCMSetup {
 
 	private static IdlMCM retrieveIdlMCM() throws ApplicationException {
 		final MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-		final IdlMCM[] idlmcms;
+		final IdlStorableObject[] idlStorableObjects;
 		try {
-			idlmcms = mServerRef.transmitMCMs(new IdlIdentifier[] {ID.getTransferable()}, LoginManager.getSessionKeyTransferable());
+			idlStorableObjects = mServerRef.transmitStorableObjects(new IdlIdentifier[] {ID.getTransferable()}, LoginManager.getSessionKeyTransferable());
 		}
 		catch (AMFICOMRemoteException are) {
 			throw new RetrieveObjectException(are.message);
 		}
-		if (idlmcms.length < 1)
+		if (idlStorableObjects.length < 1)
 			throw new IllegalDataException("Cannot find MCM '" + ID + "'");
-		return idlmcms[0];
+		return (IdlMCM) idlStorableObjects[0];
 	}
 
 	private static void createDataTypes() throws CreateObjectException {
