@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptorParser.java,v 1.1 2005/07/28 15:33:16 max Exp $
+ * $Id: LayerDescriptorParser.java,v 1.2 2005/08/01 13:32:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.mscharserver;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,44 +23,43 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/07/28 15:33:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/01 13:32:33 $
  * @module mshserver_v1
  */
 
 public class LayerDescriptorParser {
-	
-	public List<LayerDescriptor> getLayerFiles(MapDescriptor mapDescriptor) {
-		
-		List<LayerDescriptor> layerFiles = new LinkedList<LayerDescriptor>();
-		SAXReader reader = new SAXReader();
+
+	public List<LayerDescriptor> getLayerFiles(final MapDescriptor mapDescriptor) {
+		final List<LayerDescriptor> layerFiles = new LinkedList<LayerDescriptor>();
+		final SAXReader reader = new SAXReader();
 		Document document;
-		String mapMDF = mapDescriptor.getFilePathName();
+		final String mapMDF = mapDescriptor.getFilePathName();
 		try {
 			document = reader.read(mapMDF);
 		} catch (DocumentException e) {
 			Log.errorException(e);
 			return layerFiles;
 		}
-		@SuppressWarnings("unchecked") List<Node> layerNodeList = document.selectNodes("//MapDefinitionLayer");
-		for (Node node: layerNodeList) {
-			Node layerNameNode = node.selectSingleNode("ServerQuery/Table");
-			Node layerPathNode = node.selectSingleNode("Connection/Url");
+		final List layerNodeList = document.selectNodes("//MapDefinitionLayer");
+		for (final Iterator it = layerNodeList.iterator(); it.hasNext();) {
+			final Node node = (Node) it.next();
+			final Node layerNameNode = node.selectSingleNode("ServerQuery/Table");
+			final Node layerPathNode = node.selectSingleNode("Connection/Url");
 			if (layerNameNode == null || layerPathNode == null) {
 				continue;
 			}
-			String layerName = layerNameNode.getText();
+			final String layerName = layerNameNode.getText();
 			String layerPath = layerPathNode.getText();
 			if (layerName == null || layerName.equals("") || layerPath == null || layerPath.equals("")) {
-				Log.errorMessage("LayerFilesParser.getLayerFiles() | Wrong xml content in file "
-						+ mapMDF);
+				Log.errorMessage("LayerFilesParser.getLayerFiles() | Wrong xml content in file " + mapMDF);
 				continue;
 			}
 			layerPath = layerPath.substring(4);
-			File layerFile = new File(layerPath, layerName);
-			long size = layerFile.length();
-			long modified = layerFile.lastModified();
-			layerFiles.add(new LayerDescriptor(layerName, layerFile.getPath(), size, modified));				
+			final File layerFile = new File(layerPath, layerName);
+			final long size = layerFile.length();
+			final long modified = layerFile.lastModified();
+			layerFiles.add(new LayerDescriptor(layerName, layerFile.getPath(), size, modified));
 		}
 		return layerFiles;
 	}
