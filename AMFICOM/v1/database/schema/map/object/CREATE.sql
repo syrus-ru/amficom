@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+-- $Id: CREATE.sql,v 1.4 2005/08/01 15:59:04 max Exp $
 
 @@sitenode;
 @@topologicalnode;
@@ -7,10 +7,14 @@
 @@mark;
 @@collector;
 @@collphlink;
+@@maplibrary;
 @@map;
 @@mapsitenode;
 @@maptopologicalnode;
 @@mapnodelink;
 @@mapphysicallink;
+@@mapmaplink;
+@@mapmaplibrary;
+@@mapextnodelink;
 @@mapmark;
 @@mapcollector;
