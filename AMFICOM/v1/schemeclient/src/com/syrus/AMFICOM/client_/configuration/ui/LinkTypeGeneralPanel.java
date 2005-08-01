@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.3 2005/07/11 12:31:37 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.4 2005/08/01 07:52:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
@@ -42,7 +43,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/01 07:52:27 $
  * @module schemeclient_v1
  */
 
@@ -299,7 +300,7 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 		
 		try {
-			StorableObjectPool.flush(this.linkType.getId(), true);
+			StorableObjectPool.flush(this.linkType.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

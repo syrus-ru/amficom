@@ -1,5 +1,5 @@
 /*
- * $Id: TopLevelCableLink.java,v 1.2 2005/07/11 12:31:39 stas Exp $
+ * $Id: TopLevelCableLink.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,13 @@ import com.jgraph.graph.Port;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class TopLevelCableLink extends DefaultEdge {
+	private static final long serialVersionUID = 3904681565761255735L;
+
 	public static TopLevelCableLink createInstance(Object userObject,
 			Port firstPort, Port port, Point p, Point p2, Map viewMap,
 			ConnectionSet cs) {

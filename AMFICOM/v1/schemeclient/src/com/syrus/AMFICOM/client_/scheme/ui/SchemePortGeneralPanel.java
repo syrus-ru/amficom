@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.14 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.15 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,12 +44,15 @@ import com.syrus.AMFICOM.configuration.MeasurementPortTypeWrapper;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -58,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -368,16 +371,15 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				parent = null;
 			}
-			// FIXME change EquivalentCondition for TypicalCondition
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
+			TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE, 0, OperationSort.OPERATION_EQUALS,ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			condition = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
+			EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 			try {
-				cmbMpTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbMpTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition2, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

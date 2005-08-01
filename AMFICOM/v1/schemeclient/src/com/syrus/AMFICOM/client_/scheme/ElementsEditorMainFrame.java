@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.9 2005/07/15 13:07:57 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.10 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.WindowAdapter;
@@ -17,6 +19,7 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -49,16 +52,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class ElementsEditorMainFrame extends AbstractMainFrame {
 
-	public static final String	EDITOR_FRAME	= "editorFrame";
-	public static final String	GENERAL_PROPERIES_FRAME	= "generalFrame";
-	public static final String	CHARACTERISTIC_PROPERIES_FRAME = "characteristicFrame";
-	public static final String	ADDITIONAL_PROPERIES_FRAME = "additionalFrame";
 	public static final String	TREE_FRAME = "treeFrame";
 	
 	UIDefaults					frames;
@@ -69,25 +68,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		super(aContext, LangModelSchematics.getString("ElementsEditorTitle"),
 				new ElementsEditorMenuBar(aContext.getApplicationModel()),
 				new ElementsEditorToolBar());
-		
-		this.addComponentListener(new ComponentAdapter() {
-			/* (non-Javadoc)
-			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
-			 */
-			public void componentShown(ComponentEvent e) {
-				ElementsEditorMainFrame.this.desktopPane.setPreferredSize(ElementsEditorMainFrame.this.desktopPane.getSize());
-				ElementsEditorMainFrame.this.windowArranger.arrange();
-			}
-		});
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				ElementsEditorMainFrame.this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE,
-						ElementsEditorMainFrame.this);
-				Environment.getDispatcher()
-						.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
-				aContext.getApplicationModel().getCommand("menuExit").execute();
-			}
-		});
 	}
 
 	public ElementsEditorMainFrame() {
@@ -96,21 +76,21 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 
 	protected void initFrames() {
 		this.frames = new UIDefaults();
+		
 		this.elementsTab = new ElementsTabbedPane(aContext);
 		
-		this.frames.put(EDITOR_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
 				SchemeViewerFrame editorFrame = new SchemeViewerFrame(aContext, elementsTab);
-				editorFrame.setClosable(false);
 				editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
 				desktopPane.add(editorFrame);
 				return editorFrame;
 			}
 		});
 		
-		this.frames.put(GENERAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
 				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
@@ -120,7 +100,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			}
 		});
 
-		this.frames.put(CHARACTERISTIC_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
 				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
@@ -130,7 +110,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			}
 		});
 
-		this.frames.put(ADDITIONAL_PROPERIES_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
 				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
@@ -145,20 +125,16 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
+				treeFrame.setName(TREE_FRAME);
 				treeFrame.setIconifiable(true);
 				treeFrame.setClosable(true);
 				treeFrame.setResizable(true);
 				treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
-				treeFrame.setSize(new Dimension(100,200));
-				treeFrame.setMinimumSize(treeFrame.getSize());
-				treeFrame.setPreferredSize(treeFrame.getSize());
-
 				
 				SchemeTreeModel model = new SchemeTreeModel(ElementsEditorMainFrame.this.aContext);
-				PopulatableIconedNode root = new PopulatableIconedNode(model, "root", "Сеть");
-				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(root, aContext), new FilterPanel());
+				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), aContext), new FilterPanel());
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());
 				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
@@ -173,32 +149,57 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			public void arrange() {
 				ElementsEditorMainFrame f = (ElementsEditorMainFrame) mainframe;
 
-				int w = f.desktopPane.getSize().width;
-				int h = f.desktopPane.getSize().height;
+				Rectangle r = ElementsEditorMainFrame.this.scrollPane.getViewportBorderBounds();
+				int w = r.width + ElementsEditorMainFrame.this.scrollPane.getVerticalScrollBar().getWidth();
+				int h = r.height + ElementsEditorMainFrame.this.scrollPane.getHorizontalScrollBar().getHeight();
+				Dimension size = new Dimension(w, h);
+				ElementsEditorMainFrame.this.desktopPane.setPreferredSize(size);
+				ElementsEditorMainFrame.this.desktopPane.setSize(size);
 
-				JInternalFrame editorFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.EDITOR_FRAME);
-				JInternalFrame generalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.GENERAL_PROPERIES_FRAME);
-				JInternalFrame characteristicsFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.CHARACTERISTIC_PROPERIES_FRAME);
-				JInternalFrame additionalFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.ADDITIONAL_PROPERIES_FRAME);
-				JInternalFrame treeFrame = (JInternalFrame) f.frames.get(SchemeEditorMainFrame.TREE_FRAME);
+				JInternalFrame editorFrame = null;
+				JInternalFrame generalFrame = null;
+				JInternalFrame characteristicsFrame = null;
+				JInternalFrame additionalFrame = null;
+				JInternalFrame treeFrame = null;
 				
-				normalize(editorFrame);
-				normalize(generalFrame);
-				normalize(characteristicsFrame);
-				normalize(additionalFrame);
-				normalize(treeFrame);
-
-				editorFrame.setSize(3 * w / 5, h);
-				additionalFrame.setSize(w / 5, h / 4);
-				generalFrame.setSize(w/5, h/2);
-				characteristicsFrame.setSize(w/5, h / 4);
-				treeFrame.setSize(w / 5, h);
-
-				editorFrame.setLocation(w / 5, 0);
-				additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
-				generalFrame.setLocation(4*w/5, 0);
-				characteristicsFrame.setLocation(4*w/5, h/2);
-				treeFrame.setLocation(0, 0);
+				for (Component component : desktopPane.getComponents()) {
+					if (TREE_FRAME.equals(component.getName()))
+						treeFrame = (JInternalFrame)component;
+					else if (SchemeViewerFrame.NAME.equals(component.getName()))
+						editorFrame = (JInternalFrame)component;
+					else if (GeneralPropertiesFrame.NAME.equals(component.getName()))
+						generalFrame = (JInternalFrame)component;
+					else if (CharacteristicPropertiesFrame.NAME.equals(component.getName()))
+						characteristicsFrame = (JInternalFrame)component;
+					else if (AdditionalPropertiesFrame.NAME.equals(component.getName()))
+						additionalFrame = (JInternalFrame)component;
+				}
+				
+				if (editorFrame != null) {
+					normalize(editorFrame);
+					editorFrame.setSize(3 * w / 5, h);
+					editorFrame.setLocation(w / 5, 0);
+				}
+				if (generalFrame != null) {
+					normalize(generalFrame);
+					generalFrame.setSize(w/5, h/2);
+					generalFrame.setLocation(4*w/5, 0);
+				}
+				if (characteristicsFrame != null) {
+					normalize(characteristicsFrame);
+					characteristicsFrame.setSize(w/5, h / 4);
+					characteristicsFrame.setLocation(4*w/5, h/2);
+				}
+				if (additionalFrame != null) {
+					normalize(additionalFrame);
+					additionalFrame.setSize(w / 5, h / 4);
+					additionalFrame.setLocation(4 * w / 5, 3 * h / 4);
+				}
+				if (treeFrame != null) {
+					normalize(treeFrame);
+					treeFrame.setSize(w / 5, h);
+					treeFrame.setLocation(0, 0);
+				}
 			}
 		});
 	}
@@ -210,17 +211,15 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext,
-				elementsTab));
+		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext, elementsTab));
 		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(elementsTab));
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(this.windowArranger));
 		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
-		aModel.setCommand("menuWindowScheme", this.getLazyCommand(EDITOR_FRAME));
-		aModel.setCommand("menuWindowUgo", this.getLazyCommand(ADDITIONAL_PROPERIES_FRAME));
-		aModel.setCommand("menuWindowProps", this.getLazyCommand(CHARACTERISTIC_PROPERIES_FRAME));
-		aModel.setCommand("menuWindowList", this.getLazyCommand(GENERAL_PROPERIES_FRAME));
-		
+		aModel.setCommand("menuWindowScheme", this.getLazyCommand(SchemeViewerFrame.NAME));
+		aModel.setCommand("menuWindowUgo", this.getLazyCommand(AdditionalPropertiesFrame.NAME));
+		aModel.setCommand("menuWindowProps", this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
+		aModel.setCommand("menuWindowList", this.getLazyCommand(GeneralPropertiesFrame.NAME));
+
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
 	}
@@ -234,7 +233,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				if (this.command == null) {
 					Object object = ElementsEditorMainFrame.this.frames.get(key);
 					if (object instanceof JInternalFrame) {
-						System.out.println("init getLazyCommand for " + key);
+						Log.debugMessage("init getLazyCommand for " + key, Level.FINEST);
 						this.command = new ShowWindowCommand((JInternalFrame)object);
 					}
 				}
@@ -250,9 +249,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 
-		aModel.setEnabled("menuSession", true);
-		aModel.setEnabled("menuSessionNew", true);
-		aModel.setEnabled("menuSessionConnection", true);
 		aModel.setEnabled("menuComponent", true);
 		aModel.setEnabled("menuWindow", true);
 
@@ -265,7 +261,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		super.setSessionOpened();
 		
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.setEnabled("menuWindowArrange", true);
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
@@ -276,19 +271,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuComponentSave", true);
 		
 		aModel.fireModelChanged("");
-
-		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
-		editorFrame.setVisible(true);
-		JInternalFrame addFrame = (JInternalFrame)this.frames.get(ADDITIONAL_PROPERIES_FRAME);
-		addFrame.setVisible(true);
-		JInternalFrame generalFrame = (JInternalFrame)this.frames.get(GENERAL_PROPERIES_FRAME);
-		generalFrame.setVisible(true);
-		JInternalFrame charFrame = (JInternalFrame)this.frames.get(CHARACTERISTIC_PROPERIES_FRAME);
-		charFrame.setVisible(true);
-		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
-		treeFrame.setVisible(true);
-		
-		new ComponentNewCommand(aContext, elementsTab).execute();
 	}
 
 	public void setSessionClosed() {
@@ -296,28 +278,23 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuWindowTree", false);
 		aModel.setEnabled("menuWindowScheme", false);
-		aModel.setEnabled("menuWindowCatalog", false);
 		aModel.setEnabled("menuWindowUgo", false);
 		aModel.setEnabled("menuWindowProps", false);
 		aModel.setEnabled("menuWindowList", false);
 
 		aModel.fireModelChanged("");
 
-		JInternalFrame editorFrame = (JInternalFrame)this.frames.get(EDITOR_FRAME);
-		editorFrame.setVisible(false);
-		JInternalFrame addFrame = (JInternalFrame)this.frames.get(ADDITIONAL_PROPERIES_FRAME);
-		addFrame.setVisible(false);
-		JInternalFrame generalFrame = (JInternalFrame)this.frames.get(GENERAL_PROPERIES_FRAME);
-		generalFrame.setVisible(false);
-		JInternalFrame charFrame = (JInternalFrame)this.frames.get(CHARACTERISTIC_PROPERIES_FRAME);
-		charFrame.setVisible(false);
-		JInternalFrame treeFrame = (JInternalFrame)this.frames.get(TREE_FRAME);
-		treeFrame.setVisible(false);
+		setFramesVisible(false);
 	}
-//
-//	private boolean hasUnsavedChanges() {
-//		elementsTab.getP
-//		
-//		return false;
-//	}
+
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			if (!elementsTab.removeAllPanels())
+				return;
+			dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
+			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
+			ElementsEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+		}
+		super.processWindowEvent(e);
+	}
 }

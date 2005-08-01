@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.3 2005/07/20 11:12:53 stas Exp $
+ * $Id: DeviceGroup.java,v 1.4 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/20 11:12:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DeviceGroup extends DefaultGraphCell {
+	private static final long serialVersionUID = 3256445819543369017L;
+
 	public static final int PROTO_ELEMENT = 0;
 	public static final int SCHEME_ELEMENT = 1;
 	

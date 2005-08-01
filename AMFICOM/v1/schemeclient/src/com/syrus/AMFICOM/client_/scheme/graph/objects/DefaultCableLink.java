@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.5 2005/07/20 11:12:53 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.6 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,17 +25,19 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DefaultCableLink extends DefaultEdge {
+	private static final long serialVersionUID = 3618420414867519024L;
+
 	private Identifier schemeCablelinkId;
 
 	protected Point[] routed;
@@ -105,7 +107,7 @@ public class DefaultCableLink extends DefaultEdge {
 	}
 
 	public class LinkRouting implements Edge.Routing {
-		private static final long serialVersionUID = 01L;
+		private static final long serialVersionUID = 3618420414867519024L;
 
 		public void route(EdgeView edge, java.util.List points) {
 			DefaultCableLink cell = (DefaultCableLink) edge.getCell();
@@ -211,10 +213,8 @@ public class DefaultCableLink extends DefaultEdge {
 	}
 
 	public SchemeCableLink getSchemeCableLink() {
-		if (schemeCablelinkId == null)
-			return null;
 		try {
-			return (SchemeCableLink) SchemeStorableObjectPool.getStorableObject(schemeCablelinkId, true);
+			return (SchemeCableLink) StorableObjectPool.getStorableObject(schemeCablelinkId, true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 			return null;

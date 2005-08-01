@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.9 2005/07/19 06:54:18 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.10 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -53,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/07/19 06:54:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -71,9 +73,11 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
 	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
-	JTextField tfOpticalText = new JTextField();
+	JFormattedTextField tfOpticalText = new JFormattedTextField(NumberFormat.getNumberInstance());
+	JLabel lbM2Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JTextField tfPhysicalText = new JTextField();
+	JFormattedTextField tfPhysicalText = new JFormattedTextField(NumberFormat.getNumberInstance());
+	JLabel lbM1Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
 	JTextField tfInvNumberText = new JTextField();
@@ -217,7 +221,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		
 		gbcPanel2.gridx = 5;
 		gbcPanel2.gridy = 2;
-		gbcPanel2.gridwidth = 6;
+		gbcPanel2.gridwidth = 5;
 		gbcPanel2.gridheight = 1;
 		gbcPanel2.fill = GridBagConstraints.BOTH;
 		gbcPanel2.weightx = 1;
@@ -225,6 +229,17 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints( tfOpticalText, gbcPanel2 );
 		pnGeneralPanel.add( tfOpticalText );
+		
+		gbcPanel2.gridx = 10;
+		gbcPanel2.gridy = 2;
+		gbcPanel2.gridwidth = 1;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbM1Label, gbcPanel2 );
+		pnGeneralPanel.add( lbM1Label );
 		
 		gbcPanel2.gridx = 2;
 		gbcPanel2.gridy = 3;
@@ -239,7 +254,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		
 		gbcPanel2.gridx = 5;
 		gbcPanel2.gridy = 3;
-		gbcPanel2.gridwidth = 6;
+		gbcPanel2.gridwidth = 5;
 		gbcPanel2.gridheight = 1;
 		gbcPanel2.fill = GridBagConstraints.BOTH;
 		gbcPanel2.weightx = 1;
@@ -247,6 +262,17 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel2.anchor = GridBagConstraints.NORTH;
 		gbPanel2.setConstraints( tfPhysicalText, gbcPanel2 );
 		pnGeneralPanel.add( tfPhysicalText );
+		
+		gbcPanel2.gridx = 10;
+		gbcPanel2.gridy = 3;
+		gbcPanel2.gridwidth = 1;
+		gbcPanel2.gridheight = 1;
+		gbcPanel2.fill = GridBagConstraints.BOTH;
+		gbcPanel2.weightx = 0;
+		gbcPanel2.weighty = 0;
+		gbcPanel2.anchor = GridBagConstraints.NORTH;
+		gbPanel2.setConstraints( lbM2Label, gbcPanel2 );
+		pnGeneralPanel.add( lbM2Label );
 		
 		gbcPanel2.gridx = 0;
 		gbcPanel2.gridy = 4;
@@ -489,16 +515,8 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 			schemeLink.setName(this.tfNameText.getText());
 			schemeLink.setDescription(this.taDescrArea.getText());
 			schemeLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
-			try {
-				schemeLink.setOpticalLength(Double.parseDouble(tfOpticalText.getText()));
-			} catch (NumberFormatException e) {
-				schemeLink.setOpticalLength(0);
-			}
-			try {
-				schemeLink.setPhysicalLength(Double.parseDouble(tfPhysicalText.getText()));
-			} catch (NumberFormatException e1) {
-				schemeLink.setPhysicalLength(0);
-			}
+			schemeLink.setOpticalLength((Double)(tfOpticalText.getValue()));
+			schemeLink.setPhysicalLength((Double)(tfPhysicalText.getValue()));
 
 			Link link = schemeLink.getAbstractLink();
 			if (cbLinkBox.isSelected()) {

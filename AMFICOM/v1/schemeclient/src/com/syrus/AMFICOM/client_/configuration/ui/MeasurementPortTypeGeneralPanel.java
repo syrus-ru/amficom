@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.17 2005/07/11 12:31:37 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.18 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -317,7 +318,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			}
 		}
 		try {
-			StorableObjectPool.flush(this.type.getId(), true);
+			StorableObjectPool.flush(this.type.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

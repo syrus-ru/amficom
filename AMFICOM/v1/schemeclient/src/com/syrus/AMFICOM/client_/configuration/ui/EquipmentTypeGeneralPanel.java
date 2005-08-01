@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.8 2005/07/19 06:49:44 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.9 2005/08/01 07:52:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/19 06:49:44 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:27 $
  * @module schemeclient_v1
  */
 
@@ -321,7 +322,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[tfCodenameCombo.getSelectedIndex()]);
 		
 		try {
-			StorableObjectPool.flush(eqt.getId(), true);
+			StorableObjectPool.flush(eqt.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

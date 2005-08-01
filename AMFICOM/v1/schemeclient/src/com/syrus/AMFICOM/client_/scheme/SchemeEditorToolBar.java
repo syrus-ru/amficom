@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorToolBar.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeEditorToolBar.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -59,20 +59,10 @@ public class SchemeEditorToolBar extends AbstractMainToolBar {
 		schemeLoad.setName("menuSchemeLoad");
 		schemeLoad.addActionListener(super.actionListener);
 
-		final JButton catalog = new JButton();
-		catalog.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/catalog.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		catalog.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		catalog.setToolTipText(LangModelSchematics.getString("menuInsertToCatalog"));
-		catalog.setName("menuInsertToCatalog");
-		catalog.addActionListener(super.actionListener);
-
 		addSeparator();
 		add(schemeNew);
 		add(schemeLoad);
 		add(schemeSave);
-		addSeparator();
-		add(catalog);
 		
 		addApplicationModelListener(new ApplicationModelListener() {
 			public void modelChanged(String e) {
@@ -88,8 +78,6 @@ public class SchemeEditorToolBar extends AbstractMainToolBar {
 				schemeSave.setEnabled(aModel.isEnabled("menuSchemeSave"));
 				schemeLoad.setVisible(aModel.isVisible("menuSchemeLoad"));
 				schemeLoad.setEnabled(aModel.isEnabled("menuSchemeLoad"));
-				catalog.setVisible(aModel.isVisible("menuInsertToCatalog"));
-				catalog.setEnabled(aModel.isEnabled("menuInsertToCatalog"));
 			}
 		});
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.8 2005/07/11 12:31:38 stas Exp $
+ * $Id: UgoPanel.java,v 1.9 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -214,100 +214,15 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		}
 	}
 
-	protected Map insertCell(List serialized, Point p, boolean clone) {
+	protected Map<DefaultGraphCell, DefaultGraphCell> insertCell(List serialized, Point p, boolean clone) {
 		if (serialized != null) {
 			if (clone) {
-				Map clones = this.graph.copyFromArchivedState(serialized, p);
-				assignClonedIds(clones.values().toArray());
+				Map<DefaultGraphCell, DefaultGraphCell> clones = this.graph.copyFromArchivedState(serialized, p);
 				return clones;
 			}
 			return this.graph.setFromArchivedState(serialized);
 		}
 		return null;
-	}
-
-	public static void assignClonedIds(Object[] cells) {
-		for (int i = 0; i < cells.length; i++) {
-			Object cloned_cell = cells[i];
-			if (cloned_cell instanceof DeviceGroup) {
-				DeviceGroup dev = (DeviceGroup)cloned_cell;
-				Identifier or_id = dev.getElementId();
-				
-				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
-					Identifier new_id = (Identifier) Pool.get("clonedids", or_id.getIdentifierString());
-					if (new_id != null) {
-						dev.setProtoElementId(new_id);
-					} else {
-						new_id = (Identifier) Pool.get("proto2schemeids", or_id.getIdentifierString());
-						if (new_id != null)
-							dev.setSchemeElementId(new_id);
-					}
-					
-				} else {
-					Identifier new_id = (Identifier) Pool.get("clonedids", or_id.getIdentifierString());
-					if (new_id != null)
-						dev.setSchemeElementId(new_id);
-				}
-			} else if (cloned_cell instanceof DeviceCell) {
-				Identifier c_id = (Identifier) Pool.get("clonedids",
-						((DeviceCell) cloned_cell).getSchemeDeviceId()
-								.getIdentifierString());
-				if (c_id == null) {
-					// SchemeDevice dev = ((DeviceCell)cells[i]).getSchemeDevice();
-					// SchemeDevice c_dev =
-					// (SchemeDevice)dev.clone(aContext.getDataSourceInterface());
-					c_id = ((DeviceCell) cloned_cell).getSchemeDeviceId();
-				}
-				((DeviceCell) cloned_cell).setSchemeDeviceId(c_id);
-			} else if (cloned_cell instanceof PortCell) {
-				Identifier id = ((PortCell) cloned_cell).getSchemePortId();
-				Identifier new_id = (Identifier) Pool.get("clonedids", id
-						.getIdentifierString());
-				if (new_id != null)
-					((PortCell) cloned_cell).setSchemePortId(new_id);
-			} else if (cloned_cell instanceof CablePortCell) {
-				Identifier id = ((CablePortCell) cloned_cell).getSchemeCablePortId();
-				Identifier new_id = (Identifier) Pool.get("clonedids", id
-						.getIdentifierString());
-				if (new_id != null)
-					((CablePortCell) cloned_cell).setSchemeCablePortId(new_id);
-			} else if (cloned_cell instanceof DefaultCableLink) {
-				Identifier id = ((DefaultCableLink) cloned_cell).getSchemeCableLinkId();
-				Identifier new_id = (Identifier) Pool.get("clonedids", id
-						.getIdentifierString());
-				if (new_id != null)
-					((DefaultCableLink) cloned_cell).setSchemeCableLinkId(new_id);
-
-				// ((DefaultCableLink)cloned_cell).setSchemePathId("");
-				// String path_id = ((DefaultCableLink)cloned_cell).getSchemePathId();
-				// String new_path_id = (String)Pool.get("clonedids", id);
-				// if (new_path_id != null)
-				// ((DefaultCableLink)cloned_cell).setSchemePathId(new_path_id);
-			} else if (cloned_cell instanceof DefaultLink) {
-				Identifier id = ((DefaultLink) cloned_cell).getSchemeLinkId();
-				Identifier new_id = (Identifier) Pool.get("clonedids", id
-						.getIdentifierString());
-				if (new_id != null)
-					((DefaultLink) cloned_cell).setSchemeLinkId(new_id);
-
-				// ((DefaultLink)cloned_cell).setSchemePathId("");
-				// String path_id = ((DefaultLink)cloned_cell).getSchemePathId();
-				// String new_path_id = (String)Pool.get("clonedids", id);
-				// if (new_path_id != null)
-				// ((DefaultLink)cloned_cell).setSchemePathId(new_path_id);
-			} else if (cloned_cell instanceof BlockPortCell) {
-				BlockPortCell bpc = (BlockPortCell) cloned_cell;
-				Identifier p_id = (Identifier) Pool.get("clonedids", bpc
-						.getAbstractSchemePortId().getIdentifierString());
-				if (bpc.isCablePort()) {
-					if (p_id != null)
-						bpc.setAbstractSchemePortId(p_id);
-				} else {
-					if (p_id != null)
-						bpc.setAbstractSchemePortId(p_id);
-				}
-			}
-		}
 	}
 
 	public int print(Graphics g, PageFormat pf, int pi) {

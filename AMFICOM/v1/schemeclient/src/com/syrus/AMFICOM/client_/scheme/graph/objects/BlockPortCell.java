@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.4 2005/07/20 11:12:53 stas Exp $
+ * $Id: BlockPortCell.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,18 +21,20 @@ import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/20 11:12:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class BlockPortCell  extends DefaultGraphCell {
+	private static final long serialVersionUID = 4051325651938522933L;
+
 	private Identifier schemePortId;
 	private boolean isCablePort = false;
 	
@@ -72,12 +74,11 @@ public class BlockPortCell  extends DefaultGraphCell {
 
 	public AbstractSchemePort getAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) SchemeStorableObjectPool.getStorableObject(
-					schemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(schemePortId, true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
+			return null;
 		}
-		return null;
 	}
 
 	public Identifier getAbstractSchemePortId() {

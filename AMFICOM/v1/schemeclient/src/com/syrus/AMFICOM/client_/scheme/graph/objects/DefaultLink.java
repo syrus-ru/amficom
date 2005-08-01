@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.5 2005/07/20 11:12:53 stas Exp $
+ * $Id: DefaultLink.java,v 1.6 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,17 +22,21 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/20 11:12:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DefaultLink extends DefaultEdge {
+	private static final long serialVersionUID = 4050203024863737140L;
+
 	private Identifier scheme_link_id;
 
 	protected Point[] routed;
@@ -210,11 +214,10 @@ public class DefaultLink extends DefaultEdge {
 	}
 
 	public SchemeLink getSchemeLink() {
-		if (scheme_link_id == null)
-			return null;
 		try {
-			return (SchemeLink) SchemeStorableObjectPool.getStorableObject(scheme_link_id, true);
-		} catch (Exception ex) {
+			return (SchemeLink) StorableObjectPool.getStorableObject(scheme_link_id, true);
+		} catch (ApplicationException ex) {
+			Log.errorException(ex);
 			return null;
 		}
 	}

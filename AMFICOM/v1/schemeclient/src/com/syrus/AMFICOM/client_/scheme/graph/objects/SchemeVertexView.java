@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeVertexView.java,v 1.2 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeVertexView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class SchemeVertexView extends VertexView {
+	private static final long serialVersionUID = 3617569397179494963L;
 
 	public SchemeVertexView(Object v, SchemeGraph graph, CellMapper cm) {
 		super(v, graph, cm);

@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.7 2005/07/31 19:25:52 bass Exp $
+ * $Id: DeleteAction.java,v 1.8 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,15 +47,15 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/31 19:25:52 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DeleteAction extends AbstractAction {
 	UgoTabbedPane pane;
-	Set<DefaultGraphCell> cellsToDelete;
-	Set<Identifier> objectsToDelete;
+	private static Set<DefaultGraphCell> cellsToDelete = new HashSet<DefaultGraphCell>();
+	private static Set<Identifier> objectsToDelete = new HashSet<Identifier>();
 	
 	public DeleteAction(UgoTabbedPane pane) {
 		super(Constants.DELETE);
@@ -66,8 +66,6 @@ public class DeleteAction extends AbstractAction {
 		SchemeGraph graph = pane.getGraph();
 		
 		Object[] cells = graph.getDescendants(graph.getSelectionCells());
-		this.cellsToDelete = new HashSet<DefaultGraphCell>();
-		this.objectsToDelete = new HashSet<Identifier>();
 		if (cells != null) {
 			if (graph.isTopLevelSchemeMode()) {
 				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
@@ -83,24 +81,38 @@ public class DeleteAction extends AbstractAction {
 						"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 				if (ret != JOptionPane.YES_OPTION)
 					return;
-					
-				for (int i = 0; i < cells.length; i++) {
-					deleteCell(graph, (DefaultGraphCell)cells[i]);
-				}
 			}
-
-			StorableObjectPool.delete(objectsToDelete);
-			objectsToDelete.clear();
+			delete(graph, cells);
 			
-			cells = DefaultGraphModel.getDescendants(graph.getModel(), this.cellsToDelete.toArray()).toArray();
-			this.cellsToDelete.clear();
-			graph.getModel().remove(cells);
 			graph.selectionNotify();
 			pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
 		}
 	}
 	
-	void deleteCell(SchemeGraph graph, DefaultGraphCell cell) {
+	public static void delete(SchemeGraph graph, Object cell) {
+		deleteCell(graph, (DefaultGraphCell)cell);
+
+		StorableObjectPool.delete(objectsToDelete);
+		objectsToDelete.clear();
+		
+		Object[] cells = DefaultGraphModel.getDescendants(graph.getModel(), cellsToDelete.toArray()).toArray();
+		cellsToDelete.clear();
+		graph.getModel().remove(cells);
+	}
+	
+	public static void delete(SchemeGraph graph, Object[] cells) {
+		for (int i = 0; i < cells.length; i++) {
+			deleteCell(graph, (DefaultGraphCell)cells[i]);
+		}
+		StorableObjectPool.delete(objectsToDelete);
+		objectsToDelete.clear();
+		
+		cells = DefaultGraphModel.getDescendants(graph.getModel(), cellsToDelete.toArray()).toArray();
+		cellsToDelete.clear();
+		graph.getModel().remove(cells);
+	}
+	
+	static void deleteCell(SchemeGraph graph, DefaultGraphCell cell) {
 		if (cell instanceof DeviceGroup) {
 			deleteDeviceGroup((DeviceGroup)cell);
 		}
@@ -133,7 +145,7 @@ public class DeleteAction extends AbstractAction {
 					deleteCablePort(graph, (CablePortCell)p);
 				}
 			} else {
-				this.cellsToDelete.add(edge);
+				cellsToDelete.add(edge);
 				deleteConnections(graph, edge, (DefaultPort) edge.getSource());
 			}
 			if (edge.getTarget() instanceof DefaultPort) {
@@ -145,16 +157,16 @@ public class DeleteAction extends AbstractAction {
 					deleteCablePort(graph, (CablePortCell)p);
 				}
 			} else {
-				this.cellsToDelete.add(edge);
+				cellsToDelete.add(edge);
 				deleteConnections(graph, edge, (DefaultPort) edge.getTarget());
 			}
 		} else {
-			this.cellsToDelete.add(cell);
+			cellsToDelete.add(cell);
 		}
 	}
 		
-	void deleteDeviceCell(SchemeGraph graph, DeviceCell cell) {
-		this.cellsToDelete.add(cell);
+	static void deleteDeviceCell(SchemeGraph graph, DeviceCell cell) {
+		cellsToDelete.add(cell);
 		
 		for (Enumeration en = cell.children(); en.hasMoreElements();) {
 			DefaultPort port = (DefaultPort)en.nextElement();
@@ -177,42 +189,42 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
-	void deleteDeviceGroup(DeviceGroup group) {
-		this.cellsToDelete.add(group);
+	static void deleteDeviceGroup(DeviceGroup group) {
+		cellsToDelete.add(group);
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			SchemeElement element = group.getSchemeElement();
 			if(element.getEquipment() != null)
-				this.objectsToDelete.add(element.getEquipment().getId());
-			this.objectsToDelete.add(element.getId());
+				objectsToDelete.add(element.getEquipment().getId());
+			objectsToDelete.add(element.getId());
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeLink)it.next()).getId());
+				objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemePort)it.next()).getId());
+				objectsToDelete.add(((SchemePort)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeDevice)it.next()).getId());
+				objectsToDelete.add(((SchemeDevice)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeElement)it.next()).getId());
+				objectsToDelete.add(((SchemeElement)it.next()).getId());
 			}
 		} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
 			SchemeProtoElement element = group.getProtoElement();
-			this.objectsToDelete.add(element.getId());
+			objectsToDelete.add(element.getId());
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeLink)it.next()).getId());
+				objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemePort)it.next()).getId());
+				objectsToDelete.add(((SchemePort)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
 			}
 			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-				this.objectsToDelete.add(((SchemeDevice)it.next()).getId());
+				objectsToDelete.add(((SchemeDevice)it.next()).getId());
 			}
 			// FIXME can't check childs while object itself not saved
 //			for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
@@ -221,8 +233,8 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
-	void deleteCableLink(SchemeGraph graph, DefaultCableLink cell) {
-		this.cellsToDelete.add(cell);
+	static void deleteCableLink(SchemeGraph graph, DefaultCableLink cell) {
+		cellsToDelete.add(cell);
 		SchemeCableLink link = cell.getSchemeCableLink();
 		
 		if (cell.getSource() != null) {
@@ -238,13 +250,13 @@ public class DeleteAction extends AbstractAction {
 			}
 		}
 		if (link.getAbstractLink() != null) {
-			this.objectsToDelete.add(link.getAbstractLink().getId());
+			objectsToDelete.add(link.getAbstractLink().getId());
 		}
-		this.objectsToDelete.add(link.getId());
+		objectsToDelete.add(link.getId());
 	}
 	
-	void deleteLink(SchemeGraph graph, DefaultLink cell) {
-		this.cellsToDelete.add(cell);
+	static void deleteLink(SchemeGraph graph, DefaultLink cell) {
+		cellsToDelete.add(cell);
 		SchemeLink link = cell.getSchemeLink();
 
 		if (cell.getSource() != null) {
@@ -261,26 +273,26 @@ public class DeleteAction extends AbstractAction {
 		}
 
 		if (link.getAbstractLink() != null) {
-			this.objectsToDelete.add(link.getAbstractLink().getId());
+			objectsToDelete.add(link.getAbstractLink().getId());
 		}
-		this.objectsToDelete.add(link.getId());
+		objectsToDelete.add(link.getId());
 	}
 	
-	void deleteBlockPortCell(SchemeGraph graph, BlockPortCell cell) {
-		this.cellsToDelete.add(cell);
+	static void deleteBlockPortCell(SchemeGraph graph, BlockPortCell cell) {
+		cellsToDelete.add(cell);
 		for (Enumeration en = cell.children(); en.hasMoreElements();) {
 			Port p = (Port) en.nextElement();
 			for (Iterator it = p.edges(); it.hasNext();) {
 				DefaultEdge edge = (DefaultEdge) it.next();
 				deleteConnections(graph, edge, (DefaultPort) edge.getSource());
 				deleteConnections(graph, edge, (DefaultPort) edge.getTarget());
-				this.cellsToDelete.add(edge);
+				cellsToDelete.add(edge);
 			}
 		}
 	}
 	
-	private void deletePort1(SchemeGraph graph, DefaultGraphCell cell) {
-		this.cellsToDelete.add(cell);
+	private static void deletePort1(SchemeGraph graph, DefaultGraphCell cell) {
+		cellsToDelete.add(cell);
 		for (Enumeration en = cell.children(); en.hasMoreElements();) {
 			Port p = (Port) en.nextElement();
 			for (Iterator it = p.edges(); it.hasNext();) {
@@ -296,7 +308,7 @@ public class DeleteAction extends AbstractAction {
 						deleteBlockPortCell(graph, (BlockPortCell)object);
 				}	else if (edge instanceof PortEdge) {
 					PortEdge portEdge = (PortEdge)edge;
-					this.cellsToDelete.add(portEdge);
+					cellsToDelete.add(portEdge);
 					deleteConnections(graph, portEdge, (DefaultPort) portEdge.getSource());
 					deleteConnections(graph, portEdge, (DefaultPort) portEdge.getTarget());	
 				} else if (edge instanceof DefaultEdge) {
@@ -308,25 +320,25 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
-	void deletePort(SchemeGraph graph, PortCell cell) {
+	static void deletePort(SchemeGraph graph, PortCell cell) {
 		SchemePort port = cell.getSchemePort();
 		if (port.getPort() != null) {
-			this.objectsToDelete.add(port.getPort().getId());
+			objectsToDelete.add(port.getPort().getId());
 		}
-		this.objectsToDelete.add(port.getId());
+		objectsToDelete.add(port.getId());
 		deletePort1(graph, cell);
 	}
 	
-	void deleteCablePort(SchemeGraph graph, CablePortCell cell) {
+	static void deleteCablePort(SchemeGraph graph, CablePortCell cell) {
 		SchemeCablePort port = cell.getSchemeCablePort();
 		if (port.getPort() != null) {
-			this.objectsToDelete.add(port.getPort().getId());
+			objectsToDelete.add(port.getPort().getId());
 		}
-		this.objectsToDelete.add(port.getId());
+		objectsToDelete.add(port.getId());
 		deletePort1(graph, cell);
 	}
 	
-	private void deleteConnections(SchemeGraph graph, DefaultEdge edge, DefaultPort port) {
+	private static void deleteConnections(SchemeGraph graph, DefaultEdge edge, DefaultPort port) {
 		if (port != null) {
 			DefaultGraphCell cell = (DefaultGraphCell) port.getParent();
 			if (cell != null) {
@@ -334,7 +346,7 @@ public class DeleteAction extends AbstractAction {
 				Iterator it = port.edges();
 				it.next();
 				if (!it.hasNext())
-					this.cellsToDelete.add(port);
+					cellsToDelete.add(port);
 			}
 		}
 	}

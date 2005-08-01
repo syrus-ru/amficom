@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.5 2005/07/11 12:31:37 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.6 2005/08/01 07:52:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,6 +62,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -73,7 +74,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:27 $
  * @module schemeclient_v1
  */
 
@@ -622,8 +623,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		}
 		
 		try {
-			StorableObjectPool.flush(this.linkType.getId(), false);
-			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, false);
+			StorableObjectPool.flush(this.linkType.getId(), LoginManager.getUserId(), false);
+			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, LoginManager.getUserId(), false);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

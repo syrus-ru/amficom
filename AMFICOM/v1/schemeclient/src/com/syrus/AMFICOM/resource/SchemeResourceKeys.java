@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.3 2005/07/15 13:07:58 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.4 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/15 13:07:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -58,10 +58,9 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String ICON_COMPONENTS = "icon.components";
 	public static final String ICON_NEW = "icon.new";
 	public static final String ICON_SAVE = "icon.save";
-	public static final String ICON_SYNCHRONIZE = "icon.synchronize";
-	
+		
 	public static final String EMPTY = ""; //$NON-NLS-1$
-	public static final String ROOT = "root"; //$NON-NLS-1$
+	public static final String ROOT = "scheme.root"; //$NON-NLS-1$
 	public static final String INPUT = "input"; //$NON-NLS-1$
 	public static final String OUTPUT = "output"; //$NON-NLS-1$
 	public static final String CONFIGURATION = "configuration"; //$NON-NLS-1$
@@ -143,6 +142,9 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	public static final String PORTTYPEKIND_SIMPLE = "port"; //$NON-NLS-1$
 	public static final String OK = "ok"; //$NON-NLS-1$
 	public static final String CANCEL = "cancel"; //$NON-NLS-1$
+	
+	public static final String METRE = "metre_short"; //$NON-NLS-1$
+	public static final String MILLIMETER = "millimetre_short"; //$NON-NLS-1$
 
 	public static final String EQUIPMENT = "equipment"; //$NON-NLS-1$
 	public static final String INSTANCE = "instance"; //$NON-NLS-1$

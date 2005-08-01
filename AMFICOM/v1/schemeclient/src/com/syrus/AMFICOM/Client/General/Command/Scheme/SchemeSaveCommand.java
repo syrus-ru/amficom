@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -14,14 +16,19 @@ import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
@@ -69,6 +76,28 @@ public class SchemeSaveCommand extends AbstractCommand {
 		{
 			SchemeElement se = res.getSchemeElement();
 
+			// add internal objects - SL, SE
+			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+			Object[] objects = graph.getRoots();
+			for (Object object : objects) {
+				if (object instanceof DefaultLink)
+					schemeLinks.add(((DefaultLink)object).getSchemeLink());
+				else if (object instanceof DeviceGroup) {
+					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
+					assert schemeElement != null;
+					if (!schemeElement.getId().equals(se.getId()))
+						schemeElements.add(schemeElement);
+				}
+			}
+			try {
+				se.setSchemeLinks(schemeLinks);
+				se.setSchemeElements(schemeElements);
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
+			
+			//	create SchemeImageResource
 			if (se.getSchemeCell() == null) {
 				try {
 					se.setSchemeCell(SchemeObjectsFactory.createSchemeImageResource());
@@ -85,6 +114,9 @@ public class SchemeSaveCommand extends AbstractCommand {
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme s = res1.getScheme();
 					if (SchemeUtils.isSchemeContainsElement(s, se)) {
+						// TODO refreshing view (ugo)
+						
+						
 						schemeTab.setGraphChanged(p.getGraph(), true);
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 								"Ёлемент " + se.getName() + " успешно сохранен в схеме " + s.getName(), 
@@ -109,6 +141,31 @@ public class SchemeSaveCommand extends AbstractCommand {
 					return;
 			}
 			
+			// add internal objects - SL, SCL, SE
+			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+			Object[] objects = graph.getRoots();
+			for (Object object : objects) {
+				if (object instanceof DefaultLink)
+					schemeLinks.add(((DefaultLink)object).getSchemeLink());
+				if (object instanceof DefaultCableLink)
+					schemeCableLinks.add(((DefaultCableLink)object).getSchemeCableLink());
+				else if (object instanceof DeviceGroup) {
+					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
+					assert schemeElement != null;
+					schemeElements.add(schemeElement);
+				}
+			}
+			try {
+				scheme.setSchemeLinks(schemeLinks);
+				scheme.setSchemeCableLinks(schemeCableLinks);
+				scheme.setSchemeElements(schemeElements);
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
+			
+			//	create SchemeImageResource
 			try {
 				SchemeImageResource schemeIr = scheme.getSchemeCell();
 				if (schemeIr == null)
@@ -116,7 +173,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-				StorableObjectPool.flush(scheme.getId(), false);
+				StorableObjectPool.flush(scheme.getId(), LoginManager.getUserId(), false);
 				schemeTab.setGraphChanged(false);
 				
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "—хема "

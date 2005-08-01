@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.2 2005/07/15 13:07:57 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -47,6 +48,10 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 	
 	public ProtoGroupTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
+	}
+	
+	public static final Object getRootObject() {
+		return SchemeResourceKeys.SCHEME_PROTO_GROUP;
 	}
 	
 	public Item getRoot() {
@@ -101,15 +106,15 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			// first add ProtoGroups (always)
 			Identifier parentId = (node.equals(root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
 			StorableObjectCondition condition1 = new LinkedIdsCondition(parentId, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
-			Collection<Item> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+			Collection<StorableObject> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 
-			final Collection<Item> children;
+			final Collection<StorableObject> children;
 			//	next add ProtoElements according to FilteredCondition
 			if (node instanceof FiltrableIconedNode) {
 				FiltrableIconedNode filtrableNode = (FiltrableIconedNode)node;
 				StorableObjectCondition condition2 = filtrableNode.getResultingCondition();
-				Collection<Item> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
-				children = new ArrayList<Item>(groups.size() + protos.size());
+				Collection<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
+				children = new ArrayList<StorableObject>(groups.size() + protos.size());
 				children.addAll(groups);
 				children.addAll(protos);
 			} else {

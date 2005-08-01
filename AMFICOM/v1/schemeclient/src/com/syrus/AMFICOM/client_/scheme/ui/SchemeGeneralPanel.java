@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.7 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.8 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -82,6 +82,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	JComboBox cmbKindCombo = new AComboBox();
 	JLabel lbDimensionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_DIMENSION));
 	JLabel lbWidthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SHORT_WIDTH));
+	JLabel lbMMLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MILLIMETER));
 	JFormattedTextField tfWidthText = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
 	JLabel lbHeightLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_SHORT_HEIGHT));
 	JFormattedTextField tfHeightText = new JFormattedTextField(new NumberFormatter(NumberFormat.getIntegerInstance()));
@@ -295,6 +296,18 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( tfHeightText, gbcGeneralPanel );
 		pnGeneralPanel.add( tfHeightText );
+		
+		gbcGeneralPanel.gridx = 9;
+		gbcGeneralPanel.gridy = 4;
+		gbcGeneralPanel.gridwidth = 1;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 0;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( lbMMLabel, gbcGeneralPanel );
+		pnGeneralPanel.add( lbMMLabel );
+		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 12;

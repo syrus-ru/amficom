@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.6 2005/07/15 13:07:57 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.7 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -18,30 +19,47 @@ import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
 
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeListener {
-	
+	static JOptionPane optionPane;
+	static JDialog dialog;
+	int result;
+		
 	public ElementsTabbedPane() {
 		super();
 	}
@@ -72,7 +90,8 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	protected JComponent createToolBar() {
-		return new ElementsToolBar(this, aContext);
+		this.toolBar = new ElementsToolBar(this, aContext);
+		return toolBar;
 	}
 	
 	public void propertyChange(PropertyChangeEvent ae) {
@@ -81,19 +100,24 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 			if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
 				
-//				proto.clone()
-				
-				openSchemeCellContainer(proto, true);
+				try {
+					SchemeProtoElement newProto = proto.clone();
+					Map<Identifier, Identifier>clonedIds = newProto.getClonedIdMap();
+					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeCellContainer(proto, true);
+					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+				} catch (CloneNotSupportedException e) {
+					Log.errorException(e);
+				}
 			}
 		}
 	}
 	
-	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
-		Map clones = Collections.EMPTY_MAP;
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		UgoPanel p = getCurrentPanel();
 		SchemeGraph graph = p.getGraph();
 //		p.getSchemeResource().setSchemeProtoElement(proto);
-		GraphActions.clearGraph(p.getGraph());
+//		GraphActions.clearGraph(p.getGraph());
 		if (schemeCellContainer.getSchemeCell() != null) {
 			clones = p.insertCell(schemeCellContainer.getSchemeCell().getData(), new Point(0, 0), doClone);
 			fixImages(graph);
@@ -102,11 +126,54 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		return clones;
 	}
 	
+	boolean showConfirmDialog(String text) {
+		if (optionPane == null) {
+			JButton okButton = new JButton(LangModelGeneral.getString("Button.OK")); //$NON-NLS-1$
+			okButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					result = JOptionPane.OK_OPTION;
+					dialog.dispose();
+				}
+			});
+			JButton cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					result = JOptionPane.CANCEL_OPTION;
+					dialog.dispose();
+				}
+			});
+			optionPane = new JOptionPane(text, JOptionPane.QUESTION_MESSAGE,
+					JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
+							cancelButton}, null);
+			
+			dialog = optionPane.createDialog(Environment.getActiveWindow(), 
+					LangModelScheme.getString("Message.confirmation.title")); //$NON-NLS-1$
+			dialog.setModal(true);
+		}
+		dialog.setVisible(true);
+		return result == JOptionPane.OK_OPTION;
+	}
+	
 	/**
 	 * @return selected ElementsPanel
 	 */
 	public ElementsPanel getCurrentPanel() {
 		return (ElementsPanel)panel;
+	}
+	
+	public boolean removePanel(UgoPanel p) {
+		if (p instanceof ElementsPanel) {
+			if (p.getGraph().isGraphChanged()) {
+				String text = LangModelScheme.getString("Message.confirmation.object_changed");  //$NON-NLS-1$
+				return showConfirmDialog(text);
+			}
+			return true;
+		}
+		return super.removePanel(p);
+	}
+
+	public boolean removeAllPanels() {
+		return removePanel(panel);
 	}
 	
 	/*
@@ -160,7 +227,9 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					new DeleteAction(pane).actionPerformed(new ActionEvent(this, 0, ""));
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+				Log.debugMessage("aligning cells to grid", Level.FINEST);
 				GraphActions.alignToGrid(graph, graph.getSelectionCells());
+				SchemeActions.splitCableLink(graph, (DefaultCableLink)graph.getSelectionCells()[0]);
 			}
 			// CTRL + ...
 			if (e.getModifiers() == InputEvent.CTRL_MASK) {

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.8 2005/07/15 13:07:57 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.9 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,11 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
@@ -34,7 +36,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -42,6 +44,8 @@ public class UgoTabbedPane extends JPanel {
 	protected ApplicationContext aContext;
 	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
+	protected UgoToolBar toolBar;
+	protected boolean editable;
 	
 	public UgoTabbedPane() {
 		try {
@@ -64,6 +68,7 @@ public class UgoTabbedPane extends JPanel {
 	public ApplicationContext getContext() {
 		return aContext;
 	}
+	
 	private void jbInit() throws Exception {
 		marqueeHandler =  new SchemeMarqueeHandler(this);
 		setLayout(new BorderLayout());
@@ -72,7 +77,8 @@ public class UgoTabbedPane extends JPanel {
 	}
 	
 	protected JComponent createToolBar() {
-		return new UgoToolBar(this);
+		this.toolBar = new UgoToolBar(this);  
+		return toolBar;
 	}
 		
 	protected JComponent createPanel() {
@@ -96,7 +102,7 @@ public class UgoTabbedPane extends JPanel {
 	/**
 	 * @return set of UgoPanels
 	 */
-	public Set getAllPanels() {
+	public Set<UgoPanel> getAllPanels() {
 		return Collections.singleton(panel);
 	}
 	
@@ -111,31 +117,22 @@ public class UgoTabbedPane extends JPanel {
 	}
 
 	public boolean removePanel(UgoPanel p) {
-	/*	if (p.getGraph().isGraphChanged()) {
-			int res = JOptionPane.CANCEL_OPTION;
-			if (p.getGraph().getScheme() != null)
-				res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-						"Схема \"" + p.getGraph().getScheme().getName()
-								+ "\" была изменена. Вы действительно хотите закрыть схему?",
-						"Подтверждение", JOptionPane.YES_NO_OPTION);
-			else if (p.getGraph().getSchemeElement() != null)
-				res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-						"Элемент \"" + p.getGraph().getSchemeElement().getName()
-								+ "\" был изменен. Вы действительно хотите закрыть схему?",
-						"Подтверждение", JOptionPane.YES_NO_OPTION);
-
-			if (res != JOptionPane.OK_OPTION) {
-				//				SchemeSaveCommand ssc = new SchemeSaveCommand(aContext, this, null);
-				//				ssc.execute();
-				//				if (ssc.ret_code == SchemeSaveCommand.CANCEL)
-				return false;
-			}
-		}*/
 		return true;
 	}
 
-	public void removeAllPanels() {
-		removePanel(panel);
+	public boolean removeAllPanels() {
+		return removePanel(panel);
+	}
+	
+	public void setEditable(boolean b) {
+		this.editable = b;
+		for (UgoPanel p : getAllPanels()) {
+			p.getGraph().setEditable(b);
+		}
+	}
+	
+	public void setToolBarVisible(boolean b) {
+		this.toolBar.setVisible(b);
 	}
 
 	protected void fixImages(SchemeGraph graph) {
@@ -176,13 +173,13 @@ public class UgoTabbedPane extends JPanel {
 
 	/**
 	 * @param schemeCellContainer Scheme or SchemeElement or SchemeProtoElement
-	 * @param doClone
-	 * @return Map 
+	 * @param doClone create copy of objects or open themself
+	 * @return Map of cloned DefaultGraphCells (oldCell, newCell) if doClone is true, empty map overwise  
 	 */
-	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
-		Map clones = Collections.EMPTY_MAP;
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		SchemeGraph graph = getGraph();
-		GraphActions.clearGraph(graph);
+//		GraphActions.clearGraph(graph);
 		if (schemeCellContainer.getUgoCell() != null) {
 			clones = getCurrentPanel().insertCell(schemeCellContainer.getUgoCell().getData(), new Point(0, 0), doClone);
 			fixImages(graph);

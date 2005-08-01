@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.14 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeActions.java,v 1.15 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,19 +19,18 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -44,6 +43,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -54,10 +54,11 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -173,6 +174,66 @@ public class SchemeActions {
 		return false;
 	}
 	
+	public static DefaultCableLink[] splitCableLink(SchemeGraph graph, DefaultCableLink cell) {//DefaultCableLink[]
+//		DefaultPort source = (DefaultPort)cell.getSource(); 
+//		DefaultPort target = (DefaultPort)cell.getTarget();
+//		PortView source = (PortView)cell.getSource(); 
+//		PortView target = (PortView)cell.getTarget();
+		int grid = graph.getGridSize();
+		
+		SchemeCableLink cableLink = cell.getSchemeCableLink();
+		try {
+			// TODO create 2 SchemeCableLinks and init them with cableLink properties and characteristics
+			// clone???
+			SchemeCableLink cl1 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
+			SchemeCableLink cl2 = SchemeObjectsFactory.createSchemeCableLink(cableLink.getName(), cableLink.getParentScheme());
+
+			cl1.setAbstractLinkType(cableLink.getAbstractLinkType());
+			cl1.setDescription(cableLink.getDescription());
+			cl1.setOpticalLength(cableLink.getOpticalLength() / 2);
+			cl1.setPhysicalLength(cableLink.getPhysicalLength() / 2);
+			cl1.setOpticalLength(cableLink.getOpticalLength() / 2);
+
+			cl2.setAbstractLinkType(cableLink.getAbstractLinkType());
+			cl2.setDescription(cableLink.getDescription());
+			cl2.setOpticalLength(cableLink.getOpticalLength() / 2);
+			cl2.setPhysicalLength(cableLink.getPhysicalLength() / 2);
+			cl2.setOpticalLength(cableLink.getOpticalLength() / 2);
+
+			
+			EdgeView view = (EdgeView)graph.getGraphLayoutCache().getMapping(cell, false);
+			PortView source = view.getSource();
+			PortView target = view.getTarget();
+			List<Point> points = view.getPoints();
+			Point left = graph.snap(points.get(0));
+			Point right = graph.snap(points.get(points.size() - 1));
+			int x = (left.x + right.x) / 2;
+			int y = (left.y + right.y) / 2;
+			Point middle1 = graph.snap(new Point (x - 3 * grid, y));
+			Point middle2 = graph.snap(new Point (x + 3 * grid, y));
+			
+			DeleteAction.delete(graph, cell);
+			DefaultCableLink cell1 = createCableLink(graph, source, null, left, middle1, cl1.getId());
+			DefaultCableLink cell2 = createCableLink(graph, null, target, middle2, right, cl2.getId());
+//			if (source != null && source.getParent() instanceof CablePortCell) {
+//				CablePortCell port = (CablePortCell)source.getParent();
+//				connectSchemeCableLink(graph, cell1, port, true);
+//			}
+//			if (target != null && target.getParent() instanceof CablePortCell) {
+//				CablePortCell port = (CablePortCell)target.getParent();
+//				connectSchemeCableLink(graph, cell2, port, false);
+//			}
+			
+			GraphActions.setText(graph, cell1, cl1.getName());
+			GraphActions.setText(graph, cell2, cl2.getName());
+
+			return new DefaultCableLink[] { cell1, cell2 };
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+	
 	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
 			PortView port, Point p, Point p2, Identifier linkId) {
 		ConnectionSet cs = new ConnectionSet();
@@ -244,8 +305,8 @@ public class SchemeActions {
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
 		Point labelPosition = (direction.equals(IdlDirectionType._OUT) ? 
-				new Point (-u / distance, 0) : 
-				new Point (u + (u / distance), 0));
+				new Point (-2 * u / distance, 0) : 
+				new Point (u + (int)(1.5 * u / distance), 0));
 		Rectangle portCellBounds = (direction.equals(IdlDirectionType._OUT) ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
@@ -272,6 +333,7 @@ public class SchemeActions {
 		ConnectionSet cs = new ConnectionSet();
 		PortEdge edge = PortEdge.createInstance(name, devPort, ellipsePort, p, new Point(dev_bounds.x
 					+ dev_bounds.width, p.y), labelPosition, viewMap, cs);
+		
 
 		graph.getModel().insert(new Object[] { edge }, viewMap, cs, null, null);
 		graph.addSelectionCell(visualPort);

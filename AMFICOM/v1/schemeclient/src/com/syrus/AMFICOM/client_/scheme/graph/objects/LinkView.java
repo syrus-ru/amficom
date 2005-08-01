@@ -1,5 +1,5 @@
 /*
- * $Id: LinkView.java,v 1.2 2005/07/11 12:31:38 stas Exp $
+ * $Id: LinkView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,13 +24,14 @@ import com.jgraph.graph.PortView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
-public class LinkView extends EdgeView
-{
-	public LinkView(Object cell, JGraph graph, CellMapper mapper, int i) {
+public class LinkView extends EdgeView {
+	private static final long serialVersionUID = 3257562906278114617L;
+
+	public LinkView(Object cell, JGraph graph, CellMapper mapper) {
 		super(cell, graph, mapper);
 	}
 
@@ -39,6 +40,8 @@ public class LinkView extends EdgeView
 	}
 
 	public class ShemeEdgeHandle extends EdgeView.EdgeHandle {
+		private static final long serialVersionUID = 3760567502849061174L;
+
 		public ShemeEdgeHandle(EdgeView edge, GraphContext ctx) {
 			super(edge, ctx);
 		}

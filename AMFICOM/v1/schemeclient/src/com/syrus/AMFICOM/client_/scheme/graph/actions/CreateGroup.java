@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: CreateGroup.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +40,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -163,9 +163,9 @@ public class CreateGroup extends AbstractAction {
 		DeviceGroup group = createGroup(graph, cells, proto.getId(), DeviceGroup.PROTO_ELEMENT);
 		
 		// at last determine what elements it consists of
-		Set childSchemeProtoElements = new HashSet();
-		Set childSchemeLinks = new HashSet();
-		Set childSchemeDevices = new HashSet();
+		Set<SchemeProtoElement> childSchemeProtoElements = new HashSet<SchemeProtoElement>();
+		Set<SchemeLink> childSchemeLinks = new HashSet<SchemeLink>();
+		Set<SchemeDevice> childSchemeDevices = new HashSet<SchemeDevice>();
 		
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DeviceGroup) {
@@ -188,20 +188,13 @@ public class CreateGroup extends AbstractAction {
 			}
 		}
 		
-		for (Iterator it = childSchemeDevices.iterator(); it.hasNext();) {
-			SchemeDevice dev = (SchemeDevice) it.next();
-			dev.setParentSchemeProtoElement(proto);
+		try {
+			proto.setSchemeDevices(childSchemeDevices);
+			proto.setSchemeLinks(childSchemeLinks);
+			proto.setSchemeProtoElements(childSchemeProtoElements);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
-		for (Iterator it = childSchemeLinks.iterator(); it.hasNext();) {
-			SchemeLink link = (SchemeLink) it.next();
-			link.setParentSchemeProtoElement(proto);
-		}
-		proto.setSchemeProtoElements(childSchemeProtoElements);
-		
-//		for (Iterator it = childSchemeProtoElements.iterator(); it.hasNext();) {
-//			SchemeProtoElement childProto = (SchemeProtoElement) it.next();
-//			childProto.setParentSchemeProtoElement(proto);
-//		}
 		return group;
 	}
 	
@@ -209,9 +202,9 @@ public class CreateGroup extends AbstractAction {
 		DeviceGroup group = createGroup(graph, cells, element.getId(), DeviceGroup.SCHEME_ELEMENT);
 		
 		// at last determine what elements it consists of
-		Set childSchemeElements = new HashSet();
-		Set childSchemeLinks = new HashSet();
-		Set childSchemeDevices = new HashSet();
+		Set<SchemeElement> childSchemeElements = new HashSet<SchemeElement>();
+		Set<SchemeLink> childSchemeLinks = new HashSet<SchemeLink>();
+		Set<SchemeDevice> childSchemeDevices = new HashSet<SchemeDevice>();
 		
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DeviceGroup) {
@@ -234,9 +227,13 @@ public class CreateGroup extends AbstractAction {
 			}
 		}
 		
-		element.setSchemeDevices(childSchemeDevices);
-		element.setSchemeLinks(childSchemeLinks);
-		element.setSchemeElements(childSchemeElements);
+		try {
+			element.setSchemeDevices(childSchemeDevices);
+			element.setSchemeLinks(childSchemeLinks);
+			element.setSchemeElements(childSchemeElements);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
 		return group;
 	}
 	

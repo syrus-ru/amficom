@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.6 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.7 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -44,17 +45,18 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class SchemeTabbedPane extends ElementsTabbedPane {
 	JTabbedPane tabs;
-	Map graphPanelsMap;
+	Map<JScrollPane, ElementsPanel> graphPanelsMap;
 
 	public SchemeTabbedPane(ApplicationContext aContext) {
 		super(aContext);
@@ -97,13 +99,14 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 	
 	protected JComponent createToolBar() {
-		return new SchemeToolBar(this, aContext);
+		this.toolBar = new SchemeToolBar(this, aContext);
+		return toolBar;
 	}
 
 	
-	public Set getAllPanels() {
+	public Set<UgoPanel> getAllPanels() {
 		Object[] comp = tabs.getComponents();
-		Set panels = new HashSet(comp.length);
+		Set<UgoPanel> panels = new HashSet<UgoPanel>(comp.length);
 		for (int i = 0; i < comp.length; i++)
 			panels.add(graphPanelsMap.get(comp[i]));
 		return panels;
@@ -111,7 +114,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	public ElementsPanel getCurrentPanel() {
 		if (tabs.getSelectedIndex() != -1)
-			return (ElementsPanel)graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
+			return graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
 		return null;
 //		SchemePanel newPanel = new SchemePanel(aContext);
 //		addPanel(newPanel);
@@ -125,19 +128,20 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		JScrollPane graphView = new JScrollPane(graph);
 		
 		if (graphPanelsMap == null)
-			graphPanelsMap = new HashMap();
+			graphPanelsMap = new HashMap<JScrollPane, ElementsPanel>();
 		graphPanelsMap.put(graphView, p);
 		
 		tabs.addTab("", new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/close_unchanged.gif")), graphView);
 		tabs.setSelectedComponent(graphView);
 		setGraphChanged(false);
+		graph.setEditable(this.editable);
 	}
 	
 	public void selectPanel(ElementsPanel p) {
 		Object[] comp = tabs.getComponents();
 		for (int i = 0; i < comp.length; i++) {
-			UgoPanel p1 = (UgoPanel)graphPanelsMap.get(comp[i]);
+			UgoPanel p1 = graphPanelsMap.get(comp[i]);
 			if (p1.equals(p)) {
 				tabs.removeTabAt(i);
 				return;
@@ -153,7 +157,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		if (super.removePanel(p)) {
 			Object[] comp = tabs.getComponents();
 			for (int i = 0; i < comp.length; i++) {
-				UgoPanel p1 = (UgoPanel)graphPanelsMap.get(comp[i]);
+				UgoPanel p1 = graphPanelsMap.get(comp[i]);
 				if (p1.equals(p)) {
 					tabs.removeTabAt(i);
 					return true;
@@ -163,10 +167,18 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return false;
 	}
 
-	public void removeAllPanels() {
+	public boolean removeAllPanels() {
 		Object[] comp = tabs.getComponents();
-		for (int i = 0; i < comp.length; i++)
-			removePanel((UgoPanel)graphPanelsMap.get(comp[i]));
+		// check for unsaved changes
+		for (int i = 0; i < comp.length; i++) {
+			UgoPanel p = graphPanelsMap.get(comp[i]);
+			if (p instanceof ElementsPanel) {
+				if (p.getGraph().isGraphChanged()) {
+					return super.removePanel(p);
+				}
+			}
+		}
+		return true;
 	}
 	
 	public void propertyChange(PropertyChangeEvent ae) {
@@ -178,7 +190,11 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
 				openSchemeElement(schemeElement, true);
-			} else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
+			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
+				// TODO create SchemeElement from proto
+								
+			}	else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object obj = see.getObject();
 				if (obj instanceof Scheme) {
 					Scheme scheme = (Scheme)obj;
@@ -190,7 +206,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		super.propertyChange(ae);
 	}
 	
-	public Map openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
 		if (schemeCellContainer instanceof Scheme) {
 			return openScheme((Scheme)schemeCellContainer, doClone);
 		} 
@@ -198,11 +214,11 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			return openSchemeElement((SchemeElement)schemeCellContainer, doClone);
 		} 
 		Log.debugMessage("Error: try to open SchemeProtoElement in SchemeTabbedPane ", Level.FINER);
-		return Collections.EMPTY_MAP;
+		return Collections.emptyMap();
 	}
 	
-	public Map openScheme(Scheme sch, boolean doClone) {
-		Map clones = Collections.EMPTY_MAP;
+	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch, boolean doClone) {
+		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p = (UgoPanel)it.next();
@@ -233,8 +249,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return clones;
 	}
 	
-	public Map openSchemeElement(SchemeElement se, boolean doClone) {
-		Map clones = Collections.EMPTY_MAP;
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeElement(SchemeElement se, boolean doClone) {
+		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p1 = (UgoPanel)it.next();
@@ -290,7 +306,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	public void setGraphChanged(SchemeGraph graph, boolean b) {
 		for (int i = 0; i < tabs.getTabCount(); i++) {
-			UgoPanel p = (UgoPanel)graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
+			UgoPanel p = graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
 			if (graph.equals(p.getGraph())) {
 				graph.setGraphChanged(b);
 				if (b)

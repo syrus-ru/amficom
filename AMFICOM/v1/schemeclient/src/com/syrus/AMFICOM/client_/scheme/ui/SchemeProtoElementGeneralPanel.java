@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.11 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.12 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -377,7 +377,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	
 	void codeNameCombo_stateChanged(String eqtCodename) {
 		typeCombo.removeAllItems();
-		// XXX change Condition
+
 		TypicalCondition condition = new TypicalCondition(eqtCodename, OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 //		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
@@ -498,6 +498,14 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup)parent);	
 			}			
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeProtoElement, SchemeEvent.UPDATE_OBJECT));
+			
+//			try {
+//				StorableObjectPool.delete(schemeProtoElement.getId());
+//				StorableObjectPool.flush(schemeProtoElement.getId(), true);
+//			} catch (ApplicationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 		}
 	}
 }

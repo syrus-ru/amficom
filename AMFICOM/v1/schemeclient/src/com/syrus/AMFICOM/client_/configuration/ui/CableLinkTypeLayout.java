@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.4 2005/07/11 12:31:37 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.5 2005/08/01 07:52:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:27 $
  * @module schemeclient_v1
  */
 
@@ -175,16 +175,14 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		if (oe.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) oe;
 			if (ev.isSelected(ObjectSelectedEvent.OTHER_OBJECT)) {
-				Object[] objs = (Object[]) ev.getSource();
-				for (int i = 0; i < objs.length; i++) {
-					if (objs[i] instanceof ThreadTypeCell) {
-						ThreadTypeCell cell = (ThreadTypeCell)objs[i];
-						Color newColor = new Color(cell.getCableThreadType().getColor());
-						panel.getGraph().setSelectionCell(cell);
-						GraphActions.setObjectBackColor(panel.getGraph(), cell, newColor);
-					} else if (objs[i] instanceof EllipseCell) {
-						panel.getGraph().clearSelection();
-					}
+				Object obj = ev.getSelectedObject();
+				if (obj instanceof ThreadTypeCell) {
+					ThreadTypeCell cell = (ThreadTypeCell)obj;
+					Color newColor = new Color(cell.getCableThreadType().getColor());
+					panel.getGraph().setSelectionCell(cell);
+					GraphActions.setObjectBackColor(panel.getGraph(), cell, newColor);
+				} else if (obj instanceof EllipseCell) {
+					panel.getGraph().clearSelection();
 				}
 			}
 		}

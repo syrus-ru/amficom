@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.15 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.16 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,6 @@ import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -70,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -123,14 +121,20 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	protected Point settingPoint;
 	private int crossSize = 4;
 	
+	private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+	private static final Cursor CROSSHAIR_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
+	
 //	private transient SchemeProtoElement settingProto = null;
 	//	private transient boolean sendEvents = true;
 
 	// Update Undo/Redo Button State based on Undo Manager
 	public void updateHistoryButtons(GraphUndoManager undoManager) {
 		SchemeGraph graph = pane.getGraph();
-		undo.setEnabled(undoManager.canUndo(graph.getGraphLayoutCache()));
+		boolean b1 = undoManager.canUndo(graph.getGraphLayoutCache());
+		undo.setEnabled(b1);
 		redo.setEnabled(undoManager.canRedo(graph.getGraphLayoutCache()));
+		
+		pane.setGraphChanged(b1);
 	}
 	
 	/* Return true if this handler should be preferred over other handlers. */
@@ -305,13 +309,13 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	}
 	
 	private IdlDirectionType getDirectionType(Rectangle dev_bounds, Point p) {
-		if (p.y > dev_bounds.y && p.y < dev_bounds.y + dev_bounds.height) {
+	if (p.y > dev_bounds.y && p.y < dev_bounds.y + dev_bounds.height - 1) {
 			if (p.x < dev_bounds.x )
 				return IdlDirectionType._IN;
 			else if (p.x > dev_bounds.x + dev_bounds.width)
 				return IdlDirectionType._OUT;
 			else {
-				Log.errorMessage("can't create PortCell in of horizontal bounds of DeviceCell"); //$NON-NLS-1$
+				Log.errorMessage("can't create PortCell in horizontal bounds of DeviceCell"); //$NON-NLS-1$
 				return null;
 			}
 		}
@@ -347,7 +351,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			StorableObjectCondition condition = new TypicalCondition(
 					isCable ? PortTypeKind._PORT_KIND_CABLE : PortTypeKind._PORT_KIND_SIMPLE,
 					0, OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_SORT);
+					ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
 			Set types = Collections.EMPTY_SET;
 			try {
 				types = StorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -388,8 +392,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 
 	public void mouseReleased(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
-		if (!graph.isEditable())
+		if (!graph.isEditable()) {
 			event.consume();
+			graph.setCursor(DEFAULT_CURSOR);
+		}
 			
 		if (SwingUtilities.isLeftMouseButton(event)) {
 			if (event != null && !event.isConsumed() && bounds != null && !s.isSelected()) {
@@ -399,10 +405,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 //					bounds.height += 2;
 //					bounds.width ++;
 //					bounds.height ++;
-					Identifier userId = LoginManager.getUserId();
-					
 					try {
-						SchemeDevice device = SchemeDevice.createInstance(userId, Constants.DEVICE + System.currentTimeMillis());
+						SchemeDevice device = SchemeObjectsFactory.createSchemeDevice(Constants.DEVICE + System.currentTimeMillis());
 						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
@@ -434,8 +438,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						if (panel instanceof SchemePanel)
 							scheme = ((SchemePanel)panel).getSchemeResource().getScheme();
 						if (scheme != null) {
-							Identifier userId = LoginManager.getUserId();
-							
+						
 							try {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
 								link.setAbstractLinkType(type);
@@ -470,6 +473,18 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						try {
 							link = SchemeObjectsFactory.createSchemeLink("link" + System.currentTimeMillis());
 							link.setAbstractLinkType(type);
+							
+							UgoPanel panel = pane.getCurrentPanel();
+							if (panel instanceof SchemePanel) {
+								SchemeResource res = ((SchemePanel)panel).getSchemeResource();
+								if (res.getCellContainerType() == SchemeResource.SCHEME)
+									link.setParentScheme(res.getScheme());
+								else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT)
+									link.setParentSchemeElement(res.getSchemeElement());
+								else if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT)
+									link.setParentSchemeProtoElement(res.getSchemeProtoElement());
+							}
+							
 							DefaultLink cell = SchemeActions.createLink(graph,
 									firstPort, port, graph.fromScreen(new Point(start)), 
 									graph.fromScreen(new Point(current)), link.getId());
@@ -562,7 +577,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					Map m = graph.getModel().getAttributes(deviceCell);
 					devBounds = GraphConstants.getBounds(m);
 					settingPoint = graph.snap(event.getPoint());
-					graph.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					graph.setCursor(CROSSHAIR_CURSOR);
 				}
 			}
 			Point p = graph.snap(event.getPoint());
@@ -576,7 +591,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 		
 		if (!s.isSelected() && !event.isConsumed()) {
-			graph.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+			graph.setCursor(CROSSHAIR_CURSOR);
 			event.consume();
 			if (e.isSelected() || l.isSelected() || ce.isSelected()) {
 				PortView oldPort = port;
@@ -634,7 +649,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 		if ((p1.isSelected() || p2.isSelected()) && devBounds != null && settingPoint != null) {
-			if (settingPoint.y > devBounds.y && settingPoint.y < devBounds.y + devBounds.height) {
+			if (settingPoint.y > devBounds.y && settingPoint.y < devBounds.y + devBounds.height - 1) {
 				g.setColor(Color.GRAY);
 				if (settingPoint.x < devBounds.x) {
 					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x, settingPoint.y);

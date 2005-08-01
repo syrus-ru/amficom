@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.6 2005/07/24 18:13:40 bass Exp $
+ * $Id: CablePortCell.java,v 1.7 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,18 +19,20 @@ import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class CablePortCell extends DefaultGraphCell {
+	private static final long serialVersionUID = 4049357521913722424L;
+
 	private Identifier schemeCableportId;
 
 	public static CablePortCell createInstance(Object userObject,
@@ -65,7 +67,7 @@ public class CablePortCell extends DefaultGraphCell {
 
 	public SchemeCablePort getSchemeCablePort() {
 		try {
-			return (SchemeCablePort) SchemeStorableObjectPool.getStorableObject(schemeCableportId, true);
+			return (SchemeCablePort)StorableObjectPool.getStorableObject(schemeCableportId, true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 			return null;

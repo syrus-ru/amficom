@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.2 2005/07/11 12:31:38 stas Exp $
+ * $Id: DeviceView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,13 @@ import com.jgraph.graph.VertexView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DeviceView extends VertexView {
+	private static final long serialVersionUID = 3763093055304970547L;
+
 	protected DeviceCell cell;
 	protected Rectangle _bounds;
 	private static VertexRenderer schemerenderer = new SchemeVertexRenderer();
@@ -63,6 +65,8 @@ public class DeviceView extends VertexView {
 	}
 
 	public class DeviceSizeHandle extends VertexView.SizeHandle {
+		private static final long serialVersionUID = 3257004337124685618L;
+
 		public DeviceSizeHandle(DeviceView vertexview, GraphContext ctx) {
 			super(vertexview, ctx);
 		}
@@ -109,6 +113,8 @@ public class DeviceView extends VertexView {
 	}
 
 	public static class SchemeVertexRenderer extends VertexRenderer {
+		private static final long serialVersionUID = 3257003246202466869L;
+
 		protected void paintSelectionBorder(Graphics g) {
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
 			if (childrenSelected)

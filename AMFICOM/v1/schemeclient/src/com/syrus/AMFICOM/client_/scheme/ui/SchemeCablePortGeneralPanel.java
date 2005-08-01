@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.12 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.13 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,11 +36,14 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
+import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -49,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -285,10 +288,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	void setPortEnabled(boolean b) {
-		lbMarkLabel.setEnabled(b);
-		tfMarkText.setEnabled(b);
-		lbColorLabel.setEnabled(b);
-		cmbColorCombo.setEnabled(b);
+		lbPortLabel.setVisible(b);
+		pnPortPanel.setVisible(b);
 	}
 		
 	public JComponent getGUI() {
@@ -308,10 +309,9 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				parent = null;
 			}
-			// FIXME change EquivalentCondition for TypicalCondition 
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
+			TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE, 0, OperationSort.OPERATION_EQUALS,ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

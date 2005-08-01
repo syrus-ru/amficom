@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.5 2005/07/21 14:53:23 stas Exp $
+ * $Id: SchemeGraph.java,v 1.6 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/21 14:53:23 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -125,7 +125,7 @@ public class SchemeGraph extends GPGraph {
 	}
 	
 	protected EdgeView createEdgeView(Edge e, CellMapper cm) {
-		return new LinkView(e, this, cm, 0);
+		return new LinkView(e, this, cm);
 	}
 	
 	// correcting mapping between screen and logical points

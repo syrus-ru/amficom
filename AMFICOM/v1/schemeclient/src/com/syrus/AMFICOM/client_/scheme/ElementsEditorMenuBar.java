@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMenuBar.java,v 1.4 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsEditorMenuBar.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -58,8 +59,8 @@ public class ElementsEditorMenuBar extends AbstractMainMenuBar
 
 		menuWindow.setText(LangModelSchematics.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
-		menuWindowArrange.setText(LangModelSchematics.getString("menuWindowArrange"));
-		menuWindowArrange.setName("menuWindowArrange");
+		menuWindowArrange.setText(LangModelGeneral.getString("Menu.View.WindowArrange"));
+		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 		menuWindowArrange.addActionListener(actionAdapter);
 		menuWindowTree.setText(LangModelSchematics.getString("menuWindowTree"));
 		menuWindowTree.setName("menuWindowTree");
@@ -104,8 +105,8 @@ public class ElementsEditorMenuBar extends AbstractMainMenuBar
 
 		menuWindow.setVisible(aModel.isVisible("menuWindow"));
 		menuWindow.setEnabled(aModel.isEnabled("menuWindow"));
-		menuWindowArrange.setVisible(aModel.isVisible("menuWindowArrange"));
-		menuWindowArrange.setEnabled(aModel.isEnabled("menuWindowArrange"));
+		menuWindowArrange.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW_ARRANGE));
+		menuWindowArrange.setEnabled(aModel.isEnabled(ApplicationModel.MENU_VIEW_ARRANGE));
 		menuWindowTree.setVisible(aModel.isVisible("menuWindowTree"));
 		menuWindowTree.setEnabled(aModel.isEnabled("menuWindowTree"));
 		menuWindowScheme.setVisible(aModel.isVisible("menuWindowScheme"));

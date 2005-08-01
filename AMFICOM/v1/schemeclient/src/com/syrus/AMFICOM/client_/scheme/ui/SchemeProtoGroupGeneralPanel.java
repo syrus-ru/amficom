@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.2 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -286,20 +285,6 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.schemeProtoGroup, SchemeProtoGroupPropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME_PROTOGROUP));
 			}
 		}
-		/*try {
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
-			Set objects = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			Set ids = new HashSet();
-			for (Iterator iter = objects.iterator(); iter.hasNext();) {
-				StorableObject element = (StorableObject) iter.next();
-				ids.add(element.getId());
-			}
-			StorableObjectPool.delete(ids);
-			StorableObjectPool.flush(ObjectEntities.SCHEMEPROTOGROUP_CODE, true);
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 	}
 	
 	private void apply() {
@@ -322,12 +307,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			this.schemeProtoGroup.setParentSchemeProtoGroup((SchemeProtoGroup)parent);	
 		}
 		try {
-			StorableObjectPool.flush(this.schemeProtoGroup.getId(), false);
-			
-//			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
-//			Set objects = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			Set ids = new HashSet();
-			
+			StorableObjectPool.flush(this.schemeProtoGroup.getId(), LoginManager.getUserId(), false);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}

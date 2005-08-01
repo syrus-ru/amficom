@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.2 2005/07/24 18:13:40 bass Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.3 2005/08/01 07:52:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:27 $
  * @module schemeclient_v1
  */
 
@@ -51,6 +51,10 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 	
 	public ConfigurationTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
+	}
+	
+	public static final Object getRootObject() {
+		return SchemeResourceKeys.CONFIGURATION;
 	}
 	
 	public Item getRoot() {

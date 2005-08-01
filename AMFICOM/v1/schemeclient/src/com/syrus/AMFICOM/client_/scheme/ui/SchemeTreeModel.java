@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.27 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.28 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,12 +9,11 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.28 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -38,13 +37,12 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
-	ConfigurationTreeModel configurationTreeModel;
-	ProtoGroupTreeModel protoTreeModel;
+	
+	PopulatableIconedNode root;
 
 	private static IdlKind[] schemeTypes = new IdlKind[] { IdlKind.NETWORK, IdlKind.BUILDING,
 			IdlKind.CABLE_SUBNETWORK };
@@ -114,7 +112,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
 			if (s.equals(SchemeResourceKeys.ROOT)) {
-				createRoot(node, contents);
+				createRootItems(node, contents);
 			} 
 			else if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
 				for (int i = 0; i < schemeTypes.length; i++) {
@@ -294,19 +292,27 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		}
 	}
 	
-	private void createRoot(Item node, Collection contents) {
-		if (!contents.contains(SchemeResourceKeys.CONFIGURATION)) {
-			if (configurationTreeModel == null) {
-				configurationTreeModel = new ConfigurationTreeModel(aContext);
-			}
+	public static final Object getRootObject() {
+		return SchemeResourceKeys.ROOT;
+	}
+	
+	public Item getRoot() {
+		if (root == null) {
+			root = new PopulatableIconedNode(this, SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT),
+					UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
+		}
+		return root;
+	}
+	
+	private void createRootItems(Item node, Collection contents) {
+		if (!contents.contains(ConfigurationTreeModel.getRootObject())) {
+			ConfigurationTreeModel configurationTreeModel = new ConfigurationTreeModel(aContext);
 			node.addChild(configurationTreeModel.getRoot());
 		}
 		if (!contents.contains(SchemeResourceKeys.SCHEME_TYPE))
 			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-		if (!contents.contains(SchemeResourceKeys.SCHEME_PROTO_GROUP)) {
-			if (protoTreeModel == null) {
-				protoTreeModel = new ProtoGroupTreeModel(aContext);
-			}
+		if (!contents.contains(ProtoGroupTreeModel.getRootObject())) {
+			ProtoGroupTreeModel 	protoTreeModel = new ProtoGroupTreeModel(aContext);
 			node.addChild(protoTreeModel.getRoot());
 		}
 	}

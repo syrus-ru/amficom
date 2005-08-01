@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultPortView.java,v 1.2 2005/07/11 12:31:38 stas Exp $
+ * $Id: DefaultPortView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,13 @@ import com.jgraph.pad.EllipseView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DefaultPortView extends EllipseView {
+	private static final long serialVersionUID = 3977014041950565430L;
+
 	private static SchemeEllipseRenderer schemerenderer = new SchemeEllipseRenderer();
 
 	public DefaultPortView(Object cell, JGraph jgraph, CellMapper mapper) {

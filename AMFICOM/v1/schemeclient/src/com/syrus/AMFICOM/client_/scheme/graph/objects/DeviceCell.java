@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.4 2005/07/20 11:12:53 stas Exp $
+ * $Id: DeviceCell.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,17 +18,21 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
-import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/20 11:12:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
 public class DeviceCell extends DefaultGraphCell {
+	private static final long serialVersionUID = 3257008739499652403L;
+
 	private Identifier schemeDeviceId;
 
 	public static DeviceCell createInstance(Object userObject, Rectangle bounds,
@@ -59,9 +63,9 @@ public class DeviceCell extends DefaultGraphCell {
 
 	public SchemeDevice getSchemeDevice() {
 		try {
-			return (SchemeDevice) SchemeStorableObjectPool.getStorableObject(
-					schemeDeviceId, true);
-		} catch (Exception ex) {
+			return (SchemeDevice) StorableObjectPool.getStorableObject(schemeDeviceId, true);
+		} catch (ApplicationException ex) {
+			Log.errorException(ex);
 			return null;
 		}
 	}

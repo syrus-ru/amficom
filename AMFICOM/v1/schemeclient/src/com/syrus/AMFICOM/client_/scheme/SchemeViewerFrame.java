@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.4 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.5 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
-public class SchemeViewerFrame extends JInternalFrame 
-//implements	OperationListener 
-{
+public class SchemeViewerFrame extends JInternalFrame {
+	public static final String	NAME	= "editorFrame";
 	ApplicationContext aContext;
 	UgoTabbedPane pane;
 
@@ -42,20 +41,8 @@ public class SchemeViewerFrame extends JInternalFrame
 	}
 
 	public void setContext(ApplicationContext aContext) {
-//		if (this.aContext != null)
-//			this.aContext.getDispatcher().unregister(this, SchemeEvent.TYPE);
 		this.aContext = aContext;
-//		this.aContext.getDispatcher().register(this, SchemeEvent.TYPE);
 	}
-
-//	public void operationPerformed(OperationEvent ae) {
-//		if (ae.getActionCommand().equals(SchemeEvent.TYPE)) {
-//			SchemeEvent see = (SchemeEvent) ae;
-//			if (see.isType(SchemeEvent.CLOSE_SCHEME)) {
-//				closeFrame();
-//			}
-//		}
-//	}
 
 //	protected void closeFrame() {
 //		if (isClosable()) {
@@ -65,6 +52,8 @@ public class SchemeViewerFrame extends JInternalFrame
 //	}
 
 	private void jbInit() throws Exception {
+		setName(NAME);
+		
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/general.gif")));
 		setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);

@@ -13,6 +13,7 @@ scheme.jpx~
 *.swp
 *.tar
 *.gz
+*.unused
 .classpath
 .project
 .settings

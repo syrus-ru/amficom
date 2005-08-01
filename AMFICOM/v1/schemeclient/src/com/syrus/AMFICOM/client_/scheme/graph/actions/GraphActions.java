@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.5 2005/07/24 18:13:40 bass Exp $
+ * $Id: GraphActions.java,v 1.6 2005/08/01 07:52:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
  * @module schemeclient_v1
  */
 
@@ -131,7 +131,8 @@ public class GraphActions {
 		// SchemeGraph.skip_notify = true;
 		graph.setSelectionCells(new Object[0]);
 		Object[] cells = graph.getAll();
-		graph.getModel().remove(cells);
+		if (cells.length != 0)
+			graph.getModel().remove(cells);
 		// SchemeGraph.skip_notify = false;
 	}
 	
@@ -450,7 +451,7 @@ public class GraphActions {
 				v.add(objs[i]);
 		return (BlockPortCell[]) v.toArray(new BlockPortCell[v.size()]);
 	}
-
+/*
 	static void connectEdge(SchemeGraph graph, DefaultEdge edge,
 			DefaultPort port, boolean is_source) {
 		Map viewMap = new HashMap();
@@ -460,7 +461,7 @@ public class GraphActions {
 		cs.connect(edge, port, is_source);
 		graph.getModel().edit(viewMap, cs, null, null);
 	}
-
+*/
 	static void disconnectEdge(SchemeGraph graph, DefaultEdge edge,
 			DefaultPort port, boolean is_source) {
 		Map viewMap = new HashMap();

@@ -4,6 +4,7 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -13,7 +14,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 public class ComponentNewCommand extends AbstractCommand {
 	ApplicationContext aContext;
 	UgoTabbedPane cellPane;
-	private static int counter = 1; 
 
 	public ComponentNewCommand(ApplicationContext aContext,
 			UgoTabbedPane cellPane) {
@@ -26,63 +26,25 @@ public class ComponentNewCommand extends AbstractCommand {
 	}
 
 	public void execute() {
+		ApplicationModel aModel = aContext.getApplicationModel(); 
+		aModel.getCommand("menuWindowScheme").execute();
+		aModel.getCommand("menuWindowTree").execute();
+		aModel.getCommand("menuWindowUgo").execute();
+		aModel.getCommand("menuWindowProps").execute();
+		aModel.getCommand("menuWindowList").execute();
+		
+		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
+		
 		SchemeGraph cellGraph = cellPane.getGraph();
-		
-//		SchemeResource sr = cellPane.getCurrentPanel().getSchemeResource();
-//		SchemeProtoElement proto = sr.getSchemeProtoElement();
-		
-		if (cellGraph.getAll().length != 0) {
+		if (cellGraph.isGraphChanged()) {
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Создать новый компонент?", "Новый компонент",
-					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.NO_OPTION)
+					"Компонент не сохранен. Продолжить?", "Новый компонент",
+					JOptionPane.OK_CANCEL_OPTION);
+			if (ret == JOptionPane.CANCEL_OPTION)
 				return;
 		} 
-//		else if (proto != null) {
-//			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-//					"Создать новый компонент?", "Новый компонент",
-//					JOptionPane.YES_NO_OPTION);
-//			if (ret == JOptionPane.NO_OPTION)
-//				return;			
-//		}
-		
-//		try {
-//			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-//			EquipmentType eqt = null;
-//			Set<EquipmentType> eqTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			if (!eqTypes.isEmpty())
-//				eqt = eqTypes.iterator().next();
-//			
-//			proto = SchemeProtoElement.createInstance(LoginManager.getUserId(), "Новый компонент (" + Integer.toString(counter) + ")");
-//			proto.setEquipmentType(eqt);
-//			counter++;
-//			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
-//		} catch (ApplicationException e) {
-//			Log.errorException(e);
-//		}
 		((ElementsPanel)cellPane.getCurrentPanel()).getSchemeResource().setSchemeProtoElement(null);
 		GraphActions.clearGraph(cellGraph);
 		cellGraph.selectionNotify();
 	}
-	
-	/*
-	public void execute() {
-		SchemeResource sr = cellPane.getCurrentPanel().getSchemeResource();
-		SchemeProtoElement proto = sr.getSchemeProtoElement();
-		if (proto != null) {
-			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Создать новый компонент?", "Новый компонент",
-					JOptionPane.YES_NO_OPTION);
-			if (ret == JOptionPane.NO_OPTION)
-				return;			
-		}
-		try {
-			proto = SchemeProtoElement.createInstance(LoginManager.getUserId(), "Новый компонент (" + Integer.toString(counter) + ")");
-			counter++;
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-		}
-	}
-	 */
 }

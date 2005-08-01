@@ -33,7 +33,6 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuSchemeLoad");
 		add("menuSchemeSave");
 		add("menuSchemeSaveAs");
-		add("menuInsertToCatalog");
 		add("menuSchemeImport");
 		add("menuSchemeExport");
 
@@ -57,13 +56,13 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuReport");
 
 		add("menuWindow");
-		add("menuWindowArrange");
 		add("menuWindowTree");
 		add("menuWindowScheme");
-		add("menuWindowCatalog");
 		add("menuWindowUgo");
 		add("menuWindowProps");
 		add("menuWindowList");
+		
+		add(ApplicationModel.MENU_VIEW_ARRANGE);
 		
 		this.initUIConstats();
 	}
@@ -85,9 +84,6 @@ public class SchematicsApplicationModel extends ApplicationModel
 						16, Image.SCALE_SMOOTH)));
 		UIManager.put(SchemeResourceKeys.ICON_SAVE, new ImageIcon(Toolkit
 				.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16,
-						16, Image.SCALE_SMOOTH)));
-		UIManager.put(SchemeResourceKeys.ICON_SYNCHRONIZE, new ImageIcon(Toolkit
-				.getDefaultToolkit().getImage("images/synchronize.gif").getScaledInstance(16,
 						16, Image.SCALE_SMOOTH)));
 	}
 }

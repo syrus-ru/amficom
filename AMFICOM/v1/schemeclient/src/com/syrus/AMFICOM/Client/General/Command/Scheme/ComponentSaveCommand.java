@@ -1,6 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JOptionPane;
 
@@ -13,10 +15,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
@@ -84,7 +89,35 @@ public class ComponentSaveCommand extends AbstractCommand {
 					"Не установлен тип компонента", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
+		
+		if (proto.getParentSchemeProtoGroup() == null) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					"Не установлена родительская группа для компонента", "Ошибка", JOptionPane.OK_OPTION);
+			return;
+		}
 
+		// add internal objects - SL, SPE
+		Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+		Set<SchemeProtoElement> schemeProtoElements = new HashSet<SchemeProtoElement>();
+		Object[] objects = graph.getRoots();
+		for (Object object : objects) {
+			if (object instanceof DefaultLink)
+				schemeLinks.add(((DefaultLink)object).getSchemeLink());
+			else if (object instanceof DeviceGroup) {
+				SchemeProtoElement schemeProto = ((DeviceGroup)object).getProtoElement();
+				assert schemeProto != null;
+				if (!schemeProto.getId().equals(proto.getId()))
+					schemeProtoElements.add(schemeProto);
+			}
+		}
+		try {
+			proto.setSchemeLinks(schemeLinks);
+			proto.setSchemeProtoElements(schemeProtoElements);
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
+		}
+
+		// create SchemeImageResource
 		try {
 			SchemeImageResource schemeIr = proto.getSchemeCell();
 			if (schemeIr == null)
@@ -92,7 +125,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			schemeIr.setData((List) graph.getArchiveableState());
 
 			proto.setSchemeCell(schemeIr);
-			StorableObjectPool.flush(proto.getId(), false);
+			StorableObjectPool.flush(proto.getId(), LoginManager.getUserId(), false);
 			cellPane.setGraphChanged(false);
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Компонент "
