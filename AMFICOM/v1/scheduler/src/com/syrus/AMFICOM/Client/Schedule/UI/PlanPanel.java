@@ -575,7 +575,7 @@ ActionListener, PropertyChangeListener {
 			if (component instanceof TimeLine) {
 				TimeLine timeLine = (TimeLine) component;
 				timeLine.updateScale();
-				timeLine.refreshTimeItems();
+//				timeLine.refreshTimeItems();
 			}
 		}
 		this.revalidate();

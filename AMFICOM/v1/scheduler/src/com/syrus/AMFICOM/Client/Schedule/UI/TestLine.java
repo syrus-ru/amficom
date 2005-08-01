@@ -661,13 +661,13 @@ public class TestLine extends TimeLine {
 	@Override
 	void refreshTimeItems() {
 		
-		try {
-			throw new Exception();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
+//		try {
+//			throw new Exception();
+//		} catch (Exception e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		
 //		this.lastRefreshTimeItemMs = System.currentTimeMillis();
 //		this.refreshTimeItemsRequire = true;
 //
