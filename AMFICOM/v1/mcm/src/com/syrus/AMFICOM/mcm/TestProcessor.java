@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.60 2005/08/01 13:52:56 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.61 2005/08/01 14:19:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,24 +10,25 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -35,7 +36,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/08/01 13:52:56 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/01 14:19:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -105,9 +106,11 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private void startWithProcessingTest() {
+		final StorableObjectDatabase<Test> database = DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
+		final TestDatabase testDatabase = (TestDatabase) database;
 		Measurement lastMeasurement = null;
 		try {
-			lastMeasurement = this.test.retrieveLastMeasurement();
+			lastMeasurement = testDatabase.retrieveLastMeasurement(this.test);
 			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
 					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
 		}
@@ -124,7 +127,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		Result measurementResult = null;
 		if (lastMeasurement != null) {
 			try{
-				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
+				this.numberOfReceivedMResults = testDatabase.retrieveNumberOfResults(this.test, ResultSort.RESULT_SORT_MEASUREMENT);
 				switch (lastMeasurement.getStatus().value()) {
 					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
 						this.transceiver.addMeasurement(lastMeasurement, this);
@@ -134,21 +137,23 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
 						results = lastMeasurement.getResults(true);
-						if (results != null && !results.isEmpty())
+						if (results != null && !results.isEmpty()) {
 							measurementResult = results.iterator().next();
-						if (measurementResult != null)
+						}
+						if (measurementResult != null) {
 							this.addMeasurementResult(measurementResult);
-						else
+						}
+						else {
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+						}
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
 						results = lastMeasurement.getResults(true);
 						Result analysisResult = null;
 						Result evaluationResult = null;
 						if (results != null && !results.isEmpty()) {
-							for (Iterator it = results.iterator(); it.hasNext();) {
-								final Result result = (Result) it.next();
+							for (final Result result : results) {
 								switch (result.getSort().value()) {
 									case ResultSort._RESULT_SORT_MEASUREMENT:
 										measurementResult = result;
@@ -162,29 +167,34 @@ public abstract class TestProcessor extends SleepButWorkThread {
 								}
 							}
 						}
-						if (measurementResult != null)
+						if (measurementResult != null) {
 							Log.debugMessage("TestProcessor.startWithProcessingTest | Found measurement result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						else
+						}
+						else {
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find measurement result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						if (analysisResult != null)
+						}
+						if (analysisResult != null) {
 							Log.debugMessage("TestProcessor.startWithProcessingTest | Found analysis result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						else
+						}
+						else {
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						if (evaluationResult != null)
+						}
+						if (evaluationResult != null) {
 							Log.debugMessage("TestProcessor.startWithProcessingTest | Found evaluation result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						else
+						}
+						else {
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find evaluation result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+						}
 
 						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
 						try {
-							StorableObjectPool.flush(lastMeasurement.getId(), true);
-							//StorableObjectPool.flush(lastMeasurement.getId(), false);
+							StorableObjectPool.flush(lastMeasurement, LoginManager.getUserId(), false);
 						}
 						catch (ApplicationException ae) {
 							Log.errorException(ae);
@@ -201,8 +211,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	protected final void addMeasurementResult(final Result result) {
-		if (! this.measurementResultList.contains(result))
+		if (! this.measurementResultList.contains(result)) {
 			this.measurementResultList.add(result);
+		}
 	}
 
 	final void newMeasurementCreation(final Date startTime) throws CreateObjectException {
@@ -210,8 +221,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.transceiver.addMeasurement(measurement, this);
 		this.currentMeasurementStartTime = startTime.getTime();
 		try {
-			StorableObjectPool.flushGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, true);
-			//StorableObjectPool.flushGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, false);
+			StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -224,8 +234,9 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults
 				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements
 				 + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
-		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
+		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition) {
 			this.complete();
+		}
 		else {
 			if (System.currentTimeMillis() - this.currentMeasurementStartTime > this.forgetFrame) {
 				Log.debugMessage("Passed " + this.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
@@ -243,16 +254,17 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 			try {
 				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
-				for (int i = 0; i < aeResults.length; i++)
-					if (aeResults[i] != null)
+				for (int i = 0; i < aeResults.length; i++) {
+					if (aeResults[i] != null) {
 						Log.debugMessage("TestProcessor.processMeasurementResult | Result: '" + aeResults[i].getId()
 								+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL09);
+					}
+				}
 
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED);
 
 				try {
-					StorableObjectPool.flush(ObjectEntities.RESULT_CODE, true);
-					//StorableObjectPool.flush(ObjectEntities.RESULT_CODE, false);
+					StorableObjectPool.flush(ObjectEntities.RESULT_CODE, LoginManager.getUserId(), false);
 					//- Every action contains in dependencies of it's result
 				}
 				catch (ApplicationException ae) {
@@ -265,8 +277,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
 			try {
-				StorableObjectPool.flush(measurement, true);
-				//StorableObjectPool.flush(measurement, false);
+				StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -274,11 +285,10 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	private final void updateMyTestStatus(TestStatus status) {
+	private final void updateMyTestStatus(final TestStatus status) {
 		this.test.setStatus(status);
 		try {
-			StorableObjectPool.flush(this.test.getId(), true);
-			//StorableObjectPool.flush(this.test.getId(), false);
+			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
