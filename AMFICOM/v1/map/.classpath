@@ -10,5 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filter"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
