@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.7 2005/06/27 10:17:14 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.8 2005/08/01 11:11:07 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/27 10:17:14 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/01 11:11:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -39,9 +39,9 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				break;
 			default:
-				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
-						+ ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ " is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ "' and key '" + this.condition.getKey() + "' are not supported.",
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
 	}

@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/07/14 19:07:11 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.12 2005/08/01 11:11:26 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/14 19:07:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/01 11:11:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -48,9 +48,9 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 				break;
 			default:
-				throw new IllegalObjectEntityException("DatabaseTypicalConditionImpl.getColumnName | entity "
-						+ ObjectEntities.codeToString(this.condition.getEntityCode())
-						+ " is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ "' and key '" + this.condition.getKey() + "' are not supported.",
+						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
 	}
