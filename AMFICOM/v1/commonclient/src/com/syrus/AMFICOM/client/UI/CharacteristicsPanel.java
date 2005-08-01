@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.15 2005/07/28 19:45:42 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.16 2005/08/01 10:24:42 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/07/28 19:45:42 $
+ * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/08/01 10:24:42 $
  * @module commonclient_v1
  */
 
@@ -78,7 +78,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 	protected ApplicationContext aContext;
 	protected CharacteristicTypeSort selectedTypeSort;
-	protected Map<Identifier, List<Characteristic>> characteristics = new HashMap<Identifier, List<Characteristic>>();
+	protected Map<Identifier, Set<Characteristic>> characteristics = new HashMap<Identifier, Set<Characteristic>>();
 	protected Set<CharacteristicTypeSort> editableSorts = new HashSet<CharacteristicTypeSort>();
 	protected Map<CharacteristicTypeSort, CharacterizableObject> typeSortsCharacterizedIds = new HashMap<CharacteristicTypeSort, CharacterizableObject>();
 	protected Map<CharacterizableObject, List<Characteristic>> addedCharacteristics = new HashMap<CharacterizableObject, List<Characteristic>>();
@@ -140,7 +140,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
-	public CharacteristicsPanel(final List<Characteristic> characteristics, final Identifier characterizedId) {
+	public CharacteristicsPanel(final Set<Characteristic> characteristics, final Identifier characterizedId) {
 		this();
 		this.addCharacteristics(characteristics, characterizedId);
 	}
@@ -266,13 +266,13 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		return true;
 	}
 
-	public void addCharacteristics(final List<Characteristic> chars, final Identifier characterizedId) {
+	public void addCharacteristics(final Set<Characteristic> chars, final Identifier characterizedId) {
 		this.characteristics.put(characterizedId, chars);
 		elementSelected(this.selectedTypeSort);
 	}
 
 	public void addCharacteristics(final Characteristic[] chars, final Identifier characterizedId) {
-		this.characteristics.put(characterizedId, Arrays.asList(chars));
+		this.characteristics.put(characterizedId, new HashSet<Characteristic>(Arrays.asList(chars)));
 		elementSelected(this.selectedTypeSort);
 	}
 
@@ -304,7 +304,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 
 		this.wtModel.clear();
 		final Collection<Characteristic> chars2add = new LinkedList<Characteristic>();
-		for (final List<Characteristic> chars : this.characteristics.values()) {
+		for (final Set<Characteristic> chars : this.characteristics.values()) {
 			if (chars != null) {
 				for (final Characteristic ch : chars) {
 					if (((CharacteristicType) ch.getType()).getSort().equals(selectedType)) {
