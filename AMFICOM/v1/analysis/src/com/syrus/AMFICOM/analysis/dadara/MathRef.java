@@ -95,26 +95,27 @@ public class MathRef
 	// параметры: длина волны в нм, длительность импульса в нс
 	public static double calcSigma (int wavelength, int pulsewidth)
 	{
-		// XXX: приблизительные расчет, предполагающий стандартное волокно
+		// определение сигмы для импульса 1 мкс
 		double sigma0;
-		double vG = 3e8 / 1.47 * 1e-9; // м/нс
 		switch (wavelength)
 		{
-			//case 1310: sigma = 49d; break;
-			//case 1550: sigma = 52d; break;
-			//case 1625: sigma = 52.8d; break;
-			//default: sigma = 51d;
-			case 1310: sigma0 = 42d; break;
-			case 1550: sigma0 = 45d; break;
-			case 1625: sigma0 = 46d; break; // XXX: 1625 nm: sigma0 = ?
-			default:
-				sigma0 = 46d;
-				System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
+		case 1310: sigma0 = 49; break;
+		case 1550: sigma0 = 52; break;
+		case 1625: sigma0 = 53; break; // XXX: 1625 nm: sigma0 = ?
+		// у NetTest так:
+		//case 1310: sigma0 = 48.4; break;
+		//case 1550: sigma0 = 51.7; break;
+		//case 1625: sigma0 = 50.0; break;
+		default:
+			sigma0 = 51d;
+		System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
 		}
+		// если длина импульса не задана, берем 1 мкс
 		if (pulsewidth == 0)
 			pulsewidth = 1000; // XXX: default pulsewidth
-		//return sigma + Math.log(1000d/(double)pulsewidth) / Math.log(10d);
-		return sigma0 + Math.log(vG / pulsewidth) / Math.log(10d);
+		// определяем сигму для нашего импульса
+		// в формулу подставляем длину импульса, выраженную в мкс
+		return sigma0 - 10.0 * Math.log(pulsewidth / 1000.0) / Math.log(10.0);
 	}
 
 	// вычислить отражение
@@ -126,6 +127,9 @@ public class MathRef
 			return MINF_DESIGNATION;
 		double ret = -sigma
 				+ 10.0 * Math.log(Math.pow(10.0, peak/5.0) - 1) / Math.log(10.0);
+		System.err.println("calcReflectance: sigma " + sigma
+				+ ", peak " + peak
+				+ ", ret " + ret);
 		if (ret < MINF_DESIGNATION)
 			return MINF_DESIGNATION;
 		return ret;
