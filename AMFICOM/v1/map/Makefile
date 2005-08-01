@@ -75,14 +75,15 @@ $(LIBNAME_MAPXML):	$(LIBNAME_GENERALXML)
 		$(XMLDIR)/PhysicalLinkType.xsd \
 		$(XMLDIR)/SiteNode.xsd \
 		$(XMLDIR)/SiteNodeType.xsd \
-		$(XMLDIR)/TopologicalNode.xsd
+		$(XMLDIR)/TopologicalNode.xsd \
+		$(XMLDIR)/MapLibrary.xsd
 
 $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/General.xsd
 
 .PHONY: clean
-clean: cleanmach cleancorba
+clean: cleanmach cleancorba cleanxml
 	$(RM) $(LIBNAME)
 
 .PHONY: cleanmach
@@ -94,6 +95,10 @@ cleanmach:
 cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
 	$(RM) .corba
+
+.PHONY: cleanxml
+cleanxml:
+	$(RM) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
 
 #### Install ####
 .PHONY: install
