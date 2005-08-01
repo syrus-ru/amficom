@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.24 2005/07/28 18:03:00 arseniy Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.25 2005/08/01 15:02:44 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,8 +51,8 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.24 $, $Date: 2005/07/28 18:03:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/08/01 15:02:44 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class StorableObjectXMLDriver {
@@ -68,12 +70,8 @@ public class StorableObjectXMLDriver {
 				this.fileName = path.getParent();
 			}
 		} else {
-			if (path.isDirectory()) {
-				path.mkdirs();
-			} else {
-				path.getParentFile().mkdirs();
-			}
-			this.fileName = path.getAbsolutePath();
+			path.mkdirs();
+			this.fileName = path.getAbsolutePath() + File.separatorChar + packageName + ".xml";
 		}
 		this.packageName = packageName;
 		this.parseXmlFile(false);
@@ -402,11 +400,13 @@ public class StorableObjectXMLDriver {
 				this.root = this.doc.getFirstChild();
 			} else {
 				/* if file not exists creat default document */
-				final DocumentBuilder builder = factory.newDocumentBuilder();
-				this.doc = builder.newDocument();
-				/* with root item of package name */
-				this.root = this.doc.createElement(this.packageName);
-				this.doc.appendChild(this.root);
+				if (file.createNewFile()) {
+					final DocumentBuilder builder = factory.newDocumentBuilder();
+					this.doc = builder.newDocument();
+					/* with root item of package name */
+					this.root = this.doc.createElement(this.packageName);
+					this.doc.appendChild(this.root);
+				}
 			}
 			return this.doc;
 		} catch (SAXException e) {
@@ -428,7 +428,8 @@ public class StorableObjectXMLDriver {
 
 			// Prepare the output file
 			final File file = new File(this.fileName);
-			final Result result = new StreamResult(file);
+			FileOutputStream stream = new FileOutputStream(file);
+			final Result result = new StreamResult(stream);
 
 			// Write the DOM document to the file
 			final Transformer xformer = TransformerFactory.newInstance().newTransformer();
@@ -437,6 +438,8 @@ public class StorableObjectXMLDriver {
 		} catch (TransformerConfigurationException e) {
 			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
 		} catch (TransformerException e) {
+			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
+		} catch (FileNotFoundException e) {
 			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
 		}
 	}
