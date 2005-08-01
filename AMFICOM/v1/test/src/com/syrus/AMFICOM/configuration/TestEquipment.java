@@ -1,5 +1,5 @@
 /*
- * $Id: TestEquipment.java,v 1.1 2005/06/30 16:14:17 arseniy Exp $
+ * $Id: TestEquipment.java,v 1.2 2005/08/01 12:21:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -57,7 +57,7 @@ public final class TestEquipment extends TestCase {
 				"4444",
 				"5555");
 
-		StorableObjectPool.flush(equipment, false);
+		StorableObjectPool.flush(equipment, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
 	public void testUpdate() throws ApplicationException {
@@ -65,6 +65,6 @@ public final class TestEquipment extends TestCase {
 		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Equipment equipment = (Equipment) it.next();
 		equipment.setDescription("Рефлектометр QP1640A");
-		StorableObjectPool.flush(equipment, false);
+		StorableObjectPool.flush(equipment, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }
