@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/07/10 13:41:28 bass Exp $
+# $Id: Makefile,v 1.19 2005/08/01 10:54:57 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -9,6 +9,8 @@ MODULE_NAME := mscharserver
 LIBNAME := $(MODULE_NAME).jar
 LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
+
+MAPINFO_LIBDIR=$(EXTLIBDIR)/mapinfo/common
 
 IDL_SOURCES = $(IDLDIR)/mscharserver.idl
 
@@ -20,7 +22,7 @@ $(call checkenve,JAVA_HOME)
 
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/jdom.jar:$(EXTLIBDIR)/micsys.jar:$(EXTLIBDIR)/miutil.jar:$(EXTLIBDIR)/mxj.jar:$(EXTLIBDIR)/mxjgeom.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j-1.6.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mscharserver/*.java)
