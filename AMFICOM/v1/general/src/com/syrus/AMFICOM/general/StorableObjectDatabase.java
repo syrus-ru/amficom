@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.173 2005/08/01 11:57:39 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.174 2005/08/01 12:17:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.173 $, $Date: 2005/08/01 11:57:39 $
+ * @version $Revision: 1.174 $, $Date: 2005/08/01 12:17:17 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -710,8 +710,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 
-		this.insert(insertStorableObjects);
-		this.update(updateStorableObjects);
+		if (!insertStorableObjects.isEmpty()) {
+			this.insert(insertStorableObjects);
+		}
+		if (!updateStorableObjects.isEmpty()) {
+			this.update(updateStorableObjects);
+		}
 	}
 
 	protected void update(final Set<T> storableObjects) throws UpdateObjectException {
