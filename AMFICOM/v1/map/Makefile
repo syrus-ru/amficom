@@ -24,7 +24,7 @@ endif
 SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
