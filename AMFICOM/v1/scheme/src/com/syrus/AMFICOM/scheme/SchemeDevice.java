@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.61 2005/08/01 13:12:39 bass Exp $
+ * $Id: SchemeDevice.java,v 1.62 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,6 +52,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -63,11 +64,11 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/08/01 13:12:39 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
-		implements Describable, Characterizable {
+		implements Describable, Characterizable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -387,6 +388,26 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemePorts0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCablePorts0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/**

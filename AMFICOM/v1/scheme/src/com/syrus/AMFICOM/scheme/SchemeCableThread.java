@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.59 2005/08/01 13:12:39 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.60 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -62,11 +63,11 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/08/01 13:12:39 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
-		implements Describable, Characterizable {
+		implements Describable, Characterizable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -306,6 +307,20 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/**

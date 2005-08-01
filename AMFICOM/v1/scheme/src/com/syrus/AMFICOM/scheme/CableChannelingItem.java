@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.48 2005/07/31 19:11:07 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.49 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -53,12 +54,14 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class CableChannelingItem
 		extends StorableObject
-		implements Comparable<CableChannelingItem>, PathMember<SchemeCableLink, CableChannelingItem> {
+		implements Comparable<CableChannelingItem>,
+		PathMember<SchemeCableLink, CableChannelingItem>,
+		ReverseDependencyContainer {
 	private static final long serialVersionUID = 3256437027796038705L;
 
 	private double startSpare;
@@ -236,6 +239,13 @@ public final class CableChannelingItem
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() {
+		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	Identifier getEndSiteNodeId() {

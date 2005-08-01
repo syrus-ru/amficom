@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.54 2005/07/31 19:11:07 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.55 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -55,11 +56,11 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.55 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
-		implements Describable {
+		implements Describable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -288,6 +289,26 @@ public final class SchemeOptimizeInfo extends StorableObject
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoSwitches0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeOptimizeInfoRtus0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeMonitoringSolutions0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/**

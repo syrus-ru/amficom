@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.57 2005/07/31 19:11:08 bass Exp $
+ * $Id: PathElement.java,v 1.58 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -69,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/31 19:11:08 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  * @todo <code>setAttributes()</code> should contain, among others,
  *       kind and sequentialNumber paremeters.
@@ -77,7 +78,8 @@ import com.syrus.util.Log;
  *       SchemeElement
  */
 public final class PathElement extends StorableObject
-		implements Describable, Comparable<PathElement>, PathMember<SchemePath, PathElement> {
+		implements Describable, Comparable<PathElement>,
+		PathMember<SchemePath, PathElement>, ReverseDependencyContainer {
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -480,6 +482,13 @@ public final class PathElement extends StorableObject
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() {
+		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	/**

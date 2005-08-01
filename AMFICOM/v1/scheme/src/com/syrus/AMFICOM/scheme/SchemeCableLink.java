@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.60 2005/08/01 13:12:39 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.61 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
@@ -27,6 +28,7 @@ import static java.util.logging.Level.SEVERE;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -42,6 +44,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -49,6 +52,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -60,7 +64,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/08/01 13:12:39 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -271,19 +275,19 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	}
 
 	public SortedSet<CableChannelingItem> getPathMembers() {
-		return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getPathMembers0()));
+		try {
+			return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getPathMembers0()));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(Collections.<CableChannelingItem>emptySet()));
+		}
 	}
 
 	/**
 	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
 	 */
-	private Set<CableChannelingItem> getPathMembers0() {
-		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
+	private Set<CableChannelingItem> getPathMembers0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true);
 	}
 
 	/**
@@ -594,6 +598,26 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 				schemeCableLink.sourceSchemeCablePortId,
 				schemeCableLink.targetSchemeCablePortId,
 				schemeCableLink.parentSchemeId);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableThreads0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/**

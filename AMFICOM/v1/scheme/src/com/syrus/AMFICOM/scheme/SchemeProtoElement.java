@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.68 2005/08/01 08:29:01 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.69 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,6 +60,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -77,13 +78,13 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/01 08:29:01 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		LibraryEntry {
+		LibraryEntry, ReverseDependencyContainer {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -547,6 +548,29 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeProtoElements0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	/**

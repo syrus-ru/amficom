@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.42 2005/08/01 10:47:56 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.43 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -44,12 +45,12 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.42 $, $Date: 2005/08/01 10:47:56 $
+ * @version $Revision: 1.43 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
 		extends AbstractCloneableStorableObject
-		implements Describable, Characterizable {
+		implements Describable, Characterizable, ReverseDependencyContainer {
 	static final long serialVersionUID = 4644766113809681630L;
 
 	private String name;

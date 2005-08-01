@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.63 2005/08/01 10:47:55 bass Exp $
+ * $Id: SchemeElement.java,v 1.64 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,6 +56,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -70,11 +71,11 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/08/01 10:47:55 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
-public final class SchemeElement extends AbstractSchemeElement implements
-		SchemeCellContainer {
+public final class SchemeElement extends AbstractSchemeElement
+		implements SchemeCellContainer {
 	private static final long serialVersionUID = 3618977875802797368L;
 
 	private Identifier equipmentId;
@@ -530,6 +531,32 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeLinks0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeElements0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemes0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
 	}
 
 	Identifier getEquipmentId() {

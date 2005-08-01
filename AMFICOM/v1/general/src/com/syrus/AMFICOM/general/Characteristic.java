@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.52 2005/07/31 17:08:10 bass Exp $
+ * $Id: Characteristic.java,v 1.53 2005/08/01 16:18:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,12 +21,12 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/01 16:18:10 $
  * @author $Author: bass $
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
-		implements TypedObject {
+		implements TypedObject, ReverseDependencyContainer {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -342,6 +343,10 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);
 		return dependencies;
+	}
+
+	public Set<Identifiable> getReverseDependencies() {
+		return Collections.<Identifiable>singleton(super.id);
 	}
 
 	/**

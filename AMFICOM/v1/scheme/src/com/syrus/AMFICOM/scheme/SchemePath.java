@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.64 2005/07/31 19:11:07 bass Exp $
+ * $Id: SchemePath.java,v 1.65 2005/08/01 16:18:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -64,11 +65,12 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/01 16:18:09 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
-		implements Describable, Characterizable, PathOwner<PathElement> {
+		implements Describable, Characterizable, PathOwner<PathElement>,
+		ReverseDependencyContainer {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -229,6 +231,23 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
+	 * @see com.syrus.AMFICOM.general.ReverseDependencyContainer#getReverseDependencies()
+	 */
+	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
+		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
+		reverseDependencies.add(super.id);
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {
+			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+		}
+		reverseDependencies.remove(null);
+		reverseDependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(reverseDependencies);
+	}
+
+	/**
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
@@ -264,19 +283,19 @@ public final class SchemePath extends StorableObject
 	}
 
 	public SortedSet<PathElement> getPathMembers() {
-		return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(getPathMembers0()));
+		try {
+			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(getPathMembers0()));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(Collections.<PathElement>emptySet()));
+		}
 	}
 
 	/**
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
-	private Set<PathElement> getPathMembers0() {
-		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
+	private Set<PathElement> getPathMembers0() throws ApplicationException {
+		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true);
 	}
 
 	/**
