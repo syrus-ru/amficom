@@ -108,7 +108,7 @@ public class MathRef
 		//case 1625: sigma0 = 50.0; break;
 		default:
 			sigma0 = 51d;
-		System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
+			System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
 		}
 		// если длина импульса не задана, берем 1 мкс
 		if (pulsewidth == 0)
@@ -127,9 +127,9 @@ public class MathRef
 			return MINF_DESIGNATION;
 		double ret = -sigma
 				+ 10.0 * Math.log(Math.pow(10.0, peak/5.0) - 1) / Math.log(10.0);
-		System.err.println("calcReflectance: sigma " + sigma
-				+ ", peak " + peak
-				+ ", ret " + ret);
+//		System.err.println("calcReflectance: sigma " + sigma
+//				+ ", peak " + peak
+//				+ ", ret " + ret);
 		if (ret < MINF_DESIGNATION)
 			return MINF_DESIGNATION;
 		return ret;
