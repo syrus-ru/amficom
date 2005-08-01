@@ -145,7 +145,7 @@ class PlanToolBar {
 					panel.setStartDate(calDate.getTime());
 					panel.setScale(comboBox.getSelectedIndex());
 					// panel.updateTests();
-					panel.updateTestLines();
+					panel.updateTestLinesTimeRegion();
 				}
 			}
 		});
@@ -163,7 +163,7 @@ class PlanToolBar {
 				calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
 				panel.setStartDate(calDate.getTime());
 				// panel.updateTests();
-				panel.updateTestLines();
+				panel.updateTestLinesTimeRegion();
 			}
 		});
 

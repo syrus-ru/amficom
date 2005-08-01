@@ -802,9 +802,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
 							}
 
-							for(final MeasurementSetup measurementSetup1 : measurementSetups) {
-								System.out.println("refreshMeasurementSetups | " + measurementSetup1.getId() + ", " + measurementSetup1.getDescription());
-							}
+//							for(final MeasurementSetup measurementSetup1 : measurementSetups) {
+//								System.out.println("refreshMeasurementSetups | " + measurementSetup1.getId() + ", " + measurementSetup1.getDescription());
+//							}
 
 							SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 									COMMAND_SET_MEASUREMENT_SETUPS,

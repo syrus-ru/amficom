@@ -275,7 +275,7 @@ ActionListener, PropertyChangeListener {
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
 			
-			this.updateTestLinesTimeRegion();
+//			this.updateTestLinesTimeRegion();
 		}
 		
 	}
