@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.58 2005/07/28 15:42:01 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.59 2005/08/01 13:36:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/07/28 15:42:01 $
- * @author $Author: saa $
+ * @version $Revision: 1.59 $, $Date: 2005/08/01 13:36:07 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
@@ -62,20 +63,20 @@ public class DadaraAnalysisManager implements AnalysisManager {
 
 	private static final Map<String,Identifier> OUT_PARAMETER_TYPE_IDS_MAP;
 
-	private final Map<String,byte[]> tracePars;
-	private final Map<String,byte[]> criteriaPars;
-	private final Map<String,byte[]> etalonPars;
+	private final Map<String, byte[]> tracePars;
+	private final Map<String, byte[]> criteriaPars;
+	private final Map<String, byte[]> etalonPars;
 
 	static {
 		OUT_PARAMETER_TYPE_IDS_MAP = new HashMap<String,Identifier>();
-		addParameterTypeIds(new String[] {CODENAME_ALARMS});
+		addParameterTypeIds(new String[] { CODENAME_ALARMS, CODENAME_ANALYSIS_RESULT });
 	}
 
 	private static void addParameterTypeIds(final String[] codenames) {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final java.util.Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
+		final Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i],
 					OperationSort.OPERATION_EQUALS,
@@ -89,7 +90,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 				condition = typicalConditions.iterator().next();
 			else
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
-			final java.util.Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
+			final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 			for (final Iterator<ParameterType> it = parameterTypes.iterator(); it.hasNext();) {
 				final ParameterType parameterType = it.next();
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
