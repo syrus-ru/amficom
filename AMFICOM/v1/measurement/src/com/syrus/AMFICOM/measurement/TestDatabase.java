@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.108 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.109 2005/08/01 14:16:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.108 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.109 $, $Date: 2005/08/01 14:16:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -313,7 +313,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 	}
 
-	public Integer retrieveNumberOfResults(final Test test, final ResultSort resultSort)
+	public int retrieveNumberOfResults(final Test test, final ResultSort resultSort)
 			throws RetrieveObjectException,
 				ObjectNotFoundException {
 		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
@@ -336,10 +336,10 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			Log.debugMessage("TestDatabase.retrieveNumberOfResults | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				return new Integer(resultSet.getInt("count"));
+				return resultSet.getInt("count");
 			throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
 		} catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
+			final String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
