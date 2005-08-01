@@ -1,157 +1,98 @@
 package com.syrus.AMFICOM.Client.Survey;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
-
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractButton;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JToolBar;
+import javax.swing.UIManager;
 
-public class SurveyToolBar extends JToolBar implements ApplicationModelListener
+import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.resource.LangModelSurvey;
+import com.syrus.AMFICOM.resource.SurveyResourceKeys;
+
+public class SurveyToolBar  extends AbstractMainToolBar
 {
-	public final static int imgSize = 16;
-	public final static int btnSize = 24;
-
-	private ApplicationModel aModel;
-
-	JButton menuSessionOpen = new JButton();
-
-	JButton menuViewMapOpen = new JButton();
-	JButton menuViewSchemeOpen = new JButton();
-
-	JButton menuViewMeasurements = new JButton();
-	JButton menuViewAlarms = new JButton();
-	JButton menuViewResults = new JButton();
-
-	JButton menuStartScheduler = new JButton();
-	JButton menuStartAnalize = new JButton();
-	JButton menuStartAnalizeExt = new JButton();
-	JButton menuStartEvaluation = new JButton();
-	JButton menuStartPrognosis = new JButton();
-
 	public SurveyToolBar()
 	{
-		try
-		{
-			jbInit();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		initItems();
 	}
-
-	private void jbInit() throws Exception
-	{
-		ActionListener actionAdapter = new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					SurveyToolBar.this.actionPerformed(e);
-				}
-			};
-
-		Dimension buttonSize = new Dimension(btnSize, btnSize);
-
-		menuSessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		menuSessionOpen.setMaximumSize(buttonSize);
-		menuSessionOpen.setPreferredSize(buttonSize);
-		menuSessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		menuSessionOpen.setName("menuSessionNew");
-		menuSessionOpen.addActionListener(actionAdapter);
-
-		menuViewMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuViewMapOpen.setMaximumSize(buttonSize);
-		menuViewMapOpen.setPreferredSize(buttonSize);
-		menuViewMapOpen.setToolTipText(LangModelSurvey.getString("Topological_scheme_of_net"));
+	
+	private void initItems() {
+		
+		final JButton menuViewMapOpen = new JButton();
+		final JButton menuViewSchemeOpen = new JButton();
+		
+		final JButton menuViewMeasurements = new JButton();
+		final JButton menuViewAlarms = new JButton();
+		final JButton menuViewResults = new JButton();
+		
+		final JButton menuStartScheduler = new JButton();
+		final JButton menuStartAnalize = new JButton();
+		final JButton menuStartAnalizeExt = new JButton();
+		final JButton menuStartEvaluation = new JButton();
+		final JButton menuStartPrognosis = new JButton();
+		
+		
+		menuViewMapOpen.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_MAP_OPEN));
+		menuViewMapOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewMapOpen.setToolTipText(LangModelSurvey.getString("menu.view.map_open"));
 		menuViewMapOpen.setName("menuViewMapOpen");
-		menuViewMapOpen.addActionListener(actionAdapter);
-
-		menuViewSchemeOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").
-				getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		menuViewSchemeOpen.setMaximumSize(buttonSize);
-		menuViewSchemeOpen.setPreferredSize(buttonSize);
-		menuViewSchemeOpen.setToolTipText(LangModelSurvey.getString("Net_scheme"));
+		menuViewMapOpen.addActionListener(super.actionListener);
+		
+		menuViewSchemeOpen.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_SCHEME_OPEN));
+		menuViewSchemeOpen.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewSchemeOpen.setToolTipText(LangModelSurvey.getString("menu.view.scheme_open"));
 		menuViewSchemeOpen.setName("menuViewSchemeOpen");
-		menuViewSchemeOpen.addActionListener(actionAdapter);
-
-		menuViewMeasurements.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/archive_mini.gif").
-                                getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));  
-		menuViewMeasurements.setMaximumSize(buttonSize);
-		menuViewMeasurements.setPreferredSize(buttonSize);
-		menuViewMeasurements.setToolTipText(LangModelSurvey.getString("Measurement_archive"));
+		menuViewSchemeOpen.addActionListener(super.actionListener);
+		
+		menuViewMeasurements.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_ARCHIVE));
+		menuViewMeasurements.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewMeasurements.setToolTipText(LangModelSurvey.getString("menu.view.measurement_archive"));
 		menuViewMeasurements.setName("menuViewMeasurements");
-		menuViewMeasurements.addActionListener(actionAdapter);
-
-		menuViewAlarms.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/alarm_bell_red.gif").
-                                getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));  
-		menuViewAlarms.setMaximumSize(buttonSize);
-		menuViewAlarms.setPreferredSize(buttonSize);
-		menuViewAlarms.setToolTipText(LangModelSurvey.getString("Alarm_signals"));
+		menuViewMeasurements.addActionListener(super.actionListener);
+		
+		menuViewAlarms.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_ALARM));
+		menuViewAlarms.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewAlarms.setToolTipText(LangModelSurvey.getString("menu.view.alarm_signals"));
 		menuViewAlarms.setName("menuViewAlarms");
-		menuViewAlarms.addActionListener(actionAdapter);
-
-		menuViewResults.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/result.gif").
-                                getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));  
-		menuViewResults.setMaximumSize(buttonSize);
-		menuViewResults.setPreferredSize(buttonSize);
-		menuViewResults.setToolTipText(LangModelSurvey.getString("Results_overview"));
+		menuViewAlarms.addActionListener(super.actionListener);
+		
+		menuViewResults.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_RESULT));
+		menuViewResults.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuViewResults.setToolTipText(LangModelSurvey.getString("menu.view.results_overview"));
 		menuViewResults.setName("menuViewResults");
-		menuViewResults.addActionListener(actionAdapter);
-
-		menuStartScheduler.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/scheduling_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuStartScheduler.setMaximumSize(buttonSize);
-		menuStartScheduler.setPreferredSize(buttonSize);
-		menuStartScheduler.setToolTipText(LangModelSurvey.getString("Scheduling"));
+		menuViewResults.addActionListener(super.actionListener);
+		
+		menuStartScheduler.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_SCHEDULER));
+		menuStartScheduler.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuStartScheduler.setToolTipText(LangModelSurvey.getString("menu.start.scheduling"));
 		menuStartScheduler.setName("menuStartScheduler");
-		menuStartScheduler.addActionListener(actionAdapter);
-
-		menuStartAnalize.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/analyse_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuStartAnalize.setMaximumSize(buttonSize);
-		menuStartAnalize.setPreferredSize(buttonSize);
-		menuStartAnalize.setToolTipText(LangModelSurvey.getString("Evaluation_analysis"));
+		menuStartScheduler.addActionListener(super.actionListener);
+		
+		menuStartAnalize.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_ANALYSIS));
+		menuStartAnalize.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuStartAnalize.setToolTipText(LangModelSurvey.getString("menu.start.analyze"));
 		menuStartAnalize.setName("menuStartAnalize");
-		menuStartAnalize.addActionListener(actionAdapter);
-
-		menuStartAnalizeExt.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/survey_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuStartAnalizeExt.setMaximumSize(buttonSize);
-		menuStartAnalizeExt.setPreferredSize(buttonSize);
-		menuStartAnalizeExt.setToolTipText(LangModelSurvey.getString("Researching"));
+		menuStartAnalize.addActionListener(super.actionListener);
+		
+		menuStartAnalizeExt.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_SURVEY));
+		menuStartAnalizeExt.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuStartAnalizeExt.setToolTipText(LangModelSurvey.getString("menu.start.analyze_ext"));
 		menuStartAnalizeExt.setName("menuStartAnalizeExt");
-		menuStartAnalizeExt.addActionListener(actionAdapter);
-
-		menuStartEvaluation.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/evaluation_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuStartEvaluation.setMaximumSize(buttonSize);
-		menuStartEvaluation.setPreferredSize(buttonSize);
-		menuStartEvaluation.setToolTipText(LangModelSurvey.getString("Evaluation"));
+		menuStartAnalizeExt.addActionListener(super.actionListener);
+		
+		menuStartEvaluation.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_EVALUATION));
+		menuStartEvaluation.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuStartEvaluation.setToolTipText(LangModelSurvey.getString("menu.start.evaluation"));
 		menuStartEvaluation.setName("menuStartEvaluation");
-		menuStartEvaluation.addActionListener(actionAdapter);
-
-		menuStartPrognosis.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/prognosis_mini.gif").
-				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
-		menuStartPrognosis.setMaximumSize(buttonSize);
-		menuStartPrognosis.setPreferredSize(buttonSize);
-		menuStartPrognosis.setToolTipText(LangModelSurvey.getString("Forecasting"));
+		menuStartEvaluation.addActionListener(super.actionListener);
+		
+		menuStartPrognosis.setIcon(UIManager.getIcon(SurveyResourceKeys.ICON_PREDICTION));
+		menuStartPrognosis.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		menuStartPrognosis.setToolTipText(LangModelSurvey.getString("menu.start.prediction"));
 		menuStartPrognosis.setName("menuStartPrognosis");
-		menuStartPrognosis.addActionListener(actionAdapter);
-
-		add(menuSessionOpen);
-		addSeparator();
+		menuStartPrognosis.addActionListener(super.actionListener);
+		
 		add(menuViewMapOpen);
 		add(menuViewSchemeOpen);
 		addSeparator();
@@ -164,51 +105,35 @@ public class SurveyToolBar extends JToolBar implements ApplicationModelListener
 		add(menuStartAnalizeExt);
 		add(menuStartEvaluation);
 		add(menuStartPrognosis);
-	}
-
-	public void setModel(ApplicationModel a)
-	{
-		aModel = a;
-	}
-
-	public ApplicationModel getModel()
-	{
-		return aModel;
-	}
-
-	public void modelChanged(String e[])
-	{
-		menuSessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
-		menuSessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
-		menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
-		menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
-		menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
-		menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
-		menuViewMeasurements.setVisible(aModel.isVisible("menuViewMeasurements"));
-		menuViewMeasurements.setEnabled(aModel.isEnabled("menuViewMeasurements"));
-		menuViewAlarms.setVisible(aModel.isVisible("menuViewAlarms"));
-		menuViewAlarms.setEnabled(aModel.isEnabled("menuViewAlarms"));
-		menuViewResults.setVisible(aModel.isVisible("menuViewResults"));
-		menuViewResults.setEnabled(aModel.isEnabled("menuViewResults"));
-		menuStartScheduler.setVisible(aModel.isVisible("menuStartScheduler"));
-		menuStartScheduler.setEnabled(aModel.isEnabled("menuStartScheduler"));
-		menuStartAnalize.setVisible(aModel.isVisible("menuStartAnalize"));
-		menuStartAnalize.setEnabled(aModel.isEnabled("menuStartAnalize"));
-		menuStartAnalizeExt.setVisible(aModel.isVisible("menuStartAnalizeExt"));
-		menuStartAnalizeExt.setEnabled(aModel.isEnabled("menuStartAnalizeExt"));
-		menuStartEvaluation.setVisible(aModel.isVisible("menuStartEvaluation"));
-		menuStartEvaluation.setEnabled(aModel.isEnabled("menuStartEvaluation"));
-		menuStartPrognosis.setVisible(aModel.isVisible("menuStartPrognosis"));
-		menuStartPrognosis.setEnabled(aModel.isEnabled("menuStartPrognosis"));
-	}
-
-	public void actionPerformed(ActionEvent e)
-	{
-		if(aModel == null)
-			return;
-		AbstractButton jb = (AbstractButton )e.getSource();
-		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command.execute();
+		
+		addApplicationModelListener(new ApplicationModelListener() {
+			public void modelChanged(String e) {
+				modelChanged(new String[] { e });
+			}
+			
+			public void modelChanged(String e[]) {
+				ApplicationModel aModel = SurveyToolBar.this.getApplicationModel();
+				menuViewMapOpen.setVisible(aModel.isVisible("menuViewMapOpen"));
+				menuViewMapOpen.setEnabled(aModel.isEnabled("menuViewMapOpen"));
+				menuViewSchemeOpen.setVisible(aModel.isVisible("menuViewSchemeOpen"));
+				menuViewSchemeOpen.setEnabled(aModel.isEnabled("menuViewSchemeOpen"));
+				menuViewMeasurements.setVisible(aModel.isVisible("menuViewMeasurements"));
+				menuViewMeasurements.setEnabled(aModel.isEnabled("menuViewMeasurements"));
+				menuViewAlarms.setVisible(aModel.isVisible("menuViewAlarms"));
+				menuViewAlarms.setEnabled(aModel.isEnabled("menuViewAlarms"));
+				menuViewResults.setVisible(aModel.isVisible("menuViewResults"));
+				menuViewResults.setEnabled(aModel.isEnabled("menuViewResults"));
+				menuStartScheduler.setVisible(aModel.isVisible("menuStartScheduler"));
+				menuStartScheduler.setEnabled(aModel.isEnabled("menuStartScheduler"));
+				menuStartAnalize.setVisible(aModel.isVisible("menuStartAnalize"));
+				menuStartAnalize.setEnabled(aModel.isEnabled("menuStartAnalize"));
+				menuStartAnalizeExt.setVisible(aModel.isVisible("menuStartAnalizeExt"));
+				menuStartAnalizeExt.setEnabled(aModel.isEnabled("menuStartAnalizeExt"));
+				menuStartEvaluation.setVisible(aModel.isVisible("menuStartEvaluation"));
+				menuStartEvaluation.setEnabled(aModel.isEnabled("menuStartEvaluation"));
+				menuStartPrognosis.setVisible(aModel.isVisible("menuStartPrognosis"));
+				menuStartPrognosis.setEnabled(aModel.isEnabled("menuStartPrognosis"));
+			}
+		});
 	}
 }

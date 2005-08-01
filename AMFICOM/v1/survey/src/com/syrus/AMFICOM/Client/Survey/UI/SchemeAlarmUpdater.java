@@ -1,63 +1,57 @@
 package com.syrus.AMFICOM.Client.Survey.UI;
 
-import java.util.*;
+import java.util.Iterator;
 
-import com.syrus.AMFICOM.Client.Survey.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.Analysis.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 ///Thread для перезагрузки аттрибутов элементов схемы
-public class SchemeAlarmUpdater extends Thread  implements Runnable
-{
-	int timeInterval = 5000;
-	SchemePanel panel;
-	public boolean flag = false;
+public class SchemeAlarmUpdater extends Thread  implements Runnable {
+	public static final int TIME_INTERVAL = 5000;
+	
+	SchemeTabbedPane pane;
 	ApplicationContext aContext;
 
-	public SchemeAlarmUpdater(ApplicationContext aContext, SchemePanel panel)
-	{
-		this.panel = panel;
+	private boolean flag = false;
+	public SchemeAlarmUpdater(ApplicationContext aContext, SchemeTabbedPane pane) {
+		this.pane = pane;
 		this.aContext = aContext;
 	}
 
-	public void run()
-	{
-		flag = true;
-		while (flag)
-		{
-			try
-			{
+	public void run() {
+		this.flag = true;
+		while (this.flag) {
+			try {
 				updateAttributes();
-				sleep( timeInterval );
+				sleep( TIME_INTERVAL );
 			}
-			catch (InterruptedException e)
-			{
-				System.out.println("SchemeAlarmUpdater found: " + e);
+			catch (InterruptedException e) {
+				Log.errorMessage(e.getMessage());
 			}
 		}
 	}
 
-	public void updateAttributes()
-	{
-		try
-		{
-			Scheme scheme = panel.getGraph().getScheme();
+	public void updateAttributes() {
+		try {
+			Scheme scheme = this.pane.getCurrentPanel().getSchemeResource().getScheme();
+			
+			if (scheme != null) {
 
-			for(Iterator it = scheme.solution.paths.iterator(); it.hasNext();)
-			{
+			for(Iterator it = scheme.getCurrentSchemeMonitoringSolution().getSchemePaths().iterator(); it.hasNext();) {
 				SchemePath sp = (SchemePath)it.next();
-				Characteristic ch = (Characteristic)sp.attributes.get("alarmed");
-
-				if(ch != null)
+				
+				for (Iterator it2 = sp.getCharacteristics().iterator(); it.hasNext();) {
+					Characteristic ch = (Characteristic)it.next();
+					if(ch.getType().getCodename().equals("alarmed"))
 				{
 					ch.setValue("false");
 					/**
@@ -97,6 +91,8 @@ public class SchemeAlarmUpdater extends Thread  implements Runnable
 							null);
 					sp.attributes.put("alarmed", ch);
 				}
+				}
+			}
 			}
 		}
 		catch(Exception ex)

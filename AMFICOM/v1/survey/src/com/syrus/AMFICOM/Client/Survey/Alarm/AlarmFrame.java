@@ -1,30 +1,16 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
 
-import com.syrus.AMFICOM.CORBA.General.AlarmStatus;
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.event.corba.AlarmStatus;
 import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
-import com.syrus.AMFICOM.Client.General.Filter.FilterDialog;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.Alarm.SystemEvent;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
-import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
-import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.DefaultAlarmFilter;
-import com.syrus.AMFICOM.Client.Survey.Alarm.UI.AlarmController;
-import com.syrus.AMFICOM.analysis.dadara.OpticalAlarmDescriptor;
+import com.syrus.AMFICOM.scheme.corba.*;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 
 import java.awt.BorderLayout;
@@ -321,12 +307,20 @@ public class AlarmFrame extends JInternalFrame
 						alarm.getMonitoredElementId(), true);
 				if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 					List tpathIds = me.getMonitoredDomainMemberIds();
-					for (Iterator it = Pool.getMap(SchemePath.typ).values().iterator(); it.hasNext(); ) {
+
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
+					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (Iterator it = paths.iterator(); it.hasNext(); ) {
 						SchemePath sp = (SchemePath)it.next();
-						if (sp.path != null && tpathIds.contains(sp.path.getId())) {
+						if (tpathIds.contains(sp.pathImpl().getId())) {
 							ev = new SchemeNavigateEvent(
-									new SchemePath[] {sp}
-									,
+									new SchemePath[] {sp},
 									SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT);
 							break;
 						}
@@ -334,12 +328,20 @@ public class AlarmFrame extends JInternalFrame
 				}
 				else if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_EQUIPMENT)) {
 					List eqIds = me.getMonitoredDomainMemberIds();
-					for (Iterator it = Pool.getMap(SchemeElement.typ).values().iterator(); it.hasNext(); ) {
+
+					Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).
+							getAccessIdentifier().domain_id);
+					Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+							domain_id, true);
+					DomainCondition condition = new DomainCondition(domain,
+							ObjectEntities.SCHEME_ELEMENT_ENTITY_CODE);
+					List elements = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+					for (Iterator it = elements.iterator(); it.hasNext(); ) {
 						SchemeElement se = (SchemeElement)it.next();
-						if (se.equipment != null && eqIds.contains(se.equipment.getId())) {
+						if (eqIds.contains(se.equipmentImpl().getId())) {
 							ev = new SchemeNavigateEvent(
-									new SchemeElement[] {se}
-									,
+									new SchemeElement[] {se},
 									SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT);
 							break;
 						}

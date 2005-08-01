@@ -1,60 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.DefaultSchematicsApplicationModelFactory;
-import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.SchemeEditor;
 
-public class OpenSchemeEditorCommand extends VoidCommand 
-{
-	private Dispatcher dispatcher;
+public class OpenSchemeEditorCommand extends AbstractCommand {
 	ApplicationContext aContext;
-	ApplicationModelFactory factory;
-
-	public OpenSchemeEditorCommand()
-	{
-	}
-
-	public OpenSchemeEditorCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
-	{
-		this.dispatcher = dispatcher;
-		this.aContext = aContext;
-		this.factory = factory;
-	}
-
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext)value);
-	}
-
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
+	
+	public OpenSchemeEditorCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	public void execute()
-	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.schemeEditing))
-		{
-			return;
-		}
-
-        System.out.println("Starting Scheme Editor window");
-
-		new SchemeEditor(new DefaultSchematicsApplicationModelFactory());
+	public void execute() {
+		new SchemeEditor();
 	}
 }

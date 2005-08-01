@@ -3,24 +3,12 @@ package com.syrus.AMFICOM.Client.Survey.Result;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersLayeredPanel;
 import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.MapMarkersPanel;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.SurveyEvent;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.GeneralTableModel;
-import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -176,7 +164,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		Set argumentSet = null;
 
 		Identifier meId = null;
-		String schemePathId = null;
+		Identifier schemePathId = null;
 
 		try {
 			if (result.getSort().equals(ResultSort.RESULT_SORT_MODELING)) {
@@ -207,8 +195,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 					addOnResult2 = (Result)MeasurementStorableObjectPool.getStorableObject(
 							(Identifier)resIds.get(0), true);
 
+				Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 				AnalysisUtil.load_Etalon(ms);
-				AnalysisUtil.load_CriteriaSet(ms);
+				AnalysisUtil.load_CriteriaSet(user_id, ms);
 				AnalysisUtil.load_Thresholds(userId, ms);
 			}
 		}
@@ -247,7 +236,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		this.resultTable.updateUI();
 	}
 
-	private void proccessParameters(SetParameter[] parameters, SetParameter[] arguments, Identifier meId, String schemePathId) {
+	private void proccessParameters(SetParameter[] parameters, SetParameter[] arguments, Identifier meId, Identifier schemePathId) {
 		for(int i = 0; i < parameters.length; i++) {
 			SetParameter param = (SetParameter)parameters[i];
 			ParameterType ptype = (ParameterType)param.getType();
@@ -315,7 +304,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		return val;
 	}
 
-	private void jbInitReflectogram(ReflectogramEvent[] ep, SetParameter[] args, Identifier monitored_element_id, String scheme_path_id)
+	private void jbInitReflectogram(ReflectogramEvent[] ep, SetParameter[] args, Identifier monitored_element_id, Identifier scheme_path_id)
 	{
 		if (ep == null)
 			return;
@@ -384,7 +373,7 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		}
 	}
 
-	private void jbInitReflectogram(BellcoreStructure bs, SetParameter[] args, Identifier monitored_element_id, String scheme_path_id)
+	private void jbInitReflectogram(BellcoreStructure bs, SetParameter[] args, Identifier monitored_element_id, Identifier scheme_path_id)
 	{
 		int n = bs.dataPts.TNDP;
 		double delta_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d /

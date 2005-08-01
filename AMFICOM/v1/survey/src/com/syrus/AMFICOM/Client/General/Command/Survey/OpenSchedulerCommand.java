@@ -1,53 +1,21 @@
 package com.syrus.AMFICOM.Client.General.Command.Survey;
 
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Schedule.Schedule;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 
-public class OpenSchedulerCommand extends VoidCommand
-{
-	private Dispatcher dispatcher;
+public class OpenSchedulerCommand extends AbstractCommand {
 	ApplicationContext aContext;
 
-	public OpenSchedulerCommand(Dispatcher dispatcher, ApplicationContext aContext)
-	{
-		this.dispatcher = dispatcher;
+	public OpenSchedulerCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("dispatcher"))
-			setDispatcher((Dispatcher)value);
-		else
-		if(field.equals("aContext"))
-			setApplicationContext((ApplicationContext)value);
+	public Object clone() {
+		return new OpenSchedulerCommand(this.aContext);
 	}
 
-	public void setDispatcher(Dispatcher dispatcher)
-	{
-		this.dispatcher = dispatcher;
-	}
-
-	public void setApplicationContext(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new OpenSchedulerCommand(dispatcher, aContext);
-	}
-
-	public void execute()
-	{
-		if(!Checker.checkCommandByUserId(
-				aContext.getSessionInterface().getUserId(),
-				Checker.openTestPlannerWindow))
-			return;
-
+	public void execute() {
 		new Schedule();
 	}
 }

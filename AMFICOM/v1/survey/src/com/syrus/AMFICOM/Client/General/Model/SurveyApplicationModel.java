@@ -1,7 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.Toolkit;
+
+import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.resource.SurveyResourceKeys;
 
 public class SurveyApplicationModel extends ApplicationModel
 {
@@ -24,19 +28,20 @@ public class SurveyApplicationModel extends ApplicationModel
 		add("menuStartAnalizeExt");
 		add("menuStartEvaluation");
 		add("menuStartPrognosis");
+		add("menuStartMapEditor");
+		add("menuStartSchemeEditor");
 
 		add("menuView");
-		add("menuViewMapOpen");
-		add("menuViewMapEditor");
-		add("menuViewMapClose");
-		add("menuViewSchemeOpen");
-		add("menuViewSchemeEditor");
-		add("menuViewSchemeClose");
-		add("menuViewMeasurements");
-		add("menuViewResults");
-		add("menuViewAlarms");
-		add("menuViewMapSetup");
-		add("menuViewAll");
+		add("menuViewMap");
+		add("menuViewScheme");
+		
+		add("menuWindowScheme");
+		add("menuWindowMap");
+		add("menuWindowProperties");
+		add("menuWindowCharacteristics");
+		add("menuWindowResults");
+		add("menuWindowAlarms");
+		add("menuWindowMeasurements");
 
 		add("menuReport");
 		add("menuTemplateReport");
@@ -51,28 +56,40 @@ public class SurveyApplicationModel extends ApplicationModel
 		add("menuHelpSupport");
 		add("menuHelpLicense");
 		add("menuHelpAbout");
+		
+		add(ApplicationModel.MENU_VIEW_ARRANGE);
 
+		this.initUIConstats();
 	}
-
-	private static DataSourceInterface dataSource = null;
 	
-	public DataSourceInterface getDataSource(final SessionInterface session) 
-	{
-		String connection = Environment.getConnectionType();
-        if ((this.session == null) || (!this.session.equals(session)))
-			synchronized (this) 
-			{
-					if ((this.session == null) || (!this.session.equals(session))) 
-					{
-						this.session = session;
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_RISD))
-							this.dataSource = new RISDSurveyDataSource(this.session);
-						else
-						if(connection.equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-							this.dataSource = new EmptySurveyDataSource(this.session);
-					}
-			}
-        return this.dataSource;
+	private void initUIConstats() {
+		UIManager.put(SurveyResourceKeys.ICON_OBSERVE, Toolkit
+				.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_MAP_OPEN, Toolkit
+				.getDefaultToolkit().getImage("images/main/map_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_SCHEME_OPEN, Toolkit
+				.getDefaultToolkit().getImage("images/main/schematics_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_ARCHIVE, Toolkit
+				.getDefaultToolkit().getImage("images/archive_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_ALARM, Toolkit
+				.getDefaultToolkit().getImage("images/alarm_bell_red.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_RESULT, Toolkit
+				.getDefaultToolkit().getImage("images/result.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_SCHEDULER, Toolkit
+				.getDefaultToolkit().getImage("images/main/scheduling_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_ANALYSIS, Toolkit
+				.getDefaultToolkit().getImage("images/main/analyse_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_SURVEY, Toolkit
+				.getDefaultToolkit().getImage("images/main/survey_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_EVALUATION, Toolkit
+				.getDefaultToolkit().getImage("images/main/evaluation_mini.gif"));
+		UIManager.put(SurveyResourceKeys.ICON_PREDICTION, Toolkit
+				.getDefaultToolkit().getImage("images/main/prognosis_mini.gif"));
+		
+		
+		
+		
+		
 	}
 }
 
