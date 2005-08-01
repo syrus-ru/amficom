@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.59 2005/08/01 10:47:56 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.60 2005/08/01 13:12:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/08/01 10:47:56 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/01 13:12:39 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -222,6 +222,27 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 */
 	@Override
 	public SchemeCableLink clone() throws CloneNotSupportedException {
+		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
+		final int depth = 1;
+		if (stackTrace.length > depth) {
+			final StackTraceElement stackTraceElement = stackTrace[depth];
+			final String className = stackTraceElement.getClassName();
+			final String methodName = stackTraceElement.getMethodName();
+			if (!(className.equals(Scheme.class.getName())
+					&& methodName.equals("clone"))) {
+				final StackTraceElement rootStackTraceElement = stackTrace[depth - 1];
+				throw new CloneNotSupportedException(
+						"invocation of "
+						+ rootStackTraceElement.getClassName()
+						+ '.' + rootStackTraceElement.getMethodName()
+						+ '(' + rootStackTraceElement.getFileName()
+						+ ':' + (rootStackTraceElement.getLineNumber() - 1)
+						+ ") from " + className + '.' + methodName + '('
+						+ stackTraceElement.getFileName() + ':'
+						+ stackTraceElement.getLineNumber() + ')'
+						+ " is prohibited");
+			}
+		}
 		try {
 			final SchemeCableLink clone = (SchemeCableLink) super.clone();
 

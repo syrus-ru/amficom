@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.13 2005/07/29 13:07:00 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.14 2005/08/01 13:12:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/29 13:07:00 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/01 13:12:39 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -71,6 +71,7 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testSetSchemePaths"));
 		testSuite.addTest(new SchemePathTestCase("testSchemeProtoElementClone"));
 		testSuite.addTest(new SchemePathTestCase("testGetCurrentSchemeMonitoringSolution"));
+		testSuite.addTest(new SchemePathTestCase("testInvalidClone"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -393,7 +394,6 @@ public final class SchemePathTestCase extends TestCase {
 	/**
 	 * @throws CreateObjectException 
 	 * @see Scheme#getCurrentSchemeMonitoringSolution()
-	 *
 	 */
 	public void testGetCurrentSchemeMonitoringSolution() throws CreateObjectException {
 		final Identifier userId = new Identifier("User_0");
@@ -465,6 +465,67 @@ public final class SchemePathTestCase extends TestCase {
 			System.out.println("Pass " + (i++)
 					+ "; old: " + oldSchemeMonitoringSolution.getName()
 					+ "; new: " + (newSchemeMonitoringSolution == null ? "<null>" : newSchemeMonitoringSolution.getName()));
+		}
+	}
+
+	public void testInvalidClone() throws CreateObjectException, CloneNotSupportedException {
+		final Identifier userId = new Identifier("User_0");
+		final Identifier domainId = new Identifier("Domain_0");
+		final Identifier imageId = new Identifier("ImageResource_0");
+
+		final LinkType linkType0 = LinkType.createInstance(userId, "codename", "description", "linkType0", LinkTypeSort.LINKTYPESORT_ETHERNET, "manufacturer", "manufactirer code", imageId);
+		final CableLinkType cableLinkType0 = CableLinkType.createInstance(userId, "codename", "description", "cableLinkType0", LinkTypeSort.LINKTYPESORT_GSM, "manufactirer", "manufactirer code", imageId);
+		final CableThreadType cableThreadType0 = CableThreadType.createInstance(userId, "codename", "description", "cableThreadType0", 0, linkType0, cableLinkType0);
+
+		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+		final SchemeElement schemeElement0 = SchemeElement.createInstance(userId, "schemeElement0", scheme0);
+		final SchemeDevice schemeDevice0 = SchemeDevice.createInstance(userId, "schemeDevice0", schemeElement0);
+		final SchemePort schemePort0 = SchemePort.createInstance(userId, "schemePort0", IdlDirectionType._IN, schemeDevice0);
+		final SchemeLink schemeLink0 = SchemeLink.createInstance(userId, "schemeLink0", schemeElement0);
+		final SchemeCableLink schemeCableLink0 = SchemeCableLink.createInstance(userId, "schemeCableLink0", scheme0);
+		final SchemeCableThread schemeCableThread0 = SchemeCableThread.createInstance(userId, "schemeCableThread0", cableThreadType0, schemeCableLink0);
+
+		scheme0.clone();
+		schemeElement0.clone();
+
+		try {
+			schemeDevice0.clone();
+			fail();
+		} catch (final CloneNotSupportedException cnse) {
+			System.out.println(cnse.getMessage());
+			assertTrue(true);
+		}
+
+		try {
+			schemePort0.clone();
+			fail();
+		} catch (final CloneNotSupportedException cnse) {
+			System.out.println(cnse.getMessage());
+			assertTrue(true);
+		}
+
+		try {
+			schemeLink0.clone();
+			fail();
+		} catch (final CloneNotSupportedException cnse) {
+			System.out.println(cnse.getMessage());
+			assertTrue(true);
+		}
+
+		try {
+			schemeCableLink0.clone();
+			fail();
+		} catch (final CloneNotSupportedException cnse) {
+			System.out.println(cnse.getMessage());
+			assertTrue(true);
+		}
+
+		try {
+			schemeCableThread0.clone();
+			fail();
+		} catch (final CloneNotSupportedException cnse) {
+			System.out.println(cnse.getMessage());
+			assertTrue(true);
 		}
 	}
 }

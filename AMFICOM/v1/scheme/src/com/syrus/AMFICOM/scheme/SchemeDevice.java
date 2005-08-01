@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.60 2005/07/31 19:11:07 bass Exp $
+ * $Id: SchemeDevice.java,v 1.61 2005/08/01 13:12:39 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/01 13:12:39 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -304,6 +304,28 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	@Override
 	public SchemeDevice clone() throws CloneNotSupportedException {
+		final StackTraceElement stackTrace[] = (new Throwable()).getStackTrace();
+		final int depth = 1;
+		if (stackTrace.length > depth) {
+			final StackTraceElement stackTraceElement = stackTrace[depth];
+			final String className = stackTraceElement.getClassName();
+			final String methodName = stackTraceElement.getMethodName();
+			if ((!className.equals(SchemeElement.class.getName())
+					&& !className.equals(SchemeProtoElement.class.getName()))
+					|| !methodName.equals("clone")) {
+				final StackTraceElement rootStackTraceElement = stackTrace[depth - 1];
+				throw new CloneNotSupportedException(
+						"invocation of "
+						+ rootStackTraceElement.getClassName()
+						+ '.' + rootStackTraceElement.getMethodName()
+						+ '(' + rootStackTraceElement.getFileName()
+						+ ':' + (rootStackTraceElement.getLineNumber() - 1)
+						+ ") from " + className + '.' + methodName + '('
+						+ stackTraceElement.getFileName() + ':'
+						+ stackTraceElement.getLineNumber() + ')'
+						+ " is prohibited");
+			}
+		}
 		try {
 			final SchemeDevice clone = (SchemeDevice) super.clone();
 	
