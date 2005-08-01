@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.2 2005/08/01 12:45:53 arseniy Exp $
+ * $Id: StorableObjectVersion.java,v 1.3 2005/08/01 13:15:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,11 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/01 12:45:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 13:15:43 $
  * @author $Author: arseniy $
  * @module general
  */
-public final class StorableObjectVersion implements Serializable {
+public final class StorableObjectVersion implements Cloneable, Serializable {
 	private static final long serialVersionUID = -5642797178846561548L;
 
 	public static final StorableObjectVersion ILLEGAL_VERSION = new StorableObjectVersion(-1L);
