@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.5 2005/07/29 12:12:33 bob Exp $
+ * $Id: UserBean.java,v 1.6 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.jgraph.JGraph;
@@ -25,12 +24,10 @@ import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
 
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -63,8 +60,6 @@ public class UserBean extends Bean {
 	
 	private String	cellular;
 	
-	WrapperedPropertyTable table;
-
 	UserBean(List<String> names) {
 		this.names = names;
 	}
@@ -165,16 +160,7 @@ public class UserBean extends Bean {
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_NATURE, oldValue, nature));
 		}		
 	}
-	
-	@Override
-	public JPanel getPropertyPanel() {
-		WrapperedPropertyTableModel model = 
-			(WrapperedPropertyTableModel) this.table.getModel();
-		model.setObject(this);
-		return super.getPropertyPanel();
-	}
 
-	
 	public final String getBuilding() {
 		return this.building;
 	}

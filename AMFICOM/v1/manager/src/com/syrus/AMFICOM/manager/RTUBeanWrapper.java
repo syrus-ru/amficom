@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.1 2005/07/29 12:12:33 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.2 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,10 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module Miscs
+ * @module manager
  */
 public class RTUBeanWrapper implements Wrapper {
 
@@ -34,7 +34,7 @@ public class RTUBeanWrapper implements Wrapper {
 
 	private static RTUBeanWrapper	instance;
 
-	private List					keys;
+	private List<String>					keys;
 	
 	private Map<Identifier, String> 	mcmIdMapReverce; 
 	private Map<String, Identifier> 	mcmIdMap;
@@ -69,10 +69,10 @@ public class RTUBeanWrapper implements Wrapper {
 	}
 
 	public String getKey(int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 

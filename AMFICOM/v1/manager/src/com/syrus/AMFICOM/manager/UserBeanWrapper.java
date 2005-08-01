@@ -8,7 +8,7 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.2 2005/07/26 14:42:05 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.3 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,10 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/26 14:42:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module Miscs
+ * @module manager
  */
 public class UserBeanWrapper implements Wrapper {
 
@@ -38,10 +38,10 @@ public class UserBeanWrapper implements Wrapper {
 
 	private static UserBeanWrapper	instance;
 
-	private List					keys;
+	private List<String>					keys;
 
 	public String getKey(int index) {
-		return (String) this.keys.get(index);
+		return this.keys.get(index);
 	}
 
 	private UserBeanWrapper() {
@@ -69,7 +69,7 @@ public class UserBeanWrapper implements Wrapper {
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.9 2005/07/29 12:12:33 bob Exp $
+ * $Id: AbstractBean.java,v 1.10 2005/08/01 11:32:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/01 11:32:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module manager_v1
+ * @module manager
  */
 public abstract class AbstractBean {
 
@@ -48,7 +48,7 @@ public abstract class AbstractBean {
 		return this.storableObject;
 	}
 
-	public final boolean isTargetValid(AbstractBean targetBean) {
+	public boolean isTargetValid(AbstractBean targetBean) {
 		return this.validator != null ? this.validator.isValid(this, targetBean) :
 		// TODO development bypass
 				true;

@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.6 2005/07/29 12:12:33 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.7 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,19 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.event.ActionEvent;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-
-import org.jgraph.graph.DefaultGraphCell;
-import org.jgraph.graph.Port;
-
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.general.Identifier;
 
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class DomainBeanFactory extends AbstractBeanFactory {
+public class DomainBeanFactory extends TabledBeanFactory {
 	
 	private static DomainBeanFactory instance;
-	
-	private Validator validator;
 	
 	private DomainBeanFactory() {
 		super("Entity.Domain", 
@@ -54,81 +42,23 @@ public class DomainBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		AbstractBean bean = new AbstractBean() {
-			
-			@Override
-			public JPopupMenu getMenu(	final JGraphText graph,
-										final Object cell) {
-
-				if (cell != null) {
-					final JPopupMenu popupMenu = new JPopupMenu();
-
-					popupMenu.add(new AbstractAction(LangModelManager.getString("Dialog.EnterIntoDomain")) {
-
-						public void actionPerformed(ActionEvent e) {
-							
-							DefaultGraphCell cell2 =  (DefaultGraphCell) cell;
-							
-							MPort port = (MPort) cell2.getChildAt(0);
-							
-							List<Port> ports = graph.isDirect() ? port.getTargets() : port.getSources();
-							
-							if (ports.isEmpty()) {
-								JOptionPane.showMessageDialog(popupMenu, 
-									LangModelManager.getString("Error.DomainDoesnotContainNetwork"), 
-									LangModelManager.getString("Error"),
-									JOptionPane.ERROR_MESSAGE);
-								return;
-							}
-							
-							for(Port port2 : ports) {
-								MPort port3 = (MPort) port2;
-								AbstractBean bean2 = port3.getBean();
-								
-								if (bean2 == null || !bean2.getCodeName().equals("Net")) {
-									JOptionPane.showMessageDialog(popupMenu, 
-										LangModelManager.getString("Error.DomainContainsNotOnlyNetwork"), 
-										LangModelManager.getString("Error"),
-										JOptionPane.ERROR_MESSAGE);
-									return;
-								}
-							}
-							
-							graph.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + cell2.getUserObject());
-							
-							graph.domainsButton.setEnabled(true);
-							
-							graph.domainButton.setEnabled(false);
-							
-							graph.netButton.setEnabled(false);
-							
-							graph.userButton.setEnabled(true);
-
-							graph.armButton.setEnabled(true);
-
-							graph.rtuButton.setEnabled(true);
-
-							graph.serverButton.setEnabled(true);
-
-							graph.mcmButton.setEnabled(true);
-							
-							graph.showOnlyDescendants(cell2);
-							
-							graph.showOnly(new String[] {"Net", "User", "ARM", "RTU", "Server", "MCM"});
-							
-							System.out.println("DomainBeanFactory | entered");
-						};
-					});
-					return popupMenu;
-				}
-
-				return null;
-			}			
-		};
+		DomainBean bean = new DomainBean();
 		
 		bean.setCodeName("Domain");
 		bean.setValidator(this.getValidator());
-		bean.setName("Domain" + (++this.count));
+		bean.setName("Domain_" + (++this.count));		
+		bean.setId(new Identifier(bean.getName()));		
+		bean.table = super.getTable(bean, 
+			DomainBeanWrapper.getInstance(),
+			new String[] {
+				DomainBeanWrapper.KEY_NAME,
+				DomainBeanWrapper.KEY_DESCRIPTION}
+			);
+		bean.addPropertyChangeListener(this.listener);
+		
+		bean.setPropertyPanel(this.panel);
+		
+		
 		return bean;
 	}
 	

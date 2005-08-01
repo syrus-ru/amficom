@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.1 2005/07/29 12:12:33 bob Exp $
+ * $Id: RTUBean.java,v 1.2 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,54 +10,21 @@ package com.syrus.AMFICOM.manager;
 
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.JPanel;
-
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class RTUBean extends Bean {
 
-	private String			description;
-
 	private String			hostname;
 
 	private int				port;
 
 	private Identifier		mcmId;
-
-	WrapperedPropertyTable	table;
-	
-	@Override
-	public JPanel getPropertyPanel() {
-		WrapperedPropertyTableModel model = 
-			(WrapperedPropertyTableModel) this.table.getModel();
-		model.setObject(this);
-		return super.getPropertyPanel();
-	}
-
-	
-	public final String getDescription() {
-		return this.description;
-	}
-
-	
-	public final void setDescription(String description) {
-		if (this.description != description &&
-				(this.description != null && !this.description.equals(description) ||
-				!description.equals(this.description))) {
-			String oldValue = this.description;
-			this.description = description;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, RTUBeanWrapper.KEY_DESCRIPTION, oldValue, description));
-		}	
-	}
-
 	
 	public final String getHostname() {
 		return this.hostname;
@@ -89,19 +56,6 @@ public class RTUBean extends Bean {
 		}	
 
 	}
-
-	
-	public final void setName(String name) {
-		if (this.name != name &&
-				(this.name != null && !this.name.equals(name) ||
-				!name.equals(this.name))) {
-			String oldValue = this.name;
-			this.name = name;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, RTUBeanWrapper.KEY_NAME, oldValue, name));
-		}	
-	}
-
-
 	
 	public final Identifier getMcmId() {
 		return this.mcmId;

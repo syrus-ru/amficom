@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.15 2005/07/29 12:12:34 bob Exp $
+ * $Id: JGraphText.java,v 1.16 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/29 12:12:34 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -89,6 +89,8 @@ import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
+
+import static com.syrus.AMFICOM.manager.DomainBeanWrapper.*;
 
 public class JGraphText implements GraphSelectionListener {	
 	
@@ -1215,8 +1217,7 @@ public class JGraphText implements GraphSelectionListener {
 			bean.addPropertyChangeListener(new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					// TODO use const instead of "name"
-					if (evt.getPropertyName().equals("name")) {
+					if (evt.getPropertyName().equals(KEY_NAME)) {
 						AttributeMap attributeMap = new AttributeMap();
 						GraphConstants.setValue(attributeMap, evt.getNewValue());
 						Map viewMap = new Hashtable();

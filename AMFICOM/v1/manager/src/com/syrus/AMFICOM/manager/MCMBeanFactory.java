@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.3 2005/07/19 09:49:00 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.4 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,18 @@
 
 package com.syrus.AMFICOM.manager;
 
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.*;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/19 09:49:00 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module manager_v1
+ * @module manager
  */
-public class MCMBeanFactory extends AbstractBeanFactory {
+public class MCMBeanFactory extends TabledBeanFactory {
 	
 	private static MCMBeanFactory instance;
-	
-	private Validator validator;
 	
 	private MCMBeanFactory() {
 		super("Entity.MeasurementContolModule", 
@@ -42,10 +41,19 @@ public class MCMBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		AbstractBean bean = new AbstractBean() {};
+		MCMBean bean = new MCMBean();
 		bean.setCodeName("MCM");
 		bean.setValidator(this.getValidator());
 		bean.setName("MCM" + (++this.count));
+		bean.table = super.getTable(bean, 
+			MCMBeanWrapper.getInstance(),
+			new String[] { KEY_NAME, 
+				KEY_DESCRIPTION, 
+				KEY_HOSTNAME,
+				KEY_SERVER_ID,
+				KEY_USER_ID});
+		bean.addPropertyChangeListener(this.listener);
+		bean.setPropertyPanel(this.panel);
 		return bean;
 	}
 	

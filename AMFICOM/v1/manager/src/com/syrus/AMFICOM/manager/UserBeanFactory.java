@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.8 2005/07/29 12:12:33 bob Exp $
+* $Id: UserBeanFactory.java,v 1.9 2005/08/01 11:32:03 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,42 +8,34 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_FULL_NAME;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_BUILDING;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_CELLULAR;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_CITY;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_COMPANY;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_DEPARTEMENT;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_EMAIL;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_NATURE;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_PHONE;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_POSITION;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_ROOM_NO;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_STREET;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
-
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.*;
-
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/29 12:12:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBeanFactory extends AbstractBeanFactory {
+public class UserBeanFactory extends TabledBeanFactory {
 
 	private static UserBeanFactory instance;
 	
-	private Validator validator;
-	
 	private List<String> names;
-
-	private PropertyChangeListener	listener;
-
-	WrapperedPropertyTable	table;
-
-	private JPanel	panel;
-	
 	private UserBeanFactory() {
 		super("Entity.User", 
 			"Entity.User", 
@@ -80,50 +72,23 @@ public class UserBeanFactory extends AbstractBeanFactory {
 		UserBean bean = new UserBean(this.names);
 		bean.setName("User" + (++super.count));
 		bean.setCodeName("User");
-		bean.setValidator(this.getValidator());
+		bean.setValidator(this.getValidator());		
 		
-		if (this.table == null) {
-			final UserBeanWrapper wrapper = UserBeanWrapper.getInstance();
-	
-			this.table = 
-				new WrapperedPropertyTable(wrapper, 
-					bean, 
-					new String[] { KEY_FULL_NAME, 
-							KEY_USER_NATURE, 
-							KEY_USER_POSITION,
-							KEY_USER_DEPARTEMENT,
-							KEY_USER_COMPANY,
-							KEY_USER_ROOM_NO,
-							KEY_USER_CITY,
-							KEY_USER_STREET,
-							KEY_USER_BUILDING,
-							KEY_USER_EMAIL,
-							KEY_USER_PHONE,
-							KEY_USER_CELLULAR}
-				);
-			this.table.setDefaultTableCellRenderer();			
-	
-			this.listener = new PropertyChangeListener() {
-				public void propertyChange(PropertyChangeEvent evt) {
-					WrapperedPropertyTableModel model = (WrapperedPropertyTableModel)UserBeanFactory.this.table.getModel();
-					model.fireTableDataChanged();
-				}
-			};
-			
-			
-			this.panel = new JPanel(new GridBagLayout());
-			GridBagConstraints gbc = new GridBagConstraints();
-			gbc.fill = GridBagConstraints.BOTH;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			gbc.weightx = 1.0;
-			gbc.weighty = 1.0;
-			this.panel.add(this.table.getTableHeader(), gbc);		
-			this.panel.add(new JScrollPane(this.table), gbc);
-
-			System.out.println("UserBeanFactory.createBean() | create table ");
-		}
+		bean.table = super.getTable(bean, 
+			UserBeanWrapper.getInstance(),
+			new String[] { KEY_FULL_NAME, 
+				KEY_USER_NATURE, 
+				KEY_USER_POSITION,
+				KEY_USER_DEPARTEMENT,
+				KEY_USER_COMPANY,
+				KEY_USER_ROOM_NO,
+				KEY_USER_CITY,
+				KEY_USER_STREET,
+				KEY_USER_BUILDING,
+				KEY_USER_EMAIL,
+				KEY_USER_PHONE,
+				KEY_USER_CELLULAR});
 		
-		bean.table = this.table;
 		bean.addPropertyChangeListener(this.listener);
 		
 		bean.setPropertyPanel(this.panel);

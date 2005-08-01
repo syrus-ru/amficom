@@ -1,5 +1,5 @@
 /*-
- * $Id: MPort.java,v 1.2 2005/07/25 05:59:25 bob Exp $
+ * $Id: MPort.java,v 1.3 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/25 05:59:25 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -56,7 +56,7 @@ public class MPort extends DefaultGraphCell implements Port {
 	 * and a reference to the specified anchor.
 	 *
 	 * @param userObject reference to the user object
-	 * @param reference to a a graphcell that constitutes the anchor
+	 * @param anchor to a a graphcell that constitutes the anchor
 	 */
 	public MPort(Object userObject, Port anchor) {
 		super(userObject);

@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.6 2005/07/19 14:31:13 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.7 2005/08/01 11:32:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,10 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/19 14:31:13 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/01 11:32:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
- * @module manager_v1
+ * @module manager
  */
 public class NetBeanFactory extends AbstractBeanFactory {
 	
