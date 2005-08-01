@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.45 2005/07/18 15:24:43 arseniy Exp $
+ * $Id: KISReport.java,v 1.46 2005/08/01 13:52:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/18 15:24:43 $
+ * @version $Revision: 1.46 $, $Date: 2005/08/01 13:52:56 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -55,7 +55,7 @@ public class KISReport {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
+		final Set<StorableObjectCondition> typicalConditions = new HashSet<StorableObjectCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i].stringValue(),
 					OperationSort.OPERATION_EQUALS,
@@ -65,10 +65,12 @@ public class KISReport {
 
 		try {
 			final StorableObjectCondition condition;
-			if (typicalConditions.size() == 1)
+			if (typicalConditions.size() == 1) {
 				condition = typicalConditions.iterator().next();
-			else
+			}
+			else {
 				condition = new CompoundCondition(typicalConditions, CompoundConditionSort.OR);
+			}
 			final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 			for (final ParameterType parameterType : parameterTypes) {
 				OUT_PARAMETER_TYPE_IDS_MAP.put(parameterType.getCodename(), parameterType.getId());
@@ -97,7 +99,8 @@ public class KISReport {
 			}
 
 			final Result result = measurement.createResult(LoginManager.getUserId(), parameters);
-			StorableObjectPool.flush(result, false);
+			StorableObjectPool.flush(result, LoginManager.getUserId(), true);
+			//StorableObjectPool.flush(result, false);
 			return result;
 		}
 		catch (ApplicationException ae) {
