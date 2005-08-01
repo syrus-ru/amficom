@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.172 2005/07/29 16:15:08 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.173 2005/08/01 11:57:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.172 $, $Date: 2005/07/29 16:15:08 $
+ * @version $Revision: 1.173 $, $Date: 2005/08/01 11:57:39 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -573,7 +573,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		PreparedStatement preparedStatement = null;
 		final Connection connection = DatabaseConnection.getConnection();
 		Identifier id = null;
-		final Set<StorableObject> setUpdatedStorableObjects = new HashSet<StorableObject>();
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
@@ -588,9 +587,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					Log.errorException(roe);
 				}
 
-				storableObject.setUpdated(storableObject.getCreatorId());
-				setUpdatedStorableObjects.add(storableObject);
-
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
 				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
 						+ " '" + id + "'", Log.DEBUGLEVEL09);
@@ -598,15 +594,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 
 			connection.commit();
-			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = it.next();
-				storableObject.cleanupUpdate();
-			}
 		} catch (SQLException sqle) {
-			for (final Iterator<StorableObject> it = setUpdatedStorableObjects.iterator(); it.hasNext();) {
-				final StorableObject storableObject = it.next();
-				storableObject.rollbackUpdate();
-			}
 			try {
 				connection.rollback();
 			} catch (SQLException sqle1) {
@@ -711,9 +699,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final Set<Identifier> ids = Identifier.createIdentifiers(storableObjects);
 		final Set<Identifier> dbIds = this.retrievePresentInDatabaseIds(ids);
 
-		final Set<StorableObject> updateStorableObjects = new HashSet<StorableObject>();
-		final Set<StorableObject> insertStorableObjects = new HashSet<StorableObject>();
-		for (final StorableObject storableObject : storableObjects) {
+		final Set<T> updateStorableObjects = new HashSet<T>();
+		final Set<T> insertStorableObjects = new HashSet<T>();
+		for (final T storableObject : storableObjects) {
 			if (dbIds.contains(storableObject.getId())) {
 				updateStorableObjects.add(storableObject);
 			}
@@ -722,8 +710,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 
-		this.insert(storableObjects);
-		this.update(storableObjects);
+		this.insert(insertStorableObjects);
+		this.update(updateStorableObjects);
 	}
 
 	protected void update(final Set<T> storableObjects) throws UpdateObjectException {
