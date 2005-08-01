@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.19 2005/07/22 06:39:51 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.20 2005/08/01 10:55:16 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/01 10:55:16 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -245,6 +245,15 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		SimpleReflectogramEvent ev = rse[i];
 		double y0 = mt.getY(ev.getBegin());
 		double y1 = mt.getY(ev.getEnd());
+		// если слева лин. событие хотя бы из 5 точек,
+		// то альтернативным y0 будет экстраполированное значение по точке
+		// непосредственно слева началом события;
+		// иначе альтернативное y0 совпадает с y0
+		double y0alt = i > 0 && rse[i - 1].getEventType() ==
+					SimpleReflectogramEvent.LINEAR
+					&& rse[i - 1].getEnd() - rse[i - 1].getBegin() > 5
+				? mt.getY(ev.getBegin() - 1) - linearTangent(i - 1) * 1.0
+				: y0;
 		switch(ev.getEventType()) {
 		case SimpleReflectogramEvent.LINEAR:
 			return new LinearDetailedEvent(ev,
@@ -275,14 +284,14 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 					cinfo.getAdz(i));
 		case SimpleReflectogramEvent.ENDOFTRACE:
 			return new EndOfTraceDetailedEvent(ev,
-					y0 - cinfo.getYTop(),
+					y0alt - cinfo.getYTop(),
 					ReflectogramMath.getYMax(ev, mt) - cinfo.getYTop());
 		case SimpleReflectogramEvent.CONNECTOR:
 			return new ConnectorDetailedEvent(ev,
-					y0 - cinfo.getYTop(),
+					y0alt - cinfo.getYTop(),
 					y1 - cinfo.getYTop(),
 					ReflectogramMath.getYMax(ev, mt) - cinfo.getYTop(),
-					y0 - y1 - getAddToMLoss(i, true, false));
+					y0alt - y1 - getAddToMLoss(i, true, false));
 		default:
 			// FIXME: error processing: this seem to may occur even when
 			// receiving invalid eventType from server.
