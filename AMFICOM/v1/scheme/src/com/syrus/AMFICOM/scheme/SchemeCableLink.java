@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.58 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.59 2005/08/01 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -38,6 +39,7 @@ import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -58,7 +60,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/01 10:47:56 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -214,14 +216,37 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		schemeCableThread.setParentSchemeCableLink(this);
 	}
 
+	/**
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 */
 	@Override
 	public SchemeCableLink clone() throws CloneNotSupportedException {
-		final SchemeCableLink schemeCableLink = (SchemeCableLink) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCableLink;
+		try {
+			final SchemeCableLink clone = (SchemeCableLink) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			for (final SchemeCableThread schemeCableThread : this.getSchemeCableThreads0()) {
+				final SchemeCableThread schemeCableThreadClone = schemeCableThread.clone();
+				clone.clonedIdMap.putAll(schemeCableThreadClone.getClonedIdMap());
+				clone.addSchemeCableThread(schemeCableThreadClone);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	public SortedSet<CableChannelingItem> getPathMembers() {

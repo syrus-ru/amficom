@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.62 2005/08/01 08:29:01 bass Exp $
+ * $Id: SchemeElement.java,v 1.63 2005/08/01 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/08/01 08:29:01 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/01 10:47:55 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -448,12 +448,62 @@ public final class SchemeElement extends AbstractSchemeElement implements
 
 	@Override
 	public SchemeElement clone() throws CloneNotSupportedException {
-		final SchemeElement schemeElement = (SchemeElement) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeElement;
+		try {
+			final SchemeElement clone = (SchemeElement) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			final SchemeImageResource ugoCell = this.getUgoCell0();
+			if (ugoCell == null) {
+				clone.setUgoCell(null);
+			} else {
+				final SchemeImageResource ugoCellClone = ugoCell.clone();
+				clone.clonedIdMap.putAll(ugoCellClone.getClonedIdMap());
+				clone.setUgoCell(ugoCellClone);
+			}
+			final SchemeImageResource schemeCell = this.getSchemeCell0();
+			if (schemeCell == null) {
+				clone.setSchemeCell(null);
+			} else {
+				final SchemeImageResource schemeCellClone = schemeCell.clone();
+				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
+				clone.setSchemeCell(schemeCellClone);
+			}
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
+				clone.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
+				clone.addSchemeDevice(schemeDeviceClone);
+			}
+			for (final SchemeLink schemeLink : this.getSchemeLinks0()) {
+				final SchemeLink schemeLinkClone = schemeLink.clone();
+				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
+				clone.addSchemeLink(schemeLinkClone);
+			}
+			for (final Scheme scheme : this.getSchemes0()) {
+				final Scheme schemeClone = scheme.clone();
+				clone.clonedIdMap.putAll(schemeClone.getClonedIdMap());
+				clone.addScheme(schemeClone);
+			}
+			for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+				final SchemeElement schemeElementClone =  schemeElement.clone();
+				clone.clonedIdMap.putAll(schemeElementClone.getClonedIdMap());
+				clone.addSchemeElement(schemeElementClone);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	/**
@@ -603,17 +653,26 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * A wrapper around {@link #getSchemeCellId()}.
+	 * A wrapper around {@link #getSchemeCell0()}.
 	 *
 	 * @see SchemeCellContainer#getSchemeCell()
 	 */
 	public SchemeImageResource getSchemeCell() {
 		try {
-			return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
+			return this.getSchemeCell0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getSchemeCellId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	private SchemeImageResource getSchemeCell0() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
 	/**
@@ -752,17 +811,26 @@ public final class SchemeElement extends AbstractSchemeElement implements
 	}
 
 	/**
-	 * A wrapper around {@link #getUgoCellId()}.
+	 * A wrapper around {@link #getUgoCell0()}.
 	 *
 	 * @see SchemeCellContainer#getUgoCell()
 	 */
 	public SchemeImageResource getUgoCell() {
 		try {
-			return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
+			return this.getUgoCell0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getUgoCellId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	private SchemeImageResource getUgoCell0() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
 	/**

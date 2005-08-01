@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.50 2005/07/28 09:56:43 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.51 2005/08/01 10:47:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/07/28 09:56:43 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/01 10:47:55 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -192,12 +192,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 
 	@Override
 	public SchemeCablePort clone() throws CloneNotSupportedException {
-		final SchemeCablePort schemeCablePort = (SchemeCablePort) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCablePort;
+		return (SchemeCablePort) super.clone();
 	}
 
 	/**

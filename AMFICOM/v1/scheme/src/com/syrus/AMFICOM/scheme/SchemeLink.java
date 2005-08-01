@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.53 2005/07/31 19:11:08 bass Exp $
+ * $Id: SchemeLink.java,v 1.54 2005/08/01 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,6 +43,7 @@ import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -63,7 +65,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/07/31 19:11:08 $
+ * @version $Revision: 1.54 $, $Date: 2005/08/01 10:47:56 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -458,13 +460,32 @@ public final class SchemeLink extends AbstractSchemeLink {
 		}
 	}
 
+	/**
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 */
 	@Override
 	public SchemeLink clone() throws CloneNotSupportedException {
-		final SchemeLink schemeLink = (SchemeLink) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeLink;
+		try {
+			final SchemeLink clone = (SchemeLink) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	/**

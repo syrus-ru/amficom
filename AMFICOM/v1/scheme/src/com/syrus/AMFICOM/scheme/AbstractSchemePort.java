@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.47 2005/07/31 19:11:07 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.48 2005/08/01 10:47:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.47 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.48 $, $Date: 2005/08/01 10:47:56 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -480,6 +481,34 @@ public abstract class AbstractSchemePort
 		this.portId = new Identifier(portId1);
 		this.measurementPortId = new Identifier(measurementPortId1);
 		this.parentSchemeDeviceId = new Identifier(parentSchemeDeviceId1);
+	}
+
+	/**
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 */
+	@Override
+	public AbstractSchemePort clone() throws CloneNotSupportedException {
+		try {
+			final AbstractSchemePort clone = (AbstractSchemePort) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	/*-********************************************************************

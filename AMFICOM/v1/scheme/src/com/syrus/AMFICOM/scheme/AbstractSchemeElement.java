@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.41 2005/07/31 19:11:08 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.42 2005/08/01 10:47:56 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/07/31 19:11:08 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/01 10:47:56 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -112,7 +112,7 @@ public abstract class AbstractSchemeElement
 		}
 	}
 
-	private Set<Characteristic> getCharacteristics0() throws ApplicationException {
+	Set<Characteristic> getCharacteristics0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.57 2005/07/31 19:11:08 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.58 2005/08/01 10:47:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/31 19:11:08 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/01 10:47:56 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -204,13 +205,32 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		}
 	}
 
+	/**
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 */
 	@Override
 	public SchemeCableThread clone() throws CloneNotSupportedException {
-		final SchemeCableThread schemeCableThread = (SchemeCableThread) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCableThread;
+		try {
+			final SchemeCableThread clone = (SchemeCableThread) super.clone();
+
+			if (clone.clonedIdMap == null) {
+				clone.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			clone.clonedIdMap.put(this.id, clone.id);
+
+			for (final Characteristic characteristic : this.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(clone.id);
+			}
+			return clone;
+		} catch (final ApplicationException ae) {
+			final CloneNotSupportedException cnse = new CloneNotSupportedException();
+			cnse.initCause(ae);
+			throw cnse;
+		}
 	}
 
 	Identifier getCableThreadTypeId() {
