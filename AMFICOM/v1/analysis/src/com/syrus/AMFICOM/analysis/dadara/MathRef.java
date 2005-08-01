@@ -141,6 +141,21 @@ public class MathRef
 		return ret;
 	}
 
+	/**
+	 * определяет амплитуду отражательного всплеска
+	 * по коэффициенту отражения.
+	 * <p> Используется в модуле "моделирование" </p>
+	 * @param sigma определяется через {@link #calcSigma(int, int)}
+	 * @param reflectance отражение (дБ с масштабом 10)
+	 * @return амплитуда отражательного всплеска (дБ с масштабом 5)
+	 */
+	public static double calcPeakByReflectance(double sigma,
+			double reflectance) {
+		return 5.0 * Math.log10(
+				Math.pow(10.0, (reflectance + sigma) / 10.0 )
+				+ 1);
+	}
+
 	public static double round_4 (double d)
 	{
 		return Math.round(d * 10000.0) / 10000.0;
