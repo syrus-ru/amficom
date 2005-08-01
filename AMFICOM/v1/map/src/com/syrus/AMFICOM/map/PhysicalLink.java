@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.79 2005/07/29 13:09:29 max Exp $
+ * $Id: PhysicalLink.java,v 1.80 2005/08/01 10:32:08 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: max $
- * @version $Revision: 1.79 $, $Date: 2005/07/29 13:09:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.80 $, $Date: 2005/08/01 10:32:08 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -859,7 +859,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	/**
 	 * {@inheritDoc}
 	 */
-	public java.util.Map getExportMap() {
+	public java.util.Map<String, Object> getExportMap() {
 		if (exportMap == null)
 			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
