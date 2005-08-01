@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.61 2005/07/31 19:25:53 bass Exp $
+ * $Id: SchemeElement.java,v 1.62 2005/08/01 08:29:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import static java.util.logging.Level.WARNING;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,6 +45,7 @@ import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -68,7 +70,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/07/31 19:25:53 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/01 08:29:01 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement implements
@@ -210,6 +212,80 @@ public final class SchemeElement extends AbstractSchemeElement implements
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", "", null, null,
 				null, null, null, null, null, parentSchemeElement);
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, Scheme)}
+	 *
+	 * @param creatorId
+	 * @param schemeProtoElement
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final SchemeProtoElement schemeProtoElement,
+			final Scheme parentScheme)
+	throws CreateObjectException {
+		try {
+			final SchemeElement schemeElement = createInstance(creatorId,
+					schemeProtoElement.getName(),
+					schemeProtoElement.getDescription(),
+					schemeProtoElement.getLabel(),
+					schemeProtoElement.getEquipmentType0(),
+					null,
+					null,
+					null,
+					schemeProtoElement.getSymbol0(),
+					null,
+					null,
+					parentScheme);
+
+			schemeElement.fillProperties(schemeProtoElement);
+			return schemeElement;
+		} catch (final ApplicationException ae) {
+			if (ae instanceof CreateObjectException) {
+				throw (CreateObjectException) ae;
+			}
+			throw new CreateObjectException(ae);
+		}
+	}
+
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, String, String, EquipmentType, Equipment, KIS, SiteNode, BitmapImageResource, SchemeImageResource, SchemeImageResource, SchemeElement)}.
+	 *
+	 * @param creatorId
+	 * @param schemeProtoElement
+	 * @param parentSchemeElement
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final SchemeProtoElement schemeProtoElement,
+			final SchemeElement parentSchemeElement)
+	throws CreateObjectException {
+		try {
+			final SchemeElement schemeElement = createInstance(creatorId,
+					schemeProtoElement.getName(),
+					schemeProtoElement.getDescription(),
+					schemeProtoElement.getLabel(),
+					schemeProtoElement.getEquipmentType0(),
+					null,
+					null,
+					null,
+					schemeProtoElement.getSymbol0(),
+					null,
+					null,
+					parentSchemeElement);
+
+			schemeElement.fillProperties(schemeProtoElement);
+			return schemeElement;
+		} catch (final ApplicationException ae) {
+			if (ae instanceof CreateObjectException) {
+				throw (CreateObjectException) ae;
+			}
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**
@@ -1098,6 +1174,60 @@ public final class SchemeElement extends AbstractSchemeElement implements
 		return this.equipmentId != null
 				&& this.equipmentTypeId != null
 				&& (this.equipmentId.isVoid() ^ this.equipmentTypeId.isVoid());
+	}
+
+	/**
+	 * Invoked just upon creation of a new instance from
+	 * {@link #createInstance(Identifier, SchemeProtoElement, Scheme)} and
+	 * {@link #createInstance(Identifier, SchemeProtoElement, SchemeElement)}.
+	 *
+	 * Actions taken are similar to those in {@link SchemeProtoElement#clone()}.
+	 *
+	 * @param schemeProtoElement
+	 * @throws ApplicationException
+	 * @see SchemeProtoElement#clone()
+	 */
+	private void fillProperties(final SchemeProtoElement schemeProtoElement)
+	throws ApplicationException {
+		try {
+			if (super.clonedIdMap == null) {
+				super.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+	
+			final SchemeImageResource ugoCell = schemeProtoElement.getUgoCell0();
+			if (ugoCell == null) {
+				this.setUgoCell(null);
+			} else {
+				final SchemeImageResource ugoCellClone = ugoCell.clone();
+				super.clonedIdMap.putAll(ugoCellClone.getClonedIdMap());
+				this.setUgoCell(ugoCellClone);
+			}
+			final SchemeImageResource schemeCell = schemeProtoElement.getSchemeCell0();
+			if (schemeCell == null) {
+				this.setSchemeCell(null);
+			} else {
+				final SchemeImageResource schemeCellClone = schemeCell.clone();
+				super.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
+				this.setSchemeCell(schemeCellClone);
+			}
+			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics0()) {
+				final Characteristic characteristicClone = characteristic.clone();
+				super.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
+				characteristicClone.setCharacterizableId(super.id);
+			}
+			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0()) {
+				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
+				super.clonedIdMap.putAll(schemeDeviceClone.getClonedIdMap());
+				this.addSchemeDevice(schemeDeviceClone);
+			}
+			for (final SchemeLink schemeLink : schemeProtoElement.getSchemeLinks0()) {
+				final SchemeLink schemeLinkClone = schemeLink.clone();
+				super.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
+				this.addSchemeLink(schemeLinkClone);
+			}
+		} catch (final CloneNotSupportedException cnse) {
+			throw new CreateObjectException(cnse);
+		}
 	}
 
 	public Set<SchemeCablePort> getSchemeCablePortsRecursively() {

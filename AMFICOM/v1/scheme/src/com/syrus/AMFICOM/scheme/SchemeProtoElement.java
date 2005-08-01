@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.67 2005/07/31 19:11:07 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.68 2005/08/01 08:29:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/01 08:29:01 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -441,6 +441,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		return true;
 	}
 
+	/**
+	 * @throws CloneNotSupportedException
+	 * @see Object#clone()
+	 * @see SchemeElement#fillProperties(SchemeProtoElement)
+	 */
 	@Override
 	public SchemeProtoElement clone() throws CloneNotSupportedException {
 		try {
@@ -508,7 +513,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	private Set<Characteristic> getCharacteristics0() throws ApplicationException {
+	Set<Characteristic> getCharacteristics0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
 	}
 
@@ -559,7 +564,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #getEquipmentTypeId()}.
+	 * A wrapper around {@link #getEquipmentType0()}.
 	 *
 	 * @return <code>equipmentType</code> associated with this
 	 *         <code>schemeProtoElement</code>, or <code>null</code> if
@@ -567,11 +572,20 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public EquipmentType getEquipmentType() {
 		try {
-			return StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
+			return this.getEquipmentType0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getEquipmentTypeId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	EquipmentType getEquipmentType0() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getEquipmentTypeId(), true);
 	}
 
 	/**
@@ -709,7 +723,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 *
 	 * @throws ApplicationException
 	 */
-	private SchemeImageResource getSchemeCell0() throws ApplicationException {
+	SchemeImageResource getSchemeCell0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
@@ -725,7 +739,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	private Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
+	Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true);
 	}
 
@@ -741,7 +755,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 	}
 
-	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
@@ -768,17 +782,26 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * A wrapper around {@link #getSymbolId()}.
+	 * A wrapper around {@link #getSymbol0()}.
 	 *
 	 * @see SchemeSymbolContainer#getSymbol()
 	 */
 	public BitmapImageResource getSymbol() {
 		try {
-			return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
+			return this.getSymbol0();
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
 		}
+	}
+
+	/**
+	 * A wrapper around {@link #getSymbolId()}.
+	 *
+	 * @throws ApplicationException
+	 */
+	BitmapImageResource getSymbol0() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getSymbolId(), true);
 	}
 
 	/**
@@ -830,7 +853,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 *
 	 * @throws ApplicationException
 	 */
-	private SchemeImageResource getUgoCell0() throws ApplicationException {
+	SchemeImageResource getUgoCell0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
