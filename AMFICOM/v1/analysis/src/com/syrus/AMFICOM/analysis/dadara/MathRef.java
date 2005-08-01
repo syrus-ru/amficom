@@ -99,13 +99,15 @@ public class MathRef
 		double sigma0;
 		switch (wavelength)
 		{
-		case 1310: sigma0 = 49; break;
-		case 1550: sigma0 = 52; break;
-		case 1625: sigma0 = 53; break; // XXX: 1625 nm: sigma0 = ?
-		// у NetTest так:
-		//case 1310: sigma0 = 48.4; break;
-		//case 1550: sigma0 = 51.7; break;
-		//case 1625: sigma0 = 50.0; break;
+		// старые данные
+		//case 1310: sigma0 = 49; break;
+		//case 1550: sigma0 = 52; break;
+		//case 1625: sigma0 = 53; break; // XXX: 1625 nm: sigma0 = ?
+
+		// согласно программе от NetTest:
+		case 1310: sigma0 = 48.4; break;
+		case 1550: sigma0 = 51.7; break;
+		case 1625: sigma0 = 50.0; break;
 		default:
 			sigma0 = 51d;
 			System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
@@ -115,18 +117,22 @@ public class MathRef
 			pulsewidth = 1000; // XXX: default pulsewidth
 		// определ€ем сигму дл€ нашего импульса
 		// в формулу подставл€ем длину импульса, выраженную в мкс
-		return sigma0 - 10.0 * Math.log(pulsewidth / 1000.0) / Math.log(10.0);
+		return sigma0 - 10.0 * Math.log10(pulsewidth / 1000.0);
 	}
 
-	// вычислить отражение
-	// параметры: вышеприведенна€ сигма, амплитуда отражени€ в дЅ
-	// значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION 
+	/**
+	 * вычисл€ет коэффициент отражени€.
+	 * <p> значени€ менее MINF_DESIGNATION замен€ютс€ на MINF_DESIGNATION </p> 
+	 * @param sigma определ€етс€ через {@link #calcSigma(int, int)}
+	 * @param peak амплитуда отражательного всплеска, дЅ с масштабом 5
+	 * @return коэффициент отражени€, дЅ с масштабом 10
+	 */
 	public static double calcReflectance(double sigma, double peak)
 	{
 		if (peak <= 0)
 			return MINF_DESIGNATION;
 		double ret = -sigma
-				+ 10.0 * Math.log(Math.pow(10.0, peak/5.0) - 1) / Math.log(10.0);
+				+ 10.0 * Math.log10(Math.pow(10.0, peak/5.0) - 1);
 //		System.err.println("calcReflectance: sigma " + sigma
 //				+ ", peak " + peak
 //				+ ", ret " + ret);
