@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -61,8 +62,10 @@ public class Transceiver extends SleepButWorkThread {
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
 		}
-		else
-			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
+		else {
+			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value()
+					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
+		}
 	}
 
 	protected void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
@@ -71,14 +74,16 @@ public class Transceiver extends SleepButWorkThread {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
 		}
-		else
-			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
+		else {
+			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value()
+					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
+		}
 	}
 
 	protected void abortMeasurementsForTestProcessor(final TestProcessor testProcessor) {
 		synchronized (this.testProcessors) {
-			for (final Iterator it = this.testProcessors.keySet().iterator(); it.hasNext();) {
-				final Identifier measurementId = (Identifier) it.next();
+			for (final Iterator<Identifier> it = this.testProcessors.keySet().iterator(); it.hasNext();) {
+				final Identifier measurementId = it.next();
 				final TestProcessor tp = this.testProcessors.get(measurementId);
 				if (tp.getTestId().equals(testProcessor.getTestId())) {
 					try {
@@ -97,8 +102,7 @@ public class Transceiver extends SleepButWorkThread {
 		}
 
 		try {
-			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, true);
-			//StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, false);
+			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -121,8 +125,7 @@ public class Transceiver extends SleepButWorkThread {
 							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 							this.scheduledMeasurements.remove(measurement);
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
-							StorableObjectPool.flush(measurementId, true);
-							//StorableObjectPool.flush(measurementId, false);
+							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 							super.clearFalls();
 						}
 						catch (CommunicationException ce) {
@@ -167,8 +170,7 @@ public class Transceiver extends SleepButWorkThread {
 								try {
 									result = this.kisReport.createResult();
 									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-									StorableObjectPool.flush(measurementId, true);
-									//StorableObjectPool.flush(measurementId, false);
+									StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 									super.clearFalls();
 								}
 								catch (MeasurementException me) {
@@ -268,13 +270,15 @@ public class Transceiver extends SleepButWorkThread {
 
 			this.measurementToRemove = null;
 		}
-		else
+		else {
 			Log.errorMessage("Transceiver.removeMeasurement | Measurement to remove is null -- nothing to remove");
+		}
 	}
 
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
-			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away report of measurement '" + this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
+			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away report of measurement '"
+					+ this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
 			this.kisReport = null;
 		}
 		else

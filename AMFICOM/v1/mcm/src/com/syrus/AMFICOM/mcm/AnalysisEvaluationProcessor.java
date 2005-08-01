@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.34 2005/06/17 11:01:01 bass Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.35 2005/08/01 14:45:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,25 +13,22 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Analysis;
-import com.syrus.AMFICOM.measurement.AnalysisDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Parameter;
+import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/06/17 11:01:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/08/01 14:45:40 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -49,8 +46,8 @@ public class AnalysisEvaluationProcessor {
 		assert false;
 	}
 
-	public static Result[] analyseEvaluate(Result measurementResult) throws AnalysisException {
-		Measurement measurement = (Measurement) measurementResult.getAction();
+	public static Result[] analyseEvaluate(final Result measurementResult) throws AnalysisException {
+		final Measurement measurement = (Measurement) measurementResult.getAction();
 		Test test = null;
 		try {
 			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
@@ -58,14 +55,15 @@ public class AnalysisEvaluationProcessor {
 		catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot find test -- " + ae.getMessage(), ae);
 		}
-		Identifier monitoredElementId = test.getMonitoredElement().getId();
-		MeasurementSetup measurementSetup = measurement.getSetup();
+		final Identifier monitoredElementId = test.getMonitoredElement().getId();
+		final MeasurementSetup measurementSetup = measurement.getSetup();
 
-		Identifier analysisTypeId = test.getAnalysisTypeId();
+		final Identifier analysisTypeId = test.getAnalysisTypeId();
 		AnalysisType analysisType = null;
 		try {
-			if (analysisTypeId != null)
+			if (analysisTypeId != null) {
 				analysisType = (AnalysisType) StorableObjectPool.getStorableObject(analysisTypeId, true);
+			}
 		}
 		catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot load analysis type '" + analysisTypeId
@@ -78,21 +76,22 @@ public class AnalysisEvaluationProcessor {
 		return new Result[0];
 	}
 
-	private static Analysis createAnalysis(AnalysisType analysisType,
-			Identifier monitoredElementId,
-			Measurement measurement,
-			ParameterSet criteriaSet) throws AnalysisException {
-		if (criteriaSet == null)
+	private static Analysis createAnalysis(final AnalysisType analysisType,
+			final Identifier monitoredElementId,
+			final Measurement measurement,
+			final ParameterSet criteriaSet) throws AnalysisException {
+		if (criteriaSet == null) {
 			throw new AnalysisException("Criteria set is NULL");
+		}
 
 		try {
-			Analysis analysis = Analysis.createInstance(LoginManager.getUserId(),
+			final Analysis analysis = Analysis.createInstance(LoginManager.getUserId(),
 					analysisType,
 					monitoredElementId,
 					measurement,
 					ANALYSIS_NAME + " " + measurement.getId(),
 					criteriaSet);
-			((AnalysisDatabase) DatabaseContext.getDatabase(ObjectEntities.ANALYSIS_CODE)).insert(analysis);
+			StorableObjectPool.flush(analysis, LoginManager.getUserId(), false);
 			return analysis;
 		}
 		catch (ApplicationException ae) {
@@ -101,17 +100,19 @@ public class AnalysisEvaluationProcessor {
 	}
 
     // @todo: rename to loadAnalysisManager
-	private static void loadAnalysisAndEvaluationManager(String analysisCodename,
-			Result measurementResult,
-			Analysis analysis,
-			ParameterSet etalon) throws AnalysisException {
+	private static void loadAnalysisAndEvaluationManager(final String analysisCodename,
+			final Result measurementResult,
+			final Analysis analysis,
+			final ParameterSet etalon) throws AnalysisException {
 		String className = null;
 		Constructor constructor = null;
 
-		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA))
+		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
 			className = "com.syrus.AMFICOM.mcm." + CLASS_NAME_ANALYSIS_MANAGER_DADARA;
-		else
+		}
+		else {
 			throw new AnalysisException("Cannot find analysis manager for analysis of codename '" + analysisCodename + "'");
+		}
 
 		try {
 			constructor = Class.forName(className).getDeclaredConstructor(new Class[] {Result.class,
@@ -139,17 +140,18 @@ public class AnalysisEvaluationProcessor {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
 		}
 		catch (InvocationTargetException ite) {
-			Throwable cause = ite.getCause();
-			if (cause instanceof AnalysisException)
+			final Throwable cause = ite.getCause();
+			if (cause instanceof AnalysisException) {
 				throw (AnalysisException) cause;
+			}
 			throw new AnalysisException(ite.getMessage(), ite);
 		}
 	}
 
-	private static Result analyseAndEvaluate(Result measurementResult, Analysis analysis, ParameterSet etalon)
+	private static Result analyseAndEvaluate(final Result measurementResult, final Analysis analysis, final ParameterSet etalon)
 			throws AnalysisException {
 
-		String analysisCodename = analysis.getType().getCodename();
+		final String analysisCodename = analysis.getType().getCodename();
 
 		loadAnalysisAndEvaluationManager(analysisCodename, measurementResult, analysis, etalon);
 

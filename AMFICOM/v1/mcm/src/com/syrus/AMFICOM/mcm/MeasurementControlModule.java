@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.112 2005/08/01 13:52:56 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.113 2005/08/01 14:41:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,10 +28,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/08/01 13:52:56 $
+ * @version $Revision: 1.113 $, $Date: 2005/08/01 14:41:31 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -186,13 +186,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final SystemUser user = new SystemUser(mcm.getUserId());
 			final Server server = new Server(mcm.getServerId());
 			login = user.getLogin();
-	
-			/*	Init database object loader*/
-			DatabaseObjectLoader.init(user.getId());
-	
+
 			/*	Create session environment*/
 			MCMSessionEnvironment.createInstance(server.getHostName());
-	
+
 			/*	Login*/
 			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 			try {
@@ -204,16 +201,16 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 			/*	Create map of test processors*/
 			testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
-	
+
 			/*	Create (and start - ?) KIS connection manager*/
 			activateKISConnectionManager();
-	
+
 			/*	Create and start transceiver for every KIS*/
 			activateKISTransceivers();
-	
+
 			/*	Create and fill testList - sheduled tests ordered by start_time;	*/
 			prepareTestList();
-	
+
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
 			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
@@ -247,11 +244,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateKISTransceivers() {
 		try {
 			final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.KIS_CODE);
-			final Collection kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
+			final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(lic, true, false);
 
 			transceivers = Collections.synchronizedMap(new HashMap<Identifier, Transceiver>(kiss.size()));
-			for (final Iterator it = kiss.iterator(); it.hasNext();) {
-				final KIS kis = (KIS) it.next();
+			for (final KIS kis : kiss) {
 				final Identifier kisId = kis.getId();
 				final Transceiver transceiver = new Transceiver(kis);
 				transceiver.start();
@@ -308,10 +304,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			final Set tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
+			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
-			for (final Iterator it = tests.iterator(); it.hasNext();)
-				startTestProcessor((Test) it.next());
+			for (final Test test : tests) {
+				startTestProcessor(test);
+			}
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -329,8 +326,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
 						startTestProcessor(test);
 					}
-					else
+					else {
 						Log.errorMessage("Test processor for test '" + testId + "' already started");
+					}
 				}
 			}
 
@@ -344,7 +342,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}//while
 	}
 
-	private static void startTestProcessor(Test test) {
+	private static void startTestProcessor(final Test test) {
 		TestProcessor testProcessor = null;
 		switch (test.getTemporalType().value()) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -364,21 +362,23 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static class TestStartTimeComparator<T> implements Comparator<Test> {
 
-		public int compare(Test test1, Test test2) {
+		public int compare(final Test test1, final Test test2) {
 			return test1.getStartTime().compareTo(test2.getStartTime());
 		}
 	}
 
 	private static void sortTestsByStartTime(final Collection<Test> tests) {
 		List<Test> testsL;
-		if (tests instanceof List)
+		if (tests instanceof List) {
 			testsL = (List<Test>) tests;
-		else
+		}
+		else {
 			testsL = new LinkedList<Test>(tests);
+		}
 		Collections.sort(testsL, new TestStartTimeComparator<Test>());
 	}
 
-	protected static void addTests(List<Test> newTests) {
+	protected static void addTests(final List<Test> newTests) {
 		sortTestsByStartTime(newTests);
 
 		synchronized (testList) {
@@ -400,8 +400,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(ObjectEntities.TEST_CODE, true);
-				//StorableObjectPool.flush(ObjectEntities.TEST_CODE, false);
+				StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -413,12 +412,14 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	private static void prepareTestToExecute(final Test test) {
 		test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 		try {
-			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL)
+			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 				StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+			}
 
 			final Identifier analysisTypeId = test.getAnalysisTypeId();
-			if (analysisTypeId != null)
+			if (analysisTypeId != null) {
 				StorableObjectPool.getStorableObject(analysisTypeId, true);
+			}
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -430,10 +431,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final Identifier id = it.next();
 			try {
 				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
-				if (test != null)
+				if (test != null) {
 					abortTest(test);
-				else
+				}
+				else {
 					Log.errorMessage("MeasurementControlModule.abortTests | Test '" + id + "' not found");
+				}
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -456,8 +459,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				StorableObjectPool.flush(test.getId(), true);
-				//StorableObjectPool.flush(test.getId(), false);
+				StorableObjectPool.flush(test.getId(), LoginManager.getUserId(), false);
 			}
 			catch (ApplicationException ae) {
 				Log.errorException(ae);
@@ -484,8 +486,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	protected void shutdown() {
 		this.running = false;
-		for (final Iterator it = transceivers.keySet().iterator(); it.hasNext();)
-			transceivers.get(it.next()).shutdown();
+		for (final Identifier kisId : transceivers.keySet()) {
+			transceivers.get(kisId).shutdown();
+		}
 
 		DatabaseConnection.closeConnection();
 	}
