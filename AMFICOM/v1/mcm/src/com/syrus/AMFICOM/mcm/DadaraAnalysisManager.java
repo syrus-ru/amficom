@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.59 2005/08/01 13:36:07 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.60 2005/08/01 13:51:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/08/01 13:36:07 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/01 13:51:41 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -76,7 +76,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		assert codenames != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert codenames.length > 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final Set<TypicalCondition> typicalConditions = new HashSet<TypicalCondition>(codenames.length);
+		final Set<StorableObjectCondition> typicalConditions = new HashSet<StorableObjectCondition>(codenames.length);
 		for (int i = 0; i < codenames.length; i++) {
 			typicalConditions.add(new TypicalCondition(codenames[i],
 					OperationSort.OPERATION_EQUALS,
@@ -230,8 +230,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		Parameter[] ret = new Parameter[outParameters.size()];
 		int i = 0;
 		try {
-			for (final Iterator<String> it = outParameters.keySet().iterator(); it.hasNext(); i++) {
-				final String codename = it.next();
+			for (final String codename : outParameters.keySet()) {
 				Log.debugMessage("DadaraAnalysisManager.analyse | processing output parameter " + codename, Log.DEBUGLEVEL07);
 				final Identifier parameterTypeId = OUT_PARAMETER_TYPE_IDS_MAP.get(codename);
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
