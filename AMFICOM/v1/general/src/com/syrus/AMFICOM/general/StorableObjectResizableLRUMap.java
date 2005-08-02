@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.8 2005/07/27 12:03:43 bass Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.9 2005/08/02 12:41:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Set;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/27 12:03:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/08/02 12:41:57 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableObject> {
@@ -44,8 +44,9 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 		for (int i = super.array.length - 1; i >= 0; i--) {
 			final StorableObject storableObject = super.array[i].getValue();
 			if (!storableObject.isChanged()) {
-				for (int j = i; j < super.array.length - 1; j++)
+				for (int j = i; j < super.array.length - 1; j++) {
 					super.array[j] = super.array[j + 1];
+				}
 				super.array[super.array.length - 1] = new Entry(thrownObject.getId(), thrownObject);
 				return storableObject;
 			}
