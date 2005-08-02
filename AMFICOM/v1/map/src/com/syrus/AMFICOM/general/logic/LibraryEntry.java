@@ -1,5 +1,5 @@
 /*-
- * $Id: LibraryEntry.java,v 1.1 2005/07/29 12:49:28 krupenn Exp $
+ * $Id: LibraryEntry.java,v 1.2 2005/08/02 07:15:11 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.general.logic;
 
 /**
- * @author Andrew ``Bass'' Shcheglov
+ * @author Andrei Kroupennikov
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/07/29 12:49:28 $
- * @module scheme_v1
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 07:15:11 $
+ * @module map
  */
 public interface LibraryEntry {
 
