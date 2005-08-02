@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.30 2005/07/28 15:59:12 arseniy Exp $
+ * $Id: ServerCore.java,v 1.31 2005/08/02 12:24:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/07/28 15:59:12 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 12:24:33 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -231,13 +231,12 @@ public abstract class ServerCore implements CommonServer {
 			final Set<Identifier> ids = Identifier.fromTransferables(idsT);
 			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 
 			Log.debugMessage("ServerCore.delete | Deleting '"
 					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
 
-			database.delete(ids);
+			StorableObjectPool.delete(ids);
+			StorableObjectPool.flush(entityCode, LoginManager.getUserId(), false);
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
 		} catch (final Throwable throwable) {
