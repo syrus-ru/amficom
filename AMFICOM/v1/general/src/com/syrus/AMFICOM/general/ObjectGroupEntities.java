@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.23 2005/08/02 10:36:45 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.24 2005/08/02 12:28:17 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/02 10:36:45 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/02 12:28:17 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -145,7 +145,8 @@ public final class ObjectGroupEntities {
 						MARK_CODE,
 						PHYSICALLINK_CODE,
 						COLLECTOR_CODE,
-						MAP_CODE };
+						MAP_CODE,
+						MAPLIBRARY_CODE };
 			case SCHEME_GROUP_CODE:
 				return new short[] { CABLECHANNELINGITEM_CODE,
 						PATHELEMENT_CODE,
