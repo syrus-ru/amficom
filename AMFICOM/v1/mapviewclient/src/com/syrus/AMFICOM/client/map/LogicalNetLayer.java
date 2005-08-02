@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.103 2005/07/22 09:05:33 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.104 2005/08/02 08:12:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.map.controllers.EventMarkerController;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapElementController;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
@@ -54,6 +55,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -74,10 +76,10 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.103 $, $Date: 2005/07/22 09:05:33 $
+ * @version $Revision: 1.104 $, $Date: 2005/08/02 08:12:21 $
  * @module mapviewclient_v2
  */
-public class LogicalNetLayer
+public final class LogicalNetLayer
 {
 	protected CommandList commandList = new CommandList(20);
 	
@@ -89,6 +91,32 @@ public class LogicalNetLayer
 	
 	/** Текущий элемент. */
 	protected MapElement currentMapElement = null;
+
+	public Set<MapLibrary> getMapLibraries() {
+		Set<MapLibrary> mapLibraries = this.mapView.getMap().getMapLibraries();
+		if(mapLibraries.size() == 0) {
+			addMapLibrary(MapLibraryController.getDefaultMapLibrary());
+		}
+		return this.mapView.getMap().getMapLibraries();
+	}
+
+	public void addMapLibrary(MapLibrary mapLibrary) {
+		this.mapView.getMap().addMapLibrary(mapLibrary);
+		this.aContext.getDispatcher().firePropertyChange(
+			new MapEvent(
+				this, 
+				MapEvent.LIBRARY_SET_CHANGED,
+				getMapLibraries()));
+	}
+
+	public void removeMapLibrary(MapLibrary mapLibrary) {
+		this.mapView.getMap().removeMapLibrary(mapLibrary);
+		this.aContext.getDispatcher().firePropertyChange(
+				new MapEvent(
+					this, 
+					MapEvent.LIBRARY_SET_CHANGED,
+					getMapLibraries()));
+	}
 
 	/** 
 	 * фиксированный узел. 
@@ -1128,7 +1156,7 @@ public class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.103 $, $Date: 2005/07/22 09:05:33 $
+	 * @version $Revision: 1.104 $, $Date: 2005/08/02 08:12:21 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1663,8 +1691,10 @@ public class LogicalNetLayer
 						NodeLinkController controller = (NodeLinkController )getMapViewController().getController(nodeLink);
 						if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 							controller.paint(nodeLink, g, visibleBounds);
-						else
-							controller.paint(nodeLink, g, visibleBounds, vme.stroke, vme.color);
+						else {
+							boolean selectionVisible = false;
+							controller.paint(nodeLink, g, visibleBounds, vme.stroke, vme.color, selectionVisible);
+						}
 					}
 					continue;
 				}
