@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.51 2005/08/02 08:19:38 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.52 2005/08/02 09:34:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/08/02 08:19:38 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/02 09:34:16 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -95,6 +95,7 @@ public abstract class AbstractSchemePort
 	 */
 	AbstractSchemePort(final Identifier id) {
 		super(id);
+		this.portTypeSet = true;
 	}
 
 	/**
@@ -257,7 +258,10 @@ public abstract class AbstractSchemePort
 	}
 
 	final Identifier getPortId() {
-		assert this.assertPortTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertPortTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+		if (!this.assertPortTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		assert this.portId.isVoid() || this.portId.getMajor() == PORT_CODE;
 		return this.portId;
 	}
@@ -277,7 +281,10 @@ public abstract class AbstractSchemePort
 	}
 
 	final Identifier getPortTypeId() {
-		assert this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertPortTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertPortTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		assert this.portTypeId.isVoid() || this.portTypeId.getMajor() == PORT_TYPE_CODE;
 		return this.portTypeId;
 	}
@@ -343,6 +350,8 @@ public abstract class AbstractSchemePort
 			this.portId = portId;
 			this.measurementPortId = measurementPortId;
 			this.parentSchemeDeviceId = parentSchemeDeviceId;
+
+			this.portTypeSet = true;
 		}
 	}
 
@@ -500,6 +509,8 @@ public abstract class AbstractSchemePort
 		this.portId = new Identifier(portId1);
 		this.measurementPortId = new Identifier(measurementPortId1);
 		this.parentSchemeDeviceId = new Identifier(parentSchemeDeviceId1);
+
+		this.portTypeSet = true;
 	}
 
 	/**

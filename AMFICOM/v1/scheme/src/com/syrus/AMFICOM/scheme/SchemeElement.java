@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.64 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeElement.java,v 1.65 2005/08/02 09:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/02 09:34:16 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -114,6 +114,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		try {
 			DatabaseContext.getDatabase(SCHEMEELEMENT_CODE).retrieve(this);
+			this.equipmentTypeSet = true;
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -560,7 +561,10 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentId() {
-		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+		if (!this.assertEquipmentTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
 		return this.equipmentId;
 	}
@@ -578,7 +582,10 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentTypeId() {
-		assert this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertEquipmentTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
 		return this.equipmentTypeId;
 	}
@@ -970,6 +977,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.ugoCellId = ugoCellId;
 		this.schemeCellId = schemeCellId;
 		this.parentSchemeElementId = parentSchemeElementId;
+
+		this.equipmentTypeSet = true;
 	}
 
 	/**
@@ -1242,6 +1251,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.ugoCellId = new Identifier(schemeElement.ugoCellId);
 		this.schemeCellId = new Identifier(schemeElement.schemeCellId);
 		this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
+
+		this.equipmentTypeSet = true;
 	}
 
 	/*-********************************************************************

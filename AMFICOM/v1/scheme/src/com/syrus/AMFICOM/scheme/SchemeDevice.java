@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.63 2005/08/02 08:19:38 bass Exp $
+ * $Id: SchemeDevice.java,v 1.64 2005/08/02 09:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/08/02 08:19:38 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/02 09:34:16 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -94,6 +94,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		super(id);
 		try {
 			DatabaseContext.getDatabase(SCHEMEDEVICE_CODE).retrieve(this);
+			this.parentSet = true;
 		} catch (final IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -434,7 +435,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeElementId() {
-//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}
@@ -465,7 +466,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeProtoElementId() {
-//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}
@@ -600,6 +601,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			this.description = description;
 			this.parentSchemeProtoElementId = parentSchemeProtoElementId;
 			this.parentSchemeElementId = parentSchemeElementId;
+
+			this.parentSet = true;
 		}
 	}
 
@@ -748,6 +751,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.description = schemeDevice.description;
 		this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
 		this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
+
+		this.parentSet = true;
 	}
 
 	/*-********************************************************************

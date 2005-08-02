@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.70 2005/08/02 08:19:38 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.71 2005/08/02 09:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/08/02 08:19:38 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/02 09:34:16 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -676,7 +676,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeProtoElementId() {
-//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}
@@ -705,7 +705,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws IllegalStateException
 	 */
 	Identifier getParentSchemeProtoGroupId() {
-//		assert this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertParentSetStrict(): OBJECT_BADLY_INITIALIZED;
 		if (!this.assertParentSetStrict()) {
 			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		}

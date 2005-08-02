@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.30 2005/08/02 08:19:38 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.31 2005/08/02 09:34:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/08/02 08:19:38 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 09:34:16 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -97,6 +97,7 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	AbstractSchemeLink(Identifier id) {
 		super(id);
+		this.abstractLinkTypeSet = true;
 	}
 
 	/**
@@ -152,7 +153,10 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	Identifier getAbstractLinkId() {
-		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertAbstractLinkTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		return this.abstractLinkId;
 	}
 
@@ -171,7 +175,10 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	Identifier getAbstractLinkTypeId() {
-		assert this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		assert true || this.assertAbstractLinkTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+		if (!this.assertAbstractLinkTypeSetStrict()) {
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		}
 		return this.abstractLinkTypeId;
 	}
 
@@ -400,6 +407,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 			this.abstractLinkId = abstractLinkId;
 			this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 			this.targetAbstractSchemePortId = targetAbstractSchemePortId;
+
+			this.abstractLinkTypeSet = true;
 		}
 	}
 
@@ -451,6 +460,8 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.abstractLinkId = new Identifier(abstractLinkId1);
 		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);
 		this.targetAbstractSchemePortId = new Identifier(targetAbstractSchemePortId1);
+
+		this.abstractLinkTypeSet = true;
 	}
 
 	/*-********************************************************************
