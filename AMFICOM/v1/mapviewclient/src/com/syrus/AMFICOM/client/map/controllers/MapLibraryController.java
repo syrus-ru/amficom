@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.2 2005/08/02 08:33:38 krupenn Exp $
+ * $Id: MapLibraryController.java,v 1.3 2005/08/02 16:59:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -38,7 +37,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/08/02 08:33:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 16:59:31 $
  * @module mapviewclient_v1
  */
 public class MapLibraryController {
@@ -140,25 +139,17 @@ public class MapLibraryController {
 			ImageResourceWrapper.COLUMN_SORT);
 		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		// todo should be removed when FIR.filename and FIR.codename will be separated
-		codename = filename;
-		//
-
 		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
 			FileImageResource ir = (FileImageResource )it.next();
 			if(ir.getCodename().equals(codename))
 				return ir.getId();
 		}
-/*
 		FileImageResource ir = FileImageResource.createInstance(
 				userId,
+				codename,
 				filename);
-		// todo should be used when FIR.filename and FIR.codename will be separated
-//		ir.setCodename(codename);
-		//
-		StorableObjectPool.flush(ir.getId(), true);
-*/
-		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
+		StorableObjectPool.flush(ir, userId, true);
+//		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
 		return ir.getId();
 	}
 
@@ -277,15 +268,15 @@ public class MapLibraryController {
 			String codename) throws ApplicationException {
 		MapLibrary library = getMapLibrary(codename);
 		if(library == null) {
-			library = new MapLibrary(
+			library = MapLibrary.createInstance(
 				userId,
-				IdentifierPool.getGeneratedIdentifier((short )1),
 				LangModelMap.getString(codename),
+				codename,
+				"codename",
 				null);
 				
-			//todo
-//			StorableObjectPool.putStorableObject(library);
-//			StorableObjectPool.flush(library.getId(), true);
+			StorableObjectPool.putStorableObject(library);
+			StorableObjectPool.flush(library, userId, true);
 		}
 		return library;
 	}
