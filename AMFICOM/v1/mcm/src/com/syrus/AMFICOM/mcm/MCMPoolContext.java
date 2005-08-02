@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMPoolContext.java,v 1.6 2005/07/13 19:23:59 arseniy Exp $
+ * $Id: MCMPoolContext.java,v 1.7 2005/08/02 12:22:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,15 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.ConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.general.GeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
+import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
-import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/13 19:23:59 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/02 12:22:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -44,10 +39,7 @@ final class MCMPoolContext extends PoolContext {
 
 	@Override
 	public void init() {
-		final GeneralObjectLoader generalObjectLoader = new MCMGeneralObjectLoader(this.mcmServantManager);
-		final AdministrationObjectLoader administrationObjectLoader = new MCMAdministrationObjectLoader(this.mcmServantManager);
-		final ConfigurationObjectLoader configurationObjectLoader = new MCMConfigurationObjectLoader(this.mcmServantManager);
-		final MeasurementObjectLoader measurementObjectLoader = new MCMMeasurementObjectLoader(this.mcmServantManager);
+		final ObjectLoader objectLoader = new MCMObjectLoader(this.mcmServantManager);
 
 		final Class lruMapClass = StorableObjectResizableLRUMap.class;
 
@@ -56,9 +48,10 @@ final class MCMPoolContext extends PoolContext {
 		final int configurationPoolSize = ApplicationProperties.getInt(KEY_CONFIGURATION_POOL_SIZE, CONFIGURATION_POOL_SIZE);
 		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
 
-		GeneralStorableObjectPool.init(generalObjectLoader, lruMapClass, generalPoolSize);
-		AdministrationStorableObjectPool.init(administrationObjectLoader, lruMapClass, administrationPoolSize);
-		ConfigurationStorableObjectPool.init(configurationObjectLoader, lruMapClass, configurationPoolSize);
-		MeasurementStorableObjectPool.init(measurementObjectLoader, lruMapClass, measurementPoolSize);
+		StorableObjectPool.init(objectLoader, lruMapClass);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
 	}
 }
