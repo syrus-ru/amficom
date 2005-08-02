@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.29 2005/07/18 09:39:29 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.30 2005/08/02 07:33:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/07/18 09:39:29 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/02 07:33:14 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -145,7 +145,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 					dataType,
 					sort);
 			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flush(type.getId(), true);
+			StorableObjectPool.flush(type, userId, true);
 			return type;
 		} catch(ApplicationException e) {
 			e.printStackTrace();
@@ -196,7 +196,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -248,7 +248,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -332,7 +332,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -391,7 +391,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;
@@ -449,7 +449,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, LoginManager.getUserId(), true);
 			} catch(CreateObjectException e) {
 				e.printStackTrace();
 				return;

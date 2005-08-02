@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.30 2005/07/01 16:16:05 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.31 2005/08/02 07:35:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.ImageResourceDat
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/07/01 16:16:05 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 07:35:02 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -224,7 +224,7 @@ public class NodeTypeController extends AbstractNodeController {
 				true);
 				
 			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flush(type.getId(), true);
+			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
 	}
@@ -253,6 +253,16 @@ public class NodeTypeController extends AbstractNodeController {
 	public static Collection getTopologicalNodeTypes() {
 		Collection list = Collections.EMPTY_LIST;
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
+		
+		//todo getTopologicalNodeTypes should get only included libraries
+//		Set<Identifier> libIds = new HashSet<Identifier>();
+//		for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
+//			MapLibrary library = (MapLibrary )iter.next();
+//			libIds.add(library.getId());
+//		}
+//		
+//		StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds, ObjectEntities.SITENODE_TYPE_CODE);
+
 		try {
 			list = StorableObjectPool.getStorableObjectsByCondition(
 					pTypeCondition,

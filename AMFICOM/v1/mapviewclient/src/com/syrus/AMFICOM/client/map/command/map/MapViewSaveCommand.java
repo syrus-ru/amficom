@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.23 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.24 2005/08/02 07:32:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/02 07:32:43 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveCommand extends AbstractCommand
@@ -62,6 +64,8 @@ public class MapViewSaveCommand extends AbstractCommand
 				setResult(Command.RESULT_CANCEL);
 				return;
 			}
+
+			Identifier userId = LoginManager.getUserId();
 			
 			for(Iterator it = this.mapView.getSchemes().iterator(); it.hasNext();)
 			{
@@ -70,7 +74,7 @@ public class MapViewSaveCommand extends AbstractCommand
 				try
 				{
 //					 save scheme
-					StorableObjectPool.flush(scheme.getId(), true);
+					StorableObjectPool.flush(scheme, userId, true);
 				}
 				catch (VersionCollisionException e)
 				{
@@ -98,7 +102,7 @@ public class MapViewSaveCommand extends AbstractCommand
 			try
 			{
 //				 save mapview
-				StorableObjectPool.flush(this.mapView.getId(), true);
+				StorableObjectPool.flush(this.mapView, userId, true);
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}

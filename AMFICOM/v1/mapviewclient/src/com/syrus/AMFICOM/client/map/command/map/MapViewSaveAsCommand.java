@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.21 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.22 2005/08/02 07:32:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/02 07:32:43 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends AbstractCommand {
@@ -91,7 +91,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 */
 			try {
 				// save mapview
-				StorableObjectPool.flush(this.newMapView.getId(), true);
+				StorableObjectPool.flush(this.newMapView, userId, true);
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}

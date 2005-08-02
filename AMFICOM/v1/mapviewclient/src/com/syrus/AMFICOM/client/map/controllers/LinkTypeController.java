@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.37 2005/07/18 09:39:29 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.38 2005/08/02 07:33:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/07/18 09:39:29 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/02 07:33:14 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -240,7 +240,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, userId, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -297,7 +297,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, userId, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -354,7 +354,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, userId, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -430,7 +430,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, userId, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -508,7 +508,7 @@ public final class LinkTypeController extends AbstractLinkController {
 						true,
 						true);
 				StorableObjectPool.putStorableObject(attribute);
-				StorableObjectPool.flush(attribute.getId(), true);
+				StorableObjectPool.flush(attribute, userId, true);
 			}
 			catch (CreateObjectException e)
 			{
@@ -598,7 +598,7 @@ public final class LinkTypeController extends AbstractLinkController {
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
 			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flush(type.getId(), true);
+			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
 	}
