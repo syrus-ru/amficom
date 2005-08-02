@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryDatabase.java,v 1.1 2005/08/02 12:09:21 max Exp $
+ * $Id: MapLibraryDatabase.java,v 1.2 2005/08/02 18:03:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/08/02 12:09:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 18:03:24 $
  * @module map
  */
 
@@ -40,6 +40,7 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 		return ObjectEntities.MAPLIBRARY_CODE;
 	}
 	
+	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
 			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
