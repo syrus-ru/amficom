@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.17 2005/06/17 11:01:08 bass Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.18 2005/08/02 17:00:37 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -8,10 +8,7 @@ package com.syrus.AMFICOM.client.map.command.map;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.JDesktopPane;
 
@@ -25,9 +22,7 @@ import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Класс $RCSfile: MapExportCommand.java,v $ используется для закрытия карты при
@@ -35,26 +30,11 @@ import com.syrus.AMFICOM.map.MapElement;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/06/17 11:01:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/02 17:00:37 $
  * @module mapviewclient_v1
  */
 public class MapExportCommand extends ExportCommand {
-	public static final String MAP_TYPE = "map";
-
-	public static final String MARK_TYPE = "mapmarkelement";
-
-	public static final String SITE_TYPE = "mapsiteelement";
-
-	public static final String NODE_TYPE = "mapnodeelement";
-
-	public static final String NODELINK_TYPE = "mapnodelinkelement";
-
-	public static final String COLLECTOR_TYPE = "mappipepathelement";
-
-	public static final String LINK_TYPE = "maplinkelement";
-
-	private static java.util.Map typesMap = new HashMap();
 
 	JDesktopPane desktop;
 
@@ -64,16 +44,6 @@ public class MapExportCommand extends ExportCommand {
 	 * окно карты
 	 */
 	MapFrame mapFrame;
-
-	static {
-		typesMap.put(ObjectEntities.MAP, MAP_TYPE);
-		typesMap.put(ObjectEntities.MARK, MARK_TYPE);
-		typesMap.put(ObjectEntities.SITENODE, SITE_TYPE);
-		typesMap.put(ObjectEntities.TOPOLOGICALNODE, NODE_TYPE);
-		typesMap.put(ObjectEntities.NODELINK, NODELINK_TYPE);
-		typesMap.put(ObjectEntities.COLLECTOR, COLLECTOR_TYPE);
-		typesMap.put(ObjectEntities.PHYSICALLINK, LINK_TYPE);
-	}
 
 	public MapExportCommand(JDesktopPane desktop, ApplicationContext aContext) {
 		super();
@@ -108,55 +78,7 @@ public class MapExportCommand extends ExportCommand {
 		if(ext.equals(".xml")) {
 			saveXML(map, fileName);
 		}
-		else
-			if(ext.equals(".esf")) {
-				saveESF(map, fileName);
-			}
-		// mapFrame.setTitle(LangModelMap.getString("Map"));
 		setResult(Command.RESULT_OK);
-	}
-
-	Collection getAllElements(Map map) {
-		Collection allElements = new LinkedList();
-
-		allElements.addAll(map.getMarks());
-		allElements.addAll(map.getTopologicalNodes());
-		allElements.addAll(map.getSiteNodes());
-
-		allElements.addAll(map.getPhysicalLinks());
-		allElements.addAll(map.getNodeLinks());
-		allElements.addAll(map.getCollectors());
-
-		return allElements;
-	}
-
-	protected void saveESF(Map map, String fileName) {
-		java.util.Map exportColumns = null;
-
-		super.open(fileName);
-
-		super.startObject(MAP_TYPE);
-		exportColumns = map.getExportMap();
-		for(Iterator it = exportColumns.keySet().iterator(); it.hasNext();) {
-			Object key = it.next();
-			super.put(key, exportColumns.get(key));
-		}
-		super.endObject();
-
-		for(Iterator it = getAllElements(map).iterator(); it.hasNext();) {
-			MapElement me = (MapElement )it.next();
-			String entityCodeString = ObjectEntities.codeToString(me.getId()
-					.getMajor());
-			super.startObject((String )typesMap.get(entityCodeString));
-			exportColumns = me.getExportMap();
-			for(Iterator it2 = exportColumns.keySet().iterator(); it2.hasNext();) {
-				Object key = it2.next();
-				super.put(key, exportColumns.get(key));
-			}
-			super.endObject();
-		}
-
-		super.close();
 	}
 
 	protected void saveXML(Map map, String fileName) {
