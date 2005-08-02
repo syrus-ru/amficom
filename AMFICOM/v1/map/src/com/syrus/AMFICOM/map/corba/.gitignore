@@ -19,3 +19,4 @@ IdlTopologicalNode.java
 IdlLayerDescriptor.java
 IdlMapDescriptor.java
 IdlMapView.java
+IdlMapLibrary.java
