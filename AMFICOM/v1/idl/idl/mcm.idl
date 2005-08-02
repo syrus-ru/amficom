@@ -17,11 +17,12 @@ module corba {
 
 	interface MCM : general::corba::CommonServer {
 
-		void receiveTests(in measurement::corba::TestSeq tests)
-			raises (general::corba::AMFICOMRemoteException);
+		void receiveTests(in measurement::corba::IdlTestSeq idlTests,
+					in security::corba::IdlSessionKey sessionKey)
+					raises (general::corba::AMFICOMRemoteException);
 
-		void abortTests(in general::corba::IdentifierSeq test_ids)
-			raises (general::corba::AMFICOMRemoteException);
+		void abortTests(in general::corba::IdlIdentifierSeq testIds)
+					raises (general::corba::AMFICOMRemoteException);
 
 	};
 
