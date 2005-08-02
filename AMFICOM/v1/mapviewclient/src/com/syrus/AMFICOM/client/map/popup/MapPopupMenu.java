@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.48 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.49 2005/08/02 07:38:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.48 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/02 07:38:36 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -115,8 +115,6 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	}
 
 	protected SiteNode selectSiteNode() {
-		SiteNode site = null;
-
 		List list = new LinkedList();
 		for(Iterator it = this.netMapViewer.getLogicalNetLayer().getMapView().getMap()
 				.getAllSiteNodes().iterator(); it.hasNext();) {
@@ -130,8 +128,6 @@ public abstract class MapPopupMenu extends JPopupMenu {
 
 	protected PhysicalLink selectPhysicalLinkAt(UnboundLink unbound) {
 		Map map = this.netMapViewer.getLogicalNetLayer().getMapView().getMap();
-		
-		PhysicalLink link = null;
 		
 		AbstractNode node1 = unbound.getStartNode();
 		AbstractNode node2 = unbound.getEndNode();
