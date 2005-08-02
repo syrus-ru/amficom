@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortDatabase.java,v 1.19 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeCablePortDatabase.java,v 1.20 2005/08/02 07:48:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/02 07:48:51 $
  * @module scheme
  */
 public final class SchemeCablePortDatabase extends StorableObjectDatabase<SchemeCablePort> {
@@ -71,7 +71,6 @@ public final class SchemeCablePortDatabase extends StorableObjectDatabase<Scheme
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA

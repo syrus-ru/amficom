@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortDatabase.java,v 1.19 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemePortDatabase.java,v 1.20 2005/08/02 07:48:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/02 07:48:51 $
  * @module scheme
  */
 public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort> {
@@ -76,7 +76,6 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
-					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -91,6 +90,7 @@ public final class SchemePortDatabase extends StorableObjectDatabase<SchemePort>
 			SchemePort storableObject)
 			throws IllegalDataException {
 		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ storableObject.getDirectionType().value() + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getPortTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getPortId()) + COMMA
