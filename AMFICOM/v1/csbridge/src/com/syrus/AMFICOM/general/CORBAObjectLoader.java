@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.51 2005/08/02 12:25:16 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.52 2005/08/02 16:07:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/02 12:25:16 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/02 16:07:16 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -160,7 +160,11 @@ public class CORBAObjectLoader implements ObjectLoader {
 		}
 	}
 
-	public final void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
+	/**
+	 * Overridden in:
+	 * MCMObjectLoader
+	 */
+	public void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
 		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
 		if (storableObjects.isEmpty()) {
 			return;
