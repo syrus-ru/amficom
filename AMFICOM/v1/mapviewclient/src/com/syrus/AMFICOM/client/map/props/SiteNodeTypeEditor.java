@@ -18,13 +18,16 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ImagesDialog;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -37,10 +40,11 @@ public final class SiteNodeTypeEditor
 	Identifier imageId;
 
 	private JPanel jPanel = new JPanel();
-	private JLabel nameLabel = new JLabel();
-
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
+	private JLabel libraryLabel = new JLabel();
+	private WrapperedComboBox libraryComboBox = null;
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
@@ -48,7 +52,7 @@ public final class SiteNodeTypeEditor
 	private JPanel imagePanel = new JPanel();
 	private JButton imageButton = new JButton();
 
-	private ApplicationContext aContext;
+	LogicalNetLayer logicalNetLayer;
 
 	public SiteNodeTypeEditor() {
 		try {
@@ -60,11 +64,18 @@ public final class SiteNodeTypeEditor
 	}
 
 	private void jbInit() {
+		SimpleMapElementController controller = 
+			SimpleMapElementController.getInstance();
+
+		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
+
 		this.jPanel.setLayout(this.gridBagLayout1);
 		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
+		this.libraryLabel.setText(LangModelMap.getString("MapLibrary"));
 
 		this.descLabel.setText(LangModelMap.getString("Description"));
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -128,7 +139,20 @@ public final class SiteNodeTypeEditor
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.imageLabel, constraints);
+		this.jPanel.add(this.libraryLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.libraryComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -141,10 +165,10 @@ public final class SiteNodeTypeEditor
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.jPanel.add(this.imageButton, constraints);
+		this.jPanel.add(this.imageLabel, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 1;
+		constraints.gridy = 2;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 2;
 		constraints.weightx = 0.0;
@@ -162,6 +186,19 @@ public final class SiteNodeTypeEditor
 		constraints.gridheight = 1;
 		constraints.weightx = 0.0;
 		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.jPanel.add(this.imageButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
 		constraints.anchor = GridBagConstraints.NORTHWEST;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
@@ -170,7 +207,7 @@ public final class SiteNodeTypeEditor
 		this.jPanel.add(this.descLabel, constraints);
 
 		constraints.gridx = 1;
-		constraints.gridy = 3;
+		constraints.gridy = 4;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
@@ -181,6 +218,10 @@ public final class SiteNodeTypeEditor
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.descTextArea, constraints);
+
+		super.addToUndoableListener(this.nameTextField);
+		super.addToUndoableListener(this.libraryComboBox);
+		super.addToUndoableListener(this.descTextArea);
 	}
 
 	public Object getObject() {
@@ -189,9 +230,11 @@ public final class SiteNodeTypeEditor
 
 	public void setObject(Object object) {
 		this.type = (SiteNodeType )object;
+		this.libraryComboBox.removeAllItems();
 		if(this.type == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
+			this.libraryComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText("");
 
@@ -205,12 +248,16 @@ public final class SiteNodeTypeEditor
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.type.getDescription());
 
+			this.libraryComboBox.setEnabled(true);
+			this.libraryComboBox.addElements(this.logicalNetLayer.getMapLibraries());
+			this.libraryComboBox.setSelectedItem(this.type.getMapLibrary());
+
 			this.imageId = this.type.getImageId();
 			this.imagePanel.removeAll();
 
 			Image im;
 			try {
-				AbstractImageResource imageResource = (AbstractImageResource )StorableObjectPool
+				AbstractImageResource imageResource = StorableObjectPool
 						.getStorableObject(this.imageId, true);
 
 				ImageIcon icon = null;
@@ -235,13 +282,9 @@ public final class SiteNodeTypeEditor
 		}
 	}
 
-	public void setContext(ApplicationContext aContext) {
-		this.aContext = aContext;
-	}
-
 	void changeImage() throws ApplicationException {
 		
-		BitmapImageResource imageResource = (BitmapImageResource )StorableObjectPool.getStorableObject(this.imageId, true);
+		BitmapImageResource imageResource = StorableObjectPool.getStorableObject(this.imageId, true);
 		AbstractImageResource ir = ImagesDialog.showImageDialog(imageResource);
 
 		if(ir != null) {
@@ -271,6 +314,7 @@ public final class SiteNodeTypeEditor
 	public void commitChanges() {
 		try {
 			this.type.setName(this.nameTextField.getText());
+			this.type.setMapLibrary((MapLibrary )this.libraryComboBox.getSelectedItem());
 			this.type.setDescription(this.descTextArea.getText());
 			this.type.setImageId(this.imageId);
 		} catch(Exception ex) {
