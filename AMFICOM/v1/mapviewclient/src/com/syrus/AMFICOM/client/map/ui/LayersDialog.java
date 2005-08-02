@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.7 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.8 2005/08/02 07:40:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -295,6 +295,7 @@ public class LayersDialog extends JDialog {
 			}
 
 			public void editingCanceled(ChangeEvent e) {
+				// nothing to do
 			}
 		});
 		
