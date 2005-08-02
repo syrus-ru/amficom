@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.16 2005/07/26 13:25:11 arseniy Exp $
+ * $Id: Selection.java,v 1.17 2005/08/02 16:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mapview;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -25,8 +24,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/07/26 13:25:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/08/02 16:51:17 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -316,14 +315,6 @@ public final class Selection implements MapElement {
 	 */
 	public boolean isUnboundCableSelection() {
 		return this.unboundCableSelection;
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	@SuppressWarnings("deprecation")
-	public Map getExportMap() {
-		throw new UnsupportedOperationException();
 	}
 
 }

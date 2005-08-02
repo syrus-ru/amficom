@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.15 2005/07/26 13:30:26 arseniy Exp $
+ * $Id: VoidElement.java,v 1.16 2005/08/02 16:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,7 +9,6 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
@@ -21,8 +20,8 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  * Пустой элемент.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/07/26 13:30:26 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/08/02 16:51:17 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement {
@@ -155,14 +154,6 @@ public final class VoidElement implements MapElement {
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
 	public void setRemoved(final boolean removed) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc} Suppress since this class is transient
-	 */
-	@SuppressWarnings("deprecation")
-	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.24 2005/07/24 17:13:34 arseniy Exp $
+ * $Id: CablePath.java,v 1.25 2005/08/02 16:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
@@ -36,8 +35,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/07/24 17:13:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/02 16:51:17 $
  * @module mapviewclient_v1
  */
 public final class CablePath implements MapElement
@@ -496,7 +495,7 @@ public final class CablePath implements MapElement
 
 	/**
 	 * ѕолучить предыдущую линию по цепочке сортированных линий.
-	 * @param physicalLink лини€
+	 * @param cableChannelingItem прив€зка линии
 	 * @return предыдуща€ лини€, или <code>null</code>, если link - перва€
 	 * в списке
 	 */
@@ -695,15 +694,6 @@ public final class CablePath implements MapElement
 	 */
 	public void revert(MapElementState state)
 	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
-	 */
-	@SuppressWarnings("deprecation")
-	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 

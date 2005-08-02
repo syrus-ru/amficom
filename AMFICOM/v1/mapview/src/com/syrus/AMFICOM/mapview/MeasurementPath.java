@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.36 2005/07/26 13:21:04 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.37 2005/08/02 16:51:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -39,8 +38,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/07/26 13:21:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2005/08/02 16:51:17 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPath implements MapElement {
@@ -499,15 +498,6 @@ public final class MeasurementPath implements MapElement {
 	 * Suppress since this class is transient
 	 */
 	public void revert(final MapElementState state) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
-	 */
-	@SuppressWarnings("deprecation")
-	public Map getExportMap() {
 		throw new UnsupportedOperationException();
 	}
 
