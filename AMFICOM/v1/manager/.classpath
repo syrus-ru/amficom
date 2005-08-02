@@ -6,5 +6,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jgraph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/commonclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
