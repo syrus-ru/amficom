@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.62 2005/07/28 18:59:16 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.63 2005/08/02 12:26:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,17 +35,16 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
+import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.mserver.corba.MServerPOATie;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
@@ -55,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/07/28 18:59:16 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/02 12:26:26 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -233,14 +232,17 @@ public class MeasurementServer extends SleepButWorkThread {
 							continue;
 						}
 
-						IdlStorableObject[] testsT = null;
+						final IdlTest[] testsT = new IdlTest[testQueue.size()];
 						synchronized (testQueue) {
-							testsT = StorableObject.createTransferables(testQueue, servantManager.getCORBAServer().getOrb());
+							int i = 0;
+							for (final Test test : testQueue) {
+								testsT[i++] = test.getTransferable(servantManager.getCORBAServer().getOrb());
+							}
 						}
 						try {
 							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 							final IdlSessionKey sessionKey = LoginManager.getSessionKeyTransferable();
-							mcmRef.receiveStorableObjects(testsT, sessionKey);
+							mcmRef.receiveTests(testsT, sessionKey);
 							testQueue.clear();
 							super.clearFalls();
 						}
