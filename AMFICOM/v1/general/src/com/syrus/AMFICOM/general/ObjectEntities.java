@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.73 2005/07/29 12:09:43 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.74 2005/08/02 12:02:43 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/07/29 12:09:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/08/02 12:02:43 $
+ * @author $Author: max $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -131,6 +131,7 @@ public final class ObjectEntities {
 	public static final String PHYSICALLINK = "PhysicalLink";
 	public static final String COLLECTOR = "Collector";
 	public static final String MAP = "Map";
+	public static final String MAPLIBRARY = "MapLibrary";
 
 	/*       Resource       */
 	public static final String IMAGERESOURCE = "ImageResource";
@@ -291,6 +292,7 @@ public final class ObjectEntities {
 	public static final short PHYSICALLINK_CODE = 0x0305;
 	public static final short COLLECTOR_CODE = 0x0306;
 	public static final short MAP_CODE = 0x0307;
+	public static final short MAPLIBRARY_CODE = 0x0308;
 
 	public static final short SITENODE_TYPE_CODE = 0x0341;
 	public static final short PHYSICALLINK_TYPE_CODE = 0x0342;
@@ -423,6 +425,7 @@ public final class ObjectEntities {
 		registerEntity(PHYSICALLINK_CODE, PHYSICALLINK);
 		registerEntity(COLLECTOR_CODE, COLLECTOR);
 		registerEntity(MAP_CODE, MAP);
+		registerEntity(MAPLIBRARY_CODE, MAPLIBRARY);
 
 		registerEntity(IMAGERESOURCE_CODE, IMAGERESOURCE);
 
