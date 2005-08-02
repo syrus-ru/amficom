@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.66 2005/08/01 16:18:09 bass Exp $
+ * $Id: Scheme.java,v 1.67 2005/08/02 20:00:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/02 20:00:49 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -811,7 +811,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param schemeCellId
 	 * @param parentSchemeElementId
 	 */
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -828,29 +828,31 @@ public final class Scheme extends AbstractCloneableDomainMember
 			final Identifier ugoCellId,
 			final Identifier schemeCellId,
 			final Identifier parentSchemeElementId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
-
-		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
-		assert description != null: NON_NULL_EXPECTED;
-		assert label != null: NON_NULL_EXPECTED;
-		assert kind != null: NON_NULL_EXPECTED;
-		assert mapId != null: NON_NULL_EXPECTED;
-		assert symbolId != null: NON_NULL_EXPECTED;
-		assert ugoCellId != null: NON_NULL_EXPECTED;
-		assert schemeCellId != null: NON_NULL_EXPECTED;
-		assert parentSchemeElementId != null: NON_NULL_EXPECTED;
-
-		this.name = name;
-		this.description = description;
-		this.label = label;
-		this.width = width;
-		this.height = height;
-		this.kind = kind;
-		this.mapId = mapId;
-		this.symbolId = symbolId;
-		this.ugoCellId = ugoCellId;
-		this.schemeCellId = schemeCellId;
-		this.parentSchemeElementId = parentSchemeElementId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
+	
+			assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+			assert description != null: NON_NULL_EXPECTED;
+			assert label != null: NON_NULL_EXPECTED;
+			assert kind != null: NON_NULL_EXPECTED;
+			assert mapId != null: NON_NULL_EXPECTED;
+			assert symbolId != null: NON_NULL_EXPECTED;
+			assert ugoCellId != null: NON_NULL_EXPECTED;
+			assert schemeCellId != null: NON_NULL_EXPECTED;
+			assert parentSchemeElementId != null: NON_NULL_EXPECTED;
+	
+			this.name = name;
+			this.description = description;
+			this.label = label;
+			this.width = width;
+			this.height = height;
+			this.kind = kind;
+			this.mapId = mapId;
+			this.symbolId = symbolId;
+			this.ugoCellId = ugoCellId;
+			this.schemeCellId = schemeCellId;
+			this.parentSchemeElementId = parentSchemeElementId;
+		}
 	}
 
 	public void setCurrentSchemeMonitoringSolution(final SchemeMonitoringSolution currentSchemeMonitoringSolution) {
@@ -872,15 +874,17 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void setDescription(final String description) {
 		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		assert description != null : NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
 
 	public void setHeight(final int height) {
-		if (this.height == height)
+		if (this.height == height) {
 			return;
+		}
 		this.height = height;
 		super.markAsChanged();
 	}
@@ -892,18 +896,32 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void setLabel(final String label) {
 		assert this.label != null: OBJECT_NOT_INITIALIZED;
 		assert label != null: NON_NULL_EXPECTED;
-		if (this.label.equals(label))
+		if (this.label.equals(label)) {
 			return;
+		}
 		this.label = label;
 		super.markAsChanged();
 	}
 
-	public void setMap(final Map map) {
-		final Identifier newMapId = Identifier.possiblyVoid(map);
-		if (this.mapId.equals(newMapId))
+	/**
+	 * @param mapId
+	 */
+	void setMapId(final Identifier mapId) {
+		assert mapId.isVoid() || mapId.getMajor() == MAP_CODE;
+		if (this.mapId.equals(mapId)) {
 			return;
-		this.mapId = newMapId;
+		}
+		this.mapId = mapId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setMapId(Identifier)}.
+	 *
+	 * @param map
+	 */
+	public void setMap(final Map map) {
+		this.setMapId(Identifier.possiblyVoid(map));
 	}
 
 	/**
@@ -912,18 +930,32 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
 
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
-		if (this.parentSchemeElementId.equals(newParentSchemeElementId))
+	/**
+	 * @param parentSchemeElementId
+	 */
+	void setParentSchemeElementId(final Identifier parentSchemeElementId) {
+		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		if (this.parentSchemeElementId.equals(parentSchemeElementId)) {
 			return;
-		this.parentSchemeElementId = newParentSchemeElementId;
+		}
+		this.parentSchemeElementId = parentSchemeElementId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setParentSchemeElementId(Identifier)}.
+	 * 
+	 * @param parentSchemeElement
+	 */
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
+		this.setParentSchemeElementId(Identifier.possiblyVoid(parentSchemeElement));
 	}
 
 	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) throws ApplicationException {
@@ -943,15 +975,25 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * @param schemeCellId
+	 */
+	void setSchemeCellId(final Identifier schemeCellId) {
+		assert schemeCellId.isVoid() || schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.schemeCellId.equals(schemeCellId)) {
+			return;
+		}
+		this.schemeCellId = schemeCellId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setSchemeCellId(Identifier)}.
+	 *
 	 * @param schemeCell
 	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
 	public void setSchemeCell(final SchemeImageResource schemeCell) {
-		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
-		if (this.schemeCellId.equals(newSchemeCellId))
-			return;
-		this.schemeCellId = newSchemeCellId;
-		super.markAsChanged();
+		this.setSchemeCellId(Identifier.possiblyVoid(schemeCell));
 	}
 
 	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
@@ -976,8 +1018,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void setKind(final IdlKind kind) {
 		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		assert kind != null: NON_NULL_EXPECTED;
-		if (this.kind.value() == kind.value())
+		if (this.kind.value() == kind.value()) {
 			return;
+		}
 		this.kind = kind;
 		super.markAsChanged();
 	}
@@ -1031,32 +1074,52 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @param symbol
-	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @param symbolId
 	 */
-	public void setSymbol(final BitmapImageResource symbol) {
-		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
-		if (this.symbolId.equals(newSymbolId))
+	void setSymbolId(final Identifier symbolId) {
+		assert symbolId.isVoid() || symbolId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.symbolId.equals(symbolId)) {
 			return;
-		this.symbolId = newSymbolId;
+		}
+		this.symbolId = symbolId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setSymbolId(Identifier)}.
+	 * @param symbol
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 */
+	public void setSymbol(final BitmapImageResource symbol) {
+		this.setSymbolId(Identifier.possiblyVoid(symbol));
+	}
+
+	/**
+	 * @param ugoCellId
+	 */
+	void setUgoCellId(final Identifier ugoCellId) {
+		assert ugoCellId.isVoid() || ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.ugoCellId.equals(ugoCellId)) {
+			return;
+		}
+		this.ugoCellId = ugoCellId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setUgoCellId(Identifier)}.
+	 *
 	 * @param ugoCell
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {
-		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
-		if (this.ugoCellId.equals(newUgoCellId))
-			return;
-		this.ugoCellId = newUgoCellId;
-		super.markAsChanged();
+		this.setUgoCellId(Identifier.possiblyVoid(ugoCell));
 	}
 
 	public void setWidth(final int width) {
-		if (this.width == width)
+		if (this.width == width) {
 			return;
+		}
 		this.width = width;
 		super.markAsChanged();
 	}
