@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.1 2005/07/29 12:54:24 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.2 2005/08/02 06:39:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.logic.Item;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/29 12:54:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 06:39:38 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -42,6 +42,8 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 	private String name;
 
 	private String codename;
+
+	private String description;
 
 	private MapLibrary parent;
 
@@ -222,6 +224,10 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 	public Object getModified() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getCodename() {
+		return this.codename;
 	}
 
 }
