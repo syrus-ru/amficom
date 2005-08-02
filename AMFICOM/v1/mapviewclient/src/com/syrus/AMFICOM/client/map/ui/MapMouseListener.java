@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.49 2005/07/19 13:21:13 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.50 2005/08/02 07:41:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.49 $, $Date: 2005/07/19 13:21:13 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/02 07:41:55 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -89,33 +89,10 @@ public final class MapMouseListener implements MouseListener
 		}
 	}
 
-	public void mouseClicked(MouseEvent me)
-	{
+	public void mouseClicked(MouseEvent me) {
 		if(me.getClickCount() == 2
-			&& SwingUtilities.isLeftMouseButton(me))
-		{
-			// show properties on double click
-			if ( this.netMapViewer.getLogicalNetLayer().getMapView() != null)
-			{
-//				showContextMenu();
-			}
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void showContextMenu() {
-		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
-		MapElement mapElement = logicalNetLayer.getCurrentMapElement();
-		if(mapElement != null)
-		{
-				MapPopupMenu contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
-				if(contextMenu != null)
-				{
-					contextMenu.setNetMapViewer(this.netMapViewer);
-					contextMenu.showProperties(mapElement);
-				}
+				&& SwingUtilities.isLeftMouseButton(me)) {
+			// nothing for now on double click
 		}
 	}
 
