@@ -16,3 +16,4 @@ test
 *.txt
 Makefile.inc
 .pmd
+*.key
