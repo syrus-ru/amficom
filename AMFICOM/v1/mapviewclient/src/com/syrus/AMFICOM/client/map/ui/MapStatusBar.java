@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.11 2005/06/29 15:48:02 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.12 2005/08/02 07:42:25 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,15 +19,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/29 15:48:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/02 07:42:25 $
  * @module mapviewclient_v1
  */
 public final class MapStatusBar extends JPanel {
@@ -154,11 +156,11 @@ public final class MapStatusBar extends JPanel {
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 1;
+		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 5, 1, 0);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.longitudeField, constraints);
@@ -171,7 +173,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 10, 1, 0);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.latitudeLabel, constraints);
@@ -180,11 +182,11 @@ public final class MapStatusBar extends JPanel {
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 1;
+		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 5, 1, 0);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.latitudeTextField, constraints);
@@ -197,7 +199,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 40, 1, 0);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.scaleLabel, constraints);
@@ -206,11 +208,11 @@ public final class MapStatusBar extends JPanel {
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
-		constraints.weightx = 1;
+		constraints.weightx = 0;
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 5, 1, 300);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.scaleField, constraints);
