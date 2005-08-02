@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.16 2005/07/18 12:42:20 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.17 2005/08/02 12:41:00 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,12 @@
  */
 package com.syrus.AMFICOM.mcm;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,28 +25,123 @@ import com.syrus.AMFICOM.general.DatabaseObjectLoader;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/18 12:42:20 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/02 12:41:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
-abstract class MCMObjectLoader extends CORBAObjectLoader {
+final class MCMObjectLoader extends CORBAObjectLoader {
+	private DatabaseObjectLoader databaseObjectLoader;
 
 	public MCMObjectLoader(final MCMServantManager mcmServantManager) {
 		super(mcmServantManager);
+		this.databaseObjectLoader = new DatabaseObjectLoader();
+	}
+
+	@Override
+	public <T extends StorableObject> Set<T> loadStorableObjects(final Set<Identifier> ids) throws ApplicationException {
+		assert ids != null: ErrorMessages.NON_NULL_EXPECTED;
+		if (ids.isEmpty()) {
+			return Collections.emptySet();
+		}
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case EVALUATION_CODE:
+			case RESULT_CODE:
+				return this.databaseObjectLoader.loadStorableObjects(ids);
+			default:
+				return this.loadStorableObjectsCustom(ids);
+		}
+	}
+
+	@Override
+	public final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		assert ids != null && condition != null: ErrorMessages.NON_NULL_EXPECTED;
+
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case EVALUATION_CODE:
+			case RESULT_CODE:
+				return this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
+			default:
+				return this.loadStorableObjectsButIdsByConditionCustom(ids, condition);
+		}
+	}
+
+	private final <T extends StorableObject> Set<T> loadStorableObjectsCustom(final Set<Identifier> ids) throws ApplicationException {
+		final Set<T> objects = this.databaseObjectLoader.loadStorableObjects(ids);
+		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
+		if (loadIds.isEmpty()) {
+			return objects;
+		}
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+		this.loadStorableObjectsWithDependencies(loadObjectsMap, 0, loadIds);
+		if (loadObjectsMap.isEmpty()) {
+			return objects;
+		}
+
+		final Set<T> loadedObjects = (Set<T>) loadObjectsMap.get(new Integer(0)).get(new Short(entityCode));
+		if (loadedObjects.isEmpty()) {
+			return objects;
+		}
+		assert StorableObject.getEntityCodeOfIdentifiables(loadedObjects) == entityCode : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		objects.addAll(loadedObjects);
+
+		insertWithDependencies(loadObjectsMap);
+
+		return objects;
+	}
+
+	private final <T extends StorableObject> Set<T> loadStorableObjectsButIdsByConditionCustom(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws ApplicationException {
+		final Set<T> objects = this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
+		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
+
+		final Set<T> loadedObjects = super.loadStorableObjectsButIdsByCondition(loadButIds, condition);
+		if (loadedObjects.isEmpty()) {
+			return objects;
+		}
+		objects.addAll(loadedObjects);
+
+		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+		final Map<Short, Set<StorableObject>> levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>(1);
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		levelLoadObjectsMap.put(new Short(entityCode), (Set<StorableObject>) loadedObjects);
+		loadObjectsMap.put(new Integer(0), levelLoadObjectsMap);
+
+		final Map<Short, Set<Identifier>> missingDependencesMap = createMissingDependenciesMap((Set<StorableObject>) loadedObjects);
+		for (final Short entityKey : missingDependencesMap.keySet()) {
+			this.loadStorableObjectsWithDependencies(loadObjectsMap, 1, missingDependencesMap.get(entityKey));
+		}
+
+		insertWithDependencies(loadObjectsMap);
+
+		return objects;
 	}
 
 	final void loadStorableObjectsWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
 			final int dependencyLevel,
-			final short entityCode,
 			final Set<Identifier> ids) throws ApplicationException {
-		final TransmitProcedure transmitProcedure = TransmitProcedureFactory.getProcedure(entityCode);
-		final Set<StorableObject> loadedObjects = super.loadStorableObjects(entityCode, ids, transmitProcedure);
+		final Set<StorableObject> loadedObjects = super.loadStorableObjects(ids);
 		if (loadedObjects.isEmpty()) {
 			return;
 		}
@@ -51,6 +152,8 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>();
 			loadObjectsMap.put(dependencyKey, levelLoadObjectsMap);
 		}
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		final Short entityKey1 = new Short(entityCode);
 		Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey1);
 		if (entityLevelLoadObjects == null) {
@@ -63,69 +166,9 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		for (final Short entityKey : missingDependencesMap.keySet()) {
 			this.loadStorableObjectsWithDependencies(loadObjectsMap,
 					dependencyLevel + 1,
-					entityKey.shortValue(),
 					missingDependencesMap.get(entityKey));
 		}
 
-	}
-
-	protected final Set loadStorableObjects(final short entityCode, final Set<Identifier> ids) throws ApplicationException {
-		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjects(ids);
-		final Set<Identifier> loadIds = Identifier.createSubtractionIdentifiers(ids, objects);
-		if (loadIds.isEmpty()) {
-			return objects;
-		}
-
-		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
-		this.loadStorableObjectsWithDependencies(loadObjectsMap, 0, entityCode, loadIds);
-		if (loadObjectsMap.isEmpty()) {
-			return objects;
-		}
-
-		final Set<StorableObject> loadedObjects = loadObjectsMap.get(new Integer(0)).get(new Short(entityCode));
-		if (loadedObjects.isEmpty()) {
-			return objects;
-		}
-		assert StorableObject.getEntityCodeOfIdentifiables(loadedObjects) == entityCode : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		objects.addAll(loadedObjects);
-
-		insertWithDependencies(loadObjectsMap);
-
-		return objects;
-	}
-
-	protected final Set loadStorableObjectsButIdsByCondition(final short entityCode,
-			final Set<Identifier> ids,
-			final StorableObjectCondition condition) throws ApplicationException {
-		final Set<StorableObject> objects = DatabaseObjectLoader.loadStorableObjectsButIdsByCondition(condition, ids);
-		final Set<Identifier> loadButIds = Identifier.createSumIdentifiers(ids, objects);
-
-		final TransmitButIdsByConditionProcedure transmitButIdsByConditionProcedure = TransmitButIdsByConditionProcedureFactory.getProcedure(entityCode);
-		final Set<StorableObject> loadedObjects = super.loadStorableObjectsButIdsByCondition(entityCode,
-				loadButIds,
-				condition,
-				transmitButIdsByConditionProcedure);
-		if (loadedObjects.isEmpty()) {
-			return objects;
-		}
-		objects.addAll(loadedObjects);
-
-		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
-		final Map<Short, Set<StorableObject>> levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>(1);
-		levelLoadObjectsMap.put(new Short(entityCode), loadedObjects);
-		loadObjectsMap.put(new Integer(0), levelLoadObjectsMap);
-
-		final Map<Short, Set<Identifier>> missingDependencesMap = createMissingDependenciesMap(loadedObjects);
-		for (final Short entityKey : missingDependencesMap.keySet()) {
-			this.loadStorableObjectsWithDependencies(loadObjectsMap,
-					1,
-					entityKey.shortValue(),
-					missingDependencesMap.get(entityKey));
-		}
-
-		insertWithDependencies(loadObjectsMap);
-
-		return objects;
 	}
 
 	private static Map<Short, Set<Identifier>> createMissingDependenciesMap(final Set<StorableObject> storableObjects) {
@@ -161,8 +204,8 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 			for (final Short entityKey : levelLoadObjectsMap.keySet()) {
 				final Set<StorableObject> entityLevelLoadObjects = levelLoadObjectsMap.get(entityKey);
 				try {
-					final StorableObjectDatabase database = DatabaseContext.getDatabase(entityKey);
-					database.insert(entityLevelLoadObjects);
+					final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityKey);
+					database.save(entityLevelLoadObjects);
 				}
 				catch (ApplicationException ae) {
 					Log.errorException(ae);
@@ -171,36 +214,5 @@ abstract class MCMObjectLoader extends CORBAObjectLoader {
 		}
 	}
 
-	/**
-	 * This method does <em>not</em> override
-	 * {@link CORBAObjectLoader#saveStorableObjects(short, Set, ReceiveProcedure)}
-	 * since it has an extra argument, <code>final boolean force</code>,
-	 * unnecessary in super implementation.
-	 */
-	protected final void saveStorableObjects(final short entityCode,
-			final Set<? extends StorableObject> storableObjects,
-			final boolean force,
-			final ReceiveProcedure receiveProcedure) throws ApplicationException {
-		DatabaseObjectLoader.saveStorableObjects(storableObjects, force);
 
-		super.saveStorableObjects(entityCode, storableObjects, receiveProcedure);
-	}
-
-	/**
-	 * Currently not need to implement this method
-	 * @todo Using this method load objects, changed on server relatively to MCM
-	 */
-	@Override
-	public Set refresh(final Set<? extends StorableObject> storableObjects) throws ApplicationException {
-		assert false : storableObjects;
-		return null;
-	}
-
-	/**
-	 * Currently not need to implement this method
-	 */
-	@Override
-	public void delete(final Set<? extends Identifiable> identifiables) {
-		assert false : identifiables;
-	}
 }
