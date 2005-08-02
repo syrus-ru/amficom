@@ -6,8 +6,9 @@ CREATE TABLE MapLibrary (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- name VARCHAR2(128 CHAR),
- codename VARCHAR2(128 CHAR),
+ name VARCHAR2(64 CHAR),
+ codename VARCHAR2(32 CHAR),
+ description VARCHAR2(256 CHAR),
  parentmaplibrary_id,
 --
  CONSTRAINT map_lib_pk PRIMARY KEY (id),
