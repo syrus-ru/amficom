@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableImageResource.java,v 1.1 2005/07/31 17:08:09 bass Exp $
+ * $Id: AbstractCloneableImageResource.java,v 1.2 2005/08/02 08:19:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,12 +23,16 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/31 17:08:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 08:19:37 $
  * @module resource
  */
 public abstract class AbstractCloneableImageResource extends AbstractImageResource
 		implements CloneableStorableObject {
-	protected transient Map<Identifier, Identifier> clonedIdMap;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	protected Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id

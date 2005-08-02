@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.62 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeDevice.java,v 1.63 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/02 08:19:38 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -79,7 +79,11 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 
 	Identifier parentSchemeProtoElementId;
 
-	private transient boolean parentSet = false;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	boolean parentSet = false;
 
 	/**
 	 * @param id

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.29 2005/07/31 19:11:07 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.30 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/07/31 19:11:07 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/02 08:19:38 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -86,7 +86,11 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 */
 	Identifier targetAbstractSchemePortId;
 
-	transient boolean abstractLinkTypeSet = false;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	boolean abstractLinkTypeSet = false;
 
 	/**
 	 * @param id

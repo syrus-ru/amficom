@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableDomainMember.java,v 1.9 2005/07/31 17:08:09 bass Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.10 2005/08/02 08:19:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,18 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/31 17:08:09 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 08:19:37 $
  * @module admin
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
 		implements CloneableStorableObject {
 	private static final long serialVersionUID = -1126583003571701586L;
 
-	protected transient Map<Identifier, Identifier> clonedIdMap;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	protected Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id

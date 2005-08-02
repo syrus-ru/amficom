@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.43 2005/08/01 16:18:09 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.44 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.44 $, $Date: 2005/08/02 08:19:38 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -259,9 +259,12 @@ public abstract class AbstractSchemeElement
 	 **********************************************************************/
 
 	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop.
+	 *
 	 * @todo Check whether this attribute is necessary.
 	 */
-	private transient boolean alarmed;
+	private boolean alarmed;
 
 	/**
 	 * Transient attribute

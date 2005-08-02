@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.69 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.70 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/02 08:19:38 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -105,9 +105,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	Identifier parentSchemeProtoElementId;
 
-	private transient boolean parentSet = false;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	private boolean parentSet = false;
 
-	private final transient ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	private final ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
 	/**
 	 * @param id

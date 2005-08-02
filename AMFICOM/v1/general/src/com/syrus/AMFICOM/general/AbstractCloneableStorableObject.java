@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableStorableObject.java,v 1.8 2005/07/31 17:08:10 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.9 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,16 @@ import java.util.Map;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/07/31 17:08:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/02 08:19:38 $
  * @module general
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject
 		implements CloneableStorableObject {
-	protected transient Map<Identifier, Identifier> clonedIdMap;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	protected Map<Identifier, Identifier> clonedIdMap;
 
 	/**
 	 * @param id

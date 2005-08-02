@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.50 2005/08/01 16:18:09 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.51 2005/08/02 08:19:38 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/02 08:19:38 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -84,7 +84,11 @@ public abstract class AbstractSchemePort
 
 	Identifier parentSchemeDeviceId;
 
-	transient boolean portTypeSet = false;
+	/**
+	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
+	 * drag&apos;n&apos;drop. 
+	 */
+	boolean portTypeSet = false;
 
 	/**
 	 * @param id
