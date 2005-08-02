@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.32 2005/07/20 18:04:21 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.33 2005/08/02 07:40:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.32 $, $Date: 2005/07/20 18:04:21 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/02 07:40:47 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -81,7 +81,7 @@ public final class MapDropTargetListener implements DropTargetListener
 					if (df[i].getHumanPresentableName().equals("ElementLabel"))
 					{
 						Identifier id = (Identifier )transferable.getTransferData(df[(i)]);
-						SiteNodeType mpe = (SiteNodeType)StorableObjectPool.getStorableObject(id, false);
+						SiteNodeType mpe = StorableObjectPool.getStorableObject(id, false);
 	
 						mapElementDropped(mpe, point);
 					}
@@ -95,14 +95,14 @@ public final class MapDropTargetListener implements DropTargetListener
 							if(or instanceof SchemeElement) {
 								SchemeElement se = (SchemeElement )or;
 								Identifier id = se.getId();
-								SchemeElement sereal = (SchemeElement )StorableObjectPool.getStorableObject(id, false);
+								SchemeElement sereal = StorableObjectPool.getStorableObject(id, false);
 								schemeElementDropped(sereal, point);
 							}
 							else
 							if(or instanceof SchemeCableLink) {
 								SchemeCableLink scl = (SchemeCableLink )or;
 								Identifier id = scl.getId();
-								SchemeCableLink sclreal = (SchemeCableLink )StorableObjectPool.getStorableObject(id, false);
+								SchemeCableLink sclreal = StorableObjectPool.getStorableObject(id, false);
 								schemeCableLinkDropped(sclreal);
 							}
 						}

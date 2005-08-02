@@ -82,7 +82,7 @@ public final class SchemeTableController extends StorableObjectWrapper
 		{
 			try
 			{
-				Domain domain = (Domain )StorableObjectPool.getStorableObject(sc.getDomainId(), false);
+				Domain domain = StorableObjectPool.getStorableObject(sc.getDomainId(), false);
 				result = domain.getName();
 			}
 			catch (final ApplicationException ae)
@@ -96,7 +96,7 @@ public final class SchemeTableController extends StorableObjectWrapper
 		{
 			try
 			{
-				SystemUser user = (SystemUser )StorableObjectPool.getStorableObject(sc.getCreatorId(), false);
+				SystemUser user = StorableObjectPool.getStorableObject(sc.getCreatorId(), false);
 				result = user.getName();
 			}
 			catch (Exception e)

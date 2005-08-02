@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -405,7 +405,7 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 			}
 
 			try {
-				domain = (Domain )StorableObjectPool.getStorableObject(
+				domain = StorableObjectPool.getStorableObject(
 						this.mapView.getDomainId(),
 						false);
 			} catch(ApplicationException e) {

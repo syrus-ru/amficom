@@ -73,7 +73,7 @@ public final class MapTableController implements Wrapper {
 		else
 		if(key.equals(KEY_DOMAIN)) {
 			try {
-				Domain domain = (Domain )StorableObjectPool.getStorableObject(map.getDomainId(), false);
+				Domain domain = StorableObjectPool.getStorableObject(map.getDomainId(), false);
 				result = domain.getName();
 			} catch(ApplicationException e) {
 				result = "";
@@ -82,7 +82,7 @@ public final class MapTableController implements Wrapper {
 		else
 		if(key.equals(KEY_USER)) {
 			try {
-				SystemUser user = (SystemUser )StorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				SystemUser user = StorableObjectPool.getStorableObject(map.getCreatorId(), false);
 				result = user.getName();
 			} catch(ApplicationException e) {
 				result = "";
