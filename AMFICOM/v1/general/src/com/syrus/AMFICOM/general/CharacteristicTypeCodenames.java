@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeCodenames.java,v 1.7 2005/05/24 17:09:02 arseniy Exp $
+ * $Id: CharacteristicTypeCodenames.java,v 1.8 2005/08/02 13:57:12 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/05/24 17:09:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/02 13:57:12 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general_v1
  */
@@ -37,6 +37,21 @@ public final class CharacteristicTypeCodenames {
 	public static final String UNITS_TRACE_LENGTH = UNITS_PREFIX + "trclen";
 	public static final String UNITS_PULSE_WIDTH = UNITS_PREFIX + "pulswd";
 
+	
+	public static final String USER_PREFIX = "user_";
+	public static final String USER_NATURE = USER_PREFIX + "nature";
+	public static final String USER_FULLNAME = USER_PREFIX + "fullname";
+	public static final String USER_POSITION = USER_PREFIX + "position";
+	public static final String USER_DEPARTEMENT = USER_PREFIX + "departement";
+	public static final String USER_COMPANY = USER_PREFIX + "company";
+	public static final String USER_ROOM_NO = USER_PREFIX + "room_no";
+	public static final String USER_CITY = USER_PREFIX + "city";
+	public static final String USER_STREET = USER_PREFIX + "street";
+	public static final String USER_BUILDING = USER_PREFIX + "building";
+	public static final String USER_EMAIL = USER_PREFIX + "email";
+	public static final String USER_PHONE = USER_PREFIX + "phone";
+	public static final String USER_CELLULAR = USER_PREFIX + "cellular";
+	
 	private CharacteristicTypeCodenames() {
 		//singleton
 		assert false;
