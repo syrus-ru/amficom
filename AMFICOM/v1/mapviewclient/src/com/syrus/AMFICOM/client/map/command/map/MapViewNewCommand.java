@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.24 2005/07/11 13:18:04 bass Exp $
+ * $Id: MapViewNewCommand.java,v 1.25 2005/08/02 07:52:18 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 
 /**
  * создать новый вид 
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/02 07:52:18 $
  * @module mapviewclient_v1
  */
 public class MapViewNewCommand extends AbstractCommand {
@@ -54,7 +54,7 @@ public class MapViewNewCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapNew")));
+						LangModelMap.getString("MapViewNew")));
 
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
@@ -66,7 +66,7 @@ public class MapViewNewCommand extends AbstractCommand {
 			this.mapView = MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString("New"),
+					LangModelMap.getString("NewView"),
 					"",
 					center.getX(),
 					center.getY(),
@@ -84,8 +84,6 @@ public class MapViewNewCommand extends AbstractCommand {
 			setResult(RESULT_NO);
 			return;
 		}
-
-		this.mapView.setName(LangModelMap.getString("New"));
 
 		setResult(Command.RESULT_OK);
 //		if (mapFrame != null)
