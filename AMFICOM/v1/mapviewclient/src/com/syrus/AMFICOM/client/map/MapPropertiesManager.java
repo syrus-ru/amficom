@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.30 2005/07/15 15:05:29 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.31 2005/08/02 07:36:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.30 $, $Date: 2005/07/15 15:05:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 07:36:40 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -568,7 +568,7 @@ public final class MapPropertiesManager
 		{
 			try
 			{
-				AbstractImageResource ir = (AbstractImageResource )StorableObjectPool.getStorableObject(imageId, true);
+				AbstractImageResource ir = StorableObjectPool.getStorableObject(imageId, true);
 				if(ir instanceof FileImageResource)
 				{
 					img = Toolkit.getDefaultToolkit().createImage(((FileImageResource )ir).getFileName());
