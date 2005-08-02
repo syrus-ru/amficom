@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.28 2005/07/28 15:37:00 max Exp $
+ * $Id: map.idl,v 1.29 2005/08/02 12:06:01 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -268,6 +268,28 @@ module map {
 					in wstring description,
 					in general::corba::IdlIdentifierSeq physicalLinkIds);
 		};
+		
+		
+//////////////////////// MapLibrary ////////////////////////
+
+		valuetype IdlMapLibrary : general::corba::IdlStorableObject {
+			public wstring name;
+			public wstring codename;
+			public wstring description;
+			
+			public general::corba::IdlIdentifier parentMapLibraryId;
+			
+			factory init(in general::corba::IdlIdentifier id,
+					in long long created,
+					in long long modified,
+					in general::corba::IdlIdentifier creatorId,
+					in general::corba::IdlIdentifier modifierId,
+					in long long version,
+					in wstring name,
+					in wstring codename,
+					in wstring description,
+					in general::corba::IdlIdentifier parentMapLibraryId);
+		};
 
 
 /////////////////////// Map ////////////////////////
@@ -282,6 +304,9 @@ module map {
 			public general::corba::IdlIdentifierSeq physicalLinkIds;
 			public general::corba::IdlIdentifierSeq markIds;
 			public general::corba::IdlIdentifierSeq collectorIds;
+			public general::corba::IdlIdentifierSeq mapIds;
+			public general::corba::IdlIdentifierSeq externalNodeIds;
+			public general::corba::IdlIdentifierSeq mapLibraryIds;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -297,7 +322,10 @@ module map {
 					in general::corba::IdlIdentifierSeq nodeLinkIds,
 					in general::corba::IdlIdentifierSeq physicalLinkIds,
 					in general::corba::IdlIdentifierSeq markIds,
-					in general::corba::IdlIdentifierSeq collectorIds);
+					in general::corba::IdlIdentifierSeq collectorIds,
+					in general::corba::IdlIdentifierSeq mapIds,
+					in general::corba::IdlIdentifierSeq externalNodeIds,
+					in general::corba::IdlIdentifierSeq mapLibraryIds);
 		};
 
 
