@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.26 2005/08/02 06:23:17 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.27 2005/08/02 13:56:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.26 $, $Date: 2005/08/02 06:23:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/02 13:56:53 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -224,6 +224,8 @@ public class StorableObjectXMLDriver {
 			object = new Identifier(value);
 		} else if (className.equals(StorableObjectVersion.class.getName())) {
 			object = new StorableObjectVersion(Long.parseLong(value));
+		} else if (className.equals(DataType.class.getName())) {
+			object = DataType.fromInt(Integer.parseInt(value));
 		} else if (className.equals(Date.class.getName())) {
 			object = new Date(Long.parseLong(value));
 		} else if (className.equals(Short.class.getName())) {
@@ -284,6 +286,10 @@ public class StorableObjectXMLDriver {
 			final StorableObjectVersion version = (StorableObjectVersion) object;
 			final String string = Long.toString(version.longValue());
 			final Text text = this.doc.createTextNode(string);
+			element.appendChild(text);
+		} else if (object instanceof DataType) {
+			final DataType dataType = (DataType) object;
+			final Text text = this.doc.createTextNode(Integer.toString(dataType.getCode()));
 			element.appendChild(text);
 		} else if (object instanceof Date) {
 			final Date date = (Date) object;
@@ -355,8 +361,9 @@ public class StorableObjectXMLDriver {
 	public Set<Identifier> getIdentifiers(final short entityCode) throws IllegalDataException {
 
 		try {
+			// XXX just only for current representation of id
 			final NodeList idNodeList = XPathAPI.selectNodeList(this.doc, "//" + this.packageName + "/"
-					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + "')]");
+					+ "*[starts-with(name(),'" + ObjectEntities.codeToString(entityCode) + Identifier.SEPARATOR + "')]");
 			final int size = idNodeList.getLength();
 			if (size == 0)
 				return Collections.emptySet();
@@ -366,6 +373,11 @@ public class StorableObjectXMLDriver {
 				final Node node = idNodeList.item(i);
 				idSet.add(new Identifier(node.getNodeName()));
 			}
+			
+			for(Identifier identifier : idSet) {
+				System.out.println("StorableObjectXMLDriver.getIdentifiers() | identifier " + identifier);
+			}
+			
 			return idSet;
 		} catch (TransformerException e) {
 			final String msg = "StorableObjectXMLDriver.getIdentifiers | Caught " + e.getMessage()
