@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.2 2005/08/02 06:39:38 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.3 2005/08/02 12:08:27 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,43 +9,61 @@ package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.map.corba.IdlMapLibrary;
+import com.syrus.AMFICOM.map.corba.IdlMapLibraryHelper;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 06:39:38 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 12:08:27 $
+ * @author $Author: max $
  * @module map
  */
-public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTransferable {
+public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
 
-	private Identifier creatorId;
+	/**
+	 * 
+	 */
+	private static final long	serialVersionUID	= -8616969914711251336L;
 
-	private Identifier id;
-	
 	private String name;
 
 	private String codename;
-
+	
 	private String description;
 
-	private MapLibrary parent;
+	private MapLibrary parentMapLibrary;
 
 	private transient ArrayList physicalLinkTypes = new ArrayList();
 
@@ -53,15 +71,128 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 
 	private transient ArrayList libraries = new ArrayList();
 
-	public MapLibrary(
-			Identifier creatorId,
-			Identifier id,
-			String name,
+	MapLibrary(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+		super(id);
+		
+		try {
+			DatabaseContext.getDatabase(ObjectEntities.MAPLIBRARY_CODE).retrieve(this);
+		} catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e.getMessage(), e);
+		}
+	}
+	
+	public MapLibrary (final IdlMapLibrary mlt) throws CreateObjectException {
+		try {
+			this.fromTransferable(mlt);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
+	protected MapLibrary(final Identifier id,
+			final Identifier creatorId,
+			final StorableObjectVersion version,
+			final String name,
+			final String codename,
+			final String description,
 			MapLibrary parent) {
-		this.creatorId = creatorId;
-		this.id = id;
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.name = name;
-		this.parent = parent;
+		this.codename = codename;
+		this.description = description;
+		this.parentMapLibrary = parent;
+	}
+	
+	public static MapLibrary createInstance(final Identifier creatorId,
+			MapLibrary parent) throws CreateObjectException {
+		return MapLibrary.createInstance(creatorId,
+				"",
+				"",
+				"",
+				parent);
+	}
+	
+	public static MapLibrary createInstance(final Identifier creatorId,
+			String name,
+			String codename,
+			String description,
+			MapLibrary parent) throws CreateObjectException {
+		if (creatorId == null
+				|| name == null
+				|| codename == null
+				|| description == null
+				|| parent == null) {
+			throw new IllegalArgumentException("Argument is 'null'");
+		}
+		
+		try {
+			final MapLibrary mapLibrary = new MapLibrary(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPLIBRARY_CODE),
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					codename,
+					description,
+					parent);
+
+			assert mapLibrary.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+			mapLibrary.markAsChanged();
+
+			return mapLibrary;
+		} catch (IdentifierGenerationException ige) {
+			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
+	}
+	
+	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+		final IdlMapLibrary mlt = (IdlMapLibrary) transferable;
+		super.fromTransferable(mlt);
+
+		this.name = mlt.name;
+		this.codename = mlt.codename;
+		this.description = mlt.description;
+
+		this.parentMapLibrary = StorableObjectPool.getStorableObject(new Identifier(mlt.parentMapLibraryId), true);
+	}
+	
+	@Override
+	public IdlMapLibrary getTransferable(ORB orb) {
+		return IdlMapLibraryHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.name,
+				this.codename,
+				this.description,
+				this.parentMapLibrary.getId().getTransferable());
+	}
+	
+	synchronized void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final String codename,
+			final String description,
+			final MapLibrary parent) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version);
+		this.name = name;
+		this.codename = codename;
+		this.description = description;
+		this.parentMapLibrary = parent;
 	}
 	
 	public void addChild(LibraryEntry libraryEntry) {
@@ -87,7 +218,7 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 
 	public void setParent(Library library) {
 		assert library != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		this.parent = (MapLibrary )library;
+		this.parentMapLibrary = (MapLibrary )library;
 	}
 
 	public String getName() {
@@ -104,15 +235,11 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 
 	public void setParent(Item parent) {
 		assert parent != this: ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		this.parent = (MapLibrary )parent;
+		this.parentMapLibrary = (MapLibrary )parent;
 	}
 
-	public Library getParent() {
-		return this.parent;
-	}
-
-	public Identifier getId() {
-		return this.id;
+	public MapLibrary getParent() {
+		return this.parentMapLibrary;
 	}
 
 	public void setName(String name) {
@@ -210,24 +337,27 @@ public class MapLibrary implements Identifiable, Namable, Library, XMLBeansTrans
 			throw new CreateObjectException("MapLibrary.createInstance |  ", e);
 		}
 	}
-
-	public Identifier getCreatorId() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	@Override
+	public Set<Identifiable> getDependencies() {
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.parentMapLibrary);
+		return dependencies;
 	}
 
-	public Object getCreated() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object getModified() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getDescription() {
+		return this.description;
 	}
 
 	public String getCodename() {
 		return this.codename;
 	}
 
+	public void setCodename(String codename) {
+		this.codename = codename;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }
