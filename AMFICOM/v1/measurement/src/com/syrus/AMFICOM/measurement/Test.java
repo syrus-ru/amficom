@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.141 2005/07/29 16:15:49 arseniy Exp $
+ * $Id: Test.java,v 1.142 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.141 $, $Date: 2005/07/29 16:15:49 $
+ * @version $Revision: 1.142 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -543,7 +543,7 @@ public final class Test extends StorableObject {
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		if (this.temporalType == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL && !this.timeStamps.temporalPatternId.isVoid()) {
 			dependencies.add(this.timeStamps.temporalPatternId);
@@ -552,11 +552,13 @@ public final class Test extends StorableObject {
 		dependencies.addAll(this.measurementSetupIds);
 		dependencies.add(this.measurementTypeId);
 
-		if (this.analysisTypeId != null)
+		if (!this.analysisTypeId.isVoid()) {
 			dependencies.add(this.analysisTypeId);
+		}
 
-		if (this.evaluationTypeId != null)
+		if (!this.evaluationTypeId.isVoid()) {
 			dependencies.add(this.evaluationTypeId);
+		}
 
 		dependencies.add(this.monitoredElement);
 		return dependencies;

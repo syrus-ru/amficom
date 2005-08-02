@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.53 2005/07/29 12:59:12 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.54 2005/08/02 18:07:26 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.53 $, $Date: 2005/07/29 12:59:12 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/08/02 18:07:26 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -175,6 +175,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.imageId);
 	}
 

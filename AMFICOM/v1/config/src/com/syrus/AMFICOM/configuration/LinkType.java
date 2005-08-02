@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.66 2005/07/27 15:59:22 bass Exp $
+ * $Id: LinkType.java,v 1.67 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.67 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -245,6 +245,7 @@ public final class LinkType extends AbstractLinkType {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

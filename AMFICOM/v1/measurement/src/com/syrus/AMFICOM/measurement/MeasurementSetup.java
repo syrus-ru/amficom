@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.86 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.87 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.87 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -443,21 +443,24 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		if (this.parameterSet != null)
+		if (this.parameterSet != null) {
 			dependencies.add(this.parameterSet);
+		}
 
-		if (this.criteriaSet != null)
+		if (this.criteriaSet != null) {
 			dependencies.add(this.criteriaSet);
+		}
 
-		if (this.thresholdSet != null)
+		if (this.thresholdSet != null) {
 			dependencies.add(this.thresholdSet);
+		}
 
-		if (this.etalon != null)
+		if (this.etalon != null) {
 			dependencies.add(this.etalon);
+		}
 
 		dependencies.addAll(this.monitoredElementIds);
 		dependencies.addAll(this.measurementTypeIds);

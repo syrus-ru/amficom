@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.16 2005/07/25 20:50:06 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.17 2005/08/02 18:08:52 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -144,6 +144,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

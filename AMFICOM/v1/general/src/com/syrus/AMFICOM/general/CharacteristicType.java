@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.43 2005/07/27 12:03:43 bass Exp $
+ * $Id: CharacteristicType.java,v 1.44 2005/08/02 18:07:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/07/27 12:03:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/08/02 18:07:34 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -218,6 +218,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}	
 }

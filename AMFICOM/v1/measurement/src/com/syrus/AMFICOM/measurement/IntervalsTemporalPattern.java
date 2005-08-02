@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.30 2005/07/25 20:50:06 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.31 2005/08/02 18:08:52 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -446,9 +446,11 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		for (final Iterator<Long> it = this.intervalsAbstractTemporalPatternMap.keySet().iterator(); it.hasNext();) {
-			Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(it.next());
+		for (final Long milliseconds : this.intervalsAbstractTemporalPatternMap.keySet()) {
+			final Identifier abstractTemporalPatternId = this.intervalsAbstractTemporalPatternMap.get(milliseconds);
 			dependencies.add(abstractTemporalPatternId);
 		}
 		return dependencies;

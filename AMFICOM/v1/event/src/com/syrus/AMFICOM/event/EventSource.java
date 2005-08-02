@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.28 2005/07/27 15:44:14 max Exp $
+ * $Id: EventSource.java,v 1.29 2005/08/02 18:08:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/27 15:44:14 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2005/08/02 18:08:59 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public final class EventSource extends StorableObject {
@@ -137,7 +137,11 @@ public final class EventSource extends StorableObject {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		return Collections.singleton((Identifiable) this.sourceEntityId);
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.sourceEntityId);
+		return dependencies;
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.45 2005/07/26 20:10:12 bass Exp $
+ * $Id: ParameterType.java,v 1.46 2005/08/02 18:07:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/26 20:10:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/08/02 18:07:34 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -232,6 +232,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 }

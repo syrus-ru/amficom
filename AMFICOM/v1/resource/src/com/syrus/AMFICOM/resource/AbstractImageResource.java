@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.20 2005/07/31 17:06:43 bass Exp $
+ * $Id: AbstractImageResource.java,v 1.21 2005/08/02 18:09:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/07/31 17:06:43 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/08/02 18:09:07 $
  * @module resource_v1
  */
 public abstract class AbstractImageResource extends StorableObject {
@@ -75,6 +76,7 @@ public abstract class AbstractImageResource extends StorableObject {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.86 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.87 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.87 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -414,21 +414,26 @@ public final class AnalysisType extends ActionType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		if (this.inParameterTypeIds != null)
+		if (this.inParameterTypeIds != null) {
 			dependencies.addAll(this.inParameterTypeIds);
+		}
 
-		if (this.criteriaParameterTypeIds != null)
+		if (this.criteriaParameterTypeIds != null) {
 			dependencies.addAll(this.criteriaParameterTypeIds);
+		}
 
-		if (this.etalonParameterTypeIds != null)
+		if (this.etalonParameterTypeIds != null) {
 			dependencies.addAll(this.etalonParameterTypeIds);
+		}
 
-		if (this.outParameterTypeIds != null)
+		if (this.outParameterTypeIds != null) {
 			dependencies.addAll(this.outParameterTypeIds);
+		}
 
 
-		if (this.measurementTypeIds != null)
+		if (this.measurementTypeIds != null) {
 			dependencies.addAll(this.measurementTypeIds);
+		}
 
 		return dependencies;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.89 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.90 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.90 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -333,19 +333,21 @@ public final class MeasurementType extends ActionType implements Namable {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 
-		if (this.inParameterTypeIds != null)
+		if (this.inParameterTypeIds != null) {
 			dependencies.addAll(this.inParameterTypeIds);
+		}
 
-		if (this.outParameterTypeIds != null)
+		if (this.outParameterTypeIds != null) {
 			dependencies.addAll(this.outParameterTypeIds);
+		}
 
-		if (this.measurementPortTypeIds != null)
+		if (this.measurementPortTypeIds != null) {
 			dependencies.addAll(this.measurementPortTypeIds);
+		}
 
 		return dependencies;
 	}

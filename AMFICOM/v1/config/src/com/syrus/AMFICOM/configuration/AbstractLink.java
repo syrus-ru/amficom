@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.3 2005/07/25 20:49:45 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.4 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -114,6 +115,7 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	 */
 	@Override
 	public final Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.type);
 	}
 

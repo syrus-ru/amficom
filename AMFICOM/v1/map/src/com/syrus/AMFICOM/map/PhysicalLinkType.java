@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.59 2005/07/29 12:58:25 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.60 2005/08/02 18:07:25 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/07/29 12:58:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/08/02 18:07:25 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -182,6 +182,8 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		return Collections.emptySet();
 	}
 

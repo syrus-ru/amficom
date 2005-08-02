@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.53 2005/08/01 16:18:10 bass Exp $
+ * $Id: Characteristic.java,v 1.54 2005/08/02 18:07:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/08/01 16:18:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/08/02 18:07:34 $
+ * @author $Author: arseniy $
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
@@ -339,6 +339,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.characterizableId);
 		dependencies.add(this.type);

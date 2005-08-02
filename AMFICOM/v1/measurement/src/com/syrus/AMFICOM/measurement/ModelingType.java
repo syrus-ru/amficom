@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.45 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: ModelingType.java,v 1.46 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.46 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -305,11 +305,13 @@ public final class ModelingType extends ActionType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		if (this.inParameterTypeIds != null)
+		if (this.inParameterTypeIds != null) {
 			dependencies.addAll(this.inParameterTypeIds);
-				
-		if (this.outParameterTypeIds != null)
+		}
+
+		if (this.outParameterTypeIds != null) {
 			dependencies.addAll(this.outParameterTypeIds);
+		}
 				
 		return dependencies;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.98 2005/07/27 15:59:22 bass Exp $
+ * $Id: KIS.java,v 1.99 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -243,6 +243,8 @@ public final class KIS extends DomainMember implements Characterizable {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);

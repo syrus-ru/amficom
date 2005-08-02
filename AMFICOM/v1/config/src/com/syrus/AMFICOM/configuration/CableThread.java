@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.37 2005/07/27 15:59:22 bass Exp $
+ * $Id: CableThread.java,v 1.38 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableThread extends DomainMember implements TypedObject {
@@ -174,6 +174,8 @@ public final class CableThread extends DomainMember implements TypedObject {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 		dependencies.add(this.type);
 		return dependencies;

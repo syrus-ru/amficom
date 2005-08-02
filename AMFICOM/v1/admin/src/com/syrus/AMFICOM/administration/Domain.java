@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.47 2005/07/27 12:15:36 bass Exp $
+ * $Id: Domain.java,v 1.48 2005/08/02 18:08:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,13 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/07/27 12:15:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/08/02 18:08:31 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -227,6 +227,12 @@ public final class Domain extends DomainMember implements Characterizable {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		return Collections.emptySet();
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
+		if (!super.domainId.isVoid()) {
+			dependencies.add(super.domainId);
+		}
+		return dependencies;
 	}
 }

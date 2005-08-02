@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.56 2005/08/02 16:50:17 krupenn Exp $
+ * $Id: Mark.java,v 1.57 2005/08/02 18:07:25 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/08/02 16:50:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/08/02 18:07:25 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
@@ -171,6 +171,7 @@ public final class Mark extends AbstractNode {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.physicalLink);
 	}
 

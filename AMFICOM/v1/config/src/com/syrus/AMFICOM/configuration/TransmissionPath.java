@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.82 2005/07/27 15:59:22 bass Exp $
+ * $Id: TransmissionPath.java,v 1.83 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.82 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -212,7 +212,10 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.type);
 		dependencies.add(this.startPortId);
 		dependencies.add(this.finishPortId);
 		return dependencies;

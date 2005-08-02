@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.40 2005/07/27 15:44:14 max Exp $
+ * $Id: EventType.java,v 1.41 2005/08/02 18:08:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/07/27 15:44:14 $
- * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2005/08/02 18:08:59 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -296,6 +296,8 @@ public final class EventType extends StorableObjectType {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.parameterTypeIds);
 		dependencies.addAll(this.userAlertKindsMap.keySet());

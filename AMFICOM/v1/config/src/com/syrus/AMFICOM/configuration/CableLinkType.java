@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.59 2005/07/27 15:59:22 bass Exp $
+ * $Id: CableLinkType.java,v 1.60 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class CableLinkType extends AbstractLinkType {
@@ -262,6 +262,7 @@ public final class CableLinkType extends AbstractLinkType {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

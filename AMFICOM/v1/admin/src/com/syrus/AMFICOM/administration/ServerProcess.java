@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.21 2005/07/27 12:15:36 bass Exp $
+ * $Id: ServerProcess.java,v 1.22 2005/08/02 18:08:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/07/27 12:15:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/08/02 18:08:31 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public final class ServerProcess extends StorableObject {
@@ -234,7 +234,9 @@ public final class ServerProcess extends StorableObject {
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.serverId);
 		dependencies.add(this.userId);
 		return dependencies;

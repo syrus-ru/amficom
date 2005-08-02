@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.111 2005/07/27 15:59:22 bass Exp $
+ * $Id: Equipment.java,v 1.112 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -40,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.112 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -305,7 +306,11 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		return Collections.emptySet();
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
+		dependencies.add(this.type);
+		return dependencies;
 	}
 
 	public String getSupplier() {

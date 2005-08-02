@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.19 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.20 2005/08/02 18:08:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/02 18:08:52 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -1077,7 +1077,8 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	}
 
 	@Override
-	public Set<Identifiable> getDependencies() {		
+	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.66 2005/08/02 16:50:17 krupenn Exp $
+ * $Id: Map.java,v 1.67 2005/08/02 18:07:25 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.66 $, $Date: 2005/08/02 16:50:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/08/02 18:07:25 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -193,6 +193,8 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.siteNodes);
 		dependencies.addAll(this.topologicalNodes);

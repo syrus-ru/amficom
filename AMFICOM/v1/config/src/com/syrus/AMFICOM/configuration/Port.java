@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.82 2005/07/27 15:59:22 bass Exp $
+ * $Id: Port.java,v 1.83 2005/08/02 18:08:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/08/02 18:08:46 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -192,6 +192,8 @@ public final class Port extends StorableObject implements Characterizable, Typed
 
 	@Override
 	public Set<Identifiable> getDependencies() {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);
