@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.113 2005/08/01 14:41:31 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.114 2005/08/02 12:21:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.mcm.corba.MCMPOATie;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -49,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/08/01 14:41:31 $
+ * @version $Revision: 1.114 $, $Date: 2005/08/02 12:21:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -213,7 +214,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
-			corbaServer.activateServant(new MCMImplementation(), mcmId.toString());
+			corbaServer.activateServant(new MCMPOATie(new MCMImpl(), corbaServer.getPoa()), mcmId.toString());
 			corbaServer.printNamingContext();
 		}
 		catch (final ApplicationException ae) {
