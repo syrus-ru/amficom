@@ -1,8 +1,21 @@
+/*-
+ * $Id: KISConnectionLRUMap.java,v 1.4 2005/08/02 12:15:56 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.util;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mcm.KISConnection;
 
+/**
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 12:15:56 $
+ * @module mcm
+ */
 public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 	static final long serialVersionUID = -1243965322879317241L;
 

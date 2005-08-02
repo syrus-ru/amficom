@@ -1,3 +1,11 @@
+/*-
+ * $Id: TCPKISConnection.java,v 1.14 2005/08/02 12:17:04 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -7,6 +15,11 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
+/**
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/02 12:17:04 $
+ * @module mcm
+ */
 public class TCPKISConnection implements KISConnection {
 	
 	private static final int KIS_TCP_SOCKET_DISCONNECTED = -1;
@@ -26,14 +39,16 @@ public class TCPKISConnection implements KISConnection {
 		this.kisId = kis.getId();
 		
 		this.kisHostName = kis.getHostName();
-		if (this.kisHostName == null)
+		if (this.kisHostName == null) {
 			this.kisHostName = ApplicationProperties.getString(MeasurementControlModule.KEY_KIS_HOST_NAME,
 					MeasurementControlModule.KIS_HOST_NAME);
+		}
 
 		this.kisTCPPort = kis.getTCPPort();
-		if (this.kisTCPPort <= 0)
+		if (this.kisTCPPort <= 0) {
 			this.kisTCPPort = (short) ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TCP_PORT,
 					MeasurementControlModule.KIS_TCP_PORT);
+		}
 
 		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 	}
@@ -51,8 +66,9 @@ public class TCPKISConnection implements KISConnection {
 		Log.debugMessage("TCPKISConnection.establish | Connecting to KIS '" + this.kisId
 				+ "' on host '" + this.kisHostName + "', port " + this.kisTCPPort, Log.DEBUGLEVEL07);
 		if (this.isEstablished()) {
-			if (dropIfAlreadyEstablished)
+			if (dropIfAlreadyEstablished) {
 				this.drop();
+			}
 			else {
 				Log.errorMessage("TCPKISConnection.establish | Connection with KIS '" + this.kisId
 						+ "' already established -- nothing to do!");
@@ -78,11 +94,13 @@ public class TCPKISConnection implements KISConnection {
 			}
 		}	//while
 
-		if (this.isEstablished())
+		if (this.isEstablished()) {
 			Log.debugMessage("TCPKISConnection.establish | Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
-		else
+		}
+		else {
 			throw new CommunicationException("Cannot connect to KIS '" + this.kisId
 					+ "' on host '" + this.kisHostName + "', port " + this.kisTCPPort);
+		}
 	}
 
 	public synchronized void drop() {
@@ -105,17 +123,19 @@ public class TCPKISConnection implements KISConnection {
 				timewait))
 			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId
 					+ "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
-		else
+		else {
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '"
 					+ measurementId + "' to KIS '" + this.kisId + "'");
+		}
 	}
 
 	public synchronized KISReport receiveKISReport(final long timewait) throws CommunicationException {
 		this.kisReport = null;
 		if (this.receiveKISReportFromSocket(timewait)) {
-			if (this.kisReport != null)
+			if (this.kisReport != null) {
 				Log.debugMessage("TCPKISConnection.receiveKISReport | Received report for measurement '"
 						+ this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
+			}
 			return this.kisReport;
 		}
 		throw new CommunicationException("TCPKISConnection.receiveKISReport | Cannot receive report");

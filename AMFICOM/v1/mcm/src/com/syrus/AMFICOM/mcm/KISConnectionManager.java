@@ -1,8 +1,14 @@
+/*-
+ * $Id: KISConnectionManager.java,v 1.6 2005/08/02 12:17:04 arseniy Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
-
-//import com.syrus.AMFICOM.general.SleepButWorkThread;
 
 import com.syrus.util.KISConnectionLRUMap;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -10,9 +16,17 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
-public class KISConnectionManager/* extends SleepButWorkThread*/ {
+/**
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/02 12:17:04 $
+ * @module mcm
+ */
+final class KISConnectionManager/* extends SleepButWorkThread*/ {
 
-	private KISConnectionLRUMap kisConnections;	//KISConnectionLRUMap <Identifier kisId, KISConnection kisConnection>
+	/**
+	 * KISConnectionLRUMap <Identifier kisId, KISConnection kisConnection>
+	 */
+	private KISConnectionLRUMap kisConnections;
 
 	public KISConnectionManager() {
 //		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
@@ -26,7 +40,7 @@ public class KISConnectionManager/* extends SleepButWorkThread*/ {
 		final Identifier kisId = kis.getId();
 		KISConnection kisConnection;
 
-		kisConnection = (KISConnection) this.kisConnections.get(kisId);
+		kisConnection = this.kisConnections.get(kisId);
 		if (kisConnection != null)
 			return kisConnection;
 
