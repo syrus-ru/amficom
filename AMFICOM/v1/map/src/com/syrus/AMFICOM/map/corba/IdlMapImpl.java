@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMapImpl.java,v 1.2 2005/07/11 08:18:56 bass Exp $
+ * $Id: IdlMapImpl.java,v 1.3 2005/08/02 12:11:04 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:56 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 12:11:04 $
  * @module map_v1
  */
 final class IdlMapImpl extends IdlMap {
@@ -43,7 +43,10 @@ final class IdlMapImpl extends IdlMap {
 			final IdlIdentifier nodeLinkIds[],
 			final IdlIdentifier physicalLinkIds[],
 			final IdlIdentifier markIds[],
-			final IdlIdentifier collectorIds[]) {
+			final IdlIdentifier collectorIds[],
+			final IdlIdentifier mapIds[],
+			final IdlIdentifier externalNodeIds[],
+			final IdlIdentifier mapLibraryIds[]) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -59,6 +62,9 @@ final class IdlMapImpl extends IdlMap {
 		this.physicalLinkIds = physicalLinkIds;
 		this.markIds = markIds;
 		this.collectorIds = collectorIds;
+		this.mapIds = mapIds;
+		this.externalNodeIds = externalNodeIds;
+		this.mapLibraryIds = mapLibraryIds;
 	}
 
 	/**
