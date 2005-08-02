@@ -1,5 +1,5 @@
 /*-
- * $Id: SOAnchor.java,v 1.4 2005/07/14 14:28:38 saa Exp $
+ * $Id: SOAnchor.java,v 1.5 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
  * не зависящий от StorableObject Framework,
  * пригодный для сохранения в объектах dadara.
  * 
- * @author $Author: saa $
+ * @author $Author: arseniy $
  * @author saa
- * @version $Revision: 1.4 $, $Date: 2005/07/14 14:28:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class SOAnchor implements DataStreamable {
@@ -40,10 +40,10 @@ public class SOAnchor implements DataStreamable {
 	}
 
 	public long getValue() {
-		return value;
+		return this.value;
 	}
 	public void writeToDOS(DataOutputStream dos) throws IOException {
-		dos.writeLong(value);
+		dos.writeLong(this.value);
 	}
 	public static DataStreamable.Reader getDSReader () {
 		if (reader == null) {
@@ -58,6 +58,6 @@ public class SOAnchor implements DataStreamable {
 	}
 	@Override
 	public String toString() {
-		return "[" + value + "]";
+		return "[" + this.value + "]";
 	}
 }

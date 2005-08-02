@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.20 2005/08/01 10:55:16 saa Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.21 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/08/01 10:55:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class ModelTraceAndEventsImpl
@@ -53,14 +53,14 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		this.mf = mf;
 		this.deltaX = deltaX;
 		this.traceLength = calcTraceLength();
-		mt = new ModelTraceImplMF(this.getMF(), this.getTraceLength());
+		this.mt = new ModelTraceImplMF(this.getMF(), this.getTraceLength());
 	}
 
 	public ModelTraceAndEventsImpl(ReliabilitySimpleReflectogramEventImpl[] rse,
 			ModelFunction mf, double[] y, double deltaX)
 	{
 		this(rse, mf, deltaX);
-		cinfo = new ComplexInfo(y); // use all our internal fields initialized by this moment
+		this.cinfo = new ComplexInfo(y); // use all our internal fields initialized by this moment
 	}
 
 	public static ModelTraceAndEventsImpl replaceRSE(
@@ -74,11 +74,11 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 
 	public double getDeltaX()
 	{
-		return deltaX;
+		return this.deltaX;
 	}
 	public ModelTrace getModelTrace()
 	{
-		return mt;
+		return this.mt;
 	}
 
 	/**
@@ -97,105 +97,105 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		private int[] maxDevI;
 
 		protected boolean eventNeedsEdzAdzPo(int nEvent) {
-			return rse[nEvent].getEventType() ==
+			return ModelTraceAndEventsImpl.this.rse[nEvent].getEventType() ==
 				SimpleReflectogramEvent.DEADZONE;
 		}
 		protected boolean eventNeedsMaxDev(int nEvent) {
 			return
-			   rse[nEvent].getEventType() == SimpleReflectogramEvent.LINEAR
-			|| rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED;
+			   ModelTraceAndEventsImpl.this.rse[nEvent].getEventType() == SimpleReflectogramEvent.LINEAR
+			|| ModelTraceAndEventsImpl.this.rse[nEvent].getEventType() == SimpleReflectogramEvent.NOTIDENTIFIED;
 		}
 		protected int getEdz(int i) {
-			return edz[i];
+			return this.edz[i];
 		}
 		protected int getAdz(int i) {
-			return adz[i];
+			return this.adz[i];
 		}
 		protected double getMaxDev(int i) {
-			return maxDevI[i] * CINFO_DEVIATION_PREC;
+			return this.maxDevI[i] * CINFO_DEVIATION_PREC;
 		}
 		protected double getRmsDev(int i) {
-			return rmsDevI[i] * CINFO_DEVIATION_PREC;
+			return this.rmsDevI[i] * CINFO_DEVIATION_PREC;
 		}
 
 		public double getYTop() {
-			return yTop;
+			return this.yTop;
 		}
 		private void allocateArrays() {
-			edz = new int[rse.length];
-			adz = new int[rse.length];
-			maxDevI = new int[rse.length];
-			rmsDevI = new int[rse.length];
+			this.edz = new int[ModelTraceAndEventsImpl.this.rse.length];
+			this.adz = new int[ModelTraceAndEventsImpl.this.rse.length];
+			this.maxDevI = new int[ModelTraceAndEventsImpl.this.rse.length];
+			this.rmsDevI = new int[ModelTraceAndEventsImpl.this.rse.length];
 		}
 
 		public ComplexInfo(double[] y) {
 			allocateArrays();
-			yTop = ReflectogramMath.getArrayMax(y);
-			for (int i = 0; i < rse.length; i++)
+			this.yTop = ReflectogramMath.getArrayMax(y);
+			for (int i = 0; i < ModelTraceAndEventsImpl.this.rse.length; i++)
 			{
-				edz[i] = 0;
-				adz[i] = 0;
-				rmsDevI[i] = 0;
-				maxDevI[i] = 0;
+				this.edz[i] = 0;
+				this.adz[i] = 0;
+				this.rmsDevI[i] = 0;
+				this.maxDevI[i] = 0;
 				if (eventNeedsEdzAdzPo(i)) {
-					double po = ReflectogramMath.getPo(rse, i, mt);
-					int[] res = ReflectogramMath.getEdzAdz(po, rse[i], mt);
-					edz[i] = res[0];
-					adz[i] = res[1];
+					double po = ReflectogramMath.getPo(ModelTraceAndEventsImpl.this.rse, i, ModelTraceAndEventsImpl.this.mt);
+					int[] res = ReflectogramMath.getEdzAdz(po, ModelTraceAndEventsImpl.this.rse[i], ModelTraceAndEventsImpl.this.mt);
+					this.edz[i] = res[0];
+					this.adz[i] = res[1];
 				}
 				if (eventNeedsMaxDev(i)) {
 					// округляем вверх
-					maxDevI[i] = (int)Math.ceil(
-							ReflectogramMath.getMaxDev(y, rse[i], mt)
+					this.maxDevI[i] = (int)Math.ceil(
+							ReflectogramMath.getMaxDev(y, ModelTraceAndEventsImpl.this.rse[i], ModelTraceAndEventsImpl.this.mt)
 								/ CINFO_DEVIATION_PREC);
-					rmsDevI[i] = (int)Math.ceil(
-							ReflectogramMath.getRmsDev(y, rse[i], mt)
+					this.rmsDevI[i] = (int)Math.ceil(
+							ReflectogramMath.getRmsDev(y, ModelTraceAndEventsImpl.this.rse[i], ModelTraceAndEventsImpl.this.mt)
 								/ CINFO_DEVIATION_PREC);
 				}
 			}
 		}
 
 		protected ComplexInfo(DataInputStream dis) throws IOException {
-			yTop = dis.readDouble();
+			this.yTop = dis.readDouble();
 			allocateArrays();
-			for (int i = 0; i < rse.length; i++) {
-				edz[i] = 0;
-				adz[i] = 0;
-				rmsDevI[i] = 0;
-				maxDevI[i] = 0;
+			for (int i = 0; i < ModelTraceAndEventsImpl.this.rse.length; i++) {
+				this.edz[i] = 0;
+				this.adz[i] = 0;
+				this.rmsDevI[i] = 0;
+				this.maxDevI[i] = 0;
 				if (eventNeedsEdzAdzPo(i)) {
-					edz[i] = dis.readInt();
-					adz[i] = dis.readInt();
+					this.edz[i] = dis.readInt();
+					this.adz[i] = dis.readInt();
 				}
 				if (eventNeedsMaxDev(i)) {
-					maxDevI[i] = dis.readInt();
-					rmsDevI[i] = dis.readInt();
+					this.maxDevI[i] = dis.readInt();
+					this.rmsDevI[i] = dis.readInt();
 				}
 			}
 		}
 
 		public void writeToDOS(DataOutputStream dos) throws IOException {
-			dos.writeDouble(yTop);
-			for (int i = 0; i < rse.length; i++) {
+			dos.writeDouble(this.yTop);
+			for (int i = 0; i < ModelTraceAndEventsImpl.this.rse.length; i++) {
 				if (eventNeedsEdzAdzPo(i)) {
-					dos.writeInt(edz[i]);
-					dos.writeInt(adz[i]);
+					dos.writeInt(this.edz[i]);
+					dos.writeInt(this.adz[i]);
 				}
 				if (eventNeedsMaxDev(i)) {
-					dos.writeInt(maxDevI[i]);
-					dos.writeInt(rmsDevI[i]);
+					dos.writeInt(this.maxDevI[i]);
+					dos.writeInt(this.rmsDevI[i]);
 				}
 			}
 		}
 	}
 
 	private int eventLength(int i) {
-		return rse[i].getEnd() - rse[i].getBegin();
+		return this.rse[i].getEnd() - this.rse[i].getBegin();
 	}
 	private double linearTangent(int i) {
-		int begin = rse[i].getBegin();
-		int end = rse[i].getEnd();
-		return (mt.getY(begin) - mt.getY(end)) / (end - begin);
+		int begin = this.rse[i].getBegin();
+		int end = this.rse[i].getEnd();
+		return (this.mt.getY(begin) - this.mt.getY(end)) / (end - begin);
 	}
 
 	private double getAddToMLoss(int i, boolean useLeft, boolean useRight) {
@@ -209,7 +209,7 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 			linCount++;
 			linAtt += linearTangent(i - 1);
 		}
-		if (useRight && i < rse.length - 1
+		if (useRight && i < this.rse.length - 1
 				&& eventLength(i + 1) > eventLength(i))
 		{
 			linCount++;
@@ -224,73 +224,73 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	 * обеспечивает кэширование с lazy-инициализацией
 	 */
 	public DetailedEvent getDetailedEvent(int i) {
-		if (detailedEventsCache == null)
-			detailedEventsCache = new DetailedEvent[rse.length];
-		if (detailedEventsCache[i] == null)
-			detailedEventsCache[i] = makeDetailedEvent(i);
-		return detailedEventsCache[i];
+		if (this.detailedEventsCache == null)
+			this.detailedEventsCache = new DetailedEvent[this.rse.length];
+		if (this.detailedEventsCache[i] == null)
+			this.detailedEventsCache[i] = makeDetailedEvent(i);
+		return this.detailedEventsCache[i];
 	}
 
 	/**
 	 * обеспечивает кэширование с lazy-инициализацией
 	 */
 	public DetailedEvent[] getDetailedEvents() {
-		DetailedEvent[] ret = new DetailedEvent[rse.length];
-		for (int i = 0; i < rse.length; i++)
+		DetailedEvent[] ret = new DetailedEvent[this.rse.length];
+		for (int i = 0; i < this.rse.length; i++)
 			ret[i] = getDetailedEvent(i);
 		return ret;
 	}
 
 	private DetailedEvent makeDetailedEvent(int i) {
-		SimpleReflectogramEvent ev = rse[i];
-		double y0 = mt.getY(ev.getBegin());
-		double y1 = mt.getY(ev.getEnd());
+		SimpleReflectogramEvent ev = this.rse[i];
+		double y0 = this.mt.getY(ev.getBegin());
+		double y1 = this.mt.getY(ev.getEnd());
 		// если слева лин. событие хотя бы из 5 точек,
 		// то альтернативным y0 будет экстраполированное значение по точке
 		// непосредственно слева началом события;
 		// иначе альтернативное y0 совпадает с y0
-		double y0alt = i > 0 && rse[i - 1].getEventType() ==
+		double y0alt = i > 0 && this.rse[i - 1].getEventType() ==
 					SimpleReflectogramEvent.LINEAR
-					&& rse[i - 1].getEnd() - rse[i - 1].getBegin() > 5
-				? mt.getY(ev.getBegin() - 1) - linearTangent(i - 1) * 1.0
+					&& this.rse[i - 1].getEnd() - this.rse[i - 1].getBegin() > 5
+				? this.mt.getY(ev.getBegin() - 1) - linearTangent(i - 1) * 1.0
 				: y0;
 		switch(ev.getEventType()) {
 		case SimpleReflectogramEvent.LINEAR:
 			return new LinearDetailedEvent(ev,
-					y0 - cinfo.getYTop(),
-					y1 - cinfo.getYTop(),
-					cinfo.getRmsDev(i),
-					cinfo.getMaxDev(i));
+					y0 - this.cinfo.getYTop(),
+					y1 - this.cinfo.getYTop(),
+					this.cinfo.getRmsDev(i),
+					this.cinfo.getMaxDev(i));
 		case SimpleReflectogramEvent.GAIN:
 			// fall through
 		case SimpleReflectogramEvent.LOSS:
 			return new SpliceDetailedEvent(ev,
-					y0 - cinfo.getYTop(),
-					y1 - cinfo.getYTop(),
+					y0 - this.cinfo.getYTop(),
+					y1 - this.cinfo.getYTop(),
 					y0 - y1 - getAddToMLoss(i, true, true));
 		case SimpleReflectogramEvent.NOTIDENTIFIED:
 			return new NotIdentifiedDetailedEvent(ev,
-					y0 - cinfo.getYTop(),
-					y1 - cinfo.getYTop(),
-					ReflectogramMath.getYMin(ev, mt) - cinfo.getYTop(),
-					ReflectogramMath.getYMax(ev, mt) - cinfo.getYTop(),
-					cinfo.getMaxDev(i),
+					y0 - this.cinfo.getYTop(),
+					y1 - this.cinfo.getYTop(),
+					ReflectogramMath.getYMin(ev, this.mt) - this.cinfo.getYTop(),
+					ReflectogramMath.getYMax(ev, this.mt) - this.cinfo.getYTop(),
+					this.cinfo.getMaxDev(i),
 					y0 - y1);
 		case SimpleReflectogramEvent.DEADZONE:
 			return new DeadZoneDetailedEvent(ev,
-					ReflectogramMath.getPo(rse, i, mt) - cinfo.getYTop(),
-					y1 - cinfo.getYTop(),
-					cinfo.getEdz(i),
-					cinfo.getAdz(i));
+					ReflectogramMath.getPo(this.rse, i, this.mt) - this.cinfo.getYTop(),
+					y1 - this.cinfo.getYTop(),
+					this.cinfo.getEdz(i),
+					this.cinfo.getAdz(i));
 		case SimpleReflectogramEvent.ENDOFTRACE:
 			return new EndOfTraceDetailedEvent(ev,
-					y0alt - cinfo.getYTop(),
-					ReflectogramMath.getYMax(ev, mt) - cinfo.getYTop());
+					y0alt - this.cinfo.getYTop(),
+					ReflectogramMath.getYMax(ev, this.mt) - this.cinfo.getYTop());
 		case SimpleReflectogramEvent.CONNECTOR:
 			return new ConnectorDetailedEvent(ev,
-					y0alt - cinfo.getYTop(),
-					y1 - cinfo.getYTop(),
-					ReflectogramMath.getYMax(ev, mt) - cinfo.getYTop(),
+					y0alt - this.cinfo.getYTop(),
+					y1 - this.cinfo.getYTop(),
+					ReflectogramMath.getYMax(ev, this.mt) - this.cinfo.getYTop(),
 					y0alt - y1 - getAddToMLoss(i, true, false));
 		default:
 			// FIXME: error processing: this seem to may occur even when
@@ -307,23 +307,22 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 	 */
 	protected ReliabilitySimpleReflectogramEventImpl[] getRSE()
 	{
-		return rse;
+		return this.rse;
 	}
 	protected ModelFunction getMF()
 	{
-		return mf;
+		return this.mf;
 	}
 	protected int getTraceLength()
 	{
-		return traceLength;
+		return this.traceLength;
 	}
 
 	private int calcTraceLength()
 	{
 		if (getRSE().length == 0)
 			return 0;
-		else
-			return getRSE()[getRSE().length - 1].getEnd() + 1;
+		return getRSE()[getRSE().length - 1].getEnd() + 1;
 	}
 
 	/**
@@ -382,9 +381,9 @@ implements ReliabilityModelTraceAndEvents, DataStreamable {
 		getMF().writeToDOS(dos);
 		dos.writeDouble(getDeltaX());
 		int pos2 = dos.size();
-		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(rse, dos);
+		ReliabilitySimpleReflectogramEventImpl.writeArrayToDOS(this.rse, dos);
 		int pos3 = dos.size();
-		cinfo.writeToDOS(dos);
+		this.cinfo.writeToDOS(dos);
 		int pos4 = dos.size();
 		System.out.println("MTAEI: writeToDOS:"
 				+ " MT " + (pos2-pos1)     // 66-72% of total

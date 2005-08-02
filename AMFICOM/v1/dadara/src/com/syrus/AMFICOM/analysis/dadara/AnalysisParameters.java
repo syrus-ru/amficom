@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.11 2005/07/22 06:39:50 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.12 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/07/22 06:39:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class AnalysisParameters
@@ -54,63 +54,63 @@ implements DataStreamable, Cloneable
 			return false;
 
 		// проверяем дополнительные параметры
-		if (tau2nrs < 0)
+		if (this.tau2nrs < 0)
 			return false;
-		if (nrsMin < 0)
+		if (this.nrsMin < 0)
 			return false;
-		if (tau2nrs == 0 && nrsMin == 0)
+		if (this.tau2nrs == 0 && this.nrsMin == 0)
 			return false;
-		if (rsaCrit < 0)
+		if (this.rsaCrit < 0)
 			return false;
-		if (nrs2rsaSmall <= 0)
+		if (this.nrs2rsaSmall <= 0)
 			return false;
-		if (nrs2rsaBig < nrs2rsaSmall)
+		if (this.nrs2rsaBig < this.nrs2rsaSmall)
 			return false;
-		if (l2rsaBig < 0)
+		if (this.l2rsaBig < 0)
 			return false;
 
-		if (scaleFactor < 1.0)
+		if (this.scaleFactor < 1.0)
 			return false;
-		if (scaleFactor > 10) // XXX
+		if (this.scaleFactor > 10) // XXX
 			return false;
 
 		return true;
 	}
 
 	public double getMinThreshold() {
-		return param[0];
+		return this.param[0];
 	}
 	public double getMinSplice() {
-		return param[1];
+		return this.param[1];
 	}
 	public double getMinConnector() {
-		return param[2];
+		return this.param[2];
 	}
 	public double getMinEnd() {
-		return param[3];
+		return this.param[3];
 	}
 	public double getNoiseFactor() {
-		return param[4];
+		return this.param[4];
 	}
 
 	public void setMinThreshold(double v) {
-		param[0] = v;
+		this.param[0] = v;
 	}
 
 	public void setMinSplice(double v) {
-		param[1] = v;
+		this.param[1] = v;
 	}
 
 	public void setMinConnector(double v) {
-		param[2] = v;
+		this.param[2] = v;
 	}
 
 	public void setMinEnd(double v) {
-		param[3] = v;
+		this.param[3] = v;
 	}
 
 	public void setNoiseFactor(double v) {
-		param[4] = v;
+		this.param[4] = v;
 	}
 
 	/**
@@ -126,7 +126,7 @@ implements DataStreamable, Cloneable
 			double minEnd,
 			double noiseFactor)
 	{
-		param = new double[] {
+		this.param = new double[] {
 			minThreshold,
 			minSplice,
 			minConnector,
@@ -137,12 +137,12 @@ implements DataStreamable, Cloneable
 
 	public AnalysisParameters(DataInputStream dis)
 	throws IOException {
-		param = new double[5];
-		param[0] = dis.readDouble();
-		param[1] = dis.readDouble();
-		param[2] = dis.readDouble();
-		param[3] = dis.readDouble();
-		param[4] = dis.readDouble();
+		this.param = new double[5];
+		this.param[0] = dis.readDouble();
+		this.param[1] = dis.readDouble();
+		this.param[2] = dis.readDouble();
+		this.param[3] = dis.readDouble();
+		this.param[4] = dis.readDouble();
 	}
 
 	// returns true if all fields were initialized,
@@ -151,12 +151,12 @@ implements DataStreamable, Cloneable
 		int i = 0;
 		int bind = -1;
 		int ind = val.indexOf(";");
-		while ((ind != -1) && (i < param.length)) {
-			param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
+		while ((ind != -1) && (i < this.param.length)) {
+			this.param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
 			bind = ind;
 			ind = val.indexOf(";", bind + 1);
 		}
-		return i == param.length;
+		return i == this.param.length;
 	}
 
 	/**
@@ -165,7 +165,7 @@ implements DataStreamable, Cloneable
 	 * @param defaults default values
 	 */
 	public AnalysisParameters(String val, AnalysisParameters defaults) {
-		param = defaults.param.clone();
+		this.param = defaults.param.clone();
 		setParamsFromString(val);
 	}
 
@@ -175,7 +175,7 @@ implements DataStreamable, Cloneable
 	 * @throws IllegalArgumentException if input string is malformed
 	 */
 	public AnalysisParameters(String val) {
-		param = new double[5];
+		this.param = new double[5];
 		if (!setParamsFromString(val))
 			throw new IllegalArgumentException(
 					"couldn't parse analysis parameters string");
@@ -184,8 +184,8 @@ implements DataStreamable, Cloneable
 	@Override
 	public String toString() {
 		String str = "";
-		for (int i = 0; i < param.length; i++)
-			str = str + String.valueOf(param[i]) + ";";
+		for (int i = 0; i < this.param.length; i++)
+			str = str + String.valueOf(this.param[i]) + ";";
 		return str;
 	}
 
@@ -208,11 +208,11 @@ implements DataStreamable, Cloneable
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
-		dos.writeDouble(param[0]);
-		dos.writeDouble(param[1]);
-		dos.writeDouble(param[2]);
-		dos.writeDouble(param[3]);
-		dos.writeDouble(param[4]);
+		dos.writeDouble(this.param[0]);
+		dos.writeDouble(this.param[1]);
+		dos.writeDouble(this.param[2]);
+		dos.writeDouble(this.param[3]);
+		dos.writeDouble(this.param[4]);
 	}
 	
 	public static DataStreamable.Reader getReader() {
@@ -222,44 +222,44 @@ implements DataStreamable, Cloneable
 		return reader;
 	}
 	public double getL2rsaBig() {
-		return l2rsaBig;
+		return this.l2rsaBig;
 	}
 	public void setL2rsaBig(double big) {
-		l2rsaBig = big;
+		this.l2rsaBig = big;
 	}
 	public double getNrs2rsaBig() {
-		return nrs2rsaBig;
+		return this.nrs2rsaBig;
 	}
 	public void setNrs2rsaBig(double nrs2rsaBig) {
 		this.nrs2rsaBig = nrs2rsaBig;
 	}
 	public double getNrs2rsaSmall() {
-		return nrs2rsaSmall;
+		return this.nrs2rsaSmall;
 	}
 	public void setNrs2rsaSmall(double nrs2rsaSmall) {
 		this.nrs2rsaSmall = nrs2rsaSmall;
 	}
 	public int getNrsMin() {
-		return nrsMin;
+		return this.nrsMin;
 	}
 	public void setNrsMin(int nrsMin) {
 		this.nrsMin = nrsMin;
 	}
 	public double getRsaCrit() {
-		return rsaCrit;
+		return this.rsaCrit;
 	}
 	public void setRsaCrit(double rsaCrit) {
 		this.rsaCrit = rsaCrit;
 	}
 	public double getTau2nrs() {
-		return tau2nrs;
+		return this.tau2nrs;
 	}
 	public void setTau2nrs(double tau2nrs) {
 		this.tau2nrs = tau2nrs;
 	}
 
 	public double getScaleFactor() {
-		return scaleFactor;
+		return this.scaleFactor;
 	}
 
 	public void setScaleFactor(double scaleFactor) {

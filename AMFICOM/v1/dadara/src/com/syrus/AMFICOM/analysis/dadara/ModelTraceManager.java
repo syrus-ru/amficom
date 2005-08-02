@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.92 2005/07/22 06:39:51 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.93 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * порогов к событиями (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: saa $
- * @version $Revision: 1.92 $, $Date: 2005/07/22 06:39:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class ModelTraceManager
@@ -71,9 +71,9 @@ implements DataStreamable, Cloneable
 	// очищает все записи кэша
 	protected void invalidateCache()
 	{
-		thMTCache = null;
-		thSingleMTRCache = null;
-		thSRECache = null;
+		this.thMTCache = null;
+		this.thSingleMTRCache = null;
+		this.thSRECache = null;
 	}
 
 	// очищает записи кэша, зависящие от ключа key,
@@ -81,16 +81,16 @@ implements DataStreamable, Cloneable
 	protected void emptyCacheEntryByKey(int key)
 	{
 		// это надо обязательно создать
-		if (thMTCache == null)
-			thMTCache = new ModelTrace[] { null, null, null, null };
-		thMTCache[key] = null;
+		if (this.thMTCache == null)
+			this.thMTCache = new ModelTrace[] { null, null, null, null };
+		this.thMTCache[key] = null;
 
 		// это создавать не обязательно (достаточно просто очистить)
-		if (thSRECache != null)
-			thSRECache[key] = null;
+		if (this.thSRECache != null)
+			this.thSRECache[key] = null;
 
 		// а эта штука нужна только целиком - удаляем весь массив
-		thSingleMTRCache = null;
+		this.thSingleMTRCache = null;
 	}
 
 	// очищает записи кэша, зависящие от ключа key в порогах
@@ -103,7 +103,7 @@ implements DataStreamable, Cloneable
 
 	protected boolean isThMFCacheValid(int key)
 	{
-		return thMTCache != null && thMTCache[key] != null;
+		return this.thMTCache != null && this.thMTCache[key] != null;
 	}
 
 	// создать пороги
@@ -190,7 +190,7 @@ implements DataStreamable, Cloneable
 
 	protected ModelFunction getMF()
 	{
-		return mtae.getMF();
+		return this.mtae.getMF();
 	}
 
 	/**
@@ -198,29 +198,29 @@ implements DataStreamable, Cloneable
 	 */
 	protected SimpleReflectogramEventImpl[] getSE()
 	{
-		return mtae.getRSE();
+		return this.mtae.getRSE();
 	}
 
 	// is 'protected' to be accessible from DSReader
 	protected void setTL(Thresh tl[])
 	{
-		tL = tl;
+		this.tL = tl;
 		// формируем отдельно списки tDX и tDY
 		List<Thresh> thresholds = new ArrayList<Thresh>();
-		for (int i = 0; i < tL.length; i++)
+		for (int i = 0; i < this.tL.length; i++)
 		{
-			if (tL[i] instanceof ThreshDX)
-				thresholds.add(tL[i]);
+			if (this.tL[i] instanceof ThreshDX)
+				thresholds.add(this.tL[i]);
 		}
-		tDX = thresholds.toArray(new ThreshDX[thresholds.size()]);
+		this.tDX = thresholds.toArray(new ThreshDX[thresholds.size()]);
 
 		thresholds = new ArrayList<Thresh>();
-		for (int i = 0; i < tL.length; i++)
+		for (int i = 0; i < this.tL.length; i++)
 		{
-			if (tL[i] instanceof ThreshDY)
-				thresholds.add(tL[i]);
+			if (this.tL[i] instanceof ThreshDY)
+				thresholds.add(this.tL[i]);
 		}
-		tDY = thresholds.toArray(new ThreshDY[thresholds.size()]);
+		this.tDY = thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
 	/**
@@ -274,23 +274,22 @@ implements DataStreamable, Cloneable
 		}
 		public int getType()
 		{
-			return type;
+			return this.type;
 		}
 		public double getValue(int key)
 		{
-			if (th instanceof ThreshDX)
-				return ((ThreshDX )th).getDX(key) * mtae.getDeltaX(); // samples to meters
-			else
-				return ((ThreshDY )th).getDY(key);
+			if (this.th instanceof ThreshDX)
+				return ((ThreshDX )this.th).getDX(key) * ModelTraceManager.this.mtae.getDeltaX(); // samples to meters
+			return ((ThreshDY )this.th).getDY(key);
 		}
 		public void setValue(int key, double value)
 		{
 			ModelTraceManager.this.invalidateCacheByKey(key);
-			if (type == TYPE_DXF || type == TYPE_DXT)
+			if (this.type == TYPE_DXF || this.type == TYPE_DXT)
 			{
 				// convert meters to samples
-				if (mtae.getDeltaX() > 0)
-					value /= mtae.getDeltaX();
+				if (ModelTraceManager.this.mtae.getDeltaX() > 0)
+					value /= ModelTraceManager.this.mtae.getDeltaX();
 				// round in some (user-convenient?) way
 				if (value > 0 && value < 1)
 					value = 1;
@@ -303,11 +302,11 @@ implements DataStreamable, Cloneable
 					val = MAX_DX;
 				if (val < MIN_DX)
 					val = MIN_DX;
-				((ThreshDX )th).setDX(key, val);
+				((ThreshDX )this.th).setDX(key, val);
 			}
 			else
-				((ThreshDY )th).setDY(key, value);
-			th.arrangeLimits(key);
+				((ThreshDY )this.th).setDY(key, value);
+			this.th.arrangeLimits(key);
 			invalidateCache(); // сбрасываем кэш всех кривых
 		}
 		/**
@@ -316,10 +315,10 @@ implements DataStreamable, Cloneable
 		 */
 		public void increaseValues()
 		{
-			if (th instanceof ThreshDX)
-				((ThreshDX)th).changeAllBy(1);
+			if (this.th instanceof ThreshDX)
+				((ThreshDX)this.th).changeAllBy(1);
 			else
-				((ThreshDY)th).changeAllBy(0.1);
+				((ThreshDY)this.th).changeAllBy(0.1);
 			invalidateCache();
 		}
 		/**
@@ -328,10 +327,10 @@ implements DataStreamable, Cloneable
 		 */
 		public void decreaseValues()
 		{
-			if (th instanceof ThreshDX)
-				((ThreshDX)th).changeAllBy(-1);
+			if (this.th instanceof ThreshDX)
+				((ThreshDX)this.th).changeAllBy(-1);
 			else
-				((ThreshDY)th).changeAllBy(-0.1);
+				((ThreshDY)this.th).changeAllBy(-0.1);
 			invalidateCache();
 		}
 	}
@@ -402,15 +401,15 @@ implements DataStreamable, Cloneable
 		ModelTrace thMt;
 		if (isThMFCacheValid(key))
 		{
-			thMt = thMTCache[key];
+			thMt = this.thMTCache[key];
 		}
 		else
 		{
 			ModelFunction tmp = getMF().copy();
-			tmp.changeByThresh(tDX, tDY, key);
+			tmp.changeByThresh(this.tDX, this.tDY, key);
 			thMt = new ModelTraceImplMF(tmp, getTraceLength());
 			emptyCacheEntryByKey(key);
-			thMTCache[key] = thMt;
+			this.thMTCache[key] = thMt;
 		}
 		return thMt;
 	}
@@ -424,12 +423,12 @@ implements DataStreamable, Cloneable
 	 */
 	private ModelTrace getThresholdMTByLevel(boolean isUpper, double level) {
 		// создаем набор порогов
-		ThreshDX[] effX = new ThreshDX[tDX.length];
-		for (int i = 0; i < tDX.length; i++)
-			effX[i] = tDX[i].makeWeightedThresholds(level);
-		ThreshDY[] effY = new ThreshDY[tDY.length];
-		for (int i = 0; i < tDY.length; i++)
-			effY[i] = tDY[i].makeWeightedThresholds(level);
+		ThreshDX[] effX = new ThreshDX[this.tDX.length];
+		for (int i = 0; i < this.tDX.length; i++)
+			effX[i] = this.tDX[i].makeWeightedThresholds(level);
+		ThreshDY[] effY = new ThreshDY[this.tDY.length];
+		for (int i = 0; i < this.tDY.length; i++)
+			effY[i] = this.tDY[i].makeWeightedThresholds(level);
 		// генерируем пороговую кривую
 		ModelFunction tmp = getMF().copy();
 		tmp.changeByThresh(effX,
@@ -458,7 +457,7 @@ implements DataStreamable, Cloneable
 
 	private int getTraceLength()
 	{
-		return mtae.getTraceLength();
+		return this.mtae.getTraceLength();
 	}
 
 	/**
@@ -468,11 +467,11 @@ implements DataStreamable, Cloneable
 	 * @return набор DY-порогов
 	 */
 	private ThreshDX[] getSingleEventThreshDX(int nEvent) {
-		ThreshDX[] tmpTDX = new ThreshDX[tDX.length];
+		ThreshDX[] tmpTDX = new ThreshDX[this.tDX.length];
 		for (int i = 0; i < tmpTDX.length; i++) {
-			tmpTDX[i] = tDX[i].isRelevantToNEvent(nEvent)
-				? tDX[i]
-				: tDX[i].makeZeroedCopy();
+			tmpTDX[i] = this.tDX[i].isRelevantToNEvent(nEvent)
+				? this.tDX[i]
+				: this.tDX[i].makeZeroedCopy();
 		}
 		return tmpTDX;
 	}
@@ -481,11 +480,11 @@ implements DataStreamable, Cloneable
 	 * {@link #getSingleEventThreshDX(int)}
 	 */
 	private ThreshDY[] getSingleEventThreshDY(int nEvent) {
-		ThreshDY[] tmpTDY = new ThreshDY[tDY.length];
+		ThreshDY[] tmpTDY = new ThreshDY[this.tDY.length];
 		for (int i = 0; i < tmpTDY.length; i++) {
-			tmpTDY[i] = tDY[i].isRelevantToNEvent(nEvent)
-				? tDY[i]
-				: tDY[i].makeZeroedCopy();
+			tmpTDY[i] = this.tDY[i].isRelevantToNEvent(nEvent)
+				? this.tDY[i]
+				: this.tDY[i].makeZeroedCopy();
 		}
 		return tmpTDY;
 	}
@@ -503,11 +502,11 @@ implements DataStreamable, Cloneable
 	 */
 	public ModelTraceRange[] getEventThresholdMTR(int nEvent) {
 		// check if the answer is already present
-		if (thSingleMTRCacheEventId == nEvent
-				&& thSingleMTRCache != null)
+		if (this.thSingleMTRCacheEventId == nEvent
+				&& this.thSingleMTRCache != null)
 		{
 			//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache hit");
-			return thSingleMTRCache;
+			return this.thSingleMTRCache;
 		}
 
 		// make thresholds for 'this event only'
@@ -515,8 +514,8 @@ implements DataStreamable, Cloneable
 		ThreshDY[] tmpTDY = getSingleEventThreshDY(nEvent);
 
 		// init cache
-		thSingleMTRCacheEventId = nEvent;
-		thSingleMTRCache = new ModelTraceRange[] { null, null, null, null };
+		this.thSingleMTRCacheEventId = nEvent;
+		this.thSingleMTRCache = new ModelTraceRange[] { null, null, null, null };
 
 		// find ranges and curves, fill cache
 		for (int key = 0; key < 4; key++)
@@ -526,17 +525,17 @@ implements DataStreamable, Cloneable
 			if (sre != null) {
 				ModelFunction tmp = getMF().copy();
 				tmp.changeByThresh(tmpTDX, tmpTDY, key);
-				thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
+				this.thSingleMTRCache[key] = new ModelTraceRangeImplMF(tmp,
 						sre.getBegin(),
 						sre.getEnd());
 			} else {
-				thSingleMTRCache[key] = null;
+				this.thSingleMTRCache[key] = null;
 			}
 		}
 
 		// make a copy of resulting array for client
 		//System.err.println("getEventThresholdMTR: nEvent " + nEvent + " cache miss");
-		return thSingleMTRCache.clone();
+		return this.thSingleMTRCache.clone();
 	}
 
 	/**
@@ -551,18 +550,18 @@ implements DataStreamable, Cloneable
 	 */
 	public void updateThreshToContain(double[] yTop, double[] yBottom, double dyMargin, double dyFactor)
 	{
-		for (int i = 0; i < tDY.length; i++)
-			tDY[i].changeAllBy(-dyMargin);
+		for (int i = 0; i < this.tDY.length; i++)
+			this.tDY[i].changeAllBy(-dyMargin);
 		CoreAnalysisManager.extendThreshToCoverCurve(
-			mtae.getModelTrace().getYArray(), yTop,
-			tDX, tDY, Thresh.SOFT_UP, Thresh.HARD_UP,
+			this.mtae.getModelTrace().getYArray(), yTop,
+			this.tDX, this.tDY, Thresh.SOFT_UP, Thresh.HARD_UP,
 			dyFactor);
 		CoreAnalysisManager.extendThreshToCoverCurve(
-			mtae.getModelTrace().getYArray(), yBottom,
-			tDX, tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN,
+				this.mtae.getModelTrace().getYArray(), yBottom,
+				this.tDX, this.tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN,
 			dyFactor);
-		for (int i = 0; i < tDY.length; i++)
-			tDY[i].changeAllBy(dyMargin);
+		for (int i = 0; i < this.tDY.length; i++)
+			this.tDY[i].changeAllBy(dyMargin);
 	}
 
 	/**
@@ -630,7 +629,7 @@ implements DataStreamable, Cloneable
 		private double dxFrac = 0; // сохраняем дробную часть dx 
 
 		protected ThresholdHandleDX(int thId, int key, int posX, double posY) {
-			super(thId, tDX, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_LEFT_TYPE : HORIZONTAL_RIGHT_TYPE);
+			super(thId, ModelTraceManager.this.tDX, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_LEFT_TYPE : HORIZONTAL_RIGHT_TYPE);
 			this.type = ((ThreshDX)this.th).isRise() ? (Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_RIGHT_TYPE : HORIZONTAL_LEFT_TYPE) : this.type;
 		}
 		public void moveBy(double dx, double dy) // dy is ignored
@@ -653,14 +652,14 @@ implements DataStreamable, Cloneable
 
 		protected ThresholdHandleDY(int thId, int key, int posX, double posY)
 		{
-			super(thId, tDY, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
+			super(thId, ModelTraceManager.this.tDY, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
 			int posMin = this.th.xMin;
 			int posMax = this.th.xMax;
-			if (((ThreshDY)this.th).getTypeL() && thId > 0 && thId < tDY.length - 1)
+			if (((ThreshDY)this.th).getTypeL() && thId > 0 && thId < ModelTraceManager.this.tDY.length - 1)
 			{
 				// уточняем положение точки привязки по ширине 98% максимума кривой
-				posMin = tDY[thId - 1].xMax;
-				posMax = tDY[thId + 1].xMin;
+				posMin = ModelTraceManager.this.tDY[thId - 1].xMax;
+				posMax = ModelTraceManager.this.tDY[thId + 1].xMin;
 				if (posMin < posMax)
 				{
 					// получаем интересующий нас участок кривой
@@ -888,10 +887,10 @@ implements DataStreamable, Cloneable
 		// одного события".
 		ThreshDX[] tmpTDX = singleEventCurveMode
 			? getSingleEventThreshDX(nEvent)
-			: tDX;
+			: this.tDX;
 		ThreshDY[] tmpTDY = singleEventCurveMode
 			? getSingleEventThreshDY(nEvent)
-			: tDY;
+			: this.tDY;
 		if (button == 0)
 		{
 			int thId = getMF().
@@ -903,17 +902,14 @@ implements DataStreamable, Cloneable
 			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
 			return handle;
 		}
-		else
-		{
-			int thId = getMF().
-				findResponsibleThreshDXID(tmpTDX, tmpTDY, bestKey, bestX);
-			if (thId == -1)
-				return null;
-			ThresholdHandleDX handle =
-				new ThresholdHandleDX(thId, bestKey, bestX, bestY);
-			handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
-			return handle;
-		}
+		int thId = getMF().
+			findResponsibleThreshDXID(tmpTDX, tmpTDY, bestKey, bestX);
+		if (thId == -1)
+			return null;
+		ThresholdHandleDX handle =
+			new ThresholdHandleDX(thId, bestKey, bestX, bestY);
+		handle.posY = bestY; //getThresholdY(bestKey, handle.posX);
+		return handle;
 	}
 
 	// допускает указание иных порогов, нежели текущие
@@ -941,7 +937,7 @@ implements DataStreamable, Cloneable
 				if (prevNT != aX[i]) // caching
 				{
 					prevNT = aX[i];
-					prevRelevant = tDX[prevNT].isRelevantToNEvent(nEvent);
+					prevRelevant = this.tDX[prevNT].isRelevantToNEvent(nEvent);
 				}
 				belongs = prevRelevant;
 			}
@@ -972,23 +968,23 @@ implements DataStreamable, Cloneable
 	public SimpleReflectogramEvent getEventRangeOnThresholdCurve(int nEvent, int key)
 	{
 		// пытаемся взять из кэша
-		if (thSRECacheEventId == nEvent && thSRECache != null
-				&& thSRECache[key] != null)
+		if (this.thSRECacheEventId == nEvent && this.thSRECache != null
+				&& this.thSRECache[key] != null)
 		{
 			//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache hit");
-			return thSRECache[key];
+			return this.thSRECache[key];
 		}
 		
 		SimpleReflectogramEvent sre =
-			getEventRangeOnThresholdCurve(nEvent, key, tDX, tDY);
+			getEventRangeOnThresholdCurve(nEvent, key, this.tDX, this.tDY);
 
 		// кладем в кэш
-		if (thSRECacheEventId != nEvent)
-			thSRECache = null;
-		if (thSRECache == null)
-			thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
-		thSRECacheEventId = nEvent;
-		thSRECache[key] = sre;
+		if (this.thSRECacheEventId != nEvent)
+			this.thSRECache = null;
+		if (this.thSRECache == null)
+			this.thSRECache = new SimpleReflectogramEvent[] {null, null, null, null};
+		this.thSRECacheEventId = nEvent;
+		this.thSRECache[key] = sre;
 		//System.err.println("getEventRangeOnThresholdCurve: nEvent " + nEvent + " cache miss");
 		return sre;
 	}
@@ -1030,14 +1026,14 @@ implements DataStreamable, Cloneable
 
 		// сначала проверяем все DX-пороги с учетом ширин этих порогов,
 		// а затем - просто все события (на случай отсутствия DX-порогов).
-		for (int i = 0; i < tDX.length; i++) {
+		for (int i = 0; i < this.tDX.length; i++) {
 			int keyU = Thresh.HARD_UP;
 			int keyD = Thresh.HARD_DOWN;
-			int dxMin = Math.min(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) - addOne; // negative
-			int dxMax = Math.max(tDX[i].getDX(keyU), tDX[i].getDX(keyD)) + addOne; // positive
-			if (tDX[i].xMin + dxMin <= x && tDX[i].xMax + dxMax >= x) {
+			int dxMin = Math.min(this.tDX[i].getDX(keyU), this.tDX[i].getDX(keyD)) - addOne; // negative
+			int dxMax = Math.max(this.tDX[i].getDX(keyU), this.tDX[i].getDX(keyD)) + addOne; // positive
+			if (this.tDX[i].xMin + dxMin <= x && this.tDX[i].xMax + dxMax >= x) {
 				// eventId0 и eventId1 для DX-порогов равны, берем eventId0 (?)
-				int nEv = tDX[i].eventId0;
+				int nEv = this.tDX[i].eventId0;
 				//System.out.println("findSupposedAlarmEventByPos: tDX: x " + x + ", nEv " + nEv); // FIX//ME: debug sysout
 				int eventType = getMTAE().getSimpleEvent(nEv).getEventType();
 				int curPref = getEventAlarmPref(eventType);
@@ -1111,7 +1107,7 @@ implements DataStreamable, Cloneable
 
 	public byte[] eventsAndTraceToByteArray()
 	{
-		return DataStreamableUtil.writeDataStreamableToBA(mtae);
+		return DataStreamableUtil.writeDataStreamableToBA(this.mtae);
 	}
 
 	/**
@@ -1121,7 +1117,7 @@ implements DataStreamable, Cloneable
 	public ModelTraceAndEventsImpl getMTAE()
 	{
 		// мы знаем, что MTAEI - неизменяемый (unmodifiable)
-		return mtae;
+		return this.mtae;
 	}
 
 	/**
@@ -1130,7 +1126,7 @@ implements DataStreamable, Cloneable
 	@Deprecated
 	public int getNEvents()
 	{
-		return mtae.getNEvents();
+		return this.mtae.getNEvents();
 	}
 	/**
 	 * @deprecated use getMTAE().getSimpleEvent()
@@ -1138,14 +1134,14 @@ implements DataStreamable, Cloneable
 	@Deprecated
 	public SimpleReflectogramEvent getSimpleEvent(int nEvent)
 	{
-		return mtae.getSimpleEvent(nEvent);
+		return this.mtae.getSimpleEvent(nEvent);
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
-		mtae.writeToDOS(dos);
+		this.mtae.writeToDOS(dos);
 		dos.writeLong(SIGNATURE_THRESH);
-		Thresh.writeArrayToDOS(tL, dos);
+		Thresh.writeArrayToDOS(this.tL, dos);
 	}
 
 	private static class DSReader implements DataStreamable.Reader

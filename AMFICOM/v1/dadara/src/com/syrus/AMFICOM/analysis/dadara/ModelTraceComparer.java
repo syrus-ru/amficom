@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.30 2005/07/22 06:39:51 saa Exp $
+ * $Id: ModelTraceComparer.java,v 1.31 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: saa $
- * @version $Revision: 1.30 $, $Date: 2005/07/22 06:39:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class ModelTraceComparer
@@ -70,8 +70,7 @@ public class ModelTraceComparer
 				"ModelTraceComparer.compareToMTM: event alarm: " + alarmEvents);
 		if (alarmTrace != null)
 			return alarmTrace;
-		else
-			return alarmEvents;
+		return alarmEvents;
 	}
 
 	/**
@@ -273,8 +272,7 @@ public class ModelTraceComparer
 					Level.FINEST);
 			return alarm;
 		}
-		else
-			return null;
+		return null;
 	}
 
 	/**

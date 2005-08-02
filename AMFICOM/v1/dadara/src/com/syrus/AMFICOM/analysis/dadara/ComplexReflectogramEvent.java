@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.17 2005/07/22 06:39:50 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.18 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.analysis.dadara;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.17 $, $Date: 2005/07/22 06:39:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/02 19:36:33 $
  * @module dadara
  * 
  *  ласс предназначен дл€ хранени€ расширенной информации о
@@ -32,16 +32,16 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	private double asympY0;
 	private double asympY1;
 
-	public int getBegin() { return begin; }
-	public int getEnd() { return end; }
-	public int getEventType() { return type; }
+	public int getBegin() { return this.begin; }
+	public int getEnd() { return this.end; }
+	public int getEventType() { return this.type; }
 
-	public double getLength() { return end - begin; }
+	public double getLength() { return this.end - this.begin; }
 
 	/**
 	 * @return амплитуда всплеска, т.е. yMax - asympY0
 	 */
-	public double getALet() { return aLet; }
+	public double getALet() { return this.aLet; }
 
 	/**
 	 * @return потери на событии.
@@ -50,7 +50,7 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	 * дл€ остальных - то же, но скорректированное с учетом соседних
 	 * линейных событий. 
 	 */
-	public double getMLoss() { return hasMLoss() ? mLoss : 0; }
+	public double getMLoss() { return hasMLoss() ? this.mLoss : 0; }
 
 	/**
 	 * @return определен ли параметр mLoss
@@ -67,7 +67,7 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	 *   на начало мертвой зоны;
 	 * ƒл€ других событий - значение м.ф. в начале событи€.
 	 */
-	public double getAsympY0() { return asympY0; }
+	public double getAsympY0() { return this.asympY0; }
 
 	/**
 	 * @return
@@ -75,23 +75,23 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	 * ƒл€ конца волокна - в принципе, не определено;
 	 * ƒл€ других событий - значение м.ф. в конце событи€.
 	 */
-	public double getAsympY1() { return asympY1; }
+	public double getAsympY1() { return this.asympY1; }
 	
 	/**
 	 * @return type == LOSS || type == GAIN
 	 */
 	protected boolean isSplice()
 	{
-		return type == LOSS || type == GAIN;
+		return this.type == LOSS || this.type == GAIN;
 	}
 
 	private void setALet(ModelTrace mt) {
-		if (type == SimpleReflectogramEvent.LINEAR)
-			aLet = 0;
+		if (this.type == SimpleReflectogramEvent.LINEAR)
+			this.aLet = 0;
 		else {
-			final int N = end - begin + 1;
-			double []yArr = mt.getYArray(begin, N);
-			aLet = ReflectogramMath.getArrayMax(yArr) - asympY0;
+			final int N = this.end - this.begin + 1;
+			double []yArr = mt.getYArray(this.begin, N);
+			this.aLet = ReflectogramMath.getArrayMax(yArr) - this.asympY0;
 		}
 	}
 
@@ -100,23 +100,23 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	// не инициализируетс€
 	private ComplexReflectogramEvent(SimpleReflectogramEvent se, ModelTrace mt)
 	{
-		begin = se.getBegin();
-		end = se.getEnd();
-		type = se.getEventType();
-		if (type == SimpleReflectogramEvent.LINEAR)
+		this.begin = se.getBegin();
+		this.end = se.getEnd();
+		this.type = se.getEventType();
+		if (this.type == SimpleReflectogramEvent.LINEAR)
 		{
-			final int N = end - begin + 1;
-			double []yArr = mt.getYArray(begin, N);
+			final int N = this.end - this.begin + 1;
+			double []yArr = mt.getYArray(this.begin, N);
 			ModelFunction lin = ModelFunction.createLinearFrom0(yArr);
-			asympY0 = lin.fun(begin);
-			asympY1 = lin.fun(end);
-			mLoss = asympY0 - asympY1;
+			this.asympY0 = lin.fun(this.begin);
+			this.asympY1 = lin.fun(this.end);
+			this.mLoss = this.asympY0 - this.asympY1;
 		}
 		else
 		{
-			asympY0 = mt.getY(begin);
-			asympY1 = mt.getY(end);
-			mLoss = asympY0 - asympY1; // дл€ сварок будет уточнено
+			this.asympY0 = mt.getY(this.begin);
+			this.asympY1 = mt.getY(this.end);
+			this.mLoss = this.asympY0 - this.asympY1; // дл€ сварок будет уточнено
 		}
 	}
 

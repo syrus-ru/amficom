@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.29 $, $Date: 2005/07/22 13:51:58 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/02 19:36:33 $
  * @author $Author: arseniy $
  * @author saa
  * @module dadara
@@ -83,7 +83,7 @@ public class ModelFunction {
 	@Deprecated
 	public int snoopShapeID()
 	{
-		return shapeID;
+		return this.shapeID;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class ModelFunction {
 	@Deprecated
 	public double[] snoopPars()
 	{
-		return pars;
+		return this.pars;
 	}
 
 	/**
@@ -168,8 +168,8 @@ public class ModelFunction {
 	 *
 	 */
 	private ModelFunction() {
-		shapeID = 0;
-		pars = null;
+		this.shapeID = 0;
+		this.pars = null;
 	}
 
 	/**
@@ -421,8 +421,8 @@ public class ModelFunction {
 	}
 
 	public void writeToDOS(DataOutputStream dos) throws IOException {
-		dos.writeInt(shapeID);
-		boolean useNativeStreaming = nIsNativeStreamingPossible(shapeID);
+		dos.writeInt(this.shapeID);
+		boolean useNativeStreaming = nIsNativeStreamingPossible(this.shapeID);
 		dos.writeBoolean(useNativeStreaming);
 		if (useNativeStreaming) {
 			// native-преобразование
@@ -431,9 +431,9 @@ public class ModelFunction {
 			dos.write(bar);
 		} else {
 			// Java-преобразование
-			dos.writeInt(pars.length);
-			for (int i = 0; i < pars.length; i++)
-				dos.writeDouble(pars[i]);
+			dos.writeInt(this.pars.length);
+			for (int i = 0; i < this.pars.length; i++)
+				dos.writeDouble(this.pars[i]);
 		}
 	}
 
@@ -460,11 +460,11 @@ public class ModelFunction {
 	}
 
 	private void readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException {
-		shapeID = dis.readInt();
+		this.shapeID = dis.readInt();
 		boolean useNativeStreaming = dis.readBoolean();
 		if (useNativeStreaming) {
-			if (! nIsNativeStreamingPossible(shapeID))
-				throw new InternalError("native streaming not supported for " + shapeID); // XXX: maybe a SignatureMismatchException would be better
+			if (! nIsNativeStreamingPossible(this.shapeID))
+				throw new InternalError("native streaming not supported for " + this.shapeID); // XXX: maybe a SignatureMismatchException would be better
 			// native-преобразование
 			int len = dis.readInt();
 			byte[] bar = new byte[len];
@@ -474,9 +474,9 @@ public class ModelFunction {
 		} else {
 			// Java-преобразование
 			int npars = dis.readInt();
-			pars = new double[npars];
+			this.pars = new double[npars];
 			for (int i = 0; i < npars; i++)
-				pars[i] = dis.readDouble();
+				this.pars[i] = dis.readDouble();
 		}
 	}
 }

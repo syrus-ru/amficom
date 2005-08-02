@@ -1,5 +1,5 @@
 /*-
- * $Id: Etalon.java,v 1.3 2005/07/12 08:09:44 saa Exp $
+ * $Id: Etalon.java,v 1.4 2005/08/02 19:36:33 arseniy Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
  * <li> ModelTraceManager mtm - Эталонной а/к и событий;
  * <li> EventAnchorer anc - Идентификаторов для привязки к схеме, может быть null
  * </ol>
- * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/12 08:09:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 19:36:33 $
  * @module
  */
 public class Etalon implements DataStreamable {
@@ -43,12 +43,12 @@ public class Etalon implements DataStreamable {
 
 	protected Etalon(DataInputStream dis)
 	throws IOException, SignatureMismatchException {
-		minTraceLevel = dis.readDouble();
-		mtm = (ModelTraceManager) ModelTraceManager.getReader().readFromDIS(dis);
+		this.minTraceLevel = dis.readDouble();
+		this.mtm = (ModelTraceManager) ModelTraceManager.getReader().readFromDIS(dis);
 		if (dis.readBoolean()) {
-			anc = (EventAnchorer) EventAnchorer.getDSReader().readFromDIS(dis);
+			this.anc = (EventAnchorer) EventAnchorer.getDSReader().readFromDIS(dis);
 		} else {
-			anc = null;
+			this.anc = null;
 		}
 	}
 
@@ -56,28 +56,28 @@ public class Etalon implements DataStreamable {
 	 * @return (negative value)
 	 */
 	public double getMinTraceLevel() {
-		return minTraceLevel;
+		return this.minTraceLevel;
 	}
 
 	/**
 	 * @return MTM, not null
 	 */
 	public ModelTraceManager getMTM() {
-		return mtm;
+		return this.mtm;
 	}
 
 	/**
 	 * @return EventAnchorer (may be null)
 	 */
 	public EventAnchorer getAnc() {
-		return anc;
+		return this.anc;
 	}
 	public void writeToDOS(DataOutputStream dos) throws IOException {
-		dos.writeDouble(minTraceLevel);
-		mtm.writeToDOS(dos);
-		dos.writeBoolean(anc != null);
-		if (anc != null) {
-			anc.writeToDOS(dos);
+		dos.writeDouble(this.minTraceLevel);
+		this.mtm.writeToDOS(dos);
+		dos.writeBoolean(this.anc != null);
+		if (this.anc != null) {
+			this.anc.writeToDOS(dos);
 		}
 	}
 
