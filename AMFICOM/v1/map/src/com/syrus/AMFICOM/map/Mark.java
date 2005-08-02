@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.55 2005/07/28 14:47:31 arseniy Exp $
+ * $Id: Mark.java,v 1.56 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -41,34 +40,16 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.55 $, $Date: 2005/07/28 14:47:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.56 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  */
 public final class Mark extends AbstractNode {
 
-	public static final String IMAGE_NAME = "mark";
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3258126938496186164L;
-
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
-	public static final String COLUMN_DISTANCE = "distance";
-	public static final String COLUMN_X = "x";
-	public static final String COLUMN_Y = "y";
-	public static final String COLUMN_CITY = "city";
-	public static final String COLUMN_STREET = "street";
-	public static final String COLUMN_BUILDING = "building";
-
-	/**
-	 * набор параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	private PhysicalLink physicalLink;
 
@@ -446,76 +427,6 @@ public final class Mark extends AbstractNode {
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
 		setLocation(mnes.location);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public java.util.Map<String, Object> getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			exportMap.put(COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
-			exportMap.put(COLUMN_DISTANCE, String.valueOf(this.distance));
-			exportMap.put(COLUMN_X, String.valueOf(this.location.getX()));
-			exportMap.put(COLUMN_Y, String.valueOf(this.location.getY()));
-			exportMap.put(COLUMN_CITY, this.city);
-			exportMap.put(COLUMN_STREET, this.street);
-			exportMap.put(COLUMN_BUILDING, this.building);
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static Mark createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		final String name1 = (String) exportMap1.get(COLUMN_NAME);
-		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		final Identifier physicalLinkId1 = (Identifier) exportMap1.get(COLUMN_PHYSICAL_LINK_ID);
-		final double distance1 = Double.parseDouble((String) exportMap1.get(COLUMN_DISTANCE));
-		final String city1 = (String) exportMap1.get(COLUMN_CITY);
-		final String street1 = (String) exportMap1.get(COLUMN_STREET);
-		final String building1 = (String) exportMap1.get(COLUMN_BUILDING);
-		final double x1 = Double.parseDouble((String) exportMap1.get(COLUMN_X));
-		final double y1 = Double.parseDouble((String) exportMap1.get(COLUMN_Y));
-
-		if (id1 == null
-				|| creatorId == null
-				|| name1 == null
-				|| description1 == null
-				|| physicalLinkId1 == null
-				|| city1 == null
-				|| street1 == null
-				|| building1 == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			final PhysicalLink physicalLink1 = StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			final Mark mark = new Mark(
-					id1,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name1,
-					description1,
-					x1,
-					y1,
-					physicalLink1,
-					distance1,
-					city1,
-					street1,
-					building1);
-			
-			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			mark.markAsChanged();
-			
-			return mark;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("Mark.createInstance |  ", e);
-		}
 	}
 
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.57 2005/07/31 19:11:06 bass Exp $
+ * $Id: TopologicalNode.java,v 1.58 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
@@ -43,26 +41,17 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/07/31 19:11:06 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.58 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
 public final class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
 
-	public static final String CLOSED_NODE = "node";
-	public static final String OPEN_NODE = "void";
-
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3258130254244885554L;
-
-	/**
-	 * набор параметров дл€ экспорта. инициализируетс€ только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	/**
 	 * ‘лаг показывающий закрыт ли узел true значит что из узла выходит две линии,
@@ -322,60 +311,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 			this.setPhysicalLink(StorableObjectPool.<PhysicalLink>getStorableObject(mpnes.physicalLinkId, false));
 		} catch (ApplicationException e) {
 			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public java.util.Map<String, Object> getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
-			exportMap.put(StorableObjectWrapper.COLUMN_NAME, this.name);
-			exportMap.put(StorableObjectWrapper.COLUMN_DESCRIPTION, this.description);
-			exportMap.put(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
-			exportMap.put(TopologicalNodeWrapper.COLUMN_X, String.valueOf(this.location.getX()));
-			exportMap.put(TopologicalNodeWrapper.COLUMN_Y, String.valueOf(this.location.getY()));
-			exportMap.put(TopologicalNodeWrapper.COLUMN_ACTIVE, String.valueOf(this.active));
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static TopologicalNode createInstance(final Identifier creatorId, final java.util.Map exportMap1)
-			throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
-		final String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
-		final String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
-		final Identifier physicalLinkId1 = (Identifier) exportMap1.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
-		final double x1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_X));
-		final double y1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_Y));
-		final boolean active1 = Boolean.valueOf((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_ACTIVE)).booleanValue();
-
-		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkId1 == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			final PhysicalLink physicalLink1 = StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			final TopologicalNode node1 = new TopologicalNode(id1,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name1,
-					description1,
-					x1,
-					y1,
-					active1);
-			node1.setPhysicalLink(physicalLink1);
-
-			assert node1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			node1.markAsChanged();
-
-			return node1;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("Mark.createInstance |  ", e);
 		}
 	}
 

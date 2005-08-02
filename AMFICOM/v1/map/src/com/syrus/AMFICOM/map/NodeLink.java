@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.61 2005/07/28 10:07:11 max Exp $
+ * $Id: NodeLink.java,v 1.62 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,8 +43,8 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: max $
- * @version $Revision: 1.61 $, $Date: 2005/07/28 10:07:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.62 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -55,19 +53,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3257290240262617393L;
-
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_LENGTH = "length";
-	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
-	public static final String COLUMN_START_NODE_ID = "start_node_id";
-	public static final String COLUMN_END_NODE_ID = "end_node_id";
-
-	/**
-	 * набор параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private PhysicalLink physicalLink;
@@ -397,61 +382,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	 */
 	public void setLengthLt(final double length) {
 		this.setLength(length);
-	}
-
-	public java.util.Map getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_LENGTH, String.valueOf(this.length));
-			exportMap.put(COLUMN_PHYSICAL_LINK_ID, this.physicalLink.getId());
-			exportMap.put(COLUMN_START_NODE_ID, this.startNode.getId());
-			exportMap.put(COLUMN_END_NODE_ID, this.endNode.getId());
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static NodeLink createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		final String name1 = (String) exportMap1.get(COLUMN_NAME);
-		final double length1 = Double.parseDouble((String) exportMap1.get(COLUMN_LENGTH));
-		final Identifier physicalLinkId1 = (Identifier) exportMap1.get(COLUMN_PHYSICAL_LINK_ID);
-		final Identifier startNodeId1 = (Identifier) exportMap1.get(COLUMN_START_NODE_ID);
-		final Identifier endNodeId1 = (Identifier) exportMap1.get(COLUMN_END_NODE_ID);
-
-		if (id1 == null
-				|| creatorId == null
-				|| name1 == null
-				|| physicalLinkId1 == null
-				|| startNodeId1 == null
-				|| endNodeId1 == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			final PhysicalLink physicalLink1 = StorableObjectPool.getStorableObject(physicalLinkId1, false);
-			final AbstractNode startNode1 =  StorableObjectPool.getStorableObject(startNodeId1, true);
-			final AbstractNode endNode1 = StorableObjectPool.getStorableObject(endNodeId1, true);
-			final NodeLink nodeLink1 = new NodeLink(id1,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name1,
-					physicalLink1,
-					startNode1,
-					endNode1,
-					length1);
-			physicalLink1.addNodeLink(nodeLink1);
-
-			assert nodeLink1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			nodeLink1.markAsChanged();
-
-			return nodeLink1;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("NodeLink.createInstance |  ", e);
-		}
 	}
 
 	public Set<Characteristic> getCharacteristics() throws ApplicationException {

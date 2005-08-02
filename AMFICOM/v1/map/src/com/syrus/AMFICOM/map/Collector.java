@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.60 2005/07/28 14:47:31 arseniy Exp $
+ * $Id: Collector.java,v 1.61 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,8 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,8 +44,8 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/07/28 14:47:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.61 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -61,12 +59,6 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_LINKS = "links";
-
-	/**
-	 * набор параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -336,52 +328,6 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	 */
 	public void revert(final MapElementState state) {
 		throw new UnsupportedOperationException("Not implemented; MapElementState: " + state);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public java.util.Map<String, Object> getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			Collection<Identifier> physicalLinkIds = new HashSet<Identifier>(getPhysicalLinks().size());
-			for (PhysicalLink link : getPhysicalLinks()) {
-				physicalLinkIds.add(link.getId());
-			}
-			exportMap.put(COLUMN_LINKS, physicalLinkIds);
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static Collector createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1) throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		final String name1 = (String) exportMap1.get(COLUMN_NAME);
-		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		final Set<Identifier> physicalLinkIds1 = (Set) exportMap1.get(COLUMN_LINKS);
-
-		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkIds1 == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			final Collector collector = new Collector(id1, creatorId, StorableObjectVersion.createInitial(), name1, description1);
-			for (final Identifier physicalLinkId : physicalLinkIds1) {
-				final PhysicalLink physicalLink = StorableObjectPool.getStorableObject(physicalLinkId, false);
-				collector.addPhysicalLink(physicalLink);
-			}
-
-			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			collector.markAsChanged();
-
-			return collector;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("Collector.createInstance |  ", e);
-		}
 	}
 
 	public Set<Characteristic> getCharacteristics() throws ApplicationException {

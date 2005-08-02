@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.65 2005/08/02 12:10:44 max Exp $
+ * $Id: Map.java,v 1.66 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +37,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -50,8 +48,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: max $
- * @version $Revision: 1.65 $, $Date: 2005/08/02 12:10:44 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.66 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -63,20 +61,6 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 3256722862181200184L;
-
-//	public static final String COLUMN_ID = "id";
-//	public static final String COLUMN_NAME = "name";
-//	public static final String COLUMN_DESCRIPTION = "description";
-//	public static final String COLUMN_CREATOR_ID = "creatorId";
-//	public static final String COLUMN_CREATED = "created";
-//	public static final String COLUMN_MODIFIER_ID = "modifierId";
-//	public static final String COLUMN_MODIFIED = "modified";
-
-	/**
-	 * Набор параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -895,44 +879,6 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		}
 		else {
 			this.selectedElements.remove(me);
-		}
-	}
-
-	/**
-	 * Возвращает описывающий элемент набор параметров, который используется для
-	 * экспорта.
-	 *
-	 * @return хэш-таблица параметров элемента
-	 */
-	public java.util.Map getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
-			exportMap.put(StorableObjectWrapper.COLUMN_NAME, this.name);
-			exportMap.put(StorableObjectWrapper.COLUMN_DESCRIPTION, this.description);
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static Map createInstance(final Identifier creatorId, final Identifier domainId, final java.util.Map<String, Object> exportMap1)
-			throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
-		final String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
-		final String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
-
-		if (id1 == null || name1 == null || description1 == null || creatorId == null || domainId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			final Map map = new Map(id1, creatorId, StorableObjectVersion.createInitial(), domainId, name1, description1);
-			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			map.markAsChanged();
-
-			return map;
-		} catch (Exception e) {
-			throw new CreateObjectException("Map.createInstance |  ", e);
 		}
 	}
 

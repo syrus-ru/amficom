@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.15 2005/07/26 09:23:33 arseniy Exp $
+ * $Id: MapElement.java,v 1.16 2005/08/02 16:50:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,6 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Map;
-
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Namable;
@@ -23,8 +21,8 @@ import com.syrus.AMFICOM.general.Namable;
  *
  *
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/07/26 09:23:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  */
 public interface MapElement extends Characterizable, Namable {
@@ -91,14 +89,5 @@ public interface MapElement extends Characterizable, Namable {
 	 * @param removed флаг удаления элемента
 	 */
 	void setRemoved(final boolean removed);
-
-	/**
-	 * Возвращает описывающий элемент набор параметров,
-	 * который используется для экспорта.
-	 * @return хэш-таблица параметров элемента
-	 * @deprecated use <pre>XMLBeansTransferable.fillXMLTransferable(XMLObject)</pre> instead
-	 */
-	@Deprecated
-	Map getExportMap();
 }
 

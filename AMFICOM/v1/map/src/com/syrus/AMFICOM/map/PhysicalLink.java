@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.80 2005/08/01 10:32:08 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.81 2005/08/02 16:50:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,8 +57,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.80 $, $Date: 2005/08/01 10:32:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.81 $, $Date: 2005/08/02 16:50:17 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -70,23 +69,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 4121409622671570743L;
-
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_PROTO_ID = "proto_id";
-	public static final String COLUMN_START_NODE_ID = "start_node_id";
-	public static final String COLUMN_END_NODE_ID = "end_node_id";
-	public static final String COLUMN_NODE_LINKS = "node_links";
-	public static final String COLUMN_CITY = "city";
-	public static final String COLUMN_STREET = "street";
-	public static final String COLUMN_BUILDING = "building";	
-
-	/**
-	 * набор параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	private static java.util.Map<String, Object> exportMap = null;
 
 	private String name;
 	private String description;
@@ -854,101 +836,6 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		}
 
 		this.nodeLinksSorted = false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public java.util.Map<String, Object> getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap<String, Object>();
-		synchronized (exportMap) {
-			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			exportMap.put(COLUMN_PROTO_ID, this.physicalLinkType.getCodename());
-			exportMap.put(COLUMN_START_NODE_ID, this.startNode.getId());
-			exportMap.put(COLUMN_END_NODE_ID, this.endNode.getId());
-			exportMap.put(COLUMN_CITY, this.city);
-			exportMap.put(COLUMN_STREET, this.street);
-			exportMap.put(COLUMN_BUILDING, this.building);
-			return Collections.unmodifiableMap(exportMap);
-		}
-	}
-
-	public static PhysicalLink createInstance(final Identifier creatorId, final java.util.Map<String, Object> exportMap1)
-			throws CreateObjectException {
-		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		String name1 = (String) exportMap1.get(COLUMN_NAME);
-		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
-		String typeCodeName1 = (String) exportMap1.get(COLUMN_PROTO_ID);
-		Identifier startNodeId1 = (Identifier) exportMap1.get(COLUMN_START_NODE_ID);
-		Identifier endNodeId1 = (Identifier) exportMap1.get(COLUMN_END_NODE_ID);
-		String city1 = (String) exportMap1.get(COLUMN_CITY);
-		String street1 = (String) exportMap1.get(COLUMN_STREET);
-		String building1 = (String) exportMap1.get(COLUMN_BUILDING);
-
-		if (id1 == null
-				|| creatorId == null
-				|| name1 == null
-				|| description1 == null
-				|| startNodeId1 == null
-				|| endNodeId1 == null
-				|| city1 == null
-				|| street1 == null
-				|| building1 == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			PhysicalLinkType physicalLinkType1;
-
-			final TypicalCondition condition = new TypicalCondition(typeCodeName1,
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PHYSICALLINK_TYPE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME);
-
-			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			Set objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
-			if (objects == null || objects.size() == 0) {
-				typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
-
-				condition.setValue(typeCodeName1);
-
-				//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-				objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
-				if (objects == null || objects.size() == 0) {
-					throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
-				}
-			}
-			physicalLinkType1 = (PhysicalLinkType) objects.iterator().next();
-
-			final AbstractNode startNode1 = StorableObjectPool.getStorableObject(startNodeId1, true);
-			final AbstractNode endNode1 = StorableObjectPool.getStorableObject(endNodeId1, true);
-			final PhysicalLink link1 = new PhysicalLink(id1,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					name1,
-					description1,
-					physicalLinkType1,
-					startNode1,
-					endNode1,
-					city1,
-					street1,
-					building1,
-					physicalLinkType1.getBindingDimension().getWidth(),
-					physicalLinkType1.getBindingDimension().getHeight(),
-					true,
-					true);
-
-			assert link1.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-			link1.markAsChanged();
-
-			return link1;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
-		}
 	}
 
 	public Set<Characteristic> getCharacteristics() throws ApplicationException {
