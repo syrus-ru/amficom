@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.25 2005/08/01 15:02:44 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.26 2005/08/02 06:23:17 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,12 +38,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xpath.XPathAPI;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
 import org.xml.sax.SAXException;
 
 import com.syrus.util.Log;
@@ -51,7 +53,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.25 $, $Date: 2005/08/01 15:02:44 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/02 06:23:17 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -218,10 +220,10 @@ public class StorableObjectXMLDriver {
 		if (className.equals(StorableObject.class.getName())) {
 			final Identifier identifier = new Identifier(value);
 			object = this.reflectStorableObject(identifier);
-		} else if (className.equals(Boolean.class.getName())) {
-			object = new Boolean(value);
 		} else if (className.equals(Identifier.class.getName())) {
 			object = new Identifier(value);
+		} else if (className.equals(StorableObjectVersion.class.getName())) {
+			object = new StorableObjectVersion(Long.parseLong(value));
 		} else if (className.equals(Date.class.getName())) {
 			object = new Date(Long.parseLong(value));
 		} else if (className.equals(Short.class.getName())) {
@@ -244,6 +246,8 @@ public class StorableObjectXMLDriver {
 				object = value;
 			else
 				object = "";
+		} else if (className.equals(Boolean.class.getName())) {
+			object = new Boolean(value);
 		} else if (className.equals(byte[].class.getName())) {
 			/* if value is null, array is empty */
 			if (value != null) {
@@ -274,6 +278,11 @@ public class StorableObjectXMLDriver {
 		} else if (object instanceof Identifier) {
 			final Identifier id = (Identifier) object;
 			final String string = id.getIdentifierString();
+			final Text text = this.doc.createTextNode(string);
+			element.appendChild(text);
+		} else if (object instanceof StorableObjectVersion) {
+			final StorableObjectVersion version = (StorableObjectVersion) object;
+			final String string = Long.toString(version.longValue());
 			final Text text = this.doc.createTextNode(string);
 			element.appendChild(text);
 		} else if (object instanceof Date) {

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.31 2005/08/01 15:14:09 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.32 2005/08/02 06:23:17 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.31 $, $Date: 2005/08/01 15:14:09 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/02 06:23:17 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -53,7 +53,7 @@ public class StorableObjectXML {
 				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
 				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_CREATOR_ID),
 				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				((StorableObjectVersion) objectMap.get(StorableObjectWrapper.COLUMN_VERSION)));
+				(StorableObjectVersion) objectMap.get(StorableObjectWrapper.COLUMN_VERSION));
 		objectMap.remove(CLASSNAME);
 		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
@@ -119,7 +119,7 @@ public class StorableObjectXML {
 		boolean canBeModified = false;
 		try {
 			final Map<String, Object> xmlObjectMap = this.driver.getObjectMap(id);
-			final StorableObjectVersion version = new StorableObjectVersion((Long) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION));
+			final StorableObjectVersion version = (StorableObjectVersion) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION);
 			if (force || version == storableObject.getVersion()) {
 				storableObject.version.increment();	
 				canBeModified = true;
@@ -150,7 +150,7 @@ public class StorableObjectXML {
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATOR_ID, storableObject.getCreatorId());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIER_ID, storableObject.getModifierId());
-		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, storableObject.getVersion().longValue());
+		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, storableObject.getVersion());
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 		storableObject.cleanupUpdate();
 	}
