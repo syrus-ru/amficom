@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.2 2005/08/02 16:56:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,12 +7,13 @@
  */
 package com.syrus.AMFICOM.client.map.command.editor;
 
+import java.util.Collection;
+
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapLibraryTableController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -20,6 +21,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 public class MapEditorOpenLibraryCommand extends AbstractCommand {
@@ -38,9 +46,25 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
 
+		Collection allLibraries;
+		try {
+			StorableObjectCondition condition = new EquivalentCondition(
+					ObjectEntities.MAPLIBRARY_CODE);
+			allLibraries = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		} catch(CommunicationException e) {
+			e.printStackTrace();
+			return;
+		} catch(DatabaseException e) {
+			e.printStackTrace();
+			return;
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return;
+		}
+		
 		this.mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("MapLibrary"),
-				MapViewController.getMapLibraries(),
+				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
 				true);
