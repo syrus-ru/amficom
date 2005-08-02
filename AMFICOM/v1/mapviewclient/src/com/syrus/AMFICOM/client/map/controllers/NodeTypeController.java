@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.32 2005/08/02 08:33:38 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.33 2005/08/02 16:58:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/02 08:33:38 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/02 16:58:58 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -149,25 +149,17 @@ public class NodeTypeController extends AbstractNodeController {
 			ImageResourceWrapper.COLUMN_SORT);
 		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		// todo should be removed when FIR.filename and FIR.codename will be separated
-		codename = filename;
-		//
-
 		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
 			FileImageResource ir = (FileImageResource )it.next();
 			if(ir.getCodename().equals(codename))
 				return ir.getId();
 		}
-/*
 		FileImageResource ir = FileImageResource.createInstance(
 				userId,
+				codename,
 				filename);
-		// todo should be used when FIR.filename and FIR.codename will be separated
-//		ir.setCodename(codename);
-		//
-		StorableObjectPool.flush(ir.getId(), true);
-*/
-		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
+		StorableObjectPool.flush(ir, userId, true);
+//		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
 		return ir.getId();
 	}
 
