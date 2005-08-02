@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.28 2005/07/24 18:12:44 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.29 2005/08/02 07:53:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/07/24 18:12:44 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/08/02 07:53:55 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -229,8 +229,8 @@ public final class MeasurementPathController extends AbstractLinkController {
 				break;
 			case IdlKind._SCHEME_LINK:
 				SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
-				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentScheme(), link.getSourceAbstractSchemePort().getParentSchemeDevice());
-				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentScheme(), link.getTargetAbstractSchemePort().getParentSchemeDevice());
+				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(), link.getSourceAbstractSchemePort().getParentSchemeDevice());
+				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(), link.getTargetAbstractSchemePort().getParentSchemeDevice());
 				SiteNode ssite = mapView.findElement(sse);
 				SiteNode esite = mapView.findElement(ese);
 				if(ssite != null && ssite.equals(esite)) {
@@ -278,10 +278,9 @@ public final class MeasurementPathController extends AbstractLinkController {
 		try {
 			TransmissionPath tp = path.getSchemePath().getTransmissionPath();
 
-			me = (MonitoredElement )
-				StorableObjectPool.getStorableObject(
-						(Identifier )(tp.getMonitoredElementIds().iterator().next()), 
-						true);
+			me = StorableObjectPool.getStorableObject(
+					tp.getMonitoredElementIds().iterator().next(), 
+					true);
 		} catch(CommunicationException e) {
 			e.printStackTrace();
 		} catch(DatabaseException e) {
