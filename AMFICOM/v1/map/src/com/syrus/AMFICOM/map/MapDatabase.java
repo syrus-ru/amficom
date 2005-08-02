@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.38 2005/07/28 10:07:11 max Exp $
+ * $Id: MapDatabase.java,v 1.39 2005/08/02 12:10:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/28 10:07:11 $
+ * @version $Revision: 1.39 $, $Date: 2005/08/02 12:10:44 $
  * @author $Author: max $
  * @module map_v1
  */
@@ -52,6 +52,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 	private static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
 	private static final String MAP_SITE_NODE 			=  "MapSiteNode";
 	private static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
+	private static final String MAP_MAP 				= "MapMap";
+	private static final String MAP_EXTERNAL_NODE 		= "MapExternalNode";
+	private static final String MAP_MAP_LIBRARY 		= "MapMapLibrary";
 	
     private static final int _MAP_COLLECTOR 			= 0;
     private static final int _MAP_MARK 					= 1;
@@ -59,6 +62,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 	private static final int _MAP_PHYSICAL_LINK 		= 3;
 	private static final int _MAP_SITE_NODE 			= 4;
 	private static final int _MAP_TOPOLOGICAL_NODE 		= 5;
+	private static final int _MAP_MAP 					= 6;
+	private static final int _MAP_EXTERNAL_NODE 		= 7;
+	private static final int _MAP_MAP_LIBRARY 			= 8;
 	
 
     private static java.util.Map<String, String> dbTableColumnName;
@@ -71,6 +77,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		dbTableColumnName.put(MAP_PHYSICAL_LINK, MapWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		dbTableColumnName.put(MAP_SITE_NODE, MapWrapper.LINK_COLUMN_SITE_NODE_ID);
 		dbTableColumnName.put(MAP_TOPOLOGICAL_NODE, MapWrapper.LINK_COLUMN_TOPOLOGICAL_NODE_ID);
+		dbTableColumnName.put(MAP_MAP, MapWrapper.LINK_COLUMN_MAP_ID);
+		dbTableColumnName.put(MAP_EXTERNAL_NODE, MapWrapper.LINK_COLUMN_EXTERNAL_NODE_ID);
+		dbTableColumnName.put(MAP_MAP_LIBRARY, MapWrapper.LINK_COLUMN_MAP_LIBRARY_ID);
 	}
 
 
@@ -98,6 +107,15 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				break;
 			case _MAP_TOPOLOGICAL_NODE:
 				tableName = MAP_TOPOLOGICAL_NODE;
+				break;
+			case _MAP_MAP:
+				tableName = MAP_MAP;
+				break;
+			case _MAP_EXTERNAL_NODE:
+				tableName = MAP_EXTERNAL_NODE;
+				break;
+			case _MAP_MAP_LIBRARY:
+				tableName = MAP_MAP_LIBRARY;
 				break;
 			default:
 				throw new IllegalDataException(this.getEntityName() + "Database.retrieveLinkedObjects | unknown linked table code:" + linkedTable);
@@ -199,6 +217,52 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> linkedMaps = this.retrieveLinkedObjects(maps, _MAP_MAP);
+			for (final Identifier id : linkedMaps.keySet()) {
+				final Set<Identifier> linkedMapIds = linkedMaps.get(id);
+				if (id.equals(storableObject.getId())) {
+					try {
+						final Set<Map> loadedLinkedMaps = StorableObjectPool.getStorableObjects(linkedMapIds, true);
+						storableObject.setMaps0(loadedLinkedMaps);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+				
+			} 
+		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> externalNodes = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
+			for (final Identifier id : externalNodes.keySet()) {
+				final Set<Identifier> externalNodeIds = externalNodes.get(id);
+				if (id.equals(storableObject.getId())) {
+					try {
+						final Set<Map> loadedExternalNodes = StorableObjectPool.getStorableObjects(externalNodeIds, true);
+						storableObject.setMaps0(loadedExternalNodes);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+			}
+		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
+			for (final Identifier id : mapLibraries.keySet()) {
+				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
+				if (id.equals(storableObject.getId())) {
+					try {
+						final Set<Map> loadedMapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
+						storableObject.setMaps0(loadedMapLibraries);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+			}
+		}
 	}	
 
 	private java.util.Map<Identifier, Set<Identifier>> retrieveLinkedObjects(final Set<Map> maps, final int linkedTable)
@@ -289,6 +353,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			this.updateLinkedObjectIds(storableObjects, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
+			this.updateLinkedObjectIds(storableObjects, _MAP_MAP);
+			this.updateLinkedObjectIds(storableObjects, _MAP_EXTERNAL_NODE);
+			this.updateLinkedObjectIds(storableObjects, _MAP_MAP_LIBRARY);
 		} catch (final UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
@@ -303,6 +370,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		this.updateLinkedObjectIds(storableObjects, _MAP_PHYSICAL_LINK);
 		this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
+		this.updateLinkedObjectIds(storableObjects, _MAP_MAP);
+		this.updateLinkedObjectIds(storableObjects, _MAP_EXTERNAL_NODE);
+		this.updateLinkedObjectIds(storableObjects, _MAP_MAP_LIBRARY);
 	}	
 
 	private void updateLinkedObjectIds(final Set<Map> maps, final int linkedTable)
@@ -340,6 +410,15 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 					break;
 				case _MAP_TOPOLOGICAL_NODE:
 					linkedObjectList = storableObject.getTopologicalNodes();
+					break;
+				case _MAP_MAP:
+					linkedObjectList = storableObject.getMaps();
+					break;
+				case _MAP_EXTERNAL_NODE:
+					linkedObjectList = storableObject.getExternalNodes();
+					break;
+				case _MAP_MAP_LIBRARY:
+					linkedObjectList = storableObject.getMapLibraries();
 					break;
 				default:
 					throw new UpdateObjectException(this.getEntityName()
@@ -426,6 +505,14 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			linkedObjectIds.put(map, map.getTopologicalNodes());
 		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_TOPOLOGICAL_NODE);
+		
+		linkedObjectIds.clear();
+		for (final Identifiable identifiable : ids) {
+			final Identifier mapId = identifiable.getId();
+			final Map map = mapIds.get(mapId);
+			linkedObjectIds.put(map, map.getMaps());
+		}
+		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_MAP);
 	}	
 
 	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<? extends StorableObject>> linkedObjectIds, final int linkedTable) {
@@ -561,6 +648,54 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 					try {
 						final Set<TopologicalNode> loadedTopologicalNodes = StorableObjectPool.getStorableObjects(topologicalNodeIds, true);
 						map.setTopologicalNodes0(loadedTopologicalNodes);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+			}
+		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> childMaps = this.retrieveLinkedObjects(maps, _MAP_MAP);
+			for (final Identifier id : childMaps.keySet()) {
+				final Map map = mapIds.get(id);
+				final Set<Identifier> childMapIds = childMaps.get(id);
+				if (id.equals(map.getId())) {
+					try {
+						final Set<Map> loadedMaps = StorableObjectPool.getStorableObjects(childMapIds, true);
+						map.setMaps0(loadedMaps);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+			}
+		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> externalNodes = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
+			for (final Identifier id : externalNodes.keySet()) {
+				final Map map = mapIds.get(id);
+				final Set<Identifier> externalNodeIds = externalNodes.get(id);
+				if (id.equals(map.getId())) {
+					try {
+						final Set<SiteNode> loadedMaps = StorableObjectPool.getStorableObjects(externalNodeIds, true);
+						map.setExternalNodes0(loadedMaps);
+					} catch (ApplicationException e) {
+						throw new RetrieveObjectException(e);
+					}
+				}
+			}
+		}
+		
+		{
+			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_MAP_LIBRARY);
+			for (final Identifier id : mapLibraries.keySet()) {
+				final Map map = mapIds.get(id);
+				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
+				if (id.equals(map.getId())) {
+					try {
+						final Set<SiteNode> loadedmapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
+						map.setExternalNodes0(loadedmapLibraries);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}

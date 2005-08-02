@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.13 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: MapWrapper.java,v 1.14 2005/08/02 12:10:44 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/02 12:10:44 $
+ * @author $Author: max $
  * @module map_v1
  */
 public class MapWrapper extends StorableObjectWrapper {
@@ -43,6 +43,8 @@ public class MapWrapper extends StorableObjectWrapper {
 	public static final String LINK_COLUMN_TOPOLOGICAL_NODE_ID = "topological_node_id";
 	// external_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_EXTERNAL_NODE_ID = "external_node_id";
+	// external_node_id VARCHAR2(32),
+	public static final String LINK_COLUMN_MAP_LIBRARY_ID	= "map_library_id";
 
 	protected static MapWrapper instance;
 
@@ -60,7 +62,8 @@ public class MapWrapper extends StorableObjectWrapper {
 				LINK_COLUMN_SITE_NODE_ID,
 				LINK_COLUMN_TOPOLOGICAL_NODE_ID,
 				LINK_COLUMN_MAP_ID,
-				LINK_COLUMN_EXTERNAL_NODE_ID };
+				LINK_COLUMN_EXTERNAL_NODE_ID,
+				LINK_COLUMN_MAP_LIBRARY_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -92,8 +95,11 @@ public class MapWrapper extends StorableObjectWrapper {
 				|| key.equals(LINK_COLUMN_NODE_LINK_ID)
 				|| key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)
 				|| key.equals(LINK_COLUMN_SITE_NODE_ID)
-				|| key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID)) {
-			return List.class;
+				|| key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID)
+				|| key.equals(LINK_COLUMN_MAP_ID)
+				|| key.equals(LINK_COLUMN_EXTERNAL_NODE_ID)
+				|| key.equals(LINK_COLUMN_MAP_LIBRARY_ID)) {
+			return Set.class;
 		}
 		return String.class;
 	}
@@ -107,28 +113,31 @@ public class MapWrapper extends StorableObjectWrapper {
 	public Object getValue(final Object object, final String key) {
 		if (object instanceof Map) {
 			final Map map = (Map) object;
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return map.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return map.getDescription();
-			else if (key.equals(COLUMN_DOMAIN_ID))
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
 				return map.getDomainId();
-			else if (key.equals(LINK_COLUMN_COLLECTOR_ID))
+			} else if (key.equals(LINK_COLUMN_COLLECTOR_ID)) {
 				return map.getCollectors();
-			else if (key.equals(LINK_COLUMN_MARK_ID))
+			} else if (key.equals(LINK_COLUMN_MARK_ID)) {
 				return map.getMarks();
-			else if (key.equals(LINK_COLUMN_NODE_LINK_ID))
+			} else if (key.equals(LINK_COLUMN_NODE_LINK_ID)) {
 				return map.getNodeLinks();
-			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+			} else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 				return map.getPhysicalLinks();
-			else if (key.equals(LINK_COLUMN_SITE_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_SITE_NODE_ID)) {
 				return map.getSiteNodes();
-			else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID)) {
 				return map.getTopologicalNodes();
-			else if (key.equals(LINK_COLUMN_MAP_ID))
+			} else if (key.equals(LINK_COLUMN_MAP_ID)) {
 				return map.getMaps();
-			else if (key.equals(LINK_COLUMN_EXTERNAL_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_EXTERNAL_NODE_ID)) {
 				return map.getExternalNodes();
+			} else if (key.equals(LINK_COLUMN_MAP_LIBRARY_ID)) {
+				return map.getMapLibraries();
+			}
 		}
 		return null;
 	}
@@ -144,28 +153,31 @@ public class MapWrapper extends StorableObjectWrapper {
 	public void setValue(final Object object, final String key, final Object value) {
 		if (object instanceof Map) {
 			final Map map = (Map) object;
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				map.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				map.setDescription((String) value);
-			else if (key.equals(COLUMN_DOMAIN_ID))
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
 				map.setDomainId((Identifier) value);
-			else if (key.equals(LINK_COLUMN_COLLECTOR_ID))
+			} else if (key.equals(LINK_COLUMN_COLLECTOR_ID)) {
 				map.setCollectors((Set) value);
-			else if (key.equals(LINK_COLUMN_MARK_ID))
+			} else if (key.equals(LINK_COLUMN_MARK_ID)) {
 				map.setMarks((Set) value);
-			else if (key.equals(LINK_COLUMN_NODE_LINK_ID))
+			} else if (key.equals(LINK_COLUMN_NODE_LINK_ID)) {
 				map.setNodeLinks((Set) value);
-			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+			} else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 				map.setPhysicalLinks((Set) value);
-			else if (key.equals(LINK_COLUMN_SITE_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_SITE_NODE_ID)) {
 				map.setSiteNodes((Set) value);
-			else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID)) {
 				map.setTopologicalNodes((Set) value);
-			else if (key.equals(LINK_COLUMN_MAP_ID))
+			} else if (key.equals(LINK_COLUMN_MAP_ID)) {
 				map.setMaps((Set) value);
-			else if (key.equals(LINK_COLUMN_EXTERNAL_NODE_ID))
+			} else if (key.equals(LINK_COLUMN_EXTERNAL_NODE_ID)) {
 				map.setExternalNodes((Set) value);
+			} else if (key.equals(LINK_COLUMN_MAP_LIBRARY_ID)) {
+				map.setMapLibraries((Set) value);
+			}
 		}
 	}
 

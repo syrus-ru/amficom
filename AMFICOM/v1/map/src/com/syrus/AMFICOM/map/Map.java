@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.64 2005/07/29 12:56:04 krupenn Exp $
+ * $Id: Map.java,v 1.65 2005/08/02 12:10:44 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -49,8 +50,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.64 $, $Date: 2005/07/29 12:56:04 $
+ * @author $Author: max $
+ * @version $Revision: 1.65 $, $Date: 2005/08/02 12:10:44 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -63,13 +64,13 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 */
 	private static final long serialVersionUID = 3256722862181200184L;
 
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_CREATOR_ID = "creatorId";
-	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_MODIFIER_ID = "modifierId";
-	public static final String COLUMN_MODIFIED = "modified";
+//	public static final String COLUMN_ID = "id";
+//	public static final String COLUMN_NAME = "name";
+//	public static final String COLUMN_DESCRIPTION = "description";
+//	public static final String COLUMN_CREATOR_ID = "creatorId";
+//	public static final String COLUMN_CREATED = "created";
+//	public static final String COLUMN_MODIFIER_ID = "modifierId";
+//	public static final String COLUMN_MODIFIED = "modified";
 
 	/**
 	 * Набор параметров для экспорта. инициализируется только в случае
@@ -88,7 +89,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	private Set<Collector> collectors;
 
 	protected Set<Map> maps;
-	protected Set<AbstractNode> externalNodes;
+	protected Set<SiteNode> externalNodes;
 	protected Set<MapLibrary> mapLibraries;
 
 	/**
@@ -138,7 +139,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.selectedElements = new HashSet<MapElement>();
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
-		this.externalNodes = new HashSet<AbstractNode>();
+		this.externalNodes = new HashSet<SiteNode>();
 	}
 
 	public static Map createInstance(final Identifier creatorId,
@@ -193,7 +194,16 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 		ids = Identifier.fromTransferables(mt.collectorIds);
 		this.collectors = StorableObjectPool.getStorableObjects(ids, true);
-
+		
+		ids = Identifier.fromTransferables(mt.mapIds);
+		this.maps = StorableObjectPool.getStorableObjects(ids, true);
+		
+		ids = Identifier.fromTransferables(mt.externalNodeIds);
+		this.externalNodes = StorableObjectPool.getStorableObjects(ids, true);
+		
+		ids = Identifier.fromTransferables(mt.mapLibraryIds);
+		this.mapLibraries = StorableObjectPool.getStorableObjects(ids, true);
+		
 		this.allElements = new LinkedList<MapElement>();
 	}
 
@@ -206,6 +216,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		dependencies.addAll(this.physicalLinks);
 		dependencies.addAll(this.marks);
 		dependencies.addAll(this.collectors);
+		dependencies.addAll(this.maps);
+		dependencies.addAll(this.externalNodes);
+		dependencies.addAll(this.mapLibraries);
 		return dependencies;
 	}
 
@@ -221,6 +234,9 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		final IdlIdentifier[] physicalNodeLinkIds = Identifier.createTransferables(this.physicalLinks);
 		final IdlIdentifier[] markIds = Identifier.createTransferables(this.marks);
 		final IdlIdentifier[] collectorIds = Identifier.createTransferables(this.collectors);
+		final IdlIdentifier[] mapIds = Identifier.createTransferables(this.maps);
+		final IdlIdentifier[] externalNodesIds = Identifier.createTransferables(this.externalNodes);
+		final IdlIdentifier[] mapLibraryIds = Identifier.createTransferables(this.mapLibraries);
 		return IdlMapHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -236,7 +252,10 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 				nodeLinkIds,
 				physicalNodeLinkIds,
 				markIds,
-				collectorIds);
+				collectorIds,
+				mapIds,
+				externalNodesIds,
+				mapLibraryIds);
 	}
 
 	public Set<Collector> getCollectors() {
@@ -268,6 +287,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}	
 
+	public void setMapLibraries(final Set<MapLibrary> mapLibraries) {
+		this.setMapLibraries0(mapLibraries);
+		super.markAsChanged();
+	}
+	
+	protected void setMapLibraries0(final Set<MapLibrary> mapLibraries) {
+		this.mapLibraries.clear();
+		if (mapLibraries != null) {
+			this.mapLibraries.addAll(mapLibraries);
+		}
+	}
+	
 	public Set<Mark> getMarks() {
 		return Collections.unmodifiableSet(this.marks);
 	}
@@ -362,11 +393,11 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
-	public Set getMapLibraries() {
+	public Set<MapLibrary> getMapLibraries() {
 		return Collections.unmodifiableSet(this.mapLibraries);
 	}
 
-	public Set getMaps() {
+	public Set<Map> getMaps() {
 		return Collections.unmodifiableSet(this.maps);
 	}
 
@@ -381,17 +412,17 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
-	public Set<AbstractNode> getExternalNodes() {
+	public Set<SiteNode> getExternalNodes() {
 		return Collections.unmodifiableSet(this.externalNodes);
 	}
 
-	protected void setExternalNodes0(final Set<AbstractNode> externalNodes) {
+	protected void setExternalNodes0(final Set<SiteNode> externalNodes) {
 		this.externalNodes.clear();
 		if (externalNodes != null)
 			this.externalNodes.addAll(externalNodes);
 	}
 
-	public void setExternalNodes(final Set<AbstractNode> externalNodes) {
+	public void setExternalNodes(final Set<SiteNode> externalNodes) {
 		this.setExternalNodes0(externalNodes);
 		super.markAsChanged();
 	}
@@ -595,12 +626,12 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super.markAsChanged();
 	}
 
-	public void addExternalNode(final AbstractNode externalNode) {
+	public void addExternalNode(final SiteNode externalNode) {
 		this.externalNodes.add(externalNode);
 		super.markAsChanged();
 	}
 
-	public void removeExternalNode(final AbstractNode externalNode) {
+	public void removeExternalNode(final SiteNode externalNode) {
 		this.externalNodes.remove(externalNode);
 		super.markAsChanged();
 	}
@@ -828,7 +859,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.allElements.addAll(this.getAllNodeLinks());
 		this.allElements.addAll(this.getAllPhysicalLinks());
 		this.allElements.addAll(this.getAllCollectors());
-
+		
 		return Collections.unmodifiableList(this.allElements);
 	}
 
@@ -878,18 +909,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			exportMap = new HashMap<String, Object>();
 		synchronized (exportMap) {
 			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
+			exportMap.put(StorableObjectWrapper.COLUMN_NAME, this.name);
+			exportMap.put(StorableObjectWrapper.COLUMN_DESCRIPTION, this.description);
 			return Collections.unmodifiableMap(exportMap);
 		}
 	}
 
 	public static Map createInstance(final Identifier creatorId, final Identifier domainId, final java.util.Map<String, Object> exportMap1)
 			throws CreateObjectException {
-		final Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
-		final String name1 = (String) exportMap1.get(COLUMN_NAME);
-		final String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		final Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
+		final String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
+		final String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
 
 		if (id1 == null || name1 == null || description1 == null || creatorId == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -1005,7 +1036,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		final com.syrus.amficom.map.xml.PhysicalLinks xmlPhysicalLinks = xmlMap.addNewPhysicallinks();
 		final com.syrus.amficom.map.xml.NodeLinks xmlNodeLinks = xmlMap.addNewNodelinks();
 		final com.syrus.amficom.map.xml.Collectors xmlCollectors = xmlMap.addNewCollectors();
-
+				
 		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
 		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
 			xmlTopologicalNodesArray.add(topologicalNode.getXMLTransferable());
@@ -1080,7 +1111,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.selectedElements = new HashSet<MapElement>();
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
-		this.externalNodes = new HashSet<AbstractNode>();
+		this.externalNodes = new HashSet<SiteNode>();
 		
 		final com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = xmlMap.getTopologicalnodes().getTopologicalnodeArray();
 		for (int i = 0; i < xmlTopologicalNodesArray.length; i++) {
