@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.22 2005/07/29 12:39:51 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.23 2005/08/02 10:36:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/07/29 12:39:51 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/02 10:36:45 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -137,7 +137,9 @@ public final class ObjectGroupEntities {
 			case RESOURCE_GROUP_CODE:
 				return new short[] { IMAGERESOURCE_CODE };
 			case MAP_GROUP_CODE:
-				return new short[] { SITENODE_CODE,
+				return new short[] { SITENODE_TYPE_CODE,
+						PHYSICALLINK_TYPE_CODE,
+						SITENODE_CODE,
 						TOPOLOGICALNODE_CODE,
 						NODELINK_CODE,
 						MARK_CODE,
