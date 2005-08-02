@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionLRUMap.java,v 1.4 2005/08/02 12:15:56 arseniy Exp $
+ * $Id: KISConnectionLRUMap.java,v 1.5 2005/08/02 12:40:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.mcm.KISConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/02 12:15:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 12:40:44 $
  * @module mcm
  */
 public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
@@ -49,7 +49,7 @@ public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 
 		// If non-established connection not found,
 		// enlarge array and put removed connection to it's end.
-		final Entry[] array1 = new Entry[super.array.length + SIZE];
+		final IEntry<Identifier, KISConnection>[] array1 = new IEntry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
 		array1[super.array.length] = new Entry(removedKISConnection.getKISId(), removedKISConnection);
 		super.array = array1;
