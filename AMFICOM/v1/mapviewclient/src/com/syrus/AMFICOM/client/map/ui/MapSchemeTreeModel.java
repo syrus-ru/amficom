@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.26 2005/07/25 12:44:09 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.27 2005/08/02 08:51:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -28,7 +29,9 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.util.WrapperComparator;
 
 
 /**
@@ -79,8 +82,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.26 $, $Date: 2005/07/25 12:44:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/08/02 08:51:05 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapSchemeTreeModel 
@@ -97,7 +100,9 @@ public class MapSchemeTreeModel
 
 	Item root;
 
-	public static SchemeComparator schemeComparator = new SchemeComparator();
+	public static Comparator schemeComparator = new WrapperComparator(
+			SchemeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME);
 
 	static final int IMG_SIZE = 16;
 
@@ -399,23 +404,5 @@ public class MapSchemeTreeModel
 		}
 		
 		return treeNode;
-	}
-}
-
-/**
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/07/25 12:44:09 $
- * @module mapviewclient
- * @deprecated Use {@link com.syrus.util.WrapperComparator} instead.
- */
-@Deprecated
-final class SchemeComparator implements Comparator<Scheme> {
-	public int compare(final Scheme scheme1, final Scheme scheme2) {
-		return scheme1.getName().compareTo(scheme2.getName());
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		return (obj instanceof SchemeComparator);
 	}
 }
