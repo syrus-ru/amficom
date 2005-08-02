@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventResource.java,v 1.10 2005/07/22 06:56:50 saa Exp $
+ * $Id: DetailedEventResource.java,v 1.11 2005/08/02 19:13:48 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/07/22 06:56:50 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/02 19:13:48 $
  * @module analysis_v1
  */
 
@@ -251,7 +251,7 @@ public class DetailedEventResource {
 	}
 	
 	public Object getImage() {
-		int sType = event.getEventType();
+		int sType = this.event.getEventType();
 
 		switch (sType) {
 		case SimpleReflectogramEvent.DEADZONE:

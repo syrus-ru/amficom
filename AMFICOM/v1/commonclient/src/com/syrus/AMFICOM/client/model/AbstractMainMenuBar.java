@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.7 2005/07/11 08:19:41 bass Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.8 2005/08/02 19:12:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,10 +23,10 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/11 08:19:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/08/02 19:12:24 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module commonclient
  */
 public abstract class AbstractMainMenuBar extends JMenuBar {
 

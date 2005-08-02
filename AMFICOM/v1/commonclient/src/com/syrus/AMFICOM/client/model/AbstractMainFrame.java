@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.13 2005/07/29 14:41:51 arseniy Exp $
+ * $Id: AbstractMainFrame.java,v 1.14 2005/08/02 19:12:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,10 +46,10 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/29 14:41:51 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/02 19:12:24 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module commonclient
  */
 public abstract class AbstractMainFrame extends JFrame 
 implements PropertyChangeListener {

@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 
 public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChangeListener, EtalonMTMListener,
 		CurrentTraceChangeListener {
-
+	private static final long serialVersionUID = 2086348259538964334L;
 
 	ClientAnalysisManager		aManager			= new ClientAnalysisManager();
 
@@ -71,6 +71,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 
 		this.setWindowArranger( new WindowArranger(this) {
 
+			@Override
 			public void arrange() {
 				ThresholdsMainFrame f = (ThresholdsMainFrame) this.mainframe;
 
@@ -121,6 +122,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 			/* (non-Javadoc)
 			 * @see java.awt.event.ComponentAdapter#componentShown(java.awt.event.ComponentEvent)
 			 */
+			@Override
 			public void componentShown(ComponentEvent e) {
 				initModule();
 				ThresholdsMainFrame.this.desktopPane.setPreferredSize(ThresholdsMainFrame.this.desktopPane.getSize());
@@ -131,6 +133,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 			);
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				aContext.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ThresholdsMainFrame.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ThresholdsMainFrame.this);

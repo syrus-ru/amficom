@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.9 2005/07/11 08:19:41 bass Exp $
+ * $Id: AbstractMainToolBar.java,v 1.10 2005/08/02 19:12:24 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/11 08:19:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 19:12:24 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module commonclient
  */
 public abstract class AbstractMainToolBar extends JToolBar {
 
