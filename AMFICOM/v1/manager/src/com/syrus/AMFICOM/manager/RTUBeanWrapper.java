@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.2 2005/08/01 11:32:03 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.3 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -163,7 +163,7 @@ public class RTUBeanWrapper implements Wrapper {
 				bean.setHostname((String) value);
 			} else if (key.equals(KEY_PORT)) { 
 				try {
-					bean.setPort(Integer.valueOf((String)value));
+					bean.setPort(Short.valueOf((String)value));
 				} catch(NumberFormatException nfe) {
 					// nothing can do 
 				}

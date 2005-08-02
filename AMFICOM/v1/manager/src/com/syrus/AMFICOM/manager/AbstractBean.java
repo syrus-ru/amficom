@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.10 2005/08/01 11:32:02 bob Exp $
+ * $Id: AbstractBean.java,v 1.11 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,17 +17,16 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/01 11:32:02 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public abstract class AbstractBean {
 
-	protected Identifier	storableObject;
+	protected Identifier	id;
 	protected Validator		validator;
 
-	protected String		name;
 	protected String		codeName;
 
 	protected JPanel		propertyPanel;
@@ -36,16 +35,16 @@ public abstract class AbstractBean {
 		// nothing
 	}
 
-	protected AbstractBean(final Identifier storableObject,
+	protected AbstractBean(final Identifier id,
 			final Validator validator,
 			final JPanel propertyPanel) {
-		this.storableObject = storableObject;
+		this.id = id;
 		this.validator = validator;
 		this.propertyPanel = propertyPanel;
 	}
 
-	public final Identifier getStorableObject() {
-		return this.storableObject;
+	public final Identifier getId() {
+		return this.id;
 	}
 
 	public boolean isTargetValid(AbstractBean targetBean) {
@@ -72,8 +71,8 @@ public abstract class AbstractBean {
 		this.propertyPanel = propertyPanel;
 	}
 
-	protected final void setStorableObject(Identifier storableObject) {
-		this.storableObject = storableObject;
+	protected void setId(Identifier id) {
+		this.id = id;
 	}
 
 	protected final void setValidator(Validator validator) {
@@ -88,17 +87,13 @@ public abstract class AbstractBean {
 		this.codeName = codeName;
 	}
 	
-	public final String getName() {
-		return this.name;
-	}
+	public abstract String getName();
 	
-	public void setName(String name) {
-		this.name = name;
-	}
+	public abstract void setName(String name);
 
 	@Override
 	public String toString() {
-		return this.getClass().getName() + " is " + this.codeName + '/' + this.name + '/';
+		return this.getClass().getName() + " is " + this.codeName + '/' + this.getName() + '/';
 	}
 
 }

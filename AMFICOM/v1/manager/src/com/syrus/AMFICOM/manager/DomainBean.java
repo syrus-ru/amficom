@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.1 2005/08/01 11:32:03 bob Exp $
+ * $Id: DomainBean.java,v 1.2 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
+import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
+
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -18,21 +22,22 @@ import javax.swing.JPopupMenu;
 import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainBean extends Bean {
-
-	private Identifier		id;
-
-	private Identifier		parentId;
-
+	
+	private Domain domain;
+	
 	@Override
 	public JPopupMenu getMenu(	final JGraphText graph,
 								final Object cell) {
@@ -101,32 +106,56 @@ public class DomainBean extends Bean {
 
 		return null;
 	}
+	
+	@Override
+	protected void setId(Identifier storableObject) {
+		super.setId(storableObject);
+		try {
+			this.domain = StorableObjectPool.getStorableObject(this.id, true);
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public boolean isTargetValid(AbstractBean targetBean) {
 		boolean result = super.isTargetValid(targetBean);
 		if (result) {
 			DomainBean domainBean = (DomainBean) targetBean;
-			this.setParentId(domainBean.getId());
-			
-//			System.out.println("DomainBean.isTargetValid() | " + this.id + ", targetBean:" + domainBean.id);
+			this.domain.setDomainId(domainBean.getId());
 		}
 		return result;
 	}
 	
-	public final Identifier getId() {
-		return this.id;
+	public final String getDescription() {
+		return this.domain.getDescription();
+	}
+
+	@Override
+	public final String getName() {
+		return this.domain.getName();
 	}
 	
-	public final void setId(Identifier id) {
-		this.id = id;
+	public final void setDescription(String description) {
+		String description2 = this.domain.getDescription();
+		if (description2 != description &&
+				(description2 != null && !description2.equals(description) ||
+				!description.equals(description2))) {
+			this.domain.setDescription(description);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_DESCRIPTION, description2, description));
+		}	
 	}
 	
-	public final Identifier getParentId() {
-		return this.parentId;
+	public final void setName(String name) {
+		String name2 = this.domain.getName();
+		if (name2 != name &&
+				(name2 != null && !name2.equals(name) ||
+				!name.equals(name2))) {
+			this.domain.setName(name);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
+		}	
+	
 	}
 	
-	public final void setParentId(Identifier parentId) {
-		this.parentId = parentId;
-	}		
 }

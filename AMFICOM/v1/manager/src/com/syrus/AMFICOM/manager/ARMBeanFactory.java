@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.6 2005/08/01 11:32:02 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.7 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/01 11:32:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -42,7 +42,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean() {
-		AbstractBean bean = new AbstractBean() {};
+		AbstractBean bean = new NonStorableBean();
 		
 		bean.setValidator(this.getValidator());
 		bean.setCodeName("ARM");

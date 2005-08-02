@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.9 2005/08/01 11:32:03 bob Exp $
+* $Id: UserBeanFactory.java,v 1.10 2005/08/02 14:42:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,25 +8,21 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_FULL_NAME;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_BUILDING;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_CELLULAR;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_CITY;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_COMPANY;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_DEPARTEMENT;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_EMAIL;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_NATURE;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_PHONE;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_POSITION;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_ROOM_NO;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.KEY_USER_STREET;
+import static com.syrus.AMFICOM.manager.UserBeanWrapper.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSort;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -68,15 +64,25 @@ public class UserBeanFactory extends TabledBeanFactory {
 
 	
 	@Override
-	public AbstractBean createBean() {
+	public AbstractBean createBean() 
+	throws CreateObjectException, IllegalObjectEntityException {
 		UserBean bean = new UserBean(this.names);
-		bean.setName("User" + (++super.count));
 		bean.setCodeName("User");
 		bean.setValidator(this.getValidator());		
+
+		
+		SystemUser kis = SystemUser.createInstance(LoginManager.getUserId(),
+			"",
+			SystemUserSort.USER_SORT_REGULAR,
+			"",
+			"");
+		StorableObjectPool.putStorableObject(kis);
+		bean.setId(kis.getId());	
 		
 		bean.table = super.getTable(bean, 
 			UserBeanWrapper.getInstance(),
-			new String[] { KEY_FULL_NAME, 
+			new String[] {KEY_NAME,
+				KEY_FULL_NAME, 
 				KEY_USER_NATURE, 
 				KEY_USER_POSITION,
 				KEY_USER_DEPARTEMENT,

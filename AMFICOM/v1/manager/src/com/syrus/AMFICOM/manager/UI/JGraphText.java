@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.16 2005/08/01 11:32:03 bob Exp $
+ * $Id: JGraphText.java,v 1.17 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,13 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
+import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
@@ -40,8 +42,11 @@ import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -76,7 +81,8 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
@@ -89,8 +95,6 @@ import com.syrus.AMFICOM.manager.NetBeanFactory;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
-
-import static com.syrus.AMFICOM.manager.DomainBeanWrapper.*;
 
 public class JGraphText implements GraphSelectionListener {	
 	
@@ -221,37 +225,57 @@ public class JGraphText implements GraphSelectionListener {
 //		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 //		graphLayoutCache.insert(cells);	
 //
-//		this.graph.getSelectionModel().clearSelection();
-		DomainBeanFactory domainBeanFactory = DomainBeanFactory.getInstance();
+//		this.graph.getSelectionModel().clearSelection();		
 		
-		DefaultGraphCell domain1 = this.createChild(null, domainBeanFactory.getShortName() + "-" + 1, 
-				domainBeanFactory.createBean(), 550, 200, 0, 0, domainBeanFactory.getImage());
+//		try {
+//			SystemUser user = SystemUser.createInstance(null, "sys", SystemUserSort.USER_SORT_SYSADMIN, "SysAdmin", "System Administrator");
+//			StorableObjectPool.putStorableObject(user);
+//		} catch (CreateObjectException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IllegalObjectEntityException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		try {
+//			StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, LoginManager.getUserId(), true);
+//		} catch (ApplicationException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		
-		DefaultGraphCell domain2 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 2, 
-				domainBeanFactory.createBean(), 220, 50, 0, 0, domainBeanFactory.getImage());
 		
-		NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
-		
-		DefaultGraphCell net1 = this.createChild(domain2, netBeanFactory.getShortName() + "-" + 1, 
-				netBeanFactory.createBean(), 0, 50, 0, 0, netBeanFactory.getImage());
-		
-		ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
-		
-		DefaultGraphCell arm1 = this.createChild(net1, armBeanFactory.getShortName() + "-" + 1, 
-			armBeanFactory.createBean(), 0, 350, 0, 0, armBeanFactory.getImage());
-		
-		RTUBeanFactory rtuBeanFactory = RTUBeanFactory.getInstance();
-		
-		DefaultGraphCell rtu1 = this.createChild(net1, rtuBeanFactory.getShortName() + "-" + 1, 
-			rtuBeanFactory.createBean(), 450, 20, 0, 0, rtuBeanFactory.getImage());
-		
-		UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
-		
-		DefaultGraphCell user1 = this.createChild(arm1, userBeanFactory.getShortName() + "-" + 1, 
-			userBeanFactory.createBean(), 250, 250, 0, 0, userBeanFactory.getImage());
-		
-		DefaultGraphCell domain3 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 3, 
-				domainBeanFactory.createBean(), 200, 350, 0, 0, domainBeanFactory.getImage());
+//		DomainBeanFactory domainBeanFactory = DomainBeanFactory.getInstance();
+//		
+//		DefaultGraphCell domain1 = this.createChild(null, domainBeanFactory.getShortName() + "-" + 1, 
+//				domainBeanFactory.createBean(), 550, 200, 0, 0, domainBeanFactory.getImage());
+//		
+//		DefaultGraphCell domain2 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 2, 
+//				domainBeanFactory.createBean(), 220, 50, 0, 0, domainBeanFactory.getImage());
+//		
+//		NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
+//		
+//		DefaultGraphCell net1 = this.createChild(domain2, netBeanFactory.getShortName() + "-" + 1, 
+//				netBeanFactory.createBean(), 0, 50, 0, 0, netBeanFactory.getImage());
+//		
+//		ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
+//		
+//		DefaultGraphCell arm1 = this.createChild(net1, armBeanFactory.getShortName() + "-" + 1, 
+//			armBeanFactory.createBean(), 0, 350, 0, 0, armBeanFactory.getImage());
+//		
+//		RTUBeanFactory rtuBeanFactory = RTUBeanFactory.getInstance();
+//		
+//		DefaultGraphCell rtu1 = this.createChild(net1, rtuBeanFactory.getShortName() + "-" + 1, 
+//			rtuBeanFactory.createBean(), 450, 20, 0, 0, rtuBeanFactory.getImage());
+//		
+//		UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
+//		
+//		DefaultGraphCell user1 = this.createChild(arm1, userBeanFactory.getShortName() + "-" + 1, 
+//			userBeanFactory.createBean(), 250, 250, 0, 0, userBeanFactory.getImage());
+//		
+//		DefaultGraphCell domain3 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 3, 
+//				domainBeanFactory.createBean(), 200, 350, 0, 0, domainBeanFactory.getImage());
 		
 	}
 	
@@ -392,11 +416,12 @@ public class JGraphText implements GraphSelectionListener {
 		});
 	}
 	
-	private void openFrames() {
+	public void openFrames(final JDesktopPane desktopPane) {
 		{
 			// show tree frame
 			JScrollPane pane = new JScrollPane(this.tree);
-			JFrame frame = new JFrame("Tree");
+			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.ElementsTree"), true);
+			desktopPane.add(frame);
 			frame.getContentPane().add(pane);
 			
 			frame.setSize(200, 600);
@@ -414,7 +439,7 @@ public class JGraphText implements GraphSelectionListener {
 			GridBagConstraints gbc = new GridBagConstraints();
 			
 			gbc.fill = GridBagConstraints.BOTH;
-			gbc.weightx = 0.0;
+			gbc.weightx = 1.0;
 			gbc.weighty = 0.0;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 
@@ -422,13 +447,13 @@ public class JGraphText implements GraphSelectionListener {
 			
 			JToolBar perspectiveBox = this.createPerspecives();
 			
-			CommonUIUtilities.fixHorizontalSize(perspectiveBox);
+//			CommonUIUtilities.fixHorizontalSize(perspectiveBox);
 			
 			this.currentPerspectiveLabel = new JLabel();
 			
 			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
 			box.add(perspectiveBox);
-			box.add(Box.createHorizontalGlue());
+//			box.add(Box.createHorizontalGlue());
 			
 			
 			
@@ -456,7 +481,8 @@ public class JGraphText implements GraphSelectionListener {
 			gbc.weighty = 0.0;
 			panel.add(this.currentPerspectiveLabel, gbc);
 			
-			JFrame frame = new JFrame("Graph");
+			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.Graph"), true);
+			desktopPane.add(frame);
 			frame.getContentPane().add(panel);
 
 			frame.setSize(800, 800);
@@ -471,8 +497,8 @@ public class JGraphText implements GraphSelectionListener {
 		{
 			
 //			 show property frame
-			JFrame frame = new JFrame("Properties");
-			
+			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.Properties"), true);
+			desktopPane.add(frame);
 			this.propertyPanel = new JPanel(new GridBagLayout());
 			this.gbc2 = new GridBagConstraints();
 			this.gbc2.fill = GridBagConstraints.BOTH;
@@ -490,6 +516,12 @@ public class JGraphText implements GraphSelectionListener {
 			
 
 		}
+		
+		
+		this.createChilden();
+		
+		this.domainsButton.doClick();
+
 	}	
 	
 	private JToolBar createPerspecives() {		
@@ -911,15 +943,31 @@ public class JGraphText implements GraphSelectionListener {
 			private Map<String, Integer> entityIndices;
 			
 			public void actionPerformed(ActionEvent e) {
-				AbstractBean bean = factory.createBean();
-				
-				if (this.entityIndices == null) {
-					this.entityIndices = new HashMap<String, Integer>();
+				try {
+					AbstractBean bean = factory.createBean();
+					
+					if (this.entityIndices == null) {
+						this.entityIndices = new HashMap<String, Integer>();
+					}
+					Integer i = this.entityIndices.get(name);
+					int index = (i != null ? i : 0) + 1;
+					this.entityIndices.put(name, index);
+					JGraphText.this.createChild(null, factory.getShortName() + "-" + index, bean, 20, 20, 0, 0, factory.getImage());
+					
+				} catch (CreateObjectException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(graph, 
+						e1.getMessage(), 
+						LangModelManager.getString("Error"),
+						JOptionPane.ERROR_MESSAGE);
+				} catch (IllegalObjectEntityException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(graph, 
+						e1.getMessage(), 
+						LangModelManager.getString("Error"),
+						JOptionPane.ERROR_MESSAGE);
+
 				}
-				Integer i = this.entityIndices.get(name);
-				int index = (i != null ? i : 0) + 1;
-				this.entityIndices.put(name, index);
-				JGraphText.this.createChild(null, factory.getShortName() + "-" + index, bean, 20, 20, 0, 0, factory.getImage());
 				
 				
 			}
@@ -1161,28 +1209,26 @@ public class JGraphText implements GraphSelectionListener {
 //		return menu;
 //	}
 	
-	public static void main(String[] args) {
-
-		JGraphText text = new JGraphText();
-//		JFrame frame = new JFrame("JGraphText");
-//		frame.getContentPane().add(text.getPanel());
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.pack();
+//	public static void main(String[] args) {
+//
+//		JGraphText text = new JGraphText();
+////		JFrame frame = new JFrame("JGraphText");
+////		frame.getContentPane().add(text.getPanel());
+////		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+////		frame.pack();
+////		
+////		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+////		GraphicsDevice gs = ge.getDefaultScreenDevice();
+////		DisplayMode[] dmodes = gs.getDisplayModes();
+////		
+////		frame.setSize(3 * dmodes[0].getWidth() / 4, 3 * dmodes[0].getHeight() / 4);
+////		frame.setVisible(true);
 //		
-//		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-//		GraphicsDevice gs = ge.getDefaultScreenDevice();
-//		DisplayMode[] dmodes = gs.getDisplayModes();
+//		text.openFrames();
 //		
-//		frame.setSize(3 * dmodes[0].getWidth() / 4, 3 * dmodes[0].getHeight() / 4);
-//		frame.setVisible(true);
-		
-		text.openFrames();
-		
-		text.createChilden();
-		
-		text.domainsButton.doClick();
-	
-	}
+//
+//	
+//	}
 	
 	
 	private DefaultGraphCell createVertex(	final String name,

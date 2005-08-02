@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.7 2005/08/01 11:32:03 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.8 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,17 @@
 
 package com.syrus.AMFICOM.manager;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,13 +46,18 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() {
+	public AbstractBean createBean() throws IllegalObjectEntityException, 
+	CreateObjectException {
 		DomainBean bean = new DomainBean();
 		
 		bean.setCodeName("Domain");
 		bean.setValidator(this.getValidator());
-		bean.setName("Domain_" + (++this.count));		
-		bean.setId(new Identifier(bean.getName()));		
+		Domain domain = Domain.createInstance(LoginManager.getUserId(), Identifier.VOID_IDENTIFIER, "", "");
+		StorableObjectPool.putStorableObject(domain);
+		bean.setId(domain.getId());					
+		
+
+		
 		bean.table = super.getTable(bean, 
 			DomainBeanWrapper.getInstance(),
 			new String[] {

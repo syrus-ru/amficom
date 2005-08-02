@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.2 2005/08/01 11:32:03 bob Exp $
+ * $Id: RTUBean.java,v 1.3 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,67 +8,106 @@
 
 package com.syrus.AMFICOM.manager;
 
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.*;
+
 import java.beans.PropertyChangeEvent;
 
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class RTUBean extends Bean {
+	
+	private KIS kis;
 
-	private String			hostname;
-
-	private int				port;
-
-	private Identifier		mcmId;
+	@Override
+	protected void setId(Identifier storableObject) {
+		super.setId(storableObject);
+		try {
+			this.kis = StorableObjectPool.getStorableObject(this.id, true);
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public final String getName() {
+		return this.kis.getName();
+	}
+	
+	public final void setName(String name) {
+		String name2 = this.kis.getName();
+		if (name2 != name &&
+				(name2 != null && !name2.equals(name) ||
+				!name.equals(name2))) {
+			this.kis.setName(name);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
+		}		
+	}
+	
+	public final String getDescription() {
+		return this.kis.getDescription();
+	}
+	
+	public final void setDescription(String description) {
+		String description2 = this.kis.getDescription();
+		if (description2 != description &&
+				(description2 != null && !description2.equals(description) ||
+				!description.equals(description2))) {
+			this.kis.setDescription(description);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_DESCRIPTION, description2, description));
+		}	
+	}
 	
 	public final String getHostname() {
-		return this.hostname;
+		return this.kis.getHostName();
 	}
 
 	
 	public final void setHostname(String hostname) {
-		if (this.hostname != hostname &&
-				(this.hostname != null && !this.hostname.equals(hostname) ||
-				!hostname.equals(this.hostname))) {
-			String oldValue = this.hostname;
-			this.hostname = hostname;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, RTUBeanWrapper.KEY_HOSTNAME, oldValue, hostname));
-		}
+		String hostname2 = this.kis.getHostName();
+		if (hostname2 != hostname &&
+				(hostname2 != null && !hostname2.equals(hostname) ||
+				!hostname.equals(hostname2))) {
+			this.kis.setHostName(hostname);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_HOSTNAME, hostname2, hostname));
+		}	
 	}
 
 	
 	public final int getPort() {
-		return this.port;
+		return this.kis.getTCPPort();
 	}
 
 	
-	public final void setPort(int port) {
-		this.port = port;
-		if (this.port != port) {
-			int oldValue = this.port;
-			this.port = port;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, RTUBeanWrapper.KEY_PORT, oldValue, port));
-		}	
+	public final void setPort(short port) {
+		short port2 = this.kis.getTCPPort();
+		if (port2 != port) {
+			this.kis.setTCPPort(port);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_PORT, port2, port));
+		}		
 
 	}
 	
 	public final Identifier getMcmId() {
-		return this.mcmId;
+		return this.kis.getMCMId();
 	}
 	
 	public final void setMcmId(Identifier mcmId) {
-		System.out.println("RTUBean.setMcmId() | " + mcmId);
-		if (this.mcmId != mcmId &&
-				(this.mcmId != null && !this.mcmId.equals(mcmId) ||
-				!mcmId.equals(this.mcmId))) {
-			Identifier oldValue = this.mcmId;
-			this.mcmId = mcmId;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, RTUBeanWrapper.KEY_MCM_ID, oldValue, mcmId));
+		Identifier mcmId2 = this.kis.getMCMId();
+		if (mcmId2 != mcmId &&
+				(mcmId2 != null && !mcmId2.equals(mcmId) ||
+				!mcmId.equals(mcmId2))) {
+			this.kis.setMCMId(mcmId);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_MCM_ID, mcmId2, mcmId));
 		}	
 	}	
 

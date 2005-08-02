@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.6 2005/08/01 11:32:03 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.7 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,21 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.*;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_MCM_ID;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_PORT;
+
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,11 +50,23 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() {
+	public AbstractBean createBean() 
+	throws CreateObjectException, IllegalObjectEntityException {
 		RTUBean bean = new RTUBean();
-		bean.setName("RTU" + (++super.count));
 		bean.setCodeName("RTU");
 		bean.setValidator(this.getValidator());
+		
+		KIS kis = KIS.createInstance(LoginManager.getUserId(),
+			Identifier.VOID_IDENTIFIER,
+			"",
+			"",
+			"",
+			(short)0,
+			Identifier.VOID_IDENTIFIER,
+			Identifier.VOID_IDENTIFIER);
+		StorableObjectPool.putStorableObject(kis);
+		bean.setId(kis.getId());	
+		
 		bean.table = super.getTable(bean, 
 			RTUBeanWrapper.getInstance(),
 			new String[] { KEY_NAME, 

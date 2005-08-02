@@ -1,5 +1,5 @@
 /*-
-* $Id: Bean.java,v 1.2 2005/08/01 11:32:03 bob Exp $
+* $Id: Bean.java,v 1.3 2005/08/02 14:42:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,20 +18,16 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 
-import static com.syrus.AMFICOM.manager.DomainBeanWrapper.*;
-
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class Bean extends AbstractBean {
+public abstract class Bean extends AbstractBean {
 
 	protected WrapperedPropertyTable	table;
 	
-	protected String			description;
-
 	protected List<PropertyChangeListener>						propertyChangeListeners;
 
 	protected void firePropertyChangeEvent(PropertyChangeEvent event) {
@@ -56,31 +52,7 @@ public class Bean extends AbstractBean {
 			this.propertyChangeListeners.remove(propertyChangeListener);
 		}
 	}
-	
-	public final String getDescription() {
-		return this.description;
-	}
 
-	
-	public final void setDescription(String description) {
-		if (this.description != description &&
-				(this.description != null && !this.description.equals(description) ||
-				!description.equals(this.description))) {
-			String oldValue = this.description;
-			this.description = description;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_DESCRIPTION, oldValue, description));
-		}	
-	}
-	
-	public final void setName(String name) {
-		if (this.name != name &&
-				(this.name != null && !this.name.equals(name) ||
-				!name.equals(this.name))) {
-			String oldValue = this.name;
-			this.name = name;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, oldValue, name));
-		}	
-	}
 	
 	@Override
 	public JPanel getPropertyPanel() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.4 2005/08/01 11:32:03 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.5 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,17 @@ package com.syrus.AMFICOM.manager;
 
 import static com.syrus.AMFICOM.manager.MCMBeanWrapper.*;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,11 +48,21 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() {
+	public AbstractBean createBean() 
+	throws CreateObjectException, IllegalObjectEntityException {
 		MCMBean bean = new MCMBean();
 		bean.setCodeName("MCM");
 		bean.setValidator(this.getValidator());
-		bean.setName("MCM" + (++this.count));
+		MCM mcm = MCM.createInstance(LoginManager.getUserId(), 
+			Identifier.VOID_IDENTIFIER,
+			"",
+			"",
+			"",
+			Identifier.VOID_IDENTIFIER,
+			Identifier.VOID_IDENTIFIER);
+		StorableObjectPool.putStorableObject(mcm);
+		bean.setId(mcm.getId());					
+
 		bean.table = super.getTable(bean, 
 			MCMBeanWrapper.getInstance(),
 			new String[] { KEY_NAME, 

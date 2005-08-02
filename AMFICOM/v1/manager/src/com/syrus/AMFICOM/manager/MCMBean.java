@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.1 2005/08/01 11:32:03 bob Exp $
+ * $Id: MCMBean.java,v 1.2 2005/08/02 14:42:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,65 +8,106 @@
 
 package com.syrus.AMFICOM.manager;
 
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.*;
+
 import java.beans.PropertyChangeEvent;
 
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 14:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class MCMBean extends Bean {
 
-	private String			hostname;
+	private MCM mcm;
+	
+	@Override
+	protected void setId(Identifier id) {
+		super.setId(id);
+		try {
+			this.mcm = StorableObjectPool.getStorableObject(this.id, true);
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
-	private Identifier		serverId;
+	public final String getDescription() {
+		return this.mcm.getDescription();
+	}
 
-	private Identifier		userId;
+	@Override
+	public final String getName() {
+		return this.mcm.getName();
+	}
+	
+	public final void setDescription(String description) {
+		String description2 = this.mcm.getDescription();
+		if (description2 != description &&
+				(description2 != null && !description2.equals(description) ||
+				!description.equals(description2))) {
+			this.mcm.setDescription(description);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_DESCRIPTION, description2, description));
+		}	
+	}
+	
+	public final void setName(String name) {
+		String name2 = this.mcm.getName();
+		if (name2 != name &&
+				(name2 != null && !name2.equals(name) ||
+				!name.equals(name2))) {
+			this.mcm.setName(name);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
+		}		
+	}
 	
 	public final String getHostname() {
-		return this.hostname;
+		return this.mcm.getHostName();
 	}
 
 	
 	public final void setHostname(String hostname) {
-		if (this.hostname != hostname &&
-				(this.hostname != null && !this.hostname.equals(hostname) ||
-				!hostname.equals(this.hostname))) {
-			String oldValue = this.hostname;
-			this.hostname = hostname;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, MCMBeanWrapper.KEY_HOSTNAME, oldValue, hostname));
-		}
+		String hostname2 = this.mcm.getHostName();
+		if (hostname2 != hostname &&
+				(hostname2 != null && !hostname2.equals(hostname) ||
+				!hostname.equals(hostname2))) {
+			this.mcm.setHostName(hostname);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_HOSTNAME, hostname2, hostname));
+		}	
 	}
 	
 	public final Identifier getServerId() {
-		return this.serverId;
+		return this.mcm.getServerId();
 	}
 	
 	public final void setServerId(Identifier serverId) {
-		if (this.serverId != serverId &&
-				(this.serverId != null && !this.serverId.equals(serverId) ||
-				!serverId.equals(this.serverId))) {
-			Identifier oldValue = this.serverId;
-			this.serverId = serverId;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, MCMBeanWrapper.KEY_SERVER_ID, oldValue, serverId));
-		}	
+		Identifier serverId2 = this.mcm.getServerId();
+		if (serverId2 != serverId &&
+				(serverId2 != null && !serverId2.equals(serverId) ||
+				!serverId.equals(serverId2))) {
+			this.mcm.setServerId(serverId);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_SERVER_ID, serverId2, serverId));
+		}		
 	}	
 
 	
 	public final Identifier getUserId() {
-		return this.userId;
+		return this.mcm.getUserId();
 	}
 	
 	public final void setUserId(Identifier userId) {
-		if (this.userId != userId &&
-				(this.userId != null && !this.userId.equals(userId) ||
-				!userId.equals(this.userId))) {
-			Identifier oldValue = this.userId;
-			this.userId = userId;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, MCMBeanWrapper.KEY_USER_ID, oldValue, userId));
-		}	
+		Identifier userId2 = this.mcm.getUserId();
+		if (userId2 != userId &&
+				(userId2 != null && !userId2.equals(userId) ||
+				!userId.equals(userId2))) {
+			this.mcm.setUserId(userId);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_USER_ID, userId2, userId));
+		}		
 	}
 }
