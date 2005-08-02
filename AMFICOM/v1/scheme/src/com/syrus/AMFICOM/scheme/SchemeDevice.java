@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.64 2005/08/02 09:34:16 bass Exp $
+ * $Id: SchemeDevice.java,v 1.65 2005/08/02 11:01:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/08/02 09:34:16 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/02 11:01:20 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -318,7 +318,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 			final String methodName = stackTraceElement.getMethodName();
 			if ((!className.equals(SchemeElement.class.getName())
 					&& !className.equals(SchemeProtoElement.class.getName()))
-					|| !methodName.equals("clone")) {
+					|| (!methodName.equals("clone")
+					&& !methodName.equals("fillProperties"))) {
 				final StackTraceElement rootStackTraceElement = stackTrace[depth - 1];
 				throw new CloneNotSupportedException(
 						"invocation of "

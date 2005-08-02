@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.56 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeLink.java,v 1.57 2005/08/02 11:01:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.57 $, $Date: 2005/08/02 11:01:20 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -476,7 +476,8 @@ public final class SchemeLink extends AbstractSchemeLink {
 			if ((!className.equals(SchemeElement.class.getName())
 					&& !className.equals(SchemeProtoElement.class.getName())
 					&& !className.equals(Scheme.class.getName()))
-					|| !methodName.equals("clone")) {
+					|| (!methodName.equals("clone")
+					&& !methodName.equals("fillProperties"))) {
 				final StackTraceElement rootStackTraceElement = stackTrace[depth - 1];
 				throw new CloneNotSupportedException(
 						"invocation of "
