@@ -21,9 +21,14 @@ endif
 
 # If XMLBEANS_HOME is defined, search in ${XMLBEANS_HOME}/lib
 ifeq ($(XMLBEANS_HOME),)
-XMLBEANSCLASSPATH=$(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
+XMLBEANSCLASSPATH = $(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
 else
-XMLBEANSCLASSPATH=$(XMLBEANS_HOME)/lib/xbean.jar:$(XMLBEANS_HOME)/lib/jsr173_api.jar
+# XMLBEANS_HOME found. Find out whether this is an ant-build distribution
+XMLBEANSLIBDIR = $(firstword $(wildcard $(XMLBEANS_HOME)/build/lib))
+ifeq ($(XMLBEANSLIBDIR),)
+XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
+endif
+XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
 endif
 LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
@@ -143,3 +148,7 @@ arch:
 .PHONY: pmd
 pmd:
 	$(JAVA) -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
+
+
+test:
+	@echo $(XMLBEANSLIBDIR)
