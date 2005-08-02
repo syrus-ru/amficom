@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.23 2005/07/24 18:12:44 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.24 2005/08/02 07:45:11 krupenn Exp $
  *
  * Copyright њ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.23 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -153,7 +153,8 @@ public final class SchemeSampleData {
 		scheme1clink4.setTargetAbstractSchemePort(scheme1dev20cport22);
 		SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink4);
 
-		scheme1path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", scheme1);
+		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "—ольюшн", scheme1);
+		scheme1path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", solution);
 
 		PathElement scheme1pelstart = PathElement.createInstance(userId, scheme1path0, null, scheme1dev00port00);
 
@@ -224,7 +225,8 @@ public final class SchemeSampleData {
 		scheme2clink0.setTargetAbstractSchemePort(scheme2dev00cport00);
 		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme2clink0);
 
-		scheme2path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", scheme2);
+		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "—ольюшн", scheme2);
+		scheme2path0 = SchemePath.createInstance(userId, "ѕут€ра измерений", solution);
 		PathElement scheme2pelstart = PathElement.createInstance(userId, scheme2path0, null, scheme2dev10port10);
 		PathElement scheme2pel0 = PathElement.createInstance(userId, scheme2path0, scheme2link0);
 		PathElement scheme2pel1 = PathElement.createInstance(userId, scheme2path0, scheme2dev10port10, scheme2dev10cport10);
