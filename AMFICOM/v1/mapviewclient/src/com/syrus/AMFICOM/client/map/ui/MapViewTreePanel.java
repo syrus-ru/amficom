@@ -11,8 +11,6 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -25,15 +23,10 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 
 public final class MapViewTreePanel extends JPanel 
-		implements PropertyChangeListener, TreeSelectionListener {
+		implements PropertyChangeListener {
 
 	IconedTreeUI treeUI;
 	JTree tree;
@@ -43,24 +36,15 @@ public final class MapViewTreePanel extends JPanel
 
 	ApplicationContext aContext;
 
-	public boolean performProcessing = true;
-
 	private JScrollPane scroll = new JScrollPane();
 	private BorderLayout borderLayout1 = new BorderLayout();
 
 	private MapView mapView = null;
 	
-	public MapViewTreePanel() {
-		try {
-			jbInit();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	public MapViewTreePanel(ApplicationContext aContext) {
-		this();
 		setContext(aContext);
+		jbInit();
+		updateTree(null);
 	}
 
 	private void jbInit() {
@@ -80,7 +64,7 @@ public final class MapViewTreePanel extends JPanel
 		this.treeModel.setAllwaysSort(false);
 
 		this.scroll.getViewport().add(this.tree);
-		this.tree.addTreeSelectionListener(this);
+		this.tree.addTreeSelectionListener(new MapViewTreeSelectionListener(this.aContext));
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 	}
 
@@ -88,6 +72,7 @@ public final class MapViewTreePanel extends JPanel
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
 				Dispatcher disp = this.aContext.getDispatcher();
+				disp.removePropertyChangeListener(MapEvent.LIBRARY_SET_CHANGED, this);
 				disp.removePropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 				disp.removePropertyChangeListener(MapEvent.MAP_SELECTED, this);
 				disp.removePropertyChangeListener(MapEvent.MAP_CHANGED, this);
@@ -102,49 +87,49 @@ public final class MapViewTreePanel extends JPanel
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
+		disp.addPropertyChangeListener(MapEvent.LIBRARY_SET_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_SELECTED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
 		disp.addPropertyChangeListener(MapEvent.MAP_VIEW_CLOSED, this);
-
-		updateTree(null);
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
-		if(this.performProcessing) {
-			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
-				updateTree(null);
-			}
-			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
-				MapView mapView = (MapView )pce.getSource();
-				if(this.model == null 
-						|| this.mapView == null 
-						|| !this.mapView.equals(mapView)) {
-					updateTree(mapView);
-				}
-			}
-			if(	pce.getPropertyName().equals(MapEvent.MAP_CHANGED)) {
-				updateTree(this.mapView);
-			}
-			if(	pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {
-				updateTree(this.mapView);
-			}
-			if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED)) {
-				MapView mapView = (MapView )pce.getSource();
+		if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
+			updateTree(null);
+		}
+		if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
+			MapView mapView = (MapView )pce.getSource();
+			if(this.model == null 
+					|| this.mapView == null 
+					|| !this.mapView.equals(mapView)) {
 				updateTree(mapView);
 			}
-			if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
-				Collection selection = (Collection )pce.getNewValue();
-				Collection items = this.model.findNodes(this.root, selection);
-				this.tree.getSelectionModel().clearSelection();
-				for(Iterator iter = items.iterator(); iter.hasNext();) {
-					Item node = (Item )iter.next();
-					TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
-					this.tree.getSelectionModel().addSelectionPath(path);
-					this.tree.scrollPathToVisible(path);
-				}
+		}
+		if(	pce.getPropertyName().equals(MapEvent.MAP_CHANGED)) {
+			updateTree(this.mapView);
+		}
+		if(	pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {
+			updateTree(this.mapView);
+		}
+		if(	pce.getPropertyName().equals(MapEvent.LIBRARY_SET_CHANGED)) {
+			updateTree(this.mapView);
+		}
+		if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED)) {
+			MapView mapView = (MapView )pce.getSource();
+			updateTree(mapView);
+		}
+		if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
+			Collection selection = (Collection )pce.getNewValue();
+			Collection items = this.model.findNodes(this.root, selection);
+			this.tree.getSelectionModel().clearSelection();
+			for(Iterator iter = items.iterator(); iter.hasNext();) {
+				Item node = (Item )iter.next();
+				TreePath path = new TreePath(this.treeModel.getPathToRoot(node));
+				this.tree.getSelectionModel().addSelectionPath(path);
+				this.tree.scrollPathToVisible(path);
 			}
 		}
 	}
@@ -197,50 +182,6 @@ public final class MapViewTreePanel extends JPanel
 		this.tree.updateUI();
 	}
 
-	public void valueChanged(TreeSelectionEvent e) {
-		Dispatcher dispatcher = this.aContext.getDispatcher();
-		if(dispatcher != null) {
-			this.performProcessing = false;
-			TreePath paths[] = e.getPaths();
-			Collection toSelect = new LinkedList();
-			Collection toDeSelect = new LinkedList();
-			boolean sendSelectionEvent = true;
-			for (int i = 0; i < paths.length; i++) 
-			{
-				Item node = (Item )paths[i].getLastPathComponent();
-				if(node.getObject() instanceof MapElement
-						|| node.getObject() instanceof SchemeElement
-						|| node.getObject() instanceof SchemeCableLink
-						|| node.getObject() instanceof SchemePath) {
-					Object mapElement = node.getObject();
-					if(e.isAddedPath(paths[i]))
-						toSelect.add(mapElement);
-					else
-						toDeSelect.add(mapElement);
-				}
-				else if(node.getObject() instanceof Map) {
-					Map map = (Map )node.getObject();
-					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(map, MapEvent.MAP_SELECTED));
-						sendSelectionEvent = false;
-					}
-				}
-				else if(node.getObject() instanceof MapView) {
-					MapView mapView = (MapView )node.getObject();
-					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
-						sendSelectionEvent = false;
-					}
-				}
-			}
-			if(sendSelectionEvent) {
-				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_SELECT, toSelect));
-				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_DESELECT, toDeSelect));
-			}
-			this.performProcessing = true;
-		}
-	}
-	
 }
 
 
