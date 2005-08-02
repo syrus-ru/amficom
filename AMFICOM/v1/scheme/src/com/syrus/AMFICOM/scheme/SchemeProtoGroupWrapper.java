@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.9 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.10 2005/08/02 20:04:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,27 +16,16 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 20:04:08 $
  * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
-	
-//	schemeprotogroup.sql
-//	
-//	name VARCHAR2(32 CHAR) NOT NULL,
-//	description VARCHAR2(256 CHAR),
-//--
-//	symbol_id VARCHAR2(32 CHAR),
-//	parent_scheme_proto_group_id VARCHAR2(32 CHAR),
-
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_PARENT_SCHEME_PROTO_GROUP_ID  = "parent_scheme_proto_group_id";
 
 	private static SchemeProtoGroupWrapper instance;
 
-	// @PMD:REVIEWED:BeanMembersShouldSerialize: by bass on 28.07.05 20:19
-	// @PMD:REVIEWED:BeanMembersShouldSerialize: by bass on 28.07.05 20:19
 	private final List<String> keys;
 
 	private SchemeProtoGroupWrapper() {
