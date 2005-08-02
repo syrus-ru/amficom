@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -50,7 +49,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -724,13 +723,13 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				AbstractNode removedNode = cableChannelingItem.getStartSiteNode();
 				SiteNode newEndNode = cableChannelingItem.getEndSiteNode();
 			
-				if(previous.getEndNode().equals(removedNode))
-					previous.setEndNode(newEndNode);
+				if(unboundPrevious.getEndNode().equals(removedNode))
+					unboundPrevious.setEndNode(newEndNode);
 				else
-				if(previous.getStartNode().equals(removedNode))
-					previous.setStartNode(newEndNode);
+				if(unboundPrevious.getStartNode().equals(removedNode))
+					unboundPrevious.setStartNode(newEndNode);
 					
-				for(Iterator it = previous.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
+				for(Iterator it = unboundPrevious.getNodeLinksAt(removedNode).iterator(); it.hasNext();)
 				{
 					NodeLink nl = (NodeLink)it.next();
 					if(nl.getEndNode().equals(removedNode))
