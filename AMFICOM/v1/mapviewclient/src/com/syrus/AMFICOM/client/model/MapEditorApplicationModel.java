@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.4 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.5 2005/08/02 08:11:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ package com.syrus.AMFICOM.client.model;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/06/22 08:43:49 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 08:11:03 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -46,6 +46,19 @@ public class MapEditorApplicationModel extends ApplicationModel
 	public static final String ITEM_MAP_VIEW_SAVE_AS = "menuMapViewSaveAs";
 	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "menuMapViewAddScheme";
 	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "menuMapViewRemoveScheme";
+
+	public static final String ITEM_MAP_LIBRARY = "menuMapLibrary";
+	public static final String ITEM_MAP_LIBRARY_NEW = "menuMapLibraryNew";
+	public static final String ITEM_MAP_LIBRARY_OPEN = "menuMapLibraryOpen";
+	public static final String ITEM_MAP_LIBRARY_SAVE = "menuMapLibrarySave";
+	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "menuMapLibrarySaveAs";
+	public static final String ITEM_MAP_LIBRARY_REMOVE = "menuMapLibraryRemove";
+	public static final String ITEM_MAP_LIBRARY_IMPORT = "menuMapLibraryImport";
+	public static final String ITEM_MAP_LIBRARY_EXPORT = "menuMapLibraryExport";
+	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "menuMapLibraryNewSiteType";
+	public static final String ITEM_MAP_LIBRARY_NEW_LINK_TYPE = "menuMapLibraryNewLinkType";
+	public static final String ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE = "menuMapLibraryRemoveSiteType";
+	public static final String ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE = "menuMapLibraryRemoveLinkType";
 
 	public static final String ITEM_VIEW = "menuView";
 	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral";
@@ -92,6 +105,17 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS);
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		add(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
+
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE);
 
 		add(MapEditorApplicationModel.ITEM_VIEW);
 		add(MapEditorApplicationModel.ITEM_VIEW_GENERAL);
