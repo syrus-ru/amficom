@@ -3,7 +3,7 @@ package com.syrus.util;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mcm.KISConnection;
 
-public class KISConnectionLRUMap extends LRUMap {
+public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 	static final long serialVersionUID = -1243965322879317241L;
 
 	public KISConnectionLRUMap() {
@@ -14,18 +14,21 @@ public class KISConnectionLRUMap extends LRUMap {
 		super(capacity);
 	}
 
+	@Override
 	public synchronized KISConnection put(final Identifier kisId, final KISConnection kisConnection) {
-		final KISConnection removedKISConnection = (KISConnection) super.put(kisId, kisConnection);
-		if (removedKISConnection == null || !removedKISConnection.isEstablished())
+		final KISConnection removedKISConnection = super.put(kisId, kisConnection);
+		if (removedKISConnection == null || !removedKISConnection.isEstablished()) {
 			return removedKISConnection;
+		}
 
 		// Find the nearest to the right side of array non-established connection.
 		//Return it if exists.
 		for (int i = super.array.length - 1; i >= 0; i--) {
 			final KISConnection aKISConnection = (KISConnection) super.array[i];
 			if (!aKISConnection.isEstablished()) {
-				for (int j = i; j < super.array.length - 1; j++)
+				for (int j = i; j < super.array.length - 1; j++) {
 					super.array[j] = super.array[j + 1];
+				}
 				super.array[super.array.length - 1] = new Entry(removedKISConnection.getKISId(), removedKISConnection);
 				return aKISConnection;
 			}
