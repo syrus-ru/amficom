@@ -1,8 +1,16 @@
+/*-
+ * $Id: Dispatcher.java,v 1.9 2005/08/02 11:04:45 bob Exp $
+ *
+ * Copyright ї 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.client.event;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -14,8 +22,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.8 $, $Date: 2005/07/11 08:19:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/08/02 11:04:45 $
+ * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
  * @module commonclient_v1
@@ -39,11 +47,13 @@ public class Dispatcher {
 			this.events.put(propertyName, listeners);
 		}
 		
-		if (!listeners.contains(listener)) {
-			listeners.add(listener);
-		} else {
-			Log.debugMessage("Dispatcher.addPropertyChangeListener | already added listener: " + listener.getClass().getName(), Level.WARNING);
-		}	
+		synchronized(listeners) {
+			if (!listeners.contains(listener)) {
+				listeners.add(listener);
+			} else {
+				Log.debugMessage("Dispatcher.addPropertyChangeListener | already added listener: " + listener.getClass().getName(), Level.WARNING);
+			}	
+		}
 	}
 
 	// унрегистрация убирает связь подписчика с определенным событием
@@ -53,8 +63,10 @@ public class Dispatcher {
 		Log.debugMessage("Dispatcher.removePropertyChangeListener | propertyName:" + propertyName + ", listener: "
 			+ listener.getClass().getName(), Log.DEBUGLEVEL10);
 		if (listeners != null) {
-			if (!listeners.remove(listener)) {
-				Log.debugMessage("Dispatcher.removePropertyChangeListener | there is no added listener: " + listener.getClass().getName() , Level.WARNING);
+			synchronized(listeners) {
+				if (!listeners.remove(listener)) {
+					Log.debugMessage("Dispatcher.removePropertyChangeListener | there is no added listener: " + listener.getClass().getName() , Level.WARNING);
+				}
 			}
 		}		
 	}
@@ -69,8 +81,7 @@ public class Dispatcher {
 			String propertyName = (String)iterator.next();
 			List<PropertyChangeListener> listeners = this.events.get(propertyName);
 			Log.debugMessage("Dispatcher.printListeners | propertyName: " + propertyName, Level.FINEST);
-			for (Iterator iterator2 = listeners.iterator(); iterator2.hasNext();) {
-				PropertyChangeListener changeListener = (PropertyChangeListener) iterator2.next();
+			for (PropertyChangeListener changeListener : listeners) {
 				Log.debugMessage("Dispatcher.printListeners | changeListener : " + changeListener.getClass().getName(), Level.FINEST);
 			}
 		}
@@ -84,9 +95,8 @@ public class Dispatcher {
 		if (listeners != null && !listeners.isEmpty()) {
 			Object source = event.getSource();
 			synchronized (listeners) {
-				for (Iterator iterator = listeners.iterator(); iterator.hasNext();) {
-					PropertyChangeListener listener = (PropertyChangeListener) iterator.next();
-
+				List<PropertyChangeListener> newListeners = new ArrayList<PropertyChangeListener>(listeners);
+				for (PropertyChangeListener listener : newListeners) {
 					/*
 					 * yeah, really compare references, skip sending message to
 					 * source
