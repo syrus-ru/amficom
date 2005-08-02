@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.37 2005/08/02 07:56:36 krupenn Exp $
+ * $Id: MapViewController.java,v 1.38 2005/08/02 16:58:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,7 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -40,7 +38,6 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -63,7 +60,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/08/02 07:56:36 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/02 16:58:10 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -637,33 +634,6 @@ public final class MapViewController {
 		time6 = 0L;
 	}
 
-	/**
-	 * @deprecated should use StorableObjectPool
-	 */
-	private static Set<MapLibrary> mapLibraries = new HashSet<MapLibrary>();
-
-	/**
-	 * @deprecated should use StorableObjectPool
-	 */
-	public static Set<MapLibrary> getMapLibraries() {
-		return mapLibraries;
-	}
-
-	/**
-	 * @deprecated should use StorableObjectPool
-	 */
-	public static void addMapLibrary(MapLibrary mapLibrary) {
-		MapViewController.mapLibraries.add(mapLibrary);
-	}
-
-	/**
-	 * @deprecated should use StorableObjectPool
-	 */
-	public static void removeMapLibrary(MapLibrary mapLibrary) {
-		MapViewController.mapLibraries.remove(mapLibrary);
-	}
-	
-	
 /* from SiteNode
 
 	//Возвращяет длинну линий внутри данного узла,
