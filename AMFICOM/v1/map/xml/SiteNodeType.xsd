@@ -13,7 +13,7 @@
   <xsd:element name="sitenodetypes" type="map:SiteNodeTypes">
 
     <xsd:key name="sitenodetypeuid">
-      <xsd:selector xpath="map:sitenodetype"/>
+      <xsd:selector xpath="map:sitenodetypes/map:sitenodetype"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 

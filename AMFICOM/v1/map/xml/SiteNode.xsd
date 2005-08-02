@@ -13,12 +13,12 @@
   <xsd:element name="sitenodes" type="map:SiteNodes">
 
     <xsd:key name="sitenodeuid">
-      <xsd:selector xpath="map:sitenode"/>
+      <xsd:selector xpath="map:sitenodes/map:sitenode"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 
     <xsd:key name="nodeuid">
-      <xsd:selector xpath="map:sitenode"/>
+      <xsd:selector xpath="map:sitenodes/map:sitenode"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 

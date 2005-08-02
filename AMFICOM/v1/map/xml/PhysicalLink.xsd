@@ -13,7 +13,7 @@
   <xsd:element name="physicallinks" type="map:PhysicalLinks">
 
     <xsd:key name="physicallinkuid">
-      <xsd:selector xpath="map:physicallink"/>
+      <xsd:selector xpath="map:physicallinks/map:physicallink"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 <!--

@@ -11,12 +11,12 @@
   <xsd:element name="topologicalnodes" type="map:TopologicalNodes">
 
     <xsd:key name="topologicalnodeuid">
-      <xsd:selector xpath="map:topologicalnode"/>
+      <xsd:selector xpath="map:topologicalnodes/map:topologicalnode"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 
     <xsd:key name="nodeuid">
-      <xsd:selector xpath="map:topologicalnode"/>
+      <xsd:selector xpath="map:topologicalnodes/map:topologicalnode"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 
