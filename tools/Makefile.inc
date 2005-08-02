@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.29 2005/07/24 17:58:56 bass Exp $
+# $Id: Makefile.inc,v 1.30 2005/08/02 13:05:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -21,12 +21,14 @@ IDLDIR := ../idl/idl
 SRCDIR := src
 CLASSDIR := classes
 
-ifeq ($(shell hostname -s),bass)
-LIBDIR ?= lib
-EXTLIBDIR ?= lib/ext
-else
+AMFICOM_HOME := $(shell echo $(AMFICOM_HOME) | sed "s|~|$(HOME)|g")
+
+ifeq ($(AMFICOM_HOME),)
 LIBDIR ?= ../lib
 EXTLIBDIR ?= ../../extlib
+else
+LIBDIR = $(AMFICOM_HOME)/lib
+EXTLIBDIR = $(AMFICOM_HOME)/lib/ext
 endif
 
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing "$(MAKE)"))
@@ -209,9 +211,7 @@ PMD_RULES = rulesets/unusedcode.xml,rulesets/imports.xml,rulesets/basic.xml,rule
 # Targets
 #
 
-$(SRCDIR):
-$(CLASSDIR):
-$(LIBDIR):
+$(SRCDIR) $(CLASSDIR) $(LIBDIR) $(EXTLIBDIR):
 	mkdir -p $@
 
 .PHONY: idl
