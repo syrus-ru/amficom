@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.57 2005/07/24 12:30:02 krupenn Exp $
+ * $Id: MapFrame.java,v 1.58 2005/08/02 07:41:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -59,18 +58,11 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс $RCSfile: MapFrame.java,v $ используется для управления отображеним топологический схемы.
  * Основой является объект типа MapView. Отображение осуществляется объектом 
@@ -82,7 +74,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.57 $, $Date: 2005/07/24 12:30:02 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/02 07:41:10 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
