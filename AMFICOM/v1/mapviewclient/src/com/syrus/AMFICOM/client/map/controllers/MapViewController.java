@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.36 2005/07/25 12:44:09 bass Exp $
+ * $Id: MapViewController.java,v 1.37 2005/08/02 07:56:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,9 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -27,7 +29,6 @@ import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -39,6 +40,7 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -60,8 +62,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/07/25 12:44:09 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2005/08/02 07:56:36 $
  * @module mapviewclient_v1
  */
 public final class MapViewController {
@@ -269,19 +271,15 @@ public final class MapViewController {
 	 * @param meId идентификатор измерительного элемента
 	 * @return топологический путь
 	 * @throws com.syrus.AMFICOM.general.CommunicationException 
-	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
 	 * @throws com.syrus.AMFICOM.general.DatabaseException
-	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
 	 */
 	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
 			throws ApplicationException {
 		MeasurementPath path = null;
-		MonitoredElement me = (MonitoredElement )
-			StorableObjectPool.getStorableObject(meId, true);
+		MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
 		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
 			Identifier tpId = me.getMonitoredDomainMemberIds().iterator().next();
-			TransmissionPath tp = (TransmissionPath )
-				StorableObjectPool.getStorableObject(tpId, true);
+			TransmissionPath tp = StorableObjectPool.getStorableObject(tpId, true);
 			if(tp != null) {
 				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();) {
 					MeasurementPath mp = (MeasurementPath)it.next();
@@ -638,6 +636,33 @@ public final class MapViewController {
 	public static void nullTime6() {
 		time6 = 0L;
 	}
+
+	/**
+	 * @deprecated should use StorableObjectPool
+	 */
+	private static Set<MapLibrary> mapLibraries = new HashSet<MapLibrary>();
+
+	/**
+	 * @deprecated should use StorableObjectPool
+	 */
+	public static Set<MapLibrary> getMapLibraries() {
+		return mapLibraries;
+	}
+
+	/**
+	 * @deprecated should use StorableObjectPool
+	 */
+	public static void addMapLibrary(MapLibrary mapLibrary) {
+		MapViewController.mapLibraries.add(mapLibrary);
+	}
+
+	/**
+	 * @deprecated should use StorableObjectPool
+	 */
+	public static void removeMapLibrary(MapLibrary mapLibrary) {
+		MapViewController.mapLibraries.remove(mapLibrary);
+	}
+	
 	
 /* from SiteNode
 
