@@ -9,10 +9,10 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/29 14:41:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class SessionCloseCommand extends AbstractCommand {
 

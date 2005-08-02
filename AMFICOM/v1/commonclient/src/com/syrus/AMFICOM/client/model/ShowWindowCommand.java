@@ -1,5 +1,5 @@
 /*-
- * $Id: ShowWindowCommand.java,v 1.3 2005/07/28 10:03:02 bob Exp $
+ * $Id: ShowWindowCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import java.beans.PropertyVetoException;
 import javax.swing.JInternalFrame;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/28 10:03:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class ShowWindowCommand extends AbstractCommand {
 

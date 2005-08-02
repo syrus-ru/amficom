@@ -1,5 +1,5 @@
 /*-
- * $Id: MClientServantManager.java,v 1.6 2005/06/07 13:28:24 bob Exp $
+ * $Id: MClientServantManager.java,v 1.7 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/07 13:28:24 $
- * @author $Author: bob $
- * @module commonclient_v1
+ * @version $Revision: 1.7 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public final class MClientServantManager extends ClientServantManager implements BaseConnectionManager {
 	public MClientServantManager(final CORBAServer corbaServer,

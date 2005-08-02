@@ -1,5 +1,5 @@
 /*-
- * $Id: SplashScreen.java,v 1.2 2005/05/25 09:44:33 bob Exp $
+ * $Id: SplashScreen.java,v 1.3 2005/08/02 13:03:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.awt.*;
 import javax.swing.*;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/05/25 09:44:33 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 13:03:21 $
+ * @module commonclient
  */
 
 public final class SplashScreen extends JWindow {

@@ -1,5 +1,5 @@
 /*
- * $Id: XMLPoolContext.java,v 1.4 2005/07/28 19:45:42 arseniy Exp $
+ * $Id: XMLPoolContext.java,v 1.5 2005/08/02 13:03:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,9 @@ import java.io.File;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/28 19:45:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
- * @module commonclient_v1
+ * @module commonclient
  */
 public final class XMLPoolContext extends PoolContext {
 	private static final String KEY_CACHE_PATH = "CachePath";

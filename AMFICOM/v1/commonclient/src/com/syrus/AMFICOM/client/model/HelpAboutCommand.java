@@ -1,5 +1,5 @@
 /*
- * $Id: HelpAboutCommand.java,v 1.3 2005/05/23 06:43:47 bob Exp $
+ * $Id: HelpAboutCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  * 
- * @version $Revision: 1.3 $, $Date: 2005/05/23 06:43:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class HelpAboutCommand extends AbstractCommand {
 

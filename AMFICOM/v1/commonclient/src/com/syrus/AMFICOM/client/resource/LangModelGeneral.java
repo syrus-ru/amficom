@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.3 2005/06/17 11:50:08 bass Exp $
+ * $Id: LangModelGeneral.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/06/17 11:50:08 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @module commonclient
  */
 
 public class LangModelGeneral {

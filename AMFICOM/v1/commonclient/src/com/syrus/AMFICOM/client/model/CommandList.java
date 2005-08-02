@@ -1,5 +1,5 @@
 /**
- * $Id: CommandList.java,v 1.2 2005/06/17 11:50:08 bass Exp $
+ * $Id: CommandList.java,v 1.3 2005/08/02 13:03:22 arseniy Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: bass $
- * @module commonclient_v1
+ * @version $Revision: 1.3 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class CommandList extends AbstractCommand {
 	/** голова списка команд */

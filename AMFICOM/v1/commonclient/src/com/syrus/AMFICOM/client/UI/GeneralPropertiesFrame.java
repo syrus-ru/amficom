@@ -1,5 +1,5 @@
 /*-
- * $Id: GeneralPropertiesFrame.java,v 1.2 2005/07/28 10:03:02 bob Exp $
+ * $Id: GeneralPropertiesFrame.java,v 1.3 2005/08/02 13:03:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.client.UI;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/07/28 10:03:02 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 13:03:21 $
+ * @module commonclient
  */
 
 public class GeneralPropertiesFrame extends AbstractPropertiesFrame {

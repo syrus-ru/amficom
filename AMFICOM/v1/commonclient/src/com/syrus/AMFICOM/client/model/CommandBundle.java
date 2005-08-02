@@ -1,5 +1,5 @@
 /**
- * $Id: CommandBundle.java,v 1.1 2005/06/06 14:51:21 bob Exp $
+ * $Id: CommandBundle.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
@@ -16,9 +16,9 @@ import java.util.ListIterator;
 /**
  * Название: команда, включающая в себя несколько команд
  * 
- * @version $Revision: 1.1 $
- * @author $Author: bob $
- * @module commonclient_v1
+ * @version $Revision: 1.2 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class CommandBundle extends AbstractCommand {
 	/** список команд */

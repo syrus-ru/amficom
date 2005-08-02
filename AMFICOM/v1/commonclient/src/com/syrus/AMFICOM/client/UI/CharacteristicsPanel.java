@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.16 2005/08/01 10:24:42 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.17 2005/08/02 13:03:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,9 +63,9 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.16 $, $Date: 2005/08/01 10:24:42 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/02 13:03:21 $
+ * @module commonclient
  */
 
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {

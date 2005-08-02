@@ -13,10 +13,10 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class WindowCommand implements Command {
 

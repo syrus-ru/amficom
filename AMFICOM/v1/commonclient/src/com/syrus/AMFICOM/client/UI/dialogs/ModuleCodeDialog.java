@@ -19,9 +19,9 @@ import javax.swing.JPasswordField;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/19 17:55:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/02 13:03:21 $
  * @author $Author: arseniy $
- * @module commonclient_v1
+ * @module commonclient
  */
 public class ModuleCodeDialog {
 

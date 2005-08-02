@@ -1,5 +1,5 @@
 /*-
- * $Id: LazyCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: LazyCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,10 @@ package com.syrus.AMFICOM.client.model;
 import javax.swing.UIDefaults;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class LazyCommand extends AbstractCommand {
 

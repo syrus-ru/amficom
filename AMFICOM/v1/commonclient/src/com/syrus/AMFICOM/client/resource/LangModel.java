@@ -5,10 +5,10 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/27 16:16:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class LangModel {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.11 2005/07/29 14:36:37 arseniy Exp $
+ * $Id: AbstractApplication.java,v 1.12 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,10 +52,10 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/29 14:36:37 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public abstract class AbstractApplication {
 

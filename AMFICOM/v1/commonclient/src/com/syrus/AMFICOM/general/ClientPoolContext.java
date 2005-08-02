@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.13 2005/07/29 14:28:03 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.14 2005/08/02 13:03:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/29 14:28:03 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
- * @module commonclient_v1
+ * @module commonclient
  */
 class ClientPoolContext extends PoolContext {
 

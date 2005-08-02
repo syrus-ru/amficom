@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.3 2005/07/29 14:41:51 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,10 +21,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/29 14:41:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class LoginRestoreCommand extends OpenSessionCommand 
 implements LoginRestorer{

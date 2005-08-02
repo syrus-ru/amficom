@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharClientServantManager.java,v 1.2 2005/06/08 09:45:03 arseniy Exp $
+ * $Id: MscharClientServantManager.java,v 1.3 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/08 09:45:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
- * @module commonclient_v1
+ * @module commonclient
  */
 public final class MscharClientServantManager extends ClientServantManager {
 	public MscharClientServantManager(final CORBAServer corbaServer,

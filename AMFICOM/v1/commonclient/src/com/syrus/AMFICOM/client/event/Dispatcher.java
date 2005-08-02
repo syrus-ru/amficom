@@ -1,5 +1,5 @@
 /*-
- * $Id: Dispatcher.java,v 1.10 2005/08/02 13:00:57 arseniy Exp $
+ * $Id: Dispatcher.java,v 1.11 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,11 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.10 $, $Date: 2005/08/02 13:00:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class Dispatcher {
 

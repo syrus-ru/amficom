@@ -1,5 +1,5 @@
 /*
- * $Id: ExitCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: ExitCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,10 @@ import java.awt.Window;
 
 /**
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class ExitCommand extends AbstractCommand {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.10 2005/06/16 09:57:05 bob Exp $
+ * $Id: Environment.java,v 1.11 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -30,9 +30,9 @@ import com.syrus.io.IniFile;
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.10 $, $Date: 2005/06/16 09:57:05 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/02 13:03:22 $
+ * @module commonclient
  */
 public final class Environment {
 

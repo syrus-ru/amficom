@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.3 2005/07/11 12:38:10 bob Exp $
+ * $Id: ColorChooserComboBox.java,v 1.4 2005/08/02 13:03:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:21 $
+ * @module commonclient
  */
 
 public class ColorChooserComboBox extends AComboBox {

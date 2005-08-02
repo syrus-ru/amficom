@@ -4,10 +4,10 @@ package com.syrus.AMFICOM.client.model;
 /**
  * TODO
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public class SessionOptionsCommand extends AbstractCommand {
 

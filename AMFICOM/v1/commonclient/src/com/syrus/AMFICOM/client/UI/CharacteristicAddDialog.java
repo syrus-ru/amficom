@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.13 2005/07/20 06:04:43 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.14 2005/08/02 13:03:21 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,9 +46,9 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/07/20 06:04:43 $
- * @module commonclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/02 13:03:21 $
+ * @module commonclient
  */
 
 public class CharacteristicAddDialog {	

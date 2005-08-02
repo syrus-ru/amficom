@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: VoidCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,9 +16,9 @@ package com.syrus.AMFICOM.client.model;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
- * @module commonclient_v1
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
+ * @module commonclient
+ * @author $Author: arseniy $
  */
 public final class VoidCommand extends AbstractCommand {
 

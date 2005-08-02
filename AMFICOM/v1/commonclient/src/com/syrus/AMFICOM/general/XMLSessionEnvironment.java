@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.3 2005/08/01 14:07:44 arseniy Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/01 14:07:44 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
  * @author $Author: arseniy $
- * @module commonclient_v1
+ * @module commonclient
  */
 public final class XMLSessionEnvironment {
 	private XMLPoolContext poolContext;

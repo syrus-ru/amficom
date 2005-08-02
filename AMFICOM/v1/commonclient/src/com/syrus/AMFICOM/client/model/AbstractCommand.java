@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCommand.java,v 1.3 2005/06/06 14:52:47 bob Exp $
+ * $Id: AbstractCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module commonclient_v1
+ * @module commonclient
  */
 public abstract class AbstractCommand implements Command {
 
