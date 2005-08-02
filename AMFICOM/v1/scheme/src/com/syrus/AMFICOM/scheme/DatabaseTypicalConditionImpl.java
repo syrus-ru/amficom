@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseTypicalConditionImpl.java,v 1.9 2005/08/01 11:12:05 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.10 2005/08/02 08:40:42 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/01 11:12:05 $
+ * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 08:40:42 $
  * @module scheme
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -35,6 +35,11 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 			case ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE:
 				if (this.condition.getKey().equals(SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE)) {
 					return SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE;
+				}
+				break;
+			case ObjectEntities.SCHEME_CODE:
+				if (this.condition.getKey().equals(SchemeWrapper.COLUMN_KIND)) {
+					return SchemeWrapper.COLUMN_KIND;
 				}
 				break;
 			default:

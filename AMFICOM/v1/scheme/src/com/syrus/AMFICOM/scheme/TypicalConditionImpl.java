@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.9 2005/07/25 19:33:08 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.10 2005/08/02 08:40:42 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import java.util.Set;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/07/25 19:33:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/08/02 08:40:42 $
  * @module scheme
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -127,6 +127,8 @@ final class TypicalConditionImpl extends TypicalCondition {
 		Wrapper wrapper;
 		if (storableObject instanceof SchemeMonitoringSolution) {
 			wrapper = SchemeMonitoringSolutionWrapper.getInstance();
+		} else if (storableObject instanceof Scheme) {
+			wrapper = SchemeWrapper.getInstance();
 		} else {
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
