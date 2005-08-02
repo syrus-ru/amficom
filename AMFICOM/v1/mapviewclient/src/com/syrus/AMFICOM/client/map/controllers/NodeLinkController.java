@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.15 2005/07/14 15:37:04 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.16 2005/08/02 07:58:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/07/14 15:37:04 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/02 07:58:37 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -115,13 +115,8 @@ public final class NodeLinkController extends AbstractLinkController {
 	public boolean isSelectionVisible(MapElement mapElement) {
 		if(!(mapElement instanceof NodeLink))
 			return false;
-
 		NodeLink nodeLink = (NodeLink )mapElement;
-
-		PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(nodeLink.getPhysicalLink());
-
-		return nodeLink.isSelected() 
-			|| plc.isSelectionVisible(nodeLink.getPhysicalLink());
+		return nodeLink.isSelected(); 
 	}
 
 	/**
@@ -176,7 +171,7 @@ public final class NodeLinkController extends AbstractLinkController {
 	
 
 		f = System.currentTimeMillis();
-		paint(nodeLink, g, visibleBounds, stroke, color);
+		paint(nodeLink, g, visibleBounds, stroke, color, isSelectionVisible(nodeLink));
 		d = System.currentTimeMillis();
 		MapViewController.addTime4(d - f);
 		
@@ -261,7 +256,8 @@ public final class NodeLinkController extends AbstractLinkController {
 			Graphics g, 
 			Rectangle2D.Double visibleBounds, 
 			Stroke stroke, 
-			Color color)
+			Color color,
+			boolean selectionVisible)
 			throws MapConnectionException, MapDataException {
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
@@ -286,7 +282,7 @@ public final class NodeLinkController extends AbstractLinkController {
 			p.setColor(color);
 		}
 
-		if(isSelectionVisible(nodeLink)) {
+		if(selectionVisible) {
 			p.setColor(MapPropertiesManager.getSelectionColor());
 			p.setStroke(new BasicStroke(MapPropertiesManager.getSelectionThickness()));
 		}
