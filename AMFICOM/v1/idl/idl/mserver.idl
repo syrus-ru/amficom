@@ -14,7 +14,7 @@ module AMFICOM {
 module mserver {
 module corba {
 
-	interface MServer : general::corba::CommonServer {
+	interface MServer : general::corba::CommonServer, general::corba::IdentifierGeneratorServer {
 		//Ничего особенного
 	};
 
