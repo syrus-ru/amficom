@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.23 2005/07/20 17:57:47 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.24 2005/08/02 08:00:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/07/20 17:57:47 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/02 08:00:57 $
  * @module mapviewclient_v1
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -101,7 +101,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 
 		PhysicalLink link = (PhysicalLink )mapElement;
 
-		return link.isSelected() || link.isSelectionVisible();
+		return link.isSelected();
 	}
 
 	/**
@@ -178,12 +178,11 @@ public class PhysicalLinkController extends AbstractLinkController {
 			showName = true;
 		}
 
-		link.setSelectionVisible(selectionVisible);
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodelink = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer
 				.getMapViewController().getController(nodelink);
-			nlc.paint(nodelink, g, visibleBounds, stroke, color);
+			nlc.paint(nodelink, g, visibleBounds, stroke, color, selectionVisible);
 			
 			if(showName) {
 				MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
@@ -221,7 +220,6 @@ public class PhysicalLinkController extends AbstractLinkController {
 				showName = false;
 			}
 		}
-		link.setSelectionVisible(false);
 	}
 
 	/**
