@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.17 2005/08/02 12:41:00 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.18 2005/08/02 19:41:25 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/02 12:41:00 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/02 19:41:25 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -105,7 +106,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		assert StorableObject.getEntityCodeOfIdentifiables(loadedObjects) == entityCode : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		objects.addAll(loadedObjects);
 
-		insertWithDependencies(loadObjectsMap);
+		this.insertWithDependencies(loadObjectsMap);
 
 		return objects;
 	}
@@ -123,17 +124,18 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
 		final Map<Short, Set<StorableObject>> levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>(1);
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		final short entityCode = condition.getEntityCode().shortValue();
+		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		levelLoadObjectsMap.put(new Short(entityCode), (Set<StorableObject>) loadedObjects);
 		loadObjectsMap.put(new Integer(0), levelLoadObjectsMap);
 
-		final Map<Short, Set<Identifier>> missingDependencesMap = createMissingDependenciesMap((Set<StorableObject>) loadedObjects);
+		final Map<Short, Set<Identifier>> missingDependencesMap = this.createMissingDependenciesMap((Set<StorableObject>) loadedObjects);
 		for (final Short entityKey : missingDependencesMap.keySet()) {
 			this.loadStorableObjectsWithDependencies(loadObjectsMap, 1, missingDependencesMap.get(entityKey));
 		}
 
-		insertWithDependencies(loadObjectsMap);
+		this.insertWithDependencies(loadObjectsMap);
 
 		return objects;
 	}
@@ -162,7 +164,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		}
 		entityLevelLoadObjects.addAll(loadedObjects);
 
-		final Map<Short, Set<Identifier>> missingDependencesMap = createMissingDependenciesMap(loadedObjects);
+		final Map<Short, Set<Identifier>> missingDependencesMap = this.createMissingDependenciesMap(loadedObjects);
 		for (final Short entityKey : missingDependencesMap.keySet()) {
 			this.loadStorableObjectsWithDependencies(loadObjectsMap,
 					dependencyLevel + 1,
@@ -171,7 +173,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 	}
 
-	private static Map<Short, Set<Identifier>> createMissingDependenciesMap(final Set<StorableObject> storableObjects) {
+	private Map<Short, Set<Identifier>> createMissingDependenciesMap(final Set<StorableObject> storableObjects) {
 		final Map<Short, Set<Identifier>> missingDependencesMap = new HashMap<Short, Set<Identifier>>();
 		for (final StorableObject storableObject : storableObjects) {
 			final Set<Identifiable> dependencies = storableObject.getDependencies();
@@ -198,7 +200,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		return missingDependencesMap;
 	}
 
-	private static void insertWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> dependenciesMap) {
+	private void insertWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> dependenciesMap) {
 		for (final Integer dependencyKey : dependenciesMap.keySet()) {
 			final Map<Short, Set<StorableObject>> levelLoadObjectsMap = dependenciesMap.get(dependencyKey);
 			for (final Short entityKey : levelLoadObjectsMap.keySet()) {
@@ -214,5 +216,25 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		}
 	}
 
+	@Override
+	public final void saveStorableObjects(final Set<StorableObject> storableObjects) throws ApplicationException {
+		assert storableObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (storableObjects.isEmpty()) {
+			return;
+		}
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(storableObjects);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		switch (entityCode) {
+			case MEASUREMENT_CODE:
+			case ANALYSIS_CODE:
+			case EVALUATION_CODE:
+			case TEST_CODE:
+				this.databaseObjectLoader.saveStorableObjects(storableObjects);
+				super.saveStorableObjects(storableObjects);
+			default:
+				this.databaseObjectLoader.saveStorableObjects(storableObjects);
+		}
+	}
 
 }
