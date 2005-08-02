@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.3 2005/05/18 13:29:31 bass Exp $
+ * $Id: PasswordVerifier.java,v 1.4 2005/08/02 11:30:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import java.util.regex.Pattern;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.3 $, $Date: 2005/05/18 13:29:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/02 11:30:28 $
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
+ * @author $Author: arseniy $
  * @module leserver_v1
  * @see "<b><tt>crypt(3)</tt></b> manual entry."
  */
@@ -219,8 +219,7 @@ public final class PasswordVerifier {
 
 		int bufferPosition = 0;
 
-		System.arraycopy(MD5_SALT_PREFIX_BYTES, 0, buffer,
-			bufferPosition, MD5_SALT_PREFIX_LENGTH);
+		System.arraycopy(MD5_SALT_PREFIX_BYTES, 0, buffer, bufferPosition, MD5_SALT_PREFIX_LENGTH);
 		bufferPosition += MD5_SALT_PREFIX_LENGTH;
 
 		System.arraycopy(innerSalt, 0, buffer, bufferPosition,
@@ -230,24 +229,19 @@ public final class PasswordVerifier {
 		buffer[bufferPosition] = MD5_SALT_TERMINATOR;
 		bufferPosition++;
 
-		base64From24Bit(altResult[0], altResult[6], altResult[12],
-			buffer, bufferPosition, 4);
+		base64From24Bit(altResult[0], altResult[6], altResult[12], buffer, bufferPosition, 4);
 		bufferPosition += 4;
 
-		base64From24Bit(altResult[1], altResult[7], altResult[13],
-			buffer, bufferPosition, 4);
+		base64From24Bit(altResult[1], altResult[7], altResult[13], buffer, bufferPosition, 4);
 		bufferPosition += 4;
 
-		base64From24Bit(altResult[2], altResult[8], altResult[14],
-			buffer, bufferPosition, 4);
+		base64From24Bit(altResult[2], altResult[8], altResult[14], buffer, bufferPosition, 4);
 		bufferPosition += 4;
 
-		base64From24Bit(altResult[3], altResult[9], altResult[15],
-			buffer, bufferPosition, 4);
+		base64From24Bit(altResult[3], altResult[9], altResult[15], buffer, bufferPosition, 4);
 		bufferPosition += 4;
 
-		base64From24Bit(altResult[4], altResult[10], altResult[5],
-			buffer, bufferPosition, 4);
+		base64From24Bit(altResult[4], altResult[10], altResult[5], buffer, bufferPosition, 4);
 		bufferPosition += 4;
 
 		base64From24Bit((byte) 0, (byte) 0, altResult[11], buffer,
