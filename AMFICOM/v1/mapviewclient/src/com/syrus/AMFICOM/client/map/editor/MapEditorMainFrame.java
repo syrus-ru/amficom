@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.46 2005/07/07 11:47:05 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.47 2005/08/02 08:13:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,10 +19,19 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewLibraryCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewLinkTypeCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewMapCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewSiteTypeCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorNewViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorOpenLibraryCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorOpenMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorOpenViewCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorRemoveLibraryCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorRemoveLinkTypeCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorRemoveSiteTypeCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveLibraryAsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveLibraryCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveMapAsCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveMapCommand;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorSaveViewAsCommand;
@@ -39,6 +48,8 @@ import com.syrus.AMFICOM.client.map.command.map.MapAddExternalNodeCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapAddMapCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapExportCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapImportCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapLibraryExportCommand;
+import com.syrus.AMFICOM.client.map.command.map.MapLibraryImportCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapRemoveMapCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewAddSchemeCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapViewRemoveSchemeCommand;
@@ -66,7 +77,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.46 $, $Date: 2005/07/07 11:47:05 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/02 08:13:05 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -159,15 +170,6 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 						this.desktopPane, 
 						this.aContext));
 
-		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, 
-				new MapViewAddSchemeCommand(
-						this.desktopPane, 
-						this.aContext));
-		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, 
-				new MapViewRemoveSchemeCommand(
-						this.desktopPane, 
-						this.aContext));
-
 		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, 
 				new MapEditorNewViewCommand(
 						this.desktopPane, 
@@ -186,6 +188,59 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 						this.aContext));
 		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, 
 				new MapEditorSaveViewAsCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, 
+				new MapViewAddSchemeCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, 
+				new MapViewRemoveSchemeCommand(
+						this.desktopPane, 
+						this.aContext));
+
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW, 
+				new MapEditorNewLibraryCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, 
+				new MapEditorOpenLibraryCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, 
+				new MapEditorRemoveLibraryCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, 
+				new MapEditorSaveLibraryCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS, 
+				new MapEditorSaveLibraryAsCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, 
+				new MapLibraryExportCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, 
+				new MapLibraryImportCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, 
+				new MapEditorNewSiteTypeCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, 
+				new MapEditorRemoveSiteTypeCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, 
+				new MapEditorNewLinkTypeCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, 
+				new MapEditorRemoveLinkTypeCommand(
 						this.desktopPane, 
 						this.aContext));
 

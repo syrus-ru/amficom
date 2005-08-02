@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.18 2005/06/14 12:07:14 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.19 2005/08/02 08:13:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.18 $, $Date: 2005/06/14 12:07:14 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/02 08:13:05 $
  * @module mapviewclient_v1
  * @author $Author: krupenn $
  */
@@ -44,7 +44,6 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuMapExport = new JMenuItem();
 		final JMenuItem menuMapImport = new JMenuItem();
 	
-	
 		final JMenu menuMapView = new JMenu();
 		final JMenuItem menuMapViewNew = new JMenuItem();
 		final JMenuItem menuMapViewOpen = new JMenuItem();
@@ -53,6 +52,19 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuMapViewSaveAs = new JMenuItem();
 		final JMenuItem menuMapViewAddScheme = new JMenuItem();
 		final JMenuItem menuMapViewRemoveScheme = new JMenuItem();
+	
+		final JMenu menuMapLibrary = new JMenu();
+		final JMenuItem menuMapLibraryNew = new JMenuItem();
+		final JMenuItem menuMapLibraryOpen = new JMenuItem();
+		final JMenuItem menuMapLibrarySave = new JMenuItem();
+		final JMenuItem menuMapLibrarySaveAs = new JMenuItem();
+		final JMenuItem menuMapLibraryRemove = new JMenuItem();
+		final JMenuItem menuMapLibraryExport = new JMenuItem();
+		final JMenuItem menuMapLibraryImport = new JMenuItem();
+		final JMenuItem menuMapLibraryNewSiteType = new JMenuItem();
+		final JMenuItem menuMapLibraryNewLinkType = new JMenuItem();
+		final JMenuItem menuMapLibraryRemoveSiteType = new JMenuItem();
+		final JMenuItem menuMapLibraryRemoveLinkType = new JMenuItem();
 	
 		final JMenu menuView = new JMenu();
 		final JMenuItem menuViewGeneral = new JMenuItem();
@@ -151,6 +163,42 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		menuMapViewRemoveScheme.addActionListener(super.actionAdapter);
 
+		menuMapLibrary.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY));
+		menuMapLibrary.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY);
+		menuMapLibraryNew.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW));
+		menuMapLibraryNew.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW);
+		menuMapLibraryNew.addActionListener(super.actionAdapter);
+		menuMapLibraryOpen.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN));
+		menuMapLibraryOpen.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN);
+		menuMapLibraryOpen.addActionListener(super.actionAdapter);
+		menuMapLibrarySave.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE));
+		menuMapLibrarySave.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE);
+		menuMapLibrarySave.addActionListener(super.actionAdapter);
+		menuMapLibrarySaveAs.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
+		menuMapLibrarySaveAs.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
+		menuMapLibrarySaveAs.addActionListener(super.actionAdapter);
+		menuMapLibraryRemove.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+		menuMapLibraryRemove.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
+		menuMapLibraryRemove.addActionListener(super.actionAdapter);
+		menuMapLibraryExport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
+		menuMapLibraryExport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
+		menuMapLibraryExport.addActionListener(super.actionAdapter);
+		menuMapLibraryImport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT));
+		menuMapLibraryImport.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT);
+		menuMapLibraryImport.addActionListener(super.actionAdapter);
+		menuMapLibraryNewSiteType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE));
+		menuMapLibraryNewSiteType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE);
+		menuMapLibraryNewSiteType.addActionListener(super.actionAdapter);
+		menuMapLibraryNewLinkType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE));
+		menuMapLibraryNewLinkType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE);
+		menuMapLibraryNewLinkType.addActionListener(super.actionAdapter);
+		menuMapLibraryRemoveSiteType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE));
+		menuMapLibraryRemoveSiteType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE);
+		menuMapLibraryRemoveSiteType.addActionListener(super.actionAdapter);
+		menuMapLibraryRemoveLinkType.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE));
+		menuMapLibraryRemoveLinkType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE);
+		menuMapLibraryRemoveLinkType.addActionListener(super.actionAdapter);
+		
 //		menuReport.setText(LangModelGeneral.getString("label_report"));
 		menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
 //		menuReportCreate.setText(LangModelGeneral.getString("label_reportForTemplate"));
@@ -192,10 +240,27 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapView.addSeparator();
 		menuMapView.add(menuMapViewAddScheme);
 		menuMapView.add(menuMapViewRemoveScheme);
+		
+		menuMapLibrary.add(menuMapLibraryNew);
+		menuMapLibrary.add(menuMapLibraryOpen);
+		menuMapLibrary.add(menuMapLibrarySave);
+		menuMapLibrary.add(menuMapLibrarySaveAs);
+		menuMapLibrary.addSeparator();
+		menuMapLibrary.add(menuMapLibraryRemove);
+		menuMapLibrary.addSeparator();
+		menuMapLibrary.add(menuMapLibraryExport);
+		menuMapLibrary.add(menuMapLibraryImport);
+		menuMapLibrary.addSeparator();
+		menuMapLibrary.add(menuMapLibraryNewSiteType);
+		menuMapLibrary.add(menuMapLibraryRemoveSiteType);
+		menuMapLibrary.addSeparator();
+		menuMapLibrary.add(menuMapLibraryNewLinkType);
+		menuMapLibrary.add(menuMapLibraryRemoveLinkType);
 
 		add(menuMap);
 		add(menuMapView);
 		add(menuView);
+		add(menuMapLibrary);
 		add(menuReport);    
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
@@ -292,6 +357,42 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		
 				menuMapViewRemoveScheme.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 				menuMapViewRemoveScheme.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
+
+				menuMapLibrary.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY));
+				menuMapLibrary.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY));
+
+				menuMapLibraryNew.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW));
+				menuMapLibraryNew.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW));
+				
+				menuMapLibraryOpen.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN));
+				menuMapLibraryOpen.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN));
+				
+				menuMapLibrarySave.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE));
+				menuMapLibrarySave.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE));
+				
+				menuMapLibrarySaveAs.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
+				menuMapLibrarySaveAs.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS));
+				
+				menuMapLibraryRemove.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+				menuMapLibraryRemove.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE));
+				
+				menuMapLibraryExport.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
+				menuMapLibraryExport.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT));
+				
+				menuMapLibraryImport.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT));
+				menuMapLibraryImport.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT));
+				
+				menuMapLibraryNewSiteType.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE));
+				menuMapLibraryNewSiteType.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE));
+				
+				menuMapLibraryNewLinkType.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE));
+				menuMapLibraryNewLinkType.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE));
+				
+				menuMapLibraryRemoveSiteType.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE));
+				menuMapLibraryRemoveSiteType.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE));
+				
+				menuMapLibraryRemoveLinkType.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE));
+				menuMapLibraryRemoveLinkType.setEnabled(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE));
 			}
 		});
 
