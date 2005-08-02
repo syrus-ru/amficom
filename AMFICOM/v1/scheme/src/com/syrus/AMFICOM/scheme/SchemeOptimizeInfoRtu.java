@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.14 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.15 2005/08/02 18:28:42 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,52 +8,154 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFORTU_CODE;
+import static java.util.logging.Level.SEVERE;
+
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtuHelper;
+import com.syrus.util.Log;
 
 /**
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/02 18:28:42 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
-		implements ReverseDependencyContainer {
+		implements Namable, ReverseDependencyContainer {
 	private static final long serialVersionUID = 6687067380421014690L;
+
+	private String name;
+
+	private int priceUsd;
+
+	private float rangeDb;
 
 	Identifier parentSchemeOptimizeInfoId;
 
-	@SuppressWarnings("unused")
-	public SchemeOptimizeInfoRtu(final IdlSchemeOptimizeInfoRtu transferable) throws CreateObjectException {
-		throw new UnsupportedOperationException();
+	SchemeOptimizeInfoRtu(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+		super(id);
+
+		try {
+			DatabaseContext.getDatabase(SCHEMEOPTIMIZEINFORTU_CODE).retrieve(this);
+		} catch (final IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
 	}
 
-	Identifier getParentSchemeOptimizeInfoId() {
-		throw new UnsupportedOperationException();
+	SchemeOptimizeInfoRtu(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final int priceUsd,
+			final float rangeDb,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
+		super(id, created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.priceUsd = priceUsd;
+		this.rangeDb = rangeDb;
+		this.parentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
 	}
 
-	public SchemeOptimizeInfo getParentSchemeOptimizeInfo() {
-		throw new UnsupportedOperationException();
+	public SchemeOptimizeInfoRtu(final IdlSchemeOptimizeInfoRtu transferable) {
+		this.fromTransferable(transferable);
 	}
 
-	public void setParentSchemeOptimizeInfo(@SuppressWarnings("unused") final SchemeOptimizeInfo schemeOptimizeInfo) {
-		throw new UnsupportedOperationException();
+	/**
+	 * A shorthand for
+	 * {@link #createInstance(Identifier, String, int, float, SchemeOptimizeInfo)}.
+	 *
+	 * @param creatorId
+	 * @param name
+	 * @param parentSchemeOptimizeInfo
+	 * @throws CreateObjectException
+	 */
+	public static SchemeOptimizeInfoRtu createInstance(final Identifier creatorId,
+			final String name,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
+	throws CreateObjectException {
+		return createInstance(creatorId, name, 0, 0, parentSchemeOptimizeInfo);
+	}
+
+	/**
+	 * @param creatorId
+	 * @param name
+	 * @param priceUsd
+	 * @param rangeDb
+	 * @param parentSchemeOptimizeInfo
+	 * @throws CreateObjectException
+	 */
+	public static SchemeOptimizeInfoRtu createInstance(final Identifier creatorId,
+			final String name,
+			final int priceUsd,
+			final float rangeDb,
+			final SchemeOptimizeInfo parentSchemeOptimizeInfo)
+	throws CreateObjectException {
+		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+		assert parentSchemeOptimizeInfo != null : NON_NULL_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu = new SchemeOptimizeInfoRtu(IdentifierPool.getGeneratedIdentifier(SCHEMEOPTIMIZEINFORTU_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					name,
+					priceUsd,
+					rangeDb,
+					parentSchemeOptimizeInfo);
+			schemeOptimizeInfoRtu.markAsChanged();
+			return schemeOptimizeInfoRtu;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException("SchemeOptimizeInfoRtu.createInstance() | cannot generate identifier ", ige);
+		}
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		throw new UnsupportedOperationException();
+		assert this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.parentSchemeOptimizeInfoId);
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	/**
@@ -64,11 +166,173 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public float getRangeDb() {
+		return this.rangeDb;
+	}
+
+	Identifier getParentSchemeOptimizeInfoId() {
+		assert this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeOptimizeInfoId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+		assert this.parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFORTU_CODE;
+		return this.parentSchemeOptimizeInfoId;
+	}
+
+	/**
+	 * A wrapper around {@link #getParentSchemeOptimizeInfoId()}.
+	 */
+	public SchemeOptimizeInfo getParentSchemeOptimizeInfo() {
+		try {
+			return StorableObjectPool.getStorableObject(this.getParentSchemeOptimizeInfoId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+
+	public int getPriceUsd() {
+		return this.priceUsd;
+	}
+
+	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
 	@Override
 	public IdlSchemeOptimizeInfoRtu getTransferable(final ORB orb) {
-		throw new UnsupportedOperationException();
+		return IdlSchemeOptimizeInfoRtuHelper.init(orb,
+				super.id.getTransferable(),
+				super.created.getTime(),
+				super.modified.getTime(),
+				super.creatorId.getTransferable(),
+				super.modifierId.getTransferable(),
+				super.version.longValue(),
+				this.name,
+				this.priceUsd,
+				this.rangeDb,
+				this.parentSchemeOptimizeInfoId.getTransferable());
+	}
+
+	/**
+	 * @see Namable#setName(String)
+	 */
+	public void setName(final String name) {
+		assert this.name != null && this.name.length() != 0: OBJECT_NOT_INITIALIZED;
+		assert name != null && name.length() != 0: NON_EMPTY_EXPECTED;
+		if (this.name.equals(name)) {
+			return;
+		}
+		this.name = name;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @param rangeDb
+	 */
+	public void setRangeDb(final float rangeDb) {
+		if (this.rangeDb == rangeDb) {
+			return;
+		}
+		this.rangeDb = rangeDb;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @param parentSchemeOptimizeInfoId
+	 */
+	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
+		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
+		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
+		assert parentSchemeOptimizeInfoIdVoid || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFORTU_CODE;
+
+		if (this.parentSchemeOptimizeInfoId.equals(parentSchemeOptimizeInfoId)) {
+			return;
+		}
+		if (parentSchemeOptimizeInfoIdVoid) {
+			StorableObjectPool.delete(super.id);
+			return;
+		}
+		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier)}.
+	 *
+	 * @param schemeOptimizeInfo
+	 */
+	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
+		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(schemeOptimizeInfo));
+	}
+
+	/**
+	 * @param priceUsd
+	 */
+	public void setPriceUsd(final int priceUsd) {
+		if (this.priceUsd == priceUsd) {
+			return;
+		}
+		this.priceUsd = priceUsd;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @param transferable
+	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
+	 */
+	@Override
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (IdlSchemeOptimizeInfoRtu) transferable;
+		try {
+			super.fromTransferable(schemeOptimizeInfoRtu);
+		} catch (final ApplicationException ae) {
+			/*
+			 * Never.
+			 */
+			assert false;
+		}
+		this.name = schemeOptimizeInfoRtu.name;
+		this.priceUsd = schemeOptimizeInfoRtu.priceUsd;
+		this.rangeDb = schemeOptimizeInfoRtu.rangeDb;
+		this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoRtu.parentSchemeOptimizeInfoId);
+	}
+
+	/**
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param name
+	 * @param priceUsd
+	 * @param rangeDb
+	 * @param parentSchemeOptimizeInfoId
+	 */
+	void setAttributes(final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final String name,
+			final int priceUsd,
+			final float rangeDb,
+			final Identifier parentSchemeOptimizeInfoId) {
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert parentSchemeOptimizeInfoId != null && !parentSchemeOptimizeInfoId.isVoid() : NON_VOID_EXPECTED;
+
+			this.name = name;
+			this.priceUsd = priceUsd;
+			this.rangeDb = rangeDb;
+			this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
+		}
 	}
 }
