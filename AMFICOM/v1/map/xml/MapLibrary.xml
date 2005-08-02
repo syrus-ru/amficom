@@ -2,6 +2,9 @@
 <map:library
 	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml">
+    <map:name>default</map:name>
+    <map:codename>defaultlibrary</map:codename>
+    <map:description/>
 	<map:physicallinktypes>
 		<map:physicallinktype>
 			<map:uid>1</map:uid>

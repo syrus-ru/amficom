@@ -12,6 +12,9 @@
 
   <xsd:complexType name="MapLibrary">
     <xsd:all>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="physicallinktypes" type="map:PhysicalLinkTypes" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="sitenodetypes" type="map:SiteNodeTypes" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
