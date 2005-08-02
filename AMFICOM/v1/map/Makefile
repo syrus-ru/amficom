@@ -1,7 +1,7 @@
 MODULE_NAME := map
 
 LIBNAME := $(MODULE_NAME).jar
-ARCHFILE := $(MODULE_NAME).tar.gz
+ARCHFILE := $(MODULE_NAME).tar.bz2
 
 IDL_SOURCES = $(IDLDIR)/map.idl
 
@@ -9,10 +9,22 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
-XMLDIR=./xml
-XMLSRCDIR=$(XMLDIR)/src
-XMLCLASSDIR=$(XMLDIR)/classes
+XMLDIR = xml
+
+ifeq ($(shell hostname -s),bass)
+XMLSRCDIR = $(SRCDIR)
+XMLCLASSDIR = $(CLASSDIR)
+else
+XMLSRCDIR = $(XMLDIR)/src
+XMLCLASSDIR = $(XMLDIR)/classes
+endif
+
+# If XMLBEANS_HOME is defined, search in ${XMLBEANS_HOME}/lib
+ifeq ($(XMLBEANS_HOME),)
 XMLBEANSCLASSPATH=$(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
+else
+XMLBEANSCLASSPATH=$(XMLBEANS_HOME)/lib/xbean.jar:$(XMLBEANS_HOME)/lib/jsr173_api.jar
+endif
 LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
 
@@ -25,8 +37,13 @@ SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
+# If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
+ifeq ($(TROVE4J_HOME),)
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+else
+EXTCLASSPATH := $(TROVE4J_HOME)/lib/trove.jar
+endif
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
 
@@ -35,9 +52,9 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/map \
 		-C $(CLASSDIR) com/syrus/AMFICOM/general
-		
 
-.mach: .corba $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(CLASSDIR)
+
+.mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
@@ -61,11 +78,17 @@ corba: .corba
 
 
 #### XML ####
-.PHONY: xmlinstall
-xmlinstall: $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
-	$(CP) $^ $(LIBDIR)
+.PHONY: xml
+xml: .xml
 
-$(LIBNAME_MAPXML):	$(LIBNAME_GENERALXML)
+.xml: $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+	touch $@
+
+.PHONY: xmlinstall
+xmlinstall: .xml $(LIBDIR)
+	install $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(LIBDIR)
+
+$(LIBNAME_MAPXML): $(LIBNAME_GENERALXML)
 	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBNAME_GENERALXML) \
 		$(XMLDIR)/Map.xsd \
 		$(XMLDIR)/Characteristic.xsd \
@@ -96,23 +119,27 @@ cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map/corba
 	$(RM) .corba
 
-.PHONY: cleanxml
+.PHONY: cleanxml xmlclean
 cleanxml:
+xmlclean:
 	$(RM) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) .xml
 
 #### Install ####
 .PHONY: install
 install: $(LIBNAME) $(LIBDIR)
-	$(CP) $^
+	install $^
 
 #### Archive ####
 .PHONY: arch
 arch:
-	tar -czvf $(ARCHFILE) \
+	tar -cjvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/map.idl \
 		$(SOURCES)
 
 .PHONY: pmd
 pmd:
-	${JAVA} -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
+	$(JAVA) -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
