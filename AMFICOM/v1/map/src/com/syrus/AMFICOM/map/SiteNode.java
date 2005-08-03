@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.62 2005/08/02 18:07:26 arseniy Exp $
+ * $Id: SiteNode.java,v 1.63 2005/08/03 14:31:24 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +40,8 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
+import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -51,8 +55,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/08/02 18:07:26 $
+ * @author $Author: max $
+ * @version $Revision: 1.63 $, $Date: 2005/08/03 14:31:24 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -289,7 +293,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.setLocation(msnes.location);
 
 		try {
-			this.setType((StorableObjectType )StorableObjectPool.getStorableObject(msnes.mapProtoId, true));
+			this.setType((StorableObjectPool.<SiteNodeType>getStorableObject(msnes.mapProtoId, true)));
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -310,7 +314,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		uid.setStringValue(this.id.toString());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
-		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(siteNodeType.getSort().value()));
+		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forInt(siteNodeType.getSort().value()));
 		xmlSiteNode.setX(this.location.getX());
 		xmlSiteNode.setY(this.location.getY());
 		xmlSiteNode.setCity(this.city);
@@ -358,20 +362,20 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
-		if (objects == null || objects.size() == 0) {
+		Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+		if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
 			typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 			condition.setValue(typeCodeName1);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
-			if (objects == null || objects.size() == 0) {
+			siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+			if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
 				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 			}
 		}
 		
-		this.type = (SiteNodeType) objects.iterator().next();
+		this.type = siteNodeTypes.iterator().next();
 
 		this.imageId = this.type.getImageId();
 	}

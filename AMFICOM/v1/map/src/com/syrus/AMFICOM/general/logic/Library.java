@@ -1,5 +1,5 @@
 /*-
- * $Id: Library.java,v 1.4 2005/08/02 18:06:19 arseniy Exp $
+ * $Id: Library.java,v 1.5 2005/08/03 14:33:02 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.Set;
 
 /**
  * @author Andrei Kroupennikov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/02 18:06:19 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/03 14:33:02 $
  * @module map
  */
 public interface Library extends LibraryEntry {
