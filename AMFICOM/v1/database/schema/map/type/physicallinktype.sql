@@ -1,4 +1,4 @@
--- $Id: physicallinktype.sql,v 1.9 2005/08/03 11:46:32 max Exp $
+-- $Id: physicallinktype.sql,v 1.10 2005/08/03 20:06:38 bass Exp $
 
 CREATE TABLE PhysicalLinkType (
  id NUMBER(19),
@@ -8,13 +8,13 @@ CREATE TABLE PhysicalLinkType (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- sort NUMBER(1),
+ sort NUMBER(1) NOT NULL,
  codename VARCHAR2(32 CHAR) NOT NULL,
  name VARCHAR2(64 CHAR),
  description VARCHAR2(256 CHAR),
- dimension_x NUMBER(6),
- dimension_y NUMBER(6),
- is_topological NUMBER(1),
+ dimension_x NUMBER(6) NOT NULL,
+ dimension_y NUMBER(6) NOT NULL,
+ topological NUMBER(1) NOT NULL,
  map_library_id,
 --
  CONSTRAINT phlinktype_pk PRIMARY KEY (id),
@@ -27,6 +27,6 @@ CREATE TABLE PhysicalLinkType (
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.9 2005/08/03 11:46:32 max Exp $';
+COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.10 2005/08/03 20:06:38 bass Exp $';
 
 CREATE SEQUENCE PhysicalLinkType_Seq ORDER;
