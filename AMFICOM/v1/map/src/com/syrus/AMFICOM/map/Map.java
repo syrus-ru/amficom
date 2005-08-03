@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.67 2005/08/02 18:07:25 arseniy Exp $
+ * $Id: Map.java,v 1.68 2005/08/03 16:25:13 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.67 $, $Date: 2005/08/02 18:07:25 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.68 $, $Date: 2005/08/03 16:25:13 $
  * @module map_v1
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -988,40 +988,30 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
 		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
 			xmlTopologicalNodesArray.add(topologicalNode.getXMLTransferable());
-//			com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodes.addNewTopologicalnode();
-//			topologicalNode.fillXMLTransferable(xmlTopologicalNode);
 		}
 		xmlTopologicalNodes.setTopologicalnodeArray(xmlTopologicalNodesArray.toArray(new com.syrus.amficom.map.xml.TopologicalNode[xmlTopologicalNodesArray.size()]));
 
 		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
 		for (final SiteNode siteNode : this.getSiteNodes()) {
 			xmlSiteNodesArray.add(siteNode.getXMLTransferable());
-//			com.syrus.amficom.map.xml.SiteNode xmlSiteNode = xmlSiteNodes.addNewSitenode();
-//			siteNode.fillXMLTransferable(xmlSiteNode);
 		}
 		xmlSiteNodes.setSitenodeArray(xmlSiteNodesArray.toArray(new com.syrus.amficom.map.xml.SiteNode[xmlSiteNodesArray.size()]));
 
 		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
 			xmlPhysicalLinksArray.add(physicalLink.getXMLTransferable());
-//			com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = xmlPhysicalLinks.addNewPhysicallink();
-//			physicalLink.fillXMLTransferable(xmlPhysicalLink);
 		}
 		xmlPhysicalLinks.setPhysicallinkArray(xmlPhysicalLinksArray.toArray(new com.syrus.amficom.map.xml.PhysicalLink[xmlPhysicalLinksArray.size()]));
 
 		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
 		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			xmlNodeLinksArray.add(nodeLink.getXMLTransferable());
-//			com.syrus.amficom.map.xml.NodeLink xmlNodeLink = xmlNodeLinks.addNewNodelink();
-//			nodeLink.fillXMLTransferable(xmlNodeLink);
 		}
 		xmlNodeLinks.setNodelinkArray(xmlNodeLinksArray.toArray(new com.syrus.amficom.map.xml.NodeLink[xmlNodeLinksArray.size()]));
 
 		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
 		for (final Collector collector : this.getCollectors()) {
 			xmlCollectorsArray.add(collector.getXMLTransferable());
-//			com.syrus.amficom.map.xml.Collector xmlCollector = xmlCollectors.addNewCollector();
-//			collector.fillXMLTransferable(xmlCollector);
 		}
 		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new com.syrus.amficom.map.xml.Collector[xmlCollectorsArray.size()]));
 	}
