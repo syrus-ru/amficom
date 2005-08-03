@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.144 2005/07/29 12:39:22 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.145 2005/08/03 16:07:41 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.144 $, $Date: 2005/07/29 12:39:22 $
+ * @version $Revision: 1.145 $, $Date: 2005/08/03 16:07:41 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -470,11 +470,13 @@ public final class StorableObjectPool {
 			final short entityCode = id.getMajor();
 			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
 
-			Set<Identifier> entityDeleteIds = deleteIdsMap.get(new Short(entityCode));
+			final Short entityKey = new Short(entityCode);
+			Set<Identifier> entityDeleteIds = deleteIdsMap.get(entityKey);
 			if (entityDeleteIds == null) {
 				entityDeleteIds = new HashSet<Identifier>();
-				entityDeleteIds.add(id);
+				deleteIdsMap.put(entityKey, entityDeleteIds);
 			}
+			entityDeleteIds.add(id);
 		}
 
 		for (final Short entityKey : deleteIdsMap.keySet()) {
