@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.28 2005/07/20 13:23:17 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.29 2005/08/03 18:52:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.28 $, $Date: 2005/07/20 13:23:17 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/03 18:52:04 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -62,6 +62,7 @@ public final class MapToolBar extends JPanel
 	private JToggleButton moveFixedButton = new JToggleButton();
 
 	private JToggleButton showNodesButton = new JToggleButton();
+	private JToggleButton showIndicationButton = new JToggleButton();
 
 	private JToggleButton showNodeLinkToggleButton = new JToggleButton();
 	private JToggleButton showPhysicalToggleButton = new JToggleButton();
@@ -168,6 +169,14 @@ public final class MapToolBar extends JPanel
 		this.showNodesButton.setMaximumSize(buttonSize);
 		this.showNodesButton.setMinimumSize(buttonSize);
 		this.showNodesButton.setName(MapApplicationModel.MODE_NODES);
+
+		this.showIndicationButton.setIcon(new ImageIcon("images/indication_visible.gif"));
+		this.showIndicationButton.addActionListener(actionAdapter);
+		this.showIndicationButton.setToolTipText(LangModelMap.getString("ViewIndication"));
+		this.showIndicationButton.setPreferredSize(buttonSize);
+		this.showIndicationButton.setMaximumSize(buttonSize);
+		this.showIndicationButton.setMinimumSize(buttonSize);
+		this.showIndicationButton.setName(MapApplicationModel.MODE_INDICATION);
 
 		this.showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif"));
 		this.showNodeLinkToggleButton.addActionListener(actionAdapter);
@@ -410,7 +419,6 @@ public final class MapToolBar extends JPanel
 		innerPanel.add(this.measureDistanceButton, constraints);
 //		this.add(this.moveFixedButton,new GridBagConstraints(7,0,1,1,0,0,GridBagConstraints.WEST,GridBagConstraints.NONE,new Insets(1,0,1,0),0,0));
 
-
 		constraints.gridx = 8;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
@@ -424,8 +432,20 @@ public final class MapToolBar extends JPanel
 		constraints.ipady = 0;
 		innerPanel.add(this.showNodesButton, constraints);
 
-
 		constraints.gridx = 9;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,20,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.showIndicationButton, constraints);
+
+		constraints.gridx = 10;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -438,7 +458,7 @@ public final class MapToolBar extends JPanel
 		constraints.ipady = 0;
 		innerPanel.add(this.showNodeLinkToggleButton, constraints);
 
-		constraints.gridx = 10;
+		constraints.gridx = 11;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -451,7 +471,7 @@ public final class MapToolBar extends JPanel
 		constraints.ipady = 0;
 		innerPanel.add(this.showPhysicalToggleButton, constraints);
 
-		constraints.gridx = 11;
+		constraints.gridx = 12;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -464,7 +484,7 @@ public final class MapToolBar extends JPanel
 		constraints.ipady = 0;
 		innerPanel.add(this.showCablePathToggleButton, constraints);
 
-		constraints.gridx = 12;
+		constraints.gridx = 13;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -478,7 +498,7 @@ public final class MapToolBar extends JPanel
 		innerPanel.add(this.showTransPathToggleButton, constraints);
 
 
-		constraints.gridx = 13;
+		constraints.gridx = 14;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -492,7 +512,7 @@ public final class MapToolBar extends JPanel
 		innerPanel.add(this.nodeSizePanel, constraints);
 
 
-		constraints.gridx = 14;
+		constraints.gridx = 15;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -506,7 +526,7 @@ public final class MapToolBar extends JPanel
 		innerPanel.add(this.optionsButton, constraints);
 
 
-		constraints.gridx = 15;
+		constraints.gridx = 16;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -520,7 +540,7 @@ public final class MapToolBar extends JPanel
 		innerPanel.add(this.layersButton, constraints);
 
 
-		constraints.gridx = 16;
+		constraints.gridx = 17;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
@@ -553,6 +573,7 @@ public final class MapToolBar extends JPanel
 		this.aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_TO_CENTER, b);
 		this.aModel.setEnabled(MapApplicationModel.OPERATION_MOVE_FIXED, b);
 		this.aModel.setEnabled(MapApplicationModel.MODE_NODES, b);
+		this.aModel.setEnabled(MapApplicationModel.MODE_INDICATION, b);
 		this.aModel.setEnabled(MapApplicationModel.OPERATION_HAND_PAN, b);
 		this.aModel.setEnabled(MapApplicationModel.OPERATION_MEASURE_DISTANCE, b);
 
@@ -568,11 +589,15 @@ public final class MapToolBar extends JPanel
 		Command command = this.aModel.getCommand(MapApplicationModel.MODE_NODES);
 		command.setParameter("button", this.showNodesButton);
 
+		command = this.aModel.getCommand(MapApplicationModel.MODE_INDICATION);
+		command.setParameter("button", this.showIndicationButton);
+		
 		// OPERATION_HAND_PAN not accessible with descrete navigation
 		this.aModel.setAccessible(MapApplicationModel.OPERATION_HAND_PAN, !MapPropertiesManager.isDescreteNavigation());
 
 		this.aModel.setSelected(MapApplicationModel.MODE_LINK, true);
 		this.aModel.setSelected(MapApplicationModel.MODE_NODES, true);
+		this.aModel.setSelected(MapApplicationModel.MODE_INDICATION, true);
 		this.aModel.fireModelChanged();
 	}
 
@@ -623,6 +648,10 @@ public final class MapToolBar extends JPanel
 		this.showNodesButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_NODES));
 		this.showNodesButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_NODES));
 		this.showNodesButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_NODES));
+
+		this.showIndicationButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_INDICATION));
+		this.showIndicationButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_INDICATION));
+		this.showIndicationButton.setSelected(this.aModel.isSelected(MapApplicationModel.MODE_INDICATION));
 
 		this.showNodeLinkToggleButton.setVisible(this.aModel.isVisible(MapApplicationModel.MODE_NODE_LINK));
 		this.showNodeLinkToggleButton.setEnabled(this.aModel.isEnabled(MapApplicationModel.MODE_NODE_LINK));
