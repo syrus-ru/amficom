@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkTypeSort.java,v 1.4 2005/07/26 10:56:01 arseniy Exp $
+ * $Id: PhysicalLinkTypeSort.java,v 1.5 2005/08/03 14:29:49 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,12 @@ package com.syrus.AMFICOM.map;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR},
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/07/26 10:56:01 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/03 14:29:49 $
  * @module map_v1
+ * @deprecated use com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort
  */
+
 public class PhysicalLinkTypeSort {
 
 	/** тоннель */
