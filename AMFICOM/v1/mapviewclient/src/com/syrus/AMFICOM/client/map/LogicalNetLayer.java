@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.104 2005/08/02 08:12:21 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.105 2005/08/03 15:30:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,14 +55,13 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeSort;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -76,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.104 $, $Date: 2005/08/02 08:12:21 $
+ * @version $Revision: 1.105 $, $Date: 2005/08/03 15:30:25 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -91,32 +90,6 @@ public final class LogicalNetLayer
 	
 	/** Текущий элемент. */
 	protected MapElement currentMapElement = null;
-
-	public Set<MapLibrary> getMapLibraries() {
-		Set<MapLibrary> mapLibraries = this.mapView.getMap().getMapLibraries();
-		if(mapLibraries.size() == 0) {
-			addMapLibrary(MapLibraryController.getDefaultMapLibrary());
-		}
-		return this.mapView.getMap().getMapLibraries();
-	}
-
-	public void addMapLibrary(MapLibrary mapLibrary) {
-		this.mapView.getMap().addMapLibrary(mapLibrary);
-		this.aContext.getDispatcher().firePropertyChange(
-			new MapEvent(
-				this, 
-				MapEvent.LIBRARY_SET_CHANGED,
-				getMapLibraries()));
-	}
-
-	public void removeMapLibrary(MapLibrary mapLibrary) {
-		this.mapView.getMap().removeMapLibrary(mapLibrary);
-		this.aContext.getDispatcher().firePropertyChange(
-				new MapEvent(
-					this, 
-					MapEvent.LIBRARY_SET_CHANGED,
-					getMapLibraries()));
-	}
 
 	/** 
 	 * фиксированный узел. 
@@ -195,8 +168,7 @@ public final class LogicalNetLayer
 
 		Identifier userId = LoginManager.getUserId();
 
-		LinkTypeController.createDefaults(userId);
-		NodeTypeController.createDefaults(userId);
+		MapLibraryController.createDefaults(userId);
 
 		AlarmMarkerController.init(userId);
 		TopologicalNodeController.init(userId);
@@ -1156,7 +1128,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.104 $, $Date: 2005/08/02 08:12:21 $
+	 * @version $Revision: 1.105 $, $Date: 2005/08/03 15:30:25 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
