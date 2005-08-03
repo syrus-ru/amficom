@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.1 2005/08/02 07:23:05 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.2 2005/08/03 15:37:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.ImportCommand;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
@@ -34,6 +35,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
@@ -43,7 +46,7 @@ import com.syrus.AMFICOM.map.MapLibrary;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/08/02 07:23:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/03 15:37:18 $
  * @module mapviewclient_v1
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -94,11 +97,16 @@ public class MapLibraryImportCommand extends ImportCommand {
 			if(mapLibrary == null)
 				return;
 
-			//todo
-//			StorableObjectPool.putStorableObject(mapLibrary);
-//			StorableObjectPool.flush(mapLibrary.getId());
+			StorableObjectPool.putStorableObject(mapLibrary);
+			StorableObjectPool.flush(mapLibrary, LoginManager.getUserId(), true);
 
-			this.mapFrame.getMapViewer().getLogicalNetLayer().addMapLibrary(mapLibrary);
+			Map map = this.mapFrame.getMapView().getMap();
+			map.addMapLibrary(mapLibrary);
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(
+						this, 
+						MapEvent.LIBRARY_SET_CHANGED,
+						map.getMapLibraries()));
 
 			setResult(Command.RESULT_OK);
 		} catch(DatabaseException e) {
