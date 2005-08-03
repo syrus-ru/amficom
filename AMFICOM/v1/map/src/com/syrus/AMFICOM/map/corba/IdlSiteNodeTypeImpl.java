@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSiteNodeTypeImpl.java,v 1.3 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: IdlSiteNodeTypeImpl.java,v 1.4 2005/08/03 14:33:59 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:44 $
+ * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/08/03 14:33:59 $
  * @module map_v1
  */
 final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
@@ -35,22 +36,26 @@ final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
+			final SiteNodeTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
 			final IdlIdentifier imageId,
-			final boolean topological) {
+			final boolean isTopological,
+			final IdlIdentifier mapLibraryId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
+		this.sort = sort;
 		this.codename = codename;
 		this.name = name;
 		this.description = description;
 		this.imageId = imageId;
-		this.topological = topological;
+		this.isTopological = isTopological;
+		this.mapLibraryId = mapLibraryId;
 	}
 
 	/**
