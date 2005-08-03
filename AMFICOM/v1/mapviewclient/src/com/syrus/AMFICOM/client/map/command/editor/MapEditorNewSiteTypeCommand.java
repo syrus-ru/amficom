@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.2 2005/08/03 15:33:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,10 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -20,7 +23,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 
@@ -34,6 +37,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 
 	public void execute() {
 		try {
+			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 
@@ -41,11 +45,14 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 					"Новый",
 					"",
 					null,//todo default ImageResource
-					true);
+					true,
+					MapLibraryController.getDefaultMapLibrary());
+			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
+			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
 					LangModelMap.getString("type"),
 					siteNodeType,
-					new SiteNodeTypeEditor()) ) {
+					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
 				setResult(Command.RESULT_OK);
 			} else {

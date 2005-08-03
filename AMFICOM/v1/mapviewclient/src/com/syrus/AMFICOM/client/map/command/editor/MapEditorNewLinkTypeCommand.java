@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.2 2005/08/03 15:33:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,10 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkTypeEditor;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -21,7 +24,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 
 public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 
@@ -35,17 +38,22 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 
 	public void execute() {
 		try {
+			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 			PhysicalLinkType physicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					PhysicalLinkTypeSort.TUNNEL, 
 					"codename",
 					"Новый",
 					"",
-					new IntDimension(1, 1));
+					new IntDimension(1, 1),
+					true,
+					MapLibraryController.getDefaultMapLibrary());
+			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
+			physicalLinkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
 					LangModelMap.getString("type"),
 					physicalLinkType,
-					new PhysicalLinkTypeEditor()) ) {
+					physicalLinkTypeEditor) ) {
 				StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);
 				setResult(Command.RESULT_OK);
 			} else {
