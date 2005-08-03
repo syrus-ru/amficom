@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.29 2005/08/02 12:06:01 max Exp $
+ * $Id: map.idl,v 1.30 2005/08/03 11:47:19 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,27 @@ module map {
 /////////////////////// SiteNodeType ////////////////////////
 
 		valuetype IdlSiteNodeType : general::corba::IdlStorableObject {
+			
+			enum SiteNodeTypeSort {
+				SITENODETYPESORT_WELL,
+	 			SITENODETYPESORT_PIQUET,
+				SITENODETYPESORT_ATS,
+				SITENODETYPESORT_BUILDING,
+				SITENODETYPESORT_UNBOUND,
+				SITENODETYPESORT_CABLE_INLET,
+				SITENODETYPESORT_TOWER
+			};
+			
+			public SiteNodeTypeSort sort;
+			
 			public wstring codename;
 			public wstring name;
 			public wstring description;
 
 			public general::corba::IdlIdentifier imageId;
-			public boolean topological;
+			public boolean isTopological;
+			
+			public general::corba::IdlIdentifier mapLibraryId;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -39,11 +54,13 @@ module map {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
+					in SiteNodeTypeSort sort,
 					in wstring codename,
 					in wstring name,
 					in wstring description,
 					in general::corba::IdlIdentifier imageId,
-					in boolean topological);
+					in boolean isTopological,
+					in general::corba::IdlIdentifier mapLibrary);
 		};
 
 
@@ -53,12 +70,28 @@ module map {
 		 * Physical line type such as tunnel, subway, etc.
 		 */
 		valuetype IdlPhysicalLinkType : general::corba::IdlStorableObject {
+			
+			enum PhysicalLinkTypeSort {
+				PHYSICALLINKTYPESORT_TUNNEL,
+				PHYSICALLINKTYPESORT_COLLECTOR,
+				PHYSICALLINKTYPESORT_INDOOR,
+				PHYSICALLINKTYPESORT_SUBMARINE,
+				PHYSICALLINKTYPESORT_OVERHEAD,
+				PHYSICALLINKTYPESORT_UNBOUND
+			};
+			
+			public PhysicalLinkTypeSort sort;
+			
 			public wstring codename;
 			public wstring name;
 			public wstring description;
-
+			
+			public boolean isTopological;
+			
 			public long dimensionX;
 			public long dimensionY;
+			
+			public general::corba::IdlIdentifier mapLibraryId;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -66,11 +99,14 @@ module map {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
+					in PhysicalLinkTypeSort sort,
 					in wstring codename,
 					in wstring name,
 					in wstring description,
 					in long dimensionX,
-					in long dimensionY);
+					in long dimensionY,
+					in boolean isTopological,
+					in general::corba::IdlIdentifier mapLibraryId);
 		};
 
 
