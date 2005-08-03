@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.67 2005/08/02 20:00:49 bass Exp $
+ * $Id: Scheme.java,v 1.68 2005/08/03 17:06:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -66,7 +67,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/08/02 20:00:49 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/03 17:06:28 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -374,7 +375,12 @@ public final class Scheme extends AbstractCloneableDomainMember
 								Boolean.TRUE,
 								OperationSort.OPERATION_EQUALS,
 								SCHEMEMONITORINGSOLUTION_CODE,
-								SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE);
+								SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) {
+					@Override
+					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+						return false;
+					}
+				};
 			}
 			/*
 			 * Search type 1.
