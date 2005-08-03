@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.12 2005/07/25 20:48:15 arseniy Exp $
+ * $Id: DomainWrapper.java,v 1.13 2005/08/03 10:24:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,18 @@
 
 package com.syrus.AMFICOM.administration;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/03 10:24:13 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class DomainWrapper extends StorableObjectWrapper {
@@ -27,7 +30,7 @@ public class DomainWrapper extends StorableObjectWrapper {
 
 	private DomainWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION };
+		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_DOMAIN_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -52,10 +55,15 @@ public class DomainWrapper extends StorableObjectWrapper {
 		final Object value = super.getValue(object, key);
 		if (value == null && object instanceof Domain) {
 			final Domain domain = (Domain) object;
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return domain.getName();
-			if (key.equals(COLUMN_DESCRIPTION))
+			}
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return domain.getDescription();
+			}
+			if (key.equals(COLUMN_DOMAIN_ID)) {
+				return domain.getDomainId();
+			}
 		}
 		return value;
 	}
@@ -67,10 +75,13 @@ public class DomainWrapper extends StorableObjectWrapper {
 	public void setValue(Object object, final String key, final Object value) {
 		if (object instanceof Domain) {
 			final Domain domain = (Domain) object;
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				domain.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				domain.setDescription((String) value);
+			} else if (key.equals(COLUMN_DOMAIN_ID)) {
+				domain.setDomainId((Identifier) value);
+			}
 		}
 	}
 
@@ -96,6 +107,9 @@ public class DomainWrapper extends StorableObjectWrapper {
 		if (key.equals(COLUMN_NAME)
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
+		}
+		if (key.equals(COLUMN_DOMAIN_ID)) {
+			return Identifier.class;
 		}
 		return null;
 	}
