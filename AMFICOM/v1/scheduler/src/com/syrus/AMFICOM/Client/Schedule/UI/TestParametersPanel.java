@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -157,13 +158,13 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.useAnalysisSetups.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					WrapperedListModel wrapperedListModel = (WrapperedListModel) testSetups.getModel();
+					WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
 					Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
-					int selectedIndex = testSetups.getSelectedIndex();
-					testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
-					wrapperedListModel.setElements(msListAnalysisOnly);
+					int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
+					TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
+					wrapperedListModel.setElements(TestParametersPanel.this.msListAnalysisOnly);
 					if (selectedValue != null) {
-						testSetups.setSelectedValue(selectedValue, true);
+						TestParametersPanel.this.testSetups.setSelectedValue(selectedValue, true);
 					}
 					
 					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
@@ -173,13 +174,13 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.useWOAnalysisSetups.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					WrapperedListModel wrapperedListModel = (WrapperedListModel) testSetups.getModel();
+					WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
 					Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
-					int selectedIndex = testSetups.getSelectedIndex();
-					testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
-					wrapperedListModel.setElements(msList);
+					int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
+					TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
+					wrapperedListModel.setElements(TestParametersPanel.this.msList);
 					if (selectedValue != null) {
-						testSetups.setSelectedValue(selectedValue, true);
+						TestParametersPanel.this.testSetups.setSelectedValue(selectedValue, true);
 					}
 
 					if (TestParametersPanel.this.useAnalysisBox.isSelected()) {
@@ -275,12 +276,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 					if (measurementSetup1 == null) {
 						return;
 					}
-					final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));
 					final JPopupMenu popup = new JPopupMenu();
-					popup.add(deleteTestMenuItem);
-					popup.show(objList, e.getX(), e.getY());
-
-					deleteTestMenuItem.addActionListener(new ActionListener() {
+					
+					final JMenuItem msSummaryInfo = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));					
+					msSummaryInfo.addActionListener(new ActionListener() {
 
 						public void actionPerformed(ActionEvent e1) {
 							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
@@ -291,7 +290,39 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 						}
 					});
+					
+					popup.add(msSummaryInfo);
 
+					final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
+					msRename.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent e1) {
+							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
+							String info = (String) wrapper.getValue(measurementSetup1,
+								MeasurementSetupWrapper.SUMMARY_INFO);
+							Object object = JOptionPane.showInputDialog(objList, 
+								LangModelSchedule.getString("Rename Measurement setup") + '\n'
+								+ measurementSetup1.getDescription() + "\n\n"
+								+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
+								+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
+								LangModelSchedule.getString("Rename Measurement setup"),
+								JOptionPane.PLAIN_MESSAGE,
+			                    null,
+			                    null,
+			                    measurementSetup1.getDescription());
+							
+							if (object != null) {
+								measurementSetup1.setDescription((String) object);
+								WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
+								wrapperedListModel.sort();
+							}
+
+						}
+					});
+					popup.add(msRename);
+
+					popup.show(objList, e.getX(), e.getY());
+					
 				}
 			}
 		});
@@ -304,12 +335,12 @@ public class TestParametersPanel implements PropertyChangeListener {
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				if (measurementSetup1 != null) {
 
-					java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
+					Set<Identifier>  selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
 					if (selectedTestIds != null && !selectedTestIds.isEmpty()
 							&& TestParametersPanel.this.propertyChangeEvent == null) {
 						try {
-							java.util.Set measurementSetupIdSet = Collections.singleton(measurementSetup1.getId());
-							java.util.Set storableObjects = StorableObjectPool
+							Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup1.getId());
+							Set<StorableObject> storableObjects = StorableObjectPool
 									.getStorableObjects(selectedTestIds, true);
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 								Test test = (Test) iterator.next();
