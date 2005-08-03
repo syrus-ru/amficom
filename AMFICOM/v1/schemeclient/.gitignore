@@ -24,7 +24,7 @@ oldsrc
 Makefile
 makescheme
 mk.bat
-*.properties
+common.properties
 r2.bat
 run.bat
 SchemeV2.jpx
