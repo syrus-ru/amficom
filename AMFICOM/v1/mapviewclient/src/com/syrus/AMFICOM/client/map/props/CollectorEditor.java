@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
