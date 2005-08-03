@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.27 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.28 2005/08/03 15:48:56 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/03 15:48:56 $
  * @module mapviewclient_v1
  */
 public final class MapMarkElementStrategy extends AbstractMapStrategy 
@@ -118,29 +118,29 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 		if (super.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 		{
 			NodeLink nodeLink = this.mark.getNodeLink();
-			AbstractNode sn = this.mark.getStartNode();
-			AbstractNode en = nodeLink.getOtherNode(sn);
+			AbstractNode startNode = this.mark.getStartNode();
+			AbstractNode endNode = nodeLink.getOtherNode(startNode);
 			Point anchorPoint = converter.convertMapToScreen(this.mark.getLocation());
-			Point start = converter.convertMapToScreen(sn.getLocation());
-			Point end = converter.convertMapToScreen(en.getLocation());
+			Point startPoint = converter.convertMapToScreen(startNode.getLocation());
+			Point endPoint = converter.convertMapToScreen(endNode.getLocation());
 			double lengthFromStartNode;
-			MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
-			lengthFromStartNode = md.lengthFromStartNode;
-			while (lengthFromStartNode > md.nodeLinkLength)
+			MotionDescriptor motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+			lengthFromStartNode = motionDescriptor.lengthFromStartNode;
+			while (lengthFromStartNode > motionDescriptor.nodeLinkLength)
 			{
 				nodeLink = this.mark.getPhysicalLink().nextNodeLink(nodeLink);
 				if (nodeLink == null)
-					lengthFromStartNode = md.nodeLinkLength;
+					lengthFromStartNode = motionDescriptor.nodeLinkLength;
 				else
 				{
-					sn = en;
-					en = nodeLink.getOtherNode(sn);
+					startNode = endNode;
+					endNode = nodeLink.getOtherNode(startNode);
 					this.mark.setNodeLink(nodeLink);
-					this.mark.setStartNode(sn);
-					start = converter.convertMapToScreen(sn.getLocation());
-					end = converter.convertMapToScreen(en.getLocation());
-					md = new MotionDescriptor(start, end, anchorPoint, point);
-					lengthFromStartNode = md.lengthFromStartNode;
+					this.mark.setStartNode(startNode);
+					startPoint = converter.convertMapToScreen(startNode.getLocation());
+					endPoint = converter.convertMapToScreen(endNode.getLocation());
+					motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+					lengthFromStartNode = motionDescriptor.lengthFromStartNode;
 					if (lengthFromStartNode < 0)
 					{
 						lengthFromStartNode = 0;
@@ -155,17 +155,17 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 					lengthFromStartNode = 0;
 				else
 				{
-					en = sn;
-					sn = nodeLink.getOtherNode(en);
+					endNode = startNode;
+					startNode = nodeLink.getOtherNode(endNode);
 					this.mark.setNodeLink(nodeLink);
-					this.mark.setStartNode(sn);
-					start = converter.convertMapToScreen(sn.getLocation());
-					end = converter.convertMapToScreen(en.getLocation());
-					md = new MotionDescriptor(start, end, anchorPoint, point);
-					lengthFromStartNode = md.lengthFromStartNode;
-					if (lengthFromStartNode > md.nodeLinkLength)
+					this.mark.setStartNode(startNode);
+					startPoint = converter.convertMapToScreen(startNode.getLocation());
+					endPoint = converter.convertMapToScreen(endNode.getLocation());
+					motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+					lengthFromStartNode = motionDescriptor.lengthFromStartNode;
+					if (lengthFromStartNode > motionDescriptor.nodeLinkLength)
 					{
-						lengthFromStartNode = md.nodeLinkLength;
+						lengthFromStartNode = motionDescriptor.nodeLinkLength;
 						break;
 					}
 				}

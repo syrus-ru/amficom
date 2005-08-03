@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.26 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.27 2005/08/03 15:48:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.Selection;
  * Стратегия управления маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/03 15:48:56 $
  * @module mapviewclient_v1
  */
 public final class MapMarkerStrategy extends AbstractMapStrategy 
@@ -107,30 +107,30 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 		if (super.logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 		{
 			NodeLink nodeLink = this.marker.getNodeLink();
-			AbstractNode sn = this.marker.getStartNode();
-			AbstractNode en = this.marker.getEndNode();
+			AbstractNode startNode = this.marker.getStartNode();
+			AbstractNode endNode = this.marker.getEndNode();
 			Point anchorPoint = converter.convertMapToScreen(this.marker.getLocation());
-			Point start = converter.convertMapToScreen(sn.getLocation());
-			Point end = converter.convertMapToScreen(en.getLocation());
+			Point startPoint = converter.convertMapToScreen(startNode.getLocation());
+			Point endPoint = converter.convertMapToScreen(endNode.getLocation());
 			double lengthFromStartNode;
-			MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
-			lengthFromStartNode = md.lengthFromStartNode;
-			while (lengthFromStartNode > md.nodeLinkLength)
+			MotionDescriptor motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+			lengthFromStartNode = motionDescriptor.lengthFromStartNode;
+			while (lengthFromStartNode > motionDescriptor.nodeLinkLength)
 			{
 				nodeLink = this.marker.nextNodeLink();
 				if (nodeLink == null)
-					lengthFromStartNode = md.nodeLinkLength;
+					lengthFromStartNode = motionDescriptor.nodeLinkLength;
 				else
 				{
-					sn = en;
-					en = nodeLink.getOtherNode(sn);
+					startNode = endNode;
+					endNode = nodeLink.getOtherNode(startNode);
 					this.marker.setNodeLink(nodeLink);
-					this.marker.setStartNode(sn);
-					this.marker.setEndNode(en);
-					start = converter.convertMapToScreen(sn.getLocation());
-					end = converter.convertMapToScreen(en.getLocation());
-					md = new MotionDescriptor(start, end, anchorPoint, point);
-					lengthFromStartNode = md.lengthFromStartNode;
+					this.marker.setStartNode(startNode);
+					this.marker.setEndNode(endNode);
+					startPoint = converter.convertMapToScreen(startNode.getLocation());
+					endPoint = converter.convertMapToScreen(endNode.getLocation());
+					motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+					lengthFromStartNode = motionDescriptor.lengthFromStartNode;
 					if (lengthFromStartNode < 0)
 					{
 						lengthFromStartNode = 0;
@@ -145,18 +145,18 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 					lengthFromStartNode = 0;
 				else
 				{
-					en = sn;
-					sn = nodeLink.getOtherNode(en);
+					endNode = startNode;
+					startNode = nodeLink.getOtherNode(endNode);
 					this.marker.setNodeLink(nodeLink);
-					this.marker.setStartNode(sn);
-					this.marker.setEndNode(en);
-					start = converter.convertMapToScreen(sn.getLocation());
-					end = converter.convertMapToScreen(en.getLocation());
-					md = new MotionDescriptor(start, end, anchorPoint, point);
-					lengthFromStartNode = md.lengthFromStartNode;
-					if (lengthFromStartNode > md.nodeLinkLength)
+					this.marker.setStartNode(startNode);
+					this.marker.setEndNode(endNode);
+					startPoint = converter.convertMapToScreen(startNode.getLocation());
+					endPoint = converter.convertMapToScreen(endNode.getLocation());
+					motionDescriptor = new MotionDescriptor(startPoint, endPoint, anchorPoint, point);
+					lengthFromStartNode = motionDescriptor.lengthFromStartNode;
+					if (lengthFromStartNode > motionDescriptor.nodeLinkLength)
 					{
-						lengthFromStartNode = md.nodeLinkLength;
+						lengthFromStartNode = motionDescriptor.nodeLinkLength;
 						break;
 					}
 				}
