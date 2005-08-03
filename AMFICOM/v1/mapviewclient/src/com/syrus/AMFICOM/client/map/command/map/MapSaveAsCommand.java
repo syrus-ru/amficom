@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.22 2005/08/02 07:31:59 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.23 2005/08/03 15:38:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.command.map;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/08/02 07:31:59 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/03 15:38:01 $
  * @module mapviewclient_v1
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -48,9 +49,12 @@ public class MapSaveAsCommand extends AbstractCommand {
 		Identifier domainId = LoginManager.getDomainId();
 
 		try {
-			this.newMap = Map.createInstance(userId, domainId, this.map
-					.getName()
-					+ "(Copy)", "");
+			this.newMap = Map.createInstance(
+					userId, 
+					domainId, 
+					this.map .getName() + "(Copy)", 
+					"");
+			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
 			return;

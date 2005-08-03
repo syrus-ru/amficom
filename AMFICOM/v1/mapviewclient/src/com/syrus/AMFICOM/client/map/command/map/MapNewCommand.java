@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.21 2005/07/11 13:18:04 bass Exp $
+ * $Id: MapNewCommand.java,v 1.22 2005/08/03 15:38:01 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.client.map.command.map;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
+import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -26,8 +27,8 @@ import com.syrus.util.Log;
 
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/08/03 15:38:01 $
  * @module mapviewclient_v1
  */
 public class MapNewCommand extends AbstractCommand {
@@ -52,8 +53,12 @@ public class MapNewCommand extends AbstractCommand {
 			Identifier userId = LoginManager.getUserId();
 			Identifier domainId = LoginManager.getDomainId();
 
-			this.map = Map.createInstance(userId, domainId, LangModelMap
-					.getString("New"), "");
+			this.map = Map.createInstance(
+					userId, 
+					domainId, 
+					LangModelMap.getString("New"), 
+					"");
+			this.map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(Exception e) {
 			e.printStackTrace();
 			this.map = null;
