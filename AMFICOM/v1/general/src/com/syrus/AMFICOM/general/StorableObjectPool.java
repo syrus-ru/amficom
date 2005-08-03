@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.145 2005/08/03 16:07:41 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.146 2005/08/03 16:45:20 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2005/08/03 16:07:41 $
+ * @version $Revision: 1.146 $, $Date: 2005/08/03 16:45:20 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -634,31 +634,40 @@ public final class StorableObjectPool {
 
 		lockSavingObjects(ids);
 
-		final Map<Identifier, StorableObjectVersion> versionsMap = objectLoader.getRemoteVersions(ids);
 		final Set<StorableObject> setUpdatedObjects = new HashSet<StorableObject>(storableObjects.size());
-		for (final StorableObject storableObject : storableObjects) {
-			final Identifier id = storableObject.getId();
-			final StorableObjectVersion version = storableObject.getVersion();
-			final StorableObjectVersion remoteVersion = versionsMap.get(id);
-			if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION) || version.equals(remoteVersion) || force) {
-				storableObject.setUpdated(modifierId);
-				setUpdatedObjects.add(storableObject);
-			}
-			else {
-				for (final StorableObject setUpdatedObject : setUpdatedObjects) {
-					setUpdatedObject.rollbackUpdate();
+		try {
+			final Map<Identifier, StorableObjectVersion> versionsMap = objectLoader.getRemoteVersions(ids);
+			for (final StorableObject storableObject : storableObjects) {
+				final Identifier id = storableObject.getId();
+				final StorableObjectVersion version = storableObject.getVersion();
+				final StorableObjectVersion remoteVersion = versionsMap.get(id);
+				if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION) || version.equals(remoteVersion) || force) {
+					storableObject.setUpdated(modifierId);
+					setUpdatedObjects.add(storableObject);
 				}
-				unlockSavingObjects(ids);
-				throw new VersionCollisionException("Object '" + id + "'", version.longValue(), remoteVersion.longValue());
+				else {
+					throw new VersionCollisionException("Object '" + id + "'", version.longValue(), remoteVersion.longValue());
+				}
+			}
+
+			Log.debugMessage("StorableObjectPool.saveStorableObjects | Saving objects: " + Identifier.createStrings(storableObjects),
+					Log.DEBUGLEVEL08);
+			objectLoader.saveStorableObjects(storableObjects);
+
+			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
+				setUpdatedObject.cleanupUpdate();
 			}
 		}
-
-		objectLoader.saveStorableObjects(storableObjects);
-
-		for (final StorableObject setUpdatedObject : setUpdatedObjects) {
-			setUpdatedObject.cleanupUpdate();
+		catch (final ApplicationException ae) {
+			for (final StorableObject setUpdatedObject : setUpdatedObjects) {
+				setUpdatedObject.rollbackUpdate();
+			}
+			throw ae;
 		}
-		unlockSavingObjects(ids);
+		finally {
+			unlockSavingObjects(ids);
+		}
+
 	}
 
 	private static void lockSavingObjects(final Set<Identifier> savingObjectsIds) throws UpdateObjectException {
