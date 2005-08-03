@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.174 2005/08/01 12:17:17 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.175 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.174 $, $Date: 2005/08/01 12:17:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.175 $, $Date: 2005/08/03 19:53:00 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -234,8 +234,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -257,7 +258,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 						if (statement != null)
 							statement.close();
 					} finally {
-						DatabaseConnection.releaseConnection(connection);
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+						}
 					}
 				}
 			} catch (SQLException sqle) {
@@ -278,8 +281,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		final String sql = this.retrieveQuery(conditionQuery);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -301,7 +305,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -369,8 +375,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -405,7 +412,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -418,8 +427,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.isPresentInDatabase | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -444,7 +454,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -462,8 +474,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(tableName + "Database.retrieveVersions | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -490,7 +503,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -516,8 +531,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(tableName + "Database.retrieveVersions | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -543,7 +559,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 		
@@ -571,9 +589,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				+ CLOSE_BRACKET;
 
 		PreparedStatement preparedStatement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		Identifier id = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
@@ -596,7 +615,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			connection.commit();
 		} catch (SQLException sqle) {
 			try {
-				connection.rollback();
+				if (connection != null) {
+					connection.rollback();
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
@@ -611,7 +632,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -639,8 +662,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		PreparedStatement preparedStatement = null;
 		Identifier id = null;
 		Identifier linkedId = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			for (final Iterator<Identifier> it1 = idLinkedObjectIdsMap.keySet().iterator(); it1.hasNext();) {
 				id = it1.next();
@@ -668,7 +692,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -747,10 +773,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		sql.append(EQUALS);
 		sql.append(QUESTION);
 
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		Identifier id = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql.toString());
 			Log.debugMessage(this.getEntityName() + "Database.updateEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
@@ -778,7 +805,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		catch (SQLException sqle) {
 			try {
-				connection.rollback();
+				if (connection != null) {
+					connection.rollback();
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
@@ -796,7 +825,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -826,8 +857,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -855,7 +887,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -934,8 +968,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public void delete(final Identifier id) {
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			final String sql = SQL_DELETE_FROM + this.getEntityName()
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
@@ -951,7 +986,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -964,8 +1001,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.delete(List) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
@@ -980,7 +1018,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -1006,8 +1046,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -1022,7 +1063,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

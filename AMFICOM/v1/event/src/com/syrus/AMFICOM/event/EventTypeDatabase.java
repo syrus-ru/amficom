@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.35 2005/07/27 15:44:14 max Exp $
+ * $Id: EventTypeDatabase.java,v 1.36 2005/08/03 19:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/27 15:44:14 $
- * @author $Author: max $
+ * @version $Revision: 1.36 $, $Date: 2005/08/03 19:53:01 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -163,8 +163,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveDBUserAlertKindsMap | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -205,7 +206,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -370,9 +373,10 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				+ QUESTION
 				+ CLOSE_BRACKET;
 
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final Identifier eventTypeId : insertUserAlertKindsMap.keySet()) {
@@ -405,7 +409,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -433,8 +439,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.deleteUserAlertKinds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -453,7 +460,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -464,8 +473,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTTYPPARTYPLINK
@@ -489,7 +499,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -506,8 +518,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 
 			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
@@ -529,7 +542,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

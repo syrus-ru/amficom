@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.99 2005/07/27 19:06:38 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.100 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/07/27 19:06:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.100 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -263,8 +263,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResultParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -302,7 +303,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -345,8 +348,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			for (int i = 0; i < setParameters.length; i++) {
 				parameterId = setParameters[i].getId();
@@ -377,7 +381,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -389,8 +395,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 
 		final String resultIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER
 					+ SQL_WHERE + ResultWrapper.LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
@@ -407,7 +414,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

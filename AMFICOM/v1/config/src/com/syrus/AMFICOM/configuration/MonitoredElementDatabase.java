@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.80 2005/07/27 15:58:51 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.81 2005/08/03 19:53:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/07/27 15:58:51 $
+ * @version $Revision: 1.81 $, $Date: 2005/08/03 19:53:02 $
  * @author $Author: bass $
  * @module config
  */
@@ -176,8 +176,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql,
 				Log.DEBUGLEVEL09);
@@ -200,7 +201,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 		monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
@@ -311,8 +314,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 
 		PreparedStatement preparedStatement = null;
 		Identifier mdmId = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(buffer.toString());
 			for (final Iterator<Identifier> it = mdmIds.iterator(); it.hasNext();) {
 				mdmId = it.next();
@@ -341,7 +345,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -435,8 +441,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
 
 			Statement statement = null;
-			final Connection connection = DatabaseConnection.getConnection();
+			Connection connection = null;
 			try {
+				connection = DatabaseConnection.getConnection();
 				statement = connection.createStatement();
 				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
 				statement.executeUpdate(sql1.toString());
@@ -453,7 +460,9 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				} catch (SQLException sqle1) {
 					Log.errorException(sqle1);
 				} finally {
-					DatabaseConnection.releaseConnection(connection);
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+					}
 				}
 			}
 		} catch (RetrieveObjectException e) {

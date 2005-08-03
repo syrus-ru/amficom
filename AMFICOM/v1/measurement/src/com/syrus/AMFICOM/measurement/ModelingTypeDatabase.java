@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.48 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.49 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/07/27 18:20:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -143,8 +143,9 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase<ModelingType>
 
 		final String modelingTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MODTYPPARTYPLINK
@@ -163,7 +164,9 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase<ModelingType>
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

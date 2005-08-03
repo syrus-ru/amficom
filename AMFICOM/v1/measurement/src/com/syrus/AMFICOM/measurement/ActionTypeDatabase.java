@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.10 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.11 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/27 18:20:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase<T extends ActionType> extends StorableObjectDatabase<T> {
@@ -74,8 +74,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveDBParameterTypeIdsMap | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -115,7 +116,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -240,9 +243,10 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 				+ QUESTION
 				+ CLOSE_BRACKET;
 
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final Identifier actionTypeId : parameterTypeIdsMap.keySet()) {
@@ -271,7 +275,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 

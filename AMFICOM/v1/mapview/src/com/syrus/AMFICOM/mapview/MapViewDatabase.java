@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.35 2005/07/31 19:11:06 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.36 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/31 19:11:06 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/03 19:53:00 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -264,8 +264,9 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		final StringBuffer stringBuffer = idsEnumerationString(schemeIds, LINK_COLUMN_SCHEME_ID, true);
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM + MAPVIEW_SCHEME + SQL_WHERE + stringBuffer.toString());
 			connection.commit();
@@ -279,7 +280,9 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

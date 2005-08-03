@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.10 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.11 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/27 18:20:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -136,8 +136,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("ParameterSetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -176,7 +177,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -244,8 +247,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			for (int i = 0; i < setParameters.length; i++) {
 				parameterId = setParameters[i].getId();
@@ -276,7 +280,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -310,8 +316,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 
 		final String setIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.SETMELINK
@@ -333,7 +340,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			} catch(SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

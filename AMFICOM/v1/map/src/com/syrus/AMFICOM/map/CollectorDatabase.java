@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.39 2005/07/28 10:07:11 max Exp $
+ * $Id: CollectorDatabase.java,v 1.40 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/07/28 10:07:11 $
- * @author $Author: max $
+ * @version $Revision: 1.40 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
@@ -177,8 +177,9 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 		stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("CollectorDatabase.delete(Collection) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			statement.executeUpdate(stringBuffer.toString());
@@ -193,7 +194,9 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 			} catch (SQLException sqle) {
 				Log.errorException(sqle);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 

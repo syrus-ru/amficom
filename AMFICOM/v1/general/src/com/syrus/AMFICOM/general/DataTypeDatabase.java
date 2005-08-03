@@ -1,5 +1,5 @@
 /*-
- * $Id: DataTypeDatabase.java,v 1.1 2005/07/13 16:02:31 arseniy Exp $
+ * $Id: DataTypeDatabase.java,v 1.2 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/13 16:02:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/03 19:53:00 $
+ * @author $Author: bass $
  * @module general
  */
 public final class DataTypeDatabase {
@@ -49,11 +49,15 @@ public final class DataTypeDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION
 				+ CLOSE_BRACKET;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 		} catch (SQLException sqle) {
+			if (connection != null) {
+				DatabaseConnection.releaseConnection(connection);
+			}
 			throw new CreateObjectException(sqle);
 		}
 

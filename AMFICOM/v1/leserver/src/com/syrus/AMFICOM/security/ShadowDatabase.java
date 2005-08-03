@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.5 2005/07/28 13:54:19 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.6 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/28 13:54:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/03 19:53:00 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class ShadowDatabase {
@@ -56,8 +56,9 @@ public final class ShadowDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("ShadowDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -84,7 +85,9 @@ public final class ShadowDatabase {
 						}
 					}
 					finally {
-						DatabaseConnection.releaseConnection(connection);
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+						}
 					}
 				}
 			}
@@ -113,8 +116,9 @@ public final class ShadowDatabase {
 		}
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("ShadowDatabase.update | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -135,7 +139,9 @@ public final class ShadowDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

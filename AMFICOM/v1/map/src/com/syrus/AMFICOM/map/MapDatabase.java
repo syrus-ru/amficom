@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.39 2005/08/02 12:10:44 max Exp $
+ * $Id: MapDatabase.java,v 1.40 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/08/02 12:10:44 $
- * @author $Author: max $
+ * @version $Revision: 1.40 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -530,8 +530,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		linkBuffer.append(idsEnumerationString(linkedObjectIds.keySet(), columnName, true));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(linkBuffer.toString());
 			connection.commit();
@@ -545,7 +546,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

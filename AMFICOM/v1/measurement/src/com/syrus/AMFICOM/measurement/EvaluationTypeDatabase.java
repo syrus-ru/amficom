@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.94 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.95 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/07/27 18:20:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.95 $, $Date: 2005/08/03 19:53:00 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -185,8 +185,9 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 
 		final String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVATYPPARTYPLINK
@@ -205,7 +206,9 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

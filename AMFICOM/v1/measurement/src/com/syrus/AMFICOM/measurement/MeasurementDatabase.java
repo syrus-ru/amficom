@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.88 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.89 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/07/27 18:20:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.89 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -173,8 +173,9 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 			+ SQL_AND + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSortNum);
 		Statement statement = null;
 		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
@@ -200,7 +201,9 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

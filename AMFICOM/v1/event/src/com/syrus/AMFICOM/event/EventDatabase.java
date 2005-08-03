@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.38 2005/07/27 18:11:07 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.39 2005/08/03 19:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/07/27 18:11:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/08/03 19:53:01 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -142,8 +142,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 
     Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("EventDatabase.retrieveEventParametersByOneQuery | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(stringBuffer.toString());
@@ -186,7 +187,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
@@ -251,8 +254,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		
 		Identifier parameterId = null;
 		Identifier parameterTypeId = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			for (final EventParameter eventParameter : eventParameters) {
 				parameterId = eventParameter.getId();
@@ -282,7 +286,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -324,8 +330,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 
 		final String eventIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTSOURCELINK
@@ -351,7 +358,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

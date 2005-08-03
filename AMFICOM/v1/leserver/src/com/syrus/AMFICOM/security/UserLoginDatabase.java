@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.6 2005/07/28 13:54:19 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.7 2005/08/03 19:53:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/28 13:54:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/03 19:53:00 $
+ * @author $Author: bass $
  * @module leserver_v1
  */
 public final class UserLoginDatabase {
@@ -82,8 +82,9 @@ public final class UserLoginDatabase {
 
 		Statement statement = null;
 		ResultSet resultSet = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
@@ -114,7 +115,9 @@ public final class UserLoginDatabase {
 						}
 					}
 					finally {
-						DatabaseConnection.releaseConnection(connection);
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+						}
 					}
 				}
 			}
@@ -143,8 +146,9 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.CLOSE_BRACKET);
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -165,7 +169,9 @@ public final class UserLoginDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -182,8 +188,9 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.update | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -203,7 +210,9 @@ public final class UserLoginDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}
@@ -213,8 +222,9 @@ public final class UserLoginDatabase {
 				+ StorableObjectDatabase.SQL_WHERE + this.singleWhereClause(userLogin.getSessionKey()));
 
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			Log.debugMessage("UserLoginDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
@@ -234,7 +244,9 @@ public final class UserLoginDatabase {
 				Log.errorException(sqle1);
 			}
 			finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

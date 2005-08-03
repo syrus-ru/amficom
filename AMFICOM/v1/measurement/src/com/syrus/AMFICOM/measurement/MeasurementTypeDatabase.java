@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.106 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.107 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/07/27 18:20:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.107 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -183,8 +183,9 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 
 		final String measurementTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
-		final Connection connection = DatabaseConnection.getConnection();
+		Connection connection = null;
 		try {
+			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.MNTTYPEMEASPORTTYPELINK
@@ -207,7 +208,9 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 			} catch(SQLException sqle1) {
 				Log.errorException(sqle1);
 			} finally {
-				DatabaseConnection.releaseConnection(connection);
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.8 2005/07/27 13:44:17 arseniy Exp $
+ * $Id: IdentifierGenerator.java,v 1.9 2005/08/03 19:52:59 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,8 +18,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/27 13:44:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: bass $
  * @module csbridge_v1
  */
 public class IdentifierGenerator {
@@ -71,8 +72,10 @@ public class IdentifierGenerator {
 		final String sql = "SELECT " + seqName + ".NEXTVAL FROM sys.dual";
 		Statement statement = null;
 		ResultSet resultSet = null;
+		Connection connection = null; 
 		try {
-			statement = DatabaseConnection.getConnection().createStatement();
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
 			Log.debugMessage("IdentifierGenerator.generateMinor | Trying: " + sql, Log.DEBUGLEVEL08);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
@@ -97,6 +100,10 @@ public class IdentifierGenerator {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
+			} finally {
+				if (connection != null) {
+					DatabaseConnection.releaseConnection(connection);
+				}
 			}
 		}
 
