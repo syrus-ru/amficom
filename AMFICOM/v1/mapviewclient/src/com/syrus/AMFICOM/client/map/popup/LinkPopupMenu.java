@@ -8,10 +8,6 @@ import java.util.Set;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.command.action.CreateMarkCommandAtomic;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -111,13 +107,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 				{
 					try {
 						newCollector();
-					} catch(MapException e1) {
-						e1.printStackTrace();
-						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-								new StatusMessageEvent(
-										this, 
-										StatusMessageEvent.STATUS_MESSAGE, 
-										MapException.DEFAULT_STRING));
 					} catch(ApplicationException e1) {
 						e1.printStackTrace();
 					}
@@ -130,13 +119,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 				{
 					try {
 						removeCollector();
-					} catch(MapException e1) {
-						e1.printStackTrace();
-						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-								new StatusMessageEvent(
-										this, 
-										StatusMessageEvent.STATUS_MESSAGE, 
-										MapException.DEFAULT_STRING));
 					} catch(ApplicationException e1) {
 						e1.printStackTrace();
 					}
@@ -150,13 +132,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 				{
 					try {
 						addToCollector();
-					} catch(MapException e1) {
-						e1.printStackTrace();
-						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-								new StatusMessageEvent(
-										this, 
-										StatusMessageEvent.STATUS_MESSAGE, 
-										MapException.DEFAULT_STRING));
 					} catch(ApplicationException e1) {
 						e1.printStackTrace();
 					}
@@ -169,13 +144,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 				{
 					try {
 						removeFromCollector();
-					} catch(MapException e1) {
-						e1.printStackTrace();
-						LinkPopupMenu.this.netMapViewer.getLogicalNetLayer().getContext().getDispatcher().firePropertyChange(
-								new StatusMessageEvent(
-										this, 
-										StatusMessageEvent.STATUS_MESSAGE, 
-										MapException.DEFAULT_STRING));
 					} catch(ApplicationException e1) {
 						e1.printStackTrace();
 					}
@@ -202,21 +170,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 	void removeLink()
 	{
 		super.removeMapElement(this.link);
-
-		try
-		{
-			this.netMapViewer.repaint(false);
-		}
-		catch(MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	void addMark()
@@ -225,37 +178,20 @@ public final class LinkPopupMenu extends MapPopupMenu
 		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-		try
-		{
-			this.netMapViewer.repaint(false);
-		}
-		catch(MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
-	void newCollector() throws ApplicationException, MapConnectionException, MapDataException
+	void newCollector() throws ApplicationException
 	{
 		Collector collector = super.createCollector();
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, this.link);
 
-			this.netMapViewer.repaint(false);
-
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
-	void addToCollector() throws ApplicationException, MapConnectionException, MapDataException
+	void addToCollector() throws ApplicationException
 	{
 		Collector collector = super.selectCollector();
 		if(collector != null)
@@ -265,7 +201,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	void removeFromCollector() throws ApplicationException, MapConnectionException, MapDataException
+	void removeFromCollector() throws ApplicationException
 	{
 		Collector collector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(this.link);
 		if(collector != null)
@@ -275,7 +211,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		}
 	}
 
-	void removeCollector() throws ApplicationException, MapDataException, MapConnectionException
+	void removeCollector() throws ApplicationException
 	{
 		this.netMapViewer.getLogicalNetLayer().deselectAll();
 

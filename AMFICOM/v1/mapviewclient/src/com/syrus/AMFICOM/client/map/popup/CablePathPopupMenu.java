@@ -8,8 +8,6 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -109,21 +107,6 @@ public class CablePathPopupMenu extends MapPopupMenu
 	void removeCablePath()
 	{
 		super.removeMapElement(this.path);
-
-		try
-		{
-			this.netMapViewer.repaint(false);
-		}
-		catch(MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	void bind()
@@ -144,20 +127,6 @@ public class CablePathPopupMenu extends MapPopupMenu
 		if(proto != null)
 		{
 			super.generatePathCabling(this.path, proto);
-			try
-			{
-				this.netMapViewer.repaint(false);
-			}
-			catch(MapConnectionException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(MapDataException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 	
