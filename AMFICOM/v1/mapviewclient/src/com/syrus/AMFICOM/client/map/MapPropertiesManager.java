@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.31 2005/08/02 07:36:40 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.32 2005/08/03 18:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/08/02 07:36:40 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/03 18:49:35 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -197,7 +197,12 @@ public final class MapPropertiesManager
 	 * анимации меняет этот флаг и дает команду на перерисовку,
 	 * в зависимости от этого флага элемент "анимирует"
 	 */
-	protected static boolean showAlarmState = false;
+	protected static boolean drawAlarmed = false;
+
+	/**
+	 * флаг индикации при наличии сигналов тревоги.
+	 */	
+	protected static boolean showAlarmIndication = true;
 
 	/**
 	 * флаг режима отображения топологических узлов.
@@ -916,17 +921,24 @@ public final class MapPropertiesManager
 	}
 
 
-	public static void setShowAlarmState(boolean _showAlarmState)
+	public static void setDrawAlarmed(boolean _drawAlarmed)
 	{
-		showAlarmState = _showAlarmState;
+		drawAlarmed = _drawAlarmed;
 	}
 
 
-	public static boolean isShowAlarmState()
+	public static boolean isDrawAlarmed()
 	{
-		return showAlarmState;
+		return drawAlarmed;
 	}
 
+	public static boolean isShowAlarmIndication() {
+		return showAlarmIndication;
+	}
+
+	public static void setShowAlarmIndication(boolean _showAlarmIndication) {
+		showAlarmIndication = _showAlarmIndication;
+	}
 
 	public static void setShowPhysicalNodes(boolean _showPhysicalNodes)
 	{
