@@ -14,8 +14,6 @@ scheme.jpx~
 *.tar
 *.gz
 *.unused
-.classpath
-.project
 .settings
 .nbintdb
 scheme.jpx
@@ -30,3 +28,4 @@ run.bat
 SchemeV2.jpx
 src_scheme.txt
 .pmd
+.mach
