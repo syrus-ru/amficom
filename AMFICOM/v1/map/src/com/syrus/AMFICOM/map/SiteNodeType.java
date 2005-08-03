@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.54 2005/08/02 18:07:26 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.55 2005/08/03 14:29:03 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -45,6 +44,7 @@ import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.54 $, $Date: 2005/08/02 18:07:26 $
+ * @author $Author: max $
+ * @version $Revision: 1.55 $, $Date: 2005/08/03 14:29:03 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -81,7 +81,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	private Identifier imageId;
 	private String name;
-	private boolean topological;
+	private boolean isTopological;
 
 	private SiteNodeTypeSort sort;
 
@@ -113,7 +113,8 @@ public final class SiteNodeType extends StorableObjectType
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean topological) {
+			final boolean topological,
+			final MapLibrary mapLibrary) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -124,8 +125,9 @@ public final class SiteNodeType extends StorableObjectType
 				description);
 		this.name = name;
 		this.imageId = imageId;
-		this.topological = topological;
+		this.isTopological = topological;
 		this.sort = sort;
+		this.mapLibrary = mapLibrary;
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,
@@ -134,9 +136,16 @@ public final class SiteNodeType extends StorableObjectType
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean isTopological) throws CreateObjectException {
+			final boolean isTopological,
+			final MapLibrary mapLibrary) throws CreateObjectException {
 
-		if (creatorId == null || codename == null || name == null || description == null || imageId == null || sort == null)
+		if (creatorId == null 
+				|| codename == null 
+				|| name == null 
+				|| description == null 
+				|| imageId == null 
+				|| sort == null
+				|| mapLibrary == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -148,7 +157,8 @@ public final class SiteNodeType extends StorableObjectType
 					name,
 					description,
 					imageId,
-					isTopological);
+					isTopological,
+					mapLibrary);
 
 			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -167,15 +177,13 @@ public final class SiteNodeType extends StorableObjectType
 
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);
-		this.topological = sntt.topological;
+		this.isTopological = sntt.isTopological;
 
-		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(sntt.codename);
+		this.sort = sntt.sort;
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.imageId);
 	}
 
@@ -205,15 +213,17 @@ public final class SiteNodeType extends StorableObjectType
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
+				this.sort,
 				this.codename,
 				this.name,
 				this.description,
 				this.imageId.getTransferable(),
-				this.topological);
+				this.isTopological,
+				this.mapLibrary.getId().getTransferable());
 	}
 
 	public boolean isTopological() {
-		return this.topological;
+		return this.isTopological;
 	}
 
 	@Override
@@ -233,7 +243,7 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	public void setTopological(final boolean topological) {
-		this.topological = topological;
+		this.isTopological = topological;
 		super.markAsChanged();
 	}
 
@@ -242,25 +252,28 @@ public final class SiteNodeType extends StorableObjectType
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final SiteNodeTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean topological) {
+			final boolean isTopological,
+			final Identifier mapLibraryId) throws IllegalDataException {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.imageId = imageId;
-		this.topological = topological;
-
-		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(codename);
+		this.isTopological = isTopological;
+		this.sort = sort;
+		try {
+			this.mapLibrary = StorableObjectPool.getStorableObject(mapLibraryId, true);
+		} catch (ApplicationException e) {
+			throw new IllegalDataException(e);
+		}
 	}
 
 	@Override
 	public void setCodename(final String codename) {
 		super.setCodename(codename);
-		//@todo retreive from transferable!
-		this.sort = SiteNodeTypeSort.fromString(codename);
 	}
 
 	public Set<Characteristic> getCharacteristics() throws ApplicationException {
@@ -290,7 +303,7 @@ public final class SiteNodeType extends StorableObjectType
 		uid.setStringValue(this.id.toString());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
-		xmlSiteNodeType.setSort(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forString(this.sort.value()));
+		xmlSiteNodeType.setSort(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forInt(this.sort.value()));
 		xmlSiteNodeType.setTopological(this.isTopological());
 
 		String imageCodeName = "";
@@ -331,8 +344,8 @@ public final class SiteNodeType extends StorableObjectType
 
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
-		this.sort = SiteNodeTypeSort.fromString(xmlSiteNodeType.getSort().toString());
-		this.topological = xmlSiteNodeType.getTopological();
+		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue());
+		this.isTopological = xmlSiteNodeType.getTopological();
 
 		final String imageCodeName = xmlSiteNodeType.getImage();
 		Identifier loadedImageId = null;
@@ -341,10 +354,9 @@ public final class SiteNodeType extends StorableObjectType
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGERESOURCE_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
-		final Set bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		final Set<FileImageResource> bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		for(final Iterator it = bitMaps.iterator(); it.hasNext();) {
-			final FileImageResource ir = (FileImageResource )it.next();
+		for(FileImageResource ir : bitMaps) {
 			if(ir.getCodename().equals(imageCodeName)) {
 				loadedImageId = ir.getId();
 				break;

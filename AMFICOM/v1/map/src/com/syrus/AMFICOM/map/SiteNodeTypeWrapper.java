@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.8 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.9 2005/08/03 14:29:03 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,19 +16,22 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/03 14:29:03 $
+ * @author $Author: max $
  * @module map_v1
  */
 public class SiteNodeTypeWrapper extends StorableObjectWrapper {
-
+	// sort NUMBER(1)
+	public static final String COLUMN_SORT = "sort";
 	// codename VARCHAR2(32) NOT NULL,
-	// name VARCHAR2(128),
+	// name VARCHAR2(64),
 	// description VARCHAR2(256),
 	// image_id VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_IMAGE_ID = "image_id";
 	// topological NUMBER(1),
-	public static final String COLUMN_TOPOLOGICAL = "topological";
+	public static final String COLUMN_IS_TOPOLOGICAL = "is_topological";
+	// mapLibrary 
+	public static final String COLUMN_MAP_LIBRARY_ID = "map_library_id";
 
 	protected static SiteNodeTypeWrapper instance;
 
@@ -40,7 +43,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
 				COLUMN_IMAGE_ID,
-				COLUMN_TOPOLOGICAL };
+				COLUMN_IS_TOPOLOGICAL };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -87,7 +90,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				return siteNodeType.getDescription();
 			else if (key.equals(COLUMN_IMAGE_ID))
 				return siteNodeType.getImageId();
-			else if (key.equals(COLUMN_TOPOLOGICAL))
+			else if (key.equals(COLUMN_IS_TOPOLOGICAL))
 				return Boolean.valueOf(siteNodeType.isTopological());
 		}
 		return null;
@@ -112,7 +115,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				siteNodeType.setDescription((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				siteNodeType.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_TOPOLOGICAL))
+			else if (key.equals(COLUMN_IS_TOPOLOGICAL))
 				siteNodeType.setTopological(((Boolean) value).booleanValue());
 		}
 	}
