@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.2 2005/08/02 16:56:05 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.3 2005/08/03 15:34:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ import java.util.Collection;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 public class MapEditorOpenLibraryCommand extends AbstractCommand {
@@ -79,7 +81,13 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 			return;
 		}
 
-		mapFrame.getMapViewer().getLogicalNetLayer().addMapLibrary(this.mapLibrary);
+		Map map = mapFrame.getMapView().getMap();
+		map.addMapLibrary(this.mapLibrary);
+		this.aContext.getDispatcher().firePropertyChange(
+				new MapEvent(
+					this, 
+					MapEvent.LIBRARY_SET_CHANGED,
+					map.getMapLibraries()));
 		setResult(Command.RESULT_OK);
 	}
 }
