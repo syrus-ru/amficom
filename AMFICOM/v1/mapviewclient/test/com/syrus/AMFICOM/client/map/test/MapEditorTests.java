@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTests.java,v 1.6 2005/07/11 13:16:41 krupenn Exp $
+ * $Id: MapEditorTests.java,v 1.7 2005/08/03 15:27:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ public class MapEditorTests {
 		suite.addTestSuite(DeletePhysicalLinkCommandBundleTestCase.class);
 		suite.addTestSuite(InsertSiteCommandBundleTestCase.class);
 		suite.addTestSuite(CreatePhysicalNodeCommandBundleTestCase.class);
-		
+
 		suite.addTestSuite(PlaceSchemeElementCommandTestCase.class);
 		suite.addTestSuite(PlaceSchemeCableLinkCommandNoCCITestCase.class);
 		suite.addTestSuite(PlaceSchemeCableLinkCommandWithCCITestCase.class);
