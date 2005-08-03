@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.32 2005/07/21 14:53:59 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.33 2005/08/03 18:48:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,6 +57,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.EventMarker;
+import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -78,7 +79,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/07/21 14:53:59 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/03 18:48:18 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -107,7 +108,7 @@ public abstract class NetMapViewer {
 	 * Timer меняет флаг отрисовки и выдает команду
 	 * логическому слою перерисовать свое содержимое.
 	 */
-	private Timer animateTimer;
+	private AlarmIndicationTimer animateTimer;
 	
 	public NetMapViewer(
 			LogicalNetLayer logicalNetLayer,
@@ -140,27 +141,13 @@ public abstract class NetMapViewer {
 			if(this.logicalNetLayer.aContext.getApplicationModel() != null)
 				if (this.logicalNetLayer.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
 		{
-			this.animateTimer = new Timer(NetMapViewer.DEFAULT_TIME_INTERVAL, new ActionListener() {
-			
-				public void actionPerformed(ActionEvent e) {
-					MapPropertiesManager.setShowAlarmState(!MapPropertiesManager.isShowAlarmState());
-					try {
-						NetMapViewer.this.repaint(false);
-					} catch(MapConnectionException e1) {
-						e1.printStackTrace();
-					} catch(MapDataException e1) {
-						e1.printStackTrace();
-					}
-				}
-			
-			});
-//			this.animateTimer.start();
+			this.animateTimer = new AlarmIndicationTimer(this);
 		}
 	}
 
 	public void dispose() {
 		this.ttm.unregisterComponent(this.mttp);
-		this.animateTimer.stop();
+		this.animateTimer.dispose();
 	}
 	
 	/**
