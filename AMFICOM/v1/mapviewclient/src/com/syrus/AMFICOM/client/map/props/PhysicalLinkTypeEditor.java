@@ -66,6 +66,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
@@ -298,7 +299,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setText(this.type.getName());
 			
 			this.libraryComboBox.setEnabled(true);
-			this.libraryComboBox.addElements(this.logicalNetLayer.getMapLibraries());
+			this.libraryComboBox.addElements(this.logicalNetLayer.getMapView().getMap().getMapLibraries());
 			this.libraryComboBox.setSelectedItem(this.type.getMapLibrary());
 
 			this.descTextArea.setEnabled(true);

@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.ImagesDialog;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -54,6 +55,8 @@ public final class SiteNodeTypeEditor
 
 	LogicalNetLayer logicalNetLayer;
 
+	private NetMapViewer netMapViewer;
+
 	public SiteNodeTypeEditor() {
 		try {
 			jbInit();
@@ -61,6 +64,11 @@ public final class SiteNodeTypeEditor
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
@@ -249,7 +257,7 @@ public final class SiteNodeTypeEditor
 			this.descTextArea.setText(this.type.getDescription());
 
 			this.libraryComboBox.setEnabled(true);
-			this.libraryComboBox.addElements(this.logicalNetLayer.getMapLibraries());
+			this.libraryComboBox.addElements(this.logicalNetLayer.getMapView().getMap().getMapLibraries());
 			this.libraryComboBox.setSelectedItem(this.type.getMapLibrary());
 
 			this.imageId = this.type.getImageId();
