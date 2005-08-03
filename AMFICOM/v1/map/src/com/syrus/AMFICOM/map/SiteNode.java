@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.63 2005/08/03 14:31:24 max Exp $
+ * $Id: SiteNode.java,v 1.64 2005/08/03 14:44:01 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,8 +38,6 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
-import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
-import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -56,7 +52,7 @@ import com.syrus.AMFICOM.resource.AbstractImageResource;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: max $
- * @version $Revision: 1.63 $, $Date: 2005/08/03 14:31:24 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/03 14:44:01 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -293,7 +289,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.setLocation(msnes.location);
 
 		try {
-			this.setType((StorableObjectPool.<SiteNodeType>getStorableObject(msnes.mapProtoId, true)));
+			SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(msnes.mapProtoId, true);
+			this.setType(siteNodeType);
 		} catch (ApplicationException e) {
 			e.printStackTrace();
 		}
