@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.30 2005/08/03 11:47:19 max Exp $
+ * $Id: map.idl,v 1.31 2005/08/03 15:15:39 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,13 +28,13 @@ module map {
 		valuetype IdlSiteNodeType : general::corba::IdlStorableObject {
 			
 			enum SiteNodeTypeSort {
-				SITENODETYPESORT_WELL,
-	 			SITENODETYPESORT_PIQUET,
-				SITENODETYPESORT_ATS,
-				SITENODETYPESORT_BUILDING,
-				SITENODETYPESORT_UNBOUND,
-				SITENODETYPESORT_CABLE_INLET,
-				SITENODETYPESORT_TOWER
+				WELL,
+	 			PIQUET,
+				ATS,
+				BUILDING,
+				UNBOUND,
+				CABLE_INLET,
+				TOWER
 			};
 			
 			public SiteNodeTypeSort sort;
@@ -72,12 +72,12 @@ module map {
 		valuetype IdlPhysicalLinkType : general::corba::IdlStorableObject {
 			
 			enum PhysicalLinkTypeSort {
-				PHYSICALLINKTYPESORT_TUNNEL,
-				PHYSICALLINKTYPESORT_COLLECTOR,
-				PHYSICALLINKTYPESORT_INDOOR,
-				PHYSICALLINKTYPESORT_SUBMARINE,
-				PHYSICALLINKTYPESORT_OVERHEAD,
-				PHYSICALLINKTYPESORT_UNBOUND
+				TUNNEL,
+				COLLECTOR,
+				INDOOR,
+				SUBMARINE,
+				OVERHEAD,
+				UNBOUND
 			};
 			
 			public PhysicalLinkTypeSort sort;
