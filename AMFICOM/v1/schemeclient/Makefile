@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/07/10 13:41:28 bass Exp $
+# $Id: Makefile,v 1.7 2005/08/03 09:53:32 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,13 +13,15 @@ JAVAC=$(JAVA_HOME)/bin/javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
-$(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
+
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
+EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
+
 
 .mach: $(CLASSDIR)
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH):$(DEPRECATEDCLASSPATH):$(EXTCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(DEPRECATEDCLASSPATH) \
 		$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 
