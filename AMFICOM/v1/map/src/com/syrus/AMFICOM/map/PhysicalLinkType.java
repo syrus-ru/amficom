@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.60 2005/08/02 18:07:25 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.61 2005/08/03 14:28:14 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,14 +42,15 @@ import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/08/02 18:07:25 $
+ * @author $Author: max $
+ * @version $Revision: 1.61 $, $Date: 2005/08/03 14:28:14 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -92,7 +93,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	private MapLibrary mapLibrary;
 	
-	private boolean topological = true;
+	private boolean isTopological;
 
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -119,7 +120,9 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String codename,
 			final String name,
 			final String description,
-			final IntDimension bindingDimension) {
+			final IntDimension bindingDimension,
+			final boolean isTopological,
+			final MapLibrary mapLibrary) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -130,12 +133,14 @@ public final class PhysicalLinkType extends StorableObjectType
 				description);
 		this.sort = sort;
 		this.name = name;
+		this.isTopological = isTopological;
 		if (bindingDimension == null) {
 			this.bindingDimension = new IntDimension(0, 0);
 		}
 		else {
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 		}
+		this.mapLibrary = mapLibrary;
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,
@@ -143,9 +148,16 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String codename,
 			final String name,
 			final String description,
-			final IntDimension bindingDimension) throws CreateObjectException {
+			final IntDimension bindingDimension,
+			final boolean isTopological,
+			final MapLibrary mapLibrary) throws CreateObjectException {
 
-		if (creatorId == null || codename == null || name == null || description == null || bindingDimension == null || sort == null)
+		if (creatorId == null 
+				|| codename == null 
+				|| name == null 
+				|| description == null 
+				|| bindingDimension == null 
+				|| mapLibrary == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -156,7 +168,9 @@ public final class PhysicalLinkType extends StorableObjectType
 					codename,
 					name,
 					description,
-					bindingDimension);
+					bindingDimension,
+					isTopological,
+					mapLibrary);
 
 			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -167,23 +181,22 @@ public final class PhysicalLinkType extends StorableObjectType
 			throw new CreateObjectException("Cannot generate identifier ", ige);
 		}
 	}
-
+	
 	@Override
 	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlPhysicalLinkType pltt = (IdlPhysicalLinkType) transferable;
 		super.fromTransferable(pltt, pltt.codename, pltt.description);
-
+		
 		this.name = pltt.name;
 
-		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(pltt.codename);
+		this.sort = pltt.sort;
 		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
+		this.isTopological = pltt.isTopological;
+		this.mapLibrary = StorableObjectPool.getStorableObject(new Identifier(pltt.mapLibraryId), true);
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
 		return Collections.emptySet();
 	}
 
@@ -200,11 +213,14 @@ public final class PhysicalLinkType extends StorableObjectType
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
+				this.sort,
 				this.codename,
 				this.name,
 				this.description,
 				this.bindingDimension.getWidth(),
-				this.bindingDimension.getHeight());
+				this.bindingDimension.getHeight(),
+				this.isTopological,
+				this.mapLibrary.getId().getTransferable());
 	}
 
 	@Override
@@ -224,11 +240,11 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	public boolean isTopological() {
-		return this.topological;
+		return this.isTopological;
 	}
 
 	public void setTopological(final boolean topological) {
-		this.topological = topological;
+		this.isTopological = topological;
 		super.markAsChanged();
 	}
 
@@ -250,11 +266,14 @@ public final class PhysicalLinkType extends StorableObjectType
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final PhysicalLinkTypeSort sort,
 			final String codename,
 			final String name,
 			final String description,
 			final int width,
-			final int height) {
+			final int height,
+			final boolean isTopological,
+			final Identifier mapLibraryId) throws IllegalDataException {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -266,15 +285,19 @@ public final class PhysicalLinkType extends StorableObjectType
 		assert name != null: ErrorMessages.NON_NULL_EXPECTED;
 		this.name = name;
 
-		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(codename);
+		this.sort = sort;
+		this.isTopological = isTopological;
+		
+		try {
+			this.mapLibrary = StorableObjectPool.getStorableObject(mapLibraryId, true);
+		} catch (ApplicationException e) {
+			throw new IllegalDataException(e);
+		}
 	}
 
 	@Override
 	public void setCodename(final String codename) {
 		super.setCodename(codename);
-		//@todo retreive from transferable!
-		this.sort = PhysicalLinkTypeSort.fromString(codename);
 	}
 
 	protected void setBindingDimension0(final IntDimension bindingDimension) {
@@ -322,7 +345,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		uid.setStringValue(this.id.toString());
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
-		xmlPhysicalLinkType.setSort(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forString(this.sort.value()));
+		xmlPhysicalLinkType.setSort(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forInt(this.sort.value()));
 
 		xmlPhysicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
 		xmlPhysicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
