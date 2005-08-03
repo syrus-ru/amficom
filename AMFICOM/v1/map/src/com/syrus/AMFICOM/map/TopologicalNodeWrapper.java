@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.11 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.12 2005/08/03 14:32:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,12 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/03 14:32:37 $
+ * @author $Author: max $
  * @module map_v1
  */
 public class TopologicalNodeWrapper extends StorableObjectWrapper {
 
-	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 	public static final String COLUMN_X = "x";
 	public static final String COLUMN_Y = "y";
 
