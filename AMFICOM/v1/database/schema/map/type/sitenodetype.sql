@@ -1,4 +1,4 @@
--- $Id: sitenodetype.sql,v 1.9 2005/08/03 11:46:32 max Exp $
+-- $Id: sitenodetype.sql,v 1.10 2005/08/03 15:15:10 arseniy Exp $
 
 CREATE TABLE SiteNodeType (
  id NUMBER(19),
@@ -14,7 +14,7 @@ CREATE TABLE SiteNodeType (
  description VARCHAR2(256 CHAR),
  image_id NOT NULL,
  is_topological NUMBER(1) NOT NULL,
- map_library_id
+ map_library_id,
 --
  CONSTRAINT sitnodetype_pk PRIMARY KEY (id),
  CONSTRAINT sitnodetype_uniq UNIQUE (codename),
@@ -28,6 +28,6 @@ CREATE TABLE SiteNodeType (
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.9 2005/08/03 11:46:32 max Exp $';
+COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.10 2005/08/03 15:15:10 arseniy Exp $';
 
 CREATE SEQUENCE SiteNodeType_Seq ORDER;
