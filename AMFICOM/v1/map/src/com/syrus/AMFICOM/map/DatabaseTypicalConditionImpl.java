@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/08/01 11:11:50 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.12 2005/08/03 14:54:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/01 11:11:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/03 14:54:52 $
+ * @author $Author: max $
  * @module map_v1
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -46,6 +46,10 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
+			case ObjectEntities.MAPLIBRARY_CODE:
+				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
+					return StorableObjectWrapper.COLUMN_CODENAME;
+				}
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' and key '" + this.condition.getKey() + "' are not supported.",

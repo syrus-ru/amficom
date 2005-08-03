@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.11 2005/07/25 19:33:08 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.12 2005/08/03 14:54:52 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/25 19:33:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/08/03 14:54:52 $
+ * @author $Author: max $
  * @module map
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -115,15 +115,18 @@ final class TypicalConditionImpl extends TypicalCondition {
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (storableObject instanceof PhysicalLinkType)
+		if (storableObject instanceof PhysicalLinkType) {
 			wrapper = PhysicalLinkTypeWrapper.getInstance();
-		else if (storableObject instanceof SiteNodeType)
+		} else if (storableObject instanceof SiteNodeType) {
 			wrapper = SiteNodeTypeWrapper.getInstance();
-		else if (storableObject instanceof PhysicalLink)
+		} else if (storableObject instanceof PhysicalLink) {
 			wrapper = PhysicalLinkWrapper.getInstance();
-		else
+		} else if (storableObject instanceof MapLibrary) {
+			wrapper = MapLibraryWrapper.getInstance();
+		} else {
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
 
 		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}
