@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.49 2005/08/02 07:38:36 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.50 2005/08/03 15:46:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,8 +22,6 @@ import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateCollectorCommandAtomic;
@@ -57,7 +55,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/08/02 07:38:36 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/03 15:46:16 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -254,16 +252,6 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command2.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command2);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-		
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	protected void generatePathCabling(CablePath path, SiteNodeType proto) {
@@ -272,16 +260,6 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound) {
@@ -290,15 +268,5 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }
