@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorSaveLibraryAsCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorSaveLibraryAsCommand.java,v 1.2 2005/08/03 15:36:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,11 @@ import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 public class MapEditorSaveLibraryAsCommand extends AbstractCommand {
@@ -31,11 +36,18 @@ public class MapEditorSaveLibraryAsCommand extends AbstractCommand {
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
-		Set<MapLibrary> mapLibraries = mapFrame.getMapViewer().getLogicalNetLayer().getMapLibraries();
+		Map map = mapFrame.getMapView().getMap();
 
-		for(Iterator iter = mapLibraries.iterator(); iter.hasNext();) {
-			MapLibrary mapLibrary = (MapLibrary )iter.next();
-			//todo save
+		Set<MapLibrary> mapLibraries = map.getMapLibraries();
+
+		Identifier userId = LoginManager.getUserId();
+		try {
+			for(Iterator iter = mapLibraries.iterator(); iter.hasNext();) {
+				MapLibrary mapLibrary = (MapLibrary )iter.next();
+				StorableObjectPool.flush(mapLibrary, userId, true);
+			}
+		} catch(ApplicationException e) {
+			e.printStackTrace();
 		}
 	}
 }
