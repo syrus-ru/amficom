@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.3 2005/08/02 16:59:31 krupenn Exp $
+ * $Id: MapLibraryController.java,v 1.4 2005/08/03 15:42:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,9 +9,7 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
-import java.awt.Color;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -24,20 +22,16 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeSort;
-import com.syrus.AMFICOM.resource.FileImageResource;
-import com.syrus.AMFICOM.resource.ImageResourceWrapper;
-import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/08/02 16:59:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/03 15:42:00 $
  * @module mapviewclient_v1
  */
 public class MapLibraryController {
@@ -48,46 +42,6 @@ public class MapLibraryController {
 	 * Instance.
 	 */
 	private static MapLibraryController instance = null;
-
-	/** Хэш-таблица имен пиктограмм для предустановленных типов узлов. */
-	private static java.util.Map imageFileNames = new HashMap();
-	/** Хэш-таблица цветов для предустановленных типов линии. */
-	private static java.util.Map lineColors = new HashMap();
-	/** Хэш-таблица толщины линии для предустановленных типов линии. */
-	private static java.util.Map lineThickness = new HashMap();
-	/** Хэш-таблица размерности привязки для предустановленных типов линии. */
-	private static java.util.Map bindDimensions = new HashMap();
-
-	static {
-		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_BUILDING, "images/building.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_PIQUET, "images/piquet.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_WELL, "images/well.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_CABLE_INLET, "images/cableinlet.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_TOWER, "images/tower.gif");
-
-		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
-		lineColors.put(PhysicalLinkType.DEFAULT_TUNNEL, Color.BLACK);
-		lineColors.put(PhysicalLinkType.DEFAULT_INDOOR, Color.GREEN);
-		lineColors.put(PhysicalLinkType.DEFAULT_OVERHEAD, Color.BLUE);
-		lineColors.put(PhysicalLinkType.DEFAULT_SUBMARINE, Color.MAGENTA);
-		lineColors.put(PhysicalLinkType.DEFAULT_UNBOUND, Color.RED);
-
-		lineThickness.put(PhysicalLinkType.DEFAULT_COLLECTOR, new Integer(4));
-		lineThickness.put(PhysicalLinkType.DEFAULT_TUNNEL, new Integer(2));
-		lineThickness.put(PhysicalLinkType.DEFAULT_INDOOR, new Integer(1));
-		lineThickness.put(PhysicalLinkType.DEFAULT_OVERHEAD, new Integer(2));
-		lineThickness.put(PhysicalLinkType.DEFAULT_SUBMARINE, new Integer(3));
-		lineThickness.put(PhysicalLinkType.DEFAULT_UNBOUND, new Integer(1));
-
-		bindDimensions.put(PhysicalLinkType.DEFAULT_COLLECTOR, new IntDimension(2, 6));
-		bindDimensions.put(PhysicalLinkType.DEFAULT_TUNNEL, new IntDimension(3, 4));
-		bindDimensions.put(PhysicalLinkType.DEFAULT_INDOOR, new IntDimension(1, 1));
-		bindDimensions.put(PhysicalLinkType.DEFAULT_OVERHEAD, new IntDimension(10, 1));
-		bindDimensions.put(PhysicalLinkType.DEFAULT_SUBMARINE, new IntDimension(3, 4));
-		bindDimensions.put(PhysicalLinkType.DEFAULT_UNBOUND, new IntDimension(0, 0));
-	}
 
 	/**
 	 * Private constructor.
@@ -105,152 +59,6 @@ public class MapLibraryController {
 		if(instance == null)
 			instance = new MapLibraryController();
 		return instance;
-	}
-
-	/**
-	 * Получить имя пиктограммы по кодовому имени для предустановленного типа
-	 * сетевого узла.
-	 * 
-	 * @param codename кодовое имя
-	 * @return имя пиктограммы
-	 */
-	private static String getImageFileName(String codename) {
-		return (String )imageFileNames.get(codename);
-	}
-
-	/**
-	 * Получить пиктограмму по кодовому имени для предустановленного типа
-	 * сетевого узла. Если пиктограмма не существует, она создается.
-	 * 
-	 * @param userId пользователь
-	 * @param codename кодовое имя
-	 * @param filename файл пиктограммы
-	 * @return Идентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
-	 * @throws ApplicationException 
-	 */
-	private static Identifier getImageId(
-			Identifier userId,
-			String codename, 
-			String filename) throws ApplicationException {
-		StorableObjectCondition condition = new TypicalCondition(
-			String.valueOf(ImageResourceSort._FILE),
-			OperationSort.OPERATION_EQUALS,
-			ObjectEntities.IMAGERESOURCE_CODE,
-			ImageResourceWrapper.COLUMN_SORT);
-		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
-			FileImageResource ir = (FileImageResource )it.next();
-			if(ir.getCodename().equals(codename))
-				return ir.getId();
-		}
-		FileImageResource ir = FileImageResource.createInstance(
-				userId,
-				codename,
-				filename);
-		StorableObjectPool.flush(ir, userId, true);
-//		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
-		return ir.getId();
-	}
-
-	/**
-	 * Получить тип сетевого узла по кодовому имени. В случае, если такого типа
-	 * нет, создается новый.
-	 * 
-	 * @param userId пользователь
-	 * @param codename кодовое имя
-	 * @return тип сетевого узла
-	 * @throws ApplicationException 
-	 * @throws CreateObjectException 
-	 */
-	private static SiteNodeType getSiteNodeType(
-			Identifier userId,
-			SiteNodeTypeSort sort,
-			String codename) throws ApplicationException {
-		SiteNodeType type = NodeTypeController.getSiteNodeType(codename);
-		if(type == null) {
-			type = SiteNodeType.createInstance(
-				userId,
-				sort,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				MapLibraryController.getImageId(
-						userId, 
-						codename, 
-						MapLibraryController.getImageFileName(codename)),
-				true);
-				
-			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flush(type, userId, true);
-		}
-		return type;
-	}
-
-	/**
-	 * Получить цвет по кодовому имени для предустановленного типа линии.
-	 * 
-	 * @param codename кодовое имя
-	 * @return цвет
-	 */
-	public static Color getLineColor(String codename) {
-		return (Color )lineColors.get(codename);
-	}
-
-	/**
-	 * Получить толщину линии по кодовому имени для предустановленного типа
-	 * линии.
-	 * 
-	 * @param codename кодовое имя
-	 * @return толщина
-	 */
-	public static int getLineThickness(String codename) {
-		return ((Integer )lineThickness.get(codename)).intValue();
-	}
-
-	/**
-	 * Получить размерность привязки по кодовому имени для предустановленного
-	 * типа линии.
-	 * 
-	 * @param codename кодовое имя
-	 * @return размерность привязки
-	 */
-	public static IntDimension getBindDimension(String codename) {
-		return (IntDimension )bindDimensions.get(codename);
-	}
-
-	/**
-	 * Получить тип линии по кодовому имени. В случае, если такого типа нет,
-	 * создается новый.
-	 * @param userId пользователь
-	 * @param codename кодовое имя
-	 * @return тип линии
-	 * @throws CreateObjectException 
-	 */
-	private static PhysicalLinkType getPhysicalLinkType(
-			Identifier userId,
-			PhysicalLinkTypeSort sort,
-			String codename) throws ApplicationException
-	{
-		PhysicalLinkType type = LinkTypeController.getPhysicalLinkType(codename);
-		if(type == null) {
-			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
-
-			type = PhysicalLinkType.createInstance(
-				userId,
-				sort,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				MapLibraryController.getBindDimension(codename));
-
-			ltc.setLineSize(userId, type, MapLibraryController.getLineThickness(codename));
-			ltc.setColor(userId, type, MapLibraryController.getLineColor(codename));
-
-			StorableObjectPool.putStorableObject(type);
-			StorableObjectPool.flush(type, userId, true);
-		}
-		return type;
 	}
 
 	/**
@@ -272,7 +80,7 @@ public class MapLibraryController {
 				userId,
 				LangModelMap.getString(codename),
 				codename,
-				"codename",
+				"",
 				null);
 				
 			StorableObjectPool.putStorableObject(library);
@@ -290,27 +98,48 @@ public class MapLibraryController {
 	public static void createDefaults(Identifier creatorId) throws ApplicationException {
 		defaultLibrary = MapLibraryController.getMapLibrary(creatorId,  DEFAULT_LIBRARY);
 
+		SiteNodeType siteNodeType;
 		// make sure SiteNodeType.ATS is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.BUILDING is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.PIQUET is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.WELL is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.CABLE_INLET is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.UNBOUND is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND);
+		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.CABLE_INLET is created
-		MapLibraryController.getSiteNodeType(creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER);
+		siteNodeType.setMapLibrary(defaultLibrary);
 
+		PhysicalLinkType physicalLinkType;
 		// make sure PhysicalLinkType.TUNNEL is created
-		MapLibraryController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL, true);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.COLLECTOR is created
-		MapLibraryController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR, true);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
+		// make sure PhysicalLinkType.INDOOR is created
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, true);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
+		// make sure PhysicalLinkType.SUBMARINE is created
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.SUBMARINE, PhysicalLinkType.DEFAULT_SUBMARINE, true);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
+		// make sure PhysicalLinkType.OVERHEAD is created
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.OVERHEAD, PhysicalLinkType.DEFAULT_OVERHEAD, true);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.UNBOUND is created
-		MapLibraryController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND, false);
+		physicalLinkType.setMapLibrary(defaultLibrary); 
 	}
 
 	/**
@@ -325,7 +154,7 @@ public class MapLibraryController {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename, 
 				OperationSort.OPERATION_EQUALS,
-				(short )1, //todo ObjectEntities.MAPLIBRARY_CODE,
+				ObjectEntities.MAPLIBRARY_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		Collection pTypes =

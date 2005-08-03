@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.33 2005/08/02 16:58:58 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.34 2005/08/03 15:40:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
-import com.syrus.AMFICOM.map.SiteNodeTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/02 16:58:58 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/03 15:40:51 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -197,7 +198,8 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @throws ApplicationException 
 	 * @throws CreateObjectException 
 	 */
-	private static SiteNodeType getSiteNodeType(
+	static SiteNodeType getSiteNodeType(
+			MapLibrary mapLibrary,
 			Identifier userId,
 			SiteNodeTypeSort sort,
 			String codename) throws ApplicationException {
@@ -213,14 +215,15 @@ public class NodeTypeController extends AbstractNodeController {
 						userId, 
 						codename, 
 						NodeTypeController.getImageFileName(codename)),
-				true);
+				true,
+				mapLibrary);
 				
 			StorableObjectPool.putStorableObject(type);
 			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
 	}
-
+/*
 	public static void createDefaults(Identifier creatorId) throws ApplicationException {
 		// make sure SiteNodeType.ATS is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
@@ -237,7 +240,7 @@ public class NodeTypeController extends AbstractNodeController {
 		// make sure SiteNodeType.CABLE_INLET is created
 		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER);
 	}
-
+*/
 	/**
 	 * Получить список всех типов сетевых узлов.
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;

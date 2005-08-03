@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.39 2005/08/02 17:01:56 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.40 2005/08/03 15:40:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,14 +39,15 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.PhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/08/02 17:01:56 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/03 15:40:51 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -582,10 +583,12 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @return тип линии
 	 * @throws CreateObjectException 
 	 */
-	private static PhysicalLinkType getPhysicalLinkType(
+	static PhysicalLinkType getPhysicalLinkType(
+			MapLibrary mapLibrary,
 			Identifier userId,
 			PhysicalLinkTypeSort sort,
-			String codename) throws ApplicationException
+			String codename,
+			boolean isTopological) throws ApplicationException
 	{
 		PhysicalLinkType type = getPhysicalLinkType(codename);
 		if(type == null) {
@@ -597,7 +600,9 @@ public final class LinkTypeController extends AbstractLinkController {
 				codename,
 				LangModelMap.getString(codename),
 				"",
-				LinkTypeController.getBindDimension(codename));
+				LinkTypeController.getBindDimension(codename),
+				isTopological,
+				mapLibrary);
 
 			ltc.setLineSize(userId, type, LinkTypeController.getLineThickness(codename));
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
@@ -606,16 +611,6 @@ public final class LinkTypeController extends AbstractLinkController {
 			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
-	}
-
-	public static void createDefaults(Identifier creatorId) throws ApplicationException
-	{
-		// make sure PhysicalLinkType.TUNNEL is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.TUNNEL, PhysicalLinkType.DEFAULT_TUNNEL);
-		// make sure PhysicalLinkType.COLLECTOR is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR);
-		// make sure PhysicalLinkType.UNBOUND is created
-		LinkTypeController.getPhysicalLinkType(creatorId, PhysicalLinkTypeSort.UNBOUND, PhysicalLinkType.DEFAULT_UNBOUND);
 	}
 
 	/**
