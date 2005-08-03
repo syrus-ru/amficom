@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLibraryCommand.java,v 1.2 2005/08/02 16:54:40 krupenn Exp $
+ * $Id: MapEditorNewLibraryCommand.java,v 1.3 2005/08/03 15:31:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -16,6 +17,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 public class MapEditorNewLibraryCommand extends AbstractCommand {
@@ -41,7 +43,13 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 					"",
 					null);
 			
-			mapFrame.getMapViewer().getLogicalNetLayer().addMapLibrary(mapLibrary);
+			Map map = mapFrame.getMapView().getMap();
+			map.addMapLibrary(mapLibrary);
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(
+						this, 
+						MapEvent.LIBRARY_SET_CHANGED,
+						map.getMapLibraries()));
 			setResult(Command.RESULT_OK);
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
