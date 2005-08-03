@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLibraryCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorRemoveLibraryCommand.java,v 1.2 2005/08/03 15:35:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedTableChooserDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -19,6 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 public class MapEditorRemoveLibraryCommand extends AbstractCommand {
@@ -36,9 +38,11 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
 
+		Map map = mapFrame.getMapView().getMap();
+
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
 				LangModelMap.getString("MapLibrary"),
-				mapFrame.getMapViewer().getLogicalNetLayer().getMapLibraries(),
+				map.getMapLibraries(),
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
 				true);
@@ -53,7 +57,12 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 			return;
 		}
 
-		mapFrame.getMapViewer().getLogicalNetLayer().removeMapLibrary(mapLibrary);
+		map.removeMapLibrary(mapLibrary);
+		this.aContext.getDispatcher().firePropertyChange(
+				new MapEvent(
+					this, 
+					MapEvent.LIBRARY_SET_CHANGED,
+					map.getMapLibraries()));
 		setResult(Command.RESULT_OK);
 	}
 }
