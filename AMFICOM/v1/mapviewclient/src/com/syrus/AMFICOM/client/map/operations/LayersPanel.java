@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.13 2005/07/01 16:17:23 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.14 2005/08/03 15:42:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.13 $, $Date: 2005/07/01 16:17:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/03 15:42:24 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -285,10 +285,8 @@ public class LayersPanel extends JPanel {
 
 			this.revalidate();
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
