@@ -846,6 +846,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void commitChanges() throws ApplicationException {
+		StorableObjectPool.flush(ObjectEntities.MEASUREMENTSETUP_CODE, LoginManager.getUserId(), true);
 		StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), true);
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
