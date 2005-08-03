@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.6 2005/08/02 08:33:38 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.7 2005/08/03 15:28:32 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -148,12 +148,9 @@ public class ImagesPanel extends JPanel
 				in.read(data);
 				in.close();
 
-				/**
-				 * @todo Fill in your own codename.
-				 */
 				BitmapImageResource bitmapImageResource = BitmapImageResource.createInstance(
 						LoginManager.getUserId(),
-						"Sample Codename",
+						file.getAbsolutePath(),
 						data);
 
 				try {
