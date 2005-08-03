@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.82 2005/08/02 18:07:25 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.83 2005/08/03 14:26:30 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.82 $, $Date: 2005/08/02 18:07:25 $
+ * @author $Author: max $
+ * @version $Revision: 1.83 $, $Date: 2005/08/03 14:26:30 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -860,7 +861,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		uid.setStringValue(this.id.toString());
 		xmlPhysicalLink.setName(this.name);
 		xmlPhysicalLink.setDescription(this.description);
-		xmlPhysicalLink.setPhysicallinktypeuid(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forString(type.getSort().value()));
+		xmlPhysicalLink.setPhysicallinktypeuid(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forInt(type.getSort().value()));
 
 		uid = xmlPhysicalLink.addNewStartnodeuid();
 		uid.setStringValue(this.startNode.getId().toString());
@@ -920,7 +921,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+		Set<PhysicalLinkType> objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
 		if (objects == null || objects.size() == 0) {
 			typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
@@ -933,7 +934,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			}
 		}
 		
-		this.physicalLinkType = (PhysicalLinkType) objects.iterator().next();
+		this.physicalLinkType = objects.iterator().next();
 
 		this.leftToRight = true;
 		this.topToBottom = true;
