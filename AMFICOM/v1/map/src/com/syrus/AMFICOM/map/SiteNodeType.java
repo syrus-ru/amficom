@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.55 2005/08/03 14:29:03 max Exp $
+ * $Id: SiteNodeType.java,v 1.56 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: max $
- * @version $Revision: 1.55 $, $Date: 2005/08/03 14:29:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/08/03 20:13:20 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -81,7 +81,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	private Identifier imageId;
 	private String name;
-	private boolean isTopological;
+	private boolean topological;
 
 	private SiteNodeTypeSort sort;
 
@@ -125,7 +125,7 @@ public final class SiteNodeType extends StorableObjectType
 				description);
 		this.name = name;
 		this.imageId = imageId;
-		this.isTopological = topological;
+		this.topological = topological;
 		this.sort = sort;
 		this.mapLibrary = mapLibrary;
 	}
@@ -136,7 +136,7 @@ public final class SiteNodeType extends StorableObjectType
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean isTopological,
+			final boolean topological,
 			final MapLibrary mapLibrary) throws CreateObjectException {
 
 		if (creatorId == null 
@@ -157,7 +157,7 @@ public final class SiteNodeType extends StorableObjectType
 					name,
 					description,
 					imageId,
-					isTopological,
+					topological,
 					mapLibrary);
 
 			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -177,7 +177,7 @@ public final class SiteNodeType extends StorableObjectType
 
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);
-		this.isTopological = sntt.isTopological;
+		this.topological = sntt.topological;
 
 		this.sort = sntt.sort;
 	}
@@ -218,12 +218,12 @@ public final class SiteNodeType extends StorableObjectType
 				this.name,
 				this.description,
 				this.imageId.getTransferable(),
-				this.isTopological,
+				this.topological,
 				this.mapLibrary.getId().getTransferable());
 	}
 
 	public boolean isTopological() {
-		return this.isTopological;
+		return this.topological;
 	}
 
 	@Override
@@ -243,7 +243,7 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	public void setTopological(final boolean topological) {
-		this.isTopological = topological;
+		this.topological = topological;
 		super.markAsChanged();
 	}
 
@@ -257,12 +257,12 @@ public final class SiteNodeType extends StorableObjectType
 			final String name,
 			final String description,
 			final Identifier imageId,
-			final boolean isTopological,
+			final boolean topological,
 			final Identifier mapLibraryId) throws IllegalDataException {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.imageId = imageId;
-		this.isTopological = isTopological;
+		this.topological = topological;
 		this.sort = sort;
 		try {
 			this.mapLibrary = StorableObjectPool.getStorableObject(mapLibraryId, true);
@@ -345,7 +345,7 @@ public final class SiteNodeType extends StorableObjectType
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
 		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue());
-		this.isTopological = xmlSiteNodeType.getTopological();
+		this.topological = xmlSiteNodeType.getTopological();
 
 		final String imageCodeName = xmlSiteNodeType.getImage();
 		Identifier loadedImageId = null;

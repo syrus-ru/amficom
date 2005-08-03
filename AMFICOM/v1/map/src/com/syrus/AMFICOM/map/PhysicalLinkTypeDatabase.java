@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.31 2005/08/03 14:29:03 max Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.32 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/03 14:29:03 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<PhysicalLinkType> {
@@ -46,7 +46,7 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<Physi
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ PhysicalLinkTypeWrapper.COLUMN_DIMENSION_X + COMMA
 				+ PhysicalLinkTypeWrapper.COLUMN_DIMENSION_Y + COMMA
-				+ PhysicalLinkTypeWrapper.COLUMN_IS_TOPOLOGICAL + COMMA
+				+ PhysicalLinkTypeWrapper.COLUMN_TOPOLOGICAL + COMMA
 				+ PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID;
 				
 		}
@@ -125,7 +125,7 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<Physi
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_X),
 				resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_DIMENSION_Y),
-				resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_IS_TOPOLOGICAL) != 0,
+				resultSet.getInt(PhysicalLinkTypeWrapper.COLUMN_TOPOLOGICAL) != 0,
 				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID));
 		return physicalLinkType;
 	}

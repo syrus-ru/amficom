@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.31 2005/08/03 15:15:39 max Exp $
+ * $Id: map.idl,v 1.32 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ module map {
 			public wstring description;
 
 			public general::corba::IdlIdentifier imageId;
-			public boolean isTopological;
+			public boolean topological;
 			
 			public general::corba::IdlIdentifier mapLibraryId;
 
@@ -59,7 +59,7 @@ module map {
 					in wstring name,
 					in wstring description,
 					in general::corba::IdlIdentifier imageId,
-					in boolean isTopological,
+					in boolean topological,
 					in general::corba::IdlIdentifier mapLibrary);
 		};
 
@@ -86,7 +86,7 @@ module map {
 			public wstring name;
 			public wstring description;
 			
-			public boolean isTopological;
+			public boolean topological;
 			
 			public long dimensionX;
 			public long dimensionY;
@@ -105,7 +105,7 @@ module map {
 					in wstring description,
 					in long dimensionX,
 					in long dimensionY,
-					in boolean isTopological,
+					in boolean topological,
 					in general::corba::IdlIdentifier mapLibraryId);
 		};
 

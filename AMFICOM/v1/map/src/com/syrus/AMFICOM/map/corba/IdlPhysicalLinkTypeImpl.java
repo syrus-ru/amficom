@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPhysicalLinkTypeImpl.java,v 1.4 2005/08/03 14:33:59 max Exp $
+ * $Id: IdlPhysicalLinkTypeImpl.java,v 1.5 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/08/03 14:33:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/08/03 20:13:20 $
  * @module map_v1
  */
 final class IdlPhysicalLinkTypeImpl extends IdlPhysicalLinkType {
@@ -42,7 +42,7 @@ final class IdlPhysicalLinkTypeImpl extends IdlPhysicalLinkType {
 			final String description,
 			final int dimensionX,
 			final int dimensionY,
-			final boolean isTopological,
+			final boolean topological,
 			final IdlIdentifier mapLibraryId) {
 		this.id = id;
 		this.created = created;
@@ -56,7 +56,7 @@ final class IdlPhysicalLinkTypeImpl extends IdlPhysicalLinkType {
 		this.description = description;
 		this.dimensionX = dimensionX;
 		this.dimensionY = dimensionY;
-		this.isTopological = isTopological;
+		this.topological = topological;
 		this.mapLibraryId = mapLibraryId;
 	}
 

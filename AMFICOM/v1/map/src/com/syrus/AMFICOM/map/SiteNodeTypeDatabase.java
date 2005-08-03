@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.30 2005/08/03 14:29:03 max Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.31 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/08/03 14:29:03 $
- * @author $Author: max $
+ * @version $Revision: 1.31 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
@@ -45,7 +45,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ SiteNodeTypeWrapper.COLUMN_IMAGE_ID + COMMA
-				+ SiteNodeTypeWrapper.COLUMN_IS_TOPOLOGICAL + COMMA
+				+ SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL + COMMA
 				+ SiteNodeTypeWrapper.COLUMN_MAP_LIBRARY_ID;
 		}
 		return columns;
@@ -116,7 +116,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseIdentifier.getIdentifier(resultSet, SiteNodeTypeWrapper.COLUMN_IMAGE_ID),
-				resultSet.getInt(SiteNodeTypeWrapper.COLUMN_IS_TOPOLOGICAL) == 1,
+				resultSet.getInt(SiteNodeTypeWrapper.COLUMN_TOPOLOGICAL) == 1,
 				DatabaseIdentifier.getIdentifier(resultSet, SiteNodeTypeWrapper.COLUMN_MAP_LIBRARY_ID));		
 		return siteNodeType;
 	}

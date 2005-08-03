@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.9 2005/08/03 14:29:03 max Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.10 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/03 14:29:03 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class SiteNodeTypeWrapper extends StorableObjectWrapper {
@@ -29,7 +29,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 	// image_id VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_IMAGE_ID = "image_id";
 	// topological NUMBER(1),
-	public static final String COLUMN_IS_TOPOLOGICAL = "is_topological";
+	public static final String COLUMN_TOPOLOGICAL = "topological";
 	// mapLibrary 
 	public static final String COLUMN_MAP_LIBRARY_ID = "map_library_id";
 
@@ -43,7 +43,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
 				COLUMN_IMAGE_ID,
-				COLUMN_IS_TOPOLOGICAL };
+				COLUMN_TOPOLOGICAL };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -90,7 +90,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				return siteNodeType.getDescription();
 			else if (key.equals(COLUMN_IMAGE_ID))
 				return siteNodeType.getImageId();
-			else if (key.equals(COLUMN_IS_TOPOLOGICAL))
+			else if (key.equals(COLUMN_TOPOLOGICAL))
 				return Boolean.valueOf(siteNodeType.isTopological());
 		}
 		return null;
@@ -115,7 +115,7 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 				siteNodeType.setDescription((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
 				siteNodeType.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_IS_TOPOLOGICAL))
+			else if (key.equals(COLUMN_TOPOLOGICAL))
 				siteNodeType.setTopological(((Boolean) value).booleanValue());
 		}
 	}

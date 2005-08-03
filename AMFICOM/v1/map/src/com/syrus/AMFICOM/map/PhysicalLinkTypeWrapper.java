@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.9 2005/08/03 14:29:03 max Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.10 2005/08/03 20:13:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/03 14:29:03 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
@@ -30,8 +30,8 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 	public static final String COLUMN_DIMENSION_X = "dimension_x";
 	// dimension_y NUMBER(12),
 	public static final String COLUMN_DIMENSION_Y = "dimension_y";
-	// isTopological NUMBER(1)
-	public static final String COLUMN_IS_TOPOLOGICAL = "is_topological";
+	// topological NUMBER(1)
+	public static final String COLUMN_TOPOLOGICAL = "topological";
 	// mapLibrary VARCHAR2(32)
 	public static final String COLUMN_MAP_LIBRARY_ID = "map_library_id";
 	
