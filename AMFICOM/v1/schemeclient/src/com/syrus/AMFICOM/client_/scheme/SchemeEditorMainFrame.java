@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.14 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.15 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -86,7 +86,8 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	
 	protected void initFrames() {
 		this.frames = new UIDefaults();
-		schemeTab = new SchemeTabbedPane(this.aContext);
+		this.schemeTab = new SchemeTabbedPane(this.aContext);
+		this.schemeTab.setEditable(true);
 		
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.16 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.17 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -394,7 +394,6 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (!graph.isEditable()) {
 			event.consume();
-			graph.setCursor(DEFAULT_CURSOR);
 		}
 			
 		if (SwingUtilities.isLeftMouseButton(event)) {
@@ -562,6 +561,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		super.mouseReleased(event);
 		
 		graph.repaint();
+		graph.setCursor(DEFAULT_CURSOR);
 //		graph.selectionNotify();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.7 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.8 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -41,7 +42,12 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane.SchemeKeyListener;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -50,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -124,7 +130,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	public void addPanel(ElementsPanel p) {
 		SchemeGraph graph = p.getGraph();
 		graph.setMarqueeHandler(marqueeHandler);
-		graph.addKeyListener(new SchemeKeyListener());
+		graph.addKeyListener(keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
 		
 		if (graphPanelsMap == null)
@@ -143,7 +149,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		for (int i = 0; i < comp.length; i++) {
 			UgoPanel p1 = graphPanelsMap.get(comp[i]);
 			if (p1.equals(p)) {
-				tabs.removeTabAt(i);
+				tabs.setSelectedIndex(i);
 				return;
 			}
 		}
@@ -190,10 +196,30 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
 				openSchemeElement(schemeElement, true);
-			} else if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+			} else if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
-				// TODO create SchemeElement from proto
-								
+				ElementsPanel panel1 = getCurrentPanel();
+				try {
+					SchemeElement schemeElement = null;
+					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+						SchemeElement se = panel1.getSchemeResource().getSchemeElement();
+						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, se);
+					} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+						Scheme scheme = panel1.getSchemeResource().getScheme();
+						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, scheme);
+					} else {
+						assert false : "Unknown CellContainerType " + panel1.getSchemeResource().getCellContainerType();
+					}
+					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
+					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeCellContainer(schemeElement, true);
+					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+					SchemeGraph graph = panel1.getGraph();
+					schemeElement.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
+					graph.selectionNotify();
+				} catch (CreateObjectException e) {
+					Log.errorException(e);
+				}
+				return;
 			}	else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object obj = see.getObject();
 				if (obj instanceof Scheme) {
@@ -213,10 +239,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		if (schemeCellContainer instanceof SchemeElement) {
 			return openSchemeElement((SchemeElement)schemeCellContainer, doClone);
 		} 
-		Log.debugMessage("Error: try to open SchemeProtoElement in SchemeTabbedPane ", Level.FINER);
+		assert false : "Error: try to open SchemeProtoElement in SchemeTabbedPane";
 		return Collections.emptyMap();
 	}
-	
+		
 	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch, boolean doClone) {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
@@ -246,6 +272,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		p.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
 		clones = super.openSchemeCellContainer(sch, doClone);
+		p.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
 		return clones;
 	}
 	

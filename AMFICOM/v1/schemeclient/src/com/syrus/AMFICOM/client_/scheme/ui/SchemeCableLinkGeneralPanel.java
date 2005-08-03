@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.10 2005/07/19 06:54:18 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.11 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -53,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/07/19 06:54:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -71,9 +74,10 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(CableLinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
 	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
-	JTextField tfOpticalText = new JTextField();
+	NumberFormatter nf = new NumberFormatter(NumberFormat.getNumberInstance());
+	JFormattedTextField tfOpticalText = new JFormattedTextField(nf);
 	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JTextField tfPhysicalText = new JTextField();
+	JFormattedTextField tfPhysicalText = new JFormattedTextField(nf);
 	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
 	JTextField tfInvNumberText = new JTextField();
@@ -107,6 +111,10 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void jbInit() throws Exception {
+		nf.setValueClass(Double.class);
+		nf.setMinimum(new Double(0));
+		nf.setCommitsOnValidEdit(true);
+		
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
@@ -489,16 +497,8 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 			schemeCableLink.setName(this.tfNameText.getText());
 			schemeCableLink.setDescription(this.taDescrArea.getText());
 			schemeCableLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
-			try {
-				schemeCableLink.setOpticalLength(Double.parseDouble(tfOpticalText.getText()));
-			} catch (NumberFormatException e) {
-				schemeCableLink.setOpticalLength(0);
-			}
-			try {
-				schemeCableLink.setPhysicalLength(Double.parseDouble(tfPhysicalText.getText()));
-			} catch (NumberFormatException e1) {
-				schemeCableLink.setPhysicalLength(0);
-			}
+			schemeCableLink.setOpticalLength((Double)(tfOpticalText.getValue()));
+			schemeCableLink.setPhysicalLength((Double)(tfPhysicalText.getValue()));
 
 			CableLink link = schemeCableLink.getAbstractLink();
 			if (cbLinkBox.isSelected()) {

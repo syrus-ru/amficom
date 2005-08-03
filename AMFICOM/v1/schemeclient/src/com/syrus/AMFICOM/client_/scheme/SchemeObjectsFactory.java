@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.15 2005/07/31 19:25:52 bass Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.16 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/07/31 19:25:52 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -419,6 +419,13 @@ public class SchemeObjectsFactory {
 		return schemeLink;
 	}
 	
+	public static SchemeLink createSchemeLink(String name, Scheme scheme) throws CreateObjectException {
+		assert scheme != null;
+		Identifier userId = LoginManager.getUserId();
+		SchemeLink schemeLink = SchemeLink.createInstance(userId, name, scheme);
+		return schemeLink;
+	}
+	
 	public static SchemeCableLink createSchemeCableLink(String name, Scheme parent) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		SchemeCableLink schemeLink = SchemeCableLink.createInstance(userId, name, parent);
@@ -436,11 +443,13 @@ public class SchemeObjectsFactory {
 			if (clonedCell instanceof DeviceGroup) {
 				DeviceGroup dev = (DeviceGroup)clonedCell;
 				Identifier id = dev.getElementId();
-				if (dev.getType() == DeviceGroup.PROTO_ELEMENT) {
-					dev.setProtoElementId(clonedIds.get(id));
-				} else {
-					dev.setSchemeElementId(clonedIds.get(id));
-				}
+				Identifier newId = clonedIds.get(id);
+				if (newId.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE)
+					dev.setProtoElementId(newId);
+				else if (newId.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE)
+					dev.setSchemeElementId(newId);
+				else
+					assert false : "Unknown object identifier " + newId;
 			} else if (clonedCell instanceof DeviceCell) {
 				DeviceCell cell = (DeviceCell)clonedCell;
 				Identifier id = cell.getSchemeDeviceId();

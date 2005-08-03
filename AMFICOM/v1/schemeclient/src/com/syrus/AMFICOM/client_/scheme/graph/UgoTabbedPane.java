@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.9 2005/08/01 07:52:28 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.10 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -161,6 +162,17 @@ public class UgoTabbedPane extends JPanel {
 						ImageIcon icon = null;
 						if (proto.getSymbol() != null)
 							icon = new ImageIcon(proto.getSymbol().getImage());
+						GraphActions.setImage(graph, cell, icon);
+					}
+					break;
+				case DeviceGroup.SCHEME:
+					Scheme scheme = (Scheme)object;
+					cell = GraphActions.getMainCell(groups[i]);
+					if (cell != null) {
+						GraphActions.setText(graph, cell, scheme.getLabel());
+						ImageIcon icon = null;
+						if (scheme.getSymbol() != null)
+							icon = new ImageIcon(scheme.getSymbol().getImage());
 						GraphActions.setImage(graph, cell, icon);
 					}
 					break;

@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.8 2005/08/01 07:52:28 stas Exp $
+ * $Id: DeleteAction.java,v 1.9 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -189,43 +189,51 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
+	static void deleteSchemeElement(SchemeElement element) {
+		if(element.getEquipment() != null)
+			objectsToDelete.add(element.getEquipment().getId());
+		objectsToDelete.add(element.getId());
+		for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeLink)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemePort)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeDevice)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeElement)it.next()).getId());
+		}
+	}
+	
+	static void deleteSchemeProtoElement(SchemeProtoElement element) {
+		objectsToDelete.add(element.getId());
+		for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeLink)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemePort)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+		}
+		for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
+			objectsToDelete.add(((SchemeDevice)it.next()).getId());
+		}
+	}
+	
 	static void deleteDeviceGroup(DeviceGroup group) {
 		cellsToDelete.add(group);
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			SchemeElement element = group.getSchemeElement();
-			if(element.getEquipment() != null)
-				objectsToDelete.add(element.getEquipment().getId());
-			objectsToDelete.add(element.getId());
-			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeLink)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemePort)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeDevice)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeElement)it.next()).getId());
-			}
+			deleteSchemeElement(element);
 		} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
 			SchemeProtoElement element = group.getProtoElement();
-			objectsToDelete.add(element.getId());
-			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeLink)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemePort)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
-			}
-			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeDevice)it.next()).getId());
-			}
+			deleteSchemeProtoElement(element);
 			// FIXME can't check childs while object itself not saved
 //			for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
 //				this.objectsToDelete.add(((SchemeElement)it.next()).getId());

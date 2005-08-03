@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.4 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -91,12 +91,12 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			if (s.equals(SchemeResourceKeys.SCHEME_PROTO_GROUP)) {
 				addToProtoGroup(node);
 			} else if (s.equals(SchemeResourceKeys.SCHEME_PROTO_ELEMENT)) {
-				addToProtoElement(node);
+//				addToProtoElement(node);
 			} 
 		} else if (node.getObject() instanceof SchemeProtoGroup) {
 			addToProtoGroup(node);
 		} else if (node.getObject() instanceof SchemeProtoElement) {
-			addToProtoElement(node);
+//			addToProtoElement(node);
 		}
 	}
 

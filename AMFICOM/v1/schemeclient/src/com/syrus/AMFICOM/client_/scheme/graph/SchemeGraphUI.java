@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.8 2005/07/19 14:20:24 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.9 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,17 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
+
+import javax.swing.AbstractAction;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellView;
@@ -40,11 +45,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/19 14:20:24 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -84,10 +91,45 @@ public class SchemeGraphUI extends GPGraphUI {
 					e.acceptDrop(DnDConstants.ACTION_MOVE);
 					e.getDropTargetContext().dropComplete(true);
 					if (transferableObjects.size() > 0) {
-						Object transferable = transferableObjects.iterator().next(); 
+						final Object transferable = transferableObjects.iterator().next();
+						long actionType = 0;
 						if (transferable instanceof SchemeProtoElement) {
-							SchemeProtoElement proto = (SchemeProtoElement)transferable;
-							((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, proto, SchemeEvent.OPEN_PROTOELEMENT));
+							actionType = SchemeEvent.INSERT_PROTOELEMENT;
+						} else if (transferable instanceof SchemeElement) {
+							actionType = SchemeEvent.INSERT_SCHEMEELEMENT;
+						} else if (transferable instanceof Scheme) {
+							actionType = SchemeEvent.INSERT_SCHEME;
+						}
+						if (actionType != 0) {
+							final long actionType1 = actionType;
+							JPopupMenu pop = new JPopupMenu();
+							JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+								public void actionPerformed(ActionEvent ev) {
+									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType1));									
+								}
+							});
+							menu1.setText("Вставить");
+							pop.add(menu1);
+							JMenuItem menu2 = new JMenuItem(new AbstractAction() {
+								public void actionPerformed(ActionEvent ev) {
+									long actionType2;
+									if (actionType1 == SchemeEvent.INSERT_PROTOELEMENT)
+										actionType2 = SchemeEvent.OPEN_PROTOELEMENT;
+									else if (actionType1 == SchemeEvent.INSERT_SCHEMEELEMENT)
+										actionType2 = SchemeEvent.OPEN_SCHEMEELEMENT;
+									else
+										actionType2 = SchemeEvent.OPEN_SCHEME;
+									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType2));									
+								}
+							});
+							menu2.setText("Открыть");
+							pop.add(menu2);
+							JMenuItem menu3 = new JMenuItem();
+							menu3.setText("Отмена");
+							pop.addSeparator();
+							pop.add(menu3);
+							
+							pop.show(graph, e.getLocation().x, e.getLocation().y);
 						}
 					}
 				} catch (UnsupportedFlavorException ex) {

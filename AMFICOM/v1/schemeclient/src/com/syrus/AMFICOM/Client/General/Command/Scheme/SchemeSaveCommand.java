@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -161,19 +163,21 @@ public class SchemeSaveCommand extends AbstractCommand {
 				scheme.setSchemeLinks(schemeLinks);
 				scheme.setSchemeCableLinks(schemeCableLinks);
 				scheme.setSchemeElements(schemeElements);
-			} catch (ApplicationException e1) {
-				Log.errorException(e1);
-			}
 			
-			//	create SchemeImageResource
-			try {
+				//	create SchemeImageResource
 				SchemeImageResource schemeIr = scheme.getSchemeCell();
 				if (schemeIr == null)
 					schemeIr = SchemeObjectsFactory.createSchemeImageResource();
 				
 				schemeIr.setData((List) graph.getArchiveableState());
 				scheme.setSchemeCell(schemeIr);
-				StorableObjectPool.flush(scheme.getId(), LoginManager.getUserId(), false);
+
+				Identifier userId = LoginManager.getUserId();
+				StorableObjectPool.flush(scheme.getId(), userId, false);
+				for (Identifiable identifiable : scheme.getReverseDependencies()) {
+					StorableObjectPool.flush(identifiable, userId, false);
+				}
+				
 				schemeTab.setGraphChanged(false);
 				
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ñץולא "

@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.11 2005/07/24 18:13:40 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.12 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -161,9 +161,8 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			CreateUgo.createElementUgo((SchemeElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
-			throw new UnsupportedOperationException("not realized yet");
+			CreateUgo.createSchemeUgo((Scheme)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 		}
-		
 		
 		SchemeImageResource sir = cellContainer.getUgoCell();
 		if (sir == null) {

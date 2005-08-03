@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.9 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.10 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,31 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
 import javax.swing.JToolBar;
+import javax.swing.UIManager;
+import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -41,9 +57,58 @@ public class SchemeTreeUI extends IconedTreeUI {
 	}
 
 	public class SchemeTreeToolBar extends IconedTreeToolBar {
+		
 		private static final long serialVersionUID = 3546082449625987129L;
 		
 		public SchemeTreeToolBar() {
+			super();
+			
+			final JButton deleteButton = new JButton();
+			deleteButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DELETE));
+			deleteButton.setToolTipText(LangModelGeneral.getString("Delete"));
+			deleteButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			deleteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					TreePath selectedPath = SchemeTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
+					if (selectedPath != null) {
+						Item item = (Item)selectedPath.getLastPathComponent();
+						Object object = item.getObject();
+						if (object instanceof Scheme) {
+							Scheme scheme = (Scheme)object;
+							StorableObjectPool.delete(scheme.getId());
+							updateRecursively(item.getParent());
+							try {
+								StorableObjectPool.flush(scheme, LoginManager.getUserId(), true);
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
+							}
+						}
+						else if (object instanceof SchemeProtoElement) {
+							SchemeProtoElement proto = (SchemeProtoElement)object;
+							proto.setParentSchemeProtoGroup(null);
+							updateRecursively(item.getParent());
+							try {
+								StorableObjectPool.flush(proto, LoginManager.getUserId(), true);
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
+							}
+						} else if (object instanceof SchemeProtoGroup) {
+							SchemeProtoGroup group = (SchemeProtoGroup)object;
+							if (group.getSchemeProtoElements().isEmpty() && 
+									group.getSchemeProtoGroups().isEmpty()) {
+								StorableObjectPool.delete(group.getId());
+								updateRecursively(item.getParent());
+								try {
+									StorableObjectPool.flush(group, LoginManager.getUserId(), true);
+								} catch (ApplicationException e1) {
+									Log.errorException(e1);
+								}
+							}
+						}
+					}
+				}
+			});
+			this.add(deleteButton);
 		}
 	}
 }

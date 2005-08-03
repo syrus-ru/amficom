@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.7 2005/08/01 07:52:28 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.8 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
@@ -51,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -59,13 +61,20 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	static JOptionPane optionPane;
 	static JDialog dialog;
 	int result;
+	protected KeyListener keyListener;
 		
 	public ElementsTabbedPane() {
 		super();
+		jbInit();
 	}
 	
 	public ElementsTabbedPane(ApplicationContext aContext) {
 		super(aContext);
+		jbInit();
+	}
+	
+	private void jbInit() {
+		keyListener = new SchemeKeyListener();
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -84,7 +93,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		panel = new ElementsPanel(aContext);
 		SchemeGraph graph = panel.getGraph();
 		graph.setMarqueeHandler(marqueeHandler);
-		graph.addKeyListener(new SchemeKeyListener());
+		graph.addKeyListener(keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
 		return graphView;
 	}
@@ -97,7 +106,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
+			if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
 				
 				try {
@@ -105,6 +114,9 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					Map<Identifier, Identifier>clonedIds = newProto.getClonedIdMap();
 					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeCellContainer(proto, true);
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+					UgoPanel p = getCurrentPanel();
+					SchemeGraph graph = p.getGraph();
+					newProto.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
 				} catch (CloneNotSupportedException e) {
 					Log.errorException(e);
 				}

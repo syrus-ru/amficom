@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: CreateGroup.java,v 1.6 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -237,7 +237,7 @@ public class CreateGroup extends AbstractAction {
 		return group;
 	}
 	
-	private static DeviceGroup createGroup(SchemeGraph graph, Object[] cells, Identifier id, int type) {
+	static DeviceGroup createGroup(SchemeGraph graph, Object[] cells, Identifier id, int type) {
 		Map viewMap = new HashMap();
 		DeviceGroup group = DeviceGroup.createInstance(null, viewMap, id, type);
 

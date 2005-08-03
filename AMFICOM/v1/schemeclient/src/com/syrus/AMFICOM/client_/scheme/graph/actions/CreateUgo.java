@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.4 2005/07/15 13:07:57 stas Exp $
+ * $Id: CreateUgo.java,v 1.5 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
@@ -37,7 +39,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -51,7 +53,7 @@ public class CreateUgo {
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)
 			return;
-		CreateGroup.createProtoGroup(graph, cells, proto);	
+		CreateGroup.createGroup(graph, cells, proto.getId(), DeviceGroup.PROTO_ELEMENT);	
 	}
 	
 	public static void createElementUgo(SchemeElement element, SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
@@ -59,7 +61,15 @@ public class CreateUgo {
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)
 			return;
-		CreateGroup.createElementsGroup(graph, cells, element);	
+		CreateGroup.createGroup(graph, cells, element.getId(), DeviceGroup.SCHEME_ELEMENT);	
+	}
+	
+	public static void createSchemeUgo(Scheme scheme, SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
+		create(graph, symbol, label, blockports_in, blockports_out);
+		Object[] cells = CreateGroup.getCellsToAdd(graph);
+		if (cells.length == 0)
+			return;
+		CreateGroup.createGroup(graph, cells, scheme.getId(), DeviceGroup.SCHEME);
 	}
 	 
 	

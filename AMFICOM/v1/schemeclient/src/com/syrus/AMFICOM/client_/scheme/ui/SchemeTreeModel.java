@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.28 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.29 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.28 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -28,15 +28,20 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.configuration.ui.ConfigurationTreeModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
@@ -60,54 +65,36 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		Object object = node.getObject();
 		if (object instanceof String) {
 			String s = (String)object;
-			/*if (s.equals(Constants.SCHEME))
-				return SchemeController.getInstance();
-			if (s.equals(Constants.SCHEME_ELEMENT))
-				return SchemeElementController.getInstance();
-			if (s.equals(Constants.SCHEME_LINK))
-				return SchemeLinkController.getInstance();
-			if (s.equals(Constants.SCHEME_CABLELINK))
-				return SchemeCableLinkController.getInstance();
-			if (s.equals(Constants.SCHEME_PATH))
-				return SchemePathController.getInstance();
-			if (s.equals(Constants.SCHEME_PROTO_GROUP))
-				return null;*/
-			/**
-			 * @todo write SchemeProtoGroupController return
-			 *       SchemeProtoGroupController.getInstance();
-			 */
 			if (s.equals(SchemeResourceKeys.SCHEME_TYPE))
-				return null;
+				return SchemePropertiesManager.getInstance(aContext);
+			if (s.equals(SchemeResourceKeys.SCHEME))
+				return SchemePropertiesManager.getInstance(aContext);
+			if (s.equals(SchemeResourceKeys.SCHEME_ELEMENT))
+				return SchemeElementPropertiesManager.getInstance(aContext);
+			if (s.equals(SchemeResourceKeys.SCHEME_LINK))
+				return SchemeLinkPropertiesManager.getInstance(aContext);
+			if (s.equals(SchemeResourceKeys.SCHEME_CABLELINK))
+				return SchemeCableLinkPropertiesManager.getInstance(aContext);
+//			if (s.equals(SchemeResourceKeys.SCHEME_PATH))
+//				return SchemePathPController.getInstance();
 			// for any other strings return null Manager
 			return null;
 		}
 		if (object instanceof IdlKind)
-				return null;
-//		if (object instanceof Kind)
-//			return SchemeController.getInstance();
-//		if (object instanceof SchemeProtoGroup) {
-//			if (!((SchemeProtoGroup) object).getSchemeProtoGroups().isEmpty())
-//				return null;
-			/**
-			 * @todo write SchemeProtoGroupController return
-			 *       SchemeProtoGroupController.getInstance();
-			 */
-//			else
-//				return null;
-			/**
-			 * @todo write SchemeProtoElementController return
-			 *       SchemeProtoElementController.getInstance();
-			 */
-//		}
-//		if (object instanceof Scheme)
-//			return SchemeController.getInstance();
-//		if (object instanceof SchemeElement)
-//			return SchemeElementController.getInstance();
+				return SchemePropertiesManager.getInstance(aContext);
+		if (object instanceof Scheme)
+			return SchemePropertiesManager.getInstance(aContext);
+		if (object instanceof SchemeElement)
+			return SchemeElementPropertiesManager.getInstance(aContext);
+		if (object instanceof SchemeLink)
+			return SchemeLinkPropertiesManager.getInstance(aContext);
+		if (object instanceof SchemeCableLink)
+			return SchemeCableLinkPropertiesManager.getInstance(aContext);
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 	
 	public void populate(Item node) {
-		Collection contents = CommonUIUtilities.getChildObjects(node);
+		Collection<Object> contents = CommonUIUtilities.getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
@@ -115,10 +102,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 				createRootItems(node, contents);
 			} 
 			else if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
-				for (int i = 0; i < schemeTypes.length; i++) {
-					if (!contents.contains(schemeTypes[i]))
-						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-				}
+				createSchemeKinds(node, contents);
 			}
 			/*
 			} 
@@ -204,23 +188,10 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		} 
 		else {
 			if (node.getObject() instanceof IdlKind) {
-				IdlKind type = (IdlKind) node.getObject();
-				TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
-						OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
-						StorableObjectWrapper.COLUMN_TYPE_ID);
-				try {
-					Set schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-					for (Iterator it = schemes.iterator(); it.hasNext();) {
-						Scheme sc = (Scheme) it.next();
-						if (!contents.contains(sc))
-							node.addChild(new PopulatableIconedNode(this, sc));
-					}
-				} 
-				catch (ApplicationException ex1) {
-					ex1.printStackTrace();
-				}
-			}/*
+				createSchemes(node, contents);
+			}
+				
+			/*
 			else if (node.getObject() instanceof Scheme) {
 				Scheme s = (Scheme) node.getObject();
 				if (s.getSchemeElementsAsArray().length != 0) {
@@ -314,6 +285,38 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		if (!contents.contains(ProtoGroupTreeModel.getRootObject())) {
 			ProtoGroupTreeModel 	protoTreeModel = new ProtoGroupTreeModel(aContext);
 			node.addChild(protoTreeModel.getRoot());
+		}
+	}
+	
+	private void createSchemeKinds(Item node, Collection contents) {
+		for (int i = 0; i < schemeTypes.length; i++) {
+			if (!contents.contains(schemeTypes[i]))
+				node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
+		}
+	}
+	
+	private void createSchemes(Item node, Collection contents) {
+		IdlKind type = (IdlKind) node.getObject();
+		
+		try {
+			TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
+					OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
+					SchemeWrapper.COLUMN_KIND);
+			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			
+			Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemes, contents);
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemes, node.getChildren());
+
+			for (Item child : toRemove) {
+				child.setParent(null);
+			}			
+			for (Iterator it = toAdd.iterator(); it.hasNext();) {
+				Scheme sc = (Scheme) it.next();
+				node.addChild(new PopulatableIconedNode(this, sc));
+			}
+		} 
+		catch (ApplicationException ex1) {
+			ex1.printStackTrace();
 		}
 	}
 }

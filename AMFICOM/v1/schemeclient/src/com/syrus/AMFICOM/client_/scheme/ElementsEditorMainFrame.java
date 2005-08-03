@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.10 2005/08/01 07:52:28 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.11 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -78,6 +78,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames = new UIDefaults();
 		
 		this.elementsTab = new ElementsTabbedPane(aContext);
+		this.elementsTab.setEditable(true);
 		
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 

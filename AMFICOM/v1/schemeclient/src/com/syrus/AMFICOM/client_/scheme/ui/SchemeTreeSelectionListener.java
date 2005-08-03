@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.1 2005/08/01 07:56:32 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.2 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -39,13 +40,14 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/08/01 07:56:32 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
 public class SchemeTreeSelectionListener implements TreeSelectionListener, PropertyChangeListener {
 	IconedTreeUI treeUI;
 	ApplicationContext aContext;
+	private boolean doNotify = true; 
 	
 	public SchemeTreeSelectionListener(IconedTreeUI treeUI, ApplicationContext aContext) {
 		this.treeUI = treeUI;
@@ -64,6 +66,10 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 	}
 	
 	public void valueChanged(TreeSelectionEvent e) {
+		if (!this.doNotify) {
+			return;
+		}
+			
 		Item node = (Item)e.getPath().getLastPathComponent();
 		if (node == null)
 			return;
@@ -94,6 +100,8 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.SCHEME_PROTOGROUP;
 		else if (object instanceof SchemeProtoElement)
 			type = ObjectSelectedEvent.SCHEME_PROTOELEMENT;
+		else if (object instanceof Scheme)
+			type = ObjectSelectedEvent.SCHEME;
 		else if (object instanceof Result)
 			type = ObjectSelectedEvent.RESULT;
 		else if (object instanceof String || object instanceof IdlKind) {
@@ -104,8 +112,8 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			Log.debugMessage(this.getClass().getName() + " | Unsupported tree object type " + object, Level.FINER); //$NON-NLS-1$
 			return;
 		}
-		ObjectSelectedEvent ev = new ObjectSelectedEvent(e.getSource(), object, manager, type);
-		aContext.getDispatcher().firePropertyChange(ev);
+		ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, manager, type);
+		aContext.getDispatcher().firePropertyChange(ev, false);
 	}
 	
 	public void propertyChange(PropertyChangeEvent e) {
@@ -114,9 +122,15 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			Object selected = ev.getSelectedObject();
 			if (selected != null && this.treeUI.isLinkObjects()) {
 				ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
-				Item node = this.treeUI.findNode((Item)model.getRoot(), selected, true);
-				if (node != null)
+				Item node = this.treeUI.findNode((Item)model.getRoot(), selected, false);
+				if (node == null) {
+					node = this.treeUI.findNode((Item)model.getRoot(), selected, true);
+				} 
+				if (node != null) {
+					this.doNotify = false;
 					this.treeUI.getTree().setSelectionPath(new TreePath(model.getPathToRoot(node)));
+					this.doNotify = true;
+				}
 			}
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent ev = (SchemeEvent)e;

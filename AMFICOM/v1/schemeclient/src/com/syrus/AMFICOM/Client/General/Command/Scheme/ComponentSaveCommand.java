@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.awt.HeadlessException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -90,7 +93,9 @@ public class ComponentSaveCommand extends AbstractCommand {
 			return;
 		}
 		
-		if (proto.getParentSchemeProtoGroup() == null) {
+		try {
+			proto.getParentSchemeProtoGroup();
+		} catch (IllegalStateException e2) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					"Не установлена родительская группа для компонента", "Ошибка", JOptionPane.OK_OPTION);
 			return;
@@ -113,19 +118,20 @@ public class ComponentSaveCommand extends AbstractCommand {
 		try {
 			proto.setSchemeLinks(schemeLinks);
 			proto.setSchemeProtoElements(schemeProtoElements);
-		} catch (ApplicationException e1) {
-			Log.errorException(e1);
-		}
 
-		// create SchemeImageResource
-		try {
+			// create SchemeImageResource
 			SchemeImageResource schemeIr = proto.getSchemeCell();
-			if (schemeIr == null)
+			if (schemeIr == null) {
 				schemeIr = SchemeObjectsFactory.createSchemeImageResource();
+				proto.setSchemeCell(schemeIr);
+			}
 			schemeIr.setData((List) graph.getArchiveableState());
 
-			proto.setSchemeCell(schemeIr);
-			StorableObjectPool.flush(proto.getId(), LoginManager.getUserId(), false);
+			Identifier userId = LoginManager.getUserId();
+			StorableObjectPool.flush(proto.getId(), userId, false);
+			for (Identifiable identifiable : proto.getReverseDependencies()) {
+				StorableObjectPool.flush(identifiable, userId, false);
+			}
 			cellPane.setGraphChanged(false);
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Компонент "

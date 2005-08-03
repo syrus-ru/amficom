@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.10 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.11 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -29,6 +30,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -55,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -73,10 +75,11 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
 	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
-	JFormattedTextField tfOpticalText = new JFormattedTextField(NumberFormat.getNumberInstance());
+	NumberFormatter nf = new NumberFormatter(NumberFormat.getNumberInstance());
+	JFormattedTextField tfOpticalText = new JFormattedTextField(nf);
 	JLabel lbM2Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JFormattedTextField tfPhysicalText = new JFormattedTextField(NumberFormat.getNumberInstance());
+	JFormattedTextField tfPhysicalText = new JFormattedTextField(nf);
 	JLabel lbM1Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
@@ -111,6 +114,10 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void jbInit() throws Exception {
+		nf.setValueClass(Double.class);
+		nf.setMinimum(new Double(0));
+		nf.setCommitsOnValidEdit(true);
+		
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
@@ -477,8 +484,8 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		if (schemeLink != null) {
 			this.tfNameText.setText(schemeLink.getName());
 			this.taDescrArea.setText(schemeLink.getDescription());
-			this.tfOpticalText.setText(Double.toString(schemeLink.getOpticalLength()));
-			this.tfPhysicalText.setText(Double.toString(schemeLink.getPhysicalLength()));
+			this.tfOpticalText.setValue(Double.valueOf(schemeLink.getOpticalLength()));
+			this.tfPhysicalText.setValue(Double.valueOf(schemeLink.getPhysicalLength()));
 			this.cmbTypeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
 			link = schemeLink.getAbstractLink();
 		} else {

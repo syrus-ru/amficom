@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.12 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.13 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -64,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -417,7 +416,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
 			Collections.sort(sortedGroups, new WrapperComparator(SchemeProtoGroupWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 			parentCombo.addElements(sortedGroups);
-			parentCombo.addItem(NON_GROUP_ITEM);
+//			parentCombo.addItem(NON_GROUP_ITEM);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
@@ -434,25 +433,23 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			
 			try {
 				if (this.schemeProtoElement.getParentSchemeProtoElement() != null) {
+					this.parentCombo.addItem(NON_GROUP_ITEM);
 					this.parentCombo.setSelectedItem(NON_GROUP_ITEM);
 					this.parentCombo.setEnabled(false);
 				} else {
 					SchemeProtoGroup parent = this.schemeProtoElement.getParentSchemeProtoGroup();
-					if (parent == null)
-						this.parentCombo.setSelectedItem(NON_GROUP_ITEM);
-					else
+					if (parent != null)
 						this.parentCombo.setSelectedItem(parent);
 					this.parentCombo.setEnabled(true);
 				}
 			} catch (IllegalStateException e1) {
-				this.parentCombo.setSelectedItem(NON_GROUP_ITEM);
+				// ignore as it means parent == null
 			}
 		} else {
 			this.nameText.setText(SchemeResourceKeys.EMPTY);
 			this.descrArea.setText(SchemeResourceKeys.EMPTY);
 			this.labelText.setText(SchemeResourceKeys.EMPTY);
-			
-			this.parentCombo.setSelectedItem(NON_GROUP_ITEM);
+
 			this.parentCombo.setEnabled(true);
 		}
 		
@@ -492,9 +489,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				schemeProtoElement.setEquipmentType(eqt);
 			}
 			Object parent = this.parentCombo.getSelectedItem();
-			if (parent == null || parent.equals(NON_GROUP_ITEM)) {
-				this.schemeProtoElement.setParentSchemeProtoGroup(null);
-			} else {
+			if (parent != null) {
 				this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup)parent);	
 			}			
 			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeProtoElement, SchemeEvent.UPDATE_OBJECT));

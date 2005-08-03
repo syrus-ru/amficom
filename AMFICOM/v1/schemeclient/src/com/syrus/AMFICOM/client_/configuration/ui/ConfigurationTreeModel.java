@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.3 2005/08/01 07:52:27 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.4 2005/08/03 09:29:41 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/03 09:29:41 $
  * @module schemeclient_v1
  */
 
@@ -194,9 +194,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
-			for (Iterator it = toRemove.iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
+			for (Item child : toRemove) {
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
@@ -215,9 +214,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
-			for (Iterator it = toRemove.iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
+			for (Item child : toRemove) {
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
@@ -239,9 +237,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(portTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(portTypes, node.getChildren());
-			for (Iterator it = toRemove.iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(portTypes, node.getChildren());
+			for (Item child : toRemove) {
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
@@ -260,9 +257,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(equipmentTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(equipmentTypes, node.getChildren());
-			for (Iterator it = toRemove.iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(equipmentTypes, node.getChildren());
+			for (Item child : toRemove) {
 				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
@@ -282,11 +278,9 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> mpTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(mpTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(mpTypes, node.getChildren());
-			for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
-				if (toRemove.contains(child.getObject()))
-					child.setParent(null);
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(mpTypes, node.getChildren());
+			for (Item child : toRemove) {
+				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				MeasurementPortType type = (MeasurementPortType)it.next();
@@ -304,11 +298,9 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			Collection<StorableObject> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			Collection toAdd = CommonUIUtilities.getObjectsToAdd(measurementTypes, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(measurementTypes, node.getChildren());
-			for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-				Item child = (Item)it.next();
-				if (toRemove.contains(child.getObject()))
-					child.setParent(null);
+			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(measurementTypes, node.getChildren());
+			for (Item child : toRemove) {
+				child.setParent(null);
 			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				MeasurementType type = (MeasurementType)it.next();
