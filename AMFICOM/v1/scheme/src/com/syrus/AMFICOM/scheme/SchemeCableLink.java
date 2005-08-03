@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.61 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.62 2005/08/03 11:19:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,6 @@ import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -64,7 +63,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/03 11:19:31 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -104,7 +103,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 			final double physicalLength,
 			final double opticalLength,
 			final CableLinkType cableLinkType,
-			final Link link,
+			final CableLink cableLink,
 			final SchemeCablePort sourceSchemeCablePort,
 			final SchemeCablePort targetSchemeCablePort,
 			final Scheme parentScheme) {
@@ -119,7 +118,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 				physicalLength,
 				opticalLength,
 				cableLinkType,
-				link,
+				cableLink,
 				sourceSchemeCablePort,
 				targetSchemeCablePort,
 				parentScheme);
@@ -135,7 +134,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, double, double, CableLinkType, Link, SchemeCablePort, SchemeCablePort, Scheme)}.
+	 * {@link #createInstance(Identifier, String, String, double, double, CableLinkType, CableLink, SchemeCablePort, SchemeCablePort, Scheme)}.
 	 *
 	 * @param creatorId
 	 * @param name
@@ -155,7 +154,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @param physicalLength
 	 * @param opticalLength
 	 * @param cableLinkType
-	 * @param link
+	 * @param cableLink
 	 * @param sourceSchemeCablePort
 	 * @param targetSchemeCablePort
 	 * @param parentScheme
@@ -167,7 +166,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 			final double physicalLength,
 			final double opticalLength,
 			final CableLinkType cableLinkType,
-			final Link link,
+			final CableLink cableLink,
 			final SchemeCablePort sourceSchemeCablePort,
 			final SchemeCablePort targetSchemeCablePort,
 			final Scheme parentScheme) throws CreateObjectException {
@@ -189,12 +188,12 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 					physicalLength,
 					opticalLength,
 					cableLinkType,
-					link,
+					cableLink,
 					sourceSchemeCablePort,
 					targetSchemeCablePort,
 					parentScheme);
 			schemeCableLink.markAsChanged();
-			if (link != null || cableLinkType != null)
+			if (cableLink != null || cableLinkType != null)
 				schemeCableLink.abstractLinkTypeSet = true;
 			return schemeCableLink;
 		} catch (final IdentifierGenerationException ige) {
@@ -453,7 +452,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	 * @param physicalLength
 	 * @param opticalLength
 	 * @param cableLinkTypeId
-	 * @param linkId
+	 * @param cableLinkId
 	 * @param sourceSchemeCablePortId
 	 * @param targetSchemeCablePortId
 	 * @param parentSchemeId
@@ -470,7 +469,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 			final double physicalLength,
 			final double opticalLength,
 			final Identifier cableLinkTypeId,
-			final Identifier linkId,
+			final Identifier cableLinkId,
 			final Identifier sourceSchemeCablePortId,
 			final Identifier targetSchemeCablePortId,
 			final Identifier parentSchemeId) {
@@ -484,7 +483,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 				physicalLength,
 				opticalLength,
 				cableLinkTypeId,
-				linkId,
+				cableLinkId,
 				sourceSchemeCablePortId,
 				targetSchemeCablePortId,
 				parentSchemeId);
