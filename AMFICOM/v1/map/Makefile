@@ -91,9 +91,10 @@ xml: .xml
 
 .PHONY: xmlinstall
 xmlinstall: .xml $(LIBDIR)
-	install $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(LIBDIR)
+	install -m 0644 $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(LIBDIR)
 
 $(LIBNAME_MAPXML): $(LIBNAME_GENERALXML)
+	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBNAME_GENERALXML) \
 		$(XMLDIR)/Map.xsd \
 		$(XMLDIR)/Characteristic.xsd \
@@ -107,12 +108,17 @@ $(LIBNAME_MAPXML): $(LIBNAME_GENERALXML)
 		$(XMLDIR)/MapLibrary.xsd
 
 $(LIBNAME_GENERALXML):
+	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/General.xsd
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
 	$(RM) $(LIBNAME)
+
+.PHONY: distclean
+distclean:
+	$(RM) -r $(wildcard $(CLASSDIR)/*) $(wildcard *.jar) .xml .idl .mach .corba
 
 .PHONY: cleanmach
 cleanmach:
@@ -125,8 +131,7 @@ cleancorba: idlclean
 	$(RM) .corba
 
 .PHONY: cleanxml xmlclean
-cleanxml:
-xmlclean:
+cleanxml xmlclean:
 	$(RM) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
 	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
@@ -135,7 +140,7 @@ xmlclean:
 #### Install ####
 .PHONY: install
 install: $(LIBNAME) $(LIBDIR)
-	install $^
+	install -m 0644 $^
 
 #### Archive ####
 .PHONY: arch
@@ -148,7 +153,3 @@ arch:
 .PHONY: pmd
 pmd:
 	$(JAVA) -classpath $(PMD_JARS) -jar $(PMD_JAR) src/com/syrus/AMFICOM/map text $(PMD_RULES) 
-
-
-test:
-	@echo $(XMLBEANSLIBDIR)
