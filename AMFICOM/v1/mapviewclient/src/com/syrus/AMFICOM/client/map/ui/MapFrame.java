@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.58 2005/08/02 07:41:10 krupenn Exp $
+ * $Id: MapFrame.java,v 1.59 2005/08/03 18:51:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.client.map.command.navigate.MapModeCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.MeasureDistanceCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.MoveFixedCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.MoveToCenterCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.ShowIndicationCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ShowNodesCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomBoxCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.ZoomInCommand;
@@ -74,7 +75,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.58 $, $Date: 2005/08/02 07:41:10 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/03 18:51:34 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -256,6 +257,7 @@ public class MapFrame extends JInternalFrame
 		aModel.setCommand(MapApplicationModel.OPERATION_ZOOM_BOX, new ZoomBoxCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_TO_CENTER, new MoveToCenterCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.MODE_NODES, new ShowNodesCommand(aModel, this.mapViewer));
+		aModel.setCommand(MapApplicationModel.MODE_INDICATION, new ShowIndicationCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.OPERATION_HAND_PAN, new HandPanCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.OPERATION_MEASURE_DISTANCE, new MeasureDistanceCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.OPERATION_MOVE_FIXED, new MoveFixedCommand(aModel, this.mapViewer));

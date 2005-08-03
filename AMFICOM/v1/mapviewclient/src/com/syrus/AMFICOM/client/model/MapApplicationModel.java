@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModel.java,v 1.3 2005/06/23 08:16:32 krupenn Exp $
+ * $Id: MapApplicationModel.java,v 1.4 2005/08/03 18:52:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ package com.syrus.AMFICOM.client.model;
  *  
  * 
  * @author Andrei Kroupennikov
- * @version $Revision: 1.3 $, $Date: 2005/06/23 08:16:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/03 18:52:19 $
  * @module mapviewclient_v1
  */
 public class MapApplicationModel extends ApplicationModel
@@ -37,6 +37,7 @@ public class MapApplicationModel extends ApplicationModel
 	public static final String MODE_PATH = "mapModePath";
 
 	public static final String MODE_NODES = "mapModeViewNodes";
+	public static final String MODE_INDICATION = "mapModeViewIndication";
 
 	public static final String OPERATION_ZOOM_IN = "mapActionZoomIn";
 	public static final String OPERATION_ZOOM_OUT = "mapActionZoomOut";
@@ -65,6 +66,7 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(MODE_PATH);
 
 		super.add(MODE_NODES);
+		super.add(MODE_INDICATION);
 
 		super.add(OPERATION_ZOOM_IN);
 		super.add(OPERATION_ZOOM_OUT);
