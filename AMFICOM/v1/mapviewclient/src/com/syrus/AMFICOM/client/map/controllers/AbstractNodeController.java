@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.14 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.15 2005/08/03 18:50:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/06/22 08:43:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/03 18:50:38 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -217,7 +217,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 		// если на элементе есть сигнал тревоги, то анимация
 		// в зависимости от флага getShowAlarmed()
 		if(node.getAlarmState()) {
-			if(MapPropertiesManager.isShowAlarmState()) {
+			if(MapPropertiesManager.isDrawAlarmed()) {
 				pg.drawImage(
 						getAlarmedImage(node),
 						p.x - width / 2, 

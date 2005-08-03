@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.16 2005/08/02 07:58:37 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.17 2005/08/03 18:50:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/08/02 07:58:37 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/03 18:50:38 $
  * @module mapviewclient_v1
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -275,7 +275,7 @@ public final class NodeLinkController extends AbstractLinkController {
 
 		//Если alarm есть то специальный thread будет менять showAlarmState и
 		// NodeLink будет мигать
-		if((nodeLink.getAlarmState()) && MapPropertiesManager.isShowAlarmState()) {
+		if((nodeLink.getAlarmState()) && MapPropertiesManager.isDrawAlarmed()) {
 			p.setColor(getAlarmedColor(nodeLink));
 		}
 		else {
