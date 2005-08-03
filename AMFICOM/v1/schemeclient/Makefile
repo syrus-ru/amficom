@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.7 2005/08/03 09:53:32 arseniy Exp $
+# $Id: Makefile,v 1.8 2005/08/03 14:58:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -18,6 +18,25 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
 
 
+$(LIBNAME):	.mach
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/schematics_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/config_ru.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang/
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/scheme_messages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/scheme_messages_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames_ru.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource/
+	$(CP) \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages_ru.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/client_/scheme/graph/
+	$(JAR) -cf $@ \
+		-C $(CLASSDIR) com
+
+
 .mach: $(CLASSDIR)
 	$(JAVAC) \
 		$(JAVACFLAGS) \
@@ -34,8 +53,16 @@ cleanmach:
 	$(RM) $(shell find $(CLASSDIR) -name '*\.class')
 	$(RM) .mach
 
+
+#### Install ####
+.PHONY:	install
+install: $(LIBNAME) $(LIBDIR)
+	$(CP) $^
+
+
 #### Archive ####
 .PHONY: arch
 arch:
 	tar -czvf $(ARCHFILE) \
-		Makefile 
+		Makefile \
+		$(SRCDIR)
