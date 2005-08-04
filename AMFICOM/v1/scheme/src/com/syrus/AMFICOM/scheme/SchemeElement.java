@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.66 2005/08/02 11:08:02 bass Exp $
+ * $Id: SchemeElement.java,v 1.67 2005/08/04 12:25:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/08/02 11:08:02 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/04 12:25:30 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1122,15 +1122,25 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
+	 * @param schemeCellId
+	 */
+	void setSchemeCellId(final Identifier schemeCellId) {
+		assert schemeCellId.isVoid() || schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.schemeCellId.equals(schemeCellId)) {
+			return;
+		}
+		this.schemeCellId = schemeCellId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setSchemeCellId(Identifier)}.
+	 *
 	 * @param schemeCell
 	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
 	public void setSchemeCell(final SchemeImageResource schemeCell) {
-		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
-		if (this.schemeCellId.equals(newSchemeCellId))
-			return;
-		this.schemeCellId = newSchemeCellId;
-		super.markAsChanged();
+		this.setSchemeCellId(Identifier.possiblyVoid(schemeCell));
 	}
 
 	public void setSchemeDevices(final Set<SchemeDevice> schemeDevices) throws ApplicationException {
@@ -1208,27 +1218,47 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * @param symbol
-	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @param symbolId
 	 */
-	public void setSymbol(final BitmapImageResource symbol) {
-		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
-		if (this.symbolId.equals(newSymbolId))
+	void setSymbolId(final Identifier symbolId) {
+		assert symbolId.isVoid() || symbolId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.symbolId.equals(symbolId)) {
 			return;
-		this.symbolId = newSymbolId;
+		}
+		this.symbolId = symbolId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setSymbolId(Identifier)}.
+	 *
+	 * @param symbol
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 */
+	public void setSymbol(final BitmapImageResource symbol) {
+		this.setSymbolId(Identifier.possiblyVoid(symbol));
+	}
+
+	/**
+	 * @param ugoCellId
+	 */
+	void setUgoCellId(final Identifier ugoCellId) {
+		assert ugoCellId.isVoid() || ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.ugoCellId.equals(ugoCellId)) {
+			return;
+		}
+		this.ugoCellId = ugoCellId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setUgoCellId(Identifier)}.
+	 *
 	 * @param ugoCell
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {
-		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
-		if (this.ugoCellId.equals(newUgoCellId))
-			return;
-		this.ugoCellId = newUgoCellId;
-		super.markAsChanged();
+		this.setUgoCellId(Identifier.possiblyVoid(ugoCell));
 	}
 
 	/**
