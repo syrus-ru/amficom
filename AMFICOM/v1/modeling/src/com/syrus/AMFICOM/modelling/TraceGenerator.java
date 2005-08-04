@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.3 2005/08/04 17:24:31 saa Exp $
+ * $Id: TraceGenerator.java,v 1.4 2005/08/04 18:00:08 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.io.BellcoreWriter;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/08/04 17:24:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/04 18:00:08 $
  * @module
  */
 public class TraceGenerator {
@@ -208,7 +208,7 @@ public class TraceGenerator {
 	 * @param p0 координата начала рассматриваемого участка волокна
 	 * @param p1 координата конца рассматриваемого участка волокна
 	 * @param xPos координата начала отсчета времени
-	 * @param tau постоянная "времени" (координаты) затухания в волокне
+	 * @param rtau обратная постоянная "времени" (координаты) затухания в волокне
 	 * @return количество света в эаданном единичном временном интервале
 	 */
 	public static double calcExpPulseIntSlow(
@@ -216,7 +216,7 @@ public class TraceGenerator {
 			double p0,
 			double p1,
 			double xPos,
-			double tau) {
+			double rtau) {
 		double step = 0.01;
 		double sum = 0.0;
 		for (double x = xPos + step / 2; x < xPos + 1; x += step) {
@@ -224,7 +224,7 @@ public class TraceGenerator {
 				double pos = x + t;
 				if (pos < p0 || pos >= p1)
 					continue;
-				sum += exp(-(pos - p0) / tau);
+				sum += exp(-(pos - p0) * rtau);
 			}
 		}
 		sum *= step * step / w;
@@ -241,6 +241,8 @@ public class TraceGenerator {
 		// should return a*exp(-a*eps) - b*exp(-a*eps) + (exp(-a*eps)-exp(-b*eps) / eps)
 		double k = b - a;
 		double ekm1 = Math.expm1(k * eps);
+		double v1 = a * ekm1;
+		double v2 = expm1mx(k * eps) / eps;
 		return exp(-b * eps) * (a * ekm1 + expm1mx(k * eps) / eps);
 	}
 	/**
@@ -253,9 +255,8 @@ public class TraceGenerator {
 			double p0,
 			double p1,
 			double xPos,
-			double tau) {
+			double rtau) {
 		double x0 = xPos - w;
-		double rtau = 1.0 / tau;
 		double mult0 = - exp(-(x0 - p0) * rtau) / w;
 		double sum1 = 0.0;
 		double a, b;
@@ -267,7 +268,8 @@ public class TraceGenerator {
 		a = Math.max(p0 - x0, 1);
 		b = Math.min(p1 - x0, w + 1);
 		if (b > a) {
-			sum1 -= exp(-a * rtau) - exp(-b * rtau);
+			//sum1 -= exp(-a * rtau) - exp(-b * rtau);
+			sum1 -= exp(-b * rtau) * Math.expm1((b - a) * rtau);
 		}
 		a = Math.max(p0 - x0, w);
 		b = Math.min(p1 - x0, w + 1);
@@ -277,18 +279,18 @@ public class TraceGenerator {
 			sum1 += -w * (eA - eB);
 			sum1 += aEmaeMbEmbePreEmaeMEmbe(a, b, rtau);
 		}
-		sum1 *= mult0 * tau;
+		sum1 *= mult0 / rtau;
 		return sum1;
 	}
 
 	private static void addExponentCurve(double[] data,
 			double posBegin, double posEnd,
-			double levelBegin, double tau, double pWidth) {
+			double levelBegin, double rtau, double pWidth) {
 		// определяем диапазон координат, затрагиваемые импульсом
 		int iBeg = Math.max((int)Math.floor(posBegin), 0);
 		int iEnd = Math.min((int)Math.floor(posEnd + pWidth), data.length - 1);
 		for (int i = iBeg; i <= iEnd; i++) {
-			data[i] += calcExpPulseInt(pWidth, posBegin, posEnd, i, tau)
+			data[i] += calcExpPulseInt(pWidth, posBegin, posEnd, i, rtau)
 					* levelBegin;
 		}
 	}
@@ -345,7 +347,7 @@ public class TraceGenerator {
 					double endLevel = level * exp(-len * rtau);
 					// FIXME нулевое затухание вызовет деление на ноль
 					addExponentCurve(data,
-							pos, pos + len, level, 1.0 / rtau, pulseW);
+							pos, pos + len, level, rtau, pulseW);
 					pos = endPos;
 					level = endLevel;
 				}
@@ -358,7 +360,9 @@ public class TraceGenerator {
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
 				ModelEvent.createReflective(1.0, -20),
-				ModelEvent.createLinear(100.3, 1e-14),
+				// todo ошибка - потеря точности при малых затуханиях
+				// раскомментировать следующую строку для воспроизведения ошибки "малые затухания"
+				//ModelEvent.createLinear(100.3, 1e-18),
 				ModelEvent.createLinear(200.4, 2e-4),
 				ModelEvent.createLinear(100.3, 1e-5),
 //				// сварка
@@ -402,10 +406,10 @@ public class TraceGenerator {
 
 	public static void main(String[] args)
 	throws InternalError, IOException {
-		TraceGenerator tg = myTestGenerator1();
-		//TraceGenerator tg = myTestGenerator2();
+		//TraceGenerator tg = myTestGenerator1();
+		TraceGenerator tg = myTestGenerator2();
 
-		tg.printTrace(new PrintStream(new File("dump.txt")));
+		//tg.printTrace(new PrintStream(new File("dump.txt")));
 
 		// export to bellcore
 		BellcoreStructure bs = tg.getBellcore();
