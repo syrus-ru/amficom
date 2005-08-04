@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.30 2005/08/02 13:05:28 bass Exp $
+# $Id: Makefile.inc,v 1.31 2005/08/04 13:59:38 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -23,13 +23,8 @@ CLASSDIR := classes
 
 AMFICOM_HOME := $(shell echo $(AMFICOM_HOME) | sed "s|~|$(HOME)|g")
 
-ifeq ($(AMFICOM_HOME),)
-LIBDIR ?= ../lib
-EXTLIBDIR ?= ../../extlib
-else
 LIBDIR = $(AMFICOM_HOME)/lib
-EXTLIBDIR = $(AMFICOM_HOME)/lib/ext
-endif
+EXTLIBDIR = $(AMFICOM_HOME)/../extlib
 
 checkenve = $(if $($(1)), , $(error $(1) is undefined. Define it prior to issuing "$(MAKE)"))
 checkenvw = $(if $($(1)), , $(warning $(1) is undefined. Define it prior to issuing "$(MAKE)"))
