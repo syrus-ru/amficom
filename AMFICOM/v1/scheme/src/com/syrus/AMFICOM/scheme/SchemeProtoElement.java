@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.71 2005/08/02 09:34:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.72 2005/08/04 12:17:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -78,7 +78,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/08/02 09:34:16 $
+ * @version $Revision: 1.72 $, $Date: 2005/08/04 12:17:50 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -1016,15 +1016,24 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param equipmentTypeId
+	 */
+	void setEquipmentTypeId(final Identifier equipmentTypeId) {
+		assert equipmentTypeId.isVoid() || equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+		if (this.equipmentTypeId.equals(equipmentTypeId)) {
+			return;
+		}
+		this.equipmentTypeId = equipmentTypeId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setEquipmentTypeId(Identifier)}.
+	 *
 	 * @param equipmentType can be <code>null</code>.
 	 */
 	public void setEquipmentType(final EquipmentType equipmentType) {
-		final Identifier newEquipmentTypeId = Identifier.possiblyVoid(equipmentType);
-		if (this.equipmentTypeId.equals(newEquipmentTypeId)) {
-			return;
-		}
-		this.equipmentTypeId = newEquipmentTypeId;
-		super.markAsChanged();
+		this.setEquipmentTypeId(Identifier.possiblyVoid(equipmentType));
 	}
 
 	/**
@@ -1083,6 +1092,45 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param parentSchemeProtoElementId
+	 */
+	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId) {
+		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		assert !parentSchemeProtoElementId.equals(super.id) : CIRCULAR_DEPS_PROHIBITED;
+		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+
+		if (this.parentSchemeProtoGroupId.isVoid()) {
+			/*
+			 * Moving from an element to another element.
+			 */
+			if (parentSchemeProtoElementId.isVoid()) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(super.id);
+				return;
+			}
+			if (this.parentSchemeProtoElementId.equals(parentSchemeProtoElementId)) {
+				return;
+			}
+		} else {
+			/*
+			 * Moving from a group to an element.
+			 */
+			if (parentSchemeProtoElementId.isVoid()) {
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				return;
+			}
+			this.parentSchemeProtoGroupId = VOID_IDENTIFIER;
+		}
+		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * <p>
+	 * A wrapper around {@link #setParentSchemeProtoElementId(Identifier)}.
+	 * </p>
+	 *
+	 * <p>
 	 * If this <code>SchemeProtoElement</code> is initially inside another
 	 * <code>SchemeProtoElement</code>, and
 	 * <code>parentSchemeProtoElement</code> is <code>null</code>, then
@@ -1091,43 +1139,53 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * initially inside a <code>SchemeProtoGroup</code>, and
 	 * <code>parentSchemeProtoElement</code> is <code>null</code>, then
 	 * no action is taken.
+	 * </p>
 	 *
 	 * @param parentSchemeProtoElement
 	 */
 	public void setParentSchemeProtoElement(final SchemeProtoElement parentSchemeProtoElement) {
-		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
-		assert parentSchemeProtoElement != this: CIRCULAR_DEPS_PROHIBITED;
+		this.setParentSchemeProtoElementId(parentSchemeProtoElement.id);
+	}
 
-		Identifier newParentSchemeProtoElementId;
-		if (this.parentSchemeProtoGroupId.isVoid()) {
+	/**
+	 * @param parentSchemeProtoGroupId
+	 */
+	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
+		assert this.assertParentSetNonStrict() : OBJECT_BADLY_INITIALIZED;
+		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
+
+		if (this.parentSchemeProtoElementId.isVoid()) {
 			/*
-			 * Moving from an element to another element.
+			 * Moving from a group to another group.
 			 */
-			if (parentSchemeProtoElement == null) {
+			if (parentSchemeProtoGroupId.isVoid()) {
 				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 				StorableObjectPool.delete(super.id);
 				return;
 			}
-			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
-			if (this.parentSchemeProtoElementId.equals(newParentSchemeProtoElementId)) {
+			if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
 				return;
 			}
 		} else {
 			/*
-			 * Moving from a group to an element.
+			 * Moving from an element to a group.
 			 */
-			if (parentSchemeProtoElement == null) {
+			if (parentSchemeProtoGroupId.isVoid()) {
 				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 				return;
 			}
-			newParentSchemeProtoElementId = parentSchemeProtoElement.id;
-			this.parentSchemeProtoGroupId = VOID_IDENTIFIER;
+			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		}
-		this.parentSchemeProtoElementId = newParentSchemeProtoElementId;
+		this.parentSchemeProtoGroupId = parentSchemeProtoGroupId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * <p>
+	 * A wrapper around {@link #setParentSchemeProtoGroupId(Identifier)}.
+	 * </p>
+	 *
+	 * <p>
 	 * If this <code>SchemeProtoElement</code> is initially inside another
 	 * <code>SchemeProtoElement</code>, and
 	 * <code>parentSchemeProtoGroup</code> is <code>null</code>, then
@@ -1137,51 +1195,34 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * <code>parentSchemeProtoGroup</code> is <code>null</code>, then
 	 * this <code>SchemeProtoElement</code> will delete itself from the
 	 * pool.
+	 * </p>
 	 *
 	 * @param parentSchemeProtoGroup
 	 */
 	public void setParentSchemeProtoGroup(final SchemeProtoGroup parentSchemeProtoGroup) {
-		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
+		this.setParentSchemeProtoGroupId(parentSchemeProtoGroup.getId());
+	}
 
-		Identifier newParentSchemeProtoGroupId;
-		if (this.parentSchemeProtoElementId.isVoid()) {
-			/*
-			 * Moving from a group to another group.
-			 */
-			if (parentSchemeProtoGroup == null) {
-				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-				StorableObjectPool.delete(super.id);
-				return;
-			}
-			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
-			if (this.parentSchemeProtoGroupId.equals(newParentSchemeProtoGroupId)) {
-				return;
-			}
-		} else {
-			/*
-			 * Moving from an element to a group.
-			 */
-			if (parentSchemeProtoGroup == null) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			newParentSchemeProtoGroupId = parentSchemeProtoGroup.getId();
-			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+	/**
+	 * @param schemeCellId
+	 */
+	void setSchemeCellId(final Identifier schemeCellId) {
+		assert schemeCellId.isVoid() || schemeCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.schemeCellId.equals(schemeCellId)) {
+			return;
 		}
-		this.parentSchemeProtoGroupId = newParentSchemeProtoGroupId;
+		this.schemeCellId = schemeCellId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setSchemeCellId(Identifier)}.
+	 *
+	 * @param schemeCell
 	 * @see SchemeCellContainer#setSchemeCell(SchemeImageResource)
 	 */
 	public void setSchemeCell(final SchemeImageResource schemeCell) {
-		final Identifier newSchemeCellId = Identifier.possiblyVoid(schemeCell);
-		if (this.schemeCellId.equals(newSchemeCellId)) {
-			return;
-		}
-		this.schemeCellId = newSchemeCellId;
-		super.markAsChanged();
+		this.setSchemeCellId(Identifier.possiblyVoid(schemeCell));
 	}
 
 	/**
@@ -1245,29 +1286,47 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param symbol
-	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 * @param symbolId
 	 */
-	public void setSymbol(final BitmapImageResource symbol) {
-		final Identifier newSymbolId = Identifier.possiblyVoid(symbol);
-		if (this.symbolId.equals(newSymbolId)) {
+	void setSymbolId(final Identifier symbolId) {
+		assert symbolId.isVoid() || symbolId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.symbolId.equals(symbolId)) {
 			return;
 		}
-		this.symbolId = newSymbolId;
+		this.symbolId = symbolId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setSymbolId(Identifier)}.
+	 *
+	 * @param symbol
+	 * @see SchemeSymbolContainer#setSymbol(BitmapImageResource)
+	 */
+	public void setSymbol(final BitmapImageResource symbol) {
+		this.setSymbolId(Identifier.possiblyVoid(symbol));
+	}
+
+	/**
+	 * @param ugoCellId
+	 */
+	void setUgoCellId(final Identifier ugoCellId) {
+		assert ugoCellId.isVoid() || ugoCellId.getMajor() == IMAGERESOURCE_CODE;
+		if (this.ugoCellId.equals(ugoCellId)) {
+			return;
+		}
+		this.ugoCellId = ugoCellId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setUgoCellId(Identifier)}.
+	 *
 	 * @param ugoCell
 	 * @see SchemeCellContainer#setUgoCell(SchemeImageResource)
 	 */
 	public void setUgoCell(final SchemeImageResource ugoCell) {
-		final Identifier newUgoCellId = Identifier.possiblyVoid(ugoCell);
-		if (this.ugoCellId.equals(newUgoCellId)) {
-			return;
-		}
-		this.ugoCellId = newUgoCellId;
-		super.markAsChanged();
+		this.setUgoCellId(Identifier.possiblyVoid(ugoCell));
 	}
 
 	/**
