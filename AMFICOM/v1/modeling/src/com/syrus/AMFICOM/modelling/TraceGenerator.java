@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.1 2005/08/04 09:10:55 saa Exp $
+ * $Id: TraceGenerator.java,v 1.2 2005/08/04 12:33:55 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,22 @@ import static java.lang.Math.exp;
 import static java.lang.Math.log;
 import static java.lang.Math.log10;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.io.BellcoreModelWriter;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
 
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/08/04 09:10:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/04 12:33:55 $
  * @module
  */
 public class TraceGenerator {
@@ -28,7 +35,7 @@ public class TraceGenerator {
 
 	private Parameters pars;
 	private ModelEvent[] events;
-	private double[] traceData;
+	private double[] traceData; // здесь значения отрицательные и нулевые
 
 	/**
 	 * Аггрегирует параметры измерения
@@ -36,7 +43,7 @@ public class TraceGenerator {
 	public static class Parameters {
 		public double initialLevel; // начальный уровень [dB]
 		public double noiseLevel; // [dB] <= MAX_NOISE
-		public double darkLevel; // уровень темноты [dB]
+		public double darkLevel; // уровень темноты [dB]  
 		public double deltaX; // шаг дискретизации [м], > 0
 		public double distance; // дистанция тестирования [м], > 0; много больше deltaX
 		public int wavelength; // длина волны [нм]
@@ -53,7 +60,8 @@ public class TraceGenerator {
 		 * Создает набор параметров
 		 * @param initialLevel начальный уровень (по сути это примерно Po), дБ, отрицательное (Например, -5.0)
 		 * @param noiseLevel уровень шума, дБ, отрицательное, соответствует разности initialLevel-ДД. (Например, -20..-45)
-		 * @param darkLevel уровень -inf, дБ, отрицательное, соответствует минимальному значению на р/г, типично уровень шума минус ~10 дБ (Например, -30..-55)
+		 * @param darkLevel уровень '-inf', дБ, отрицательное, соответствует минимальному значению на р/г, типично уровень шума минус ~10 дБ (Например, -30..-55).
+		 *   При сохранении в Bellcore не может быть меньше -65 дБ
 		 * @param deltaX разрешение, метры, положительное
 		 * @param distance дистанция тестирования, метры
 		 * @param wavelength длина волны, нм
@@ -95,12 +103,31 @@ public class TraceGenerator {
 				this.traceData[i] = this.pars.darkLevel;
 			} else {
 				this.traceData[i] = lin2log(value);
+				if (this.traceData[i] > 0) {
+					this.traceData[i] = 0;
+				}
 			}
 		}
 	}
 
 	public BellcoreStructure getBellcore() {
-		throw new UnsupportedOperationException(); // FIXME
+		BellcoreStructure bs = new BellcoreStructure();
+		BellcoreModelWriter bmw = new BellcoreModelWriter(bs);
+		bmw.setAverages(1);
+		double[] temp = new double[this.traceData.length];
+		for (int i = 0; i < this.traceData.length; i++) {
+			temp[i] = this.traceData[i] - this.pars.darkLevel;
+		}
+		bmw.setData(temp);
+		bmw.setPulseWidth(this.pars.pulseWidth);
+		bmw.setWavelength(this.pars.wavelength);
+		bmw.setOpticalModule("");
+		double kmRes = this.pars.deltaX / 1000.0;
+		bmw.setRangeParameters(this.pars.refactionIndex,
+				kmRes,
+				kmRes * temp.length);
+		bmw.finalizeChanges();
+		return bs;
 	}
 
 	public void printTrace(PrintStream ps) {
@@ -309,7 +336,9 @@ public class TraceGenerator {
 		}
 		return data;
 	}
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	throws InternalError, IOException {
+		// create input data for modelling
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
 				ModelEvent.createReflective(1.0, -20),
@@ -318,17 +347,34 @@ public class TraceGenerator {
 				// сварка
 				ModelEvent.createSlice(0.2),
 				ModelEvent.createLinear(3000.0, 2e-4),
-				// два неразличимо близких отражения
-				ModelEvent.createReflective(0.0, -70),
-				ModelEvent.createLinear(5.4, 2e-4),
+				// два близких отражения
+				ModelEvent.createReflective(0.0, -80),
+				ModelEvent.createLinear(80, 2e-4),
 				ModelEvent.createReflective(1.0, -60),
 				ModelEvent.createLinear(2000.0, 2e-4),
 				// конец волокна
 				ModelEvent.createReflective(1.0, -20)
 		};
-		Parameters pars = new Parameters(-5.0, -15.0, -30.0,
-				4.0, 6500.0, 1625, 1000, 1.48);
+		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
+				4.0, 6500.0, 1625, 1000, 1.468);
+
+		// perform modelling
 		TraceGenerator tg = new TraceGenerator(pars, me);
-		tg.printTrace(System.out);
+
+		// export to bellcore
+		BellcoreStructure bs = tg.getBellcore();
+
+		// save to file
+		BellcoreWriter bw = new BellcoreWriter();
+		byte[] bar = bw.write(bs);
+		File outFile = new File("./model.sor");
+		outFile.delete();
+		if (!outFile.createNewFile()) {
+			throw new InternalError("Could not create new file");
+		}
+		OutputStream os = new FileOutputStream(outFile);
+		BufferedOutputStream bos = new BufferedOutputStream(os);
+		bos.write(bar);
+		bos.close();
 	}
 }
