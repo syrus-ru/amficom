@@ -80,6 +80,13 @@ public class BellcoreModelWriter
 			bs.dataPts.dsf[0][i] = 65535 - (int)(data[i]*1000);
 	}
 
+	/**
+	 * @param groupIndex
+	 * @param resolution разрешение, выраженное в километрах (!) 
+	 * @param range дистанция, которая, по-видимому, должна определяться как
+	 *   resulution * data.length
+	 *   (по-видимому, другие значения чреваты появлением внутренне противоречивой BellcoreStructure) 
+	 */
 	public void setRangeParameters(double groupIndex, double resolution, double range)
 	{
 		bs.addField(BellcoreStructure.FXDPARAMS);
