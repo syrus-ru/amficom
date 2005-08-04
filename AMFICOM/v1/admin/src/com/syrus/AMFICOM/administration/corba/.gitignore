@@ -9,3 +9,4 @@ IdlMCM.java
 IdlServer.java
 IdlServerProcess.java
 IdlSystemUser.java
+IdlPermissionAttributes.java
