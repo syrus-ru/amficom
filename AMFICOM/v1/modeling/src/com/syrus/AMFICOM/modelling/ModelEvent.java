@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelEvent.java,v 1.2 2005/08/04 17:23:07 saa Exp $
+ * $Id: ModelEvent.java,v 1.3 2005/08/04 18:01:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/08/04 17:23:07 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/04 18:01:45 $
  * @module
  */
 public class ModelEvent {
@@ -78,7 +78,7 @@ public class ModelEvent {
 		m = patSplice.matcher(s);
 		if (m.matches()) {
 			events.add(createSlice(Double.parseDouble(m.group(2))));
-			events.add(createLinear(Double.parseDouble(m.group(1)), 1e-10)); // XXX: не учитываем затухание, которое должно быть отнесено к след. участку 
+			events.add(createLinear(Double.parseDouble(m.group(1)), 1e-8)); // XXX: не учитываем затухание, которое должно быть отнесено к след. участку 
 			return;
 		}
 		// CONNECTOR ?
@@ -87,7 +87,7 @@ public class ModelEvent {
 		if (m.matches()) {
 			events.add(createReflective(Double.parseDouble(m.group(2)),
 					Double.parseDouble(m.group(3))));
-			events.add(createLinear(Double.parseDouble(m.group(1)), 1e-10)); // XXX: не учитываем затухание, которое должно быть отнесено к след. участку
+			events.add(createLinear(Double.parseDouble(m.group(1)), 1e-8)); // XXX: не учитываем затухание, которое должно быть отнесено к след. участку
 			return;
 		}
 		// parse error
