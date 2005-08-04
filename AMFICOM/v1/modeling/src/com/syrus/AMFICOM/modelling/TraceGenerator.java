@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.2 2005/08/04 12:33:55 saa Exp $
+ * $Id: TraceGenerator.java,v 1.3 2005/08/04 17:24:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,15 @@ import static java.lang.Math.log;
 import static java.lang.Math.log10;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreModelWriter;
@@ -27,7 +31,7 @@ import com.syrus.io.BellcoreWriter;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/08/04 12:33:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/04 17:24:31 $
  * @module
  */
 public class TraceGenerator {
@@ -226,6 +230,19 @@ public class TraceGenerator {
 		sum *= step * step / w;
 		return sum;
 	}
+
+	private static double expm1mx(double x) {
+		if (Math.abs(x) < 1e-8)
+			return x * x / 2 * (1.0 + x / 3);
+		return Math.expm1(x) - x;
+	}
+
+	private static double aEmaeMbEmbePreEmaeMEmbe(double a, double b, double eps) {
+		// should return a*exp(-a*eps) - b*exp(-a*eps) + (exp(-a*eps)-exp(-b*eps) / eps)
+		double k = b - a;
+		double ekm1 = Math.expm1(k * eps);
+		return exp(-b * eps) * (a * ekm1 + expm1mx(k * eps) / eps);
+	}
 	/**
 	 * Быстрое (аналитическое) вычисление двойного интеграла, представленного
 	 * в {@link #calcExpPulseIntSlow}. Описание параметров и возвращаемого
@@ -237,31 +254,31 @@ public class TraceGenerator {
 			double p1,
 			double xPos,
 			double tau) {
-		double x0 = xPos - w; 
+		double x0 = xPos - w;
 		double rtau = 1.0 / tau;
-		double mult = -tau / w * exp(-(x0 - p0) * rtau);
-		double sum = 0.0;
-		sum = 0.0;
+		double mult0 = - exp(-(x0 - p0) * rtau) / w;
+		double sum1 = 0.0;
 		double a, b;
 		a = Math.max(p0 - x0, 0);
 		b = Math.min(p1 - x0, 1);
 		if (b > a) {
-			sum += (b + tau) * exp(-b * rtau)
-					- (a + tau) * exp(-a * rtau);
+			sum1 -= aEmaeMbEmbePreEmaeMEmbe(a, b, rtau);
 		}
 		a = Math.max(p0 - x0, 1);
 		b = Math.min(p1 - x0, w + 1);
 		if (b > a) {
-			sum += exp(-b * rtau) - exp(-a * rtau);
+			sum1 -= exp(-a * rtau) - exp(-b * rtau);
 		}
 		a = Math.max(p0 - x0, w);
 		b = Math.min(p1 - x0, w + 1);
 		if (b > a) {
-			sum += (w - b - tau) * exp(-b * rtau)
-					- (w - a - tau) * exp(-a * rtau);
+			double eA = exp(-a * rtau);
+			double eB = exp(-b * rtau);
+			sum1 += -w * (eA - eB);
+			sum1 += aEmaeMbEmbePreEmaeMEmbe(a, b, rtau);
 		}
-		sum *= mult;
-		return sum;
+		sum1 *= mult0 * tau;
+		return sum1;
 	}
 
 	private static void addExponentCurve(double[] data,
@@ -336,30 +353,59 @@ public class TraceGenerator {
 		}
 		return data;
 	}
-	public static void main(String[] args)
-	throws InternalError, IOException {
+	private static TraceGenerator myTestGenerator1() {
 		// create input data for modelling
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
 				ModelEvent.createReflective(1.0, -20),
-				ModelEvent.createLinear(1000.3, 2e-4),
-				ModelEvent.createLinear(100.4, 2e-4),
-				// сварка
-				ModelEvent.createSlice(0.2),
-				ModelEvent.createLinear(3000.0, 2e-4),
-				// два близких отражения
-				ModelEvent.createReflective(0.0, -80),
-				ModelEvent.createLinear(80, 2e-4),
-				ModelEvent.createReflective(1.0, -60),
-				ModelEvent.createLinear(2000.0, 2e-4),
-				// конец волокна
-				ModelEvent.createReflective(1.0, -20)
+				ModelEvent.createLinear(100.3, 1e-14),
+				ModelEvent.createLinear(200.4, 2e-4),
+				ModelEvent.createLinear(100.3, 1e-5),
+//				// сварка
+//				ModelEvent.createSlice(0.2),
+//				ModelEvent.createLinear(3000.0, 2e-4),
+//				// два близких отражения
+//				ModelEvent.createReflective(0.0, -80),
+//				ModelEvent.createLinear(80, 2e-4),
+//				ModelEvent.createReflective(1.0, -60),
+//				ModelEvent.createLinear(2000.0, 2e-4),
+//				// конец волокна
+//				ModelEvent.createReflective(1.0, -20)
 		};
 		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
-				4.0, 6500.0, 1625, 1000, 1.468);
+				4.0, 500.0, 1625, 500, 1.468);
 
 		// perform modelling
-		TraceGenerator tg = new TraceGenerator(pars, me);
+		return new TraceGenerator(pars, me);
+	}
+
+	private static TraceGenerator myTestGenerator2() {
+		List<ModelEvent> events = new ArrayList<ModelEvent>();
+		try {
+			File f = new File("input.dat");
+			FileReader fr = new FileReader(f);
+			BufferedReader br = new BufferedReader(fr);
+			String s;
+			while ((s = br.readLine()) != null) {
+				ModelEvent.addEventsByString(events, s);
+			}
+			br.close();
+		} catch (IOException e) {
+			throw new InternalError("IOException in debug code: " + e);
+		}
+		ModelEvent[] me = events.toArray(new ModelEvent[events.size()]);
+		Parameters pars = new Parameters(-5.0, -30.0, -40.0,
+				8.0, 100000.0, 1625, 1000, 1.467);
+
+		return new TraceGenerator(pars, me);
+	}
+
+	public static void main(String[] args)
+	throws InternalError, IOException {
+		TraceGenerator tg = myTestGenerator1();
+		//TraceGenerator tg = myTestGenerator2();
+
+		tg.printTrace(new PrintStream(new File("dump.txt")));
 
 		// export to bellcore
 		BellcoreStructure bs = tg.getBellcore();
@@ -376,5 +422,6 @@ public class TraceGenerator {
 		BufferedOutputStream bos = new BufferedOutputStream(os);
 		bos.write(bar);
 		bos.close();
+		System.out.println("Done!");
 	}
 }
