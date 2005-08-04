@@ -1,4 +1,4 @@
--- $Id: DROP.sql,v 1.5 2005/08/04 11:10:48 max Exp $
+-- $Id: DROP.sql,v 1.6 2005/08/04 11:12:01 max Exp $
 
 DROP TABLE MapMapLink;
 DROP TABLE MapMapLibraryLink;
@@ -25,4 +25,3 @@ DROP SEQUENCE nodelink_seq;
 DROP SEQUENCE physicallink_seq;
 DROP SEQUENCE topologicalnode_seq;
 DROP SEQUENCE sitenode_seq;
-DROP SEQUENCE maplibrary_seq;
