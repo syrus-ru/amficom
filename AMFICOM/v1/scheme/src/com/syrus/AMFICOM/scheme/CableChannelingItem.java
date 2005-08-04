@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.49 2005/08/01 16:18:09 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.50 2005/08/04 18:55:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -54,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/04 18:55:05 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -521,10 +523,6 @@ public final class CableChannelingItem
 		super.markAsChanged();
 	}
 
-	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
-	 */
-	@SuppressWarnings("unused")
 	private void shiftRight() {
 		this.sequentialNumber++;
 		super.markAsChanged();
@@ -614,16 +612,88 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
+	 * @param that
+	 * @throws ApplicationException
 	 */
-	public void insertSelfBefore(@SuppressWarnings("unused") final CableChannelingItem sibling) {
-		throw new UnsupportedOperationException();
+	public void insertSelfBefore(final CableChannelingItem that) throws ApplicationException {
+		assert that != null : NON_NULL_EXPECTED;
+
+		if (this == that || super.id.equals(that.id)) {
+			return;
+		}
+
+		final SchemeCableLink parentSchemeCableLink = this.getParentPathOwner();
+		assert parentSchemeCableLink.getId().equals(that.getParentSchemeCableLinkId());
+
+		final int thatSequentialNumber = that.getSequentialNumber();
+		assert this.sequentialNumber != thatSequentialNumber;
+
+		if (thatSequentialNumber - this.sequentialNumber == -1) {
+			/*-
+			 * This one is already situated immediately before that.
+			 */
+			return;
+		}
+
+		final SortedSet<CableChannelingItem> cableChannelingItems = new TreeSet<CableChannelingItem>(parentSchemeCableLink.getPathMembers0());
+		if (this.sequentialNumber < thatSequentialNumber) {
+			final SortedSet<CableChannelingItem> toShiftLeft = cableChannelingItems.subSet(this, that);
+			toShiftLeft.remove(this);
+			for (final CableChannelingItem cableChannelingItem : toShiftLeft) {
+				cableChannelingItem.shiftLeft();
+			}
+			this.sequentialNumber = thatSequentialNumber - 1;
+		} else {
+			final SortedSet<CableChannelingItem> toShiftRight = cableChannelingItems.subSet(that, this);
+			for (final CableChannelingItem cableChannelingItem : toShiftRight) {
+				cableChannelingItem.shiftRight();
+			}
+			this.sequentialNumber = thatSequentialNumber;
+		}
+		super.markAsChanged();
 	}
 
 	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
+	 * @param that
+	 * @throws ApplicationException
 	 */
-	public void insertSelfAfter(@SuppressWarnings("unused") final CableChannelingItem sibling) {
-		throw new UnsupportedOperationException();
+	public void insertSelfAfter(final CableChannelingItem that) throws ApplicationException {
+		assert that != null : NON_NULL_EXPECTED;
+
+		if (this == that || super.id.equals(that.id)) {
+			return;
+		}
+
+		final SchemeCableLink parentSchemeCableLink = this.getParentPathOwner();
+		assert parentSchemeCableLink.getId().equals(that.getParentSchemeCableLinkId());
+
+		final int thatSequentialNumber = that.getSequentialNumber();
+		assert this.sequentialNumber != thatSequentialNumber;
+
+		if (this.sequentialNumber - thatSequentialNumber == 1) {
+			/*-
+			 * This one is already situated immediately after that.
+			 */
+			return;
+		}
+
+		final SortedSet<CableChannelingItem> cableChannelingItems = new TreeSet<CableChannelingItem>(parentSchemeCableLink.getPathMembers0());
+		if (this.sequentialNumber > thatSequentialNumber) {
+			final SortedSet<CableChannelingItem> toShiftRight = cableChannelingItems.subSet(that, this);
+			toShiftRight.remove(that);
+			for (final CableChannelingItem cableChannelingItem : toShiftRight) {
+				cableChannelingItem.shiftRight();
+			}
+			this.sequentialNumber = thatSequentialNumber + 1;
+		} else {
+			final SortedSet<CableChannelingItem> toShiftLeft = cableChannelingItems.subSet(this, that);
+			toShiftLeft.remove(this);
+			for (final CableChannelingItem cableChannelingItem : toShiftLeft) {
+				cableChannelingItem.shiftLeft();
+			}
+			that.shiftLeft();
+			this.sequentialNumber = thatSequentialNumber;
+		}
+		super.markAsChanged();
 	}
 }

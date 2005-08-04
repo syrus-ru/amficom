@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.15 2005/08/04 16:13:42 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.16 2005/08/04 18:55:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.CONFIGURATION_GROUP_CODE;
+import static com.syrus.AMFICOM.general.ObjectGroupEntities.MAP_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.RESOURCE_GROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectGroupEntities.SCHEME_GROUP_CODE;
 
@@ -40,6 +41,11 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -49,7 +55,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/08/04 16:13:42 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/04 18:55:05 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -107,6 +113,7 @@ public final class SchemePathTestCase extends TestCase {
 		StorableObjectPool.init(new EmptySchemeObjectLoader(), StorableObjectResizableLRUMap.class);
 		StorableObjectPool.addObjectPoolGroup(CONFIGURATION_GROUP_CODE, 20);
 		StorableObjectPool.addObjectPoolGroup(RESOURCE_GROUP_CODE, 20);
+		StorableObjectPool.addObjectPoolGroup(MAP_GROUP_CODE, 20);
 		StorableObjectPool.addObjectPoolGroup(SCHEME_GROUP_CODE, 20);
 		final IdentifierGeneratorServer identifierGeneratorServer = new IdentifierGeneratorServer() {
 			private long l;
@@ -283,8 +290,158 @@ public final class SchemePathTestCase extends TestCase {
 		assertEquals(8, pathElement9.getSequentialNumber());
 	}
 
-	public void testShiftRight() {
-		// empty
+	public void testShiftRight() throws ApplicationException {
+		final Identifier userId = new Identifier("User_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+		final SchemeMonitoringSolution schemeMonitoringSolution0 = SchemeMonitoringSolution.createInstance(userId, "schemeMonitoringSolution0", scheme0);
+		final SchemePath schemePath0 = SchemePath.createInstance(userId, "schemePath0", schemeMonitoringSolution0);
+		final SchemeLink schemeLink0 = SchemeLink.createInstance(userId, "schemeLink0", scheme0);
+		final SchemeElement schemeElement0 = SchemeElement.createInstance(userId, "schemeElement0", scheme0);
+		final SchemeDevice schemeDevice0 = SchemeDevice.createInstance(userId, "schemeDevice0", schemeElement0);
+		final SchemePort startSchemePort0 = SchemePort.createInstance(userId, "startSchemePort0", IdlDirectionType._IN, schemeDevice0);
+		final SchemePort endSchemePort0 = SchemePort.createInstance(userId, "endSchemePort0", IdlDirectionType._OUT, schemeDevice0);
+		final SchemeCableLink schemeCableLink0 = SchemeCableLink.createInstance(userId, "schemeCableLink0", scheme0);
+		final SiteNodeType siteNodeType0 = SiteNodeType.createInstance(userId, SiteNodeTypeSort.ATS, "codename", "siteNodeType0", "", Identifier.VOID_IDENTIFIER, false, MapLibrary.createInstance(userId, null)); 
+		final SiteNode siteNode0 = SiteNode.createInstance(userId, new DoublePoint(), siteNodeType0);
+		final SiteNode siteNode1 = SiteNode.createInstance(userId, new DoublePoint(), siteNodeType0);
+
+		final PathElement pathElement0 = PathElement.createInstance(userId, schemePath0, schemePath0.getPathMembers().isEmpty() ? null : startSchemePort0, endSchemePort0);
+		final PathElement pathElement1 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement2 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement3 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement4 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement5 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement6 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement7 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement8 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+		final PathElement pathElement9 = PathElement.createInstance(userId, schemePath0, schemeLink0);
+
+		pathElement6.insertSelfAfter(pathElement5);
+		pathElement6.insertSelfAfter(pathElement6);
+		pathElement6.insertSelfBefore(pathElement6);
+		pathElement6.insertSelfBefore(pathElement7);
+
+		pathElement6.insertSelfBefore(pathElement2);
+		
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement6.getSequentialNumber());
+		assertEquals(3, pathElement2.getSequentialNumber());
+		assertEquals(4, pathElement3.getSequentialNumber());
+		assertEquals(5, pathElement4.getSequentialNumber());
+		assertEquals(6, pathElement5.getSequentialNumber());
+		assertEquals(7, pathElement7.getSequentialNumber());
+		assertEquals(8, pathElement8.getSequentialNumber());
+		assertEquals(9, pathElement9.getSequentialNumber());
+
+		pathElement2.insertSelfBefore(pathElement7);
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement6.getSequentialNumber());
+		assertEquals(3, pathElement3.getSequentialNumber());
+		assertEquals(4, pathElement4.getSequentialNumber());
+		assertEquals(5, pathElement5.getSequentialNumber());
+		assertEquals(6, pathElement2.getSequentialNumber());
+		assertEquals(7, pathElement7.getSequentialNumber());
+		assertEquals(8, pathElement8.getSequentialNumber());
+		assertEquals(9, pathElement9.getSequentialNumber());
+
+		pathElement6.insertSelfAfter(pathElement2);
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement3.getSequentialNumber());
+		assertEquals(3, pathElement4.getSequentialNumber());
+		assertEquals(4, pathElement5.getSequentialNumber());
+		assertEquals(5, pathElement2.getSequentialNumber());
+		assertEquals(6, pathElement6.getSequentialNumber());
+		assertEquals(7, pathElement7.getSequentialNumber());
+		assertEquals(8, pathElement8.getSequentialNumber());
+		assertEquals(9, pathElement9.getSequentialNumber());
+
+		pathElement2.insertSelfAfter(pathElement1);
+
+		assertEquals(0, pathElement0.getSequentialNumber());
+		assertEquals(1, pathElement1.getSequentialNumber());
+		assertEquals(2, pathElement2.getSequentialNumber());
+		assertEquals(3, pathElement3.getSequentialNumber());
+		assertEquals(4, pathElement4.getSequentialNumber());
+		assertEquals(5, pathElement5.getSequentialNumber());
+		assertEquals(6, pathElement6.getSequentialNumber());
+		assertEquals(7, pathElement7.getSequentialNumber());
+		assertEquals(8, pathElement8.getSequentialNumber());
+		assertEquals(9, pathElement9.getSequentialNumber());
+
+		final CableChannelingItem cableChannelingItem0 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem1 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem2 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem3 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem4 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem5 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem6 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem7 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem8 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+		final CableChannelingItem cableChannelingItem9 = CableChannelingItem.createInstance(userId, siteNode0, siteNode1, schemeCableLink0);
+
+		cableChannelingItem6.insertSelfAfter(cableChannelingItem5);
+		cableChannelingItem6.insertSelfAfter(cableChannelingItem6);
+		cableChannelingItem6.insertSelfBefore(cableChannelingItem6);
+		cableChannelingItem6.insertSelfBefore(cableChannelingItem7);
+
+		cableChannelingItem6.insertSelfBefore(cableChannelingItem2);
+		
+		assertEquals(0, cableChannelingItem0.getSequentialNumber());
+		assertEquals(1, cableChannelingItem1.getSequentialNumber());
+		assertEquals(2, cableChannelingItem6.getSequentialNumber());
+		assertEquals(3, cableChannelingItem2.getSequentialNumber());
+		assertEquals(4, cableChannelingItem3.getSequentialNumber());
+		assertEquals(5, cableChannelingItem4.getSequentialNumber());
+		assertEquals(6, cableChannelingItem5.getSequentialNumber());
+		assertEquals(7, cableChannelingItem7.getSequentialNumber());
+		assertEquals(8, cableChannelingItem8.getSequentialNumber());
+		assertEquals(9, cableChannelingItem9.getSequentialNumber());
+
+		cableChannelingItem2.insertSelfBefore(cableChannelingItem7);
+
+		assertEquals(0, cableChannelingItem0.getSequentialNumber());
+		assertEquals(1, cableChannelingItem1.getSequentialNumber());
+		assertEquals(2, cableChannelingItem6.getSequentialNumber());
+		assertEquals(3, cableChannelingItem3.getSequentialNumber());
+		assertEquals(4, cableChannelingItem4.getSequentialNumber());
+		assertEquals(5, cableChannelingItem5.getSequentialNumber());
+		assertEquals(6, cableChannelingItem2.getSequentialNumber());
+		assertEquals(7, cableChannelingItem7.getSequentialNumber());
+		assertEquals(8, cableChannelingItem8.getSequentialNumber());
+		assertEquals(9, cableChannelingItem9.getSequentialNumber());
+
+		cableChannelingItem6.insertSelfAfter(cableChannelingItem2);
+
+		assertEquals(0, cableChannelingItem0.getSequentialNumber());
+		assertEquals(1, cableChannelingItem1.getSequentialNumber());
+		assertEquals(2, cableChannelingItem3.getSequentialNumber());
+		assertEquals(3, cableChannelingItem4.getSequentialNumber());
+		assertEquals(4, cableChannelingItem5.getSequentialNumber());
+		assertEquals(5, cableChannelingItem2.getSequentialNumber());
+		assertEquals(6, cableChannelingItem6.getSequentialNumber());
+		assertEquals(7, cableChannelingItem7.getSequentialNumber());
+		assertEquals(8, cableChannelingItem8.getSequentialNumber());
+		assertEquals(9, cableChannelingItem9.getSequentialNumber());
+
+		cableChannelingItem2.insertSelfAfter(cableChannelingItem1);
+
+		assertEquals(0, cableChannelingItem0.getSequentialNumber());
+		assertEquals(1, cableChannelingItem1.getSequentialNumber());
+		assertEquals(2, cableChannelingItem2.getSequentialNumber());
+		assertEquals(3, cableChannelingItem3.getSequentialNumber());
+		assertEquals(4, cableChannelingItem4.getSequentialNumber());
+		assertEquals(5, cableChannelingItem5.getSequentialNumber());
+		assertEquals(6, cableChannelingItem6.getSequentialNumber());
+		assertEquals(7, cableChannelingItem7.getSequentialNumber());
+		assertEquals(8, cableChannelingItem8.getSequentialNumber());
+		assertEquals(9, cableChannelingItem9.getSequentialNumber());
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.63 2005/08/04 14:18:03 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.64 2005/08/04 18:55:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/08/04 14:18:03 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/04 18:55:05 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -285,7 +285,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	/**
 	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
 	 */
-	private Set<CableChannelingItem> getPathMembers0() throws ApplicationException {
+	Set<CableChannelingItem> getPathMembers0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true);
 	}
 

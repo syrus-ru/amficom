@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.58 2005/08/01 16:18:09 bass Exp $
+ * $Id: PathElement.java,v 1.59 2005/08/04 18:55:05 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -70,10 +72,8 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/04 18:55:05 $
  * @module scheme
- * @todo <code>setAttributes()</code> should contain, among others,
- *       kind and sequentialNumber paremeters.
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
@@ -904,10 +904,6 @@ public final class PathElement extends StorableObject
 		super.markAsChanged();
 	}
 
-	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
-	 */
-	@SuppressWarnings("unused")
 	private void shiftRight() {
 		this.sequentialNumber++;
 		super.markAsChanged();
@@ -1013,17 +1009,89 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
+	 * @param that
+	 * @throws ApplicationException
 	 */
-	public void insertSelfBefore(@SuppressWarnings("unused") final PathElement sibling) {
-		throw new UnsupportedOperationException();
+	public void insertSelfBefore(final PathElement that) throws ApplicationException {
+		assert that != null : NON_NULL_EXPECTED;
+
+		if (this == that || super.id.equals(that.id)) {
+			return;
+		}
+
+		final SchemePath parentSchemePath = this.getParentPathOwner();
+		assert parentSchemePath.getId().equals(that.getParentSchemePathId());
+
+		final int thatSequentialNumber = that.getSequentialNumber();
+		assert this.sequentialNumber != thatSequentialNumber;
+
+		if (thatSequentialNumber - this.sequentialNumber == 1) {
+			/*-
+			 * This one is already situated immediately before that.
+			 */
+			return;
+		}
+
+		final SortedSet<PathElement> pathElements = new TreeSet<PathElement>(parentSchemePath.getPathMembers0());
+		if (this.sequentialNumber < thatSequentialNumber) {
+			final SortedSet<PathElement> toShiftLeft = pathElements.subSet(this, that);
+			toShiftLeft.remove(this);
+			for (final PathElement pathElement : toShiftLeft) {
+				pathElement.shiftLeft();
+			}
+			this.sequentialNumber = thatSequentialNumber - 1;
+		} else {
+			final SortedSet<PathElement> toShiftRight = pathElements.subSet(that, this);
+			for (final PathElement pathElement : toShiftRight) {
+				pathElement.shiftRight();
+			}
+			this.sequentialNumber = thatSequentialNumber;
+		}
+		super.markAsChanged();
 	}
 
 	/**
-	 * @todo Remove {@code SuppressWarnings} annotation.
+	 * @param that
+	 * @throws ApplicationException
 	 */
-	public void insertSelfAfter(@SuppressWarnings("unused") final PathElement sibling) {
-		throw new UnsupportedOperationException();
+	public void insertSelfAfter(final PathElement that) throws ApplicationException {
+		assert that != null : NON_NULL_EXPECTED;
+
+		if (this == that || super.id.equals(that.id)) {
+			return;
+		}
+
+		final SchemePath parentSchemePath = this.getParentPathOwner();
+		assert parentSchemePath.getId().equals(that.getParentSchemePathId());
+
+		final int thatSequentialNumber = that.getSequentialNumber();
+		assert this.sequentialNumber != thatSequentialNumber;
+
+		if (this.sequentialNumber - thatSequentialNumber == 1) {
+			/*-
+			 * This one is already situated immediately after that.
+			 */
+			return;
+		}
+
+		final SortedSet<PathElement> pathElements = new TreeSet<PathElement>(parentSchemePath.getPathMembers0());
+		if (this.sequentialNumber > thatSequentialNumber) {
+			final SortedSet<PathElement> toShiftRight = pathElements.subSet(that, this);
+			toShiftRight.remove(that);
+			for (final PathElement pathElement : toShiftRight) {
+				pathElement.shiftRight();
+			}
+			this.sequentialNumber = thatSequentialNumber + 1;
+		} else {
+			final SortedSet<PathElement> toShiftLeft = pathElements.subSet(this, that);
+			toShiftLeft.remove(this);
+			for (final PathElement pathElement : toShiftLeft) {
+				pathElement.shiftLeft();
+			}
+			that.shiftLeft();
+			this.sequentialNumber = thatSequentialNumber;
+		}
+		super.markAsChanged();
 	}
 
 	/*-********************************************************************
