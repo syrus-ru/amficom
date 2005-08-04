@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.68 2005/08/04 12:54:40 bass Exp $
+ * $Id: SchemeElement.java,v 1.69 2005/08/04 13:08:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/04 12:54:40 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/04 13:08:45 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -241,7 +241,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 * Though these are ids of different types, Stas needs
 			 * the pair to update the icon or whatever. 
 			 */
-			schemeElement.clonedIdMap.put(parentScheme.getId(), schemeElement.id);
+			schemeElement.clonedIdMap.put(childScheme.getId(), schemeElement.id);
 	
 			final SchemeImageResource ugoCell = parentScheme.getUgoCell0();
 			if (ugoCell == null) {
