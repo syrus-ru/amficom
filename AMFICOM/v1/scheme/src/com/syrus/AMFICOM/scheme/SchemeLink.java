@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.59 2005/08/03 17:01:28 bass Exp $
+ * $Id: SchemeLink.java,v 1.60 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/08/03 17:01:28 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -966,6 +966,16 @@ public final class SchemeLink extends AbstractSchemeLink {
 	}
 
 	/**
+	 * @param sourceAbstractSchemePortId
+	 * @see AbstractSchemeLink#setSourceAbstractSchemePortId(Identifier)
+	 */
+	@Override
+	void setSourceAbstractSchemePortId(final Identifier sourceAbstractSchemePortId) {
+		assert sourceAbstractSchemePortId.isVoid() || sourceAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		super.setSourceAbstractSchemePortId(sourceAbstractSchemePortId);
+	}
+
+	/**
 	 * @param sourceAbstractSchemePort
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
@@ -975,8 +985,21 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.setSourceAbstractSchemePort((SchemePort) sourceAbstractSchemePort);
 	}
 
+	/**
+	 * @param sourceSchemePort
+	 */
 	public void setSourceAbstractSchemePort(final SchemePort sourceSchemePort) {
 		super.setSourceAbstractSchemePort(sourceSchemePort);
+	}
+
+	/**
+	 * @param targetAbstractSchemePortId
+	 * @see AbstractSchemeLink#setTargetAbstractSchemePortId(Identifier)
+	 */
+	@Override
+	void setTargetAbstractSchemePortId(final Identifier targetAbstractSchemePortId) {
+		assert targetAbstractSchemePortId.isVoid() || targetAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE;
+		super.setTargetAbstractSchemePortId(targetAbstractSchemePortId);
 	}
 
 	/**
@@ -989,6 +1012,9 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.setTargetAbstractSchemePort((SchemePort) targetAbstractSchemePort);
 	}
 
+	/**
+	 * @param targetSchemePort
+	 */
 	public void setTargetAbstractSchemePort(final SchemePort targetSchemePort) {
 		super.setTargetAbstractSchemePort(targetSchemePort);
 	}

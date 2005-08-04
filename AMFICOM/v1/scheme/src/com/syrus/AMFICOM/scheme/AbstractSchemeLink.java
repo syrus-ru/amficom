@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.31 2005/08/02 09:34:16 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.32 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/08/02 09:34:16 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -340,41 +340,69 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	/**
 	 * Overridden by descendants to add extra checks.
 	 *
-	 * @param sourceAbstractSchemePort
+	 * @param sourceAbstractSchemePortId
 	 */
-	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+	void setSourceAbstractSchemePortId(final Identifier sourceAbstractSchemePortId) {
 		assert this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceAbstractSchemePortId.isVoid()
 				|| !this.sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		final Identifier newSourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
-		assert newSourceAbstractSchemePortId.isVoid()
-				|| !newSourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.sourceAbstractSchemePortId.equals(newSourceAbstractSchemePortId)) {
+		assert sourceAbstractSchemePortId.isVoid()
+				|| !sourceAbstractSchemePortId.equals(this.targetAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		if (this.sourceAbstractSchemePortId.equals(sourceAbstractSchemePortId)) {
 			return;
 		}
-		this.sourceAbstractSchemePortId = newSourceAbstractSchemePortId;
+		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * <p>
+	 * A wrapper around {@link #setSourceAbstractSchemePortId(Identifier)}.
+	 * </p>
+	 *
+	 * <p>
+	 * Overridden by descendants to add extra checks.
+	 * </p>
+	 *
+	 * @param sourceAbstractSchemePort
+	 */
+	public void setSourceAbstractSchemePort(final AbstractSchemePort sourceAbstractSchemePort) {
+		this.setSourceAbstractSchemePortId(Identifier.possiblyVoid(sourceAbstractSchemePort));
 	}
 
 	/**
 	 * Overridden by descendants to add extra checks.
 	 *
-	 * @param targetAbstractSchemePort
+	 * @param targetAbstractSchemePortId
 	 */
-	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+	void setTargetAbstractSchemePortId(final Identifier targetAbstractSchemePortId) {
 		assert this.sourceAbstractSchemePortId != null
 				&& this.targetAbstractSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetAbstractSchemePortId.isVoid()
 				|| !this.targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		final Identifier newTargetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
-		assert newTargetAbstractSchemePortId.isVoid()
-				|| !newTargetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.targetAbstractSchemePortId.equals(newTargetAbstractSchemePortId)) {
+		assert targetAbstractSchemePortId.isVoid()
+				|| !targetAbstractSchemePortId.equals(this.sourceAbstractSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		if (this.targetAbstractSchemePortId.equals(targetAbstractSchemePortId)) {
 			return;
 		}
-		this.targetAbstractSchemePortId = newTargetAbstractSchemePortId;
+		this.targetAbstractSchemePortId = targetAbstractSchemePortId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * <p>
+	 * A wrapper around {@link #setTargetAbstractSchemePortId(Identifier)}.
+	 * </p>
+	 * 
+	 * <p>
+	 * Overridden by descendants to add extra checks.
+	 * </p>
+	 *
+	 * @param targetAbstractSchemePort
+	 */
+	public void setTargetAbstractSchemePort(final AbstractSchemePort targetAbstractSchemePort) {
+		this.setTargetAbstractSchemePortId(Identifier.possiblyVoid(targetAbstractSchemePort));
 	}
 
 	void setAttributes(final Date created,

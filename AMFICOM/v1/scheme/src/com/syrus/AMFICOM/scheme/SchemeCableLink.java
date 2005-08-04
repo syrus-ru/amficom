@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.62 2005/08/03 11:19:31 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.63 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/08/03 11:19:31 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -351,7 +351,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		}
 	}
 
-	private Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
+	Set<SchemeCableThread> getSchemeCableThreads0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMECABLETHREAD_CODE), true);
 	}
 
@@ -554,6 +554,16 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	}
 
 	/**
+	 * @param sourceAbstractSchemePortId
+	 * @see AbstractSchemeLink#setSourceAbstractSchemePortId(Identifier)
+	 */
+	@Override
+	void setSourceAbstractSchemePortId(final Identifier sourceAbstractSchemePortId) {
+		assert sourceAbstractSchemePortId.isVoid() || sourceAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		super.setSourceAbstractSchemePortId(sourceAbstractSchemePortId);
+	}
+
+	/**
 	 * @param sourceAbstractSchemePort
 	 * @see AbstractSchemeLink#setSourceAbstractSchemePort(AbstractSchemePort)
 	 */
@@ -563,8 +573,21 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		this.setSourceAbstractSchemePort((SchemeCablePort) sourceAbstractSchemePort);
 	}
 
+	/**
+	 * @param sourceSchemeCablePort
+	 */
 	public void setSourceAbstractSchemePort(final SchemeCablePort sourceSchemeCablePort) {
 		super.setSourceAbstractSchemePort(sourceSchemeCablePort);
+	}
+
+	/**
+	 * @param targetAbstractSchemePortId
+	 * @see AbstractSchemeLink#setTargetAbstractSchemePortId(Identifier)
+	 */
+	@Override
+	void setTargetAbstractSchemePortId(final Identifier targetAbstractSchemePortId) {
+		assert targetAbstractSchemePortId.isVoid() || targetAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		super.setTargetAbstractSchemePortId(targetAbstractSchemePortId);
 	}
 
 	/**
@@ -577,6 +600,9 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		this.setTargetAbstractSchemePort((SchemeCablePort) targetAbstractSchemePort);
 	}
 
+	/**
+	 * @param targetSchemeCablePort
+	 */
 	public void setTargetAbstractSchemePort(final SchemeCablePort targetSchemeCablePort) {
 		super.setTargetAbstractSchemePort(targetSchemeCablePort);
 	}

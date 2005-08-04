@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.69 2005/08/04 13:08:45 bass Exp $
+ * $Id: SchemeElement.java,v 1.70 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/08/04 13:08:45 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -557,6 +557,17 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(schemeElementClone.getClonedIdMap());
 				clone.addSchemeElement(schemeElementClone);
 			}
+
+			/*-
+			 * Port references remapping.
+			 */
+			for (final SchemeLink schemeLink : clone.getSchemeLinks0()) {
+				final Identifier sourceSchemePortId = clone.clonedIdMap.get(schemeLink.sourceAbstractSchemePortId);
+				final Identifier targetSchemePortId = clone.clonedIdMap.get(schemeLink.targetAbstractSchemePortId);
+				schemeLink.setSourceAbstractSchemePortId((sourceSchemePortId == null) ? VOID_IDENTIFIER : sourceSchemePortId);
+				schemeLink.setTargetAbstractSchemePortId((targetSchemePortId == null) ? VOID_IDENTIFIER : targetSchemePortId);
+			}
+
 			return clone;
 		} catch (final ApplicationException ae) {
 			final CloneNotSupportedException cnse = new CloneNotSupportedException();
@@ -1423,6 +1434,16 @@ public final class SchemeElement extends AbstractSchemeElement
 				final SchemeLink schemeLinkClone = schemeLink.clone();
 				super.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				this.addSchemeLink(schemeLinkClone);
+			}
+
+			/*-
+			 * Port references remapping.
+			 */
+			for (final SchemeLink schemeLink : this.getSchemeLinks0()) {
+				final Identifier sourceSchemePortId = super.clonedIdMap.get(schemeLink.sourceAbstractSchemePortId);
+				final Identifier targetSchemePortId = super.clonedIdMap.get(schemeLink.targetAbstractSchemePortId);
+				schemeLink.setSourceAbstractSchemePortId((sourceSchemePortId == null) ? VOID_IDENTIFIER : sourceSchemePortId);
+				schemeLink.setTargetAbstractSchemePortId((targetSchemePortId == null) ? VOID_IDENTIFIER : targetSchemePortId);
 			}
 		} catch (final CloneNotSupportedException cnse) {
 			throw new CreateObjectException(cnse);

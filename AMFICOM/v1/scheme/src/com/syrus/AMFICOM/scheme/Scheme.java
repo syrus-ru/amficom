@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.69 2005/08/04 12:54:40 bass Exp $
+ * $Id: Scheme.java,v 1.70 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/08/04 12:54:40 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -353,6 +353,30 @@ public final class Scheme extends AbstractCloneableDomainMember
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				clone.addSchemeLink(schemeLinkClone);
 			}
+
+			/*-
+			 * Port references remapping.
+			 */
+			for (final SchemeLink schemeLink : clone.getSchemeLinks0()) {
+				final Identifier sourceSchemePortId = clone.clonedIdMap.get(schemeLink.sourceAbstractSchemePortId);
+				final Identifier targetSchemePortId = clone.clonedIdMap.get(schemeLink.targetAbstractSchemePortId);
+				schemeLink.setSourceAbstractSchemePortId((sourceSchemePortId == null) ? VOID_IDENTIFIER : sourceSchemePortId);
+				schemeLink.setTargetAbstractSchemePortId((targetSchemePortId == null) ? VOID_IDENTIFIER : targetSchemePortId);
+			}
+			for (final SchemeCableLink schemeCableLink : clone.getSchemeCableLinks0()) {
+				final Identifier sourceSchemeCablePortId = clone.clonedIdMap.get(schemeCableLink.sourceAbstractSchemePortId);
+				final Identifier targetSchemeCablePortId = clone.clonedIdMap.get(schemeCableLink.targetAbstractSchemePortId);
+				schemeCableLink.setSourceAbstractSchemePortId((sourceSchemeCablePortId == null) ? VOID_IDENTIFIER : sourceSchemeCablePortId);
+				schemeCableLink.setTargetAbstractSchemePortId((targetSchemeCablePortId == null) ? VOID_IDENTIFIER : targetSchemeCablePortId);
+
+				for (final SchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads0()) {
+					final Identifier sourceSchemePortId = clone.clonedIdMap.get(schemeCableThread.sourceSchemePortId);
+					final Identifier targetSchemePortId = clone.clonedIdMap.get(schemeCableThread.targetSchemePortId);
+					schemeCableThread.setSourceSchemePortId((sourceSchemePortId == null) ? VOID_IDENTIFIER : sourceSchemePortId);
+					schemeCableThread.setTargetSchemePortId((targetSchemePortId == null) ? VOID_IDENTIFIER : targetSchemePortId);
+				}
+			}
+
 			return clone;
 		} catch (final ApplicationException ae) {
 			final CloneNotSupportedException cnse = new CloneNotSupportedException();

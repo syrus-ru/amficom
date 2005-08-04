@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.60 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.61 2005/08/04 14:18:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/04 14:18:03 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -570,32 +570,54 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
+	/**
+	 * @param sourceSchemePortId
+	 */
+	void setSourceSchemePortId(final Identifier sourceSchemePortId) {
 		assert this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceSchemePortId.isVoid()
 				|| !this.sourceSchemePortId.equals(this.targetSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		final Identifier newSourceSchemePortId = Identifier.possiblyVoid(sourceSchemePort);
-		assert newSourceSchemePortId.isVoid()
-				|| !newSourceSchemePortId.equals(this.targetSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.sourceSchemePortId.equals(newSourceSchemePortId))
+		assert sourceSchemePortId.isVoid()
+				|| !sourceSchemePortId.equals(this.targetSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		if (this.sourceSchemePortId.equals(sourceSchemePortId))
 			return;
-		this.sourceSchemePortId = newSourceSchemePortId;
+		this.sourceSchemePortId = sourceSchemePortId;
 		super.markAsChanged();
 	}
 
-	public void setTargetSchemePort(final SchemePort targetSchemePort) {
+	/**
+	 * A wrapper around {@link #setSourceSchemePortId(Identifier)}.
+	 *
+	 * @param sourceSchemePort
+	 */
+	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
+		this.setSourceSchemePortId(Identifier.possiblyVoid(sourceSchemePort));
+	}
+
+	/**
+	 * @param targetSchemePortId
+	 */
+	void setTargetSchemePortId(final Identifier targetSchemePortId) {
 		assert this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.targetSchemePortId.isVoid()
 				|| !this.targetSchemePortId.equals(this.sourceSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		final Identifier newTargetSchemePortId = Identifier.possiblyVoid(targetSchemePort);
-		assert newTargetSchemePortId.isVoid()
-				|| !newTargetSchemePortId.equals(this.sourceSchemePortId): CIRCULAR_DEPS_PROHIBITED;
-		if (this.targetSchemePortId.equals(newTargetSchemePortId))
+		assert targetSchemePortId.isVoid()
+				|| !targetSchemePortId.equals(this.sourceSchemePortId): CIRCULAR_DEPS_PROHIBITED;
+		if (this.targetSchemePortId.equals(targetSchemePortId))
 			return;
-		this.targetSchemePortId = newTargetSchemePortId;
+		this.targetSchemePortId = targetSchemePortId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setTargetSchemePortId(Identifier)}.
+	 *
+	 * @param targetSchemePort
+	 */
+	public void setTargetSchemePort(final SchemePort targetSchemePort) {
+		this.setTargetSchemePortId(Identifier.possiblyVoid(targetSchemePort));
 	}
 
 	/**
