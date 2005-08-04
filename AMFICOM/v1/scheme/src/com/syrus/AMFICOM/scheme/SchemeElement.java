@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.67 2005/08/04 12:25:30 bass Exp $
+ * $Id: SchemeElement.java,v 1.68 2005/08/04 12:54:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/08/04 12:25:30 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/04 12:54:40 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -214,6 +214,63 @@ public final class SchemeElement extends AbstractSchemeElement
 			throws CreateObjectException {
 		return createInstance(creatorId, name, "", "", null, null,
 				null, null, null, null, null, parentSchemeElement);
+	}
+
+	/**
+	 * Creates a new {@code SchemeElement} with the same {@code name},
+	 * {@code ugoCell} and {@code schemeCell} as the {@code parentScheme}
+	 * and inserts the {@childScheme} into the newly created
+	 * {@code SchemeElement}.
+	 *
+	 * @param creatorId
+	 * @param childScheme
+	 * @param parentScheme
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final Scheme childScheme, final Scheme parentScheme)
+	throws CreateObjectException {
+		try {
+			final SchemeElement schemeElement = createInstance(creatorId, parentScheme.getName(), parentScheme);
+
+			if (schemeElement.clonedIdMap == null) {
+				schemeElement.clonedIdMap = new HashMap<Identifier, Identifier>();
+			}
+
+			/*
+			 * Though these are ids of different types, Stas needs
+			 * the pair to update the icon or whatever. 
+			 */
+			schemeElement.clonedIdMap.put(parentScheme.getId(), schemeElement.id);
+	
+			final SchemeImageResource ugoCell = parentScheme.getUgoCell0();
+			if (ugoCell == null) {
+				schemeElement.setUgoCell(null);
+			} else {
+				final SchemeImageResource ugoCellClone = ugoCell.clone();
+				schemeElement.clonedIdMap.putAll(ugoCellClone.getClonedIdMap());
+				schemeElement.setUgoCell(ugoCellClone);
+			}
+			final SchemeImageResource schemeCell = parentScheme.getSchemeCell0();
+			if (schemeCell == null) {
+				schemeElement.setSchemeCell(null);
+			} else {
+				final SchemeImageResource schemeCellClone = schemeCell.clone();
+				schemeElement.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
+				schemeElement.setSchemeCell(schemeCellClone);
+			}
+
+			schemeElement.addScheme(childScheme);
+
+			return schemeElement;
+		} catch (final CloneNotSupportedException cnse) {
+			throw new CreateObjectException(cnse);
+		} catch (final ApplicationException ae) {
+			if (ae instanceof CreateObjectException) {
+				throw (CreateObjectException) ae;
+			}
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**

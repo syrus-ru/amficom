@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.68 2005/08/03 17:06:28 bass Exp $
+ * $Id: Scheme.java,v 1.69 2005/08/04 12:54:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/03 17:06:28 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/04 12:54:40 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -588,7 +588,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 *
 	 * @throws ApplicationException
 	 */
-	private SchemeImageResource getSchemeCell0() throws ApplicationException {
+	SchemeImageResource getSchemeCell0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getSchemeCellId(), true);
 	}
 
@@ -730,7 +730,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 *
 	 * @throws ApplicationException
 	 */
-	private SchemeImageResource getUgoCell0() throws ApplicationException {
+	SchemeImageResource getUgoCell0() throws ApplicationException {
 		return StorableObjectPool.getStorableObject(this.getUgoCellId(), true);
 	}
 
