@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.32 2005/06/16 10:46:10 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.33 2005/08/04 14:06:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.cmserver;
 
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
+import com.syrus.AMFICOM.administration.PermissionAttributesDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
@@ -43,14 +44,14 @@ import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
 import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
+import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/06/16 10:46:10 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/08/04 14:06:21 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
@@ -66,6 +67,7 @@ final class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new SystemUserDatabase());
 		DatabaseContext.registerDatabase(new DomainDatabase());
+		DatabaseContext.registerDatabase(new PermissionAttributesDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new MCMDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
