@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.14 2005/08/01 13:12:39 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.15 2005/08/04 16:13:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/08/01 13:12:39 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/04 16:13:42 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -72,6 +72,7 @@ public final class SchemePathTestCase extends TestCase {
 		testSuite.addTest(new SchemePathTestCase("testSchemeProtoElementClone"));
 		testSuite.addTest(new SchemePathTestCase("testGetCurrentSchemeMonitoringSolution"));
 		testSuite.addTest(new SchemePathTestCase("testInvalidClone"));
+		testSuite.addTest(new SchemePathTestCase("testSchemeClone"));
 		return new TestSetup(testSuite) {
 			@Override
 			protected void setUp() {
@@ -527,5 +528,52 @@ public final class SchemePathTestCase extends TestCase {
 			System.out.println(cnse.getMessage());
 			assertTrue(true);
 		}
+	}
+
+	public void testSchemeClone() throws CreateObjectException, CloneNotSupportedException {
+		final Identifier userId = new Identifier("User_0");
+		final Identifier domainId = new Identifier("Domain_0");
+
+		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
+		final SchemeElement schemeElement0 = SchemeElement.createInstance(userId, "schemeElement0", scheme0);
+		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
+		scheme1.setParentSchemeElement(schemeElement0);
+		final SchemeElement schemeElement1 = SchemeElement.createInstance(userId, "schemeElement1", scheme1);
+
+		final SchemeDevice schemeDevice0 = SchemeDevice.createInstance(userId, "schemeDevice0", schemeElement1);
+
+		final SchemePort schemePort0 = SchemePort.createInstance(userId, "schemePort0", IdlDirectionType._IN, schemeDevice0);
+		final SchemePort schemePort1 = SchemePort.createInstance(userId, "schemePort1", IdlDirectionType._IN, schemeDevice0);
+		final SchemePort schemePort2 = SchemePort.createInstance(userId, "schemePort2", IdlDirectionType._IN, schemeDevice0);
+		final SchemePort schemePort3 = SchemePort.createInstance(userId, "schemePort3", IdlDirectionType._IN, schemeDevice0);
+
+		final SchemeLink schemeLink0 = SchemeLink.createInstance(userId, "schemeLink0", scheme0);
+		schemeLink0.setSourceAbstractSchemePort(schemePort0);
+		final SchemeLink schemeLink1 = SchemeLink.createInstance(userId, "schemeLink1", schemeElement0);
+		schemeLink1.setSourceAbstractSchemePort(schemePort1);
+		final SchemeLink schemeLink2 = SchemeLink.createInstance(userId, "schemeLink2", scheme1);
+		schemeLink2.setSourceAbstractSchemePort(schemePort2);
+		final SchemeLink schemeLink3 = SchemeLink.createInstance(userId, "schemeLink3", schemeElement1);
+		schemeLink3.setSourceAbstractSchemePort(schemePort3);
+		
+		final Scheme scheme0prime = scheme0.clone();
+		final SchemeElement schemeElement0prime = scheme0prime.getSchemeElements().iterator().next();
+		final Scheme scheme1prime = schemeElement0prime.getSchemes().iterator().next();
+		final SchemeElement schemeElement1prime = scheme1prime.getSchemeElements().iterator().next();
+
+		final SchemeDevice schemeDevice0prime = schemeElement1prime.getSchemeDevices().iterator().next();
+
+		final SchemeLink schemeLink0prime = scheme0prime.getSchemeLinks().iterator().next();
+
+		assertNotSame(schemeLink0prime, schemeLink0);
+		assertFalse(schemeLink0prime.getId().equals(schemeLink0.getId()));
+		assertEquals(schemeLink0prime.getName(), schemeLink0.getName());
+		assertNull(schemeLink0prime.getTargetAbstractSchemePort());
+		
+		final SchemePort schemePort0prime = schemeLink0prime.getSourceAbstractSchemePort();
+		assertNotSame(schemePort0prime, schemePort0);
+		assertFalse(schemePort0prime.getId().equals(schemePort0.getId()));
+		assertEquals(schemePort0prime.getName(), schemePort0.getName());
+		assertEquals(schemeDevice0prime, schemePort0prime.getParentSchemeDevice());
 	}
 }
