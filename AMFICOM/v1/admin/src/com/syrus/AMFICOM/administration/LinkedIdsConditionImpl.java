@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/06/27 09:36:29 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/08/04 14:45:47 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/06/27 09:36:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/08/04 14:45:47 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -79,6 +79,21 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final Server server = (Server) storableObject;
 				condition = this.checkDomain(server);
 				break;
+			case ObjectEntities.PERMATTR_CODE:
+				final PermissionAttributes permissionAttributes = (PermissionAttributes) storableObject;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_CODE:
+						condition = super.conditionTest(permissionAttributes.getDomainId());
+						break;
+					case ObjectEntities.SYSTEMUSER_CODE:
+						condition = super.conditionTest(permissionAttributes.getUserId());
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+						
+				}				
 			default:
 				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
 						+ ", " + ObjectEntities.codeToString(this.entityCode),
