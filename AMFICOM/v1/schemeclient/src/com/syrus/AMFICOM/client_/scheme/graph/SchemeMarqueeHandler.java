@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.17 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.18 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -331,7 +331,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			 * @todo possibility to add ports to grouped element
 			 */
 			if (GraphActions.hasGroupedParent(deviceCell)) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_GROUPED_DEVICE, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGraph.getString("error_grouped_device"),  //$NON-NLS-1$
+						LangModelGraph.getString("error"), //$NON-NLS-1$
+						JOptionPane.ERROR_MESSAGE);
 				Log.errorMessage("can't create PortCell as DeviceCell has parent group"); //$NON-NLS-1$
 				return;
 			}
@@ -359,7 +362,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				Log.errorException(e1);
 			}
 			if (types.isEmpty()) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_PORTTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+						LangModelGraph.getString("error_porttype_not_found"),  //$NON-NLS-1$
+						LangModelGraph.getString("error"), //$NON-NLS-1$
+						JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			PortType type = (PortType)types.iterator().next();
@@ -378,10 +384,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				Color color = SchemeActions.determinePortColor(schemePort);
 
 				if (!isCable) { //port
-					PortCell cell = SchemeActions.createPort(graph, deviceCell, 
+					SchemeActions.createPort(graph, deviceCell, 
 							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
 				} else {
-					CablePortCell cell = SchemeActions.createCablePort(graph, deviceCell, 
+					SchemeActions.createCablePort(graph, deviceCell, 
 							graph.fromScreen(graph.snap(p)), name, directionType, color, schemePort.getId());
 				}
 			} catch (ApplicationException e1) {
@@ -427,7 +433,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							Log.errorException(e1);
 						}
 						if (types.isEmpty()) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_CABLELINKTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+									LangModelGraph.getString("error_cablelinktype_not_found"), //$NON-NLS-1$
+									LangModelGraph.getString("error"), //$NON-NLS-1$
+									JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						CableLinkType type = (CableLinkType)types.iterator().next();
@@ -463,7 +472,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							Log.errorException(e1);
 						}
 						if (types.isEmpty()) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(), Constants.ERROR_LINKTYPE_NOT_FOUND, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+									LangModelGraph.getString("error_linktype_not_found"), //$NON-NLS-1$
+									LangModelGraph.getString("error"), //$NON-NLS-1$
+									JOptionPane.ERROR_MESSAGE);
 							return;
 						}
 						LinkType type = (LinkType)types.iterator().next();

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.awt.HeadlessException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,7 +10,6 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
@@ -23,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
@@ -48,18 +47,22 @@ public class ComponentSaveCommand extends AbstractCommand {
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Пустая схема!", Constants.ERROR, JOptionPane.OK_OPTION);
+					LangModelScheme.getString("Message.error.empty_scheme"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Не сгруппированное устройство!", Constants.ERROR,
+					LangModelScheme.getString("Message.error.ungrouped_device"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
 		if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					Constants.ERROR_COMPONENT_NOT_FOUND, Constants.ERROR,
+					LangModelScheme.getString("Message.error.component_not_found"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}
@@ -74,13 +77,15 @@ public class ComponentSaveCommand extends AbstractCommand {
 			if (groups.length > 1) {
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						"blah-blah-blah! Надо создать УГО или компонент должен быть простым!",
-						Constants.ERROR, JOptionPane.OK_OPTION);
+						LangModelScheme.getString("Message.error.compound_component"), //$NON-NLS-1$
+						LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
+						JOptionPane.OK_OPTION);
 				return;
 			}
 			if ((status & SchemeActions.SCHEME_HAS_LINK) != 0) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-						"Простой компонент не может иметь линий связи", Constants.ERROR,
+						LangModelScheme.getString("Message.error.simple_component_link"),  //$NON-NLS-1$
+						LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 						JOptionPane.OK_OPTION);
 				return;
 			}
@@ -89,7 +94,9 @@ public class ComponentSaveCommand extends AbstractCommand {
 
 		if (proto.getEquipmentType() == null) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Не установлен тип компонента", "Ошибка", JOptionPane.OK_OPTION);
+					LangModelScheme.getString("Message.error.component_type_not_set"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$ 
+					JOptionPane.OK_OPTION);
 			return;
 		}
 		
@@ -97,7 +104,9 @@ public class ComponentSaveCommand extends AbstractCommand {
 			proto.getParentSchemeProtoGroup();
 		} catch (IllegalStateException e2) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Не установлена родительская группа для компонента", "Ошибка", JOptionPane.OK_OPTION);
+					LangModelScheme.getString("Message.error.component_parent_not_set"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -134,8 +143,9 @@ public class ComponentSaveCommand extends AbstractCommand {
 			}
 			cellPane.setGraphChanged(false);
 			
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Компонент "
-					+ proto.getName() + " успешно сохранен", "Сообщение",
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					proto.getName() + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$
+					LangModelScheme.getString("Message.information"), //$NON-NLS-1$,
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (ApplicationException e) {
 			Log.errorException(e);

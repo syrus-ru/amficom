@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.8 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.9 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -23,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -43,20 +41,18 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane.SchemeKeyListener;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -91,8 +87,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							removePanel(getCurrentPanel());
 						}
 					});
-					close.setText("Закрыть \"" + tabs.getTitleAt(tabs.getSelectedIndex())
-							+ "\"");
+					close.setText(LangModelScheme.getString("Button.close") + " '" + tabs.getTitleAt(tabs.getSelectedIndex()) + "'");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 					popup.add(close);
 					popup.show(tabs, e.getX(), e.getY());
 				}
@@ -192,10 +187,59 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			SchemeEvent see = (SchemeEvent) ae;
 			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();
-				openScheme(scheme, true);
+				openScheme(scheme);
 			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
-				openSchemeElement(schemeElement, true);
+				openSchemeElement(schemeElement);
+			} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
+				Scheme scheme = (Scheme) see.getObject();
+				SchemeImageResource res = scheme.getUgoCell();
+				if (res == null)
+					res = scheme.getSchemeCell();
+				super.openSchemeImageResource(res, true);
+
+				//TODO SchemeElement.createInstace(Scheme) 
+				
+//				Scheme scheme = (Scheme) see.getObject();
+//				
+//				ElementsPanel panel1 = getCurrentPanel();
+//				try {
+//					SchemeElement schemeElement = null;
+//					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+//						SchemeElement parent = panel1.getSchemeResource().getSchemeElement();
+//						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme.getName(), parent);
+//					} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+//						Scheme parent = panel1.getSchemeResource().getScheme();
+//						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme.getName(), parent);
+//					} else {
+//						assert false : "Unknown CellContainerType " + panel1.getSchemeResource().getCellContainerType();
+//					}
+//					schemeElement.setScheme(scheme);
+//					Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
+//					clonedIds.put(scheme.getId(), schemeElement.getId());
+//										
+//					SchemeImageResource res = scheme.getUgoCell();
+//					if (res == null)
+//						res = scheme.getSchemeCell();
+//					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
+//					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+//					
+//					SchemeGraph graph = panel1.getGraph();
+//					schemeElement.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
+//					schemeElement.setUgoCell(scheme.getSchemeCell());
+//					graph.selectionNotify();					
+//				} catch (ApplicationException e) {
+//					Log.errorException(e);
+//				}
+//				
+//				
+//				
+			} else if (see.isType(SchemeEvent.INSERT_SCHEMEELEMENT)) {
+				SchemeElement schemeElement = (SchemeElement) see.getObject();
+				SchemeImageResource res = schemeElement.getUgoCell();
+				if (res == null)
+					res = schemeElement.getSchemeCell();
+				super.openSchemeImageResource(res, true);
 			} else if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
 				ElementsPanel panel1 = getCurrentPanel();
@@ -203,15 +247,18 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					SchemeElement schemeElement = null;
 					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 						SchemeElement se = panel1.getSchemeResource().getSchemeElement();
-						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, se);
+						schemeElement = SchemeObjectsFactory.createSchemeElement(se, proto);
 					} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
 						Scheme scheme = panel1.getSchemeResource().getScheme();
-						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, scheme);
+						schemeElement = SchemeObjectsFactory.createSchemeElement(scheme, proto);
 					} else {
 						assert false : "Unknown CellContainerType " + panel1.getSchemeResource().getCellContainerType();
 					}
 					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
-					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeCellContainer(schemeElement, true);
+					SchemeImageResource res = schemeElement.getUgoCell();
+					if (res == null)
+						res = schemeElement.getSchemeCell();
+					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					SchemeGraph graph = panel1.getGraph();
 					schemeElement.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
@@ -231,19 +278,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		}
 		super.propertyChange(ae);
 	}
-	
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
-		if (schemeCellContainer instanceof Scheme) {
-			return openScheme((Scheme)schemeCellContainer, doClone);
-		} 
-		if (schemeCellContainer instanceof SchemeElement) {
-			return openSchemeElement((SchemeElement)schemeCellContainer, doClone);
-		} 
-		assert false : "Error: try to open SchemeProtoElement in SchemeTabbedPane";
-		return Collections.emptyMap();
-	}
 		
-	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch, boolean doClone) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
@@ -259,7 +295,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
 							sp.getSchemeResource().setScheme(sch);
-							clones = super.openSchemeCellContainer(sch, doClone);
+							clones = super.openSchemeImageResource(sch.getSchemeCell(), false);
 						}		
 					}
 					return clones;
@@ -271,12 +307,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		addPanel(p);
 		p.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
-		clones = super.openSchemeCellContainer(sch, doClone);
+		clones = super.openSchemeImageResource(sch.getSchemeCell(), false);
 		p.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
 		return clones;
 	}
 	
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeElement(SchemeElement se, boolean doClone) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeElement(SchemeElement se) {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		Set panels = getAllPanels();
 		for (Iterator it = panels.iterator(); it.hasNext();) {
@@ -292,7 +328,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
 							p.getSchemeResource().setSchemeElement(se);
-							clones = super.openSchemeCellContainer(se, doClone);
+							clones = super.openSchemeImageResource(se.getSchemeCell(), false);
 						}
 					}
 					return clones;
@@ -303,7 +339,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		addPanel(p);
 		p.getSchemeResource().setSchemeElement(se);
 		updateTitle(se.getName());
-		clones = super.openSchemeCellContainer(se, doClone);
+		clones = super.openSchemeImageResource(se.getSchemeCell(), false);
 		return clones;
 	}
 	/*

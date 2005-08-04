@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 
 public class ComponentNewCommand extends AbstractCommand {
 	ApplicationContext aContext;
@@ -38,7 +39,8 @@ public class ComponentNewCommand extends AbstractCommand {
 		SchemeGraph cellGraph = cellPane.getGraph();
 		if (cellGraph.isGraphChanged()) {
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-					"Компонент не сохранен. Продолжить?", "Новый компонент",
+					LangModelScheme.getString("Message.confirmation.component_not_saved"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.confirmation"), //$NON-NLS-1$
 					JOptionPane.OK_CANCEL_OPTION);
 			if (ret == JOptionPane.CANCEL_OPTION)
 				return;

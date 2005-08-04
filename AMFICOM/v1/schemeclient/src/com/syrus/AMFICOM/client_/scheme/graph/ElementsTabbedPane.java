@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.8 2005/08/03 09:29:41 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.9 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -17,7 +16,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,14 +44,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.SchemeResourceKeys;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -106,13 +103,16 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
+			if (see.isType(SchemeEvent.INSERT_PROTOELEMENT) || 
+					see.isType(SchemeEvent.OPEN_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
 				
 				try {
 					SchemeProtoElement newProto = proto.clone();
 					Map<Identifier, Identifier>clonedIds = newProto.getClonedIdMap();
-					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeCellContainer(proto, true);
+					SchemeImageResource imageResource = see.isType(SchemeEvent.INSERT_PROTOELEMENT) ? 
+							newProto.getUgoCell() : newProto.getSchemeCell();
+					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(imageResource, true);
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					UgoPanel p = getCurrentPanel();
 					SchemeGraph graph = p.getGraph();
@@ -122,20 +122,6 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 				}
 			}
 		}
-	}
-	
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
-		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
-		UgoPanel p = getCurrentPanel();
-		SchemeGraph graph = p.getGraph();
-//		p.getSchemeResource().setSchemeProtoElement(proto);
-//		GraphActions.clearGraph(p.getGraph());
-		if (schemeCellContainer.getSchemeCell() != null) {
-			clones = p.insertCell(schemeCellContainer.getSchemeCell().getData(), new Point(0, 0), doClone);
-			fixImages(graph);
-		}
-		setGraphChanged(false);
-		return clones;
 	}
 	
 	boolean showConfirmDialog(String text) {

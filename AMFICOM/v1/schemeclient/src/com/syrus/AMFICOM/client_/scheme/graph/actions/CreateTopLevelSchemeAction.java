@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.12 2005/08/03 09:29:41 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.13 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -48,11 +49,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
 public class CreateTopLevelSchemeAction extends AbstractAction {
+	private static final long serialVersionUID = -2327554205858907698L;
 	UgoTabbedPane sourcePane;
 
 	public CreateTopLevelSchemeAction(UgoTabbedPane sourcePane) {
@@ -66,17 +68,23 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Пустая схема!", Constants.ERROR, JOptionPane.OK_OPTION);
+					LangModelGraph.getString("error_empty_scheme"),  //$NON-NLS-1$
+					LangModelGraph.getString("error"),  //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		} 
 		if ((status & SchemeActions.SCHEME_HAS_UNGROUPED_DEVICE) != 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					"Не сгруппированное устройство!", Constants.ERROR, JOptionPane.OK_OPTION);
+					LangModelGraph.getString("error_ungrouped_device"),  //$NON-NLS-1$
+					LangModelGraph.getString("error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		} 
 		if ((status & SchemeActions.SCHEME_HAS_DEVICE_GROUP) == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					Constants.ERROR_COMPONENT_NOT_FOUND, Constants.ERROR, JOptionPane.OK_OPTION);
+					LangModelGraph.getString("error_component_not_found"),  //$NON-NLS-1$
+					LangModelGraph.getString("error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
 			return;
 		}
 		
@@ -94,7 +102,8 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		}
 		if (blockports_in.size() == 0 && blockports_out.size() == 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					Constants.ERROR_HIERARCHY_PORT_NOT_FOUND, Constants.ERROR,
+					LangModelGraph.getString("error_heirarchy_port_not_found"), //$NON-NLS-1$
+					LangModelGraph.getString("error"), //$NON-NLS-1$
 					JOptionPane.OK_OPTION);
 			return;
 		}

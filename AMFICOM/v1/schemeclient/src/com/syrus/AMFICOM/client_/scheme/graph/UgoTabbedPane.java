@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.10 2005/08/03 09:29:41 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.11 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -29,15 +28,15 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -188,12 +187,12 @@ public class UgoTabbedPane extends JPanel {
 	 * @param doClone create copy of objects or open themself
 	 * @return Map of cloned DefaultGraphCells (oldCell, newCell) if doClone is true, empty map overwise  
 	 */
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeCellContainer(SchemeCellContainer schemeCellContainer, boolean doClone) {
+	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeImageResource(SchemeImageResource schemeImageResource, boolean doClone) {
 		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
 		SchemeGraph graph = getGraph();
 //		GraphActions.clearGraph(graph);
-		if (schemeCellContainer.getUgoCell() != null) {
-			clones = getCurrentPanel().insertCell(schemeCellContainer.getUgoCell().getData(), new Point(0, 0), doClone);
+		if (schemeImageResource != null) {
+			clones = getCurrentPanel().insertCell(schemeImageResource.getData(), new Point(0, 0), doClone);
 			fixImages(graph);
 		}
 		setGraphChanged(false);

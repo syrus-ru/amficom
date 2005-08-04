@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.11 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.12 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -459,8 +459,8 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		if (schemeCableLink != null) {
 			this.tfNameText.setText(schemeCableLink.getName());
 			this.taDescrArea.setText(schemeCableLink.getDescription());
-			this.tfOpticalText.setText(Double.toString(schemeCableLink.getOpticalLength()));
-			this.tfPhysicalText.setText(Double.toString(schemeCableLink.getPhysicalLength()));
+			this.tfOpticalText.setValue(Double.valueOf(schemeCableLink.getOpticalLength()));
+			this.tfPhysicalText.setValue(Double.valueOf(schemeCableLink.getPhysicalLength()));
 			this.cmbTypeCombo.setSelectedItem(schemeCableLink.getAbstractLinkType());
 			link = schemeCableLink.getAbstractLink();
 		} else {

@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.5 2005/07/11 12:31:38 stas Exp $
+ * $Id: Constants.java,v 1.6 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -82,14 +82,6 @@ public interface Constants {
 	public static final String LINK = "link";  //$NON-NLS-1$
 	
 	public static final String DEVICE = "device"; //$NON-NLS-1$
-	
-	public static final String ERROR = "error"; //$NON-NLS-1$
-	public static final String ERROR_COMPONENT_NOT_FOUND = "error_component_not_found"; //$NON-NLS-1$
-	public static final String ERROR_HIERARCHY_PORT_NOT_FOUND = "error_hierarchy_port_not_found"; //$NON-NLS-1$
-	public static final String ERROR_PORTTYPE_NOT_FOUND = "error_porttype_not_found";
-	public static final String ERROR_LINKTYPE_NOT_FOUND = "error_linktype_not_found";//$NON-NLS-1$
-	public static final String ERROR_CABLELINKTYPE_NOT_FOUND = "error_cablelinktype_not_found";//$NON-NLS-1$
-	public static final String ERROR_GROUPED_DEVICE = "error_grouped_device";//$NON-NLS-1$
 	
 	// list of button keys
 	public static final String DELETE = "delete"; //$NON-NLS-1$

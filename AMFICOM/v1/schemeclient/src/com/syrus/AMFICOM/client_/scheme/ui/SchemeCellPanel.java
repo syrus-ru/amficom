@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.2 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.3 2005/08/04 09:19:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/04 09:19:00 $
  * @module schemeclient_v1
  */
 
@@ -90,7 +90,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 		this.schemeCellContainer = (SchemeCellContainer)or;
 		GraphActions.clearGraph(pane.getGraph());
 		if (this.schemeCellContainer != null) {
-			pane.openSchemeCellContainer(schemeCellContainer, false);
+			pane.openSchemeImageResource(schemeCellContainer.getUgoCell(), false);
 		}
 	}
 
