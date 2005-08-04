@@ -173,10 +173,10 @@ public class SchemeSaveCommand extends AbstractCommand {
 				scheme.setSchemeCell(schemeIr);
 
 				Identifier userId = LoginManager.getUserId();
-				StorableObjectPool.flush(scheme.getId(), userId, false);
 				for (Identifiable identifiable : scheme.getReverseDependencies()) {
 					StorableObjectPool.flush(identifiable, userId, false);
 				}
+				StorableObjectPool.flush(scheme.getId(), userId, false);
 				
 				schemeTab.setGraphChanged(false);
 				
