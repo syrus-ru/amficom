@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.24 2005/08/02 12:28:17 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.25 2005/08/04 13:58:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,15 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.*;
+
+import com.syrus.util.Shitlet;
+
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/02 12:28:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/08/04 13:58:22 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
@@ -92,13 +95,14 @@ public final class ObjectGroupEntities {
 	 * @todo Implement
 	 * @param groupCode
 	 */
+	@Shitlet
 	public static short[] getEntityCodes(final short groupCode) {
 		assert isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
 		switch (groupCode) {
 			case GENERAL_GROUP_CODE:
 				return new short[] { PARAMETER_TYPE_CODE, CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE };
 			case ADMINISTRATION_GROUP_CODE:
-				return new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, SERVER_CODE, MCM_CODE, SERVERPROCESS_CODE };
+				return new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, SERVER_CODE, MCM_CODE, SERVERPROCESS_CODE, PERMATTR_CODE };
 			case CONFIGURATION_GROUP_CODE:
 				return new short[] { EQUIPMENT_TYPE_CODE,
 						PORT_TYPE_CODE,
