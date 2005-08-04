@@ -1,5 +1,5 @@
 /*-
-* $Id: Shitlet.java,v 1.2 2005/08/04 13:55:08 bob Exp $
+* $Id: Shitlet.java,v 1.3 2005/08/04 14:50:42 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import java.lang.annotation.RetentionPolicy;
 
 /**
  * 
- * A program element annotated that method is impementation incorrect 
- * and / or very dummy
+ * A program element annotated that method implementation is incorrect 
+ * and / or very dull
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/04 13:55:08 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/04 14:50:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @author Andrew `Bass' Scheglov
