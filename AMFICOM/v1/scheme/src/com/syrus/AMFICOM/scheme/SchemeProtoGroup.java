@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.55 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.56 2005/08/04 12:24:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -59,7 +60,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/08/01 16:18:09 $
+ * @version $Revision: 1.56 $, $Date: 2005/08/04 12:24:14 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -402,7 +403,7 @@ public final class SchemeProtoGroup extends StorableObject
 
 	Identifier getSymbolId() {
 		assert this.symbolId != null: OBJECT_NOT_INITIALIZED;
-		assert this.symbolId.isVoid() || this.symbolId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		assert this.symbolId.isVoid() || this.symbolId.getMajor() == IMAGERESOURCE_CODE;
 		return this.symbolId;
 	}
 
@@ -642,7 +643,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param symbolId
 	 */
 	void setSymbolId(final Identifier symbolId) {
-		assert symbolId.isVoid() || symbolId.getMajor() == SCHEMEPROTOGROUP_CODE;
+		assert symbolId.isVoid() || symbolId.getMajor() == IMAGERESOURCE_CODE;
 		if (this.symbolId.equals(symbolId)) {
 			return;
 		}
