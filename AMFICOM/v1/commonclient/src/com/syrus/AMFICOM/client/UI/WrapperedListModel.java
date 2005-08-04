@@ -17,7 +17,7 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/29 07:22:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/04 08:17:49 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -183,7 +183,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		}
 	}
 
-	private void sort() {
+	public void sort() {
 		if (this.objects != null) {
 			Collections.sort(this.objects, new WrapperComparator(this.wrapper, this.key, true));
 			super.fireContentsChanged(this, 0, objects.size());
