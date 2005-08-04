@@ -1,17 +1,17 @@
--- $Id: DROP.sql,v 1.4 2005/08/03 15:24:00 max Exp $
+-- $Id: DROP.sql,v 1.5 2005/08/04 11:10:48 max Exp $
 
+DROP TABLE MapMapLink;
+DROP TABLE MapMapLibraryLink;
+DROP TABLE MapExtNodeLink;
 DROP TABLE MapCollector;
 DROP TABLE MapMark;
 DROP TABLE MapPhysicalLink;
 DROP TABLE MapNodeLink;
 DROP TABLE MapTopologicalNode;
 DROP TABLE MapSiteNode;
-DROP TABLE Map;
 DROP TABLE CollPhLink;
+DROP TABLE Map;
 DROP TABLE Collector;
-DROP TABLE MapMapLink;
-DROP TABLE MapMapLibraryLink;
-DROP TABLE MapExtNodeLink;
 DROP TABLE Mark;
 DROP TABLE NodeLink;
 DROP TABLE PhysicalLink;
