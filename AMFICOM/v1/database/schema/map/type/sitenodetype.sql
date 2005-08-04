@@ -1,4 +1,4 @@
--- $Id: sitenodetype.sql,v 1.11 2005/08/03 20:06:38 bass Exp $
+-- $Id: sitenodetype.sql,v 1.12 2005/08/04 15:22:26 max Exp $
 
 CREATE TABLE SiteNodeType (
  id NUMBER(19),
@@ -24,10 +24,10 @@ CREATE TABLE SiteNodeType (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT sitnodetype_image_fk FOREIGN KEY (image_id)
   REFERENCES ImageResource (id) ON DELETE CASCADE,
-  CONSTRAINT sitnodetype_ml_id_fk GOREIGN KEY (map_library_id)
+  CONSTRAINT sitnodetype_ml_id_fk FOREIGN KEY (map_library_id)
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.11 2005/08/03 20:06:38 bass Exp $';
+COMMENT ON TABLE SiteNodeType IS '$Id: sitenodetype.sql,v 1.12 2005/08/04 15:22:26 max Exp $';
 
 CREATE SEQUENCE SiteNodeType_Seq ORDER;

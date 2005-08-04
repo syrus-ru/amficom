@@ -1,4 +1,4 @@
--- $Id: physicallinktype.sql,v 1.10 2005/08/03 20:06:38 bass Exp $
+-- $Id: physicallinktype.sql,v 1.11 2005/08/04 15:22:26 max Exp $
 
 CREATE TABLE PhysicalLinkType (
  id NUMBER(19),
@@ -23,10 +23,10 @@ CREATE TABLE PhysicalLinkType (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT phlinktype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT phlinktype_maplib_id_fk GOREIGN KEY (map_library_id)
+ CONSTRAINT phlinktype_maplib_id_fk FOREIGN KEY (map_library_id)
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.10 2005/08/03 20:06:38 bass Exp $';
+COMMENT ON TABLE PhysicalLinkType IS '$Id: physicallinktype.sql,v 1.11 2005/08/04 15:22:26 max Exp $';
 
 CREATE SEQUENCE PhysicalLinkType_Seq ORDER;

@@ -16,7 +16,7 @@ CREATE TABLE MapLibrary (
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT map_lib_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT par_map_lib_fk FOREIN KEY (parentmaplibrary_id)
-  REFERENCES map (id) ON DELETE CASCADE
+ CONSTRAINT par_map_lib_fk FOREIGN KEY (parentmaplibrary_id)
+  REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 CREATE SEQUENCE MapLibrary_Seq;
