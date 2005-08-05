@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.59 2005/08/04 18:55:05 bass Exp $
+ * $Id: PathElement.java,v 1.60 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/08/04 18:55:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -968,7 +968,7 @@ public final class PathElement extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlPathElement pathElement = (IdlPathElement) transferable;
 		try {
 			super.fromTransferable(pathElement);

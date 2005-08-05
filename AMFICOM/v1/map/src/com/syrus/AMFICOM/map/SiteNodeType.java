@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.58 2005/08/05 14:56:06 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.59 2005/08/05 16:50:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.58 $, $Date: 2005/08/05 14:56:06 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/05 16:50:26 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -171,7 +171,7 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlSiteNodeType sntt = (IdlSiteNodeType) transferable;
 		super.fromTransferable(sntt, sntt.codename, sntt.description);
 

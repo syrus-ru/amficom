@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.52 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.53 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.52 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -139,7 +139,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCableThreadType cttt = (IdlCableThreadType) transferable;
 		super.fromTransferable(cttt, cttt.codename, cttt.description);
 		this.name = cttt.name;

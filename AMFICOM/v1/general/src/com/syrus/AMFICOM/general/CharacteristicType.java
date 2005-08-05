@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.44 2005/08/02 18:07:34 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.45 2005/08/05 16:49:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/08/02 18:07:34 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/05 16:49:29 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -82,7 +82,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlCharacteristicType ctt = (IdlCharacteristicType) transferable;
 		try {
 			super.fromTransferable(ctt, ctt.codename, ctt.description);

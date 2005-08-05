@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.33 2005/07/31 17:08:09 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.34 2005/08/05 16:50:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/07/31 17:08:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/05 16:50:21 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
@@ -234,7 +234,7 @@ public final class SchemeImageResource extends AbstractCloneableImageResource {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlImageResource idlImageResource = (IdlImageResource) transferable;
 		super.fromTransferable(idlImageResource);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.67 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: LinkType.java,v 1.68 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -139,7 +139,7 @@ public final class LinkType extends AbstractLinkType {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlLinkType ltt = (IdlLinkType) transferable;
 		super.fromTransferable(ltt, ltt.codename, ltt.description);
 

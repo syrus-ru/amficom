@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.87 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.88 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.88 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -170,7 +170,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurementSetup mst = (IdlMeasurementSetup) transferable;
 		super.fromTransferable(mst);
 

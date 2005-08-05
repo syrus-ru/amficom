@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.62 2005/08/02 18:07:25 arseniy Exp $
+ * $Id: Collector.java,v 1.63 2005/08/05 16:50:26 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/08/02 18:07:25 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/05 16:50:26 $
  * @module map_v1
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -129,7 +129,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCollector ct = (IdlCollector) transferable;
 		super.fromTransferable(ct);
 

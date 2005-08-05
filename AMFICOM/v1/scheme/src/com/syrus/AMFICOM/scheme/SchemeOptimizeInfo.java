@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.55 2005/08/01 16:18:09 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.56 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/08/01 16:18:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -725,7 +725,7 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
 		try {
 			super.fromTransferable(schemeOptimizeInfo);

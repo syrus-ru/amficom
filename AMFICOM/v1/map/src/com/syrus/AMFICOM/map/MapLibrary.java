@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.9 2005/08/05 14:02:09 max Exp $
+ * $Id: MapLibrary.java,v 1.10 2005/08/05 16:50:26 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/05 14:02:09 $
- * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 16:50:26 $
+ * @author $Author: arseniy $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -158,7 +158,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMapLibrary mlt = (IdlMapLibrary) transferable;
 		super.fromTransferable(mlt);
 

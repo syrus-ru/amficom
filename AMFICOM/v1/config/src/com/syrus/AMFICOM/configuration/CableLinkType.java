@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.60 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.61 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -136,7 +136,7 @@ public final class CableLinkType extends AbstractLinkType {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCableLinkType cltt = (IdlCableLinkType) transferable;
 		super.fromTransferable(cltt, cltt.codename, cltt.description);
 		this.sort = cltt.sort.value();

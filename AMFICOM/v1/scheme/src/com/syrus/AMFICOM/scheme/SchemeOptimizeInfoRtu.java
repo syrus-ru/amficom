@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.15 2005/08/02 18:28:42 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.16 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.15 $, $Date: 2005/08/02 18:28:42 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -287,7 +287,7 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu = (IdlSchemeOptimizeInfoRtu) transferable;
 		try {
 			super.fromTransferable(schemeOptimizeInfoRtu);

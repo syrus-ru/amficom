@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.52 2005/08/01 10:47:56 bass Exp $
+ * $Id: SchemePort.java,v 1.53 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 /**
  * #10 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/08/01 10:47:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort {
@@ -274,7 +274,7 @@ public final class SchemePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemePort schemePort = (IdlSchemePort) transferable;
 		super.fromTransferable(schemePort, schemePort.name,
 				schemePort.description,

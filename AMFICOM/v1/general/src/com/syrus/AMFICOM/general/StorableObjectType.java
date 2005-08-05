@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.26 2005/07/25 20:47:00 arseniy Exp $
+ * $Id: StorableObjectType.java,v 1.27 2005/08/05 16:49:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/25 20:47:00 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/05 16:49:29 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -57,7 +57,7 @@ public abstract class StorableObjectType extends StorableObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(final IdlStorableObject transferable, final String codename1, final String description1)
+	protected synchronized void fromTransferable(final IdlStorableObject transferable, final String codename1, final String description1)
 			throws ApplicationException {
 		super.fromTransferable(transferable);
 		this.codename = codename1;

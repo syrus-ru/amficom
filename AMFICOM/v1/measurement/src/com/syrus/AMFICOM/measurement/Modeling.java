@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.57 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: Modeling.java,v 1.58 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @author arseniy
  * @module measurement_v1
@@ -102,7 +102,7 @@ public final class Modeling extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlModeling mt = (IdlModeling) transferable;
 		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
 

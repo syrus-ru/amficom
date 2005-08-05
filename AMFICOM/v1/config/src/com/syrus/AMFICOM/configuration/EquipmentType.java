@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.78 2005/07/27 15:59:22 bass Exp $
+ * $Id: EquipmentType.java,v 1.79 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/08/05 16:50:02 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -128,7 +128,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlEquipmentType ett = (IdlEquipmentType) transferable;
 		super.fromTransferable(ett, ett.codename, ett.description);
 		this.name = ett.name;

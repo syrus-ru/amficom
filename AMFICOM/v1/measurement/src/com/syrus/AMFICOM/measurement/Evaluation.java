@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.75 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: Evaluation.java,v 1.76 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluationHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.76 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -100,7 +100,7 @@ public final class Evaluation extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlEvaluation et = (IdlEvaluation) transferable;
 		super.fromTransferable(et, null, new Identifier(et.monitoredElementId), null);
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.88 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: Measurement.java,v 1.89 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.89 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -122,7 +122,7 @@ public final class Measurement extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurement mt = (IdlMeasurement) transferable;
 		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
 

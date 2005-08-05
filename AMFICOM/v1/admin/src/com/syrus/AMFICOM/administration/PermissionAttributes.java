@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.1 2005/08/04 14:04:16 bob Exp $
+* $Id: PermissionAttributes.java,v 1.2 2005/08/05 16:49:49 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/04 14:04:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 16:49:49 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -144,7 +144,7 @@ public class PermissionAttributes extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlPermissionAttributes pat = (IdlPermissionAttributes)transferable;
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);

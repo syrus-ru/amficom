@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.65 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.66 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.66 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -116,7 +116,7 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurementPortType mptt = (IdlMeasurementPortType) transferable;
 		super.fromTransferable(mptt, mptt.codename, mptt.description);
 		this.name = mptt.name;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.66 2005/08/03 11:34:38 bass Exp $
+ * $Id: SchemeDevice.java,v 1.67 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/08/03 11:34:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -741,7 +741,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
 		try {
 			super.fromTransferable(schemeDevice);

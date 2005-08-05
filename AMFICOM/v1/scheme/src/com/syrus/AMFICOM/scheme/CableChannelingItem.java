@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.50 2005/08/04 18:55:05 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.51 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/08/04 18:55:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -582,7 +582,7 @@ public final class CableChannelingItem
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
 		try {
 			super.fromTransferable(cableChannelingItem);

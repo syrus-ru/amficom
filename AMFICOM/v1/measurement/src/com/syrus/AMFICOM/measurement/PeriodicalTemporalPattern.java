@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.17 2005/08/02 18:08:52 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.18 2005/08/05 16:50:08 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -83,7 +83,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlPeriodicalTemporalPattern ptpt = (IdlPeriodicalTemporalPattern)transferable;
 		super.fromTransferable(ptpt);
 		this.period = ptpt.period;

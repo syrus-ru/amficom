@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.31 2005/08/02 18:08:52 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.32 2005/08/05 16:50:08 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement_v1
@@ -128,7 +128,7 @@ public final class IntervalsTemporalPattern extends AbstractTemporalPattern impl
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlIntervalsTemporalPattern itpt = (IdlIntervalsTemporalPattern) transferable;
 		super.fromTransferable(itpt);
 

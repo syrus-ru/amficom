@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.37 2005/08/02 18:08:59 arseniy Exp $
+ * $Id: Event.java,v 1.38 2005/08/05 16:50:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/02 18:08:59 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/05 16:50:14 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -138,7 +138,7 @@ public final class Event extends StorableObject implements TypedObject {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlEvent et = (IdlEvent) transferable;
 
 		super.fromTransferable(et);

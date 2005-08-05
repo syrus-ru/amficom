@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.38 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: CableThread.java,v 1.39 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.39 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -112,7 +112,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCableThread ctt = (IdlCableThread) transferable;
 		super.fromTransferable(ctt, new Identifier(ctt.domainId));
 

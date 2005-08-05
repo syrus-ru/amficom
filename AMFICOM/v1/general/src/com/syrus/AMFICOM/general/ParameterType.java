@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.46 2005/08/02 18:07:34 arseniy Exp $
+ * $Id: ParameterType.java,v 1.47 2005/08/05 16:49:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/02 18:07:34 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/05 16:49:29 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -128,7 +128,7 @@ public final class ParameterType extends StorableObjectType implements Character
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlParameterType ptt = (IdlParameterType) transferable;
 		try {
 			super.fromTransferable(ptt, ptt.codename, ptt.description);

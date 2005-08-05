@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.34 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: Action.java,v 1.35 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -75,7 +75,7 @@ public abstract class Action extends StorableObject implements TypedObject {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void fromTransferable(final IdlStorableObject transferable,
+	protected synchronized void fromTransferable(final IdlStorableObject transferable,
 			final ActionType type1,
 			final Identifier monitoredElementId1,
 			final Action parentAction1) throws ApplicationException {

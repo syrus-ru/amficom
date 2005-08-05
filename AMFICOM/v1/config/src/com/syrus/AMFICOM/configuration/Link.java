@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.69 2005/07/27 15:59:21 bass Exp $
+ * $Id: Link.java,v 1.70 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/07/27 15:59:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.70 $, $Date: 2005/08/05 16:50:02 $
  * @module config
  */
 public final class Link extends AbstractLink {
@@ -136,7 +136,7 @@ public final class Link extends AbstractLink {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlLink idlLink = (IdlLink) transferable;
 		super.fromTransferable(idlLink, new Identifier(idlLink.domainId));
 

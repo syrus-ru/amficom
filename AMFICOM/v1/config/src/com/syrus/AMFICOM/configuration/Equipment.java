@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.112 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: Equipment.java,v 1.113 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.113 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -193,7 +193,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEquipment et = (IdlEquipment) transferable;
 		super.fromTransferable(et, new Identifier(et.domainId));
 

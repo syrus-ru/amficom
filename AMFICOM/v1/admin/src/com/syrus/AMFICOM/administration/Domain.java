@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.48 2005/08/02 18:08:31 arseniy Exp $
+ * $Id: Domain.java,v 1.49 2005/08/05 16:49:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/02 18:08:31 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/05 16:49:49 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -99,7 +99,7 @@ public final class Domain extends DomainMember implements Characterizable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlDomain dt = (IdlDomain)transferable;
 		super.fromTransferable(dt, new Identifier(dt.domainId));
 		this.name = dt.name;

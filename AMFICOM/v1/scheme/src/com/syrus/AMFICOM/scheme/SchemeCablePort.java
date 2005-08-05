@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.51 2005/08/01 10:47:55 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.52 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,8 @@ import com.syrus.util.Log;
 /**
  * #11 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/08/01 10:47:55 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort {
@@ -260,7 +260,7 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
 		final IdlSchemeCablePort schemeCablePort = (IdlSchemeCablePort) transferable;
 		super.fromTransferable(schemeCablePort,
 				schemeCablePort.name,

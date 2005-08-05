@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.12 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.13 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -152,7 +152,7 @@ public final class ParameterSet extends StorableObject {
 	 * </p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlParameterSet st = (IdlParameterSet)transferable;
 		super.fromTransferable(st);
 		this.sort = st.sort.value();

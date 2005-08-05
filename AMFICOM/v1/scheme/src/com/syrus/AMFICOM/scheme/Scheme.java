@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.70 2005/08/04 14:18:03 bass Exp $
+ * $Id: Scheme.java,v 1.71 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,8 +66,8 @@ import com.syrus.util.Log;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/08/04 14:18:03 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1159,7 +1159,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlScheme scheme = (IdlScheme) transferable;
 		super.fromTransferable(scheme, new Identifier(scheme.domainId));
 		this.name = scheme.name;

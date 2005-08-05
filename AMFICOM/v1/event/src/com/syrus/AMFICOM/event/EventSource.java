@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.29 2005/08/02 18:08:59 arseniy Exp $
+ * $Id: EventSource.java,v 1.30 2005/08/05 16:50:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/08/02 18:08:59 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/05 16:50:14 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -88,7 +88,7 @@ public final class EventSource extends StorableObject {
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlEventSource est = (IdlEventSource) transferable;
 		try {
 			super.fromTransferable(est);

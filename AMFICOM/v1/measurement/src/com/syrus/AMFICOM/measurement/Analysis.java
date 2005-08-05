@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.79 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: Analysis.java,v 1.80 2005/08/05 16:50:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.80 $, $Date: 2005/08/05 16:50:08 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -102,7 +102,7 @@ public final class Analysis extends Action {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlAnalysis at = (IdlAnalysis) transferable;
 		super.fromTransferable(at, null, new Identifier(at.monitoredElementId), null);
 

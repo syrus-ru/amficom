@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.56 2005/08/04 12:24:14 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.57 2005/08/05 16:50:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.util.Log;
 /**
  * #01 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/08/04 12:24:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/08/05 16:50:34 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -666,7 +666,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
 		final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
 		try {
 			super.fromTransferable(schemeProtoGroup);

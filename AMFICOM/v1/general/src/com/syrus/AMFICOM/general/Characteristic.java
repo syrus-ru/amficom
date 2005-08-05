@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.54 2005/08/02 18:07:34 arseniy Exp $
+ * $Id: Characteristic.java,v 1.55 2005/08/05 16:49:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/08/02 18:07:34 $
+ * @version $Revision: 1.55 $, $Date: 2005/08/05 16:49:29 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -157,7 +157,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlCharacteristic ct = (IdlCharacteristic) transferable;
 		
 		super.fromTransferable(ct);

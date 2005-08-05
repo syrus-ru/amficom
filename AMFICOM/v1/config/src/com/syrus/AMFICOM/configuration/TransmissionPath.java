@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.83 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.84 2005/08/05 16:50:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.83 $, $Date: 2005/08/02 18:08:46 $
+ * @version $Revision: 1.84 $, $Date: 2005/08/05 16:50:02 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -132,7 +132,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	}
 
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
+	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlTransmissionPath tpt = (IdlTransmissionPath) transferable;
 		super.fromTransferable(tpt, new Identifier(tpt.domainId));
 
