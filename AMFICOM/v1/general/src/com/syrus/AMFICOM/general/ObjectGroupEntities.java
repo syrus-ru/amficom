@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.25 2005/08/04 13:58:22 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.26 2005/08/05 13:54:20 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,11 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.*;
 
-import com.syrus.util.Shitlet;
-
 import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/08/04 13:58:22 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/05 13:54:20 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -52,6 +50,7 @@ public final class ObjectGroupEntities {
 
 	private static final TObjectShortHashMap NAME_CODE_MAP = new TObjectShortHashMap();
 	private static final TShortObjectHashMap CODE_NAME_MAP = new TShortObjectHashMap();
+	private static final TShortObjectHashMap GROUP_CODES_MAP = new TShortObjectHashMap();
 
 	private ObjectGroupEntities() {
 		// singleton constructor
@@ -63,22 +62,104 @@ public final class ObjectGroupEntities {
 	}
 
 	private static void registerGroups() {
-		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP);
-		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP);
-		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP);
-		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP);
-		registerGroup(MEASUREMENT_GROUP_CODE, MEASUREMENT_GROUP);
-		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP);
-		registerGroup(MAP_GROUP_CODE, MAP_GROUP);
-		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP);
-		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP);
+		registerGroup(GENERAL_GROUP_CODE, 
+			GENERAL_GROUP,
+			new short[] { PARAMETER_TYPE_CODE, 
+				CHARACTERISTIC_TYPE_CODE, 
+				CHARACTERISTIC_CODE });
+		registerGroup(EVENT_GROUP_CODE, 
+			EVENT_GROUP,
+			new short[] { EVENT_TYPE_CODE, 
+				EVENTSOURCE_CODE, EVENT_CODE });
+		registerGroup(ADMINISTRATION_GROUP_CODE, 
+			ADMINISTRATION_GROUP,
+			new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, 
+				SERVER_CODE, MCM_CODE, 
+				SERVERPROCESS_CODE, 
+				PERMATTR_CODE });
+		registerGroup(CONFIGURATION_GROUP_CODE, 
+			CONFIGURATION_GROUP,
+			new short[] { EQUIPMENT_TYPE_CODE,
+				PORT_TYPE_CODE,
+				MEASUREMENTPORT_TYPE_CODE,
+				TRANSPATH_TYPE_CODE,
+				LINK_TYPE_CODE,
+				CABLELINK_TYPE_CODE,
+				CABLETHREAD_TYPE_CODE,
+				EQUIPMENT_CODE,
+				PORT_CODE,
+				MEASUREMENTPORT_CODE,
+				TRANSPATH_CODE,
+				KIS_CODE,
+				MONITOREDELEMENT_CODE,
+				LINK_CODE,
+				CABLELINK_CODE,
+				CABLETHREAD_CODE });
+		registerGroup(MEASUREMENT_GROUP_CODE, 
+			MEASUREMENT_GROUP,
+			new short[] { MEASUREMENT_TYPE_CODE,
+				ANALYSIS_TYPE_CODE,
+				EVALUATION_TYPE_CODE,
+				MODELING_TYPE_CODE,
+				MEASUREMENT_CODE,
+				ANALYSIS_CODE,
+				EVALUATION_CODE,
+				MODELING_CODE,
+				MEASUREMENTSETUP_CODE,
+				RESULT_CODE,
+				PARAMETERSET_CODE,
+				TEST_CODE,
+				CRONTEMPORALPATTERN_CODE,
+				INTERVALSTEMPORALPATTERN_CODE,
+				PERIODICALTEMPORALPATTERN_CODE });
+		registerGroup(SCHEME_GROUP_CODE, 
+			SCHEME_GROUP,
+			new short[] { CABLECHANNELINGITEM_CODE,
+				PATHELEMENT_CODE,
+				SCHEME_CODE,
+				SCHEMECABLELINK_CODE,
+				SCHEMECABLEPORT_CODE,
+				SCHEMECABLETHREAD_CODE,
+				SCHEMEDEVICE_CODE,
+				SCHEMEELEMENT_CODE,
+				SCHEMELINK_CODE,
+				SCHEMEMONITORINGSOLUTION_CODE,
+				SCHEMEOPTIMIZEINFO_CODE,
+				SCHEMEOPTIMIZEINFOSWITCH_CODE,
+				SCHEMEOPTIMIZEINFORTU_CODE,
+				SCHEMEPATH_CODE,
+				SCHEMEPORT_CODE,
+				SCHEMEPROTOELEMENT_CODE,
+				SCHEMEPROTOGROUP_CODE });
+		registerGroup(MAP_GROUP_CODE, 
+			MAP_GROUP,
+			new short[] { SITENODE_TYPE_CODE,
+				PHYSICALLINK_TYPE_CODE,
+				SITENODE_CODE,
+				TOPOLOGICALNODE_CODE,
+				NODELINK_CODE,
+				MARK_CODE,
+				PHYSICALLINK_CODE,
+				COLLECTOR_CODE,
+				MAP_CODE,
+				MAPLIBRARY_CODE });
+		registerGroup(RESOURCE_GROUP_CODE, 
+			RESOURCE_GROUP,
+			new short[] { IMAGERESOURCE_CODE });
+		registerGroup(MAPVIEW_GROUP_CODE, 
+			MAPVIEW_GROUP,
+			new short[] { MAPVIEW_CODE });
 	}
 
-	private static void registerGroup(final short groupCode, final String group) {
+	private static void registerGroup(final short groupCode,
+	                                  final String group, 
+	                                  final short[] entityCodes) {
 		assert CODE_NAME_MAP.get(groupCode) == null;
 		CODE_NAME_MAP.put(groupCode, group);
 		assert NAME_CODE_MAP.get(group) == 0;
 		NAME_CODE_MAP.put(group, groupCode);
+		assert GROUP_CODES_MAP.get(groupCode) == null;
+		GROUP_CODES_MAP.put(groupCode, entityCodes);
 	}
 
 	public static short stringToCode(final String group) {
@@ -92,89 +173,12 @@ public final class ObjectGroupEntities {
 	}
 
 	/**
-	 * @todo Implement
 	 * @param groupCode
 	 */
-	@Shitlet
 	public static short[] getEntityCodes(final short groupCode) {
-		assert isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
-		switch (groupCode) {
-			case GENERAL_GROUP_CODE:
-				return new short[] { PARAMETER_TYPE_CODE, CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE };
-			case ADMINISTRATION_GROUP_CODE:
-				return new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, SERVER_CODE, MCM_CODE, SERVERPROCESS_CODE, PERMATTR_CODE };
-			case CONFIGURATION_GROUP_CODE:
-				return new short[] { EQUIPMENT_TYPE_CODE,
-						PORT_TYPE_CODE,
-						MEASUREMENTPORT_TYPE_CODE,
-						TRANSPATH_TYPE_CODE,
-						LINK_TYPE_CODE,
-						CABLELINK_TYPE_CODE,
-						CABLETHREAD_TYPE_CODE,
-						EQUIPMENT_CODE,
-						PORT_CODE,
-						MEASUREMENTPORT_CODE,
-						TRANSPATH_CODE,
-						KIS_CODE,
-						MONITOREDELEMENT_CODE,
-						LINK_CODE,
-						CABLELINK_CODE,
-						CABLETHREAD_CODE };
-			case MEASUREMENT_GROUP_CODE:
-				return new short[] { MEASUREMENT_TYPE_CODE,
-						ANALYSIS_TYPE_CODE,
-						EVALUATION_TYPE_CODE,
-						MODELING_TYPE_CODE,
-						MEASUREMENT_CODE,
-						ANALYSIS_CODE,
-						EVALUATION_CODE,
-						MODELING_CODE,
-						MEASUREMENTSETUP_CODE,
-						RESULT_CODE,
-						PARAMETERSET_CODE,
-						TEST_CODE,
-						CRONTEMPORALPATTERN_CODE,
-						INTERVALSTEMPORALPATTERN_CODE,
-						PERIODICALTEMPORALPATTERN_CODE };
-			case EVENT_GROUP_CODE:
-				return new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE };
-			case RESOURCE_GROUP_CODE:
-				return new short[] { IMAGERESOURCE_CODE };
-			case MAP_GROUP_CODE:
-				return new short[] { SITENODE_TYPE_CODE,
-						PHYSICALLINK_TYPE_CODE,
-						SITENODE_CODE,
-						TOPOLOGICALNODE_CODE,
-						NODELINK_CODE,
-						MARK_CODE,
-						PHYSICALLINK_CODE,
-						COLLECTOR_CODE,
-						MAP_CODE,
-						MAPLIBRARY_CODE };
-			case SCHEME_GROUP_CODE:
-				return new short[] { CABLECHANNELINGITEM_CODE,
-						PATHELEMENT_CODE,
-						SCHEME_CODE,
-						SCHEMECABLELINK_CODE,
-						SCHEMECABLEPORT_CODE,
-						SCHEMECABLETHREAD_CODE,
-						SCHEMEDEVICE_CODE,
-						SCHEMEELEMENT_CODE,
-						SCHEMELINK_CODE,
-						SCHEMEMONITORINGSOLUTION_CODE,
-						SCHEMEOPTIMIZEINFO_CODE,
-						SCHEMEOPTIMIZEINFOSWITCH_CODE,
-						SCHEMEOPTIMIZEINFORTU_CODE,
-						SCHEMEPATH_CODE,
-						SCHEMEPORT_CODE,
-						SCHEMEPROTOELEMENT_CODE,
-						SCHEMEPROTOGROUP_CODE };
-			case MAPVIEW_GROUP_CODE:
-				return new short[] { MAPVIEW_CODE };
-			default:
-				assert false : ErrorMessages.ILLEGAL_GROUP_CODE + ": " + groupCode;
-				return null;
-		}
+		short[] enityCodes = (short[]) GROUP_CODES_MAP.get(groupCode);
+		assert enityCodes != null : ErrorMessages.ILLEGAL_GROUP_CODE + ": " + groupCode;
+		return enityCodes;
 	}
 
 	/**
