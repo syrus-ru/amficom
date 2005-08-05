@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2005/08/03 14:58:59 arseniy Exp $
+# $Id: Makefile,v 1.9 2005/08/05 09:47:26 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -24,8 +24,8 @@ $(LIBNAME):	.mach
 		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/config_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/General/Lang/
 	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/scheme_messages.properties \
-		$(SRCDIR)/com/syrus/AMFICOM/resource/scheme_messages_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages_ru.properties \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames.properties \
 		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames_ru.properties \
 		$(CLASSDIR)/com/syrus/AMFICOM/resource/
