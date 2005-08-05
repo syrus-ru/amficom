@@ -1,11 +1,13 @@
 /**
- * $Id: MapLibrary.java,v 1.5 2005/08/03 16:29:23 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.6 2005/08/05 11:16:29 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  */
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -48,8 +50,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/03 16:29:23 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 11:16:29 $
+ * @author $Author: max $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -205,7 +207,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.parentMapLibrary);
-		return dependencies;
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+		return Collections.unmodifiableSet(dependencies);
 	}
 
 	public void addChild(final LibraryEntry libraryEntry) {
