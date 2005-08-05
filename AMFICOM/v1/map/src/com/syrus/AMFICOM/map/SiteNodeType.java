@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.56 2005/08/03 20:13:20 bass Exp $
+ * $Id: SiteNodeType.java,v 1.57 2005/08/05 12:33:07 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: max $
+ * @version $Revision: 1.57 $, $Date: 2005/08/05 12:33:07 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -394,6 +394,7 @@ public final class SiteNodeType extends StorableObjectType
 	MapLibrary library;
 	
 	public void setParent(Library library) {
+		assert library instanceof MapLibrary : "must be instance of MapLibrary";
 		this.library = (MapLibrary)library;
 	}
 
