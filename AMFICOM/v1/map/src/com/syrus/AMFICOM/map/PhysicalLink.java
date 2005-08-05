@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.83 2005/08/03 14:26:30 max Exp $
+ * $Id: PhysicalLink.java,v 1.84 2005/08/05 07:34:42 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -58,8 +57,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: max $
- * @version $Revision: 1.83 $, $Date: 2005/08/03 14:26:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.84 $, $Date: 2005/08/05 07:34:42 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient

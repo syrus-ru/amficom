@@ -1,5 +1,5 @@
 /**
- * $Id: ShowIndicationCommand.java,v 1.1 2005/08/03 18:47:31 krupenn Exp $
+ * $Id: ShowIndicationCommand.java,v 1.2 2005/08/05 07:38:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,18 +13,15 @@ import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/08/03 18:47:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 07:38:22 $
  * @module mapviewclient_v1
  */
 public class ShowIndicationCommand extends MapNavigateCommand {
