@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.149 2005/08/05 15:35:21 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.150 2005/08/05 17:35:10 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
@@ -28,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.149 $, $Date: 2005/08/05 15:35:21 $
+ * @version $Revision: 1.150 $, $Date: 2005/08/05 17:35:10 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -75,7 +77,7 @@ public final class StorableObjectPool {
 	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
 	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
 
-	private static final Map<Integer, Map<Short, Set<StorableObject>>> SAVING_OBJECTS_MAP = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+	private static final SortedMap<Integer, Map<Short, Set<StorableObject>>> SAVING_OBJECTS_MAP = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 	private static final Set<Identifier> SAVING_OBJECT_IDS = new HashSet<Identifier>();
 
 
