@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.63 2005/08/02 18:07:25 arseniy Exp $
+ * $Id: NodeLink.java,v 1.64 2005/08/05 13:23:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,14 +37,15 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.63 $, $Date: 2005/08/02 18:07:25 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.64 $, $Date: 2005/08/05 13:23:24 $
  * @module map_v1
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -189,7 +190,44 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		super.markAsChanged();
 	}
 
+	/**
+	 * Если один из концевых узлов линии - кабельный ввод, и другой - 
+	 * телефонный узел или здание, то это - проводка по дому. В этом
+	 * случае длина считается при подсчете длины проводки по дому,
+	 * а данный метод возвращает длину 0.
+	 * @return топологическая длина фрагмента, и 0, если проводка по зданию
+	 */
 	public double getLength() {
+		AbstractNode startLinkNode = this.physicalLink.getStartNode();
+		boolean hasCableInlet = false;
+		boolean hasBuilding = false;
+		if(startLinkNode instanceof SiteNode) {
+			SiteNode startLinkSite = (SiteNode) startLinkNode;
+			SiteNodeTypeSort startLinkSiteTypeSort = ((SiteNodeType)startLinkSite.getType()).getSort();
+			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
+					|| startLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
+				hasBuilding = true;
+			}
+			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
+				hasCableInlet = true;
+			}
+		}
+
+		AbstractNode endLinkNode = this.physicalLink.getEndNode();
+		if(endLinkNode instanceof SiteNode) {
+			SiteNode endLinkSite = (SiteNode) endLinkNode;
+			SiteNodeTypeSort endLinkSiteTypeSort = ((SiteNodeType)endLinkSite.getType()).getSort();
+			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
+					|| endLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
+				hasBuilding = true;
+			}
+			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
+				hasCableInlet = true;
+			}
+		}
+		if(hasCableInlet && hasBuilding) {
+			return 0D;
+		}
 		return this.length;
 	}
 
