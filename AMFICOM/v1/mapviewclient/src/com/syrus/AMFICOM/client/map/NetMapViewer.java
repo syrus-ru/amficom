@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.33 2005/08/03 18:48:18 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.34 2005/08/05 07:37:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,6 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -31,7 +29,6 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.JComponent;
-import javax.swing.Timer;
 import javax.swing.ToolTipManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
@@ -57,7 +54,6 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.EventMarker;
-import com.syrus.AMFICOM.mapview.MapTypedElementsContainer;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
@@ -79,12 +75,10 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/03 18:48:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/05 07:37:56 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
-	public static final int DEFAULT_TIME_INTERVAL = 1000;
-
 	protected LogicalNetLayer logicalNetLayer;
 	protected MapContext mapContext;
 	protected MapImageRenderer renderer;

@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmIndicationTimer.java,v 1.1 2005/08/03 18:48:18 krupenn Exp $
+ * $Id: AlarmIndicationTimer.java,v 1.2 2005/08/05 07:37:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,13 +63,15 @@ public class AlarmIndicationTimer {
 	final LogicalNetLayer logicalNetLayer;
 	final MapTypedElementsContainer container;
 
+	public static final int DEFAULT_TIME_INTERVAL = 1000;
+
 	public AlarmIndicationTimer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		this.dispatcher = this.logicalNetLayer.getContext().getDispatcher();
 		this.container = new MapTypedElementsContainer();
 		this.animateTimer = new Timer(
-				NetMapViewer.DEFAULT_TIME_INTERVAL,
+				AlarmIndicationTimer.DEFAULT_TIME_INTERVAL,
 				this.timerActionListener);
 		this.animateTimer.start();
 	}
