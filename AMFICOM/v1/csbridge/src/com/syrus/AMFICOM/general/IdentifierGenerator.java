@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierGenerator.java,v 1.9 2005/08/03 19:52:59 bass Exp $
+ * $Id: IdentifierGenerator.java,v 1.10 2005/08/05 09:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 09:30:46 $
+ * @author $Author: arseniy $
  * @module csbridge_v1
  */
 public class IdentifierGenerator {
@@ -91,19 +91,26 @@ public class IdentifierGenerator {
 		}
 		finally {
 			try {
-				if (resultSet != null)
-					resultSet.close();
-				if (statement != null)
-					statement.close();
-				resultSet = null;
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.36 2005/08/03 19:53:00 bass Exp $
+ * $Id: MapViewDatabase.java,v 1.37 2005/08/05 09:28:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,38 +41,37 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/03 19:53:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/08/05 09:28:05 $
+ * @author $Author: arseniy $
  * @module mapview_v1
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
-    // domain_id VARCHAR2(32),
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
-    // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // longitude FLOAT,
-    public static final String COLUMN_LONGITUDE     = "longitude";
-    // latitude FLOAT,
-    public static final String COLUMN_LATITUDE      = "latitude";
-    // scale FLOAT,
-    public static final String COLUMN_SCALE = "scale";
-    // defaultScale FLOAT,
-    public static final String COLUMN_DEFAULTSCALE  = "defaultScale";
-    // map_id VARCHAR2(32),
-    public static final String COLUMN_MAP_ID        = "map_id";
+	// domain_id VARCHAR2(32),
+	public static final String COLUMN_DOMAIN_ID = "domain_id";
+	// name VARCHAR2(128),
+	public static final String COLUMN_NAME = "name";
+	// description VARCHAR2(256),
+	public static final String COLUMN_DESCRIPTION = "description";
+	// longitude FLOAT,
+	public static final String COLUMN_LONGITUDE = "longitude";
+	// latitude FLOAT,
+	public static final String COLUMN_LATITUDE = "latitude";
+	// scale FLOAT,
+	public static final String COLUMN_SCALE = "scale";
+	// defaultScale FLOAT,
+	public static final String COLUMN_DEFAULTSCALE = "defaultScale";
+	// map_id VARCHAR2(32),
+	public static final String COLUMN_MAP_ID = "map_id";
 
-    // linked table ::
-    private static final String MAPVIEW_SCHEME        = "MapViewScheme";
-    // mapview_id VARCHAR2(32),
-    private static final String LINK_COLUMN_MAPVIEW_ID    = "mapview_id";
-    // scheme_id VARCHAR2(32),
-    private static final String LINK_COLUMN_SCHEME_ID     = "scheme_id";
-
+	// linked table ::
+	private static final String MAPVIEW_SCHEME = "MapViewScheme";
+	// mapview_id VARCHAR2(32),
+	private static final String LINK_COLUMN_MAPVIEW_ID = "mapview_id";
+	// scheme_id VARCHAR2(32),
+	private static final String LINK_COLUMN_SCHEME_ID = "scheme_id";
 
 	private static String columns;
-	
+
 	private static String updateMultipleSQLValues;	
 
 
@@ -100,12 +99,12 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 			}
 		}
 	}	
-	
+
 	@Override
 	protected short getEntityCode() {		
 		return ObjectEntities.MAPVIEW_CODE;
 	}	
-	
+
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
@@ -135,10 +134,9 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
-@Override
-		protected int setEntityForPreparedStatementTmpl(final MapView storableObject,
+
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final MapView storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
@@ -148,24 +146,24 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getLatitude());
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getScale());
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getDefaultScale());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMap().getId());					
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMap().getId());
 		return startParameterNumber;
 	}
-	
+
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final MapView storableObject) throws IllegalDataException {
 		final MapView mapView = storableObject;
 		final String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ mapView.getLongitude() + COMMA
-			+ mapView.getLatitude() + COMMA
-			+ mapView.getScale() + COMMA
-			+ mapView.getDefaultScale() + COMMA
-			+ DatabaseIdentifier.toSQLString(mapView.getMap().getId());
+				+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
+				+ mapView.getLongitude() + COMMA
+				+ mapView.getLatitude() + COMMA
+				+ mapView.getScale() + COMMA
+				+ mapView.getDefaultScale() + COMMA
+				+ DatabaseIdentifier.toSQLString(mapView.getMap().getId());
 		return values;
 	}
-	
+
 	@Override
 	protected MapView updateEntityFromResultSet(final MapView storableObject, final ResultSet resultSet)
 			throws IllegalDataException,
@@ -223,8 +221,9 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	}	
 
 	private void updateSchemeIds(final Set<MapView> mapViews) throws UpdateObjectException {
-		if (mapViews == null || mapViews.isEmpty())
+		if (mapViews == null || mapViews.isEmpty()) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> mapIdLinkedObjectIds = new HashMap<Identifier, Set<Identifier>>();
 
@@ -274,28 +273,32 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
-			
+
 	@Override
 	protected Set<MapView> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<MapView> maps = super.retrieveByCondition(conditionQuery);
-		
+
 		final java.util.Map<Identifier, MapView> mapIds = new HashMap<Identifier, MapView>();
 		for (final MapView map : maps) {
 			mapIds.put(map.getId(), map);
 		}
-		
+
 		final java.util.Map<Identifier, Set<Identifier>> schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		for (final Identifier id : schemeIdsMap.keySet()) {
 			final MapView map = mapIds.get(id);
@@ -312,6 +315,5 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		return maps;
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}
-
 
 }
