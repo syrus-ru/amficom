@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.6 2005/08/05 11:16:29 max Exp $
+ * $Id: MapLibrary.java,v 1.7 2005/08/05 12:34:15 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -50,7 +51,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/05 11:16:29 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:34:15 $
  * @author $Author: max $
  * @module map
  */
@@ -60,7 +61,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	private String name;
 	private String codename;
 	private String description;
-	private MapLibrary parentMapLibrary;
+	private Identifier parentMapLibraryId;
 
 	MapLibrary(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -86,22 +87,22 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			final String name,
 			final String codename,
 			final String description,
-			MapLibrary parent) {
+			final MapLibrary parentMapLibrary) {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version);
 		this.name = name;
 		this.codename = codename;
 		this.description = description;
-		this.parentMapLibrary = parent;
+		this.parentMapLibraryId = Identifier.possiblyVoid(parentMapLibrary);
 	}
 
-	public static MapLibrary createInstance(final Identifier creatorId, final MapLibrary parent) throws CreateObjectException {
-		MapLibrary newInstance = MapLibrary.createInstance(creatorId, "", "", "", parent);
+	public static MapLibrary createInstance(final Identifier creatorId, final MapLibrary parentMapLibrary) throws CreateObjectException {
+		MapLibrary newInstance = MapLibrary.createInstance(creatorId, "", "", "", parentMapLibrary);
 		newInstance.codename = newInstance.id.toString();
 		return newInstance;
 	}
 
-	public static MapLibrary createInstance(final Identifier creatorId, final String name, final MapLibrary parent) throws CreateObjectException {
-		MapLibrary newInstance = MapLibrary.createInstance(creatorId, name, "", "", parent);
+	public static MapLibrary createInstance(final Identifier creatorId, final String name, final MapLibrary parentMapLibrary) throws CreateObjectException {
+		MapLibrary newInstance = MapLibrary.createInstance(creatorId, name, "", "",parentMapLibrary);
 		newInstance.codename = newInstance.id.toString();
 		return newInstance;
 	}
@@ -110,11 +111,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			final String name,
 			final String codename,
 			final String description,
-			final MapLibrary parent) throws CreateObjectException {
-		if (creatorId == null || name == null || codename == null || description == null) {
-			throw new IllegalArgumentException("Argument is 'null'");
-		}
-
+			final MapLibrary parentMapLibrary) throws CreateObjectException {
+		assert creatorId == null || name == null || codename == null || description == null : ErrorMessages.NON_NULL_EXPECTED;
+			
 		try {
 			final MapLibrary mapLibrary = new MapLibrary(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPLIBRARY_CODE),
 					creatorId,
@@ -122,7 +121,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 					name,
 					codename,
 					description,
-					parent);
+					parentMapLibrary);
 
 			assert mapLibrary.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -167,7 +166,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		this.codename = mlt.codename;
 		this.description = mlt.description;
 
-		this.parentMapLibrary = StorableObjectPool.getStorableObject(new Identifier(mlt.parentMapLibraryId), true);
+		this.parentMapLibraryId = new Identifier(mlt.parentMapLibraryId);
 	}
 
 	@Override
@@ -182,7 +181,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 				this.name,
 				this.codename,
 				this.description,
-				this.parentMapLibrary.getId().getTransferable());
+				this.parentMapLibraryId.getTransferable());
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -193,12 +192,12 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			final String name,
 			final String codename,
 			final String description,
-			final MapLibrary parent) {
+			final Identifier parentMapLibraryId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.codename = codename;
 		this.description = description;
-		this.parentMapLibrary = parent;
+		this.parentMapLibraryId = parentMapLibraryId;
 	}
 
 	@Override
@@ -206,7 +205,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.parentMapLibrary);
+		dependencies.add(this.parentMapLibraryId);
 		dependencies.remove(null);
 		dependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(dependencies);
@@ -232,8 +231,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setParent(final Library library) {
+		assert library instanceof MapLibrary : "must be instance of MapLibrary";
 		assert library != this : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		this.parentMapLibrary = (MapLibrary) library;
+		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) library);
 	}
 
 	public Set<SiteNodeType> getSiteNodeTypes() {
@@ -275,12 +275,18 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setParent(final Item parent) {
+		assert parent instanceof MapLibrary : "must be instance of MapLibrary";
 		assert parent != this : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
-		this.parentMapLibrary = (MapLibrary) parent;
+		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) parent);
 	}
 
 	public MapLibrary getParent() {
-		return this.parentMapLibrary;
+		try {
+			return StorableObjectPool.getStorableObject(this.getParentMapLibraryId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	public XmlObject getXMLTransferable() {
@@ -358,6 +364,10 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		} catch (Exception e) {
 			throw new CreateObjectException("MapLibrary.createInstance |  ", e);
 		}
+	}
+
+	public Identifier getParentMapLibraryId() {
+		return parentMapLibraryId;
 	}
 	
 }
