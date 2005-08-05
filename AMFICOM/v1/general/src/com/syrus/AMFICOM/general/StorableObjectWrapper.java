@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.13 2005/08/05 09:46:13 bob Exp $
+ * $Id: StorableObjectWrapper.java,v 1.14 2005/08/05 10:28:21 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 10:28:21 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -90,16 +90,18 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	
 	public Object getValue(	T object,
 							String key) {
-		if (key.equals(COLUMN_ID)) {
-			return object.getId();
-		} else if(key.equals(COLUMN_CREATED)) {
-			return object.getCreated();
-		} else if(key.equals(COLUMN_CREATOR_ID)) {
-			return object.getCreatorId();
-		} else if(key.equals(COLUMN_MODIFIED)) {
-			return object.getModified();
-		} else if(key.equals(COLUMN_MODIFIER_ID)) {
-			return object.getCreatorId();
+		if (object != null) {
+			if (key.equals(COLUMN_ID)) {
+				return object.getId();
+			} else if(key.equals(COLUMN_CREATED)) {
+				return object.getCreated();
+			} else if(key.equals(COLUMN_CREATOR_ID)) {
+				return object.getCreatorId();
+			} else if(key.equals(COLUMN_MODIFIED)) {
+				return object.getModified();
+			} else if(key.equals(COLUMN_MODIFIER_ID)) {
+				return object.getCreatorId();
+			}
 		}
 		return null;
 	}
