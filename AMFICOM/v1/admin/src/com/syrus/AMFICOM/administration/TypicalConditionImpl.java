@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.17 2005/08/05 14:33:33 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.18 2005/08/05 14:36:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,11 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
+import com.syrus.util.Shitlet;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/05 14:33:33 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 14:36:32 $
  * @author $Author: arseniy $
  * @module admin
  */
@@ -113,6 +114,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 	}
 
 	@Override
+	@Shitlet
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		if (storableObject instanceof SystemUser) {
 			final SystemUser systemUser = (SystemUser) storableObject;
