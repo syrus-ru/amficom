@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperComparator.java,v 1.4 2005/07/29 06:00:42 bob Exp $
+* $Id: WrapperComparator.java,v 1.5 2005/08/05 12:07:27 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,15 +13,14 @@ import java.util.Comparator;
 
 /**
  * Wrapper comparator
- * @version $Revision: 1.4 $, $Date: 2005/07/29 06:00:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:07:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module util
  */
-public final class WrapperComparator implements Comparator {
-
+public final class WrapperComparator<T> implements Comparator<T> {
 	
-	private Wrapper wrapper;	
+	private Wrapper<T> wrapper;	
 	private String key;
 	private boolean ascend;
 	
@@ -30,7 +29,7 @@ public final class WrapperComparator implements Comparator {
 	 * @param key key for wrapper
 	 * @param ascend ascend compare
 	 */
-	public WrapperComparator(final Wrapper wrapper,
+	public WrapperComparator(final Wrapper<T> wrapper,
 	                         final String key,
 	                         final boolean ascend) {
 		this.wrapper = wrapper;
@@ -43,13 +42,13 @@ public final class WrapperComparator implements Comparator {
 	 * @param wrapper
 	 * @param key
 	 */
-	public WrapperComparator(final Wrapper wrapper,
+	public WrapperComparator(final Wrapper<T> wrapper,
 	                         final String key) {
 		this(wrapper, key, true);
 	}
 
-	public int compare(	final Object object1,
-	                   	final Object object2) {
+	public int compare(	final T object1,
+	                   	final T object2) {
 		final Object value1 = this.wrapper.getValue(object1, this.key);
 		final Object value2 = this.wrapper.getValue(object2, this.key);
 		
