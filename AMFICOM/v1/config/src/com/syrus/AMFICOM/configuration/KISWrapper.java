@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.13 2005/07/27 15:59:22 bass Exp $
+ * $Id: KISWrapper.java,v 1.14 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class KISWrapper extends StorableObjectWrapper {
+public final class KISWrapper extends StorableObjectWrapper<KIS> {
 
 	// table :: kis
 	// description VARCHAR2(256),
@@ -68,10 +68,9 @@ public final class KISWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof KIS) {
-			final KIS kis = (KIS) object;
+	public Object getValue(final KIS kis, final String key) {
+		final Object value = super.getValue(kis, key);
+		if (value == null && kis != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -92,9 +91,8 @@ public final class KISWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof KIS) {
-			final KIS kis = (KIS) object;
+	public void setValue(final KIS kis, final String key, final Object value) {
+		if (kis != null) {
 			if (key.equals(COLUMN_NAME))
 				kis.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

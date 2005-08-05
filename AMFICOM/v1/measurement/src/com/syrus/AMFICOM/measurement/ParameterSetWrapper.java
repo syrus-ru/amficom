@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.6 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.7 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class ParameterSetWrapper extends StorableObjectWrapper {
+public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 
 	public static final String COLUMN_SORT = "sort";
 
@@ -65,18 +65,17 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof ParameterSet) {
-			final ParameterSet set = (ParameterSet) object;
+	public Object getValue(final ParameterSet parameterSet, final String key) {
+		final Object value = super.getValue(parameterSet, key);
+		if (value == null && parameterSet != null) {
 			if (key.equals(COLUMN_SORT))
-				return new Integer(set.getSort().value());
+				return new Integer(parameterSet.getSort().value());
 			if (key.equals(COLUMN_DESCRIPTION))
-				return set.getDescription();
+				return parameterSet.getDescription();
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
-				return set.getMonitoredElementIds();
+				return parameterSet.getMonitoredElementIds();
 			if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
-				final Parameter[] parameters = set.getParameters();
+				final Parameter[] parameters = parameterSet.getParameters();
 				final Map<String, Object> values = new HashMap<String, Object>(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(COLUMN_ID + i, parameters[i].getId());
@@ -93,17 +92,16 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof ParameterSet) {
-			final ParameterSet set = (ParameterSet) object;
+	public void setValue(final ParameterSet parameterSet, final String key, final Object value) {
+		if (parameterSet != null) {
 			if (key.equals(COLUMN_SORT))
-				set.setSort(ParameterSetSort.from_int(((Integer) value).intValue()));
+				parameterSet.setSort(ParameterSetSort.from_int(((Integer) value).intValue()));
 			else
 				if (key.equals(COLUMN_DESCRIPTION))
-					set.setDescription((String) value);
+					parameterSet.setDescription((String) value);
 				else
 					if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
-						set.setMonitoredElementIds((Set) value);
+						parameterSet.setMonitoredElementIds((Set) value);
 					} else
 						if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
 							Map setParameterMap = (Map) value;
@@ -117,7 +115,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper {
 								setParameters[i] = new Parameter(parameterId, parameterType, setParameterValue);
 
 							}
-							set.setParameters(setParameters);
+							parameterSet.setParameters(setParameters);
 						}
 		}
 	}

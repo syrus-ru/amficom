@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.19 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.20 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,11 +23,11 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementSetupWrapper extends StorableObjectWrapper {
+public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
 
 	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
 	public static final String COLUMN_ETALON_ID = "etalon_id";
@@ -73,10 +73,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MeasurementSetup) {
-			final MeasurementSetup measurementSetup = (MeasurementSetup) object;
+	public Object getValue(final MeasurementSetup measurementSetup, final String key) {
+		final Object value = super.getValue(measurementSetup, key);
+		if (value == null && measurementSetup != null) {
 			if (key.equals(COLUMN_PARAMETER_SET_ID))
 				return measurementSetup.getParameterSet();
 			if (key.equals(COLUMN_CRITERIA_SET_ID))
@@ -160,10 +159,8 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MeasurementSetup) {
-			final MeasurementSetup measurementSetup = (MeasurementSetup) object;
-
+	public void setValue(final MeasurementSetup measurementSetup, final String key, final Object value) {
+		if (measurementSetup != null) {
 			if (key.equals(COLUMN_PARAMETER_SET_ID))
 				measurementSetup.setParameterSet((ParameterSet) value);
 			else if (key.equals(COLUMN_CRITERIA_SET_ID))

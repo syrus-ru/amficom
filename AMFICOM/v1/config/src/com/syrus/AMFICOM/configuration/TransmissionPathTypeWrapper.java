@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeWrapper.java,v 1.12 2005/07/27 15:59:22 bass Exp $
+ * $Id: TransmissionPathTypeWrapper.java,v 1.13 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
+public final class TransmissionPathTypeWrapper extends StorableObjectWrapper<TransmissionPathType> {
 
 	private static TransmissionPathTypeWrapper instance;
 
@@ -27,7 +27,9 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 
 	private TransmissionPathTypeWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, 
+				COLUMN_DESCRIPTION, 
+				COLUMN_NAME };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -48,16 +50,16 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof TransmissionPathType) {
-			final TransmissionPathType type = (TransmissionPathType) object;
+	public Object getValue(final TransmissionPathType transmissionPathType, 
+	                       final String key) {
+		final Object value = super.getValue(transmissionPathType, key);
+		if (value == null && transmissionPathType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return transmissionPathType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return transmissionPathType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return transmissionPathType.getName();
 		}
 		return value;
 	}
@@ -66,15 +68,16 @@ public final class TransmissionPathTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof TransmissionPathType) {
-			final TransmissionPathType type = (TransmissionPathType) object;
+	public void setValue(final TransmissionPathType transmissionPathType, 
+	                     final String key, 
+	                     final Object value) {
+		if (transmissionPathType != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				transmissionPathType.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				transmissionPathType.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				transmissionPathType.setCodename((String) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.12 2005/07/29 16:36:37 bass Exp $
+ * $Id: StorableObjectWrapper.java,v 1.13 2005/08/05 09:46:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,14 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/07/29 16:36:37 $
+ * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:13 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
  * @module general_v1
  */
-public abstract class StorableObjectWrapper implements Wrapper {
+public abstract class StorableObjectWrapper<T extends StorableObject> implements Wrapper<T> {
 
 	public static final String COLUMN_CREATED = "created";
 	public static final String COLUMN_CREATOR_ID = "creator_id";
@@ -88,24 +88,25 @@ public abstract class StorableObjectWrapper implements Wrapper {
 		return wrapper;
 	}	
 	
-	public Object getValue(	Object object,
+	public Object getValue(	T object,
 							String key) {
-		if (object instanceof StorableObject) {
-			StorableObject storableObject = (StorableObject)object;
-			if (key.equals(COLUMN_ID)) {
-				return storableObject.getId();
-			} else if(key.equals(COLUMN_CREATED)) {
-				return storableObject.getCreated();
-			} else if(key.equals(COLUMN_CREATOR_ID)) {
-				return storableObject.getCreatorId();
-			} else if(key.equals(COLUMN_MODIFIED)) {
-				return storableObject.getModified();
-			} else if(key.equals(COLUMN_MODIFIER_ID)) {
-				return storableObject.getCreatorId();
-			}
+		if (key.equals(COLUMN_ID)) {
+			return object.getId();
+		} else if(key.equals(COLUMN_CREATED)) {
+			return object.getCreated();
+		} else if(key.equals(COLUMN_CREATOR_ID)) {
+			return object.getCreatorId();
+		} else if(key.equals(COLUMN_MODIFIED)) {
+			return object.getModified();
+		} else if(key.equals(COLUMN_MODIFIER_ID)) {
+			return object.getCreatorId();
 		}
 		return null;
 	}
+	
+	public abstract void setValue(T object,
+							String key,
+							Object value);
 	
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_ID) 

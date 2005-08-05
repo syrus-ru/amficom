@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.9 2005/07/25 20:48:15 arseniy Exp $
+ * $Id: ServerProcessWrapper.java,v 1.10 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 09:46:31 $
+ * @author $Author: bob $
  * @module admin_v1
  */
-public class ServerProcessWrapper extends StorableObjectWrapper {
+public class ServerProcessWrapper extends StorableObjectWrapper<ServerProcess> {
 	public static final String KEY_LOGIN_PROCESS_CODENAME = "LoginProcessCodename";
 	public static final String KEY_EVENT_PROCESS_CODENAME = "EventProcessCodename";
 	public static final String KEY_MSERVER_PROCESS_CODENAME = "MServerProcessCodename";
@@ -62,10 +62,10 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof ServerProcess) {
-			final ServerProcess serverProcess = (ServerProcess) object;
+	public Object getValue(final ServerProcess serverProcess, 
+	                       final String key) {
+		final Object value = super.getValue(serverProcess, key);
+		if (value == null && serverProcess != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return serverProcess.getCodename();
 			if (key.equals(COLUMN_SERVER_ID))
@@ -82,9 +82,10 @@ public class ServerProcessWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof ServerProcess) {
-			final ServerProcess serverProcess = (ServerProcess) object;
+	public void setValue(final ServerProcess serverProcess, 
+	                     final String key, 
+	                     final Object value) {
+		if (serverProcess != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				serverProcess.setDescription((String) value);
 		}

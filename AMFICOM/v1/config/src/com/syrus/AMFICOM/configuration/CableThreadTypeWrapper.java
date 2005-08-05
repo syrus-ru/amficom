@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.13 2005/07/27 15:59:22 bass Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.14 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class CableThreadTypeWrapper extends StorableObjectWrapper {
+public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThreadType> {
 
 	// codename VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
@@ -61,20 +61,19 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof CableThreadType) {
-			final CableThreadType type = (CableThreadType) object;
+	public Object getValue(final CableThreadType cableThreadType, final String key) {
+		final Object value = super.getValue(cableThreadType, key);
+		if (value == null && cableThreadType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return cableThreadType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return cableThreadType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return cableThreadType.getName();
 			if (key.equals(COLUMN_COLOR))
-				return new Integer(type.getColor());
+				return new Integer(cableThreadType.getColor());
 			if (key.equals(COLUMN_LINK_TYPE_ID))
-				return type.getLinkType();
+				return cableThreadType.getLinkType();
 		}
 		return value;
 	}
@@ -83,19 +82,18 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof CableThreadType) {
-			final CableThreadType type = (CableThreadType) object;
+	public void setValue(final CableThreadType object, final String key, final Object value) {
+		if (object != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				object.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				object.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				object.setCodename((String) value);
 			else if (key.equals(COLUMN_COLOR))
-				type.setColor(((Integer)value).intValue());
+				object.setColor(((Integer)value).intValue());
 			else if (key.equals(COLUMN_LINK_TYPE_ID))
-				type.setLinkType((LinkType)value);
+				object.setLinkType((LinkType)value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.12 2005/07/25 18:10:03 arseniy Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.13 2005/08/05 09:46:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 18:10:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:13 $
+ * @author $Author: bob $
  * @module general_v1
  */
-public class ParameterTypeWrapper extends StorableObjectWrapper {
+public class ParameterTypeWrapper extends StorableObjectWrapper<ParameterType> {
 
 	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 
@@ -72,9 +72,9 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof ParameterType) {
-			ParameterType parameterType = (ParameterType) object;
+	public Object getValue(final ParameterType parameterType, final String key) {
+		final Object value = super.getValue(parameterType, key);
+		if (value == null && parameterType != null) {
 			if (key.equals(StorableObjectWrapper.COLUMN_CODENAME))
 				return parameterType.getCodename();
 			else if (key.equals(StorableObjectWrapper.COLUMN_DESCRIPTION))
@@ -84,16 +84,18 @@ public class ParameterTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_DATA_TYPE_CODE))
 				return parameterType.getDataType();
 		}
-		return null;
+		return value;
 	}
 
 	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof ParameterType) {
-			ParameterType parameterType = (ParameterType) object;
+	@Override
+	public void setValue(final ParameterType parameterType, 
+	                     final String key, 
+	                     final Object value) {
+		if (parameterType != null) {
 			if (key.equals(StorableObjectWrapper.COLUMN_CODENAME))
 				parameterType.setCodename((String) value);
 			else if (key.equals(StorableObjectWrapper.COLUMN_DESCRIPTION))

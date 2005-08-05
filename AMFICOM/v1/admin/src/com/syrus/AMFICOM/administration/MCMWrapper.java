@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.12 2005/07/25 20:48:15 arseniy Exp $
+ * $Id: MCMWrapper.java,v 1.13 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:31 $
+ * @author $Author: bob $
  * @module admin_v1
  */
-public class MCMWrapper extends StorableObjectWrapper {
+public class MCMWrapper extends StorableObjectWrapper<MCM> {
 
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
@@ -57,10 +57,9 @@ public class MCMWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MCM) {
-			final MCM mcm = (MCM) object;
+	public Object getValue(final MCM mcm, final String key) {
+		final Object value = super.getValue(mcm, key);
+		if (value == null && mcm != null) {
 			if (key.equals(COLUMN_NAME))
 				return mcm.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -79,9 +78,8 @@ public class MCMWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MCM) {
-			final MCM mcm = (MCM) object;
+	public void setValue(final MCM mcm, final String key, final Object value) {
+		if (mcm != null) {
 			if (key.equals(COLUMN_NAME))
 				mcm.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

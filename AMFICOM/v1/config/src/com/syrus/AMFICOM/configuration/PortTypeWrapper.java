@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.18 2005/07/27 15:59:22 bass Exp $
+ * $Id: PortTypeWrapper.java,v 1.19 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class PortTypeWrapper extends StorableObjectWrapper {
+public final class PortTypeWrapper extends StorableObjectWrapper<PortType> {
 
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_KIND = "kind";
@@ -52,20 +52,19 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		Object value = super.getValue(object, key);
-		if (value == null && object instanceof PortType) {
-			PortType type = (PortType) object;
+	public Object getValue(final PortType portType, final String key) {
+		Object value = super.getValue(portType, key);
+		if (value == null && portType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return portType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return portType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return portType.getName();
 			if (key.equals(COLUMN_SORT))
-				return new Integer(type.getSort().value());
+				return new Integer(portType.getSort().value());
 			if (key.equals(COLUMN_KIND))
-				return new Integer(type.getKind().value());
+				return new Integer(portType.getKind().value());
 		}
 		return value;
 	}
@@ -74,17 +73,16 @@ public final class PortTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof PortType) {
-			PortType type = (PortType) object;
+	public void setValue(final PortType object, final String key, final Object value) {
+		if (object != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				object.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				object.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				object.setCodename((String) value);
 			else if (key.equals(COLUMN_SORT))
-				type.setSort(PortTypeSort.from_int(((Integer) value).intValue()));
+				object.setSort(PortTypeSort.from_int(((Integer) value).intValue()));
 		}
 	}
 

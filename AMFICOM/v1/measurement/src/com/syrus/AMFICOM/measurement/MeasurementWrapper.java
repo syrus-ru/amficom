@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.9 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: MeasurementWrapper.java,v 1.10 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementWrapper extends StorableObjectWrapper {
+public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_SETUP_ID = "setup_id";
@@ -67,10 +67,9 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Measurement) {
-			final Measurement measurement = (Measurement) object;
+	public Object getValue(final Measurement measurement, final String key) {
+		final Object value = super.getValue(measurement, key);
+		if (value == null && measurement != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				return measurement.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -95,9 +94,10 @@ public class MeasurementWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Measurement) {
-			final Measurement measurement = (Measurement) object;
+	public void setValue(final Measurement measurement, 
+	                     final String key, 
+	                     final Object value) {
+		if (measurement != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				measurement.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))

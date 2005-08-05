@@ -1,5 +1,5 @@
 /*
- * $Id: DomainWrapper.java,v 1.13 2005/08/03 10:24:13 bob Exp $
+ * $Id: DomainWrapper.java,v 1.14 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/03 10:24:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:46:31 $
  * @author $Author: bob $
  * @module admin_v1
  */
-public class DomainWrapper extends StorableObjectWrapper {
+public class DomainWrapper extends StorableObjectWrapper<Domain> {
 
 	private static DomainWrapper instance;
 
@@ -51,10 +51,9 @@ public class DomainWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Domain) {
-			final Domain domain = (Domain) object;
+	public Object getValue(final Domain domain, final String key) {
+		final Object value = super.getValue(domain, key);
+		if (value == null && domain != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return domain.getName();
 			}
@@ -72,9 +71,8 @@ public class DomainWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
-		if (object instanceof Domain) {
-			final Domain domain = (Domain) object;
+	public void setValue(Domain domain, final String key, final Object value) {
+		if (domain != null) {
 			if (key.equals(COLUMN_NAME)) {
 				domain.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

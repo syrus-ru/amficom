@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationWrapper.java,v 1.10 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: EvaluationWrapper.java,v 1.11 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class EvaluationWrapper extends StorableObjectWrapper {
+public class EvaluationWrapper extends StorableObjectWrapper<Evaluation> {
 
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
@@ -56,10 +56,9 @@ public class EvaluationWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Evaluation) {
-			final Evaluation evaluation = (Evaluation) object;
+	public Object getValue(final Evaluation evaluation, final String key) {
+		final Object value = super.getValue(evaluation, key);
+		if (value == null && evaluation != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				return evaluation.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -76,9 +75,10 @@ public class EvaluationWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Evaluation) {
-			final Evaluation evaluation = (Evaluation) object;
+	public void setValue(final Evaluation evaluation, 
+	                     final String key, 
+	                     final Object value) {
+		if (evaluation != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				evaluation.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))

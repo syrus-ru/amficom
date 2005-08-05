@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.16 2005/07/25 18:10:03 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.17 2005/08/05 09:46:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/25 18:10:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 09:46:13 $
+ * @author $Author: bob $
  * @module general_v1
  */
-public class CharacteristicWrapper extends StorableObjectWrapper {
+public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic> {
 	// table :: Characteristic
 	// type_id VARCHAR2(32) NOT NULL,
 	// name VARCHAR2(64) NOT NULL,
@@ -92,10 +92,9 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Characteristic) {
-			final Characteristic characteristic = (Characteristic) object;
+	public Object getValue(final Characteristic characteristic, final String key) {
+		final Object value = super.getValue(characteristic, key);
+		if (value == null && characteristic != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				return characteristic.getType();
 			else if (key.equals(COLUMN_NAME))
@@ -118,9 +117,10 @@ public class CharacteristicWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Characteristic) {
-			final Characteristic characteristic = (Characteristic) object;
+	public void setValue(final Characteristic characteristic, 
+	                     final String key, 
+	                     final Object value) {
+		if (characteristic != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				characteristic.setType((CharacteristicType) value);
 			else if (key.equals(COLUMN_NAME))

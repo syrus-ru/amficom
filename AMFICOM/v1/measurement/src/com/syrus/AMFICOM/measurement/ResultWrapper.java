@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.13 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.14 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class ResultWrapper extends StorableObjectWrapper {
+public class ResultWrapper extends StorableObjectWrapper<Result> {
 
 	// measurementId VARCHAR2(32) NOT NULL,
 	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
@@ -71,10 +71,9 @@ public class ResultWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Result) {
-			final Result result = (Result) object;
+	public Object getValue(final Result result, final String key) {
+		final Object value = super.getValue(result, key);
+		if (value == null && result != null) {
 			if (key.equals(COLUMN_ACTION_ID))
 				return result.getAction();
 			if (key.equals(COLUMN_SORT))
@@ -97,9 +96,8 @@ public class ResultWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Result) {
-			final Result result = (Result) object;
+	public void setValue(final Result result, final String key, final Object value) {
+		if (result != null) {
 			if (key.equals(COLUMN_ACTION_ID))
 				result.setAction((Action) value);
 			else

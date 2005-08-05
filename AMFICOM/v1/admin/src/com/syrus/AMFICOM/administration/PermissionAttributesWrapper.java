@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.1 2005/08/04 14:04:16 bob Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.2 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/04 14:04:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 09:46:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
  */
-public class PermissionAttributesWrapper extends StorableObjectWrapper {
+public class PermissionAttributesWrapper extends StorableObjectWrapper<PermissionAttributes> {
 
 	public static final String	COLUMN_USER_ID			= "user_id";
 	public static final String	COLUMN_PERMISSION_MASK	= "permission_mask";
@@ -57,11 +57,10 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof PermissionAttributes) {
-			final PermissionAttributes permissionAttributes = 
-				(PermissionAttributes) object;
+	public Object getValue(final PermissionAttributes permissionAttributes, 
+	                       final String key) {
+		final Object value = super.getValue(permissionAttributes, key);
+		if (value == null && permissionAttributes != null) {
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				return permissionAttributes.getDomainId();
 			}
@@ -79,10 +78,10 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(Object object, final String key, final Object value) {
-		if (object instanceof PermissionAttributes) {
-			final PermissionAttributes permissionAttributes = 
-				(PermissionAttributes) object;
+	public void setValue(PermissionAttributes permissionAttributes, 
+	                     final String key, 
+	                     final Object value) {
+		if (permissionAttributes != null) {
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				permissionAttributes.setDomainId((Identifier) value);
 			} else if (key.equals(COLUMN_USER_ID)) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.12 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.13 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class MeasurementTypeWrapper extends StorableObjectWrapper {
+public class MeasurementTypeWrapper extends StorableObjectWrapper<MeasurementType> {
 
 	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
 	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
@@ -51,10 +51,9 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MeasurementType) {
-			final MeasurementType measurementType = (MeasurementType) object;
+	public Object getValue(final MeasurementType measurementType, final String key) {
+		final Object value = super.getValue(measurementType, key);
+		if (value == null && measurementType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return measurementType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -70,9 +69,10 @@ public class MeasurementTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MeasurementType) {
-			final MeasurementType measurementType = (MeasurementType) object;
+	public void setValue(final MeasurementType measurementType, 
+	                     final String key, 
+	                     final Object value) {
+		if (measurementType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				measurementType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

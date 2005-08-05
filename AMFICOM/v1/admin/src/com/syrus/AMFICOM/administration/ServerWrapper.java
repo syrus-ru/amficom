@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.11 2005/07/25 20:48:15 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.12 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/07/25 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 09:46:31 $
+ * @author $Author: bob $
  * @module admin_v1
  */
-public class ServerWrapper extends StorableObjectWrapper {
+public class ServerWrapper extends StorableObjectWrapper<Server> {
 
 	// description VARCHAR2(256),
 	// name VARCHAR2(64) NOT NULL,
@@ -54,10 +54,9 @@ public class ServerWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Server) {
-			final Server server = (Server) object;
+	public Object getValue(final Server server, final String key) {
+		final Object value = super.getValue(server, key);
+		if (value == null && server != null) {
 			if (key.equals(COLUMN_NAME))
 				return server.getName();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -74,9 +73,10 @@ public class ServerWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Server) {
-			final Server server = (Server) object;
+	public void setValue(final Server server, 
+	                     final String key, 
+	                     final Object value) {
+		if (server != null) {
 			if (key.equals(COLUMN_NAME))
 				server.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

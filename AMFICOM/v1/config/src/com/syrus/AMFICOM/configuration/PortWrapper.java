@@ -1,5 +1,5 @@
 /*
- * $Id: PortWrapper.java,v 1.17 2005/07/27 15:59:22 bass Exp $
+ * $Id: PortWrapper.java,v 1.18 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class PortWrapper extends StorableObjectWrapper {
+public final class PortWrapper extends StorableObjectWrapper<Port> {
 
 	// type_id VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
@@ -33,7 +33,9 @@ public final class PortWrapper extends StorableObjectWrapper {
 
 	private PortWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_TYPE_ID, COLUMN_EQUIPMENT_ID };
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, 
+				COLUMN_TYPE_ID, 
+				COLUMN_EQUIPMENT_ID };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -54,10 +56,9 @@ public final class PortWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Port) {
-			final Port port = (Port) object;
+	public Object getValue(final Port port, final String key) {
+		final Object value = super.getValue(port, key);
+		if (value == null && port != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return port.getDescription();
 			if (key.equals(COLUMN_TYPE_ID))
@@ -72,9 +73,10 @@ public final class PortWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Port) {
-			final Port port = (Port) object;
+	public void setValue(final Port port, 
+	                     final String key, 
+	                     final Object value) {
+		if (port != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				port.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID))

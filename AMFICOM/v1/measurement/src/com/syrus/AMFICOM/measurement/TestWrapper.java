@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.17 2005/07/28 20:55:39 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.18 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,11 +21,11 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/28 20:55:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class TestWrapper extends StorableObjectWrapper {
+public class TestWrapper extends StorableObjectWrapper<Test> {
 
 	public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 	public static final String COLUMN_END_TIME = "end_time";
@@ -81,10 +81,9 @@ public class TestWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Test) {
-			final Test test = (Test) object;
+	public Object getValue(final Test test, final String key) {
+		final Object value = super.getValue(test, key);
+		if (value == null && test != null) {
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
 				return new Integer(test.getTemporalType().value());
 			if (key.equals(COLUMN_START_TIME))
@@ -121,9 +120,8 @@ public class TestWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Test) {
-			final Test test = (Test) object;
+	public void setValue(final Test test, final String key, final Object value) {
+		if (test != null) {
 			if (key.equals(COLUMN_TEMPORAL_TYPE))
 				test.setTemporalType(TestTemporalType.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_START_TIME))

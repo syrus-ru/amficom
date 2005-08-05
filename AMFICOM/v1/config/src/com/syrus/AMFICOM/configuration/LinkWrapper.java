@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.13 2005/07/27 15:59:22 bass Exp $
+ * $Id: LinkWrapper.java,v 1.14 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class LinkWrapper extends StorableObjectWrapper {
+public final class LinkWrapper extends StorableObjectWrapper<Link> {
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
 	// inventory_no VARCHAR2(64),
@@ -69,10 +69,9 @@ public final class LinkWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Link) {
-			final Link link = (Link) object;
+	public Object getValue(final Link link, final String key) {
+		final Object value = super.getValue(link, key);
+		if (value == null && link != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return link.getDescription();
 			if (key.equals(COLUMN_NAME))
@@ -95,9 +94,8 @@ public final class LinkWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Link) {
-			final Link link = (Link) object;
+	public void setValue(final Link link, final String key, final Object value) {
+		if (link != null) {
 			if (key.equals(COLUMN_NAME))
 				link.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

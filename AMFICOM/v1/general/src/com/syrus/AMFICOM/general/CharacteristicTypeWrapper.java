@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.14 2005/07/25 18:10:03 arseniy Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.15 2005/08/05 09:46:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/25 18:10:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/05 09:46:13 $
+ * @author $Author: bob $
  * @module general_v1
  */
-public class CharacteristicTypeWrapper extends StorableObjectWrapper {
+public class CharacteristicTypeWrapper extends StorableObjectWrapper<CharacteristicType> {
 
 	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 	public static final String COLUMN_SORT = "sort";
@@ -76,15 +76,17 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof CharacteristicType) {
-			final CharacteristicType characteristicType = (CharacteristicType) object;
+	public Object getValue(final CharacteristicType characteristicType, 
+	                       final String key) {
+		final Object value = super.getValue(characteristicType, key);
+		if (value == null && characteristicType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return characteristicType.getCodename();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -103,9 +105,10 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof CharacteristicType) {
-			final CharacteristicType characteristicType = (CharacteristicType) object;
+	public void setValue(final CharacteristicType characteristicType, 
+	                     final String key, 
+	                     final Object value) {
+		if (characteristicType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				characteristicType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -113,7 +116,9 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper {
 			else if (key.equals(COLUMN_NAME))
 				characteristicType.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
-				characteristicType.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
+				characteristicType.setSort0(
+					CharacteristicTypeSort.from_int(
+						((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DATA_TYPE_CODE))
 				characteristicType.setDataType0((DataType) value);
 		}

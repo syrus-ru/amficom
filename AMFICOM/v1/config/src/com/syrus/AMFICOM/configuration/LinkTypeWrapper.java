@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.14 2005/07/27 15:59:22 bass Exp $
+ * $Id: LinkTypeWrapper.java,v 1.15 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class LinkTypeWrapper extends StorableObjectWrapper {
+public final class LinkTypeWrapper extends StorableObjectWrapper<LinkType> {
 
 	// codename VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
@@ -72,24 +72,23 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof LinkType) {
-			final LinkType type = (LinkType) object;			
+	public Object getValue(final LinkType linkType, final String key) {
+		final Object value = super.getValue(linkType, key);
+		if (value == null && linkType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return linkType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return linkType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return linkType.getName();
 			if (key.equals(COLUMN_KIND))
-				return new Integer(type.getSort().value());
+				return new Integer(linkType.getSort().value());
 			if (key.equals(COLUMN_MANUFACTURER))
-				return type.getManufacturer();
+				return linkType.getManufacturer();
 			if (key.equals(COLUMN_MANUFACTURER_CODE))
-				return type.getManufacturerCode();
+				return linkType.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
-				return type.getImageId();
+				return linkType.getImageId();
 		}
 		return value;
 	}
@@ -98,23 +97,22 @@ public final class LinkTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof LinkType) {
-			final LinkType type = (LinkType) object;
+	public void setValue(final LinkType linkType, final String key, final Object value) {
+		if (linkType != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				linkType.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				linkType.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				linkType.setCodename((String) value);
 			else if (key.equals(COLUMN_KIND))
-				type.setSort(LinkTypeSort.from_int(((Integer) value).intValue()));
+				linkType.setSort(LinkTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_MANUFACTURER))
-				type.setManufacturer((String) value);
+				linkType.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
-				type.setManufacturerCode((String) value);
+				linkType.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
-				type.setImageId((Identifier) value);
+				linkType.setImageId((Identifier) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeWrapper.java,v 1.20 2005/07/27 15:59:22 bass Exp $
+ * $Id: CableLinkTypeWrapper.java,v 1.21 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.21 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class CableLinkTypeWrapper extends StorableObjectWrapper {
+public final class CableLinkTypeWrapper extends StorableObjectWrapper<CableLinkType> {
 
 	// codename VARCHAR2(32) NOT NULL,
 	// description VARCHAR2(256),
@@ -69,24 +69,23 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof CableLinkType) {
-			final CableLinkType type = (CableLinkType) object;
+	public Object getValue(final CableLinkType cableLinkType, final String key) {
+		final Object value = super.getValue(cableLinkType, key);
+		if (value == null && cableLinkType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return cableLinkType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return cableLinkType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return cableLinkType.getName();
 			if (key.equals(COLUMN_KIND))
-				return new Integer(type.getSort().value());
+				return new Integer(cableLinkType.getSort().value());
 			if (key.equals(COLUMN_MANUFACTURER))
-				return type.getManufacturer();
+				return cableLinkType.getManufacturer();
 			if (key.equals(COLUMN_MANUFACTURER_CODE))
-				return type.getManufacturerCode();
+				return cableLinkType.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
-				return type.getImageId();
+				return cableLinkType.getImageId();
 		}
 		return value;
 	}
@@ -95,23 +94,22 @@ public final class CableLinkTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof CableLinkType) {
-			final CableLinkType type = (CableLinkType) object;
+	public void setValue(final CableLinkType cableLinkType, final String key, final Object value) {
+		if (cableLinkType != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				cableLinkType.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				cableLinkType.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				cableLinkType.setCodename((String) value);
 			else if (key.equals(COLUMN_KIND))
-				type.setSort(LinkTypeSort.from_int(((Integer)value).intValue()));
+				cableLinkType.setSort(LinkTypeSort.from_int(((Integer)value).intValue()));
 			else if (key.equals(COLUMN_MANUFACTURER))
-				type.setManufacturer((String) value);
+				cableLinkType.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
-				type.setManufacturerCode((String) value);
+				cableLinkType.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
-				type.setImageId((Identifier) value);
+				cableLinkType.setImageId((Identifier) value);
 		}
 	}
 

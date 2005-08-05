@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.15 2005/07/27 15:59:22 bass Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.16 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class MonitoredElementWrapper extends StorableObjectWrapper {
+public final class MonitoredElementWrapper extends StorableObjectWrapper<MonitoredElement> {
 
 	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
 	// sort NUMBER(2) NOT NULL,
@@ -69,20 +69,20 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MonitoredElement) {
-			final MonitoredElement me = (MonitoredElement) object;
+	public Object getValue(final MonitoredElement monitoredElement,
+	                       final String key) {
+		final Object value = super.getValue(monitoredElement, key);
+		if (value == null && monitoredElement != null) {
 			if (key.equals(COLUMN_NAME))
-				return me.getName();
+				return monitoredElement.getName();
 			if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
-				return me.getMeasurementPortId();
+				return monitoredElement.getMeasurementPortId();
 			if (key.equals(COLUMN_SORT))
-				return new Integer(me.getSort().value());
+				return new Integer(monitoredElement.getSort().value());
 			if (key.equals(COLUMN_LOCAL_ADDRESS))
-				return me.getLocalAddress();
+				return monitoredElement.getLocalAddress();
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))
-				return me.getMonitoredDomainMemberIds();
+				return monitoredElement.getMonitoredDomainMemberIds();
 		}
 		return value;
 	}
@@ -91,22 +91,23 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MonitoredElement) {
-			final MonitoredElement me = (MonitoredElement) object;
+	public void setValue(final MonitoredElement monitoredElement,
+	                     final String key,
+	                     final Object value) {
+		if (monitoredElement != null) {
 			if (key.equals(COLUMN_NAME))
-				me.setName((String) value);
+				monitoredElement.setName((String) value);
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
-				me.setMeasurementPortId((Identifier) value);
+				monitoredElement.setMeasurementPortId((Identifier) value);
 			else if (key.equals(COLUMN_SORT))
-				me.setSort(MonitoredElementSort.from_int(((Integer) value).intValue()));
+				monitoredElement.setSort(MonitoredElementSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_LOCAL_ADDRESS))
-				me.setLocalAddress((String) value);
+				monitoredElement.setLocalAddress((String) value);
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER)) {
 				final Set<Identifier> meDomainMemeberIds = new HashSet<Identifier>(((Set) value).size());
 				for (final Iterator it = ((List) value).iterator(); it.hasNext();)
 					meDomainMemeberIds.add((Identifier) it.next());
-				me.setMonitoredDomainMemberIds(meDomainMemeberIds);
+				monitoredElement.setMonitoredDomainMemberIds(meDomainMemeberIds);
 			}
 		}
 	}

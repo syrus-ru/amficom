@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.15 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.16 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class AnalysisTypeWrapper extends StorableObjectWrapper {
+public class AnalysisTypeWrapper extends StorableObjectWrapper<AnalysisType> {
 
 	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 
@@ -29,7 +29,8 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 
 	private AnalysisTypeWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, 
+				COLUMN_DESCRIPTION };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -50,10 +51,9 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof AnalysisType) {
-			final AnalysisType analysisType = (AnalysisType) object;
+	public Object getValue(final AnalysisType analysisType, final String key) {
+		final Object value = super.getValue(analysisType, key);
+		if (value == null && analysisType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return analysisType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -66,9 +66,10 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof AnalysisType) {
-			final AnalysisType analysisType = (AnalysisType) object;
+	public void setValue(final AnalysisType analysisType, 
+	                     final String key, 
+	                     final Object value) {
+		if (analysisType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				analysisType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -81,7 +82,9 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 

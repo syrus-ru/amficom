@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.9 2005/07/25 20:48:15 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.10 2005/08/05 09:46:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 20:48:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 09:46:31 $
+ * @author $Author: bob $
  * @module admin_v1
  */
-public class SystemUserWrapper extends StorableObjectWrapper {
+public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	public static final String SYS_LOGIN = "sys";
 	public static final String LOGINPROCESSOR_LOGIN = "loginprocessor";
 	public static final String EVENTPROCESSOR_LOGIN = "eventprocessor";
@@ -64,10 +64,9 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof SystemUser) {
-			final SystemUser user = (SystemUser) object;
+	public Object getValue(final SystemUser user, final String key) {
+		final Object value = super.getValue(user, key);
+		if (value == null && user != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
 				return user.getDescription();
 			if (key.equals(COLUMN_LOGIN))
@@ -84,17 +83,20 @@ public class SystemUserWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SystemUser) {
-			final SystemUser user = (SystemUser) object;
-			if (key.equals(COLUMN_DESCRIPTION))
+	public void setValue(final SystemUser user, 
+	                     final String key, 
+	                     final Object value) {
+		if (user != null) {
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				user.setDescription((String) value);
-			else if (key.equals(COLUMN_LOGIN))
+			} else if (key.equals(COLUMN_LOGIN)) {
 				user.setLogin((String) value);
-			else if (key.equals(COLUMN_NAME))
+			} else if (key.equals(COLUMN_NAME)) {
 				user.setName((String) value);
-			else if (key.equals(COLUMN_SORT))
-				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
+			} else if (key.equals(COLUMN_SORT)) {
+				user.setSort(SystemUserSort.from_int(
+					((Integer) value).intValue()));
+			}
 		}
 	}
 

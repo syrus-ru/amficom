@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortWrapper.java,v 1.12 2005/07/27 15:59:21 bass Exp $
+ * $Id: MeasurementPortWrapper.java,v 1.13 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/27 15:59:21 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class MeasurementPortWrapper extends StorableObjectWrapper {
+public final class MeasurementPortWrapper extends StorableObjectWrapper<MeasurementPort> {
 
 	// type_id VARCHAR2(32) NOT NULL,
 	// name VARCHAR2(64) NOT NULL,
@@ -58,20 +58,20 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MeasurementPort) {
-			final MeasurementPort port = (MeasurementPort) object;
+	public Object getValue(final MeasurementPort measurementPort,
+	                       final String key) {
+		final Object value = super.getValue(measurementPort, key);
+		if (value == null && measurementPort != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
-				return port.getDescription();
+				return measurementPort.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return port.getName();
+				return measurementPort.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return port.getType();
+				return measurementPort.getType();
 			if (key.equals(COLUMN_KIS_ID))
-				return port.getKISId();
+				return measurementPort.getKISId();
 			if (key.equals(COLUMN_PORT_ID))
-				return port.getPortId();
+				return measurementPort.getPortId();
 		}
 		return value;
 	}
@@ -80,19 +80,20 @@ public final class MeasurementPortWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MeasurementPort) {
-			final MeasurementPort port = (MeasurementPort) object;
+	public void setValue(final MeasurementPort measurementPort, 
+	                     final String key, 
+	                     final Object value) {
+		if (measurementPort != null) {
 			if (key.equals(COLUMN_NAME))
-				port.setName((String) value);
+				measurementPort.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				port.setDescription((String) value);
+				measurementPort.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID))
-				port.setType((MeasurementPortType) value);
+				measurementPort.setType((MeasurementPortType) value);
 			else if (key.equals(COLUMN_KIS_ID))
-				port.setKISId((Identifier) value);
+				measurementPort.setKISId((Identifier) value);
 			else if (key.equals(COLUMN_PORT_ID))
-				port.setPortId((Identifier) value);
+				measurementPort.setPortId((Identifier) value);
 		}
 	}
 

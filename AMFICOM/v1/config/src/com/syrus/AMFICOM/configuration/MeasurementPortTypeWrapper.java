@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.12 2005/07/27 15:59:22 bass Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.13 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
-public final class MeasurementPortTypeWrapper extends StorableObjectWrapper {
+public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<MeasurementPortType> {
 
 	private static MeasurementPortTypeWrapper instance;
 
@@ -48,16 +48,15 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof MeasurementPortType) {
-			final MeasurementPortType type = (MeasurementPortType) object;
+	public Object getValue(final MeasurementPortType measurementPortType, final String key) {
+		final Object value = super.getValue(measurementPortType, key);
+		if (value == null && measurementPortType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return measurementPortType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return measurementPortType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return measurementPortType.getName();
 		}
 		return value;
 	}
@@ -66,15 +65,16 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MeasurementPortType) {
-			final MeasurementPortType type = (MeasurementPortType) object;
+	public void setValue(final MeasurementPortType object, 
+	                     final String key, 
+	                     final Object value) {
+		if (object != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				object.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				object.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				object.setCodename((String) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.13 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.14 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class EvaluationTypeWrapper extends StorableObjectWrapper {
+public class EvaluationTypeWrapper extends StorableObjectWrapper<EvaluationType> {
 
 	public static final String LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
 
@@ -50,10 +50,9 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof EvaluationType) {
-			final EvaluationType evaluationType = (EvaluationType) object;
+	public Object getValue(final EvaluationType evaluationType, final String key) {
+		final Object value = super.getValue(evaluationType, key);
+		if (value == null && evaluationType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return evaluationType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -66,9 +65,8 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof EvaluationType) {
-			final EvaluationType evaluationType = (EvaluationType) object;
+	public void setValue(final EvaluationType evaluationType, final String key, final Object value) {
+		if (evaluationType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				evaluationType.setCodename((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

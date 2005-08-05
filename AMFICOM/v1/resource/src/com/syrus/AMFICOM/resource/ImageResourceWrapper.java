@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.12 2005/07/29 11:56:03 max Exp $
+ * $Id: ImageResourceWrapper.java,v 1.13 2005/08/05 09:50:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/29 11:56:03 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 09:50:46 $
+ * @author $Author: bob $
  * @module resource_v1
  */
-public class ImageResourceWrapper extends StorableObjectWrapper {
+public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageResource> {
 
 	public static final String COLUMN_FILENAME = "filename";
 	
@@ -81,10 +81,10 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof AbstractImageResource) {
-			final AbstractImageResource abstractImageResource = (AbstractImageResource) object;
+	public Object getValue(final AbstractImageResource abstractImageResource, 
+	                       final String key) {
+		final Object value = super.getValue(abstractImageResource, key);
+		if (value == null && abstractImageResource != null) {
 			if (key.equals(COLUMN_SORT))
 				return new Integer(abstractImageResource.getSort().value());
 			if (key.equals(COLUMN_CODENAME)) {
@@ -113,9 +113,10 @@ public class ImageResourceWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof AbstractImageResource) {
-			final AbstractImageResource abstractImageResource = (AbstractImageResource) object;
+	public void setValue(final AbstractImageResource abstractImageResource, 
+	                     final String key, 
+	                     final Object value) {
+		if (abstractImageResource != null) {
 			if (key.equals(COLUMN_CODENAME)) {
 				switch (abstractImageResource.getSort().value()) {
 					case ImageResourceSort._BITMAP:

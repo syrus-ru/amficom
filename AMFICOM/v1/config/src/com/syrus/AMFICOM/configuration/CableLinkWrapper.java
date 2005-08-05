@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkWrapper.java,v 1.1 2005/07/29 08:52:43 max Exp $
+ * $Id: CableLinkWrapper.java,v 1.2 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/07/29 08:52:43 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 09:46:38 $
  * @module config
  */
 
-public class CableLinkWrapper extends StorableObjectWrapper{
+public class CableLinkWrapper extends StorableObjectWrapper<CableLink> {
 	
 	// name VARCHAR2(64) NOT NULL,
 	// description VARCHAR2(256),
@@ -71,24 +71,23 @@ public class CableLinkWrapper extends StorableObjectWrapper{
 	}
 	
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof CableLink) {
-			final CableLink link = (CableLink) object;
+	public Object getValue(final CableLink cableLink, final String key) {
+		final Object value = super.getValue(cableLink, key);
+		if (value == null && cableLink != null) {
 			if (key.equals(COLUMN_DESCRIPTION))
-				return link.getDescription();
+				return cableLink.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return link.getName();
+				return cableLink.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return link.getType();
+				return cableLink.getType();
 			if (key.equals(COLUMN_SUPPLIER))
-				return link.getSupplier();
+				return cableLink.getSupplier();
 			if (key.equals(COLUMN_SUPPLIER_CODE))
-				return link.getSupplierCode();
+				return cableLink.getSupplierCode();
 			if (key.equals(COLUMN_COLOR))
-				return new Integer(link.getColor());
+				return new Integer(cableLink.getColor());
 			if (key.equals(COLUMN_MARK))
-				return link.getMark();
+				return cableLink.getMark();
 		}
 		return value;
 	}
@@ -97,23 +96,24 @@ public class CableLinkWrapper extends StorableObjectWrapper{
 		return false;
 	}
 	
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof CableLink) {
-			final CableLink link = (CableLink) object;
+	public void setValue(final CableLink cableLink, 
+	                     final String key, 
+	                     final Object value) {
+		if (cableLink != null) {
 			if (key.equals(COLUMN_NAME))
-				link.setName((String) value);
+				cableLink.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				link.setDescription((String) value);
+				cableLink.setDescription((String) value);
 			else if (key.equals(COLUMN_TYPE_ID))
-				link.setType((CableLinkType) value);
+				cableLink.setType((CableLinkType) value);
 			else if (key.equals(COLUMN_SUPPLIER))
-				link.setSupplier((String) value);
+				cableLink.setSupplier((String) value);
 			else if (key.equals(COLUMN_SUPPLIER_CODE))
-				link.setSupplierCode((String) value);
+				cableLink.setSupplierCode((String) value);
 			else if (key.equals(COLUMN_COLOR))
-				link.setColor(((Integer) value).intValue());
+				cableLink.setColor(((Integer) value).intValue());
 			else if (key.equals(COLUMN_MARK))
-				link.setMark((String) value);
+				cableLink.setMark((String) value);
 		}
 	}
 	

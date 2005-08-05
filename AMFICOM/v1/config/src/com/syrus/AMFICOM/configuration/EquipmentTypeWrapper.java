@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeWrapper.java,v 1.15 2005/07/27 15:59:22 bass Exp $
+ * $Id: EquipmentTypeWrapper.java,v 1.16 2005/08/05 09:46:38 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 09:46:38 $
+ * @author $Author: bob $
  * @module config
  */
 
-public final class EquipmentTypeWrapper extends StorableObjectWrapper {
+public final class EquipmentTypeWrapper extends StorableObjectWrapper<EquipmentType> {
 
 	// manufacturer VARCHAR2(64),
 	public static final String COLUMN_MANUFACTURER = "manufacturer";
@@ -59,20 +59,19 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof EquipmentType) {
-			final EquipmentType type = (EquipmentType) object;			
+	public Object getValue(final EquipmentType equipmentType, final String key) {
+		final Object value = super.getValue(equipmentType, key);
+		if (value == null && equipmentType != null) {
 			if (key.equals(COLUMN_CODENAME))
-				return type.getCodename();
+				return equipmentType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
-				return type.getDescription();
+				return equipmentType.getDescription();
 			if (key.equals(COLUMN_NAME))
-				return type.getName();
+				return equipmentType.getName();
 			if (key.equals(COLUMN_MANUFACTURER))
-				return type.getManufacturer();
+				return equipmentType.getManufacturer();
 			if (key.equals(COLUMN_MANUFACTURER_CODE))
-				return type.getManufacturerCode();
+				return equipmentType.getManufacturerCode();
 		}
 		return value;
 	}
@@ -81,19 +80,18 @@ public final class EquipmentTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof EquipmentType) {
-			final EquipmentType type = (EquipmentType) object;
+	public void setValue(final EquipmentType equipmentType, final String key, final Object value) {
+		if (equipmentType != null) {
 			if (key.equals(COLUMN_NAME))
-				type.setName((String) value);
+				equipmentType.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription((String) value);
+				equipmentType.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
-				type.setCodename((String) value);
+				equipmentType.setCodename((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER))
-				type.setManufacturer((String) value);
+				equipmentType.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
-				type.setManufacturerCode((String) value);
+				equipmentType.setManufacturerCode((String) value);
 		}
 	}
 

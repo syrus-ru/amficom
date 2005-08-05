@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.8 2005/07/25 20:50:00 arseniy Exp $
+ * $Id: ModelingWrapper.java,v 1.9 2005/08/05 09:48:24 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/25 20:50:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 09:48:24 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class ModelingWrapper extends StorableObjectWrapper {
+public class ModelingWrapper extends StorableObjectWrapper<Modeling> {
 
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_ARGUMENT_SET_ID = "argument_set_id";
@@ -53,10 +53,9 @@ public class ModelingWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Modeling) {
-			final Modeling modeling = (Modeling) object;
+	public Object getValue(final Modeling modeling, final String key) {
+		final Object value = super.getValue(modeling, key);
+		if (value == null && modeling != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				return modeling.getType();
 			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
@@ -73,9 +72,10 @@ public class ModelingWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Modeling) {
-			final Modeling modeling = (Modeling) object;
+	public void setValue(final Modeling modeling, 
+	                     final String key, 
+	                     final Object value) {
+		if (modeling != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				modeling.setType((ActionType) value);
 			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
