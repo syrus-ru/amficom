@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.9 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: CollectorWrapper.java,v 1.10 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class CollectorWrapper extends StorableObjectWrapper {
+public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
@@ -74,9 +74,8 @@ public class CollectorWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof Collector) {
-			final Collector collector = (Collector) object;
+	public Object getValue(final Collector collector, final String key) {
+		if (collector != null) {
 			if (key.equals(COLUMN_NAME))
 				return collector.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -96,9 +95,8 @@ public class CollectorWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Collector) {
-			final Collector collector = (Collector) object;
+	public void setValue(final Collector collector, final String key, final Object value) {
+		if (collector != null) {
 			if (key.equals(COLUMN_NAME))
 				collector.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

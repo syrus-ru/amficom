@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.10 2005/08/03 20:13:20 bass Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.11 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/03 20:13:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
+public class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkType> {
 
 	// sort Number(1),
 	public static final String COLUMN_SORT = "sort";
@@ -81,9 +81,8 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof PhysicalLinkType) {
-			final PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
+	public Object getValue(final PhysicalLinkType physicalLinkType, final String key) {
+		if (physicalLinkType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return physicalLinkType.getCodename();
 			else if (key.equals(COLUMN_NAME))
@@ -106,9 +105,8 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof PhysicalLinkType) {
-			final PhysicalLinkType physicalLinkType = (PhysicalLinkType) object;
+	public void setValue(final PhysicalLinkType physicalLinkType, final String key, final Object value) {
+		if (physicalLinkType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				physicalLinkType.setCodename((String) value);
 			else if (key.equals(COLUMN_NAME))

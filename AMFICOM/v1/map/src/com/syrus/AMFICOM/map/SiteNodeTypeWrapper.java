@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.10 2005/08/03 20:13:20 bass Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.11 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/03 20:13:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNodeTypeWrapper extends StorableObjectWrapper {
+public class SiteNodeTypeWrapper extends StorableObjectWrapper<SiteNodeType> {
 	// sort NUMBER(1)
 	public static final String COLUMN_SORT = "sort";
 	// codename VARCHAR2(32) NOT NULL,
@@ -79,9 +79,8 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof SiteNodeType) {
-			final SiteNodeType siteNodeType = (SiteNodeType) object;
+	public Object getValue(final SiteNodeType siteNodeType, final String key) {
+		if (siteNodeType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return siteNodeType.getCodename();
 			else if (key.equals(COLUMN_NAME))
@@ -104,9 +103,8 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SiteNodeType) {
-			final SiteNodeType siteNodeType = (SiteNodeType) object;
+	public void setValue(final SiteNodeType siteNodeType, final String key, final Object value) {
+		if (siteNodeType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				siteNodeType.setCodename((String) value);
 			else if (key.equals(COLUMN_NAME))

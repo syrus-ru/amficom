@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.13 2005/08/02 18:16:43 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.14 2005/08/05 10:04:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/02 18:16:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 10:04:32 $
+ * @author $Author: bob $
  * @module event_v1
  */
-public class EventWrapper extends StorableObjectWrapper {
+public class EventWrapper extends StorableObjectWrapper<Event> {
 
 	public static final String LINK_COLUMN_EVENT_ID	= "event_id";
 
@@ -58,10 +58,9 @@ public class EventWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof Event) {
-			final Event event = (Event) object;
+	public Object getValue(final Event event, final String key) {
+		final Object value = super.getValue(event, key);
+		if (value == null && event != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				return event.getType();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -74,9 +73,8 @@ public class EventWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Event) {
-			final Event event = (Event) object;
+	public void setValue(final Event event, final String key, final Object value) {
+		if (event != null) {
 			if (key.equals(COLUMN_TYPE_ID)) {
 				event.setType((EventType) value);
 			}

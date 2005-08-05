@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.7 2005/07/26 08:39:09 arseniy Exp $
+ * $Id: EventSourceWrapper.java,v 1.8 2005/08/05 10:04:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/26 08:39:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 10:04:32 $
+ * @author $Author: bob $
  * @module event_v1
  */
-public class EventSourceWrapper extends StorableObjectWrapper {
+public class EventSourceWrapper extends StorableObjectWrapper<EventSource> {
 
 	public static final String COLUMN_SOURCE_ENTITY_CODE = "source_entity_code";
 
@@ -58,10 +58,9 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof EventSource) {
-			final EventSource eventSource = (EventSource) object;
+	public Object getValue(final EventSource eventSource, final String key) {
+		final Object value = super.getValue(eventSource, key);
+		if (value == null && eventSource != null) {
 			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
 				return eventSource.getSourceEntityId();
 		}
@@ -69,9 +68,10 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 		return value;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof EventSource) {
-			final EventSource eventSource = (EventSource) object;
+	public void setValue(final EventSource eventSource, 
+	                     final String key, 
+	                     final Object value) {
+		if (eventSource != null) {
 			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
 				eventSource.setSourceEntityId((Identifier) value);
 		}
@@ -86,7 +86,9 @@ public class EventSourceWrapper extends StorableObjectWrapper {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
+	public void setPropertyValue(final String key, 
+	                             final Object objectKey, 
+	                             final Object objectValue) {
 		/* there is no properties */
 	}
 

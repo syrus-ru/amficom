@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.14 2005/08/02 12:10:44 max Exp $
+ * $Id: MapWrapper.java,v 1.15 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/02 12:10:44 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class MapWrapper extends StorableObjectWrapper {
+public class MapWrapper extends StorableObjectWrapper<Map> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
@@ -110,9 +110,8 @@ public class MapWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof Map) {
-			final Map map = (Map) object;
+	public Object getValue(final Map map, final String key) {
+		if (map != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return map.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -150,9 +149,8 @@ public class MapWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Map) {
-			final Map map = (Map) object;
+	public void setValue(final Map map, final String key, final Object value) {
+		if (map != null) {
 			if (key.equals(COLUMN_NAME)) {
 				map.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.9 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: NodeLinkWrapper.java,v 1.10 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class NodeLinkWrapper extends StorableObjectWrapper {
+public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 
 	// name VARCHAR2(128),
 	// physical_link_id VARCHAR2(32),
@@ -77,9 +77,8 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof NodeLink) {
-			final NodeLink nodeLink = (NodeLink) object;
+	public Object getValue(final NodeLink nodeLink, final String key) {
+		if (nodeLink != null) {
 			if (key.equals(COLUMN_NAME))
 				return nodeLink.getName();
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
@@ -102,9 +101,8 @@ public class NodeLinkWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof NodeLink) {
-			final NodeLink nodeLink = (NodeLink) object;
+	public void setValue(final NodeLink nodeLink, final String key, final Object value) {
+		if (nodeLink != null) {
 			if (key.equals(COLUMN_NAME))
 				nodeLink.setName((String) value);
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))

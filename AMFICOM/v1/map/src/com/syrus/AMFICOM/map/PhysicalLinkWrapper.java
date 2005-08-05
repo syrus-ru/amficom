@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.8 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.9 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class PhysicalLinkWrapper extends StorableObjectWrapper {
+public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
@@ -94,9 +94,8 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof PhysicalLink) {
-			final PhysicalLink physicalLink = (PhysicalLink) object;
+	public Object getValue(final PhysicalLink physicalLink, final String key) {
+		if (physicalLink != null) {
 			if (key.equals(COLUMN_NAME))
 				return physicalLink.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -125,9 +124,8 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof PhysicalLink) {
-			final PhysicalLink physicalLink = (PhysicalLink) object;
+	public void setValue(final PhysicalLink physicalLink, final String key, final Object value) {
+		if (physicalLink != null) {
 			if (key.equals(COLUMN_NAME))
 				physicalLink.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

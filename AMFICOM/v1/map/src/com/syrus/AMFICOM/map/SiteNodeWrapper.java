@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.9 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: SiteNodeWrapper.java,v 1.10 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNodeWrapper extends StorableObjectWrapper {
+public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
@@ -89,9 +89,8 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof SiteNode) {
-			final SiteNode siteNode = (SiteNode) object;
+	public Object getValue(final SiteNode siteNode, final String key) {
+		if (siteNode != null) {
 			if (key.equals(COLUMN_NAME))
 				return siteNode.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -122,9 +121,10 @@ public class SiteNodeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SiteNode) {
-			final SiteNode siteNode = (SiteNode) object;
+	public void setValue(final SiteNode siteNode, 
+	                     final String key, 
+	                     final Object value) {
+		if (siteNode != null) {
 			if (key.equals(COLUMN_NAME))
 				siteNode.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

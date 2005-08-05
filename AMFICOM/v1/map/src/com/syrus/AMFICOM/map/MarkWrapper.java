@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.9 2005/07/26 11:39:26 arseniy Exp $
+ * $Id: MarkWrapper.java,v 1.10 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/26 11:39:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class MarkWrapper extends StorableObjectWrapper {
+public class MarkWrapper extends StorableObjectWrapper<Mark> {
 
 	// name VARCHAR2(128),
 	// description VARCHAR2(256),
@@ -88,9 +88,8 @@ public class MarkWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof Mark) {
-			final Mark mark = (Mark) object;
+	public Object getValue(final Mark mark, final String key) {
+		if (mark != null) {
 			if (key.equals(COLUMN_NAME))
 				return mark.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -122,9 +121,8 @@ public class MarkWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Mark) {
-			final Mark mark = (Mark) object;
+	public void setValue(final Mark mark, final String key, final Object value) {
+		if (mark != null) {
 			if (key.equals(COLUMN_NAME))
 				mark.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

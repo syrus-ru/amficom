@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.14 2005/08/02 18:16:43 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.15 2005/08/05 10:04:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,11 +15,11 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/02 18:16:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/05 10:04:32 $
+ * @author $Author: bob $
  * @module event_v1
  */
-public class EventTypeWrapper extends StorableObjectWrapper {
+public class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 
 	public static final String LINK_COLUMN_EVENT_TYPE_ID = "event_type_id";
 	public static final String LINK_FIELD_PARAMETER_TYPES = "parameter_types";
@@ -53,10 +53,9 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
-		if (value == null && object instanceof EventType) {
-			final EventType eventType = (EventType) object;
+	public Object getValue(final EventType eventType, final String key) {
+		final Object value = super.getValue(eventType, key);
+		if (value == null && eventType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				return eventType.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -71,9 +70,8 @@ public class EventTypeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof EventType) {
-			final EventType eventType = (EventType) object;
+	public void setValue(final EventType eventType, final String key, final Object value) {
+		if (eventType != null) {
 			if (key.equals(COLUMN_CODENAME)) {
 				eventType.setCodename((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

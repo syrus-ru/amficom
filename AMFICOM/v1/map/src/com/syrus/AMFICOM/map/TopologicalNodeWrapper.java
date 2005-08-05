@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.12 2005/08/03 14:32:37 max Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.13 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/03 14:32:37 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 10:01:06 $
+ * @author $Author: bob $
  * @module map_v1
  */
-public class TopologicalNodeWrapper extends StorableObjectWrapper {
+public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNode> {
 
 	public static final String COLUMN_X = "x";
 	public static final String COLUMN_Y = "y";
@@ -75,9 +75,9 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof TopologicalNode) {
-			final TopologicalNode topologicalNode = (TopologicalNode) object;
+	public Object getValue(final TopologicalNode topologicalNode, 
+	                       final String key) {
+		if (topologicalNode != null) {
 			if (key.equals(COLUMN_NAME))
 				return topologicalNode.getName();
 			else if (key.equals(COLUMN_DESCRIPTION))
@@ -103,9 +103,10 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper {
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof TopologicalNode) {
-			final TopologicalNode topologicalNode = (TopologicalNode) object;
+	public void setValue(final TopologicalNode topologicalNode, 
+	                     final String key, 
+	                     final Object value) {
+		if (topologicalNode != null) {
 			if (key.equals(COLUMN_NAME))
 				topologicalNode.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))

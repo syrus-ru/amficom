@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryWrapper.java,v 1.1 2005/08/02 12:09:21 max Exp $
+ * $Id: MapLibraryWrapper.java,v 1.2 2005/08/05 10:01:06 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/08/02 12:09:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 10:01:06 $
  * @module map
  */
 
-public class MapLibraryWrapper extends StorableObjectWrapper{
+public class MapLibraryWrapper extends StorableObjectWrapper<MapLibrary> {
 	
 	public static final String COLUMN_PARENT_MAP_LIBRARY_ID = "parentMapLibraryId";
 
@@ -62,9 +62,8 @@ public class MapLibraryWrapper extends StorableObjectWrapper{
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		if (object instanceof MapLibrary) {
-			final MapLibrary mapLibrary = (MapLibrary) object;
+	public Object getValue(final MapLibrary mapLibrary, final String key) {
+		if (mapLibrary != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return mapLibrary.getName();
 			} else if (key.equals(COLUMN_CODENAME)) {
@@ -86,9 +85,8 @@ public class MapLibraryWrapper extends StorableObjectWrapper{
 		/* there is no properties */
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof MapLibrary) {
-			final MapLibrary mapLibrary = (MapLibrary) object;
+	public void setValue(final MapLibrary mapLibrary, final String key, final Object value) {
+		if (mapLibrary != null) {
 			if (key.equals(COLUMN_NAME)) {
 				mapLibrary.setName((String) value);
 			} else if (key.equals(COLUMN_CODENAME)) {
