@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.147 2005/08/05 11:41:48 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.148 2005/08/05 14:21:28 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2005/08/05 11:41:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.148 $, $Date: 2005/08/05 14:21:28 $
+ * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -580,20 +580,22 @@ public final class StorableObjectPool {
 		SAVING_OBJECT_IDS.add(id);
 
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
-		for (final Identifiable identifiable: dependencies) {
+		for (final Identifiable identifiable : dependencies) {
 			assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
 
 			StorableObject dependencyObject = null;
-			if (identifiable instanceof Identifier)
+			if (identifiable instanceof Identifier) {
 				dependencyObject = getStorableObject((Identifier) identifiable, false);
-			else if (identifiable instanceof StorableObject)
+			} else if (identifiable instanceof StorableObject) {
 				dependencyObject = (StorableObject) identifiable;
-			else
+			} else {
 				throw new IllegalDataException("dependency for object '" + id
 						+ "' neither Identifier nor StorableObject -- " + identifiable.getClass().getName());
+			}
 
-			if (dependencyObject != null)
+			if (dependencyObject != null) {
 				checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
+			}
 		}
 
 		if (storableObject.isChanged()) {
