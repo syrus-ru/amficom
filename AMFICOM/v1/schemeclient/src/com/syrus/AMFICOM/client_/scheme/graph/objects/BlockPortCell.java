@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: BlockPortCell.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -69,12 +69,12 @@ public class BlockPortCell  extends DefaultGraphCell {
 	}
 
 	public boolean isCablePort() {
-		return isCablePort;
+		return this.isCablePort;
 	}
 
 	public AbstractSchemePort getAbstractSchemePort() {
 		try {
-			return (AbstractSchemePort) StorableObjectPool.getStorableObject(schemePortId, true);
+			return (AbstractSchemePort) StorableObjectPool.getStorableObject(this.schemePortId, true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 			return null;
@@ -82,7 +82,7 @@ public class BlockPortCell  extends DefaultGraphCell {
 	}
 
 	public Identifier getAbstractSchemePortId() {
-		return schemePortId;
+		return this.schemePortId;
 	}
 
 	/**

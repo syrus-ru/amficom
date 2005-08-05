@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.2 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.3 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -43,15 +43,15 @@ public class SchemeEventHandler extends AbstractEventHandler {
 		if (e.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent event = (ObjectSelectedEvent) e;
 			
-			frame.setVisualManager(event.getVisualManager());
-			StorableObjectEditor editor = frame.getCurrentEditor();
+			this.frame.setVisualManager(event.getVisualManager());
+			StorableObjectEditor editor = this.frame.getCurrentEditor();
 			if (editor != null)
 				editor.setObject(event.getSelectedObject());	
 		} else if (e.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent event = (SchemeEvent)e;
 			if (event.isType(SchemeEvent.UPDATE_OBJECT)) {
 				Object newObject = e.getNewValue();
-				StorableObjectEditor editor = frame.getCurrentEditor();
+				StorableObjectEditor editor = this.frame.getCurrentEditor();
 				if (editor != null && newObject.equals(editor.getObject())) {
 					editor.setObject(newObject);
 				}

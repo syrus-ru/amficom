@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.16 2005/08/01 07:52:28 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.17 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -97,20 +98,21 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(type);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		parametersRoot = createParametersRoot();
-		CheckableTreeUI parametersTreeUI = new CheckableTreeUI(parametersRoot);
-		trParametersTree = parametersTreeUI.getTree();
-		trParametersTree.setRootVisible(false);
+		this.parametersRoot = createParametersRoot();
+		CheckableTreeUI parametersTreeUI = new CheckableTreeUI(this.parametersRoot);
+		this.trParametersTree = parametersTreeUI.getTree();
+		this.trParametersTree.setRootVisible(false);
 		
-		portsRoot = createPortsRoot();
-		CheckableTreeUI portsTreeUI = new CheckableTreeUI(portsRoot);
-		trPortTypesTree = portsTreeUI.getTree();
-		trPortTypesTree.setRootVisible(false);
+		this.portsRoot = createPortsRoot();
+		CheckableTreeUI portsTreeUI = new CheckableTreeUI(this.portsRoot);
+		this.trPortTypesTree = portsTreeUI.getTree();
+		this.trPortTypesTree.setRootVisible(false);
 				
-		allInPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.INPUT);
-		allOutPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.OUTPUT);
-		allMPTypeNodes = getMeasurementPortTypeNodes();
+		this.allInPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.INPUT);
+		this.allOutPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.OUTPUT);
+		this.allMPTypeNodes = getMeasurementPortTypeNodes();
 
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -242,18 +244,18 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 	
 	public Object getObject() {
-		return type;
+		return this.type;
 	}
 
 	public void setObject(Object or) {
 		this.type = (MeasurementType)or;
 		
 		if (this.type != null) {
-			tfNameText.setText(this.type.getDescription());
+			this.tfNameText.setText(this.type.getDescription());
 		
 			Set inPTypeIds = this.type.getInParameterTypeIds();
 			Set outPTypeIds = this.type.getOutParameterTypeIds();
@@ -261,57 +263,57 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 			try {
 				Collection inPTypes = StorableObjectPool.getStorableObjects(inPTypeIds, true);
 				Collection outPTypes = StorableObjectPool.getStorableObjects(outPTypeIds, true);
-				for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
+				for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
 					CheckableNode node = (CheckableNode)it.next();
 					node.setChecked(inPTypes.contains(node.getObject()));
 				}
-				for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
+				for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
 					CheckableNode node = (CheckableNode)it.next();
 					node.setChecked(outPTypes.contains(node.getObject()));
 				}
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			trParametersTree.updateUI();
+			this.trParametersTree.updateUI();
 				
 			Set mPTypeIds = this.type.getMeasurementPortTypeIds();
 			try {
 				Collection mPTypes = StorableObjectPool.getStorableObjects(mPTypeIds, true);
-				for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
+				for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
 					CheckableNode node = (CheckableNode)it.next();
 					node.setChecked(mPTypes.contains(node.getObject()));
 				}
 			} catch (ApplicationException e1) {
 				Log.errorException(e1);
 			}
-			trPortTypesTree.updateUI();
+			this.trPortTypesTree.updateUI();
 		} else {
-			tfNameText.setText(SchemeResourceKeys.EMPTY);
-			for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
+			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
+			for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
-			for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
+			for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
-			trParametersTree.updateUI();
-			for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
+			this.trParametersTree.updateUI();
+			for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
-			trPortTypesTree.updateUI();
+			this.trPortTypesTree.updateUI();
 		}
 	}
 	
 	public void commitChanges() {
-		if (MiscUtil.validName(tfNameText.getText())) {
-			if (type == null) {
+		if (MiscUtil.validName(this.tfNameText.getText())) {
+			if (this.type == null) {
 				try {
-					type = SchemeObjectsFactory.createMeasurementType(tfNameText.getText());
+					this.type = SchemeObjectsFactory.createMeasurementType(this.tfNameText.getText());
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, type, MeasurementTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.MEASUREMENT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.type, MeasurementTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.MEASUREMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
@@ -323,45 +325,51 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void apply() {
-		if (!type.getDescription().equals(tfNameText.getText()))
-			type.setDescription(tfNameText.getText());
+		if (!this.type.getDescription().equals(this.tfNameText.getText())) {
+			this.type.setDescription(this.tfNameText.getText());
+		}
 
-		Set inPTypeIds = new HashSet();
-		Set outPTypeIds = new HashSet();
-		for (Iterator it = allInPTypeNodes.iterator(); it.hasNext();) {
+		Set<Identifier> inPTypeIds = new HashSet<Identifier>();
+		Set<Identifier> outPTypeIds = new HashSet<Identifier>();
+		for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
 			CheckableNode node = (CheckableNode) it.next();
-			if (node.isChecked())
+			if (node.isChecked()) {
 				inPTypeIds.add(((ParameterType)node.getObject()).getId());
 			}
-		if (!type.getInParameterTypeIds().equals(inPTypeIds))
-			type.setInParameterTypeIds(inPTypeIds);
-		for (Iterator it = allOutPTypeNodes.iterator(); it.hasNext();) {
-			CheckableNode node = (CheckableNode) it.next();
-			if (node.isChecked())
-				outPTypeIds.add(((ParameterType)node.getObject()).getId());
 		}
-		if (!type.getOutParameterTypeIds().equals(outPTypeIds))
-			type.setOutParameterTypeIds(outPTypeIds);
+		if (!this.type.getInParameterTypeIds().equals(inPTypeIds)) {
+			this.type.setInParameterTypeIds(inPTypeIds);
+		}
+		for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
+			CheckableNode node = (CheckableNode) it.next();
+			if (node.isChecked()) {
+				outPTypeIds.add(((ParameterType)node.getObject()).getId());
+			}
+		}
+		if (!this.type.getOutParameterTypeIds().equals(outPTypeIds)) {
+			this.type.setOutParameterTypeIds(outPTypeIds);
+		}
 
-		Set mPTypeIds = new HashSet();
-		for (Iterator it = allMPTypeNodes.iterator(); it.hasNext();) {
+		Set<Identifier> mPTypeIds = new HashSet<Identifier>();
+		for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
 			CheckableNode node = (CheckableNode) it.next();
 			if (node.isChecked())
 				mPTypeIds.add(((MeasurementPortType)node.getObject()).getId());
 		}
-		if (!type.getMeasurementPortTypeIds().equals(mPTypeIds))
-			type.setMeasurementPortTypeIds(mPTypeIds);
+		if (!this.type.getMeasurementPortTypeIds().equals(mPTypeIds)) {
+			this.type.setMeasurementPortTypeIds(mPTypeIds);
+		}
 		
 		try {
 			StorableObjectPool.flush(this.type.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.UPDATE_OBJECT));
 	}
 	
 	List getParameterTypeNodes(String way) {
-		for (Iterator it = parametersRoot.getChildren().iterator(); it.hasNext();) {
+		for (Iterator it = this.parametersRoot.getChildren().iterator(); it.hasNext();) {
 			Item node = (Item)it.next();
 			if (node.getObject().equals(way)) {
 				return node.getChildren();
@@ -371,7 +379,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	List getMeasurementPortTypeNodes() {
-		return portsRoot.getChildren();
+		return this.portsRoot.getChildren();
 	}
 	
 	Item createParametersRoot() {

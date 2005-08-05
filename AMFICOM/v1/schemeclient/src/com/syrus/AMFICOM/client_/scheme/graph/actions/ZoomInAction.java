@@ -1,5 +1,5 @@
 /*
- * $Id: ZoomInAction.java,v 1.3 2005/07/11 12:31:38 stas Exp $
+ * $Id: ZoomInAction.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class ZoomInAction extends AbstractAction {
+	private static final long serialVersionUID = -6803338845175386815L;
 	UgoTabbedPane pane;
 
 	public ZoomInAction(UgoTabbedPane pane) {
@@ -33,7 +34,7 @@ public class ZoomInAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		SchemeGraph graph = pane.getGraph();
+		SchemeGraph graph = this.pane.getGraph();
 		graph.setScale(graph.getScale() * 1.25);
 		Dimension size = graph.getPreferredSize();
 		graph.setPreferredSize(new Dimension((int) (size.width * 1.25),

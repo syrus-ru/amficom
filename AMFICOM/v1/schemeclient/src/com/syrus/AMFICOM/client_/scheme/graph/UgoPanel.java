@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.9 2005/08/01 07:52:28 stas Exp $
+ * $Id: UgoPanel.java,v 1.10 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,18 +31,11 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphUndoManager;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -52,7 +45,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -61,10 +54,12 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 	protected SchemeGraph graph;
 		
 	protected GraphUndoManager undoManager = new GraphUndoManager() {
+		private static final long serialVersionUID = 4110744288424174429L;
+
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
-			((SchemeMarqueeHandler)graph.getMarqueeHandler()).updateHistoryButtons(this);
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, graph, 
+			((SchemeMarqueeHandler)UgoPanel.this.graph.getMarqueeHandler()).updateHistoryButtons(this);
+			UgoPanel.this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, UgoPanel.this.graph, 
 					SchemeEvent.SCHEME_CHANGED), false);
 		}
 	};
@@ -90,7 +85,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 	}
 	
 	private void jbInit() throws Exception {
-		this.graph = new SchemeGraph(new DefaultGraphModel(), aContext);
+		this.graph = new SchemeGraph(new DefaultGraphModel(), this.aContext);
 		this.graph.setGridEnabled(true);
 		this.graph.setGridVisible(false);
 		this.graph.setGridVisibleAtActualSize(false);
@@ -111,11 +106,11 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 	}
 
 	public SchemeGraph getGraph() {
-		return graph;
+		return this.graph;
 	}
 	
 	public GraphUndoManager getGraphUndoManager() {
-		return undoManager;
+		return this.undoManager;
 	}
 	
 	void updateGroup(DeviceGroup group, String text) {

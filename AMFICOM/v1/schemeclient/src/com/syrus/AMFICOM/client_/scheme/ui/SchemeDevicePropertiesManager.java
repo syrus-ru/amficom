@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevicePropertiesManager.java,v 1.5 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeDevicePropertiesManager.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeDeviceWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -38,9 +38,10 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	}
 
 	public void setContext(ApplicationContext aContext) {
-		if (generalPane == null)
-			generalPane = new SchemeDeviceGeneralPanel();
-		generalPane.setContext(aContext);
+		if (this.generalPane == null) {
+			this.generalPane = new SchemeDeviceGeneralPanel();
+		}
+		this.generalPane.setContext(aContext);
 	}
 	
 	/**
@@ -48,7 +49,7 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPane;
+		return this.generalPane;
 	}
 
 	/**
@@ -56,9 +57,10 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		if (charPane == null)
-			charPane = new EmptyStorableObjectEditor();
-		return charPane;
+		if (this.charPane == null) {
+			this.charPane = new EmptyStorableObjectEditor();
+		}
+		return this.charPane;
 	}
 
 	/**
@@ -74,8 +76,9 @@ public class SchemeDevicePropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		if (emptyPanel == null)
-			emptyPanel = new EmptyStorableObjectEditor();
-		return emptyPanel;
+		if (this.emptyPanel == null) {
+			this.emptyPanel = new EmptyStorableObjectEditor();
+		}
+		return this.emptyPanel;
 	}
 }

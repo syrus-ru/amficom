@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.4 2005/08/03 09:29:41 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.5 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -58,29 +58,30 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 	}
 	
 	public Item getRoot() {
-		if (root == null) {
-			root = new PopulatableIconedNode(this, SchemeResourceKeys.CONFIGURATION, LangModelScheme.getString(SchemeResourceKeys.CONFIGURATION),
+		if (this.root == null) {
+			this.root = new PopulatableIconedNode(this, SchemeResourceKeys.CONFIGURATION, LangModelScheme.getString(SchemeResourceKeys.CONFIGURATION),
 					UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
 		}
-		return root;
+		return this.root;
 	}
 	
+	@SuppressWarnings("unqualified-field-access")
 	public VisualManager getVisualManager(Item node) {
 		Object object = node.getObject();
 		if (object instanceof String) {
 			String s = (String)object;
 			if (s.equals(SchemeResourceKeys.LINK_TYPE))
-				return LinkTypePropertiesManager.getInstance(aContext);
+				return LinkTypePropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.CABLE_LINK_TYPE))
-				return CableLinkTypePropertiesManager.getInstance(aContext);
+				return CableLinkTypePropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.PORT_TYPE))
-				return PortTypePropertiesManager.getInstance(aContext, PortTypeKind.PORT_KIND_SIMPLE);
+				return PortTypePropertiesManager.getInstance(this.aContext, PortTypeKind.PORT_KIND_SIMPLE);
 			if (s.equals(SchemeResourceKeys.CABLE_PORT_TYPE))
-				return PortTypePropertiesManager.getInstance(aContext, PortTypeKind.PORT_KIND_CABLE);
+				return PortTypePropertiesManager.getInstance(this.aContext, PortTypeKind.PORT_KIND_CABLE);
 			if (s.equals(SchemeResourceKeys.EQUIPMENT_TYPE))
-				return EquipmentTypePropertiesManager.getInstance(aContext);
+				return EquipmentTypePropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.MEASUREMENT_PORT_TYPES))
-				return MeasurementPortTypePropertiesManager.getInstance(aContext);
+				return MeasurementPortTypePropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.MEASUREMENT_TYPES))
 				return MeasurementTypePropertiesManager.getInstance(aContext);
 			// for any other strings return null Manager

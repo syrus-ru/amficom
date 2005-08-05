@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.12 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.13 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -76,10 +75,10 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
 	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
 	NumberFormatter nf = new NumberFormatter(NumberFormat.getNumberInstance());
-	JFormattedTextField tfOpticalText = new JFormattedTextField(nf);
+	JFormattedTextField tfOpticalText = new JFormattedTextField(this.nf);
 	JLabel lbM2Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JFormattedTextField tfPhysicalText = new JFormattedTextField(nf);
+	JFormattedTextField tfPhysicalText = new JFormattedTextField(this.nf);
 	JLabel lbM1Label = new JLabel(LangModelScheme.getString(SchemeResourceKeys.METRE));
 	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
@@ -113,6 +112,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 	
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		nf.setValueClass(Double.class);
 		nf.setMinimum(new Double(0));
@@ -461,39 +461,39 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 	
 	public void setObject(Object or) {
 		this.schemeLink = (SchemeLink)or;
 		
-		cmbTypeCombo.removeAllItems();
-		if (schemeLink != null) {
+		this.cmbTypeCombo.removeAllItems();
+		if (this.schemeLink != null) {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			boolean b = false;
 			try {
-				b = schemeLink.getParentScheme() != null;
+				b = this.schemeLink.getParentScheme() != null;
 			} catch (IllegalStateException e) {
 				// igore, same as schemeLink.getParentScheme() == null
 			}
-			cbLinkBox.setVisible(b); 
+			this.cbLinkBox.setVisible(b); 
 		}
 		
 		Link link = null;
 		setLinkEnabled(false);
 		
-		if (schemeLink != null) {
-			this.tfNameText.setText(schemeLink.getName());
-			this.taDescrArea.setText(schemeLink.getDescription());
-			this.tfOpticalText.setValue(Double.valueOf(schemeLink.getOpticalLength()));
-			this.tfPhysicalText.setValue(Double.valueOf(schemeLink.getPhysicalLength()));
-			this.cmbTypeCombo.setSelectedItem(schemeLink.getAbstractLinkType());
-			link = schemeLink.getAbstractLink();
+		if (this.schemeLink != null) {
+			this.tfNameText.setText(this.schemeLink.getName());
+			this.taDescrArea.setText(this.schemeLink.getDescription());
+			this.tfOpticalText.setValue(Double.valueOf(this.schemeLink.getOpticalLength()));
+			this.tfPhysicalText.setValue(Double.valueOf(this.schemeLink.getPhysicalLength()));
+			this.cmbTypeCombo.setSelectedItem(this.schemeLink.getAbstractLinkType());
+			link = this.schemeLink.getAbstractLink();
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
@@ -501,66 +501,66 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfPhysicalText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (link != null) {
-			cbLinkBox.setSelected(true);
+			this.cbLinkBox.setSelected(true);
 			setLinkEnabled(true);
-			tfInvNumberText.setText(link.getInventoryNo());
-			tfSupplierText.setText(link.getSupplier());
-			tfSupplierCodeText.setText(link.getSupplierCode());
-			tfMarkText.setText(link.getMark());
+			this.tfInvNumberText.setText(link.getInventoryNo());
+			this.tfSupplierText.setText(link.getSupplier());
+			this.tfSupplierCodeText.setText(link.getSupplierCode());
+			this.tfMarkText.setText(link.getMark());
 			Color color = new Color(link.getColor());
-			cmbColorCombo.addItem(color);
+			this.cmbColorCombo.addItem(color);
 		} else {
-			cbLinkBox.setSelected(false);
+			this.cbLinkBox.setSelected(false);
 			setLinkEnabled(false);
-			tfInvNumberText.setText(SchemeResourceKeys.EMPTY);
-			tfSupplierText.setText(SchemeResourceKeys.EMPTY);
-			tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
-			tfMarkText.setText(SchemeResourceKeys.EMPTY);
+			this.tfInvNumberText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSupplierText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 	
 	public Object getObject() {
-		return schemeLink;
+		return this.schemeLink;
 	}
 	
 	public void commitChanges() {
-		if (schemeLink != null && MiscUtil.validName(tfNameText.getText())) {
-			schemeLink.setName(this.tfNameText.getText());
-			schemeLink.setDescription(this.taDescrArea.getText());
-			schemeLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
-			schemeLink.setOpticalLength((Double)(tfOpticalText.getValue()));
-			schemeLink.setPhysicalLength((Double)(tfPhysicalText.getValue()));
+		if (this.schemeLink != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.schemeLink.setName(this.tfNameText.getText());
+			this.schemeLink.setDescription(this.taDescrArea.getText());
+			this.schemeLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
+			this.schemeLink.setOpticalLength((Double)(this.tfOpticalText.getValue()));
+			this.schemeLink.setPhysicalLength((Double)(this.tfPhysicalText.getValue()));
 
-			Link link = schemeLink.getAbstractLink();
-			if (cbLinkBox.isSelected()) {
+			Link link = this.schemeLink.getAbstractLink();
+			if (this.cbLinkBox.isSelected()) {
 				if (link == null) {
 					try {
-						link = SchemeObjectsFactory.createLink(schemeLink);
+						link = SchemeObjectsFactory.createLink(this.schemeLink);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
 				}
 				if (link != null) {
-					link.setName(schemeLink.getName());
-					link.setDescription(schemeLink.getDescription());
-					link.setType(schemeLink.getAbstractLinkType());
+					link.setName(this.schemeLink.getName());
+					link.setDescription(this.schemeLink.getDescription());
+					link.setType(this.schemeLink.getAbstractLinkType());
 					
 					// TODO add link.setInventoryNo()
 					// link.setInventoryNo(invNumberText.getText());
-					link.setSupplier(tfSupplierText.getText());
-					link.setSupplierCode(tfSupplierCodeText.getText());
-					link.setMark(tfMarkText.getText());
-					link.setColor(((Color) cmbColorCombo.getSelectedItem()).getRGB());
+					link.setSupplier(this.tfSupplierText.getText());
+					link.setSupplierCode(this.tfSupplierCodeText.getText());
+					link.setMark(this.tfMarkText.getText());
+					link.setColor(((Color) this.cmbColorCombo.getSelectedItem()).getRGB());
 				}	
 			} else if (link != null) {
 				StorableObjectPool.delete(link.getId());
-				schemeLink.setAbstractLink(null);
+				this.schemeLink.setAbstractLink(null);
 			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeLink, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeLink, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
 	void setLinkEnabled(boolean b) {
-		pnLinkPanel.setVisible(b);
+		this.pnLinkPanel.setVisible(b);
 	}
 }

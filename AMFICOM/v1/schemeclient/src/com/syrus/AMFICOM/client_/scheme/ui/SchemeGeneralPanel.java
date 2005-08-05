@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.8 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.9 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -110,6 +110,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(scheme);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -353,6 +354,8 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private static class SchemeExternedObjectRenderer extends JLabel implements ListCellRenderer {
+		private static final long serialVersionUID = -1316715209536756611L;
+
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 			String key = (String)value;
 			try {
@@ -368,27 +371,27 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	void cmbSizeCombo_itemStateChanged(Object selected) {
 		for (int i = 0; i < SchemeResourceKeys.SIZES.length - 1; i++) {
 			if (SchemeResourceKeys.SIZES[i].equals(selected)) {
-				tfWidthText.setValue(SchemeResourceKeys.WIDTHS[i]);
-				tfHeightText.setValue(SchemeResourceKeys.HEIGHTS[i]);
+				this.tfWidthText.setValue(SchemeResourceKeys.WIDTHS[i]);
+				this.tfHeightText.setValue(SchemeResourceKeys.HEIGHTS[i]);
 				break;
 			}
 		}
 	}
 	
 	void initSizeFields() {
-		int w = scheme.getWidth() / 4; // in mm
-		int h = scheme.getHeight() / 4; // in mm
+		int w = this.scheme.getWidth() / 4; // in mm
+		int h = this.scheme.getHeight() / 4; // in mm
 		
 		for (int i = 0; i < SchemeResourceKeys.WIDTHS.length; i++) {
 			if (SchemeResourceKeys.WIDTHS[i].intValue() == w && SchemeResourceKeys.HEIGHTS[i].intValue() == h) {
-				cmbSizeCombo.setSelectedItem(SchemeResourceKeys.SIZES[i]);
+				this.cmbSizeCombo.setSelectedItem(SchemeResourceKeys.SIZES[i]);
 				cmbSizeCombo_itemStateChanged(SchemeResourceKeys.SIZES[i]);
 				return;
 			}
 		}
-		this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
-		this.tfWidthText.setValue(new Long(scheme.getWidth() / 4));
-		this.tfHeightText.setValue(new Long(scheme.getHeight() / 4));
+		this.cmbSizeCombo.setSelectedIndex(this.cmbSizeCombo.getItemCount() - 1);
+		this.tfWidthText.setValue(new Long(this.scheme.getWidth() / 4));
+		this.tfHeightText.setValue(new Long(this.scheme.getHeight() / 4));
 	}
 
 	public void setObject(Object or) {
@@ -396,16 +399,16 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 		Icon symbol = null;
 		
 		if (this.scheme != null) {
-			this.tfNameText.setText(scheme.getName());
-			this.taDescrArea.setText(scheme.getDescription());
-			this.tfSymbolText.setText(scheme.getLabel());
-			if (scheme.getSymbol() != null)
-				symbol = new ImageIcon(scheme.getSymbol().getImage());
+			this.tfNameText.setText(this.scheme.getName());
+			this.taDescrArea.setText(this.scheme.getDescription());
+			this.tfSymbolText.setText(this.scheme.getLabel());
+			if (this.scheme.getSymbol() != null)
+				symbol = new ImageIcon(this.scheme.getSymbol().getImage());
 			initSizeFields();
-			for (int i = 0; i < cmbKindCombo.getItemCount(); i++) {
-				Item item = (Item)cmbKindCombo.getItemAt(i);
-				if (item.getObject().equals(scheme.getKind())) {
-					cmbKindCombo.setSelectedItem(item);
+			for (int i = 0; i < this.cmbKindCombo.getItemCount(); i++) {
+				Item item = (Item)this.cmbKindCombo.getItemAt(i);
+				if (item.getObject().equals(this.scheme.getKind())) {
+					this.cmbKindCombo.setSelectedItem(item);
 					break;
 				}
 			}
@@ -413,7 +416,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
 			this.tfSymbolText.setText(SchemeResourceKeys.EMPTY);
-			this.cmbSizeCombo.setSelectedIndex(cmbSizeCombo.getItemCount() - 1);
+			this.cmbSizeCombo.setSelectedIndex(this.cmbSizeCombo.getItemCount() - 1);
 			this.tfWidthText.setValue(ZERO);
 			this.tfHeightText.setValue(ZERO);
 		}
@@ -421,33 +424,33 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 
 	public Object getObject() {
-		return scheme;
+		return this.scheme;
 	}
 
 	public void commitChanges() {
-		if (scheme != null && MiscUtil.validName(this.tfNameText.getText())) {
-			scheme.setName(this.tfNameText.getText());
-			scheme.setDescription(this.taDescrArea.getText());
-			scheme.setLabel(this.tfSymbolText.getText());
+		if (this.scheme != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.scheme.setName(this.tfNameText.getText());
+			this.scheme.setDescription(this.taDescrArea.getText());
+			this.scheme.setLabel(this.tfSymbolText.getText());
 			if (this.btSymbolBut.getIcon() == null) {
-				scheme.setSymbol(null);
+				this.scheme.setSymbol(null);
 			} else {
 				try {
-					scheme.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
+					this.scheme.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
 			}
-			Item item = (Item)cmbKindCombo.getSelectedItem();
-			scheme.setKind((IdlKind)item.getObject());
-			scheme.setWidth(((Long)this.tfWidthText.getValue()).intValue() * 4);
-			scheme.setHeight(((Long)this.tfHeightText.getValue()).intValue() * 4);
+			Item item = (Item)this.cmbKindCombo.getSelectedItem();
+			this.scheme.setKind((IdlKind)item.getObject());
+			this.scheme.setWidth(((Long)this.tfWidthText.getValue()).intValue() * 4);
+			this.scheme.setHeight(((Long)this.tfHeightText.getValue()).intValue() * 4);
 			
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.scheme, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

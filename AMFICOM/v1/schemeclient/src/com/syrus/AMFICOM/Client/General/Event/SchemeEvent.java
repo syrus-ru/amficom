@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeEvent.java,v 1.5 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeEvent.java,v 1.6 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,13 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
 public class SchemeEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = 8625207232243614595L;
+
 	static final public String TYPE = SchemeEvent.class.getName();
 	
 	public static final long OPEN_SCHEME = 						0x00000001;
@@ -44,7 +46,7 @@ public class SchemeEvent extends PropertyChangeEvent {
 	}
 	
 	public boolean isType(long eventType) {
-		return (type & eventType) != 0;
+		return (this.type & eventType) != 0;
 	}
 
 	public Object getObject() {

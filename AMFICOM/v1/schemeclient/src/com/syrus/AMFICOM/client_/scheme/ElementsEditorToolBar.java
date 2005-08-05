@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorToolBar.java,v 1.4 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsEditorToolBar.java,v 1.5 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,14 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/06/22 10:16:05 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorToolBar extends AbstractMainToolBar
-{
-	public ElementsEditorToolBar()
-	{
+public class ElementsEditorToolBar extends AbstractMainToolBar {
+	private static final long serialVersionUID = 1002579172632953867L;
+
+	public ElementsEditorToolBar() {
 		initItems();
 	}
 

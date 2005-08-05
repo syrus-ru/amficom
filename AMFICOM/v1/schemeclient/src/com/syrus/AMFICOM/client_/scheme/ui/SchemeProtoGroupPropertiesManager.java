@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupPropertiesManager.java,v 1.1 2005/07/11 12:31:40 stas Exp $
+ * $Id: SchemeProtoGroupPropertiesManager.java,v 1.2 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/07/11 12:31:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -38,13 +38,16 @@ public class SchemeProtoGroupPropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new SchemeProtoGroupGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new EmptyStorableObjectEditor();
-		if (ugoPanel == null)
-			ugoPanel = new EmptyStorableObjectEditor();
+		if (this.generalPanel == null) {
+			this.generalPanel = new SchemeProtoGroupGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new EmptyStorableObjectEditor();
+		}
+		if (this.ugoPanel == null) {
+			this.ugoPanel = new EmptyStorableObjectEditor();
+		}
 	}
 	
 	/**
@@ -52,7 +55,7 @@ public class SchemeProtoGroupPropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class SchemeProtoGroupPropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -76,7 +79,7 @@ public class SchemeProtoGroupPropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return ugoPanel;
+		return this.ugoPanel;
 	}
 }
 

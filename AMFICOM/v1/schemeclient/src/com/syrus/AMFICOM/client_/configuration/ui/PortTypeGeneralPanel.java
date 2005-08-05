@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.12 2005/08/01 07:52:28 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.13 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -65,7 +65,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfNameText = new JTextField();
 	JButton commitButton = new JButton();
 	JLabel lbSortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
-	JComboBox cmbSortCombo = new AComboBox(sorts);
+	JComboBox cmbSortCombo = new AComboBox(this.sorts);
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
 	JPanel pnGeneralPanel = new JPanel();
@@ -94,6 +94,7 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(portType);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -223,28 +224,28 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 
 	public Object getObject() {
-		return portType;
+		return this.portType;
 	}
 
 	public void setObject(Object or) {
 		this.portType = (PortType) or;
 
-		if (portType != null) {
-			this.tfNameText.setText(portType.getName());
-			this.taDescriptionArea.setText(portType.getDescription());
-			switch (portType.getSort().value()) {
+		if (this.portType != null) {
+			this.tfNameText.setText(this.portType.getName());
+			this.taDescriptionArea.setText(this.portType.getDescription());
+			switch (this.portType.getSort().value()) {
 			case PortTypeSort._PORTTYPESORT_OPTICAL:
-				cmbSortCombo.setSelectedItem(sorts[0]);
+				this.cmbSortCombo.setSelectedItem(this.sorts[0]);
 				break;
 			case PortTypeSort._PORTTYPESORT_THERMAL:
-				cmbSortCombo.setSelectedItem(sorts[1]);
+				this.cmbSortCombo.setSelectedItem(this.sorts[1]);
 				break;
 			case PortTypeSort._PORTTYPESORT_ELECTRICAL:
-				cmbSortCombo.setSelectedItem(sorts[2]);
+				this.cmbSortCombo.setSelectedItem(this.sorts[2]);
 			}
 		} 
 		else {
@@ -254,13 +255,13 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		if (MiscUtil.validName(tfNameText.getText())) {
-			if (portType == null) {
+		if (MiscUtil.validName(this.tfNameText.getText())) {
+			if (this.portType == null) {
 				try {
-					portType = SchemeObjectsFactory.createPortType(tfNameText.getText(), this.kind);
+					this.portType = SchemeObjectsFactory.createPortType(this.tfNameText.getText(), this.kind);
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, portType, PortTypePropertiesManager.getInstance(aContext, this.kind), ObjectSelectedEvent.PORT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.portType, PortTypePropertiesManager.getInstance(this.aContext, this.kind), ObjectSelectedEvent.PORT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
@@ -272,21 +273,21 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void apply() {
-		portType.setName(this.tfNameText.getText());
-		portType.setDescription(this.taDescriptionArea.getText());
+		this.portType.setName(this.tfNameText.getText());
+		this.portType.setDescription(this.taDescriptionArea.getText());
 
-		if (cmbSortCombo.getSelectedItem().equals(sorts[0]))
-			portType.setSort(PortTypeSort.PORTTYPESORT_OPTICAL);
-		else if (cmbSortCombo.getSelectedItem().equals(sorts[1]))
-			portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
-		else if (cmbSortCombo.getSelectedItem().equals(sorts[2]))
-			portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
+		if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[0]))
+			this.portType.setSort(PortTypeSort.PORTTYPESORT_OPTICAL);
+		else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[1]))
+			this.portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
+		else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[2]))
+			this.portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
 		
 		try {
-			StorableObjectPool.flush(portType.getId(), LoginManager.getUserId(), true);
+			StorableObjectPool.flush(this.portType.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, portType, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType, SchemeEvent.UPDATE_OBJECT));
 	}
 }

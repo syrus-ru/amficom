@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.6 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeGraph.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,11 +44,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeGraph extends GPGraph {
+	private static final long serialVersionUID = -1663840885231780078L;
+
 	ApplicationContext aContext;
 	 // variables for graph representation
 	private Dimension actualSize = Constants.A4;
@@ -85,13 +87,13 @@ public class SchemeGraph extends GPGraph {
 	}
 
 	public void setTopLevelSchemeMode(boolean b) {
-		topLevelSchemeMode = b;
+		this.topLevelSchemeMode = b;
 		if (b)
 			SchemeActions.generateTopLevelScheme(this);
 	}
 
 	public boolean isTopLevelSchemeMode() {
-		return topLevelSchemeMode;
+		return this.topLevelSchemeMode;
 	}
 
 	public void setActualSize(Dimension d) {
@@ -102,11 +104,11 @@ public class SchemeGraph extends GPGraph {
 			super.setPreferredSize(new Dimension(w, h));
 			this.updateUI();
 		}
-		actualSize = d;
+		this.actualSize = d;
 	}
 	
 	public Dimension getActualSize() {
-		return actualSize;
+		return this.actualSize;
 	}
 
 	// objects view substitution
@@ -131,11 +133,11 @@ public class SchemeGraph extends GPGraph {
 	// correcting mapping between screen and logical points
 	public Point snap(Point p) {
 		Point p2 = new Point(fromScreen(p));
-		if (gridEnabled && p != null) {
-			p2.x = p.x + gridSize / 2;
-			p2.y = p.y + gridSize / 2;
-			p2.x = Math.round(p2.x / gridSize) * gridSize;
-			p2.y = Math.round(p2.y / gridSize) * gridSize;
+		if (this.gridEnabled && p != null) {
+			p2.x = p.x + this.gridSize / 2;
+			p2.y = p.y + this.gridSize / 2;
+			p2.x = Math.round(p2.x / this.gridSize) * this.gridSize;
+			p2.y = Math.round(p2.y / this.gridSize) * this.gridSize;
 		}
 		return toScreen(p2);
 	}
@@ -147,84 +149,84 @@ public class SchemeGraph extends GPGraph {
 	public Point toScreen(Point p) {
 		if (p == null)
 			return null;
-		p.x = (int) Math.round(p.x * scale);
-		p.y = (int) Math.round(p.y * scale);
+		p.x = (int) Math.round(p.x * this.scale);
+		p.y = (int) Math.round(p.y * this.scale);
 		return p;
 	}
 
 	public Point fromScreen(Point p) {
 		if (p == null)
 			return null;
-		p.x = (int) Math.round(p.x / scale);
-		p.y = (int) Math.round(p.y / scale);
+		p.x = (int) Math.round(p.x / this.scale);
+		p.y = (int) Math.round(p.y / this.scale);
 		return p;
 	}
 
 	public Rectangle toScreen(Rectangle rect) {
 		if (rect == null)
 			return null;
-		rect.x *= scale;
-		rect.y *= scale;
-		rect.width *= scale;
-		rect.height *= scale;
+		rect.x *= this.scale;
+		rect.y *= this.scale;
+		rect.width *= this.scale;
+		rect.height *= this.scale;
 		return rect;
 	}
 
 	public Rectangle fromScreen(Rectangle rect) {
 		if (rect == null)
 			return null;
-		rect.x /= scale;
-		rect.y /= scale;
-		rect.width /= scale;
-		rect.height /= scale;
+		rect.x /= this.scale;
+		rect.y /= this.scale;
+		rect.width /= this.scale;
+		rect.height /= this.scale;
 		return rect;
 	}
 
 	public void selectionNotify() {
-		if (!make_notifications)
+		if (!this.make_notifications)
 			return;
 		
 		SchemeMarqueeHandler marqee = (SchemeMarqueeHandler)getMarqueeHandler();
 		marqee.updateButtonsState(getSelectionCells());
 		
-		notify = true;
+		this.notify = true;
 		if (getSelectionCount() == 0) {
 			UgoPanel panel = marqee.pane.getCurrentPanel();
 			if (panel instanceof ElementsPanel) {
 				SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
 				if (res.getCellContainer() != null) {
-					Notifier.notify(this, aContext, res.getCellContainer());
-					notify = false;
+					Notifier.notify(this, this.aContext, res.getCellContainer());
+					this.notify = false;
 					return;
 				}
 			}
 		}
-		Notifier.notify(this, aContext, getSelectionCells());
-		notify = false;
+		Notifier.notify(this, this.aContext, getSelectionCells());
+		this.notify = false;
 	}
 	
 	public void addSelectionCell(Object cell) {
-		if (!notify)
+		if (!this.notify)
 			super.addSelectionCell(cell);
 	}
 
 	public void addSelectionCells(Object[] cells) {
-		if (!notify)
+		if (!this.notify)
 			super.addSelectionCells(cells);
 	}
 
 	public void setSelectionCell(Object cell) {
-		if (!notify)
+		if (!this.notify)
 			super.setSelectionCell(cell);
 	}
 	
 	public void setSelectionCells(Object[] cells) {
-		if (!notify)
+		if (!this.notify)
 			super.setSelectionCells(cells);
 	}
 	
 	public void removeSelectionCell(Object cell) {
-		if (!notify)
+		if (!this.notify)
 			super.removeSelectionCell(cell);
 	}
 	
@@ -272,14 +274,14 @@ public class SchemeGraph extends GPGraph {
 		Object[] flat = DefaultGraphModel.getDescendants(getModel(), cells).toArray();
 		ConnectionSet cs = ConnectionSet.create(getModel(), flat, false);
 		Map viewAttributes = GraphConstants.createAttributes(cells, getGraphLayoutCache());
-		ArrayList v = new ArrayList(3);
+		ArrayList<Object> v = new ArrayList<Object>(3);
 		v.add(cells);
 		v.add(viewAttributes);
 		v.add(cs);
 		return v;
 	}
 
-	public Map setFromArchivedState(Object s) {
+	public Map<DefaultGraphCell, DefaultGraphCell> setFromArchivedState(Object s) {
 		if (s instanceof List) {
 			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
@@ -287,7 +289,7 @@ public class SchemeGraph extends GPGraph {
 			ConnectionSet cs = (ConnectionSet) v.get(2);
 			getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
 		}
-		return Collections.EMPTY_MAP;
+		return Collections.emptyMap();
 	}
 	
 	public Map<DefaultGraphCell, DefaultGraphCell> copyFromArchivedState(Object s, Point p) {
@@ -366,11 +368,11 @@ public class SchemeGraph extends GPGraph {
 		invalidate();
 	}
 	public GraphUI getUI() {
-		return (SchemeGraphUI)ui;
+		return (SchemeGraphUI)this.ui;
 	}
 	
 	boolean isBorderVisible() {
-		return isBorderVisible;
+		return this.isBorderVisible;
 	}
 	void setBorderVisible(boolean isBorderVisible) {
 		this.isBorderVisible = isBorderVisible;
@@ -379,13 +381,13 @@ public class SchemeGraph extends GPGraph {
 		this.isGridVisibleAtActualSize = isGridVisibleAtActualSize;
 	}
 	public boolean isGridVisibleAtActualSize() {
-		return isGridVisibleAtActualSize;
+		return this.isGridVisibleAtActualSize;
 	}
 	void setGraphChanged(boolean b) {
 		this.graphChanged = b;
 	}
 	public boolean isGraphChanged() {
-		return graphChanged;
+		return this.graphChanged;
 	}
 	public void setMode(String mode) {
 		this.mode = mode;

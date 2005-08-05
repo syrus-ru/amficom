@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.7 2005/07/19 06:54:18 stas Exp $
+ * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.8 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/19 06:54:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -34,20 +34,20 @@ public class SchemeProtoElementCharacteristicsPanel extends CharacteristicsPanel
 	}
 
 	public Object getObject() {
-		return schemeProtoElement;
+		return this.schemeProtoElement;
 	}
 
 	public void setObject(Object or) {
 		this.schemeProtoElement = (SchemeProtoElement)or;
 		super.clear();
 
-		if (schemeProtoElement != null) {
+		if (this.schemeProtoElement != null) {
 			try {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-						schemeProtoElement,
-						schemeProtoElement.getId(), true);
-				super.addCharacteristics(schemeProtoElement.getCharacteristics(), schemeProtoElement.getId());
-				EquipmentType eqt = schemeProtoElement.getEquipmentType();
+						this.schemeProtoElement,
+						this.schemeProtoElement.getId(), true);
+				super.addCharacteristics(this.schemeProtoElement.getCharacteristics(), this.schemeProtoElement.getId());
+				EquipmentType eqt = this.schemeProtoElement.getEquipmentType();
 				if (eqt != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],

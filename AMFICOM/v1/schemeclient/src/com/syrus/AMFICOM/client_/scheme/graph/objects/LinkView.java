@@ -1,5 +1,5 @@
 /*
- * $Id: LinkView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: LinkView.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.jgraph.graph.PortView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -49,27 +49,27 @@ public class LinkView extends EdgeView {
 		// Update and paint control points
 		public void paint(Graphics g) {
 			invalidate();
-			for (int i = 0; i < r.length; i++) {
-				if (isEdgeConnectable)
-					g.setColor(graph.getHandleColor());
+			for (int i = 0; i < this.r.length; i++) {
+				if (this.isEdgeConnectable)
+					g.setColor(this.graph.getHandleColor());
 				else
-					g.setColor(graph.getLockedHandleColor());
-				g.fill3DRect(r[i].x, r[i].y, r[i].width, r[i].height, true);
+					g.setColor(this.graph.getLockedHandleColor());
+				g.fill3DRect(this.r[i].x, this.r[i].y, this.r[i].width, this.r[i].height, true);
 				PortView port = null;
-				if (i == 0 && edge.getSource() != null)
-					port = edge.getSource();
-				else if (i == r.length - 1 && edge.getTarget() != null)
-					port = edge.getTarget();
+				if (i == 0 && this.edge.getSource() != null)
+					port = this.edge.getSource();
+				else if (i == this.r.length - 1 && this.edge.getTarget() != null)
+					port = this.edge.getTarget();
 				if (port != null) {
-					g.setColor(graph.getLockedHandleColor());
+					g.setColor(this.graph.getLockedHandleColor());
 					Point tmp = GraphConstants.getOffset(port.getAllAttributes());
 					if (tmp != null) {
-						g.drawLine(r[i].x + 1, r[i].y + 1, r[i].x + r[i].width - 3, r[i].y
-								+ r[i].height - 3);
-						g.drawLine(r[i].x + 1, r[i].y + r[i].height - 3, r[i].x
-								+ r[i].width - 3, r[i].y + 1);
+						g.drawLine(this.r[i].x + 1, this.r[i].y + 1, this.r[i].x + this.r[i].width - 3, this.r[i].y
+								+ this.r[i].height - 3);
+						g.drawLine(this.r[i].x + 1, this.r[i].y + this.r[i].height - 3, this.r[i].x
+								+ this.r[i].width - 3, this.r[i].y + 1);
 					} else
-						g.drawRect(r[i].x + 2, r[i].y + 2, r[i].width - 5, r[i].height - 5);
+						g.drawRect(this.r[i].x + 2, this.r[i].y + 2, this.r[i].width - 5, this.r[i].height - 5);
 				}
 			}
 		}
@@ -83,11 +83,11 @@ public class LinkView extends EdgeView {
 
 			boolean offset = (GraphConstants.getOffset(p.getAllAttributes()) != null);
 			Rectangle rect = (offset) ? p.getBounds() : p.getParentView().getBounds();
-			rect = graph.toScreen(new Rectangle(rect));
+			rect = this.graph.toScreen(new Rectangle(rect));
 			int s = 3;
 			rect.translate(-s, -s);
 			rect.setSize(rect.width + 2 * s, rect.height + 2 * s);
-			graph.getUI().paintCell(g, p, rect, true);
+			this.graph.getUI().paintCell(g, p, rect, true);
 		}
 	}
 }

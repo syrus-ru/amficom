@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementPropertiesManager.java,v 1.3 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeElementPropertiesManager.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.scheme.SchemeElementWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -39,15 +39,18 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new SchemeElementGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new SchemeElementCharacteristicsPanel();
-		charPanel.setContext(aContext);
-		if (ugoPanel == null)
-			ugoPanel = new SchemeCellPanel();
-		ugoPanel.setContext(aContext);
+		if (this.generalPanel == null) {
+			this.generalPanel = new SchemeElementGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new SchemeElementCharacteristicsPanel();
+		}
+		this.charPanel.setContext(aContext);
+		if (this.ugoPanel == null) {
+			this.ugoPanel = new SchemeCellPanel();
+		}
+		this.ugoPanel.setContext(aContext);
 	}
 	
 	/**
@@ -55,7 +58,7 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -63,7 +66,7 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -79,6 +82,6 @@ public class SchemeElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return ugoPanel;
+		return this.ugoPanel;
 	}
 }

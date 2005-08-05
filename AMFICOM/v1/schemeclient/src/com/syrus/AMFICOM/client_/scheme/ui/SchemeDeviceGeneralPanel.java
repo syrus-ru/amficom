@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.5 2005/07/24 18:13:40 bass Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +26,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -48,7 +48,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	JTable table;
 	JComboBox combo;
 	
-	final String NULL_PORT = "---"; //$NON-NLS-1$
+	private static final String NULL_PORT = "---"; //$NON-NLS-1$
 	Object[][] data;
 	int size = 0;
 	int portDirection;
@@ -62,8 +62,8 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	private void jbInit() throws Exception {
-		table = new JTable();
-		combo = new ColorChooserComboBox();
+		this.table = new JTable();
+		this.combo = new ColorChooserComboBox();
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -75,7 +75,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 * @see StorableObjectEditor#getGUI()
 	 */
 	public JComponent getGUI() {
-	  return table;
+	  return this.table;
 	}
 
 	/**
@@ -84,51 +84,53 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 */
 	public void setObject(Object or) {
 		this.schemeDevice = (SchemeDevice)or;
-		combo.removeAllItems();
+		this.combo.removeAllItems();
 		
-		if (schemeDevice != null) {
-			List sPorts = new ArrayList(schemeDevice.getSchemePorts());
+		if (this.schemeDevice != null) {
+			List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts());
 			WrapperComparator sorter = new WrapperComparator(
 					SchemePortWrapper.getInstance(),
 					StorableObjectWrapper.COLUMN_NAME, true);
 			Collections.sort(sPorts, sorter);
-			Set schemeCableLinks = new HashSet();
-			combo.addItem(NULL_PORT);
+			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+			this.combo.addItem(NULL_PORT);
 			for (int i = 0; i < sPorts.size(); i++) {
-				SchemePort port = (SchemePort) sPorts.get(i);
-				combo.addItem(port);
+				SchemePort port = sPorts.get(i);
+				this.combo.addItem(port);
 				SchemeCableThread thread = port.getSchemeCableThread();
 				if (thread != null)
 					schemeCableLinks.add(thread.getParentSchemeCableLink());
 			}
 
-			List scThreads = new ArrayList();
-			for (Iterator it = schemeCableLinks.iterator(); it.hasNext();) {
-				scThreads.add(it.next());
+			List<SchemeCableThread> scThreads = new ArrayList<SchemeCableThread>();
+			for (SchemeCableLink scl : schemeCableLinks) {
+				scThreads.addAll(scl.getSchemeCableThreads());
 			}
 			sorter = new WrapperComparator(SchemeCableThreadWrapper.getInstance(),
 					StorableObjectWrapper.COLUMN_NAME, true);
 			Collections.sort(scThreads, sorter);
-			size = scThreads.size();
-			data = new Object[size][2];
+			this.size = scThreads.size();
+			this.data = new Object[this.size][2];
 			for (int i = 0; i < scThreads.size(); i++) {
-				SchemeCableThread thread = (SchemeCableThread) scThreads.get(i);
-				data[i][0] = thread;
-				SchemePort port = thread.getSchemePort(schemeDevice);
+				SchemeCableThread thread = scThreads.get(i);
+				this.data[i][0] = thread;
+				SchemePort port = thread.getSchemePort(this.schemeDevice);
 				if (port != null) {
-					data[i][1] = port;
+					this.data[i][1] = port;
 					if (port.equals(thread.getSourceSchemePort()))
-						portDirection = IdlDirectionType.__OUT;
+						this.portDirection = IdlDirectionType.__OUT;
 					else
-						portDirection = IdlDirectionType.__IN;
+						this.portDirection = IdlDirectionType.__IN;
 				} else
-					data[i][1] = NULL_PORT;
+					this.data[i][1] = NULL_PORT;
 			}
 		} else {
-			size = 0;
-			data = new Object[0][2];
+			this.size = 0;
+			this.data = new Object[0][2];
 		}
 		TableModel model = new AbstractTableModel() {
+			private static final long serialVersionUID = -3385987775156183367L;
+
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				if (columnIndex == 0)
 					return false;
@@ -140,20 +142,20 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 			}
 
 			public int getRowCount() {
-				return size;
+				return SchemeDeviceGeneralPanel.this.size;
 			}
 
 			public Object getValueAt(int rowIndex, int columnIndex) {
-				return data[rowIndex][columnIndex];
+				return SchemeDeviceGeneralPanel.this.data[rowIndex][columnIndex];
 			}
 			
 			public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-				data[rowIndex][columnIndex] = aValue;
+				SchemeDeviceGeneralPanel.this.data[rowIndex][columnIndex] = aValue;
 			}
 		};
-		table.setModel(model);			
-		DefaultCellEditor editor = new DefaultCellEditor(combo);
-		table.getColumnModel().getColumn(1).setCellEditor(editor);
+		this.table.setModel(model);			
+		DefaultCellEditor editor = new DefaultCellEditor(this.combo);
+		this.table.getColumnModel().getColumn(1).setCellEditor(editor);
 	}
 
 	/**
@@ -161,7 +163,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 * @see StorableObjectEditor#getObject()
 	 */
 	public Object getObject() {
-		return schemeDevice;
+		return this.schemeDevice;
 	}
 
 	/**
@@ -169,14 +171,14 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	 * @see StorableObjectEditor#commitChanges()
 	 */
 	public void commitChanges() {
-		for (int i = 0; i < size; i++) {
-			if (!data[i][1].equals(NULL_PORT)) {
-				if (portDirection == IdlDirectionType.__OUT)
-					((SchemeCableThread)data[i][0]).setSourceSchemePort((SchemePort)data[i][1]);
-				else
-					((SchemeCableThread)data[i][0]).setTargetSchemePort((SchemePort)data[i][1]);
+		for (int i = 0; i < this.size; i++) {
+			if (!this.data[i][1].equals(NULL_PORT)) {
+				if (this.portDirection == IdlDirectionType.__OUT) {
+					((SchemeCableThread)this.data[i][0]).setSourceSchemePort((SchemePort)this.data[i][1]);
+				} else {
+					((SchemeCableThread)this.data[i][0]).setTargetSchemePort((SchemePort)this.data[i][1]);
+				}
 			}
 		}
-		
 	}
 }

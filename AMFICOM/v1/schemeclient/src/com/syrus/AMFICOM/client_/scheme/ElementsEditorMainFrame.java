@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.11 2005/08/03 09:29:41 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.12 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,10 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -28,11 +24,9 @@ import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.ComponentSaveCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
-import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -52,11 +46,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
 public class ElementsEditorMainFrame extends AbstractMainFrame {
+	private static final long serialVersionUID = -7638134017425749912L;
 
 	public static final String	TREE_FRAME = "treeFrame";
 	
@@ -65,7 +60,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	ElementsTabbedPane elementsTab;
 
 	public ElementsEditorMainFrame(final ApplicationContext aContext) {
-		super(aContext, LangModelSchematics.getString("ElementsEditorTitle"),
+		super(aContext, LangModelSchematics.getString("ElementsEditorTitle"), //$NON-NLS-1$
 				new ElementsEditorMenuBar(aContext.getApplicationModel()),
 				new ElementsEditorToolBar());
 	}
@@ -77,16 +72,16 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	protected void initFrames() {
 		this.frames = new UIDefaults();
 		
-		this.elementsTab = new ElementsTabbedPane(aContext);
+		this.elementsTab = new ElementsTabbedPane(this.aContext);
 		this.elementsTab.setEditable(true);
 		
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
-				SchemeViewerFrame editorFrame = new SchemeViewerFrame(aContext, elementsTab);
+				SchemeViewerFrame editorFrame = new SchemeViewerFrame(ElementsEditorMainFrame.this.aContext, ElementsEditorMainFrame.this.elementsTab);
 				editorFrame.setTitle(LangModelSchematics.getString("elementsMainTitle"));
-				desktopPane.add(editorFrame);
+				ElementsEditorMainFrame.this.desktopPane.add(editorFrame);
 				return editorFrame;
 			}
 		});
@@ -95,7 +90,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
 				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
-				desktopPane.add(generalFrame);
+				ElementsEditorMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ElementsEditorMainFrame.this.aContext);
 				return generalFrame;
 			}
@@ -105,7 +100,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
 				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
-				desktopPane.add(characteristicFrame);
+				ElementsEditorMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ElementsEditorMainFrame.this.aContext);
 				return characteristicFrame;
 			}
@@ -115,7 +110,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
 				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
-				desktopPane.add(additionalFrame);
+				ElementsEditorMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ElementsEditorMainFrame.this.aContext);
 				return additionalFrame;
 			}
@@ -135,12 +130,12 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 				
 				SchemeTreeModel model = new SchemeTreeModel(ElementsEditorMainFrame.this.aContext);
-				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), aContext), new FilterPanel());
+				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), ElementsEditorMainFrame.this.aContext), new FilterPanel());
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());
 				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
 
-				desktopPane.add(treeFrame);
+				ElementsEditorMainFrame.this.desktopPane.add(treeFrame);
 				return treeFrame;
 			}
 		});
@@ -148,8 +143,6 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		super.setWindowArranger(new WindowArranger(ElementsEditorMainFrame.this) {
 
 			public void arrange() {
-				ElementsEditorMainFrame f = (ElementsEditorMainFrame) mainframe;
-
 				Rectangle r = ElementsEditorMainFrame.this.scrollPane.getViewportBorderBounds();
 				int w = r.width + ElementsEditorMainFrame.this.scrollPane.getVerticalScrollBar().getWidth();
 				int h = r.height + ElementsEditorMainFrame.this.scrollPane.getHorizontalScrollBar().getHeight();
@@ -163,7 +156,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				JInternalFrame additionalFrame = null;
 				JInternalFrame treeFrame = null;
 				
-				for (Component component : desktopPane.getComponents()) {
+				for (Component component : ElementsEditorMainFrame.this.desktopPane.getComponents()) {
 					if (TREE_FRAME.equals(component.getName()))
 						treeFrame = (JInternalFrame)component;
 					else if (SchemeViewerFrame.NAME.equals(component.getName()))
@@ -212,8 +205,8 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		aModel.setCommand("menuComponentNew", new ComponentNewCommand(aContext, elementsTab));
-		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(elementsTab));
+		aModel.setCommand("menuComponentNew", new ComponentNewCommand(this.aContext, this.elementsTab));
+		aModel.setCommand("menuComponentSave", new ComponentSaveCommand(this.elementsTab));
 
 		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
 		aModel.setCommand("menuWindowScheme", this.getLazyCommand(SchemeViewerFrame.NAME));
@@ -261,7 +254,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	public void setSessionOpened() {
 		super.setSessionOpened();
 		
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
@@ -276,7 +269,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 
 	public void setSessionClosed() {
 		super.setSessionClosed();
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuWindowTree", false);
 		aModel.setEnabled("menuWindowScheme", false);
 		aModel.setEnabled("menuWindowUgo", false);
@@ -290,9 +283,9 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			if (!elementsTab.removeAllPanels())
+			if (!this.elementsTab.removeAllPanels())
 				return;
-			dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
+			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
 			ElementsEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
 		}

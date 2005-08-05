@@ -1,5 +1,5 @@
 /*
- * $Id: ThreadTypeCell.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: ThreadTypeCell.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -50,7 +50,7 @@ public class ThreadTypeCell extends EllipseCell {
 	}
 
 	public CableThreadType getCableThreadType() {
-		return threadType;
+		return this.threadType;
 	}
 
 	public void setCableThreadType(CableThreadType threadType) {

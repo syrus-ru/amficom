@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.4 2005/08/03 09:29:41 stas Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.5 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.UIManager;
 
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -55,14 +54,14 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 	}
 	
 	public Item getRoot() {
-		if (root == null) {
-			root = new PopulatableIconedNode();
-			root.setChildrenFactory(this);
-			root.setObject(SchemeResourceKeys.SCHEME_PROTO_GROUP);
-			root.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_GROUP));
-			root.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
+		if (this.root == null) {
+			this.root = new PopulatableIconedNode();
+			this.root.setChildrenFactory(this);
+			this.root.setObject(SchemeResourceKeys.SCHEME_PROTO_GROUP);
+			this.root.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_PROTO_GROUP));
+			this.root.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
 		}
-		return root;
+		return this.root;
 	}
 	
 	public VisualManager getVisualManager(Item node) {
@@ -70,16 +69,16 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 		if (object instanceof String) {
 			String s = (String)object;
 			if (s.equals(SchemeResourceKeys.SCHEME_PROTO_GROUP))
-				return SchemeProtoGroupPropertiesManager.getInstance(aContext);
+				return SchemeProtoGroupPropertiesManager.getInstance(this.aContext);
 			if (s.equals(SchemeResourceKeys.SCHEME_PROTO_ELEMENT))
-				return SchemeProtoElementPropertiesManager.getInstance(aContext);
+				return SchemeProtoElementPropertiesManager.getInstance(this.aContext);
 			// for any other strings return null Manager
 			return null;
 		}
 		if (object instanceof SchemeProtoGroup)
-			return SchemeProtoGroupPropertiesManager.getInstance(aContext);
+			return SchemeProtoGroupPropertiesManager.getInstance(this.aContext);
 		if (object instanceof SchemeProtoElement)
-			return SchemeProtoElementPropertiesManager.getInstance(aContext);
+			return SchemeProtoElementPropertiesManager.getInstance(this.aContext);
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 	
@@ -104,7 +103,7 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 		Collection contents = CommonUIUtilities.getChildObjects(node);
 		try {
 			// first add ProtoGroups (always)
-			Identifier parentId = (node.equals(root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
+			Identifier parentId = (node.equals(this.root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
 			StorableObjectCondition condition1 = new LinkedIdsCondition(parentId, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
 			Collection<StorableObject> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 
@@ -156,7 +155,7 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 	}
 
 	
-	private void addToProtoElement(Item node) {
+	/*private void addToProtoElement(Item node) {
 		Collection contents = CommonUIUtilities.getChildObjects(node);
 		SchemeProtoElement proto = (SchemeProtoElement)node.getObject();
 
@@ -219,5 +218,5 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 			child.setDefaultCondition(condition2);
 			node.addChild(child);
 		}
-	}
+	}*/
 }

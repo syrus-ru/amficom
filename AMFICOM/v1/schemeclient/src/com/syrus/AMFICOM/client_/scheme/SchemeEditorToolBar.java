@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorToolBar.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeEditorToolBar.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,11 +23,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeEditorToolBar extends AbstractMainToolBar {
+	private static final long serialVersionUID = 7496638136912951178L;
 
 	public SchemeEditorToolBar() {
 		initItems();

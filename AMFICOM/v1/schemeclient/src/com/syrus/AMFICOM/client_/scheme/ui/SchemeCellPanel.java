@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.3 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -50,28 +50,30 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void jbInit() throws Exception {
-		pane = new UgoTabbedPane() {
+		this.pane = new UgoTabbedPane() {
+			private static final long serialVersionUID = 6725936773878805596L;
+
 			protected JComponent createToolBar() {
-				JComponent toolBar = super.createToolBar();
+				JComponent toolBar1 = super.createToolBar();
 				
-				commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
-				commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
-				commitButton.setFocusPainted(false);
-				commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
-				commitButton.addActionListener(new ActionListener() {
+				SchemeCellPanel.this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
+				SchemeCellPanel.this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
+				SchemeCellPanel.this.commitButton.setFocusPainted(false);
+				SchemeCellPanel.this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
+				SchemeCellPanel.this.commitButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						commitChanges();
 					}
 				});
-				toolBar.add(commitButton);
-				return toolBar;
+				toolBar1.add(SchemeCellPanel.this.commitButton);
+				return toolBar1;
 			}
 		};
 	}
 	
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		pane.setContext(aContext);
+		this.pane.setContext(aContext);
 	}
 	
 	/**
@@ -79,7 +81,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#getGUI()
 	 */
 	public JComponent getGUI() {
-		return pane;
+		return this.pane;
 	}
 
 	/**
@@ -88,9 +90,9 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	 */
 	public void setObject(Object or) {
 		this.schemeCellContainer = (SchemeCellContainer)or;
-		GraphActions.clearGraph(pane.getGraph());
+		GraphActions.clearGraph(this.pane.getGraph());
 		if (this.schemeCellContainer != null) {
-			pane.openSchemeImageResource(schemeCellContainer.getUgoCell(), false);
+			this.pane.openSchemeImageResource(this.schemeCellContainer.getUgoCell(), false);
 		}
 	}
 
@@ -99,14 +101,14 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#getObject()
 	 */
 	public Object getObject() {
-		return schemeCellContainer;
+		return this.schemeCellContainer;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#commitChanges()
 	 */
 	public void commitChanges() {
-		SchemeImageResource image = schemeCellContainer.getUgoCell();
+		SchemeImageResource image = this.schemeCellContainer.getUgoCell();
 		if (image == null) {
 			try {
 				image = SchemeObjectsFactory.createSchemeImageResource();
@@ -114,8 +116,8 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 				Log.errorException(e);
 				return;
 			}
-			schemeCellContainer.setUgoCell(image);
+			this.schemeCellContainer.setUgoCell(image);
 		}
-		image.setData((List)pane.getGraph().getArchiveableState());
+		image.setData((List)this.pane.getGraph().getArchiveableState());
 	}
 }

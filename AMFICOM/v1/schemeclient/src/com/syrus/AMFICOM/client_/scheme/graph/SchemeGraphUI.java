@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.10 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.11 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import com.jgraph.JGraph;
 import com.jgraph.graph.CellHandle;
 import com.jgraph.graph.CellView;
 import com.jgraph.graph.DefaultEdge;
@@ -51,11 +52,12 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeGraphUI extends GPGraphUI {
+	private static final long serialVersionUID = 2929624792764978924L;
 	private Object selected;
 	
 	public boolean isConstrainedMoveEvent(MouseEvent event) {
@@ -66,7 +68,7 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 	public CellHandle createHandle(GraphContext context) {
-		if (context != null && !context.isEmpty() && graph.isEnabled())
+		if (context != null && !context.isEmpty() && this.graph.isEnabled())
 			return new SchemeRootHandle(context);
 		return null;
 	}
@@ -76,8 +78,10 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 	class SchemeGraphDropTargetListener extends BasicGraphUI.GraphDropTargetListener {
+		private static final long serialVersionUID = 6170350766676553728L;
+
 		SchemeGraphDropTargetListener() {
-			DropTarget dt = new DropTarget(graph, this);
+			DropTarget dt = new DropTarget(SchemeGraphUI.this.graph, this);
 			dt.setActive(true);
 		}
 
@@ -104,13 +108,17 @@ public class SchemeGraphUI extends GPGraphUI {
 							final long actionType1 = actionType;
 							JPopupMenu pop = new JPopupMenu();
 							JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+								private static final long serialVersionUID = 7254016041683457753L;
+
 								public void actionPerformed(ActionEvent ev) {
-									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType1));									
+									((SchemeGraph) SchemeGraphUI.this.graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType1));									
 								}
 							});
 							menu1.setText(LangModelGraph.getString("insert")); //$NON-NLS-1$
 							pop.add(menu1);
 							JMenuItem menu2 = new JMenuItem(new AbstractAction() {
+								private static final long serialVersionUID = 1023861610666047648L;
+
 								public void actionPerformed(ActionEvent ev) {
 									long actionType2;
 									if (actionType1 == SchemeEvent.INSERT_PROTOELEMENT)
@@ -119,7 +127,7 @@ public class SchemeGraphUI extends GPGraphUI {
 										actionType2 = SchemeEvent.OPEN_SCHEMEELEMENT;
 									else
 										actionType2 = SchemeEvent.OPEN_SCHEME;
-									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType2));									
+									((SchemeGraph) SchemeGraphUI.this.graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType2));									
 								}
 							});
 							menu2.setText(LangModelGraph.getString("open")); //$NON-NLS-1$
@@ -129,7 +137,7 @@ public class SchemeGraphUI extends GPGraphUI {
 							pop.addSeparator();
 							pop.add(menu3);
 							
-							pop.show(graph, e.getLocation().x, e.getLocation().y);
+							pop.show(SchemeGraphUI.this.graph, e.getLocation().x, e.getLocation().y);
 						}
 					}
 				} catch (UnsupportedFlavorException ex) {
@@ -144,11 +152,11 @@ public class SchemeGraphUI extends GPGraphUI {
 
 	protected void installListeners() {
 		super.installListeners();
-		DropTarget dropTarget = graph.getDropTarget();
+		DropTarget dropTarget = this.graph.getDropTarget();
 		try {
 			if (dropTarget != null) {
-				defaultDropTargetListener = new SchemeGraphDropTargetListener();
-				dropTarget.addDropTargetListener(defaultDropTargetListener);
+				this.defaultDropTargetListener = new SchemeGraphDropTargetListener();
+				dropTarget.addDropTargetListener(this.defaultDropTargetListener);
 			}
 		} catch (TooManyListenersException tmle) {
 			// should not happen... swing drop target is multicast
@@ -156,70 +164,75 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 	public class SchemeMouseHandler extends BasicGraphUI.MouseHandler {
+		private static final long serialVersionUID = 4087747949953155093L;
+
 		public void mousePressed(MouseEvent e) {
-			handler = null;
+			this.handler = null;
 			if (!e.isConsumed())// && graph.isEnabled())
 			{
-				graph.requestFocus();
-				int s = graph.getTolerance();
-				Rectangle r = graph.fromScreen(new Rectangle(e.getX() - s,
+				JGraph graph2 = SchemeGraphUI.this.graph;
+				graph2.requestFocus();
+				int s = graph2.getTolerance();
+				Rectangle r = graph2.fromScreen(new Rectangle(e.getX() - s,
 						e.getY() - s, 2 * s, 2 * s));
-				Point point = graph.fromScreen(new Point(e.getPoint()));
+				Point point = graph2.fromScreen(new Point(e.getPoint()));
 
-				focus = (focus != null && focus.intersects(graph.getGraphics(), r)) ? focus : null;
-				cell = graph.getNextViewAt(focus, point.x, point.y);
+				SchemeGraphUI.this.focus = (SchemeGraphUI.this.focus != null && SchemeGraphUI.this.focus.intersects(graph2.getGraphics(), r)) ? SchemeGraphUI.this.focus : null;
+				this.cell = graph2.getNextViewAt(SchemeGraphUI.this.focus, point.x, point.y);
 
-				if (focus == null)
-					focus = cell;
+				if (SchemeGraphUI.this.focus == null)
+					SchemeGraphUI.this.focus = this.cell;
 
 				completeEditing();
 				if (!isForceMarqueeEvent(e)) {
-					if (e.getClickCount() == graph.getEditClickCount() && focus != null
-							&& focus.isLeaf() && focus.getParentView() == null) {
+					if (e.getClickCount() == graph2.getEditClickCount() && SchemeGraphUI.this.focus != null
+							&& SchemeGraphUI.this.focus.isLeaf() && SchemeGraphUI.this.focus.getParentView() == null) {
 						// Start Editing
-						handleEditTrigger(focus.getCell());
+						handleEditTrigger(SchemeGraphUI.this.focus.getCell());
 						e.consume();
-						cell = null;
+						this.cell = null;
 					} else if (!isToggleSelectionEvent(e)) {
 						// Immediate Selection
-						if (handle != null) {
-							handle.mousePressed(e);
-							handler = handle;
+						if (SchemeGraphUI.this.handle != null) {
+							SchemeGraphUI.this.handle.mousePressed(e);
+							this.handler = SchemeGraphUI.this.handle;
 						}
-						if (!e.isConsumed() && cell != null && !graph.isCellSelected(cell)) {
-							selectCellForEvent(cell.getCell(), e);
-							focus = cell;
-							if (handle != null) {
-								handle.mousePressed(e);
-								handler = handle;
+						if (!e.isConsumed() && this.cell != null && !graph2.isCellSelected(this.cell)) {
+							selectCellForEvent(this.cell.getCell(), e);
+							SchemeGraphUI.this.focus = this.cell;
+							if (SchemeGraphUI.this.handle != null) {
+								SchemeGraphUI.this.handle.mousePressed(e);
+								this.handler = SchemeGraphUI.this.handle;
 							}
-							cell = null;
+							this.cell = null;
 						}
 					}
 				}
 
 				//Marquee Selection
-				if (!e.isConsumed() && (!isToggleSelectionEvent(e) || focus == null)) {
-					if (marquee != null) {
-						marquee.mousePressed(e);
-						handler = marquee;
+				if (!e.isConsumed() && (!isToggleSelectionEvent(e) || SchemeGraphUI.this.focus == null)) {
+					if (SchemeGraphUI.this.marquee != null) {
+						SchemeGraphUI.this.marquee.mousePressed(e);
+						this.handler = SchemeGraphUI.this.marquee;
 					}
 				}
 			}
 		}
 
 		public void mouseDragged(MouseEvent e) {
-			if (graph.isEditable())
+			if (SchemeGraphUI.this.graph.isEditable())
 				super.mouseDragged(e);
 		}
 		
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
-			((SchemeGraph)graph).selectionNotify();
+			((SchemeGraph)SchemeGraphUI.this.graph).selectionNotify();
 		}
 	}
 
 	public class SchemeRootHandle extends BasicGraphUI.RootHandle {
+		private static final long serialVersionUID = 6395641791384643788L;
+
 		public SchemeRootHandle(GraphContext ctx) {
 			super(ctx);
 		}
@@ -227,17 +240,17 @@ public class SchemeGraphUI extends GPGraphUI {
 		public void mouseReleased(MouseEvent event) {
 			try {
 				if (event != null && !event.isConsumed()) {
-					if (activeHandle != null) {
-						activeHandle.mouseReleased(event);
-						activeHandle = null;
-					} else if (isMoving && !event.getPoint().equals(start)) {
-						if (cachedBounds != null) {
-							int dx = event.getX() - start.x;
-							int dy = event.getY() - start.y;
-							Point tmp = graph.fromScreen(graph.snap(new Point(dx, dy)));
-							GraphLayoutCache.translateViews(views, tmp.x, tmp.y);
+					if (this.activeHandle != null) {
+						this.activeHandle.mouseReleased(event);
+						this.activeHandle = null;
+					} else if (this.isMoving && !event.getPoint().equals(this.start)) {
+						if (this.cachedBounds != null) {
+							int dx = event.getX() - this.start.x;
+							int dy = event.getY() - this.start.y;
+							Point tmp = SchemeGraphUI.this.graph.fromScreen(SchemeGraphUI.this.graph.snap(new Point(dx, dy)));
+							GraphLayoutCache.translateViews(this.views, tmp.x, tmp.y);
 						}
-						CellView[] all = graphLayoutCache.getAllDescendants(views);
+						CellView[] all = SchemeGraphUI.this.graphLayoutCache.getAllDescendants(this.views);
 						
 						// TODO make graph cells clonable
 						/*
@@ -248,9 +261,9 @@ public class SchemeGraphUI extends GPGraphUI {
 						 Map attributes = GraphConstants.createAttributes(all, null);
 						 insertCells(context.getCells(), attributes, cs, true, 0, 0);
 						 } else */
-						if (graph.isMoveable()) {
+						if (SchemeGraphUI.this.graph.isMoveable()) {
 							Map attributes = GraphConstants.createAttributes(all, null);
-							graph.getGraphLayoutCache().edit(attributes, disconnect, null,
+							SchemeGraphUI.this.graph.getGraphLayoutCache().edit(attributes, this.disconnect, null,
 									null);
 						}
 						event.consume();
@@ -259,11 +272,11 @@ public class SchemeGraphUI extends GPGraphUI {
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
-				isDragging = false;
-				disconnect = null;
-				offscreen = null;
-				firstDrag = true;
-				start = null;
+				this.isDragging = false;
+				this.disconnect = null;
+				this.offscreen = null;
+				this.firstDrag = true;
+				this.start = null;
 			}
 			super.mouseDragged(event);
 		}
@@ -272,12 +285,12 @@ public class SchemeGraphUI extends GPGraphUI {
 	protected void paintBackground(Graphics g) {
 		super.paintBackground(g);
 
-		if (graph instanceof SchemeGraph) {
-			int w = graph.getPreferredSize().width;
-			int h = graph.getPreferredSize().height;
+		if (this.graph instanceof SchemeGraph) {
+			int w = this.graph.getPreferredSize().width;
+			int h = this.graph.getPreferredSize().height;
 
-			if (((SchemeGraph) graph).isBorderVisible()) {
-				int gs = (int) (graph.getGridSize() * graph.getScale());
+			if (((SchemeGraph) this.graph).isBorderVisible()) {
+				int gs = (int) (this.graph.getGridSize() * this.graph.getScale());
 				if (gs > 0) {
 
 					g.setColor(Color.lightGray);
@@ -309,9 +322,9 @@ public class SchemeGraphUI extends GPGraphUI {
 
 	protected void completeEditing() {
 		super.completeEditing();
-		if (selected instanceof PortEdge) {
-			String name = (String) ((DefaultEdge) selected).getUserObject();
-			DefaultPort p = (DefaultPort) ((DefaultEdge) selected).getTarget();
+		if (this.selected instanceof PortEdge) {
+			String name = (String) ((DefaultEdge) this.selected).getUserObject();
+			DefaultPort p = (DefaultPort) ((DefaultEdge) this.selected).getTarget();
 			if (p != null) {
 				if (p.getParent() instanceof PortCell) {
 					PortCell port = (PortCell) p.getParent();
@@ -323,12 +336,12 @@ public class SchemeGraphUI extends GPGraphUI {
 						port.getSchemeCablePort().setName(name);
 				}
 			}
-		} else if (selected instanceof DefaultLink) {
-			DefaultLink link = (DefaultLink) selected;
+		} else if (this.selected instanceof DefaultLink) {
+			DefaultLink link = (DefaultLink) this.selected;
 			if (link.getSchemeLink() != null)
 				link.getSchemeLink().setName((String) link.getUserObject());
-		} else if (selected instanceof DefaultCableLink) {
-			DefaultCableLink link = (DefaultCableLink) selected;
+		} else if (this.selected instanceof DefaultCableLink) {
+			DefaultCableLink link = (DefaultCableLink) this.selected;
 			if (link.getSchemeCableLink() != null)
 				link.getSchemeCableLink().setName((String) link.getUserObject());
 		}
@@ -337,24 +350,24 @@ public class SchemeGraphUI extends GPGraphUI {
 	protected void paintGrid(int gs, Graphics g, Rectangle r) {
 		
 		if (gs > 0) {
-			int w = graph.getPreferredSize().width;
-			int h = graph.getPreferredSize().height;
+			int w = this.graph.getPreferredSize().width;
+			int h = this.graph.getPreferredSize().height;
 
-			gs = (int) (gs * graph.getScale());
-			Rectangle r1 = graph.getVisibleRect();
+			gs = (int) (gs * this.graph.getScale());
+			Rectangle r1 = this.graph.getVisibleRect();
 			int x0 = (r1.x / gs + 1) * gs; // - r1.x
 			int y0 = (r1.y / gs + 1) * gs;
 			int xe = r1.x + r1.width;
 			int ye = r1.y + r1.height;
-			if (graph instanceof SchemeGraph) {
-				if (((SchemeGraph) graph).isBorderVisible()) {
+			if (this.graph instanceof SchemeGraph) {
+				if (((SchemeGraph) this.graph).isBorderVisible()) {
 					x0 = Math.max(x0, 10 * gs);
 					y0 = Math.max(y0, 2 * gs);
 					xe = Math.min(xe, (w / gs - 2) * gs);
 					ye = Math.min(ye, (h / gs - 2) * gs);
 				}
 			}
-			g.setColor(graph.getGridColor());
+			g.setColor(this.graph.getGridColor());
 			
 			for (int x = x0; x <= xe; x += gs)
 				for (int y = y0; y <= ye; y += gs)

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.10 2005/08/05 08:21:34 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.11 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,11 +50,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeListener {
+	private static final long serialVersionUID = -1781981917301697387L;
+
 	static JOptionPane optionPane;
 	static JDialog dialog;
 	int result;
@@ -71,7 +73,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	private void jbInit() {
-		keyListener = new SchemeKeyListener();
+		this.keyListener = new SchemeKeyListener();
 	}
 	
 	public void setContext(ApplicationContext aContext) {
@@ -87,17 +89,17 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	protected JComponent createPanel() {
-		panel = new ElementsPanel(aContext);
-		SchemeGraph graph = panel.getGraph();
-		graph.setMarqueeHandler(marqueeHandler);
-		graph.addKeyListener(keyListener);
+		this.panel = new ElementsPanel(this.aContext);
+		SchemeGraph graph = this.panel.getGraph();
+		graph.setMarqueeHandler(this.marqueeHandler);
+		graph.addKeyListener(this.keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
 		return graphView;
 	}
 	
 	protected JComponent createToolBar() {
-		this.toolBar = new ElementsToolBar(this, aContext);
-		return toolBar;
+		this.toolBar = new ElementsToolBar(this, this.aContext);
+		return this.toolBar;
 	}
 	
 	public void propertyChange(PropertyChangeEvent ae) {
@@ -131,14 +133,14 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 			JButton okButton = new JButton(LangModelGeneral.getString("Button.OK")); //$NON-NLS-1$
 			okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					result = JOptionPane.OK_OPTION;
+					ElementsTabbedPane.this.result = JOptionPane.OK_OPTION;
 					dialog.dispose();
 				}
 			});
 			JButton cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					result = JOptionPane.CANCEL_OPTION;
+					ElementsTabbedPane.this.result = JOptionPane.CANCEL_OPTION;
 					dialog.dispose();
 				}
 			});
@@ -151,14 +153,14 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 			dialog.setModal(true);
 		}
 		dialog.setVisible(true);
-		return result == JOptionPane.OK_OPTION;
+		return this.result == JOptionPane.OK_OPTION;
 	}
 	
 	/**
 	 * @return selected ElementsPanel
 	 */
 	public ElementsPanel getCurrentPanel() {
-		return (ElementsPanel)panel;
+		return (ElementsPanel)this.panel;
 	}
 	
 	public boolean removePanel(UgoPanel p) {
@@ -173,7 +175,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 
 	public boolean removeAllPanels() {
-		return removePanel(panel);
+		return removePanel(this.panel);
 	}
 	
 	/*

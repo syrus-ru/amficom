@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
@@ -37,12 +36,11 @@ public class ComponentSaveCommand extends AbstractCommand {
 	}
 
 	public Object clone() {
-		return new ComponentSaveCommand(cellPane);
+		return new ComponentSaveCommand(this.cellPane);
 	}
 
 	public void execute() {
-		SchemeGraph graph = cellPane.getGraph();
-		ApplicationContext aContext = cellPane.getContext();
+		SchemeGraph graph = this.cellPane.getGraph();
 
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
@@ -68,9 +66,8 @@ public class ComponentSaveCommand extends AbstractCommand {
 		}
 
 		SchemeProtoElement proto = null;
-		if (cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
-			proto = cellPane.getCurrentPanel().getSchemeResource()
-					.getSchemeProtoElement();
+		if (this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement() != null) {
+			proto = this.cellPane.getCurrentPanel().getSchemeResource().getSchemeProtoElement();
 		} else {
 			// check if the olny DeviceGroup exists
 			DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
@@ -141,7 +138,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			for (Identifiable identifiable : proto.getReverseDependencies()) {
 				StorableObjectPool.flush(identifiable, userId, false);
 			}
-			cellPane.setGraphChanged(false);
+			this.cellPane.setGraphChanged(false);
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 					proto.getName() + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$

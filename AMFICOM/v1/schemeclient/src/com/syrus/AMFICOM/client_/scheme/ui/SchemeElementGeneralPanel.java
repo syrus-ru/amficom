@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.10 2005/07/15 13:07:57 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.11 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -22,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,6 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.NumberFormatter;
 
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -63,7 +66,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/07/15 13:07:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -116,7 +119,8 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbKisAddrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.ADDRESS));
 	JTextField tfKisAddrText = new JTextField();
 	JLabel lbKisPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PORT));
-	JTextField tfKisPortText = new JTextField();
+	NumberFormatter nf = new NumberFormatter(NumberFormat.getIntegerInstance());
+	JFormattedTextField tfKisPortText = new JFormattedTextField(this.nf);
 	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescrArea = new JTextArea(2,10);
 	
@@ -138,7 +142,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(schemeElement);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
+		nf.setValueClass(Integer.class);
+		nf.setMinimum(new Integer(0));
+		nf.setCommitsOnValidEdit(true);
+		
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
 		pnPanel0.setLayout( gbPanel0 );
@@ -674,6 +683,11 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				kisBox_stateChanged();
 			}
 		});
+		cmbKisCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				kisCombo_stateChanged((KIS)e.getItem());
+			}
+		});
 		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
@@ -713,14 +727,17 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			}
 		});
 	}
+	
+	void kisCombo_stateChanged(KIS kis) {
+		this.tfKisAddrText.setText(kis.getHostName());
+		this.tfKisPortText.setValue(Short.valueOf(kis.getTCPPort()));
+	}
 
 	void codeNameCombo_stateChanged(String eqtCodename) {
-		cmbTypeCombo.removeAllItems();
-		// XXX change Condition
+		this.cmbTypeCombo.removeAllItems();
 		TypicalCondition condition = new TypicalCondition(eqtCodename, OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-//		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		try {
-			cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+			this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 		} catch (ApplicationException e1) {
 			Log.errorException(e1);
 		}
@@ -728,41 +745,41 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 
 	void typeCombo_stateChanged(EquipmentType eqt) {
 		if (eqt != null) {
-			tfManufacturerText.setText(eqt.getManufacturer());
-			tfManufacturerCodeText.setText(eqt.getManufacturerCode());
+			this.tfManufacturerText.setText(eqt.getManufacturer());
+			this.tfManufacturerCodeText.setText(eqt.getManufacturerCode());
 		} else {
-			tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
-			tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
+			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 	
 	public void instanceBox_stateChanged() {
-		setEquipmentEnabled(cbInstanceBox.isSelected());
-		if (!cbInstanceBox.isSelected()) {
-			cbKisBox.setSelected(false);
+		setEquipmentEnabled(this.cbInstanceBox.isSelected());
+		if (!this.cbInstanceBox.isSelected()) {
+			this.cbKisBox.setSelected(false);
 			kisBox_stateChanged();
 		}
 	}
 	
 	public void kisBox_stateChanged() {
-		setKISEnabled(cbKisBox.isSelected());
+		setKISEnabled(this.cbKisBox.isSelected());
 	}
 	
 	void setEquipmentEnabled(boolean b) {
-		pnEquipmentPanel.setVisible(b);
-		cbKisBox.setVisible(b);
+		this.pnEquipmentPanel.setVisible(b);
+		this.cbKisBox.setVisible(b);
 	}
 	
 	void setKISEnabled(boolean b) {
-		pnPanel6.setVisible(b);
+		this.pnPanel6.setVisible(b);
 	}
 
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 
 	public Object getObject() {
-		return schemeElement;
+		return this.schemeElement;
 	}
 
 	public void setObject(Object or) {
@@ -772,28 +789,28 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		KIS kis = null;
 		Icon symbol = null;
 		
-		cmbTypeCombo.removeAllItems();
-		cmbKisCombo.removeAllItems();
+		this.cmbTypeCombo.removeAllItems();
+		this.cmbKisCombo.removeAllItems();
 
 		if (this.schemeElement != null) {
-			this.tfNameText.setText(schemeElement.getName());
-			this.taDescrArea.setText(schemeElement.getDescription());
-			this.tfLabelText.setText(schemeElement.getLabel());
-			if (schemeElement.getSymbol() != null)
-				symbol = new ImageIcon(schemeElement.getSymbol().getImage());
+			this.tfNameText.setText(this.schemeElement.getName());
+			this.taDescrArea.setText(this.schemeElement.getDescription());
+			this.tfLabelText.setText(this.schemeElement.getLabel());
+			if (this.schemeElement.getSymbol() != null)
+				symbol = new ImageIcon(this.schemeElement.getSymbol().getImage());
 			eqt = this.schemeElement.getEquipmentType();
 			eq = this.schemeElement.getEquipment(); 
 			kis = this.schemeElement.getKis();
 			
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			condition = new EquivalentCondition(ObjectEntities.KIS_CODE);
 			try {
-				cmbKisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				this.cmbKisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
@@ -821,11 +838,11 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.cbKisBox.setSelected(true);
 			this.cmbKisCombo.setSelectedItem(kis);
 			this.tfKisAddrText.setText(kis.getHostName());
-			this.tfKisPortText.setText(Short.toString(kis.getTCPPort()));
+			this.tfKisPortText.setValue(Short.valueOf(kis.getTCPPort()));
 		} else {
 			this.cbKisBox.setSelected(false);
 			this.tfKisAddrText.setText(SchemeResourceKeys.EMPTY);
-			this.tfKisPortText.setText(SchemeResourceKeys.EMPTY);
+			this.tfKisPortText.setValue(new Short((short)0));
 		}
 		if (eq != null) {
 			this.cbInstanceBox.setSelected(true);
@@ -854,37 +871,37 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		if (schemeElement != null && MiscUtil.validName(this.tfNameText.getText())) {
-			schemeElement.setName(this.tfNameText.getText());
-			schemeElement.setDescription(this.taDescrArea.getText());
-			schemeElement.setLabel(this.tfLabelText.getText());
+		if (this.schemeElement != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.schemeElement.setName(this.tfNameText.getText());
+			this.schemeElement.setDescription(this.taDescrArea.getText());
+			this.schemeElement.setLabel(this.tfLabelText.getText());
 			if (this.btSymbolBut.getIcon() == null) {
-				schemeElement.setSymbol(null);
+				this.schemeElement.setSymbol(null);
 			} else {
 				try {
-					schemeElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
+					this.schemeElement.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 				} catch (ApplicationException e) {
 					Log.errorException(e);
 				}
 			}
-			EquipmentType eqt = (EquipmentType)cmbTypeCombo.getSelectedItem();
+			EquipmentType eqt = (EquipmentType)this.cmbTypeCombo.getSelectedItem();
 			if (eqt != null) {
-				schemeElement.setEquipmentType(eqt);
+				this.schemeElement.setEquipmentType(eqt);
 				eqt.setManufacturer(this.tfManufacturerText.getText());
 				eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
 			}
-			Equipment eq = schemeElement.getEquipment();
-			if (cbInstanceBox.isSelected()) {
+			Equipment eq = this.schemeElement.getEquipment();
+			if (this.cbInstanceBox.isSelected()) {
 				if (eq == null) {
 					try {
-						eq = SchemeObjectsFactory.createEquipment(schemeElement);
+						eq = SchemeObjectsFactory.createEquipment(this.schemeElement);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
 				}
 				if (eq != null) {
-					eq.setName(schemeElement.getName());
-					eq.setDescription(schemeElement.getDescription());
+					eq.setName(this.schemeElement.getName());
+					eq.setDescription(this.schemeElement.getDescription());
 					eq.setSupplier(this.tfSupplierText.getText());
 					eq.setSupplierCode(this.tfSupplierCodeText.getText());
 					eq.setHwSerial(this.tfHwsnText.getText());
@@ -904,22 +921,22 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			} else if (eq != null) {
 				StorableObjectPool.delete(eq.getId());
-				schemeElement.setEquipment(null);
+				this.schemeElement.setEquipment(null);
 			}
 
-			if (cbKisBox.isSelected()) {
-				KIS kis = (KIS)cmbKisCombo.getSelectedItem();
+			if (this.cbKisBox.isSelected()) {
+				KIS kis = (KIS)this.cmbKisCombo.getSelectedItem();
 				if (kis != null) {
-					schemeElement.setKis(kis);
-					kis.setName(schemeElement.getName());
-					kis.setDescription(schemeElement.getDescription());
+					this.schemeElement.setKis(kis);
+//					kis.setName(schemeElement.getName());
+//					kis.setDescription(schemeElement.getDescription());
 					kis.setHostName(this.tfKisAddrText.getText());
-					kis.setTCPPort(Short.parseShort(this.tfKisPortText.getText()));
+					kis.setTCPPort(((Short)this.tfKisPortText.getValue()).shortValue());
 				}
 			} else {
-				schemeElement.setKis(null);
+				this.schemeElement.setKis(null);
 			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeElement, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeElement, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

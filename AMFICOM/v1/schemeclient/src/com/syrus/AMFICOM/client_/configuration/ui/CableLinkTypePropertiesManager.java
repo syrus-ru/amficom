@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypePropertiesManager.java,v 1.7 2005/07/11 12:31:37 stas Exp $
+ * $Id: CableLinkTypePropertiesManager.java,v 1.8 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -38,15 +38,15 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new CableLinkTypeGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new CableLinkTypeCharacteristicsPanel();
-		charPanel.setContext(aContext);
-		if (layout == null)
-			layout = new CableLinkTypeLayout();
-		layout.setContext(aContext);
+		if (this.generalPanel == null)
+			this.generalPanel = new CableLinkTypeGeneralPanel();
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null)
+			this.charPanel = new CableLinkTypeCharacteristicsPanel();
+		this.charPanel.setContext(aContext);
+		if (this.layout == null)
+			this.layout = new CableLinkTypeLayout();
+		this.layout.setContext(aContext);
 	}
 	
 	/**
@@ -54,7 +54,7 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -78,6 +78,6 @@ public class CableLinkTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return layout;
+		return this.layout;
 	}
 }

@@ -14,7 +14,7 @@ public class SchemeOpenCommand extends AbstractCommand
 
 	public Object clone()
 	{
-		return new SchemeOpenCommand(aContext);
+		return new SchemeOpenCommand(this.aContext);
 	}
 
 	public void execute()

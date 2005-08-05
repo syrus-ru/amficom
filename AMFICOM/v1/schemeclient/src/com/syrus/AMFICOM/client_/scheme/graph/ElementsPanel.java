@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.6 2005/07/11 12:31:38 stas Exp $
+ * $Id: ElementsPanel.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -39,7 +39,7 @@ public class ElementsPanel extends UgoPanel {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		schemeResource = new SchemeResource(this.graph);
+		this.schemeResource = new SchemeResource(this.graph);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -53,23 +53,23 @@ public class ElementsPanel extends UgoPanel {
 	}
 
 	private void jbInit() throws Exception {
-		GraphModel model = graph.getModel();
-		model.addUndoableEditListener(undoManager);
+		GraphModel model = this.graph.getModel();
+		model.addUndoableEditListener(this.undoManager);
 
-		graph.setEditable(true);
+		this.graph.setEditable(true);
 		
-		graph.setGridEnabled(true);
-		graph.setGridVisible(true);
-		graph.setGridVisibleAtActualSize(true);
-		graph.setRequestFocusEnabled(true);
-		graph.setBendable(true);
-		graph.setEditable(true);
-		graph.setEnabled(true);
-		graph.make_notifications = true;
+		this.graph.setGridEnabled(true);
+		this.graph.setGridVisible(true);
+		this.graph.setGridVisibleAtActualSize(true);
+		this.graph.setRequestFocusEnabled(true);
+		this.graph.setBendable(true);
+		this.graph.setEditable(true);
+		this.graph.setEnabled(true);
+		this.graph.make_notifications = true;
 	}
 	
 	public SchemeResource getSchemeResource() {
-		return schemeResource;
+		return this.schemeResource;
 	}
 
 	public void propertyChange(PropertyChangeEvent ae) {
@@ -77,8 +77,8 @@ public class ElementsPanel extends UgoPanel {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) ae;
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
 				SchemePath path = (SchemePath)ev.getSelectedObject();
-				graph.setSelectionCells(schemeResource.getPathElements(path));
-				schemeResource.setSchemePath(path);
+				this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
+				this.schemeResource.setSchemePath(path);
 			}
 			// TODO разобраться с созданием пути 
 //			else {
@@ -91,26 +91,26 @@ public class ElementsPanel extends UgoPanel {
 //			} 
 			if (ev.isSelected(ObjectSelectedEvent.SCHEME_ELEMENT)) {
 				SchemeElement element = (SchemeElement)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findGroupById(graph, element.getId()));
+				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, element.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PROTOELEMENT)) {
 				SchemeProtoElement proto = (SchemeProtoElement)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findGroupById(graph, proto.getId()));
+				this.graph.setSelectionCell(SchemeActions.findGroupById(this.graph, proto.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_PORT)) {
 				SchemePort port = (SchemePort)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findPortCellById(graph, port.getId()));
+				this.graph.setSelectionCell(SchemeActions.findPortCellById(this.graph, port.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLEPORT)) {
 				SchemeCablePort port = (SchemeCablePort)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findCablePortCellById(graph, port.getId()));
+				this.graph.setSelectionCell(SchemeActions.findCablePortCellById(this.graph, port.getId()));
 			} else if (ev.isSelected(ObjectSelectedEvent.SCHEME_LINK)) {
 				SchemeLink link = (SchemeLink)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findSchemeLinkById(graph, link.getId()));
+				this.graph.setSelectionCell(SchemeActions.findSchemeLinkById(this.graph, link.getId()));
 			} 
 			else if (ev.isSelected(ObjectSelectedEvent.SCHEME_CABLELINK)) {
 				SchemeCableLink link = (SchemeCableLink)ev.getSelectedObject();
-				graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(graph, link.getId()));
+				this.graph.setSelectionCell(SchemeActions.findSchemeCableLinkById(this.graph, link.getId()));
 			}
 		}
 		// TODO разобраться с созданием пути 

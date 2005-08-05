@@ -1,5 +1,5 @@
 /*-
- * $Id: EmptyStorableObjectEditor.java,v 1.5 2005/07/11 12:31:39 stas Exp $
+ * $Id: EmptyStorableObjectEditor.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -34,11 +34,11 @@ public class EmptyStorableObjectEditor extends DefaultStorableObjectEditor {
 	}
 	
 	private void jbInit() throws Exception {
-		pnPanel0.setBackground(Color.WHITE);
+		this.pnPanel0.setBackground(Color.WHITE);
 	}
 
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 
 	public void setObject(Object object) {

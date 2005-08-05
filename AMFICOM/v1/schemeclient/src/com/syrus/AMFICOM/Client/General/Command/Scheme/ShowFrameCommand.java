@@ -20,25 +20,25 @@ public class ShowFrameCommand extends AbstractCommand
 
 	public Object clone()
 	{
-		return new ShowFrameCommand(desktop, frame);
+		return new ShowFrameCommand(this.desktop, this.frame);
 	}
 
 	public void execute()
 	{
-		if (frame != null)
+		if (this.frame != null)
 		{
-			frame.setVisible(true);
-			if (frame.isIcon())
+			this.frame.setVisible(true);
+			if (this.frame.isIcon())
 			{
 				try
 				{
-					frame.setIcon(false);
+					this.frame.setIcon(false);
 				} catch (PropertyVetoException ex)
 				{
 					ex.printStackTrace();
 				}
 			}
-			frame.moveToFront();
+			this.frame.moveToFront();
 		}
 	}
 }

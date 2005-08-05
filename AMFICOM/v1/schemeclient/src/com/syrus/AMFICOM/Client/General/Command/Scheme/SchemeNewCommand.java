@@ -20,7 +20,7 @@ public class SchemeNewCommand extends AbstractCommand {
 		try {
 			Scheme scheme = SchemeObjectsFactory.createScheme();
 			
-			ApplicationModel aModel = aContext.getApplicationModel(); 
+			ApplicationModel aModel = this.aContext.getApplicationModel(); 
 			aModel.getCommand("menuWindowScheme").execute();
 			aModel.getCommand("menuWindowTree").execute();
 			aModel.getCommand("menuWindowUgo").execute();
@@ -29,8 +29,8 @@ public class SchemeNewCommand extends AbstractCommand {
 			
 			aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));
-			result = RESULT_OK;
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));
+			this.result = RESULT_OK;
 		} 
 		catch (CreateObjectException e) {
 			Log.errorException(e);

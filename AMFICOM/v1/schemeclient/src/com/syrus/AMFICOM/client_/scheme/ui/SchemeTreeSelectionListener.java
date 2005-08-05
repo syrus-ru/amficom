@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.2 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.3 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -113,7 +113,7 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			return;
 		}
 		ObjectSelectedEvent ev = new ObjectSelectedEvent(this, object, manager, type);
-		aContext.getDispatcher().firePropertyChange(ev, false);
+		this.aContext.getDispatcher().firePropertyChange(ev, false);
 	}
 	
 	public void propertyChange(PropertyChangeEvent e) {

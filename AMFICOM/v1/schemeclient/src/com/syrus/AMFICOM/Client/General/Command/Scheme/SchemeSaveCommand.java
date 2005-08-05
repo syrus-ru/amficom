@@ -45,11 +45,11 @@ public class SchemeSaveCommand extends AbstractCommand {
 	}
 
 	public Object clone() {
-		return new SchemeSaveCommand(schemeTab);
+		return new SchemeSaveCommand(this.schemeTab);
 	}
 
 	public void execute() {
-		SchemeGraph graph = schemeTab.getGraph();
+		SchemeGraph graph = this.schemeTab.getGraph();
 
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
@@ -74,7 +74,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 			return;
 		}
 		
-		SchemeResource res = schemeTab.getCurrentPanel().getSchemeResource();
+		SchemeResource res = this.schemeTab.getCurrentPanel().getSchemeResource();
 
 		if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) // сохраняем компонент
 		{
@@ -112,7 +112,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 			}
 			se.getSchemeCell().setData((List) graph.getArchiveableState());
 
-			for (Iterator it = schemeTab.getAllPanels().iterator(); it.hasNext();) {
+			for (Iterator it = this.schemeTab.getAllPanels().iterator(); it.hasNext();) {
 				ElementsPanel p = (ElementsPanel) it.next();
 				SchemeResource res1 = p.getSchemeResource();
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
@@ -121,7 +121,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 						// TODO refreshing view (ugo)
 						
 						
-						schemeTab.setGraphChanged(p.getGraph(), true);
+						this.schemeTab.setGraphChanged(p.getGraph(), true);
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 								se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.information"), //$NON-NLS-1$
@@ -130,7 +130,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 					}
 				}
 			}
-			schemeTab.setGraphChanged(false);
+			this.schemeTab.setGraphChanged(false);
 			return;
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) // сохраняем схему
 		{
@@ -180,7 +180,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				}
 				StorableObjectPool.flush(scheme.getId(), userId, false);
 				
-				schemeTab.setGraphChanged(false);
+				this.schemeTab.setGraphChanged(false);
 				
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 						scheme.getName() + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$

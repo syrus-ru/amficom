@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.5 2005/08/01 07:52:27 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.6 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,13 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
 public class ObjectSelectedEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = -4308063227316813319L;
+
 	public static final long PORT_TYPE = 						0x00000001;
 	public static final long CABLEPORT_TYPE = 			0x00000040;
 	public static final long MEASUREMENTPORT_TYPE = 0x00000002;
@@ -54,11 +56,11 @@ public class ObjectSelectedEvent extends PropertyChangeEvent {
 	}
 
 	public boolean isSelected(long value) {
-		return (type & value) != 0;
+		return (this.type & value) != 0;
 	}
 	
 	public VisualManager getVisualManager() {
-		return manager;
+		return this.manager;
 	}
 	
 	public Object getSelectedObject() {

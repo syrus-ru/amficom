@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.7 2005/08/05 08:21:34 stas Exp $
+ * $Id: CreateGroup.java,v 1.8 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -69,7 +69,7 @@ public class CreateGroup extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		SchemeGraph graph = pane.getGraph();
+		SchemeGraph graph = this.pane.getGraph();
 
 		Object[] cells = getCellsToAdd(graph);
 		if (cells.length == 0)
@@ -79,7 +79,7 @@ public class CreateGroup extends AbstractAction {
 		SchemeProtoElement protoElement = null;
 		SchemeElement element = null;
 
-		if (type == DeviceGroup.PROTO_ELEMENT) {
+		if (this.type == DeviceGroup.PROTO_ELEMENT) {
 			try {
 				protoElement = SchemeObjectsFactory.createSchemeProtoElement();
 			} catch (CreateObjectException e1) {
@@ -89,7 +89,7 @@ public class CreateGroup extends AbstractAction {
 			counter++;
 			createProtoGroup(graph, cells, protoElement);
 		} else {
-			UgoPanel p = pane.getCurrentPanel();
+			UgoPanel p = this.pane.getCurrentPanel();
 			if (p instanceof ElementsPanel) {
 				SchemeResource res = ((ElementsPanel)p).getSchemeResource();
 				try {

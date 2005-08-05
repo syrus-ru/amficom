@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePanel.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemePanel.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -34,10 +34,10 @@ public class SchemePanel extends ElementsPanel {
 	}
 
 	private void jbInit() throws Exception {
-		graph.setBorderVisible(true);
+		this.graph.setBorderVisible(true);
 		// graph.setPortsVisible(true);
-		graph.setBendable(false);
-		graph.setActualSize(Constants.A4);
+		this.graph.setBendable(false);
+		this.graph.setActualSize(Constants.A4);
 		// graph.getSelectionModel().setChildrenSelectable(false);
 	}
 

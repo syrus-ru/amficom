@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeCharacteristicsPanel.java,v 1.6 2005/07/19 06:49:44 stas Exp $
+ * $Id: LinkTypeCharacteristicsPanel.java,v 1.7 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/19 06:49:44 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -32,20 +32,20 @@ public class LinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 	}
 
 	public Object getObject() {
-		return type;
+		return this.type;
 	}
 
 	public void setObject(Object or) {
 		this.type = (LinkType) or;
 		super.clear();
 		
-		if (type != null) {
+		if (this.type != null) {
 			try {
 				for (int i = 0; i < sorts.length; i++)
 					super.setTypeSortMapping(sorts[i],
-							type,
-							type.getId(), true);
-				super.addCharacteristics(type.getCharacteristics(), type.getId());
+							this.type,
+							this.type.getId(), true);
+				super.addCharacteristics(this.type.getCharacteristics(), this.type.getId());
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				showNoSelection();

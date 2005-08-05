@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.6 2005/08/01 07:52:27 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.7 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,6 +64,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
@@ -74,7 +75,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -143,6 +144,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(linkType);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -432,7 +434,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 //		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		cmbTTypeCombo.addElements(new LinkedList(StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE), true)));
+		cmbTTypeCombo.addElements(new LinkedList<StorableObject>(StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE), true)));
 		
 		cmbTNameCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -506,21 +508,22 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private List<CableThreadType> getSortedThreadTypes() {
-		List<CableThreadType> threads = new LinkedList<CableThreadType>(this.linkType.getCableThreadTypes(false));
+		Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
+		List<CableThreadType> threads = new LinkedList<CableThreadType>(cableThreadTypes);
 		Collections.sort(threads, new WrapperComparator(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
 	}
 
 	public void setObject(Object or) {
 		this.linkType = (CableLinkType) or;
-		sortedTheradTypes = Collections.EMPTY_LIST;
+		this.sortedTheradTypes = Collections.EMPTY_LIST;
 		
 		if (this.linkType != null) {
 			this.tfNameText.setText(this.linkType.getName());
 			this.taDescriptionArea.setText(this.linkType.getDescription());
 			this.tfManufacturerText.setText(this.linkType.getManufacturer());
 			this.tfManufacturerCodeText.setText(this.linkType.getManufacturerCode());
-			sortedTheradTypes = getSortedThreadTypes();
+			this.sortedTheradTypes = getSortedThreadTypes();
 		} 
 		else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
@@ -529,18 +532,18 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 		}
 		
-		cashedFields = new HashMap<CableThreadType, ThreadTypeFields>();
-		currentCash = null;
-		for (Iterator it = sortedTheradTypes.iterator(); it.hasNext();) {
+		this.cashedFields = new HashMap<CableThreadType, ThreadTypeFields>();
+		this.currentCash = null;
+		for (Iterator it = this.sortedTheradTypes.iterator(); it.hasNext();) {
 			CableThreadType ctt = (CableThreadType) it.next();
-			cashedFields.put(ctt, new ThreadTypeFields(ctt.getName(), ctt.getDescription(), ctt.getLinkType(), ctt.getColor()));
+			this.cashedFields.put(ctt, new ThreadTypeFields(ctt.getName(), ctt.getDescription(), ctt.getLinkType(), ctt.getColor()));
 		}
 		
-		cmbTNameCombo.removeAllItems();
-		if (!sortedTheradTypes.isEmpty()) {
-			this.cmbTNameCombo.addElements(sortedTheradTypes);
+		this.cmbTNameCombo.removeAllItems();
+		if (!this.sortedTheradTypes.isEmpty()) {
+			this.cmbTNameCombo.addElements(this.sortedTheradTypes);
 			this.cmbTNameCombo.setEnabled(true);
-			this.tfThreadNumText.setValue(new Integer(sortedTheradTypes.size()));
+			this.tfThreadNumText.setValue(new Integer(this.sortedTheradTypes.size()));
 		} else {
 			this.cmbTNameCombo.setEnabled(false);
 			this.tfThreadNumText.setValue(new Integer(0));
@@ -553,12 +556,12 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void commitChanges() {
 		if(MiscUtil.validName(this.tfNameText.getText())) {
-			if (linkType == null) {
+			if (this.linkType == null) {
 				try {
-					linkType = SchemeObjectsFactory.createCableLinkType(tfNameText.getText());
+					this.linkType = SchemeObjectsFactory.createCableLinkType(this.tfNameText.getText());
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, linkType, CableLinkTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.CABLELINK_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -576,9 +579,9 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.linkType.setManufacturer(this.tfManufacturerText.getText());
 		this.linkType.setManufacturerCode(this.tfManufacturerCodeText.getText());
 		
-		for (Iterator it = cashedFields.keySet().iterator(); it.hasNext();) {
+		for (Iterator it = this.cashedFields.keySet().iterator(); it.hasNext();) {
 			CableThreadType ctt = (CableThreadType)it.next();
-			ThreadTypeFields fields = (ThreadTypeFields)cashedFields.get(ctt);
+			ThreadTypeFields fields = this.cashedFields.get(ctt);
 			ctt.setName(fields.mark);
 			ctt.setDescription(fields.description);
 			ctt.setColor(fields.color);
@@ -597,7 +600,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Set linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					if (linkTypes.isEmpty()) {
-						JOptionPane.showMessageDialog(Environment.getActiveWindow(), "No LinkType found", "Error", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.cablelinktype_not_found"), //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 					tlType = (LinkType)linkTypes.iterator().next();
@@ -607,7 +613,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					SchemeObjectsFactory.createCableThreadType(
 							EquipmentTypeCodenames.getName(EquipmentTypeCodenames.THREAD) + (i + 1), 
 							Integer.toString(i + 1), 
-							tlType, linkType);
+							tlType, this.linkType);
 				}
 			} else if (oldSize > newSize) { // remove
 				int i = oldSize;

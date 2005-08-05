@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.18 2005/08/01 07:52:28 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.19 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -95,12 +96,13 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		setObject(apt);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		root = createRoot();
-		CheckableTreeUI treeUI = new CheckableTreeUI(root); 
-		trTestTypeTree = treeUI.getTree();
-		trTestTypeTree.setRootVisible(false);
-		measurementTypeNodes = getMeasurementTypeNodes();
+		this.root = createRoot();
+		CheckableTreeUI treeUI = new CheckableTreeUI(this.root); 
+		this.trTestTypeTree = treeUI.getTree();
+		this.trTestTypeTree.setRootVisible(false);
+		this.measurementTypeNodes = getMeasurementTypeNodes();
 	
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -233,55 +235,55 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	}
 
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 	
 	public Object getObject() {
-		return type;
+		return this.type;
 	}
 
 	public void setObject(Object or) {
 		this.type = (MeasurementPortType)or;
 
 		if (this.type != null) {
-			this.tfNameText.setText(type.getName());
-			this.taDescriptionArea.setText(type.getDescription());
+			this.tfNameText.setText(this.type.getName());
+			this.taDescriptionArea.setText(this.type.getDescription());
 
 			try {
-				LinkedIdsCondition condition = new LinkedIdsCondition(type.getId(), ObjectEntities.MEASUREMENT_TYPE_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.type.getId(), ObjectEntities.MEASUREMENT_TYPE_CODE);
 				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				
-				for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+				for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
 					CheckableNode node = (CheckableNode)it.next();
 					node.setChecked(mPTypes.contains(node.getObject()));
 				}
-				trTestTypeTree.updateUI();
+				this.trTestTypeTree.updateUI();
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
-			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+			for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
-			trTestTypeTree.updateUI();
+			this.trTestTypeTree.updateUI();
 		}
 	}
 	
 	List getMeasurementTypeNodes() {
-		return root.getChildren();
+		return this.root.getChildren();
 	}
 
 	public void commitChanges() {
-		if (MiscUtil.validName(tfNameText.getText())) {
-			if (type == null) {
+		if (MiscUtil.validName(this.tfNameText.getText())) {
+			if (this.type == null) {
 				try {
-					type = SchemeObjectsFactory.createMeasurementPortType(tfNameText.getText());
+					this.type = SchemeObjectsFactory.createMeasurementPortType(this.tfNameText.getText());
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, type, MeasurementPortTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.MEASUREMENTPORT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.type, MeasurementPortTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.MEASUREMENTPORT_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -294,25 +296,25 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	}
 	
 	private void apply() {
-		this.type.setName(tfNameText.getText());
+		this.type.setName(this.tfNameText.getText());
 		this.type.setDescription(this.taDescriptionArea.getText());
 
-		for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+		for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
 			CheckableNode node = (CheckableNode)it.next();
 			MeasurementType mtype = (MeasurementType) node.getObject();
 			if (node.isChecked()) {
-				Collection pTypes = mtype.getMeasurementPortTypeIds();
-				if (!pTypes.contains(type.getId())) {
-					Set newPTypes = new HashSet(pTypes);
-					newPTypes.add(type.getId());
+				Collection<Identifier> pTypes = mtype.getMeasurementPortTypeIds();
+				if (!pTypes.contains(this.type.getId())) {
+					Set<Identifier> newPTypes = new HashSet<Identifier>(pTypes);
+					newPTypes.add(this.type.getId());
 					mtype.setMeasurementPortTypeIds(newPTypes);
 				}
 			} else {
-				Collection pTypes = mtype.getMeasurementPortTypeIds();
+				Collection<Identifier> pTypes = mtype.getMeasurementPortTypeIds();
 				// TODO add/remove MeasurementPortType to/from MeasurementType
-				if (pTypes.contains(type.getId())) {
-					Set newPTypes = new HashSet(pTypes);
-					newPTypes.remove(type.getId());
+				if (pTypes.contains(this.type.getId())) {
+					Set<Identifier> newPTypes = new HashSet<Identifier>(pTypes);
+					newPTypes.remove(this.type.getId());
 					mtype.setMeasurementPortTypeIds(newPTypes);
 				}
 			}
@@ -322,7 +324,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, type, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.UPDATE_OBJECT));
 	}
 	
 	Item createRoot() {

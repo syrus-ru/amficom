@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.9 2005/07/19 06:54:18 stas Exp $
+ * $Id: SchemeCableLinkCharacteristicsPanel.java,v 1.10 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/07/19 06:54:18 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -35,20 +35,20 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 	}
 
 	public Object getObject() {
-		return schemeCableLink;
+		return this.schemeCableLink;
 	}
 
 	public void setObject(Object or) {
 		this.schemeCableLink = (SchemeCableLink)or;
 		super.clear();
 
-		if (schemeCableLink != null) {
+		if (this.schemeCableLink != null) {
 			try {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-						schemeCableLink,
-						schemeCableLink.getId(), true);
-				super.addCharacteristics(schemeCableLink.getCharacteristics(), schemeCableLink.getId());
-				AbstractLink link = schemeCableLink.getAbstractLink();
+						this.schemeCableLink,
+						this.schemeCableLink.getId(), true);
+				super.addCharacteristics(this.schemeCableLink.getCharacteristics(), this.schemeCableLink.getId());
+				AbstractLink link = this.schemeCableLink.getAbstractLink();
 				if (link != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
@@ -56,7 +56,7 @@ public class SchemeCableLinkCharacteristicsPanel extends CharacteristicsPanel {
 								link.getId(), true);
 					super.addCharacteristics(link.getCharacteristics(), link.getId());
 				} else {
-					CableLinkType linkType = schemeCableLink.getAbstractLinkType();
+					CableLinkType linkType = this.schemeCableLink.getAbstractLinkType();
 					if (linkType != null) {
 						for (int i = 0; i < sorts.length; i++)
 							super.setTypeSortMapping(sorts[i],

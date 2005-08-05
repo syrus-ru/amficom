@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.16 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeActions.java,v 1.17 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -390,6 +390,8 @@ public class SchemeActions {
 			final Scheme sc = group.getScheme();
 
 			JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+				private static final long serialVersionUID = 8641829415106895132L;
+
 				public void actionPerformed(ActionEvent ev) {
 					aContext.getDispatcher().firePropertyChange(
 							new SchemeEvent(this, sc, SchemeEvent.OPEN_SCHEME));
@@ -405,10 +407,14 @@ public class SchemeActions {
 		}
 		
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
-			List v = se.getUgoCell().getData();
-			if (se.getSchemeElements().isEmpty()
-					|| (v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0)) {
+			List v = null;
+			if (se.getUgoCell() != null)
+				v = se.getUgoCell().getData();
+			if (!se.getSchemeElements().isEmpty()
+					&& (v != null && v.size() != 0 && ((Object[]) v.get(0)).length != 0)) {
 				JMenuItem menu1 = new JMenuItem(new AbstractAction() {
+					private static final long serialVersionUID = 7612382099522511230L;
+
 					public void actionPerformed(ActionEvent ev) {
 						aContext.getDispatcher().firePropertyChange(
 								new SchemeEvent(this, se, SchemeEvent.OPEN_SCHEMEELEMENT));

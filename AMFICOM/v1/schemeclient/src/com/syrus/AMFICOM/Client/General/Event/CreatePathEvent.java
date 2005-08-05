@@ -2,8 +2,9 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 import java.beans.PropertyChangeEvent;
 
-public class CreatePathEvent extends PropertyChangeEvent
-{
+public class CreatePathEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = -2833642884261217887L;
+
 	public boolean CREATE_PATH = false;
 	public boolean EDIT_PATH = false;
 	public boolean ADD_LINK = false;
@@ -34,30 +35,30 @@ public class CreatePathEvent extends PropertyChangeEvent
 	public CreatePathEvent(Object source, Object[] cells, long type)
 	{
 		super(source, CreatePathEvent.TYPE, null, cells);
-		change_type = type;
+		this.change_type = type;
 		this.cells = cells;
 
 		if((type & CREATE_PATH_EVENT) != 0)
-			CREATE_PATH = true;
+			this.CREATE_PATH = true;
 		if((type & EDIT_PATH_EVENT) != 0)
-			EDIT_PATH = true;
+			this.EDIT_PATH = true;
 		if((type & ADD_LINK_EVENT) != 0)
-			ADD_LINK = true;
+			this.ADD_LINK = true;
 		if((type & REMOVE_LINK_EVENT) != 0)
-			REMOVE_LINK = true;
+			this.REMOVE_LINK = true;
 
 		if((type & SET_START_EVENT) != 0)
-			SET_START = true;
+			this.SET_START = true;
 		if((type & SET_END_EVENT) != 0)
-			SET_END = true;
+			this.SET_END = true;
 		if((type & CANCEL_PATH_CREATION_EVENT) != 0)
-			CANCEL_PATH_CREATION = true;
+			this.CANCEL_PATH_CREATION = true;
 		if((type & SAVE_PATH_EVENT) != 0)
-			SAVE_PATH = true;
+			this.SAVE_PATH = true;
 		if((type & DELETE_PATH_EVENT) != 0)
-			DELETE_PATH = true;
+			this.DELETE_PATH = true;
 	if((type & PE_SELECTED_EVENT) != 0)
-			PE_SELECTED = true;
+		this.PE_SELECTED = true;
 	}
 }
 

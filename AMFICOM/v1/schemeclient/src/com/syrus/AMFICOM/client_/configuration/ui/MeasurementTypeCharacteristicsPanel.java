@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeCharacteristicsPanel.java,v 1.3 2005/05/26 07:40:51 stas Exp $
+ * $Id: MeasurementTypeCharacteristicsPanel.java,v 1.4 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -30,7 +30,7 @@ public class MeasurementTypeCharacteristicsPanel extends CharacteristicsPanel {
 	}
 
 	public Object getObject() {
-		return type;
+		return this.type;
 	}
 
 	public void setObject(Object or) {

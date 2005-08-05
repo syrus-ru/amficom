@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.7 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.8 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -22,11 +23,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeToolBar extends ElementsToolBar {
+	private static final long serialVersionUID = 7897889339745050703L;
 
 	private static String[] buttons = new String[] { Constants.MARQUEE,
 			Constants.SEPARATOR, Constants.RECTANGLE,//
@@ -54,27 +56,27 @@ public class SchemeToolBar extends ElementsToolBar {
 		return buttons;
 	}
 	
-	protected Map createGraphButtons() {
-		Map bttns = super.createGraphButtons();
+	protected Map<String, AbstractButton> createGraphButtons() {
+		Map<String, AbstractButton> bttns = super.createGraphButtons();
 
-		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
+		SchemeMarqueeHandler mh = this.pane.getMarqueeHandler();
 
-		bttns.put(Constants.GROUP, createToolButton(mh.gr2, btn_size, null,
-				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane, DeviceGroup.SCHEME_ELEMENT), false));
+		bttns.put(Constants.GROUP, createToolButton(mh.gr2, this.btn_size, null,
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(this.pane, DeviceGroup.SCHEME_ELEMENT), false));
 		bttns.put(Constants.CREATE_UGO, createToolButton(
-				mh.scheme_ugo, btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
+				mh.scheme_ugo, this.btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
 				Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane), true));
-		bttns.put(Constants.LINK_MODE, createToolButton(mh.linkButt, btn_size,
-				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(pane),
+				new CreateTopLevelSchemeAction(this.pane), true));
+		bttns.put(Constants.LINK_MODE, createToolButton(mh.linkButt, this.btn_size,
+				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(this.pane),
 				true));
-		bttns.put(Constants.PATH_MODE, createToolButton(mh.pathButt, btn_size,
-				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(pane),
+		bttns.put(Constants.PATH_MODE, createToolButton(mh.pathButt, this.btn_size,
+				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(this.pane),
 				true));
 
 		bttns.put(Constants.TOP_LEVEL_MODE, createToolButton(mh.topModeButt,
-				btn_size, null, LangModelGraph.getString(Constants.TOP_LEVEL_MODE), Constants.ICON_TOP_LEVEL_MODE,
-				new SetTopLevelModeAction(pane), true));
+				this.btn_size, null, LangModelGraph.getString(Constants.TOP_LEVEL_MODE), Constants.ICON_TOP_LEVEL_MODE,
+				new SetTopLevelModeAction(this.pane), true));
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(mh.linkButt);

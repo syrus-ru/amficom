@@ -1,5 +1,5 @@
 /*
- * $Id: PortToolAction.java,v 1.2 2005/05/26 07:40:51 stas Exp $
+ * $Id: PortToolAction.java,v 1.3 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 /**
  * used only for pressed port button identification
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/05/26 07:40:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class PortToolAction extends AbstractAction {
+	private static final long serialVersionUID = 6240450396040267156L;
+
 	public PortToolAction() {
 		super(Constants.PORT);
 	}

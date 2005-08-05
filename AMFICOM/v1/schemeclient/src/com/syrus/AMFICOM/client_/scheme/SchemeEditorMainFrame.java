@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.15 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.16 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -18,15 +18,12 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -40,12 +37,9 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.ArrangeWindowCommand;
 import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
-import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -55,21 +49,16 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
-	SchemeGraph scheme_graph;
+	private static final long serialVersionUID = 8315696633544939499L;
 
 	public static final String	TREE_FRAME = "treeFrame";
 		
@@ -92,9 +81,9 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(SchemeViewerFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | EDITOR_FRAME", Level.FINEST);
-				SchemeViewerFrame editorFrame = new SchemeViewerFrame(SchemeEditorMainFrame.this.aContext, schemeTab);
+				SchemeViewerFrame editorFrame = new SchemeViewerFrame(SchemeEditorMainFrame.this.aContext, SchemeEditorMainFrame.this.schemeTab);
 				editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
-				desktopPane.add(editorFrame);
+				SchemeEditorMainFrame.this.desktopPane.add(editorFrame);
 				return editorFrame;
 			}
 		});
@@ -103,7 +92,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
 				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
-				desktopPane.add(generalFrame);
+				SchemeEditorMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, SchemeEditorMainFrame.this.aContext);
 				return generalFrame;
 			}
@@ -113,7 +102,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
 				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
-				desktopPane.add(characteristicFrame);
+				SchemeEditorMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, SchemeEditorMainFrame.this.aContext);
 				return characteristicFrame;
 			}
@@ -123,7 +112,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
 				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
-				desktopPane.add(additionalFrame);
+				SchemeEditorMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, SchemeEditorMainFrame.this.aContext);
 				return additionalFrame;
 			}
@@ -142,20 +131,18 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 				
 				SchemeTreeModel model = new SchemeTreeModel(SchemeEditorMainFrame.this.aContext);
-				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), aContext), new FilterPanel());
+				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), SchemeEditorMainFrame.this.aContext), new FilterPanel());
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());
 				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
 
-				desktopPane.add(treeFrame);
+				SchemeEditorMainFrame.this.desktopPane.add(treeFrame);
 				return treeFrame;
 			}
 		});
 		
 		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
 			public void arrange() {
-				SchemeEditorMainFrame f = (SchemeEditorMainFrame) mainframe;
-
 				Rectangle r = SchemeEditorMainFrame.this.scrollPane.getViewportBorderBounds();
 				int w = r.width + SchemeEditorMainFrame.this.scrollPane.getVerticalScrollBar().getVisibleRect().width;
 				int h = r.height + SchemeEditorMainFrame.this.scrollPane.getHorizontalScrollBar().getVisibleRect().height;
@@ -169,7 +156,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				JInternalFrame additionalFrame = null;
 				JInternalFrame treeFrame = null;
 				
-				for (Component component : desktopPane.getComponents()) {
+				for (Component component : SchemeEditorMainFrame.this.desktopPane.getComponents()) {
 					if (TREE_FRAME.equals(component.getName()))
 						treeFrame = (JInternalFrame)component;
 					else if (SchemeViewerFrame.NAME.equals(component.getName()))
@@ -223,10 +210,10 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(aContext));
-		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(aContext));
-		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(schemeTab));
-		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(aContext, schemeTab));
+		aModel.setCommand("menuSchemeNew", new SchemeNewCommand(this.aContext));
+		aModel.setCommand("menuSchemeLoad", new SchemeOpenCommand(this.aContext));
+		aModel.setCommand("menuSchemeSave", new SchemeSaveCommand(this.schemeTab));
+		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(this.aContext, this.schemeTab));
 
 		
 //		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment
@@ -284,7 +271,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		if (ae.getPropertyName().equals(CreatePathEvent.TYPE)) {
 			CreatePathEvent cpe = (CreatePathEvent) ae;
 			if (cpe.CREATE_PATH || cpe.EDIT_PATH) {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled("menuPathSave", true);
 				aModel.setEnabled("menuPathAddStart", true);
 				aModel.setEnabled("menuPathAddEnd", true);
@@ -292,11 +279,11 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled("menuPathCancel", true);
 				aModel.setEnabled("menuPathAutoCreate", true);
 				aModel.getCommand("menuPathAutoCreate").setParameter("panel",
-						schemeTab.getCurrentPanel());
+						this.schemeTab.getCurrentPanel());
 				aModel.fireModelChanged("");
 			}
 			if (cpe.CANCEL_PATH_CREATION || cpe.SAVE_PATH) {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled("menuPathSave", false);
 				aModel.setEnabled("menuPathAddStart", false);
 				aModel.setEnabled("menuPathAddEnd", false);
@@ -307,13 +294,13 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				aModel.fireModelChanged("");
 			}
 			if (cpe.PE_SELECTED) {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				if (aModel.isEnabled("menuPathCancel")) {
 					aModel.setEnabled("menuPathRemoveLink", true);
 					aModel.fireModelChanged("");
 				}
 			} else {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				if (aModel.isEnabled("menuPathCancel")) {
 					aModel.setEnabled("menuPathRemoveLink", false);
 					aModel.fireModelChanged("");
@@ -322,12 +309,12 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		} else if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			ObjectSelectedEvent sne = (ObjectSelectedEvent) ae;
 			if (sne.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled("menuPathEdit", true);
 				aModel.setEnabled("menuPathDelete", true);
 				aModel.fireModelChanged("");
 			} else {
-				ApplicationModel aModel = aContext.getApplicationModel();
+				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled("menuPathEdit", false);
 				aModel.setEnabled("menuPathDelete", false);
 				aModel.fireModelChanged("");
@@ -371,7 +358,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	public void setSessionOpened() {
 		super.setSessionOpened();
 
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuSchemeExport", true);
 		aModel.setEnabled("menuSchemeImport", true);
 
@@ -385,7 +372,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 
 	public void setDomainSelected() {
 		super.setDomainSelected();
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSchemeNew", true);
 		aModel.setEnabled("menuSchemeLoad", true);
@@ -398,7 +385,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 
 	public void setSessionClosed() {
 		super.setSessionClosed();
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSchemeNew", false);
 		aModel.setEnabled("menuSchemeLoad", false);
@@ -422,9 +409,9 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			if (!schemeTab.removeAllPanels())
+			if (!this.schemeTab.removeAllPanels())
 				return;
-			dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
+			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
 			SchemeEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
 		}

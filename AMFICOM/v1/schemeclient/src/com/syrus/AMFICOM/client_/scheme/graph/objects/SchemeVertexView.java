@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeVertexView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeVertexView.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -33,7 +33,7 @@ public class SchemeVertexView extends VertexView {
 	}
 
 	public Rectangle getPureBounds() {
-		return bounds;
+		return this.bounds;
 	}
 }
 

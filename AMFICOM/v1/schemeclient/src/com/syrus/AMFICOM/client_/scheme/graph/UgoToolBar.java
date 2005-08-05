@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.6 2005/07/11 12:31:38 stas Exp $
+ * $Id: UgoToolBar.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,15 +33,17 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class UgoToolBar extends JToolBar {
+	private static final long serialVersionUID = 5139643435052148700L;
+
 	public final Dimension btn_size = new Dimension(24, 24);
 	protected UgoTabbedPane pane;
 	protected int position = 0;
-	protected Map commands = new HashMap();
+	protected Map<String, AbstractButton> commands = new HashMap<String, AbstractButton>();
 	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
 	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { Constants.MARQUEE,
@@ -66,7 +68,7 @@ public class UgoToolBar extends JToolBar {
 	}
 	
 	protected void createToolBar() {
-		commands.putAll(createGraphButtons());
+		this.commands.putAll(createGraphButtons());
 
 		String[] butt = getButtons();
 		
@@ -76,7 +78,7 @@ public class UgoToolBar extends JToolBar {
 			else if (butt[i].equals(Constants.HORIZONTAL_GLUE))
 				insert(Box.createHorizontalGlue());
 			else
-				insert((JComponent)commands.get(butt[i]));
+				insert(this.commands.get(butt[i]));
 		}
 	}
 	
@@ -84,20 +86,20 @@ public class UgoToolBar extends JToolBar {
 		return buttons;
 	}
 
-	protected Map createGraphButtons() {
-		Map bttns = new HashMap();
-		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
-		bttns.put(Constants.MARQUEE, createToolButton(mh.s, btn_size, null,
-				null, Constants.ICON_MARQUEE, new MarqeeAction(pane), true));
-		bttns.put(Constants.RECTANGLE, createToolButton(mh.r, btn_size, null,
+	protected Map<String, AbstractButton> createGraphButtons() {
+		Map<String, AbstractButton> bttns = new HashMap<String, AbstractButton>();
+		SchemeMarqueeHandler mh = this.pane.getMarqueeHandler();
+		bttns.put(Constants.MARQUEE, createToolButton(mh.s, this.btn_size, null,
+				null, Constants.ICON_MARQUEE, new MarqeeAction(this.pane), true));
+		bttns.put(Constants.RECTANGLE, createToolButton(mh.r, this.btn_size, null,
 				LangModelGraph.getString(Constants.RECTANGLE), Constants.ICON_RECTANGLE, null, true));
-		bttns.put(Constants.ELLIPSE, createToolButton(mh.c, btn_size, null,
+		bttns.put(Constants.ELLIPSE, createToolButton(mh.c, this.btn_size, null,
 				LangModelGraph.getString(Constants.ELLIPSE), Constants.ICON_ELLIPSE, null, true));
-		bttns.put(Constants.TEXT, createToolButton(mh.t, btn_size, null,
+		bttns.put(Constants.TEXT, createToolButton(mh.t, this.btn_size, null,
 				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
-		bttns.put(Constants.ICON, createToolButton(mh.i, btn_size, null,
+		bttns.put(Constants.ICON, createToolButton(mh.i, this.btn_size, null,
 				LangModelGraph.getString(Constants.ICON), Constants.ICON_TEXT, null, true));
-		bttns.put(Constants.LINE, createToolButton(mh.l, btn_size, null,
+		bttns.put(Constants.LINE, createToolButton(mh.l, this.btn_size, null,
 				LangModelGraph.getString(Constants.LINE), Constants.ICON_LINE, null, true));
 		
 		ButtonGroup group = new ButtonGroup();
@@ -141,10 +143,10 @@ public class UgoToolBar extends JToolBar {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			JComponent source = pane.getGraph();
+			JComponent source = UgoToolBar.this.pane.getGraph();
 			if (source != null)
 				e = new ActionEvent(source, e.getID(), e.getActionCommand(), e.getModifiers());
-			action.actionPerformed(e);
+			this.action.actionPerformed(e);
 		}
 	}
 }

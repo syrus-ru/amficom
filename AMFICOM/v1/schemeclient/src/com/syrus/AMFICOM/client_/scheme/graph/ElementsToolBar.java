@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsToolBar.java,v 1.7 2005/07/11 12:31:38 stas Exp $
+ * $Id: ElementsToolBar.java,v 1.8 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client_.scheme.graph;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateBlockPortAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.DeleteAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PortToolAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.RedoAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
@@ -32,11 +30,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class ElementsToolBar extends UgoToolBar {
+	private static final long serialVersionUID = -8239098824427482935L;
+
 	protected ApplicationContext aContext;
 	private static String[] buttons = new String[] { Constants.MARQUEE,
 		Constants.SEPARATOR, Constants.RECTANGLE, Constants.ELLIPSE,
@@ -58,55 +58,55 @@ public class ElementsToolBar extends UgoToolBar {
 		this.aContext = aContext;
 	}
 
-	protected Map createGraphButtons() {
-		Map bttns = super.createGraphButtons();
+	protected Map<String, AbstractButton> createGraphButtons() {
+		Map<String, AbstractButton> bttns = super.createGraphButtons();
 
-		SchemeMarqueeHandler mh = pane.getMarqueeHandler();
+		SchemeMarqueeHandler mh = this.pane.getMarqueeHandler();
 
-		bttns.put(Constants.DEVICE, createToolButton(mh.dev, btn_size, null,
+		bttns.put(Constants.DEVICE, createToolButton(mh.dev, this.btn_size, null,
 				LangModelGraph.getString(Constants.DEVICE), Constants.ICON_DEVICE, null, true));
-		bttns.put(Constants.CABLE, createToolButton(mh.ce, btn_size, null,
+		bttns.put(Constants.CABLE, createToolButton(mh.ce, this.btn_size, null,
 				LangModelGraph.getString(Constants.CABLE), Constants.ICON_CABLE, null, true));
-		bttns.put(Constants.LINK, createToolButton(mh.e, btn_size, null,
+		bttns.put(Constants.LINK, createToolButton(mh.e, this.btn_size, null,
 				LangModelGraph.getString(Constants.LINK), Constants.ICON_LINK, null, true));
 //		bttns.put(Constants.ZOOM, createToolButton(mh.z, btn_size, null,
 //				LangModelGraph.getString(Constants.ZOOM), Constants.ICON_ZOOM_NORMAL, null, null, true));
-		bttns.put(Constants.PORT, createToolButton(mh.p1, btn_size, null,
+		bttns.put(Constants.PORT, createToolButton(mh.p1, this.btn_size, null,
 				LangModelGraph.getString(Constants.PORT), Constants.ICON_PORT, new PortToolAction(), false));
-		bttns.put(Constants.CABLE_PORT, createToolButton(mh.p2, btn_size, null,
+		bttns.put(Constants.CABLE_PORT, createToolButton(mh.p2, this.btn_size, null,
 				LangModelGraph.getString(Constants.CABLE_PORT), Constants.ICON_CABLE_PORT,
 				new PortToolAction(), false));
-		bttns.put(Constants.GROUP, createToolButton(mh.gr, btn_size, null,
-				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(pane, DeviceGroup.PROTO_ELEMENT),
+		bttns.put(Constants.GROUP, createToolButton(mh.gr, this.btn_size, null,
+				LangModelGraph.getString(Constants.GROUP), Constants.ICON_GROUP, new CreateGroup(this.pane, DeviceGroup.PROTO_ELEMENT),
 				false));
-		bttns.put(Constants.UNGROUP, createToolButton(mh.ugr, btn_size, null,
+		bttns.put(Constants.UNGROUP, createToolButton(mh.ugr, this.btn_size, null,
 				LangModelGraph.getString(Constants.UNGROUP), Constants.ICON_UNGROUP,
-				new UngroupAction(pane), false));
-		bttns.put(Constants.UNDO, createToolButton(mh.undo, btn_size, null,
-				LangModelGraph.getString(Constants.UNDO), Constants.ICON_UNDO, new UndoAction(pane), false));
-		bttns.put(Constants.REDO, createToolButton(mh.redo, btn_size, null,
-				LangModelGraph.getString(Constants.REDO), Constants.ICON_REDO, new RedoAction(pane), false));
-		bttns.put(Constants.ZOOM_IN, createToolButton(mh.zi, btn_size, null,
-				LangModelGraph.getString(Constants.ZOOM_IN), Constants.ICON_ZOOM_IN, new ZoomInAction(pane),
+				new UngroupAction(this.pane), false));
+		bttns.put(Constants.UNDO, createToolButton(mh.undo, this.btn_size, null,
+				LangModelGraph.getString(Constants.UNDO), Constants.ICON_UNDO, new UndoAction(this.pane), false));
+		bttns.put(Constants.REDO, createToolButton(mh.redo, this.btn_size, null,
+				LangModelGraph.getString(Constants.REDO), Constants.ICON_REDO, new RedoAction(this.pane), false));
+		bttns.put(Constants.ZOOM_IN, createToolButton(mh.zi, this.btn_size, null,
+				LangModelGraph.getString(Constants.ZOOM_IN), Constants.ICON_ZOOM_IN, new ZoomInAction(this.pane),
 				true));
-		bttns.put(Constants.ZOOM_OUT, createToolButton(mh.zo, btn_size, null,
+		bttns.put(Constants.ZOOM_OUT, createToolButton(mh.zo, this.btn_size, null,
 				LangModelGraph.getString(Constants.ZOOM_OUT), Constants.ICON_ZOOM_OUT, new ZoomOutAction(
-						pane), true));
-		bttns.put(Constants.ZOOM_ACTUAL, createToolButton(mh.za, btn_size, null,
+						this.pane), true));
+		bttns.put(Constants.ZOOM_ACTUAL, createToolButton(mh.za, this.btn_size, null,
 				LangModelGraph.getString(Constants.ZOOM_ACTUAL), Constants.ICON_ZOOM_NORMAL,
-				new ZoomActualAction(pane), true));
-		bttns.put(Constants.DELETE, createToolButton(mh.del, btn_size, null,
-				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(pane), false));
+				new ZoomActualAction(this.pane), true));
+		bttns.put(Constants.DELETE, createToolButton(mh.del, this.btn_size, null,
+				LangModelGraph.getString(Constants.DELETE), Constants.ICON_DELETE, new DeleteAction(this.pane), false));
 		// bttns.put(Constants.hierarchyUpKey,
 		// createToolButton(mh.hup, btn_size, null, "вверх",
 		// new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/hand.gif")),
 		// new HierarchyUpAction (getGraph()), true));
 		bttns.put(Constants.CREATE_UGO, createToolButton(mh.ugo,
-				btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), Constants.ICON_CREATE_UGO,
-				new CreateTopLevelSchemeAction(pane), false));
-		bttns.put(Constants.BLOCK_PORT, createToolButton(mh.bp, btn_size, null,
+				this.btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), Constants.ICON_CREATE_UGO,
+				new CreateTopLevelSchemeAction(this.pane), false));
+		bttns.put(Constants.BLOCK_PORT, createToolButton(mh.bp, this.btn_size, null,
 				LangModelGraph.getString(Constants.BLOCK_PORT), Constants.ICON_HIERARCHY_PORT,
-				new CreateBlockPortAction(pane), false));
+				new CreateBlockPortAction(this.pane), false));
 
 		ButtonGroup group = new ButtonGroup();
 		for (Iterator it = bttns.values().iterator(); it.hasNext();) {

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.4 2005/08/01 07:52:27 stas Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.5 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -81,6 +81,7 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(linkType);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -276,12 +277,12 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void commitChanges() {
 		if(MiscUtil.validName(this.tfNameText.getText())) {
-			if (linkType == null) {
+			if (this.linkType == null) {
 				try {
-					linkType = SchemeObjectsFactory.createLinkType(tfNameText.getText());
+					this.linkType = SchemeObjectsFactory.createLinkType(this.tfNameText.getText());
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, linkType, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, linkType, LinkTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.LINK_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, LinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.LINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);

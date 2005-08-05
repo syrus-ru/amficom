@@ -25,11 +25,11 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 	}
 
 	public Object clone() {
-		return new SchemeSaveAsCommand(aContext, schemeTab);
+		return new SchemeSaveAsCommand(this.aContext,this.schemeTab);
 	}
 
 	public void execute() {
-		SchemeGraph graph = schemeTab.getGraph();
+		SchemeGraph graph = this.schemeTab.getGraph();
 
 //		if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 //			new PathSaveCommand(aContext, schemeTab).execute();
@@ -42,7 +42,7 @@ public class SchemeSaveAsCommand extends AbstractCommand {
 			return;
 		}
 
-		SchemeResource res = schemeTab.getCurrentPanel().getSchemeResource();
+		SchemeResource res = this.schemeTab.getCurrentPanel().getSchemeResource();
 		
 		Scheme scheme = res.getScheme();
 		

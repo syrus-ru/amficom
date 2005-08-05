@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePropertiesManager.java,v 1.2 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemePropertiesManager.java,v 1.3 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.scheme.SchemeWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -39,14 +39,17 @@ public class SchemePropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new SchemeGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new EmptyStorableObjectEditor();
-		if (ugoPanel == null)
-			ugoPanel = new SchemeCellPanel();
-		ugoPanel.setContext(aContext);
+		if (this.generalPanel == null) {
+			this.generalPanel = new SchemeGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new EmptyStorableObjectEditor();
+		}
+		if (this.ugoPanel == null) {
+			this.ugoPanel = new SchemeCellPanel();
+		}
+		this.ugoPanel.setContext(aContext);
 	}
 	
 	/**
@@ -54,7 +57,7 @@ public class SchemePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class SchemePropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -78,6 +81,6 @@ public class SchemePropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return ugoPanel;
+		return this.ugoPanel;
 	}
 }

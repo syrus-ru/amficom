@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.10 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.11 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,11 +53,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeTabbedPane extends ElementsTabbedPane {
+	private static final long serialVersionUID = 2083767734784404078L;
 	JTabbedPane tabs;
 	Map<JScrollPane, ElementsPanel> graphPanelsMap;
 
@@ -66,8 +67,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 
 	protected JComponent createPanel() {
-		tabs = new JTabbedPane(SwingConstants.BOTTOM);
-		tabs.addChangeListener(new ChangeListener() {
+		this.tabs = new JTabbedPane(SwingConstants.BOTTOM);
+		this.tabs.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				UgoPanel p = getCurrentPanel();
 				if (p != null) {
@@ -79,44 +80,46 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			}
 		});
 		
-		tabs.addMouseListener(new MouseAdapter() {
+		this.tabs.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e) && tabs.getTabCount() > 1) {
+				if (SwingUtilities.isRightMouseButton(e) && SchemeTabbedPane.this.tabs.getTabCount() > 1) {
 					JPopupMenu popup = new JPopupMenu();
 					JMenuItem close = new JMenuItem(new AbstractAction() {
+						private static final long serialVersionUID = 3655699666572424829L;
+
 						public void actionPerformed(ActionEvent ae) {
 							removePanel(getCurrentPanel());
 						}
 					});
-					close.setText(LangModelScheme.getString("Button.close") + " '" + tabs.getTitleAt(tabs.getSelectedIndex()) + "'");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+					close.setText(LangModelScheme.getString("Button.close") + " '" + SchemeTabbedPane.this.tabs.getTitleAt(SchemeTabbedPane.this.tabs.getSelectedIndex()) + "'");  //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 					popup.add(close);
-					popup.show(tabs, e.getX(), e.getY());
+					popup.show(SchemeTabbedPane.this.tabs, e.getX(), e.getY());
 				}
 			}
 		});
 		setLayout(new BorderLayout());
-		add(tabs, BorderLayout.CENTER);
+		add(this.tabs, BorderLayout.CENTER);
 //		addPanel(new SchemePanel(aContext));
-		return tabs;
+		return this.tabs;
 	}
 	
 	protected JComponent createToolBar() {
-		this.toolBar = new SchemeToolBar(this, aContext);
-		return toolBar;
+		this.toolBar = new SchemeToolBar(this, this.aContext);
+		return this.toolBar;
 	}
 
 	
 	public Set<UgoPanel> getAllPanels() {
-		Object[] comp = tabs.getComponents();
+		Object[] comp = this.tabs.getComponents();
 		Set<UgoPanel> panels = new HashSet<UgoPanel>(comp.length);
 		for (int i = 0; i < comp.length; i++)
-			panels.add(graphPanelsMap.get(comp[i]));
+			panels.add(this.graphPanelsMap.get(comp[i]));
 		return panels;
 	}
 	
 	public ElementsPanel getCurrentPanel() {
-		if (tabs.getSelectedIndex() != -1)
-			return graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
+		if (this.tabs.getSelectedIndex() != -1)
+			return this.graphPanelsMap.get(this.tabs.getComponentAt(this.tabs.getSelectedIndex()));
 		return null;
 //		SchemePanel newPanel = new SchemePanel(aContext);
 //		addPanel(newPanel);
@@ -125,43 +128,43 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	public void addPanel(ElementsPanel p) {
 		SchemeGraph graph = p.getGraph();
-		graph.setMarqueeHandler(marqueeHandler);
-		graph.addKeyListener(keyListener);
+		graph.setMarqueeHandler(this.marqueeHandler);
+		graph.addKeyListener(this.keyListener);
 		JScrollPane graphView = new JScrollPane(graph);
 		
-		if (graphPanelsMap == null)
-			graphPanelsMap = new HashMap<JScrollPane, ElementsPanel>();
-		graphPanelsMap.put(graphView, p);
+		if (this.graphPanelsMap == null)
+			this.graphPanelsMap = new HashMap<JScrollPane, ElementsPanel>();
+		this.graphPanelsMap.put(graphView, p);
 		
-		tabs.addTab("", new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		this.tabs.addTab("", new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 				"images/close_unchanged.gif")), graphView);
-		tabs.setSelectedComponent(graphView);
+		this.tabs.setSelectedComponent(graphView);
 		setGraphChanged(false);
 		graph.setEditable(this.editable);
 	}
 	
 	public void selectPanel(ElementsPanel p) {
-		Object[] comp = tabs.getComponents();
+		Object[] comp = this.tabs.getComponents();
 		for (int i = 0; i < comp.length; i++) {
-			UgoPanel p1 = graphPanelsMap.get(comp[i]);
+			UgoPanel p1 = this.graphPanelsMap.get(comp[i]);
 			if (p1.equals(p)) {
-				tabs.setSelectedIndex(i);
+				this.tabs.setSelectedIndex(i);
 				return;
 			}
 		}
 	}
 
 	public void updateTitle(String title) {
-		tabs.setTitleAt(tabs.getSelectedIndex(), title);
+		this.tabs.setTitleAt(this.tabs.getSelectedIndex(), title);
 	}
 
 	public boolean removePanel(UgoPanel p) {
 		if (super.removePanel(p)) {
-			Object[] comp = tabs.getComponents();
+			Object[] comp = this.tabs.getComponents();
 			for (int i = 0; i < comp.length; i++) {
-				UgoPanel p1 = graphPanelsMap.get(comp[i]);
+				UgoPanel p1 = this.graphPanelsMap.get(comp[i]);
 				if (p1.equals(p)) {
-					tabs.removeTabAt(i);
+					this.tabs.removeTabAt(i);
 					return true;
 				}
 			}
@@ -170,10 +173,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}
 
 	public boolean removeAllPanels() {
-		Object[] comp = tabs.getComponents();
+		Object[] comp = this.tabs.getComponents();
 		// check for unsaved changes
 		for (int i = 0; i < comp.length; i++) {
-			UgoPanel p = graphPanelsMap.get(comp[i]);
+			UgoPanel p = this.graphPanelsMap.get(comp[i]);
 			if (p instanceof ElementsPanel) {
 				if (p.getGraph().isGraphChanged()) {
 					return super.removePanel(p);
@@ -332,7 +335,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			}				
 		}
 
-		SchemePanel p = new SchemePanel(aContext);
+		SchemePanel p = new SchemePanel(this.aContext);
 		addPanel(p);
 		p.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
@@ -364,7 +367,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				}
 			}
 		}
-		ElementsPanel p = new ElementsPanel(aContext);
+		ElementsPanel p = new ElementsPanel(this.aContext);
 		addPanel(p);
 		p.getSchemeResource().setSchemeElement(se);
 		updateTitle(se.getName());
@@ -397,15 +400,15 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	}*/
 	
 	public void setGraphChanged(SchemeGraph graph, boolean b) {
-		for (int i = 0; i < tabs.getTabCount(); i++) {
-			UgoPanel p = graphPanelsMap.get(tabs.getComponentAt(tabs.getSelectedIndex()));
+		for (int i = 0; i < this.tabs.getTabCount(); i++) {
+			UgoPanel p = this.graphPanelsMap.get(this.tabs.getComponentAt(this.tabs.getSelectedIndex()));
 			if (graph.equals(p.getGraph())) {
 				graph.setGraphChanged(b);
 				if (b)
-					tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					this.tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/close_changed.gif")));
 				else
-					tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+					this.tabs.setIconAt(i, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/close_unchanged.gif")));
 				return;
 			}
@@ -418,10 +421,10 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 		super.setGraphChanged(b);
 		if (b)
-			tabs.setIconAt(tabs.getSelectedIndex(), new ImageIcon(Toolkit
+			this.tabs.setIconAt(this.tabs.getSelectedIndex(), new ImageIcon(Toolkit
 					.getDefaultToolkit().getImage("images/close_changed.gif")));
 		else
-			tabs.setIconAt(tabs.getSelectedIndex(), new ImageIcon(Toolkit
+			this.tabs.setIconAt(this.tabs.getSelectedIndex(), new ImageIcon(Toolkit
 					.getDefaultToolkit().getImage("images/close_unchanged.gif")));
 	}
 }

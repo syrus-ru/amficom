@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.6 2005/08/01 07:52:28 stas Exp $
+ * $Id: DefaultLink.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -40,8 +40,8 @@ public class DefaultLink extends DefaultEdge {
 	private Identifier scheme_link_id;
 
 	protected Point[] routed;
-	protected transient Object _source, _target;
-	protected transient Object source, target;
+	protected transient DefaultPort _source, _target;
+	protected transient DefaultPort source, target;
 	private LinkRouting routing = new LinkRouting();
 
 	public static DefaultLink createInstance(Object userObject,
@@ -69,7 +69,7 @@ public class DefaultLink extends DefaultEdge {
 		GraphConstants.setRouting(map, cell.getRouting());
 		GraphConstants.setLabelPosition(map, new Point((int)(u * 0.4), (int)(u * 0.49)));
 		
-		ArrayList list = new ArrayList();
+		ArrayList<Point> list = new ArrayList<Point>(2);
 		list.add(p);
 		list.add(p2);
 
@@ -92,16 +92,16 @@ public class DefaultLink extends DefaultEdge {
 
 	public void setSource(Object port) {
 		super.setSource(port);
-		source = port;
+		this.source = (DefaultPort)port;
 	}
 
 	public void setTarget(Object port) {
 		super.setTarget(port);
-		target = port;
+		this.target = (DefaultPort)port;
 	}
 
 	public DefaultEdge.Routing getRouting() {
-		return routing;
+		return this.routing;
 	}
 
 	public class LinkRouting implements DefaultEdge.Routing {
@@ -115,54 +115,55 @@ public class DefaultLink extends DefaultEdge {
 				setSchemeLinkId(cell.getSchemeLinkId());
 
 			if (cell.source != cell._source) {
-				source = cell.source;
-				_source = cell._source;
+				DefaultLink.this.source = cell.source;
+				DefaultLink.this._source = cell._source;
 			}
 			if (cell.target != cell._target) {
-				target = cell.target;
-				_target = cell._target;
+				DefaultLink.this.target = cell.target;
+				DefaultLink.this._target = cell._target;
 			}
 
-			if (source != null && !source.equals(_source)) {
-				if (_source != null) {
-					if (((DefaultPort) _source).getParent() instanceof PortCell)
-						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_source).getParent(), true);
+			if (DefaultLink.this.source != null && !DefaultLink.this.source.equals(DefaultLink.this._source)) {
+				if (DefaultLink.this._source != null) {
+					if (DefaultLink.this._source.getParent() instanceof PortCell)
+						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true);
 				}
 				
-				_source = source;
+				DefaultLink.this._source = DefaultLink.this.source;
 				cell._source = cell.source;
 
-				if (((DefaultPort) source).getParent() instanceof PortCell)
+				if (DefaultLink.this.source.getParent() instanceof PortCell)
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
-							(PortCell) ((DefaultPort) source).getParent(), true);
+							(PortCell) DefaultLink.this.source.getParent(), true);
 			}
-			if (source == null && _source != null) {
-				if (((DefaultPort) _source).getParent() instanceof PortCell)
-					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_source).getParent(), true);
+			if (DefaultLink.this.source == null && DefaultLink.this._source != null) {
+				if (DefaultLink.this._source.getParent() instanceof PortCell)
+					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true);
 				
-				_source = source;
+				DefaultLink.this._source = DefaultLink.this.source;
 				cell._source = cell.source;
 			}
 
-			if (target != null && !target.equals(_target))
+			if (DefaultLink.this.target != null && !DefaultLink.this.target.equals(DefaultLink.this._target))
 			{
-				if (_target != null) {
-					if (((DefaultPort) _target).getParent() instanceof PortCell)
-						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_target).getParent(), false);
+				if (DefaultLink.this._target != null) {
+					if (DefaultLink.this._target.getParent() instanceof PortCell)
+						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false);
 				}
 				
-				_target = target;
+				DefaultLink.this._target = DefaultLink.this.target;
 				cell._target = cell.target;
 
-				if (((DefaultPort) target).getParent() instanceof PortCell)
+				if (DefaultLink.this.target.getParent() instanceof PortCell) {
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
-							(PortCell) ((DefaultPort) target).getParent(), false);
+							(PortCell) DefaultLink.this.target.getParent(), false);
+				}
 			}
-			if (target == null && _target != null) {
-				if (((DefaultPort) _target).getParent() instanceof PortCell)
-					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) ((DefaultPort)_target).getParent(), false);
+			if (DefaultLink.this.target == null && DefaultLink.this._target != null) {
+				if (DefaultLink.this._target.getParent() instanceof PortCell)
+					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false);
 				
-				_target = target;
+				DefaultLink.this._target = DefaultLink.this.target;
 				cell._target = cell.target;
 			}
 
@@ -179,34 +180,34 @@ public class DefaultLink extends DefaultEdge {
 					Rectangle bounds = edge.getSource().getParentView().getBounds();
 					int height = edge.getGraph().getGridSize();
 					int width = (int) (bounds.getWidth() / 3);
-					routed = new Point[4];
-					routed[0] = graph.snap(new Point(bounds.x + width, bounds.y
+					DefaultLink.this.routed = new Point[4];
+					DefaultLink.this.routed[0] = graph.snap(new Point(bounds.x + width, bounds.y
 							+ bounds.height));
-					routed[1] = graph.snap(new Point(bounds.x + width, bounds.y
+					DefaultLink.this.routed[1] = graph.snap(new Point(bounds.x + width, bounds.y
 							+ bounds.height + height));
-					routed[2] = graph.snap(new Point(bounds.x + 2 * width, bounds.y
+					DefaultLink.this.routed[2] = graph.snap(new Point(bounds.x + 2 * width, bounds.y
 							+ bounds.height + height));
-					routed[3] = graph.snap(new Point(bounds.x + 2 * width, bounds.y
+					DefaultLink.this.routed[3] = graph.snap(new Point(bounds.x + 2 * width, bounds.y
 							+ bounds.height));
 				} else {
 					boolean bendable = GraphConstants.isBendable(edge.getAllAttributes());
-					if (!bendable || routed == null) {
+					if (!bendable || DefaultLink.this.routed == null) {
 						int x2 = from.x + ((to.x - from.x) / 2);
-						routed = new Point[4];
-						routed[0] = graph.snap(new Point(x2, from.y));
-						routed[1] = graph.snap(new Point(x2, from.y));
-						routed[2] = graph.snap(new Point(x2, to.y));
-						routed[3] = graph.snap(new Point(x2, to.y));
+						DefaultLink.this.routed = new Point[4];
+						DefaultLink.this.routed[0] = graph.snap(new Point(x2, from.y));
+						DefaultLink.this.routed[1] = graph.snap(new Point(x2, from.y));
+						DefaultLink.this.routed[2] = graph.snap(new Point(x2, to.y));
+						DefaultLink.this.routed[3] = graph.snap(new Point(x2, to.y));
 					}
 				}
 				// Set/Add Points
-				for (int i = 0; i < routed.length; i++)
+				for (int i = 0; i < DefaultLink.this.routed.length; i++)
 					if (points.size() > i + 2)
-						points.set(i + 1, routed[i]);
+						points.set(i + 1, DefaultLink.this.routed[i]);
 					else
-						points.add(i + 1, routed[i]);
+						points.add(i + 1, DefaultLink.this.routed[i]);
 				// Remove spare points
-				while (points.size() > routed.length + 2) {
+				while (points.size() > DefaultLink.this.routed.length + 2) {
 					points.remove(points.size() - 2);
 				}
 			}
@@ -215,7 +216,7 @@ public class DefaultLink extends DefaultEdge {
 
 	public SchemeLink getSchemeLink() {
 		try {
-			return (SchemeLink) StorableObjectPool.getStorableObject(scheme_link_id, true);
+			return (SchemeLink) StorableObjectPool.getStorableObject(this.scheme_link_id, true);
 		} catch (ApplicationException ex) {
 			Log.errorException(ex);
 			return null;
@@ -223,11 +224,11 @@ public class DefaultLink extends DefaultEdge {
 	}
 
 	public Identifier getSchemeLinkId() {
-		return scheme_link_id;
+		return this.scheme_link_id;
 	}
 
 	public void setSchemeLinkId(Identifier id) {
 		assert id != null;
-		scheme_link_id = id;
+		this.scheme_link_id = id;
 	}
 }

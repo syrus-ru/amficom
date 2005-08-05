@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.13 2005/08/04 09:19:00 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.14 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -64,7 +64,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 
-		SchemeGraph graph = sourcePane.getGraph();
+		SchemeGraph graph = this.sourcePane.getGraph();
 		long status = SchemeActions.getGraphState(graph);
 		if ((status & SchemeActions.SCHEME_EMPTY) != 0) {
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -89,8 +89,8 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		}
 		
 		Object[] cells = graph.getAll();
-		ArrayList blockports_in = new ArrayList();
-		ArrayList blockports_out = new ArrayList();
+		ArrayList<BlockPortCell> blockports_in = new ArrayList<BlockPortCell>();
+		ArrayList<BlockPortCell> blockports_out = new ArrayList<BlockPortCell>();
 		BlockPortCell[] bpcs = GraphActions.findTopLevelPorts(graph, cells);
 
 		for (int i = 0; i < bpcs.length; i++) {
@@ -109,7 +109,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		}
 
 		
-		SchemeResource res = ((ElementsPanel)sourcePane.getCurrentPanel()).getSchemeResource();
+		SchemeResource res = ((ElementsPanel)this.sourcePane.getCurrentPanel()).getSchemeResource();
 		
 		if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 			try {
@@ -186,7 +186,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		
 		VisualManager manager = null;
 		long type = 0;
-		ApplicationContext aContext = sourcePane.getContext();
+		ApplicationContext aContext = this.sourcePane.getContext();
 		
 		switch (res.getCellContainerType()) { 
 		case SchemeResource.SCHEME:

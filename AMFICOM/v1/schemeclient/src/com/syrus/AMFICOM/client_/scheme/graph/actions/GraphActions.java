@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.6 2005/08/01 07:52:28 stas Exp $
+ * $Id: GraphActions.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.Edge;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
 import com.jgraph.pad.ImageCell;
@@ -43,7 +44,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -360,11 +361,9 @@ public class GraphActions {
 		return null;
 	}
 
-	public static DefaultGraphCell[] findVisualPorts(SchemeGraph graph,
-			DeviceCell cell) {
-		ArrayList v = new ArrayList();
-		for (Enumeration enumeration = cell.children(); enumeration
-				.hasMoreElements();) {
+	public static DefaultGraphCell[] findVisualPorts(SchemeGraph graph, DeviceCell cell) {
+		ArrayList<DefaultGraphCell> v = new ArrayList<DefaultGraphCell>();
+		for (Enumeration enumeration = cell.children(); enumeration.hasMoreElements();) {
 			Object obj = enumeration.nextElement();
 			if (obj instanceof Port) {
 				Port p = (Port) obj;
@@ -372,16 +371,16 @@ public class GraphActions {
 					DefaultEdge edge = (DefaultEdge) i.next();
 					Object p2 = DefaultGraphModel.getTargetVertex(graph.getModel(), edge);
 					if (p2 instanceof PortCell || p2 instanceof CablePortCell)
-						v.add(p2);
+						v.add((DefaultGraphCell)p2);
 
 				}
 			}
 		}
-		return (DefaultGraphCell[]) v.toArray(new DefaultGraphCell[v.size()]);
+		return v.toArray(new DefaultGraphCell[v.size()]);
 	}
 
-	public static Object[] findAllVertexEdges(SchemeGraph graph, DefaultGraphCell[] cells) {
-		ArrayList edges = new ArrayList();
+	public static Edge[] findAllVertexEdges(SchemeGraph graph, DefaultGraphCell[] cells) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (int i = 0; i < cells.length; i++) {
 			for (Enumeration enumeration = cells[i].children(); enumeration
 					.hasMoreElements();) {
@@ -389,16 +388,15 @@ public class GraphActions {
 				if (obj instanceof Port) {
 					Port p = (Port) obj;
 					for (Iterator j = p.edges(); j.hasNext();)
-						edges.add(j.next());
+						edges.add((Edge)j.next());
 				}
 			}
 		}
-		return edges.toArray(new Object[edges.size()]);
+		return edges.toArray(new Edge[edges.size()]);
 	}
 
-	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph,
-			DeviceGroup group) {
-		ArrayList v = new ArrayList();
+	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph, DeviceGroup group) {
+		ArrayList<BlockPortCell> v = new ArrayList<BlockPortCell>();
 		Object[] objs = graph.getDescendants(new Object[] { group });
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof DeviceCell) {
@@ -409,47 +407,43 @@ public class GraphActions {
 						v.add(bpc);
 				}
 			}
-		return (BlockPortCell[]) v.toArray(new BlockPortCell[v.size()]);
+		return v.toArray(new BlockPortCell[v.size()]);
 	}
 
-	public static DeviceGroup[] findTopLevelGroups(SchemeGraph graph,
-			Object[] cells) {
-		ArrayList v = new ArrayList();
+	public static DeviceGroup[] findTopLevelGroups(SchemeGraph graph, Object[] cells) {
+		ArrayList<DeviceGroup> v = new ArrayList<DeviceGroup>();
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof DeviceGroup && !hasGroupedParent(objs[i]))
-				v.add(objs[i]);
-		return (DeviceGroup[]) v.toArray(new DeviceGroup[v.size()]);
+				v.add((DeviceGroup)objs[i]);
+		return  v.toArray(new DeviceGroup[v.size()]);
 	}
 	
-	public static DeviceGroup[] findAllGroups(SchemeGraph graph,
-			Object[] cells) {
-		ArrayList v = new ArrayList();
+	public static DeviceGroup[] findAllGroups(SchemeGraph graph, Object[] cells) {
+		ArrayList<DeviceGroup> v = new ArrayList<DeviceGroup>();
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof DeviceGroup)
-				v.add(objs[i]);
-		return (DeviceGroup[]) v.toArray(new DeviceGroup[v.size()]);
+				v.add((DeviceGroup)objs[i]);
+		return v.toArray(new DeviceGroup[v.size()]);
 	}
 
-	public static DefaultLink[] findTopLevelLinks(SchemeGraph graph,
-			Object[] cells) {
-		List v = new ArrayList();
+	public static DefaultLink[] findTopLevelLinks(SchemeGraph graph, Object[] cells) {
+		List<DefaultLink> v = new ArrayList<DefaultLink>();
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof DefaultLink && !hasGroupedParent(objs[i]))
-				v.add(objs[i]);
-		return (DefaultLink[])v.toArray(new DefaultLink[v.size()]);
+				v.add((DefaultLink)objs[i]);
+		return v.toArray(new DefaultLink[v.size()]);
 	}
 
-	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph,
-			Object[] cells) {
-		ArrayList v = new ArrayList();
+	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph, Object[] cells) {
+		ArrayList<DeviceGroup> v = new ArrayList<DeviceGroup>();
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof BlockPortCell)
-				v.add(objs[i]);
-		return (BlockPortCell[]) v.toArray(new BlockPortCell[v.size()]);
+				v.add((DeviceGroup)objs[i]);
+		return v.toArray(new BlockPortCell[v.size()]);
 	}
 /*
 	static void connectEdge(SchemeGraph graph, DefaultEdge edge,
@@ -462,8 +456,7 @@ public class GraphActions {
 		graph.getModel().edit(viewMap, cs, null, null);
 	}
 */
-	static void disconnectEdge(SchemeGraph graph, DefaultEdge edge,
-			DefaultPort port, boolean is_source) {
+	static void disconnectEdge(SchemeGraph graph, DefaultEdge edge, DefaultPort port, boolean is_source) {
 		Map viewMap = new HashMap();
 		Map map = edge.getAttributes();
 		viewMap.put(edge, GraphConstants.cloneMap(map));

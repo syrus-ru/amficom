@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.6 2005/08/05 08:21:34 stas Exp $
+ * $Id: DeviceGroup.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -60,7 +60,7 @@ public class DeviceGroup extends DefaultGraphCell {
 	public SchemeProtoElement getProtoElement() {
 		if (this.type == PROTO_ELEMENT) {
 			try {
-				return (SchemeProtoElement) StorableObjectPool.getStorableObject(elementId, true);
+				return (SchemeProtoElement) StorableObjectPool.getStorableObject(this.elementId, true);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
@@ -69,7 +69,7 @@ public class DeviceGroup extends DefaultGraphCell {
 	}
 
 	public Identifier getElementId() {
-		return elementId;
+		return this.elementId;
 	}
 
 	public void setProtoElementId(Identifier id) {
@@ -81,7 +81,7 @@ public class DeviceGroup extends DefaultGraphCell {
 	public SchemeElement getSchemeElement() {
 		if (this.type == SCHEME_ELEMENT) {
 			try {
-				return (SchemeElement)StorableObjectPool.getStorableObject(elementId, true);
+				return (SchemeElement)StorableObjectPool.getStorableObject(this.elementId, true);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

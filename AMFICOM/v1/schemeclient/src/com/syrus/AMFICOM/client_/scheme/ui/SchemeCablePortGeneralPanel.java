@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.13 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.14 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -52,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -95,6 +94,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -288,37 +288,37 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	void setPortEnabled(boolean b) {
-		lbPortLabel.setVisible(b);
-		pnPortPanel.setVisible(b);
+		this.lbPortLabel.setVisible(b);
+		this.pnPortPanel.setVisible(b);
 	}
 		
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 
 	public void setObject(Object or) {
 		this.schemePort = (SchemeCablePort)or;
 		Port port = null;
-		cmbTypeCombo.removeAllItems();
+		this.cmbTypeCombo.removeAllItems();
 		
-		if (schemePort != null) {
+		if (this.schemePort != null) {
 			try {
-				parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
-				port = schemePort.getPort();
+				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
+				port = this.schemePort.getPort();
 			} catch (IllegalStateException e1) {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
-				parent = null;
+				this.parent = null;
 			}
 			TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE, 0, OperationSort.OPERATION_EQUALS,ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
+				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			
-			this.tfNameText.setText(schemePort.getName());
-			this.taDescrArea.setText(schemePort.getDescription());
-			this.cmbTypeCombo.setSelectedItem(schemePort.getPortType());
+			this.tfNameText.setText(this.schemePort.getName());
+			this.taDescrArea.setText(this.schemePort.getDescription());
+			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
 		if (port != null) {
 			setPortEnabled(true);
@@ -330,28 +330,28 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //			colorCombo.setSelectedItem(color);
 		} else {
 			setPortEnabled(false);
-			tfMarkText.setText(SchemeResourceKeys.EMPTY);
+			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 
 	public Object getObject() {
-		return schemePort;
+		return this.schemePort;
 	}
 
 	public void commitChanges() {
-		if (schemePort != null && MiscUtil.validName(tfNameText.getText())) {
-			schemePort.setName(this.tfNameText.getText());
-			schemePort.setDescription(this.taDescrArea.getText());
-			schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
+		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.schemePort.setName(this.tfNameText.getText());
+			this.schemePort.setDescription(this.taDescrArea.getText());
+			this.schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
 			
-			Port port = schemePort.getPort();
+			Port port = this.schemePort.getPort();
 			if (port != null) {
-				port.setDescription(schemePort.getDescription());
+				port.setDescription(this.schemePort.getDescription());
 					// TODO add mark and color fields to Port
 //					port.setMark(markText.getText());
 //					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemePort, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.5 2005/08/01 07:52:27 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.6 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -60,41 +60,41 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	protected JScrollPane scrollPane;
 
 	public CableLinkTypeLayout() {
-		internalContext.setDispatcher(new Dispatcher());
-		internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+		this.internalContext.setDispatcher(new Dispatcher());
+		this.internalContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 
-		panel = new UgoTabbedPane(internalContext);
-		panel.getGraph().setGraphEditable(false);
-		panel.getGraph().setAntiAliased(true);
-		scrollPane = new JScrollPane(panel.getGraph());
+		this.panel = new UgoTabbedPane(this.internalContext);
+		this.panel.getGraph().setGraphEditable(false);
+		this.panel.getGraph().setAntiAliased(true);
+		this.scrollPane = new JScrollPane(this.panel.getGraph());
 	}
 
 	public void setObject(Object or) {
 		this.type = (CableLinkType) or;
 //		this.mapping.clear();
-		GraphActions.clearGraph(panel.getGraph());
+		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.type != null) {
 		// TODO разобраться с числом модулей
 			int nModules = 6;
-			if (type.getCodename().equals("okst8")
-					|| type.getCodename().equals("okst16"))
+			if (this.type.getCodename().equals("okst8")
+					|| this.type.getCodename().equals("okst16"))
 				nModules = 6;
 
 			List ctts = getSortedThreadTypes();
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
-			if (tmp > radius)
-				radius = tmp;
+			if (tmp > this.radius)
+				this.radius = tmp;
 
-			panel.getGraph().removeAll();
+			this.panel.getGraph().removeAll();
 			createModules(nModules);
 			createFibers(nModules, ctts);
 		}
 	}
 	
 	public Object getObject() {
-		return type;
+		return this.type;
 	}
 	
 	public void commitChanges() {
@@ -119,56 +119,56 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		double angle = 2 * Math.PI / nModules;
 		double inner_angle = 2 * Math.PI
 				/ (moduleFibers + (additionalFibers == 0 ? 0 : 1));
-		int r1 = radius;
-		int r2 = (int) ((radius * nModules) / Math.PI);
+		int r1 = this.radius;
+		int r2 = (int) ((this.radius * nModules) / Math.PI);
 		if (r2 < (1.415 * r1))
 			r2 = (int) (1.415 * r1);
 
 		Iterator it = fibers.iterator();
 		for (int i = 0; i < nModules; i++) {
-			int module_center_x = GAP + radius + (int) (r2 * (1 + Math.cos(i * angle)));
-			int module_center_y = GAP + radius + (int) (r2 * (1 + Math.sin(i * angle)));
+			int module_center_x = GAP + this.radius + (int) (r2 * (1 + Math.cos(i * angle)));
+			int module_center_y = GAP + this.radius + (int) (r2 * (1 + Math.sin(i * angle)));
 			for (int j = 0; j < (i < additionalFibers ? moduleFibers + 1 : moduleFibers); j++) {
 				CableThreadType ctt = (CableThreadType)it.next();
 				
 				int x = module_center_x
-						+ (int) (radius / 2 * (Math.cos(j * inner_angle))) - FIBER_RADIUS;
+						+ (int) (this.radius / 2 * (Math.cos(j * inner_angle))) - FIBER_RADIUS;
 				int y = module_center_y
-						+ (int) (radius / 2 * (Math.sin(j * inner_angle))) - FIBER_RADIUS;
+						+ (int) (this.radius / 2 * (Math.sin(j * inner_angle))) - FIBER_RADIUS;
 				Rectangle bounds = new Rectangle(x, y, 2 * FIBER_RADIUS,
 						2 * FIBER_RADIUS);
 				Color c = new Color(ctt.getColor());
-				addThreadCell(panel.getGraph(), ctt, bounds,	c);
+				addThreadCell(this.panel.getGraph(), ctt, bounds,	c);
 			}
 		}
 	}
 
 	private void createModules(int nModules) {
 		double angle = 2 * Math.PI / nModules;
-		int r1 = radius;
-		int r2 = (int) ((radius * nModules) / Math.PI);
+		int r1 = this.radius;
+		int r2 = (int) ((this.radius * nModules) / Math.PI);
 		if (r2 < (1.415 * r1))
 			r2 = (int) (1.415 * r1);
 
-		addCell(panel.getGraph(), "", new Rectangle(GAP - 8, GAP - 8, //$NON-NLS-1$
+		addCell(this.panel.getGraph(), "", new Rectangle(GAP - 8, GAP - 8, //$NON-NLS-1$
 				16 + 2 * (r2 + r1), 16 + 2 * (r2 + r1)), Color.LIGHT_GRAY);
-		addCell(panel.getGraph(), "", new Rectangle(GAP - 1, GAP - 1, //$NON-NLS-1$
+		addCell(this.panel.getGraph(), "", new Rectangle(GAP - 1, GAP - 1, //$NON-NLS-1$
 				2 + 2 * (r2 + r1), 2 + 2 * (r2 + r1)), Color.WHITE);
-		addCell(panel.getGraph(), "", new Rectangle(GAP //$NON-NLS-1$
-				+ (int) Math.round(radius * 1.915) + 2, GAP
-				+ (int) Math.round(radius * 1.915) + 2, 2 * (r2 - r1), 2 * (r2 - r1)),
+		addCell(this.panel.getGraph(), "", new Rectangle(GAP //$NON-NLS-1$
+				+ (int) Math.round(this.radius * 1.915) + 2, GAP
+				+ (int) Math.round(this.radius * 1.915) + 2, 2 * (r2 - r1), 2 * (r2 - r1)),
 				Color.GRAY);
 		for (int i = 0; i < nModules; i++) {
 			int x = GAP + (int) (r2 * (1 + Math.cos(i * angle)));
 			int y = GAP + (int) (r2 * (1 + Math.sin(i * angle)));
-			Rectangle bounds = new Rectangle(x, y, 2 * radius, 2 * radius);
-			addCell(panel.getGraph(), "", bounds, Color.WHITE); //$NON-NLS-1$
+			Rectangle bounds = new Rectangle(x, y, 2 * this.radius, 2 * this.radius);
+			addCell(this.panel.getGraph(), "", bounds, Color.WHITE); //$NON-NLS-1$
 		}
-		panel.getCurrentPanel().setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
+		this.panel.getCurrentPanel().setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
 	}
 
 	public JComponent getGUI() {
-		return scrollPane;
+		return this.scrollPane;
 	}
 
 	public void propertyChange(PropertyChangeEvent oe) {
@@ -179,10 +179,10 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 				if (obj instanceof ThreadTypeCell) {
 					ThreadTypeCell cell = (ThreadTypeCell)obj;
 					Color newColor = new Color(cell.getCableThreadType().getColor());
-					panel.getGraph().setSelectionCell(cell);
-					GraphActions.setObjectBackColor(panel.getGraph(), cell, newColor);
+					this.panel.getGraph().setSelectionCell(cell);
+					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, newColor);
 				} else if (obj instanceof EllipseCell) {
-					panel.getGraph().clearSelection();
+					this.panel.getGraph().clearSelection();
 				}
 			}
 		}

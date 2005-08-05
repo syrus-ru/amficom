@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.15 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.16 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -108,6 +108,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -336,57 +337,57 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	void setPortEnabled(boolean b) {
-		lbPortLabel.setVisible(b);
-		pnPortPanel.setVisible(b);
+		this.lbPortLabel.setVisible(b);
+		this.pnPortPanel.setVisible(b);
 		
-		if (b && parent != null && parent.getKis() != null)
+		if (b && this.parent != null && this.parent.getKis() != null)
 			setMPTypeEnabled(true);
 		else
 			setMPTypeEnabled(false);			
 	}
 	
 	void setMPTypeEnabled(boolean b) {
-		cbMpBox.setVisible(b);
-		lbMpTypeLabel.setVisible(b);
-		cmbMpTypeCombo.setVisible(b);
+		this.cbMpBox.setVisible(b);
+		this.lbMpTypeLabel.setVisible(b);
+		this.cmbMpTypeCombo.setVisible(b);
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 
 	public void setObject(Object or) {
 		this.schemePort = (SchemePort)or;
 		MeasurementPort mPort = null;
 		Port port = null;
-		cmbTypeCombo.removeAllItems();
-		cmbMpTypeCombo.removeAllItems();
+		this.cmbTypeCombo.removeAllItems();
+		this.cmbMpTypeCombo.removeAllItems();
 		
-		if (schemePort != null) {
+		if (this.schemePort != null) {
 			try {
-				parent = schemePort.getParentSchemeDevice().getParentSchemeElement();
-				port = schemePort.getPort();
-				mPort = schemePort.getMeasurementPort();
+				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
+				port = this.schemePort.getPort();
+				mPort = this.schemePort.getMeasurementPort();
 			} catch (IllegalStateException e1) {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
-				parent = null;
+				this.parent = null;
 			}
 			TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_SIMPLE, 0, OperationSort.OPERATION_EQUALS,ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
+				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			EquivalentCondition condition2 = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 			try {
-				cmbMpTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition2, true));
+				this.cmbMpTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition2, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
 			
-			this.tfNameText.setText(schemePort.getName());
-			this.taDescrArea.setText(schemePort.getDescription());
-			this.cmbTypeCombo.setSelectedItem(schemePort.getPortType());
+			this.tfNameText.setText(this.schemePort.getName());
+			this.taDescrArea.setText(this.schemePort.getDescription());
+			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
 		if (port != null) {
 			setPortEnabled(true);
@@ -398,43 +399,43 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //			colorCombo.setSelectedItem(color);
 		} else {
 			setPortEnabled(false);
-			tfMarkText.setText(SchemeResourceKeys.EMPTY);
+			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (mPort != null) {
-			cbMpBox.setSelected(true);
-			cmbMpTypeCombo.setSelectedItem(mPort.getType());
+			this.cbMpBox.setSelected(true);
+			this.cmbMpTypeCombo.setSelectedItem(mPort.getType());
 		} else {
-			cbMpBox.setSelected(false);
+			this.cbMpBox.setSelected(false);
 			setMPTypeEnabled(false);
 		}
 	}
 
 	public Object getObject() {
-		return schemePort;
+		return this.schemePort;
 	}
 
 	public void commitChanges() {
-		if (schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
-			schemePort.setName(this.tfNameText.getText());
-			schemePort.setDescription(this.taDescrArea.getText());
-			schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
+		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.schemePort.setName(this.tfNameText.getText());
+			this.schemePort.setDescription(this.taDescrArea.getText());
+			this.schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
 			
-			Port port = schemePort.getPort();
+			Port port = this.schemePort.getPort();
 			if (port != null) {
-				port.setDescription(schemePort.getDescription());
+				port.setDescription(this.schemePort.getDescription());
 				// TODO add mark and color fields to Port
 //				port.setMark(markText.getText());
 //				port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
 
-			MeasurementPort mp = schemePort.getMeasurementPort();
-			if (cbMpBox.isSelected()) {
+			MeasurementPort mp = this.schemePort.getMeasurementPort();
+			if (this.cbMpBox.isSelected()) {
 				if (mp == null) {
-					if (parent != null && parent.getKis() != null) {
+					if (this.parent != null && this.parent.getKis() != null) {
 						try {
-							MeasurementPortType mpType = (MeasurementPortType) cmbMpTypeCombo.getSelectedItem();
-							mp = SchemeObjectsFactory.createMeasurementPort(mpType, schemePort);
-							schemePort.setMeasurementPort(mp);
+							MeasurementPortType mpType = (MeasurementPortType) this.cmbMpTypeCombo.getSelectedItem();
+							mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
+							this.schemePort.setMeasurementPort(mp);
 						} catch (CreateObjectException e) {
 							Log.errorException(e);
 						}
@@ -442,15 +443,15 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 						Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
 					}
 				} else if (mp != null) {
-					mp.setName(schemePort.getName());
-					mp.setDescription(schemePort.getDescription());
-					mp.setType((MeasurementPortType)cmbMpTypeCombo.getSelectedItem());
+					mp.setName(this.schemePort.getName());
+					mp.setDescription(this.schemePort.getDescription());
+					mp.setType((MeasurementPortType)this.cmbMpTypeCombo.getSelectedItem());
 				}
 			} else if (mp != null) {
 				StorableObjectPool.delete(mp.getId());
-				schemePort.setMeasurementPort(null);
+				this.schemePort.setMeasurementPort(null);
 			} 
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemePort, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

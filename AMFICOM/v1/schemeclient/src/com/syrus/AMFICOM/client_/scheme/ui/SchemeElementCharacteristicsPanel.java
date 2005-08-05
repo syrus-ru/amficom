@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.8 2005/07/19 06:54:18 stas Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.9 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/07/19 06:54:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -35,20 +35,20 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 	}
 
 	public Object getObject() {
-		return schemeElement;
+		return this.schemeElement;
 	}
 
 	public void setObject(Object or) {
 		this.schemeElement = (SchemeElement)or;
 		super.clear();
 
-		if (schemeElement != null) {
+		if (this.schemeElement != null) {
 			try {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
-						schemeElement,
-						schemeElement.getId(), true);
-				super.addCharacteristics(schemeElement.getCharacteristics(), schemeElement.getId());
-				Equipment eq = schemeElement.getEquipment();
+						this.schemeElement,
+						this.schemeElement.getId(), true);
+				super.addCharacteristics(this.schemeElement.getCharacteristics(), this.schemeElement.getId());
+				Equipment eq = this.schemeElement.getEquipment();
 				if (eq != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
@@ -56,7 +56,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 								eq.getId(), true);
 					super.addCharacteristics(eq.getCharacteristics(), eq.getId());
 				} else {
-					EquipmentType eqt = schemeElement.getEquipmentType();
+					EquipmentType eqt = this.schemeElement.getEquipmentType();
 					if (eqt != null) {
 						for (int i = 0; i < sorts.length; i++)
 							super.setTypeSortMapping(sorts[i],

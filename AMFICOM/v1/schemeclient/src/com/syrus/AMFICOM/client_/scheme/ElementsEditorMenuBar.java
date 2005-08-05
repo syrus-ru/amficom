@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMenuBar.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: ElementsEditorMenuBar.java,v 1.6 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,20 +19,18 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
-public class ElementsEditorMenuBar extends AbstractMainMenuBar
-{
+public class ElementsEditorMenuBar extends AbstractMainMenuBar {
+	private static final long serialVersionUID = -6603705967256780208L;
 
-	public ElementsEditorMenuBar(ApplicationModel aModel)
-	{
+	public ElementsEditorMenuBar(ApplicationModel aModel) {
 		super(aModel);
 	}
 
-	protected void addMenuItems()
-	{
+	protected void addMenuItems() {
 		final JMenu menuComponent = new JMenu();
 		final JMenuItem menuComponentNew = new JMenuItem();
 		final JMenuItem menuComponentSave = new JMenuItem();
@@ -49,10 +47,10 @@ public class ElementsEditorMenuBar extends AbstractMainMenuBar
 		menuComponent.setName("menuComponent");
 		menuComponentNew.setText(LangModelSchematics.getString("menuComponentNew"));
 		menuComponentNew.setName("menuComponentNew");
-		menuComponentNew.addActionListener(actionAdapter);
+		menuComponentNew.addActionListener(this.actionAdapter);
 		menuComponentSave.setText(LangModelSchematics.getString("menuComponentSave"));
 		menuComponentSave.setName("menuComponentSave");
-		menuComponentSave.addActionListener(actionAdapter);
+		menuComponentSave.addActionListener(this.actionAdapter);
 
 		menuComponent.add(menuComponentNew);
 		menuComponent.add(menuComponentSave);
@@ -61,22 +59,22 @@ public class ElementsEditorMenuBar extends AbstractMainMenuBar
 		menuWindow.setName("menuWindow");
 		menuWindowArrange.setText(LangModelGeneral.getString("Menu.View.WindowArrange"));
 		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
-		menuWindowArrange.addActionListener(actionAdapter);
+		menuWindowArrange.addActionListener(this.actionAdapter);
 		menuWindowTree.setText(LangModelSchematics.getString("menuWindowTree"));
 		menuWindowTree.setName("menuWindowTree");
-		menuWindowTree.addActionListener(actionAdapter);
+		menuWindowTree.addActionListener(this.actionAdapter);
 		menuWindowScheme.setText(LangModelSchematics.getString("menuWindowElements"));
 		menuWindowScheme.setName("menuWindowScheme");
-		menuWindowScheme.addActionListener(actionAdapter);
+		menuWindowScheme.addActionListener(this.actionAdapter);
 		menuWindowUgo.setText(LangModelSchematics.getString("menuWindowUgo"));
 		menuWindowUgo.setName("menuWindowUgo");
-		menuWindowUgo.addActionListener(actionAdapter);
+		menuWindowUgo.addActionListener(this.actionAdapter);
 		menuWindowProps.setText(LangModelSchematics.getString("menuWindowProps"));
 		menuWindowProps.setName("menuWindowProps");
-		menuWindowProps.addActionListener(actionAdapter);
+		menuWindowProps.addActionListener(this.actionAdapter);
 		menuWindowList.setText(LangModelSchematics.getString("menuWindowList"));
 		menuWindowList.setName("menuWindowList");
-		menuWindowList.addActionListener(actionAdapter);
+		menuWindowList.addActionListener(this.actionAdapter);
 
 		menuWindow.add(menuWindowArrange);
 		menuWindow.addSeparator();

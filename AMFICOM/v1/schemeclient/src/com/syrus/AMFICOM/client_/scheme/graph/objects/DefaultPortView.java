@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultPortView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: DefaultPortView.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.jgraph.pad.EllipseView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -38,15 +38,17 @@ public class DefaultPortView extends EllipseView {
 	}
 
 	static class SchemeEllipseRenderer extends EllipseView.EllipseRenderer {
+		private static final long serialVersionUID = -5509316073878497199L;
+
 		protected void paintSelectionBorder(Graphics g) {
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			if (childrenSelected)
-				g.setColor(graph.getGridColor());
+			if (this.childrenSelected)
+				g.setColor(this.graph.getGridColor());
 			//      else if (hasFocus && selected)
 			//       g.setColor(graph.getLockedHandleColor());
-			else if (selected)
-				g.setColor(graph.getHighlightColor());
-			if (childrenSelected || selected) {
+			else if (this.selected)
+				g.setColor(this.graph.getHighlightColor());
+			if (this.childrenSelected || this.selected) {
 				Dimension d = getSize();
 				g.drawRect(0, 0, d.width - 1, d.height - 1);
 			}

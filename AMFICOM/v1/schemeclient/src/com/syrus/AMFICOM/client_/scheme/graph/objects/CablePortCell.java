@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.7 2005/08/01 07:52:28 stas Exp $
+ * $Id: CablePortCell.java,v 1.8 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -67,7 +67,7 @@ public class CablePortCell extends DefaultGraphCell {
 
 	public SchemeCablePort getSchemeCablePort() {
 		try {
-			return (SchemeCablePort)StorableObjectPool.getStorableObject(schemeCableportId, true);
+			return (SchemeCablePort)StorableObjectPool.getStorableObject(this.schemeCableportId, true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 			return null;
@@ -75,7 +75,7 @@ public class CablePortCell extends DefaultGraphCell {
 	}
 
 	public Identifier getSchemeCablePortId() {
-		return schemeCableportId;
+		return this.schemeCableportId;
 	}
 	
 	/**

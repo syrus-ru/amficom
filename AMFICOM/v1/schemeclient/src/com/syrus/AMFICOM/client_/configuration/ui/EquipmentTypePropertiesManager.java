@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypePropertiesManager.java,v 1.4 2005/07/11 12:31:37 stas Exp $
+ * $Id: EquipmentTypePropertiesManager.java,v 1.5 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 12:31:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -39,14 +39,17 @@ public class EquipmentTypePropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new EquipmentTypeGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new EquipmentTypeCharacteristicsPanel();
-		charPanel.setContext(aContext);
-		if (emptyPanel == null)
-			emptyPanel = new EmptyStorableObjectEditor();
+		if (this.generalPanel == null) {
+			this.generalPanel = new EquipmentTypeGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new EquipmentTypeCharacteristicsPanel();
+		}
+		this.charPanel.setContext(aContext);
+		if (this.emptyPanel == null) {
+			this.emptyPanel = new EmptyStorableObjectEditor();
+		}
 	}
 	
 	/**
@@ -54,7 +57,7 @@ public class EquipmentTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class EquipmentTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -78,6 +81,6 @@ public class EquipmentTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return emptyPanel;
+		return this.emptyPanel;
 	}
 }

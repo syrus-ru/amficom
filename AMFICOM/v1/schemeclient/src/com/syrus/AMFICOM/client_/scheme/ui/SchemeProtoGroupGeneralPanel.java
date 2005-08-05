@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.4 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -65,7 +65,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemeProtoGroup schemeProtoGroup;
 	private Identifier imageId;
-	private String NON_GROUP_ITEM = "nonGroupItem";
+	private static final String NON_GROUP_ITEM = "nonGroupItem";
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
@@ -96,6 +96,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(schemeProtoGroup);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbpanel0 = new GridBagLayout();
 		GridBagConstraints gbcpanel0 = new GridBagConstraints();
@@ -228,18 +229,18 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return panel0; 
+		return this.panel0; 
 	}
 
 	public Object getObject() {
-		return schemeProtoGroup;
+		return this.schemeProtoGroup;
 	}
 
 	public void setObject(Object or) {
 		this.schemeProtoGroup = (SchemeProtoGroup) or;
 		Icon symbol = null;
 		
-		parentCombo.removeAllItems();
+		this.parentCombo.removeAllItems();
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.SCHEMEPROTOGROUP_CODE);
 		
 		try {
@@ -247,18 +248,18 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			groups.remove(this.schemeProtoGroup);
 			List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
 			Collections.sort(sortedGroups, new WrapperComparator(SchemeProtoGroupWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
-			parentCombo.addElements(sortedGroups);
-			parentCombo.addItem(NON_GROUP_ITEM);
+			this.parentCombo.addElements(sortedGroups);
+			this.parentCombo.addItem(NON_GROUP_ITEM);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
 		
 		if (this.schemeProtoGroup != null) {
-			this.nameText.setText(schemeProtoGroup.getName());
-			this.descrArea.setText(schemeProtoGroup.getDescription());
-			if (schemeProtoGroup.getSymbol() != null)
-				symbol = new ImageIcon(schemeProtoGroup.getSymbol().getImage());
-			parentCombo.setSelectedItem(schemeProtoGroup.getParent());
+			this.nameText.setText(this.schemeProtoGroup.getName());
+			this.descrArea.setText(this.schemeProtoGroup.getDescription());
+			if (this.schemeProtoGroup.getSymbol() != null)
+				symbol = new ImageIcon(this.schemeProtoGroup.getSymbol().getImage());
+			this.parentCombo.setSelectedItem(this.schemeProtoGroup.getParent());
 		} else {
 			this.nameText.setText(SchemeResourceKeys.EMPTY);
 			this.descrArea.setText(SchemeResourceKeys.EMPTY);
@@ -272,8 +273,8 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.schemeProtoGroup = SchemeObjectsFactory.createSchemeProtoGroup();
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoGroup, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.schemeProtoGroup, SchemeProtoGroupPropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME_PROTOGROUP));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoGroup, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.schemeProtoGroup, SchemeProtoGroupPropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.SCHEME_PROTOGROUP));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -281,8 +282,8 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			} else {
 				apply();
-				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoGroup, SchemeEvent.UPDATE_OBJECT));
-				aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.schemeProtoGroup, SchemeProtoGroupPropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME_PROTOGROUP));
+				this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoGroup, SchemeEvent.UPDATE_OBJECT));
+				this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.schemeProtoGroup, SchemeProtoGroupPropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.SCHEME_PROTOGROUP));
 			}
 		}
 	}
@@ -294,7 +295,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			this.schemeProtoGroup.setSymbol(null);
 		} else {
 			try {
-				this.schemeProtoGroup.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(imageId, true));
+				this.schemeProtoGroup.setSymbol((BitmapImageResource)StorableObjectPool.getStorableObject(this.imageId, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

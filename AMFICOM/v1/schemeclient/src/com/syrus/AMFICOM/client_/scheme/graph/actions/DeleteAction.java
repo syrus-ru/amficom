@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.10 2005/08/05 08:21:34 stas Exp $
+ * $Id: DeleteAction.java,v 1.11 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -65,7 +65,7 @@ public class DeleteAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		SchemeGraph graph = pane.getGraph();
+		SchemeGraph graph = this.pane.getGraph();
 		
 		Object[] cells = graph.getDescendants(graph.getSelectionCells());
 		if (cells != null) {
@@ -89,7 +89,7 @@ public class DeleteAction extends AbstractAction {
 			delete(graph, cells);
 			
 			graph.selectionNotify();
-			pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
+			this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
 		}
 	}
 	

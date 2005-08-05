@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.11 2005/08/04 09:19:00 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.12 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,11 +36,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class UgoTabbedPane extends JPanel {
+	private static final long serialVersionUID = -1701913114506241472L;
+
 	protected ApplicationContext aContext;
 	protected SchemeMarqueeHandler marqueeHandler;
 	protected UgoPanel panel;
@@ -62,15 +64,15 @@ public class UgoTabbedPane extends JPanel {
 
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		panel.getGraph().setContext(aContext);
+		this.panel.getGraph().setContext(aContext);
 	}
 	
 	public ApplicationContext getContext() {
-		return aContext;
+		return this.aContext;
 	}
 	
 	private void jbInit() throws Exception {
-		marqueeHandler =  new SchemeMarqueeHandler(this);
+		this.marqueeHandler =  new SchemeMarqueeHandler(this);
 		setLayout(new BorderLayout());
 		add(createPanel(), BorderLayout.CENTER);
 		add(createToolBar(), BorderLayout.NORTH);
@@ -78,32 +80,32 @@ public class UgoTabbedPane extends JPanel {
 	
 	protected JComponent createToolBar() {
 		this.toolBar = new UgoToolBar(this);  
-		return toolBar;
+		return this.toolBar;
 	}
 		
 	protected JComponent createPanel() {
-		panel = new UgoPanel(aContext);
-		panel.getGraph().setMarqueeHandler(marqueeHandler);
-		JScrollPane graphView = new JScrollPane(panel.getGraph());
+		this.panel = new UgoPanel(this.aContext);
+		this.panel.getGraph().setMarqueeHandler(this.marqueeHandler);
+		JScrollPane graphView = new JScrollPane(this.panel.getGraph());
 		return graphView;
 	}
 	
 	public SchemeMarqueeHandler getMarqueeHandler() {
-		return marqueeHandler;
+		return this.marqueeHandler;
 	}
 
 	/**
 	 * @return selected UgoPanel
 	 */
 	public UgoPanel getCurrentPanel() {
-		return panel;
+		return this.panel;
 	}
 	
 	/**
 	 * @return set of UgoPanels
 	 */
 	public Set<UgoPanel> getAllPanels() {
-		return Collections.singleton(panel);
+		return Collections.singleton(this.panel);
 	}
 	
 	/**
@@ -121,7 +123,7 @@ public class UgoTabbedPane extends JPanel {
 	}
 
 	public boolean removeAllPanels() {
-		return removePanel(panel);
+		return removePanel(this.panel);
 	}
 	
 	public void setEditable(boolean b) {
@@ -183,7 +185,7 @@ public class UgoTabbedPane extends JPanel {
 	}
 
 	/**
-	 * @param schemeCellContainer Scheme or SchemeElement or SchemeProtoElement
+	 * @param schemeImageResource Scheme or SchemeElement or SchemeProtoElement SchemeCell or UgoCell
 	 * @param doClone create copy of objects or open themself
 	 * @return Map of cloned DefaultGraphCells (oldCell, newCell) if doClone is true, empty map overwise  
 	 */

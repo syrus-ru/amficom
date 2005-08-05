@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.6 2005/07/20 15:01:32 bass Exp $
+ * $Id: SchemeResource.java,v 1.7 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
+import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/20 15:01:32 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -100,15 +100,15 @@ public class SchemeResource {
 	}
 	
 	public SchemePath getSchemePath() {
-		return schemePath;
+		return this.schemePath;
 	}
 	
 	private void updateObject() {
-		SchemeImageResource ir = object.getUgoCell();
+		SchemeImageResource ir = this.object.getUgoCell();
 		if (ir == null) {
 			try {
 				ir = SchemeObjectsFactory.createSchemeImageResource();
-				object.setUgoCell(ir);
+				this.object.setUgoCell(ir);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				return;
@@ -136,12 +136,13 @@ public class SchemeResource {
 	}
 	
 	public Object[] getPathElements(SchemePath path) {
-		Object[] cells = graph.getAll();
-		ArrayList new_cells = new ArrayList();
+		Object[] cells = this.graph.getAll();
+		ArrayList<Object> new_cells = new ArrayList<Object>();
 		Set pes = path.getPathMembers();
-		ArrayList links = new ArrayList(pes.size());
-		for (Iterator it = pes.iterator(); it.hasNext();)
+		ArrayList<AbstractSchemeElement> links = new ArrayList<AbstractSchemeElement>(pes.size());
+		for (Iterator it = pes.iterator(); it.hasNext();) {
 			links.add(((PathElement)it.next()).getAbstractSchemeElement());
+		}
 
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DefaultCableLink) {

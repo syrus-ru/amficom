@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.6 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,11 +22,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
 public class SchemeViewerFrame extends JInternalFrame {
+	private static final long serialVersionUID = 7822597656196362953L;
 	public static final String	NAME	= "editorFrame";
 	ApplicationContext aContext;
 	UgoTabbedPane pane;
@@ -38,6 +39,7 @@ public class SchemeViewerFrame extends JInternalFrame {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		setContext(aContext);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -62,11 +64,11 @@ public class SchemeViewerFrame extends JInternalFrame {
 		setMaximizable(true);
 		setIconifiable(true);
 		getContentPane().setLayout(new BorderLayout());
-		getContentPane().add(pane, BorderLayout.CENTER);
+		getContentPane().add(this.pane, BorderLayout.CENTER);
 	}
 
 	public SchemeGraph getGraph() {
-		return pane.getGraph();
+		return this.pane.getGraph();
 	}
 
 	public void doDefaultCloseAction() {

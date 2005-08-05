@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.18 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.19 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -119,7 +119,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	
 	protected Rectangle devBounds;
 	protected Point settingPoint;
-	private int crossSize = 4;
+	private static final int CROSS_SIZE = 4;
 	
 	private static final Cursor DEFAULT_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
 	private static final Cursor CROSSHAIR_CURSOR = new Cursor(Cursor.CROSSHAIR_CURSOR);
@@ -129,17 +129,17 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 
 	// Update Undo/Redo Button State based on Undo Manager
 	public void updateHistoryButtons(GraphUndoManager undoManager) {
-		SchemeGraph graph = pane.getGraph();
+		SchemeGraph graph = this.pane.getGraph();
 		boolean b1 = undoManager.canUndo(graph.getGraphLayoutCache());
-		undo.setEnabled(b1);
-		redo.setEnabled(undoManager.canRedo(graph.getGraphLayoutCache()));
+		this.undo.setEnabled(b1);
+		this.redo.setEnabled(undoManager.canRedo(graph.getGraphLayoutCache()));
 		
-		pane.setGraphChanged(b1);
+		this.pane.setGraphChanged(b1);
 	}
 	
 	/* Return true if this handler should be preferred over other handlers. */
 	public boolean isForceMarqueeEvent(MouseEvent event) {
-		return !s.isSelected()
+		return !this.s.isSelected()
 			|| isPopupTrigger(event)
 			|| super.isForceMarqueeEvent(event);
 	}
@@ -149,15 +149,15 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	}
 
 	public void updateButtonsState(Object[] cells) {
-		SchemeGraph graph = pane.getGraph();
-		ugo.setEnabled((graph.getAll().length == 0) ? false : true);
-		del.setEnabled(cells.length != 0 && !GraphActions.hasGroupedParent(cells[0]));
-		ugr.setEnabled(false);
-		gr.setEnabled(false);
-		gr2.setEnabled(false);
-		p1.setEnabled(false);
-		p2.setEnabled(false);
-		bp.setEnabled(false);
+		SchemeGraph graph = this.pane.getGraph();
+		this.ugo.setEnabled((graph.getAll().length == 0) ? false : true);
+		this.del.setEnabled(cells.length != 0 && !GraphActions.hasGroupedParent(cells[0]));
+		this.ugr.setEnabled(false);
+		this.gr.setEnabled(false);
+		this.gr2.setEnabled(false);
+		this.p1.setEnabled(false);
+		this.p2.setEnabled(false);
+		this.bp.setEnabled(false);
 
 		int ports = 0;
 		int cablePorts = 0;
@@ -182,48 +182,49 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (groups == 0) {
 			if (devices == 0) {
 				if (ports + cablePorts == 1)
-					bp.setEnabled(true);
+					this.bp.setEnabled(true);
 			} 
 			else if (devices == 1) {
 				if (!GraphActions.hasGroupedParent(device)) {
-					p1.setEnabled(true);
-					p2.setEnabled(true);
+					this.p1.setEnabled(true);
+					this.p2.setEnabled(true);
 					if (device.getChildCount() > 1) {
-						gr.setEnabled(true);
-						gr2.setEnabled(true);
+						this.gr.setEnabled(true);
+						this.gr2.setEnabled(true);
 					}
 				}
 			}
 		} else if (groups == 1) {
 			// ugo.setEnabled(true);
 		}
-		if (groups > 0)
-			ugr.setEnabled(true);
+		if (groups > 0) {
+			this.ugr.setEnabled(true);
+		}
 		if (groups > 1) {
-			gr.setEnabled(true);
-			gr2.setEnabled(true);
+			this.gr.setEnabled(true);
+			this.gr2.setEnabled(true);
 		}
 	}
 
 	public void mousePressed(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (graph.isEditable()) {
-			if (p1.isSelected() || p2.isSelected()) {
+			if (this.p1.isSelected() || this.p2.isSelected()) {
 				createPort(graph, graph.snap(event.getPoint()));
-				devBounds = null;
-				settingPoint = null;
+				this.devBounds = null;
+				this.settingPoint = null;
 				graph.repaint();
 				event.consume();
-			} else if (ce.isSelected() && firstPort != null)
-				start = graph.toScreen(firstPort.getLocation(null));
+			} else if (this.ce.isSelected() && this.firstPort != null)
+				this.start = graph.toScreen(this.firstPort.getLocation(null));
 		}
 		
 		// from GPMarqueeHandler
-		if (!isPopupTrigger(event) && !event.isConsumed() && !s.isSelected()) {
-			start = graph.snap(event.getPoint());
-			firstPort = port;
-			if (e.isSelected() && firstPort != null)
-				start = graph.toScreen(firstPort.getLocation(null));
+		if (!isPopupTrigger(event) && !event.isConsumed() && !this.s.isSelected()) {
+			this.start = graph.snap(event.getPoint());
+			this.firstPort = this.port;
+			if (this.e.isSelected() && this.firstPort != null)
+				this.start = graph.toScreen(this.firstPort.getLocation(null));
 			event.consume();
 		}
 		if (!isPopupTrigger(event))
@@ -244,30 +245,30 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (!graph.isEditable())
 			return;
 
-		if (p1.isSelected() || p2.isSelected())
+		if (this.p1.isSelected() || this.p2.isSelected())
 			event.consume();
 		// from GPMarqueeHandler
-		else if (!event.isConsumed() && !s.isSelected()) {
+		else if (!event.isConsumed() && !this.s.isSelected()) {
 			Graphics g = graph.getGraphics();
 			Color bg = graph.getBackground();
 			Color fg = Color.black;
 			g.setColor(fg);
 			g.setXORMode(bg);
 			overlay(graph, g);
-			current = graph.snap(event.getPoint());
-			if (e.isSelected() || l.isSelected() || ce.isSelected()) {
-				port = getPortViewAt(graph, event.getX(), event.getY(), !event.isShiftDown());
-				if (port != null) {
-					Map map = graph.getModel().getAttributes(port.getCell());
+			this.current = graph.snap(event.getPoint());
+			if (this.e.isSelected() || this.l.isSelected() || this.ce.isSelected()) {
+				this.port = getPortViewAt(graph, event.getX(), event.getY(), !event.isShiftDown());
+				if (this.port != null) {
+					Map map = graph.getModel().getAttributes(this.port.getCell());
 					if (map != null) {
 						if (!GraphConstants.isConnectable(map))
-							port = null;
+							this.port = null;
 						else
-							current = graph.toScreen(port.getLocation(null));
+							this.current = graph.toScreen(this.port.getLocation(null));
 					}
 				}
 			}
-			bounds = new Rectangle(start).union(new Rectangle(current));
+			this.bounds = new Rectangle(this.start).union(new Rectangle(this.current));
 			g.setColor(bg);
 			g.setXORMode(fg);
 			overlay(graph, g);
@@ -349,7 +350,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			if (directionType == null)
 				return;
 			
-			boolean isCable = !p1.isSelected();
+			boolean isCable = !this.p1.isSelected();
 			
 			StorableObjectCondition condition = new TypicalCondition(
 					isCable ? PortTypeKind._PORT_KIND_CABLE : PortTypeKind._PORT_KIND_SIMPLE,
@@ -403,26 +404,26 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 			
 		if (SwingUtilities.isLeftMouseButton(event)) {
-			if (event != null && !event.isConsumed() && bounds != null && !s.isSelected()) {
-				if (dev.isSelected()) {
-					graph.fromScreen(bounds);
+			if (event != null && !event.isConsumed() && this.bounds != null && !this.s.isSelected()) {
+				if (this.dev.isSelected()) {
+					graph.fromScreen(this.bounds);
 //					bounds.width += 2;
 //					bounds.height += 2;
 //					bounds.width ++;
 //					bounds.height ++;
 					try {
 						SchemeDevice device = SchemeObjectsFactory.createSchemeDevice(Constants.DEVICE + System.currentTimeMillis());
-						DeviceCell cell = SchemeActions.createDevice(graph, "", bounds, device.getId());  //$NON-NLS-1$
+						DeviceCell cell = SchemeActions.createDevice(graph, "", this.bounds, device.getId());  //$NON-NLS-1$
 						cell.setSchemeDeviceId(device.getId());
 					} catch (ApplicationException e1) {
 						Log.errorException(e1);
 					}
-				} else if (r.isSelected())
-					graph.addVertex("", bounds, false, Color.black); //$NON-NLS-1$
-				else if (c.isSelected())
-					graph.addEllipse("", bounds); //$NON-NLS-1$
-				else if (ce.isSelected()) {
-					if (start == null || current == null) {
+				} else if (this.r.isSelected())
+					graph.addVertex("", this.bounds, false, Color.black); //$NON-NLS-1$
+				else if (this.c.isSelected())
+					graph.addEllipse("", this.bounds); //$NON-NLS-1$
+				else if (this.ce.isSelected()) {
+					if (this.start == null || this.current == null) {
 						event.consume();
 					} else {
 						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
@@ -442,7 +443,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						CableLinkType type = (CableLinkType)types.iterator().next();
 						
 						Scheme scheme = null;
-						UgoPanel panel = pane.getCurrentPanel();
+						UgoPanel panel = this.pane.getCurrentPanel();
 						if (panel instanceof SchemePanel)
 							scheme = ((SchemePanel)panel).getSchemeResource().getScheme();
 						if (scheme != null) {
@@ -451,17 +452,17 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
 								link.setAbstractLinkType(type);
 								DefaultCableLink cell = SchemeActions.createCableLink(graph,
-										firstPort, port, graph.fromScreen(new Point(start)), 
-										graph.fromScreen(new Point(current)), link.getId());
+										this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
+										graph.fromScreen(new Point(this.current)), link.getId());
 								link.setName((String)cell.getUserObject());
-								Notifier.notify(graph, pane.aContext, link);
+								Notifier.notify(graph, this.pane.aContext, link);
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
 							}
 						}
 					}
-				} else if (e.isSelected()) {
-					if (start == null || current == null) {
+				} else if (this.e.isSelected()) {
+					if (this.start == null || this.current == null) {
 						event.consume();
 					} else {
 						StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
@@ -485,7 +486,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							link = SchemeObjectsFactory.createSchemeLink("link" + System.currentTimeMillis());
 							link.setAbstractLinkType(type);
 							
-							UgoPanel panel = pane.getCurrentPanel();
+							UgoPanel panel = this.pane.getCurrentPanel();
 							if (panel instanceof SchemePanel) {
 								SchemeResource res = ((SchemePanel)panel).getSchemeResource();
 								if (res.getCellContainerType() == SchemeResource.SCHEME)
@@ -497,16 +498,16 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 							}
 							
 							DefaultLink cell = SchemeActions.createLink(graph,
-									firstPort, port, graph.fromScreen(new Point(start)), 
-									graph.fromScreen(new Point(current)), link.getId());
+									this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
+									graph.fromScreen(new Point(this.current)), link.getId());
 							link.setName((String)cell.getUserObject());
-							Notifier.notify(graph, pane.aContext, link);
+							Notifier.notify(graph, this.pane.aContext, link);
 						} catch (ApplicationException e1) {
 							Log.errorException(e1);
 							return;
 						}
 						
-						UgoPanel panel = pane.getCurrentPanel();
+						UgoPanel panel = this.pane.getCurrentPanel();
 						if (panel instanceof ElementsPanel) {
 							SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
 							if (res.getCellContainerType() == SchemeResource.SCHEME) {
@@ -520,10 +521,10 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						}
 					}
 				} 
-				else if (l.isSelected()) {
-					List list = new ArrayList();
-					list.add(graph.fromScreen(new Point(start)));
-					list.add(graph.toScreen(new Point(current)));
+				else if (this.l.isSelected()) {
+					List<Point> list = new ArrayList<Point>();
+					list.add(graph.fromScreen(new Point(this.start)));
+					list.add(graph.toScreen(new Point(this.current)));
 					Map map = GraphConstants.createMap();
 					GraphConstants.setPoints(map, list);
 					GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
@@ -533,14 +534,14 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					viewMap.put(cell, map);
 					Object[] insert = new Object[] { cell };
 					ConnectionSet cs = new ConnectionSet();
-					if (firstPort != null)
-						cs.connect(cell, firstPort.getCell(), true);
-					if (port != null)
-						cs.connect(cell, port.getCell(), false);
+					if (this.firstPort != null)
+						cs.connect(cell, this.firstPort.getCell(), true);
+					if (this.port != null)
+						cs.connect(cell, this.port.getCell(), false);
 					graph.getModel().insert(insert, viewMap, cs, null, null);
 				} 
-				else if (t.isSelected()) {
-					DefaultGraphCell cell = GraphActions.addVertex(graph, LangModelGraph.getString(Constants.TEXT), bounds, true, false, false, null);
+				else if (this.t.isSelected()) {
+					DefaultGraphCell cell = GraphActions.addVertex(graph, LangModelGraph.getString(Constants.TEXT), this.bounds, true, false, false, null);
 					graph.startEditingAtCell(cell);
 				}
 				event.consume();
@@ -557,19 +558,19 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					group = (DeviceGroup) ((DeviceCell) cell).getParent();
 
 				if (group != null) {
-					JPopupMenu pop = SchemeActions.createElementPopup(pane.aContext, graph, group);
+					JPopupMenu pop = SchemeActions.createElementPopup(this.pane.aContext, graph, group);
 					if (pop.getSubElements().length != 0)
 						pop.show(graph, event.getX(), event.getY());
 				}
 			}
 		}
-		if (!s.isSelected())
-			s.doClick();
-		firstPort = null;
-		port = null;
-		start = null;
-		current = null;
-		bounds = null;
+		if (!this.s.isSelected())
+			this.s.doClick();
+		this.firstPort = null;
+		this.port = null;
+		this.start = null;
+		this.current = null;
+		this.bounds = null;
 		super.mouseReleased(event);
 		
 		graph.repaint();
@@ -582,31 +583,31 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (!graph.isEditable())
 			return;
 
-		if (p1.isSelected() || p2.isSelected()) {
-			if (devBounds == null) {
+		if (this.p1.isSelected() || this.p2.isSelected()) {
+			if (this.devBounds == null) {
 				DeviceCell deviceCell = getOnlySelectedDevice(graph);
 				if (deviceCell != null) {
 					Map m = graph.getModel().getAttributes(deviceCell);
-					devBounds = GraphConstants.getBounds(m);
-					settingPoint = graph.snap(event.getPoint());
+					this.devBounds = GraphConstants.getBounds(m);
+					this.settingPoint = graph.snap(event.getPoint());
 					graph.setCursor(CROSSHAIR_CURSOR);
 				}
 			}
 			Point p = graph.snap(event.getPoint());
-			int minX = Math.min(devBounds.x, Math.min(p.x, settingPoint.x) - crossSize) - 1;
-			int maxX = Math.max(devBounds.x + devBounds.width, Math.max(p.x, settingPoint.x + crossSize)) + 1;
-			int minY = Math.min(devBounds.y, Math.min(p.y, settingPoint.y - crossSize)) - 1;
-			int maxY = Math.max(devBounds.y + devBounds.height, Math.max(p.y, settingPoint.y + crossSize)) + 1;
+			int minX = Math.min(this.devBounds.x, Math.min(p.x, this.settingPoint.x) - CROSS_SIZE) - 1;
+			int maxX = Math.max(this.devBounds.x + this.devBounds.width, Math.max(p.x, this.settingPoint.x + CROSS_SIZE)) + 1;
+			int minY = Math.min(this.devBounds.y, Math.min(p.y, this.settingPoint.y - CROSS_SIZE)) - 1;
+			int maxY = Math.max(this.devBounds.y + this.devBounds.height, Math.max(p.y, this.settingPoint.y + CROSS_SIZE)) + 1;
 			graph.repaint(minX, minY, maxX - minX, maxY - minY);
-			settingPoint = p;
+			this.settingPoint = p;
 			event.consume();
 		}
 		
-		if (!s.isSelected() && !event.isConsumed()) {
+		if (!this.s.isSelected() && !event.isConsumed()) {
 			graph.setCursor(CROSSHAIR_CURSOR);
 			event.consume();
-			if (e.isSelected() || l.isSelected() || ce.isSelected()) {
-				PortView oldPort = port;
+			if (this.e.isSelected() || this.l.isSelected() || this.ce.isSelected()) {
+				PortView oldPort = this.port;
 				PortView newPort = getPortViewAt(graph, event.getX(), event.getY(), !event.isShiftDown());
 
 				if (newPort == null || (oldPort != newPort && 
@@ -617,7 +618,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					g.setColor(fg);
 					g.setXORMode(bg);
 					overlay(graph, g);
-					port = newPort;
+					this.port = newPort;
 					g.setColor(bg);
 					g.setXORMode(fg);
 					overlay(graph, g);
@@ -628,72 +629,72 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	}
 
 	public void overlay(SchemeGraph graph, Graphics g) {
-		if (marqueeBounds != null)
-			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width,
-					marqueeBounds.height);
+		if (this.marqueeBounds != null) {
+			g.drawRect(this.marqueeBounds.x, this.marqueeBounds.y, this.marqueeBounds.width, this.marqueeBounds.height);
+		}
 		paintPort(graph, graph.getGraphics());
-		if (bounds != null && start != null) {
-			if (i.isSelected() || z.isSelected())
+		if (this.bounds != null && this.start != null) {
+			if (this.i.isSelected() || this.z.isSelected()) {
 				((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			else if (c.isSelected())
-				g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
-			else if ((l.isSelected() || e.isSelected() || ce.isSelected())
-					&& current != null)
-				g.drawLine(start.x, start.y, current.x, current.y);
-			else if (!s.isSelected())
-				g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			} else if (this.c.isSelected()) {
+				g.drawOval(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+			} else if ((this.l.isSelected() || this.e.isSelected() || this.ce.isSelected()) && this.current != null) {
+					g.drawLine(this.start.x, this.start.y, this.current.x, this.current.y);
+			}	else if (!this.s.isSelected()) {
+					g.drawRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+			}
 		}
 	}
 	
 	public void overlay(Graphics g) {
-		if (marqueeBounds != null) {
-			g.drawRect(marqueeBounds.x, marqueeBounds.y, marqueeBounds.width, marqueeBounds.height);
+		if (this.marqueeBounds != null) {
+			g.drawRect(this.marqueeBounds.x, this.marqueeBounds.y, this.marqueeBounds.width, this.marqueeBounds.height);
 		}
-		if (bounds != null && start != null) {
-			if (i.isSelected() || z.isSelected())
+		if (this.bounds != null && this.start != null) {
+			if (this.i.isSelected() || this.z.isSelected()) {
 				((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			else if (c.isSelected())
-				g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
-			else if ((l.isSelected() || e.isSelected() || ce.isSelected())
-					&& current != null)
-				g.drawLine(start.x, start.y, current.x, current.y);
-			else if (!s.isSelected())
-				g.drawRect(bounds.x, bounds.y, bounds.width, bounds.height);
+			} else if (this.c.isSelected()) {
+				g.drawOval(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+			} else if ((this.l.isSelected() || this.e.isSelected() || this.ce.isSelected()) && this.current != null) {
+				g.drawLine(this.start.x, this.start.y, this.current.x, this.current.y);
+			} else if (!this.s.isSelected()) {
+				g.drawRect(this.bounds.x, this.bounds.y, this.bounds.width, this.bounds.height);
+			}
 		}
-		if ((p1.isSelected() || p2.isSelected()) && devBounds != null && settingPoint != null) {
-			if (settingPoint.y > devBounds.y && settingPoint.y < devBounds.y + devBounds.height - 1) {
+		if ((this.p1.isSelected() || this.p2.isSelected()) && this.devBounds != null && this.settingPoint != null) {
+			if (this.settingPoint.y > this.devBounds.y && this.settingPoint.y < this.devBounds.y + this.devBounds.height - 1) {
 				g.setColor(Color.GRAY);
-				if (settingPoint.x < devBounds.x) {
-					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x, settingPoint.y);
-					g.drawLine(settingPoint.x - crossSize, settingPoint.y - crossSize, 
-							settingPoint.x + crossSize, settingPoint.y + crossSize);
-					g.drawLine(settingPoint.x - crossSize, settingPoint.y + crossSize, 
-							settingPoint.x + crossSize, settingPoint.y - crossSize);
-				} else if (settingPoint.x > devBounds.x + devBounds.width) { 
-					g.drawLine(settingPoint.x, settingPoint.y, devBounds.x + devBounds.width, settingPoint.y);
-					g.drawLine(settingPoint.x - crossSize, settingPoint.y - crossSize, 
-							settingPoint.x + crossSize, settingPoint.y + crossSize);
-					g.drawLine(settingPoint.x - crossSize, settingPoint.y + crossSize, 
-							settingPoint.x + crossSize, settingPoint.y - crossSize);
+				if (this.settingPoint.x < this.devBounds.x) {
+					g.drawLine(this.settingPoint.x, this.settingPoint.y, this.devBounds.x, this.settingPoint.y);
+					g.drawLine(this.settingPoint.x - CROSS_SIZE, this.settingPoint.y - CROSS_SIZE, 
+							this.settingPoint.x + CROSS_SIZE, this.settingPoint.y + CROSS_SIZE);
+					g.drawLine(this.settingPoint.x - CROSS_SIZE, this.settingPoint.y + CROSS_SIZE, 
+							this.settingPoint.x + CROSS_SIZE, this.settingPoint.y - CROSS_SIZE);
+				} else if (this.settingPoint.x > this.devBounds.x + this.devBounds.width) { 
+					g.drawLine(this.settingPoint.x, this.settingPoint.y, this.devBounds.x + this.devBounds.width, this.settingPoint.y);
+					g.drawLine(this.settingPoint.x - CROSS_SIZE, this.settingPoint.y - CROSS_SIZE, 
+							this.settingPoint.x + CROSS_SIZE, this.settingPoint.y + CROSS_SIZE);
+					g.drawLine(this.settingPoint.x - CROSS_SIZE, this.settingPoint.y + CROSS_SIZE, 
+							this.settingPoint.x + CROSS_SIZE, this.settingPoint.y - CROSS_SIZE);
 				}
 			}
 		}
 	}
 	
 	protected void paintPort(SchemeGraph graph, Graphics g) {
-		if (port != null) {
+		if (this.port != null) {
 			boolean offset =
-				(GraphConstants.getOffset(port.getAllAttributes()) != null);
+				(GraphConstants.getOffset(this.port.getAllAttributes()) != null);
 			Rectangle rect =
 				(offset)
-					? port.getBounds()
-					: port.getParentView().getBounds();
+					? this.port.getBounds()
+					: this.port.getParentView().getBounds();
 			rect = graph.toScreen(new Rectangle(rect));
 			int s1 = 3;
 			rect.translate(-s1, -s1);
 			rect.setSize(rect.width + 2 * s1, rect.height + 2 * s1);
 			GraphUI ui = graph.getUI();
-			ui.paintCell(g, port, rect, true);
+			ui.paintCell(g, this.port, rect, true);
 		}
 	}
 }

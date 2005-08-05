@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.12 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.13 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
-import com.syrus.AMFICOM.configuration.CableLinkTypeWrapper;
 import com.syrus.AMFICOM.configuration.CableLink;
+import com.syrus.AMFICOM.configuration.CableLinkTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -75,9 +75,9 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbLengthLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LENGTH));
 	JLabel lbOpticalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.OPTICAL_LENGTH));
 	NumberFormatter nf = new NumberFormatter(NumberFormat.getNumberInstance());
-	JFormattedTextField tfOpticalText = new JFormattedTextField(nf);
+	JFormattedTextField tfOpticalText = new JFormattedTextField(this.nf);
 	JLabel lbPhysicalLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.PHYSICAL_LENGTH));
-	JFormattedTextField tfPhysicalText = new JFormattedTextField(nf);
+	JFormattedTextField tfPhysicalText = new JFormattedTextField(this.nf);
 	JCheckBox cbLinkBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbInvNumberLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INVNUMBER));
 	JTextField tfInvNumberText = new JTextField();
@@ -110,6 +110,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 		this.aContext = aContext;
 	}
 	
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		nf.setValueClass(Double.class);
 		nf.setMinimum(new Double(0));
@@ -436,33 +437,33 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0;
+		return this.pnPanel0;
 	}
 	
 	public void setObject(Object or) {
 		this.schemeCableLink = (SchemeCableLink)or;
 		
-		cmbTypeCombo.removeAllItems();
-		if (schemeCableLink != null) {
+		this.cmbTypeCombo.removeAllItems();
+		if (this.schemeCableLink != null) {
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 			try {
-				cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			cbLinkBox.setVisible(schemeCableLink.getParentScheme() != null); 
+			this.cbLinkBox.setVisible(this.schemeCableLink.getParentScheme() != null); 
 		}
 		
 		CableLink link = null;
 		setLinkEnabled(false);
 		
-		if (schemeCableLink != null) {
-			this.tfNameText.setText(schemeCableLink.getName());
-			this.taDescrArea.setText(schemeCableLink.getDescription());
-			this.tfOpticalText.setValue(Double.valueOf(schemeCableLink.getOpticalLength()));
-			this.tfPhysicalText.setValue(Double.valueOf(schemeCableLink.getPhysicalLength()));
-			this.cmbTypeCombo.setSelectedItem(schemeCableLink.getAbstractLinkType());
-			link = schemeCableLink.getAbstractLink();
+		if (this.schemeCableLink != null) {
+			this.tfNameText.setText(this.schemeCableLink.getName());
+			this.taDescrArea.setText(this.schemeCableLink.getDescription());
+			this.tfOpticalText.setValue(Double.valueOf(this.schemeCableLink.getOpticalLength()));
+			this.tfPhysicalText.setValue(Double.valueOf(this.schemeCableLink.getPhysicalLength()));
+			this.cmbTypeCombo.setSelectedItem(this.schemeCableLink.getAbstractLinkType());
+			link = this.schemeCableLink.getAbstractLink();
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescrArea.setText(SchemeResourceKeys.EMPTY);
@@ -470,66 +471,66 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfPhysicalText.setText(SchemeResourceKeys.EMPTY);
 		}
 		if (link != null) {
-			cbLinkBox.setSelected(true);
+			this.cbLinkBox.setSelected(true);
 			setLinkEnabled(true);
-			tfInvNumberText.setText(link.getInventoryNo());
-			tfSupplierText.setText(link.getSupplier());
-			tfSupplierCodeText.setText(link.getSupplierCode());
-			tfMarkText.setText(link.getMark());
+			this.tfInvNumberText.setText(link.getInventoryNo());
+			this.tfSupplierText.setText(link.getSupplier());
+			this.tfSupplierCodeText.setText(link.getSupplierCode());
+			this.tfMarkText.setText(link.getMark());
 			Color color = new Color(link.getColor());
-			cmbColorCombo.addItem(color);
+			this.cmbColorCombo.addItem(color);
 		} else {
-			cbLinkBox.setSelected(false);
+			this.cbLinkBox.setSelected(false);
 			setLinkEnabled(false);
-			tfInvNumberText.setText(SchemeResourceKeys.EMPTY);
-			tfSupplierText.setText(SchemeResourceKeys.EMPTY);
-			tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
-			tfMarkText.setText(SchemeResourceKeys.EMPTY);
+			this.tfInvNumberText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSupplierText.setText(SchemeResourceKeys.EMPTY);
+			this.tfSupplierCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 	
 	public Object getObject() {
-		return schemeCableLink;
+		return this.schemeCableLink;
 	}
 	
 	public void commitChanges() {
-		if (schemeCableLink != null && MiscUtil.validName(tfNameText.getText())) {
-			schemeCableLink.setName(this.tfNameText.getText());
-			schemeCableLink.setDescription(this.taDescrArea.getText());
-			schemeCableLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
-			schemeCableLink.setOpticalLength((Double)(tfOpticalText.getValue()));
-			schemeCableLink.setPhysicalLength((Double)(tfPhysicalText.getValue()));
+		if (this.schemeCableLink != null && MiscUtil.validName(this.tfNameText.getText())) {
+			this.schemeCableLink.setName(this.tfNameText.getText());
+			this.schemeCableLink.setDescription(this.taDescrArea.getText());
+			this.schemeCableLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
+			this.schemeCableLink.setOpticalLength((Double)(this.tfOpticalText.getValue()));
+			this.schemeCableLink.setPhysicalLength((Double)(this.tfPhysicalText.getValue()));
 
-			CableLink link = schemeCableLink.getAbstractLink();
-			if (cbLinkBox.isSelected()) {
+			CableLink link = this.schemeCableLink.getAbstractLink();
+			if (this.cbLinkBox.isSelected()) {
 				if (link == null) {
 					try {
-						link = SchemeObjectsFactory.createCableLink(schemeCableLink);
+						link = SchemeObjectsFactory.createCableLink(this.schemeCableLink);
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
 				}
 				if (link != null) {
-					link.setName(schemeCableLink.getName());
-					link.setDescription(schemeCableLink.getDescription());
-					link.setType(schemeCableLink.getAbstractLinkType());
+					link.setName(this.schemeCableLink.getName());
+					link.setDescription(this.schemeCableLink.getDescription());
+					link.setType(this.schemeCableLink.getAbstractLinkType());
 					
 					// TODO add link.setInventoryNo()
 					// link.setInventoryNo(invNumberText.getText());
-					link.setSupplier(tfSupplierText.getText());
-					link.setSupplierCode(tfSupplierCodeText.getText());
-					link.setMark(tfMarkText.getText());
-					link.setColor(((Color) cmbColorCombo.getSelectedItem()).getRGB());
+					link.setSupplier(this.tfSupplierText.getText());
+					link.setSupplierCode(this.tfSupplierCodeText.getText());
+					link.setMark(this.tfMarkText.getText());
+					link.setColor(((Color) this.cmbColorCombo.getSelectedItem()).getRGB());
 				}	
 			} else if (link != null) {
 				StorableObjectPool.delete(link.getId());
-				schemeCableLink.setAbstractLink(null);
+				this.schemeCableLink.setAbstractLink(null);
 			}
-			aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, schemeCableLink, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeCableLink, SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	
 	void setLinkEnabled(boolean b) {
-		pnLinkPanel.setVisible(b);
+		this.pnLinkPanel.setVisible(b);
 	}
 }

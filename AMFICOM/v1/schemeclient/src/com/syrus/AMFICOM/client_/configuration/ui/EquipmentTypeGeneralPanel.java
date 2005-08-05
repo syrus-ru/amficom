@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.9 2005/08/01 07:52:27 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.10 2005/08/05 12:39:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/01 07:52:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 12:39:58 $
  * @module schemeclient_v1
  */
 
@@ -86,6 +86,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		setObject(equipmentType);
 	}
 
+	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -269,22 +270,22 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public JComponent getGUI() {
-		return pnPanel0; 
+		return this.pnPanel0; 
 	}
 
 	public Object getObject() {
-		return eqt;
+		return this.eqt;
 	}
 
 	public void setObject(Object or) {
 		this.eqt = (EquipmentType) or;
 
-		if (eqt != null) {
-			this.tfNameText.setText(eqt.getName());
-			this.taDescriptionArea.setText(eqt.getDescription());
-			this.tfManufacturerText.setText(eqt.getManufacturer());
-			this.tfManufacturerCodeText.setText(eqt.getManufacturerCode());
-			this.tfCodenameCombo.setSelectedItem(eqt.getCodename());
+		if (this.eqt != null) {
+			this.tfNameText.setText(this.eqt.getName());
+			this.taDescriptionArea.setText(this.eqt.getDescription());
+			this.tfManufacturerText.setText(this.eqt.getManufacturer());
+			this.tfManufacturerCodeText.setText(this.eqt.getManufacturerCode());
+			this.tfCodenameCombo.setSelectedItem(this.eqt.getCodename());
 		} 
 		else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
@@ -295,15 +296,15 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
-		if (MiscUtil.validName(tfNameText.getText())) {
-			if (eqt == null) {
+		if (MiscUtil.validName(this.tfNameText.getText())) {
+			if (this.eqt == null) {
 				try {
 					String name = this.tfNameText.getText();
-					String codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[tfCodenameCombo.getSelectedIndex()];
-					eqt = SchemeObjectsFactory.createEquipmentType(name, codeName);
+					String codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()];
+					this.eqt = SchemeObjectsFactory.createEquipmentType(name, codeName);
 					apply();
-					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, eqt, SchemeEvent.CREATE_OBJECT));
-					aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, eqt, EquipmentTypePropertiesManager.getInstance(aContext), ObjectSelectedEvent.EQUIPMENT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.eqt, EquipmentTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.EQUIPMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
@@ -315,17 +316,17 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	private void apply() {
-		eqt.setName(this.tfNameText.getText());
-		eqt.setDescription(this.taDescriptionArea.getText());
-		eqt.setManufacturer(this.tfManufacturerText.getText());
-		eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
-		eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[tfCodenameCombo.getSelectedIndex()]);
+		this.eqt.setName(this.tfNameText.getText());
+		this.eqt.setDescription(this.taDescriptionArea.getText());
+		this.eqt.setManufacturer(this.tfManufacturerText.getText());
+		this.eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
+		this.eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()]);
 		
 		try {
-			StorableObjectPool.flush(eqt.getId(), LoginManager.getUserId(), true);
+			StorableObjectPool.flush(this.eqt.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, eqt, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt, SchemeEvent.UPDATE_OBJECT));
 	}
 }

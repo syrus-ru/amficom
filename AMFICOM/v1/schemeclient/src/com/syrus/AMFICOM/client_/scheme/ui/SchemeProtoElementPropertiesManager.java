@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementPropertiesManager.java,v 1.3 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeProtoElementPropertiesManager.java,v 1.4 2005/08/05 12:40:00 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,16 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import javax.swing.JComponent;
-
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
-import com.syrus.AMFICOM.client_.scheme.graph.UgoToolBar;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementWrapper;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:40:00 $
  * @module schemeclient_v1
  */
 
@@ -43,15 +39,18 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new SchemeProtoElementGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new SchemeProtoElementCharacteristicsPanel();
-		charPanel.setContext(aContext);
-		if (ugoPanel == null)
-			ugoPanel = new SchemeCellPanel();
-		ugoPanel.setContext(aContext);
+		if (this.generalPanel == null) {
+			this.generalPanel = new SchemeProtoElementGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new SchemeProtoElementCharacteristicsPanel();
+		}
+		this.charPanel.setContext(aContext);
+		if (this.ugoPanel == null) {
+			this.ugoPanel = new SchemeCellPanel();
+		}
+		this.ugoPanel.setContext(aContext);
 	}
 	
 	/**
@@ -59,7 +58,7 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -83,7 +82,7 @@ public class SchemeProtoElementPropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return ugoPanel;
+		return this.ugoPanel;
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.3 2005/08/01 07:52:28 stas Exp $
+ * $Id: DeviceView.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.jgraph.graph.VertexView;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -73,7 +73,7 @@ public class DeviceView extends VertexView {
 
 		public void mousePressed(MouseEvent event) {
 			super.mousePressed(event);
-			_bounds = initialBounds;
+			DeviceView.this._bounds = this.initialBounds;
 		}
 
 		public void mouseDragged(MouseEvent event) {
@@ -81,9 +81,9 @@ public class DeviceView extends VertexView {
 
 			Rectangle bounds1 = computeBounds(event);
 
-			if (!bounds1.equals(_bounds)) {
+			if (!bounds1.equals(DeviceView.this._bounds)) {
 				double u = GraphConstants.PERCENT;
-				java.util.List list = cell.getChildren();
+				java.util.List list = DeviceView.this.cell.getChildren();
 				Iterator iterator = list.iterator();
 				while (iterator.hasNext()) {
 					Port port = (Port) iterator.next();
@@ -107,7 +107,7 @@ public class DeviceView extends VertexView {
 						}
 					}
 				}
-				_bounds = bounds1;
+				DeviceView.this._bounds = bounds1;
 			}
 		}
 	}
@@ -117,13 +117,13 @@ public class DeviceView extends VertexView {
 
 		protected void paintSelectionBorder(Graphics g) {
 			((Graphics2D) g).setStroke(GraphConstants.SELECTION_STROKE);
-			if (childrenSelected)
-				g.setColor(graph.getGridColor());
+			if (this.childrenSelected)
+				g.setColor(this.graph.getGridColor());
 			//		else if (hasFocus && selected)
 			//			g.setColor(graph.getLockedHandleColor());
-			else if (selected)
-				g.setColor(graph.getHighlightColor());
-			if (childrenSelected || selected) {
+			else if (this.selected)
+				g.setColor(this.graph.getHighlightColor());
+			if (this.childrenSelected || this.selected) {
 				Dimension d = getSize();
 				g.drawRect(0, 0, d.width - 1, d.height - 1);
 			}

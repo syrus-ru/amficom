@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkPropertiesManager.java,v 1.3 2005/07/11 12:31:39 stas Exp $
+ * $Id: SchemeCableLinkPropertiesManager.java,v 1.4 2005/08/05 12:39:59 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLinkWrapper;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:31:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
  * @module schemeclient_v1
  */
 
@@ -38,15 +38,18 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	}
 
 	public void setContext(ApplicationContext aContext) {
-		if (generalPanel == null)
-			generalPanel = new SchemeCableLinkGeneralPanel();
-		generalPanel.setContext(aContext);
-		if (charPanel == null)
-			charPanel = new SchemeCableLinkCharacteristicsPanel();
-		charPanel.setContext(aContext);
-		if (layout == null)
-			layout = new SchemeCableLinkLayout();
-		layout.setContext(aContext);
+		if (this.generalPanel == null) {
+			this.generalPanel = new SchemeCableLinkGeneralPanel();
+		}
+		this.generalPanel.setContext(aContext);
+		if (this.charPanel == null) {
+			this.charPanel = new SchemeCableLinkCharacteristicsPanel();
+		}
+		this.charPanel.setContext(aContext);
+		if (this.layout == null) {
+			this.layout = new SchemeCableLinkLayout();
+		}
+		this.layout.setContext(aContext);
 	}
 	
 	/**
@@ -54,7 +57,7 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	 * @see VisualManager#getGeneralPropertiesPanel()
 	 */
 	public StorableObjectEditor getGeneralPropertiesPanel() {
-		return generalPanel;
+		return this.generalPanel;
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	 * @see VisualManager#getCharacteristicPropertiesPanel()
 	 */
 	public StorableObjectEditor getCharacteristicPropertiesPanel() {
-		return charPanel;
+		return this.charPanel;
 	}
 
 	/**
@@ -78,6 +81,6 @@ public class SchemeCableLinkPropertiesManager implements VisualManager {
 	 * @see VisualManager#getAdditionalPropertiesPanel()
 	 */
 	public StorableObjectEditor getAdditionalPropertiesPanel() {
-		return layout;
+		return this.layout;
 	}
 }

@@ -23,11 +23,11 @@ public class ComponentNewCommand extends AbstractCommand {
 	}
 
 	public Object clone() {
-		return new ComponentNewCommand(aContext, cellPane);
+		return new ComponentNewCommand(this.aContext, this.cellPane);
 	}
 
 	public void execute() {
-		ApplicationModel aModel = aContext.getApplicationModel(); 
+		ApplicationModel aModel = this.aContext.getApplicationModel(); 
 		aModel.getCommand("menuWindowScheme").execute();
 		aModel.getCommand("menuWindowTree").execute();
 		aModel.getCommand("menuWindowUgo").execute();
@@ -36,7 +36,7 @@ public class ComponentNewCommand extends AbstractCommand {
 		
 		aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 		
-		SchemeGraph cellGraph = cellPane.getGraph();
+		SchemeGraph cellGraph = this.cellPane.getGraph();
 		if (cellGraph.isGraphChanged()) {
 			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					LangModelScheme.getString("Message.confirmation.component_not_saved"), //$NON-NLS-1$
@@ -45,7 +45,7 @@ public class ComponentNewCommand extends AbstractCommand {
 			if (ret == JOptionPane.CANCEL_OPTION)
 				return;
 		} 
-		((ElementsPanel)cellPane.getCurrentPanel()).getSchemeResource().setSchemeProtoElement(null);
+		((ElementsPanel)this.cellPane.getCurrentPanel()).getSchemeResource().setSchemeProtoElement(null);
 		GraphActions.clearGraph(cellGraph);
 		cellGraph.selectionNotify();
 	}
