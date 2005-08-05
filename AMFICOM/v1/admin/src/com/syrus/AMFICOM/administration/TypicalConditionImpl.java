@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.16 2005/07/25 19:33:07 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.17 2005/08/05 14:33:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/25 19:33:07 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 14:33:33 $
+ * @author $Author: arseniy $
  * @module admin
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -114,25 +114,29 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		Wrapper wrapper;
-		if (storableObject instanceof SystemUser)
-			wrapper = SystemUserWrapper.getInstance();
-		else
-			if (storableObject instanceof Domain)
-				wrapper = DomainWrapper.getInstance();
-			else
-				if (storableObject instanceof Server)
-					wrapper = ServerWrapper.getInstance();
-				else
-					if (storableObject instanceof MCM)
-						wrapper = MCMWrapper.getInstance();
-					else
-						if (storableObject instanceof ServerProcess)
-							wrapper = ServerProcessWrapper.getInstance();
-						else
-							throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
-									IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-
-		return super.parseCondition(wrapper.getValue(storableObject, this.key));
+		if (storableObject instanceof SystemUser) {
+			final SystemUser systemUser = (SystemUser) storableObject;
+			final Wrapper<SystemUser> wrapper = SystemUserWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(systemUser, this.key));
+		} else if (storableObject instanceof Domain) {
+			final Domain domain = (Domain) storableObject;
+			final Wrapper<Domain> wrapper = DomainWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(domain, this.key));
+		} else if (storableObject instanceof Server) {
+			final Server server = (Server) storableObject;
+			final Wrapper<Server> wrapper = ServerWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(server, this.key));
+		} else if (storableObject instanceof MCM) {
+			final MCM mcm = (MCM) storableObject;
+			final Wrapper<MCM> wrapper = MCMWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(mcm, this.key));
+		} else if (storableObject instanceof ServerProcess) {
+			final ServerProcess serverProcess = (ServerProcess) storableObject;
+			final Wrapper<ServerProcess> wrapper = ServerProcessWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(serverProcess, this.key));
+		} else {
+			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
 	}
 }
