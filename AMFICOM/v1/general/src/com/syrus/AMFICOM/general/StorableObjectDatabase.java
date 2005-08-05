@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.175 2005/08/03 19:53:00 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.176 2005/08/05 07:38:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.175 $, $Date: 2005/08/03 19:53:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.176 $, $Date: 2005/08/05 07:38:01 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -251,15 +251,20 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		} finally {
 			try {
 				try {
-					if (resultSet != null)
+					if (resultSet != null) {
 						resultSet.close();
+						resultSet = null;
+					}
 				} finally {
 					try {
-						if (statement != null)
+						if (statement != null) {
 							statement.close();
+							statement = null;
+						}
 					} finally {
 						if (connection != null) {
 							DatabaseConnection.releaseConnection(connection);
+							connection = null;
 						}
 					}
 				}
@@ -292,22 +297,30 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				storableObjects.add(storableObject);
 			}
 		} catch (SQLException sqle) {
-			String mesg = this.getEntityName() + "Database.retrieveByCondition | Cannot execute query -- " + sqle.getMessage();
+			final String mesg = this.getEntityName() + "Database.retrieveByCondition | Cannot execute query -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 
@@ -403,18 +416,26 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -492,20 +513,26 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 
@@ -548,23 +575,29 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
-			}
 		}
-		
+
 		return presentInDatabaseIds;
 	}
 
@@ -626,15 +659,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -686,15 +723,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -817,17 +858,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 		finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -878,18 +921,26 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 
@@ -980,22 +1031,27 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
 
 	public void delete(Set<? extends Identifiable> identifiables) {
-		if ((identifiables == null) || (identifiables.isEmpty()))
+		if ((identifiables == null) || (identifiables.isEmpty())) {
 			return;
+		}
 
 		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEntityName() + SQL_WHERE);
 		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
@@ -1012,15 +1068,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -1057,15 +1117,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}

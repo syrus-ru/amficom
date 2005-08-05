@@ -1,5 +1,5 @@
 /*-
- * $Id: DataTypeDatabase.java,v 1.2 2005/08/03 19:53:00 bass Exp $
+ * $Id: DataTypeDatabase.java,v 1.3 2005/08/05 07:38:01 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/03 19:53:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 07:38:01 $
+ * @author $Author: arseniy $
  * @module general
  */
 public final class DataTypeDatabase {
@@ -49,22 +49,16 @@ public final class DataTypeDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION
 				+ CLOSE_BRACKET;
+
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			preparedStatement = connection.prepareStatement(sql);
-		} catch (SQLException sqle) {
-			if (connection != null) {
-				DatabaseConnection.releaseConnection(connection);
-			}
-			throw new CreateObjectException(sqle);
-		}
-
 		int code = 0;
 		String codename = null;
 		String description = null;
 		try {
+			connection = DatabaseConnection.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+
 			for (final DataType dataType : DataType.values()) {
 				code = dataType.ordinal();
 				codename = dataType.getCodename();
@@ -86,13 +80,19 @@ public final class DataTypeDatabase {
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 
