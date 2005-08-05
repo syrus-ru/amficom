@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.50 2005/07/10 13:41:28 bass Exp $
+# $Id: Makefile,v 1.51 2005/08/05 16:05:42 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -15,7 +15,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/xbean.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
