@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.46 2005/08/01 13:52:56 arseniy Exp $
+ * $Id: KISReport.java,v 1.47 2005/08/05 11:06:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/01 13:52:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/05 11:06:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -99,8 +99,7 @@ public class KISReport {
 			}
 
 			final Result result = measurement.createResult(LoginManager.getUserId(), parameters);
-			StorableObjectPool.flush(result, LoginManager.getUserId(), true);
-			//StorableObjectPool.flush(result, false);
+			StorableObjectPool.flush(result, LoginManager.getUserId(), false);
 			return result;
 		}
 		catch (ApplicationException ae) {
