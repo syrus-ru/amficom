@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.17 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.18 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -235,6 +235,11 @@ public class SchemeObjectsFactory {
 		return schemeElement;
 	}
 	
+	public static SchemeElement createSchemeElement(Scheme parentScheme, Scheme scheme) throws CreateObjectException {
+		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme, parentScheme);
+		return schemeElement;
+	}
+	
 	public static SchemeElement createSchemeElement(Scheme parentScheme) throws CreateObjectException {
 		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		EquipmentType eqt = null;
@@ -314,6 +319,10 @@ public class SchemeObjectsFactory {
 				DeviceGroup dev = (DeviceGroup)clonedCell;
 				Identifier id = dev.getElementId();
 				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
 				if (newId.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE)
 					dev.setProtoElementId(newId);
 				else if (newId.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE)
@@ -323,27 +332,57 @@ public class SchemeObjectsFactory {
 			} else if (clonedCell instanceof DeviceCell) {
 				DeviceCell cell = (DeviceCell)clonedCell;
 				Identifier id = cell.getSchemeDeviceId();
-				cell.setSchemeDeviceId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setSchemeDeviceId(newId);
 			} else if (clonedCell instanceof PortCell) {
 				PortCell cell = (PortCell)clonedCell;
 				Identifier id = cell.getSchemePortId();
-				cell.setSchemePortId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setSchemePortId(newId);
 			} else if (clonedCell instanceof CablePortCell) {
 				CablePortCell cell = (CablePortCell)clonedCell;
 				Identifier id = cell.getSchemeCablePortId();
-				cell.setSchemeCablePortId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setSchemeCablePortId(newId);
 			} else if (clonedCell instanceof DefaultCableLink) {
 				DefaultCableLink cell = (DefaultCableLink)clonedCell;
 				Identifier id = cell.getSchemeCableLinkId();
-				cell.setSchemeCableLinkId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setSchemeCableLinkId(newId);
 			} else if (clonedCell instanceof DefaultLink) {
 				DefaultLink cell = (DefaultLink)clonedCell;
 				Identifier id = cell.getSchemeLinkId();
-				cell.setSchemeLinkId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setSchemeLinkId(newId);
 			} else if (clonedCell instanceof BlockPortCell) {
 				BlockPortCell cell = (BlockPortCell)clonedCell;
 				Identifier id = cell.getAbstractSchemePortId();
-				cell.setAbstractSchemePortId(clonedIds.get(id));
+				Identifier newId = clonedIds.get(id);
+				if (newId == null) {
+					Log.debugMessage("cloned id not found for id " + id + " no clone performed", Level.FINEST);
+					newId = id;
+				}
+				cell.setAbstractSchemePortId(newId);
 			}
 		}
 	}

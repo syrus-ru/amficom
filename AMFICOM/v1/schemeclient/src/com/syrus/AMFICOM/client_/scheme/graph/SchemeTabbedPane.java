@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.9 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.10 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
@@ -52,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -193,12 +194,39 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				openSchemeElement(schemeElement);
 			} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();
-				SchemeImageResource res = scheme.getUgoCell();
-				if (res == null)
-					res = scheme.getSchemeCell();
-				super.openSchemeImageResource(res, true);
+//				SchemeImageResource res = scheme.getUgoCell();
+//				if (res == null)
+//					res = scheme.getSchemeCell();
+//				super.openSchemeImageResource(res, true);
 
-				//TODO SchemeElement.createInstace(Scheme) 
+				//TODO SchemeElement.createInstace(Scheme)
+				ElementsPanel panel1 = getCurrentPanel();
+				try {
+					SchemeElement schemeElement = null;
+					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+						Scheme parentScheme = panel1.getSchemeResource().getScheme();
+						schemeElement = SchemeObjectsFactory.createSchemeElement(parentScheme, scheme);
+					} else {
+						Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
+						return;
+					}
+					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
+					SchemeImageResource res = scheme.getUgoCell();
+					if (res == null)
+						res = scheme.getSchemeCell();
+					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
+					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+					SchemeGraph graph = panel1.getGraph();
+					SchemeImageResource seRes = schemeElement.getUgoCell();
+					if (seRes == null) {
+						seRes = SchemeObjectsFactory.createSchemeImageResource();
+						schemeElement.setUgoCell(seRes);
+					}
+					seRes.setData((List<Object>)graph.getArchiveableState());
+					graph.selectionNotify();
+				} catch (CreateObjectException e) {
+					Log.errorException(e);
+				}
 				
 //				Scheme scheme = (Scheme) see.getObject();
 //				
@@ -252,7 +280,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						Scheme scheme = panel1.getSchemeResource().getScheme();
 						schemeElement = SchemeObjectsFactory.createSchemeElement(scheme, proto);
 					} else {
-						assert false : "Unknown CellContainerType " + panel1.getSchemeResource().getCellContainerType();
+						Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
+						return;
 					}
 					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 					SchemeImageResource res = schemeElement.getUgoCell();

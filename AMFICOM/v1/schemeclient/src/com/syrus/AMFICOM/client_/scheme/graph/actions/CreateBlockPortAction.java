@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.6 2005/07/24 18:13:40 bass Exp $
+ * $Id: CreateBlockPortAction.java,v 1.7 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,6 @@ import java.util.Map;
 import javax.swing.AbstractAction;
 
 import com.jgraph.graph.ConnectionSet;
-import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
@@ -36,12 +34,13 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/24 18:13:40 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
 public class CreateBlockPortAction extends AbstractAction {
+	private static final long serialVersionUID = 1840346018179019980L;
 	protected UgoTabbedPane pane;
 
 	public CreateBlockPortAction(UgoTabbedPane pane) {

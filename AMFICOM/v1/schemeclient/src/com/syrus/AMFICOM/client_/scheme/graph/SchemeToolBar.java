@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.6 2005/07/11 12:31:38 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.7 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import javax.swing.ButtonGroup;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.SetBackgroundSizeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetLinkModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetPathModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SetTopLevelModeAction;
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 12:31:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -41,7 +40,7 @@ public class SchemeToolBar extends ElementsToolBar {
 			// Constants.undoKey,
 			// Constants.redoKey,
 			Constants.SEPARATOR, Constants.ZOOM_IN, Constants.ZOOM_OUT,
-			Constants.ZOOM_ACTUAL, Constants.SEPARATOR, Constants.BACKGROUND_SIZE,
+			Constants.ZOOM_ACTUAL, Constants.SEPARATOR, 
 			Constants.SEPARATOR, Constants.LINK_MODE, Constants.PATH_MODE,
 			Constants.SEPARATOR, Constants.TOP_LEVEL_MODE, Constants.HORIZONTAL_GLUE 
 	};
@@ -66,9 +65,6 @@ public class SchemeToolBar extends ElementsToolBar {
 				mh.scheme_ugo, btn_size, null, LangModelGraph.getString(Constants.CREATE_UGO), 
 				Constants.ICON_CREATE_UGO,
 				new CreateTopLevelSchemeAction(pane), true));
-		bttns.put(Constants.BACKGROUND_SIZE, createToolButton(mh.bSize, btn_size,
-				null, LangModelGraph.getString(Constants.BACKGROUND_SIZE), Constants.ICON_SCHEME_SIZE, new SetBackgroundSizeAction(
-						pane), true));
 		bttns.put(Constants.LINK_MODE, createToolButton(mh.linkButt, btn_size,
 				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(pane),
 				true));

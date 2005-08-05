@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.13 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.14 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -444,6 +444,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 				}
 			} catch (IllegalStateException e1) {
 				// ignore as it means parent == null
+				this.parentCombo.setEnabled(true);
 			}
 		} else {
 			this.nameText.setText(SchemeResourceKeys.EMPTY);

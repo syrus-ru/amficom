@@ -1,5 +1,5 @@
 /*
- * $Id: CreateGroup.java,v 1.6 2005/08/03 09:29:41 stas Exp $
+ * $Id: CreateGroup.java,v 1.7 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoPanel;
@@ -51,11 +52,12 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
 public class CreateGroup extends AbstractAction {
+	private static final long serialVersionUID = -7128458304825807589L;
 	UgoTabbedPane pane;
 	private static int counter = 1;
 	private int type;
@@ -126,7 +128,9 @@ public class CreateGroup extends AbstractAction {
 										PortCell ellipse = (PortCell)obj;
 										if (ellipse.getSchemePort().getPortType() == null) {
 											JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-													"Не установлен тип порта", "Ошибка", JOptionPane.OK_OPTION);
+													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
+													LangModelGraph.getString("error"), //$NON-NLS-1$
+													JOptionPane.OK_OPTION);
 											Log.debugMessage("Port type not set for " + ellipse.getSchemePort().getName(), Level.WARNING); //$NON-NLS-1$
 											return new Object[0];
 										}
@@ -135,7 +139,8 @@ public class CreateGroup extends AbstractAction {
 										CablePortCell ellipse = (CablePortCell)obj;
 										if (ellipse.getSchemeCablePort().getPortType() == null) {
 											JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-													"Не установлен тип кабельного порта", "Ошибка",
+													LangModelGraph.getString("error_port_type_not_set"), //$NON-NLS-1$
+													LangModelGraph.getString("error"), //$NON-NLS-1$
 													JOptionPane.OK_OPTION);
 											Log.debugMessage("Port type not set for " + ellipse.getSchemeCablePort().getName(), Level.WARNING); //$NON-NLS-1$
 											return new Object[0];

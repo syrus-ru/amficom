@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.6 2005/08/04 09:19:00 stas Exp $
+ * $Id: Constants.java,v 1.7 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import javax.swing.ImageIcon;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -100,7 +100,6 @@ public interface Constants {
 	public static final String ZOOM_ACTUAL = "zoom_actual"; //$NON-NLS-1$
 	public static final String SEPARATOR = "separator";  //$NON-NLS-1$
 	public static final String HORIZONTAL_GLUE = "horizontal_glue";  //$NON-NLS-1$
-	public static final String BACKGROUND_SIZE = "background";  //$NON-NLS-1$
 
 	public static final int CREATING_PATH_MODE = 3;
 	public static final int NORMAL = 0;

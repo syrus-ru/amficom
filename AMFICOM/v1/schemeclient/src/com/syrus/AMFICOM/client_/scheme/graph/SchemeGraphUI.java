@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.9 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.10 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -108,7 +108,7 @@ public class SchemeGraphUI extends GPGraphUI {
 									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType1));									
 								}
 							});
-							menu1.setText("Вставить");
+							menu1.setText(LangModelGraph.getString("insert")); //$NON-NLS-1$
 							pop.add(menu1);
 							JMenuItem menu2 = new JMenuItem(new AbstractAction() {
 								public void actionPerformed(ActionEvent ev) {
@@ -122,10 +122,10 @@ public class SchemeGraphUI extends GPGraphUI {
 									((SchemeGraph) graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType2));									
 								}
 							});
-							menu2.setText("Открыть");
+							menu2.setText(LangModelGraph.getString("open")); //$NON-NLS-1$
 							pop.add(menu2);
 							JMenuItem menu3 = new JMenuItem();
-							menu3.setText("Отмена");
+							menu3.setText(LangModelGraph.getString("cancel")); //$NON-NLS-1$
 							pop.addSeparator();
 							pop.add(menu3);
 							

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.15 2005/08/01 07:52:28 stas Exp $
+ * $Id: SchemeActions.java,v 1.16 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -58,11 +59,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/01 07:52:28 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
 public class SchemeActions {
+	private static final String EMPTY = ""; //$NON-NLS-1$
+	
 	private SchemeActions () {
 		// empty
 	}
@@ -82,7 +85,7 @@ public class SchemeActions {
 			Port port, Point p, Point p2) {
 		Map viewMap = new HashMap();
 		ConnectionSet cs = new ConnectionSet();
-		TopLevelCableLink cell = TopLevelCableLink.createInstance("", firstPort, 
+		TopLevelCableLink cell = TopLevelCableLink.createInstance(EMPTY, firstPort, 
 				port, p, p2, viewMap, cs);
 		
 		graph.getModel().insert(new Object[] {cell}, viewMap, cs, null, null);
@@ -107,7 +110,7 @@ public class SchemeActions {
 					Rectangle r = graph.toScreen(new Rectangle(GraphActions.getGroupBounds(graph, group).getLocation(),
 							 new Dimension(4 * graph.getGridSize(), 6 * graph.getGridSize())));
 
-					DeviceGroup newGroup = createTopLevelElement(graph, "", r, group.getSchemeElement());
+					DeviceGroup newGroup = createTopLevelElement(graph, EMPTY, r, group.getSchemeElement());
 
 					if (newGroup != null)
 						oldToNewMap.put(group, newGroup);
@@ -320,15 +323,15 @@ public class SchemeActions {
 		Map viewMap = new HashMap();
 	
 		if (!isCable) {
-			visualPort = PortCell.createInstance("", portCellBounds, viewMap, direction, color);
+			visualPort = PortCell.createInstance(EMPTY, portCellBounds, viewMap, direction, color);
 			((PortCell)visualPort).setSchemePortId(portId);
 		} else { // cableport
-			visualPort = CablePortCell.createInstance("", portCellBounds, viewMap, direction, color);
+			visualPort = CablePortCell.createInstance(EMPTY, portCellBounds, viewMap, direction, color);
 			((CablePortCell)visualPort).setSchemeCablePortId(portId);
 		}
 		graph.getGraphLayoutCache().insert(new Object[] { visualPort }, viewMap, null, null, null);
-		devPort = GraphActions.addPort (graph, "", deviceCell, devportPos); //$NON-NLS-1$
-		ellipsePort = GraphActions.addPort (graph, "", visualPort, ellipseportPos); //$NON-NLS-1$
+		devPort = GraphActions.addPort (graph, EMPTY, deviceCell, devportPos); //$NON-NLS-1$
+		ellipsePort = GraphActions.addPort (graph, EMPTY, visualPort, ellipseportPos); //$NON-NLS-1$
 		
 		ConnectionSet cs = new ConnectionSet();
 		PortEdge edge = PortEdge.createInstance(name, devPort, ellipsePort, p, new Point(dev_bounds.x
@@ -397,9 +400,8 @@ public class SchemeActions {
 										SchemeEvent.CREATE_ALARMED_LINK));
 				}
 			});
-			menu1.setText("Открыть схему");
+			menu1.setText(LangModelGraph.getString("open_scheme")); //$NON-NLS-1$
 			pop.add(menu1);
-			pop.addSeparator();
 		}
 		
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
@@ -417,7 +419,8 @@ public class SchemeActions {
 											SchemeEvent.CREATE_ALARMED_LINK));
 					}
 				});
-				menu1.setText("Открыть компонент");
+				menu1.setText(LangModelGraph.getString("open_component")); //$NON-NLS-1$
+				pop.addSeparator();
 				pop.add(menu1);
 			}
 		}
@@ -472,7 +475,7 @@ public class SchemeActions {
 		Object[] cells = graph.getAll();
 		for (int i = 0; i < cells.length; i++)
 			if (cells[i] instanceof PortCell)
-				if (!((PortCell) cells[i]).getSchemePortId().equals(""))
+				if (!((PortCell) cells[i]).getSchemePortId().equals(EMPTY))
 					if (((PortCell) cells[i]).getSchemePort().getMeasurementPort() != null
 							&& ((PortCell) cells[i]).getSchemePort().getMeasurementPort()
 									.getId().equals(aportId))
@@ -527,6 +530,7 @@ public class SchemeActions {
 			return false;
 		}
 
+		// TODO externalyze
 		if (sp.getAbstractSchemeLink() != null && !sp.getAbstractSchemeLink().equals(sl)) {
 			String message = "К порту " + sp.getName()
 					+ " уже подключена линия связи " + sp.getAbstractSchemeLink().getName() + ".\n";
@@ -595,6 +599,7 @@ public class SchemeActions {
 							+ link.getSchemeCableLinkId());
 			return false;
 		}
+		// TODO externalyze
 		if (sp.getAbstractSchemeLink() != null && !sp.getAbstractSchemeLink().equals(sl)) {
 			String message = "К порту " + sp.getName()
 					+ " уже подключена линия связи " + sp.getAbstractSchemeLink().getName()

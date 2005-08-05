@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.9 2005/08/03 09:29:41 stas Exp $
+ * $Id: DeleteAction.java,v 1.10 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.jgraph.graph.Port;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
@@ -48,11 +49,12 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
 public class DeleteAction extends AbstractAction {
+	private static final long serialVersionUID = -8819605194892661368L;
 	UgoTabbedPane pane;
 	private static Set<DefaultGraphCell> cellsToDelete = new HashSet<DefaultGraphCell>();
 	private static Set<Identifier> objectsToDelete = new HashSet<Identifier>();
@@ -69,7 +71,8 @@ public class DeleteAction extends AbstractAction {
 		if (cells != null) {
 			if (graph.isTopLevelSchemeMode()) {
 				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-						"Удалить элементы со схематичного вида?", "Подтверждение",
+						LangModelGraph.getString("remove_elements_schematic"),  //$NON-NLS-1$
+						LangModelGraph.getString("confirmation"), //$NON-NLS-1$
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				if (ret == JOptionPane.YES_OPTION) {
 					graph.getModel().remove(cells);
@@ -77,8 +80,9 @@ public class DeleteAction extends AbstractAction {
 				}
 			} else {
 				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-						"Удалить все эти элементы?",
-						"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
+						LangModelGraph.getString("remove_elements"),  //$NON-NLS-1$
+						LangModelGraph.getString("confirmation"),  //$NON-NLS-1$
+						JOptionPane.YES_NO_CANCEL_OPTION);
 				if (ret != JOptionPane.YES_OPTION)
 					return;
 			}

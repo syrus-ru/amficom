@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.9 2005/08/04 09:19:00 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.10 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/04 09:19:00 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -112,6 +112,8 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 					Map<Identifier, Identifier>clonedIds = newProto.getClonedIdMap();
 					SchemeImageResource imageResource = see.isType(SchemeEvent.INSERT_PROTOELEMENT) ? 
 							newProto.getUgoCell() : newProto.getSchemeCell();
+					if (imageResource == null)
+						imageResource = newProto.getSchemeCell();
 					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(imageResource, true);
 					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					UgoPanel p = getCurrentPanel();

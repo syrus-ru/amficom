@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.11 2005/08/03 09:29:41 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.12 2005/08/05 08:21:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/03 09:29:41 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 08:21:34 $
  * @module schemeclient_v1
  */
 
@@ -475,7 +475,13 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			cbLinkBox.setVisible(schemeLink.getParentScheme() != null); 
+			boolean b = false;
+			try {
+				b = schemeLink.getParentScheme() != null;
+			} catch (IllegalStateException e) {
+				// igore, same as schemeLink.getParentScheme() == null
+			}
+			cbLinkBox.setVisible(b); 
 		}
 		
 		Link link = null;
