@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.48 2005/08/02 18:09:28 arseniy Exp $
+* $Id: MapView.java,v 1.49 2005/08/05 07:36:16 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.48 $, $Date: 2005/08/02 18:09:28 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.49 $, $Date: 2005/08/05 07:36:16 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -72,10 +72,13 @@ public final class MapView extends DomainMember implements Namable {
 	private String name;
 	private String description;
 
-	private double longitude;
-	private double latitude;
 	private double scale;
 	private double defaultScale;
+
+	/**
+	 * Географические координаты центра вида.
+	 */
+	protected DoublePoint center = new DoublePoint(0, 0);
 
 	private Map map;
 	/**
@@ -129,8 +132,7 @@ public final class MapView extends DomainMember implements Namable {
 		super(id, new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis()), creatorId, creatorId, version, domainId);
 		this.name = name;
 		this.description = description;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this.center = new DoublePoint(longitude, latitude);
 		this.scale = scale;
 		this.defaultScale = defaultScale;
 		this.map = map;
@@ -178,8 +180,7 @@ public final class MapView extends DomainMember implements Namable {
 		this.name = mvt.name;
 		this.description = mvt.description;
 
-		this.longitude = mvt.longitude;
-		this.latitude = mvt.latitude;
+		this.center = new DoublePoint(mvt.longitude, mvt.latitude);
 		this.scale = mvt.scale;
 		this.defaultScale = mvt.defaultScale;
 
@@ -230,8 +231,8 @@ public final class MapView extends DomainMember implements Namable {
 				this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
-				this.longitude,
-				this.latitude,
+				this.center.getX(),
+				this.center.getY(),
 				this.scale,
 				this.defaultScale,
 				this.map.getId().getTransferable(),
@@ -317,8 +318,7 @@ public final class MapView extends DomainMember implements Namable {
 		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
 		this.name = name;
 		this.description = description;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this.center.setLocation(longitude, latitude);
 		this.scale = scale;
 		this.defaultScale = defaultScale;
 		this.map = map;
@@ -334,20 +334,20 @@ public final class MapView extends DomainMember implements Namable {
 	}
 
 	public double getLatitude() {
-		return this.latitude;
+		return this.center.getX();
 	}
 
 	public void setLatitude(final double latitude) {
-		this.latitude = latitude;
+		this.center.setLocation(this.center.getX(), latitude);
 		super.markAsChanged();
 	}
 
 	public double getLongitude() {
-		return this.longitude;
+		return this.center.getY();
 	}
 
 	public void setLongitude(final double longitude) {
-		this.longitude = longitude;
+		this.center.setLocation(longitude, this.center.getY());
 		super.markAsChanged();
 	}
 
@@ -390,8 +390,7 @@ public final class MapView extends DomainMember implements Namable {
 	 * @param center центр вида
 	 */
 	public void setCenter(final DoublePoint center) {
-		this.setLongitude(center.getX());
-		this.setLatitude(center.getY());
+		this.center.setLocation(center);
 	}
 
 	/**
@@ -399,7 +398,7 @@ public final class MapView extends DomainMember implements Namable {
 	 * @return центр вида
 	 */
 	public DoublePoint getCenter() {
-		return new DoublePoint(getLongitude(), getLatitude());
+		return (DoublePoint) this.center.clone();
 	}
 
 	/**
