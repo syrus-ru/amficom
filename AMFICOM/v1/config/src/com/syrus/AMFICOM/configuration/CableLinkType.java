@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.61 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.62 2005/08/05 17:58:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/08/05 16:50:02 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/05 17:58:13 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -248,16 +248,16 @@ public final class CableLinkType extends AbstractLinkType {
 		super.markAsChanged();
 	}
 
-	public Set getCableThreadTypes(final boolean breakOnLoadError) {
+	public Set<CableThreadType> getCableThreadTypes(final boolean breakOnLoadError) {
 		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CABLETHREAD_TYPE_CODE);
-		Set cableThreadTypes;
+		Set<CableThreadType> cableThreadTypes;
 		try {
 			cableThreadTypes = StorableObjectPool.getStorableObjectsByCondition(lic, true, breakOnLoadError);
+			return cableThreadTypes;
 		} catch (final ApplicationException ae) {
 			Log.errorException(ae);
-			cableThreadTypes = Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
-		return cableThreadTypes;
 	}
 
 	@Override
