@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.18 2005/08/04 08:21:54 krupenn Exp $
+ * $Id: Selection.java,v 1.19 2005/08/05 07:35:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.map.MapElementState;
  * Набор выбранных элементов.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/04 08:21:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/05 07:35:44 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -59,13 +59,6 @@ public final class Selection extends MapTypedElementsContainer implements MapEle
 	 */
 	public DoublePoint getLocation() {
 		return super.getLocation();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setLocation(final DoublePoint aLocation) {
-		throw new UnsupportedOperationException("Cannot set location to selection");
 	}
 
 	/**
