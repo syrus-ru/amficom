@@ -29,6 +29,13 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
+.mach:	$(CLASSDIR)
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
+		$(shell find . -name *java)
+	touch $@
+
+
 .PHONY:	clean
 clean:	cleanmach
 	$(RM) $(LIBNAME)
@@ -37,17 +44,6 @@ clean:	cleanmach
 cleanmach:
 	$(RM) -r $(CLASSDIR)/com
 	$(RM) .mach
-
-#.mach:	$(CLASSDIR)
-#	$(JAVAC) $(JAVACFLAGS) \
-#		-classpath $(ECLIPSE_CLASSPATH)$(ECLIPSE_PROJECT) \
-#		$(shell find . -name *java)
-.mach:	$(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
-		$(shell find . -name *java)
-	touch $@
-
 
 
 
