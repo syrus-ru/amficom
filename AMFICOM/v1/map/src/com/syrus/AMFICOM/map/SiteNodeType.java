@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.57 2005/08/05 12:33:07 max Exp $
+ * $Id: SiteNodeType.java,v 1.58 2005/08/05 14:56:06 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: max $
- * @version $Revision: 1.57 $, $Date: 2005/08/05 12:33:07 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/08/05 14:56:06 $
  * @module map_v1
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -184,7 +184,11 @@ public final class SiteNodeType extends StorableObjectType
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		return Collections.singleton((Identifiable) this.imageId);
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.imageId);
+		dependencies.add(this.mapLibrary);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return dependencies;
 	}
 
 	@Override

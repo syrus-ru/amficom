@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.62 2005/08/03 20:13:20 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.63 2005/08/05 14:56:06 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.map;
 
 import java.math.BigInteger;
-import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/08/03 20:13:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/08/05 14:56:06 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -197,7 +197,10 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		return Collections.emptySet();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.mapLibrary);
+		dependencies.remove(Identifier.VOID_IDENTIFIER);
+		return dependencies;
 	}
 
 	/**
