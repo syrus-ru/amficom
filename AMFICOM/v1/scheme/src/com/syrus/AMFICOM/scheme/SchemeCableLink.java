@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.65 2005/08/05 10:38:06 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.66 2005/08/05 11:35:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/08/05 10:38:06 $
+ * @version $Revision: 1.66 $, $Date: 2005/08/05 11:35:29 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -695,5 +695,15 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		}
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
+	}
+	
+	/**
+	 * @param cableLinkType
+	 */
+	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType) {
+		this.setAbstractLinkType(cableLinkType);
+		/**
+		 * @todo Add further implementation.
+		 */
 	}
 }
