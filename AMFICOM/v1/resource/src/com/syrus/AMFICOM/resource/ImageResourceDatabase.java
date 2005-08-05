@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.33 2005/08/03 19:53:02 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.34 2005/08/05 09:12:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/08/03 19:53:02 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/05 09:12:40 $
  * @module resource_v1
  */
 
@@ -91,12 +91,30 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			final String mesg = this.getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
-			if (connection != null) {
-				DatabaseConnection.releaseConnection(connection);
+			try {
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle) {
+				Log.errorException(sqle);
 			}
 		}
 		return image;
-		
 	}
 
 	private void updateImage(final AbstractImageResource abstractImageResource) throws UpdateObjectException {
@@ -121,8 +139,20 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			final String mesg = this.getEntityName() + "Database.insertImage | Cannot update blob " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
-			if (connection != null) {
-				DatabaseConnection.releaseConnection(connection);
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
+			} catch (SQLException sqle) {
+				Log.errorException(sqle);
 			}
 		}
 	}
@@ -303,8 +333,27 @@ public final class ImageResourceDatabase extends StorableObjectDatabase<Abstract
 			final String mesg = this.getEntityName() + "Database.insertImage | Cannot insert blob " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
-			if (connection != null) {
-				DatabaseConnection.releaseConnection(connection);
+			try {
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle) {
+				Log.errorException(sqle);
 			}
 		}
 	}
