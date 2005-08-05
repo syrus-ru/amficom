@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.36 2005/08/03 19:53:01 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.37 2005/08/05 09:21:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/03 19:53:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/08/05 09:21:35 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -120,8 +120,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void retrieveParameterTypeIdsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
-		if ((eventTypes == null) || (eventTypes.isEmpty()))
+		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
 				ObjectEntities.EVENTTYPPARTYPLINK,
@@ -137,8 +138,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void retrieveUserAlertKindsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
-		if ((eventTypes == null) || (eventTypes.isEmpty()))
+		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = this.retrieveDBUserAlertKindsMap(eventTypes);
 
@@ -195,20 +197,26 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -237,8 +245,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void updateParameterTypeIds(final Set<EventType> eventTypes) throws UpdateObjectException {
-		if ((eventTypes == null) || (eventTypes.isEmpty()))
+		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> parameterTypeIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final EventType eventType : eventTypes) {
@@ -253,8 +262,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void updateUserAlertKinds(final Set<EventType> eventTypes) throws UpdateObjectException {
-		if ((eventTypes == null) || (eventTypes.isEmpty()))
+		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
+		}
 
 		Map<Identifier, Map<Identifier, Set<AlertKind>>> dbEventTypeUserAlertKindsMap = null;
 		try {
@@ -360,8 +370,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void insertUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> insertUserAlertKindsMap) throws CreateObjectException {
-		if (insertUserAlertKindsMap == null || insertUserAlertKindsMap.isEmpty())
+		if (insertUserAlertKindsMap == null || insertUserAlertKindsMap.isEmpty()) {
 			return;
+		}
 
 		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTTYPEUSERALERT + OPEN_BRACKET
 				+ EventTypeWrapper.LINK_COLUMN_USER_ID + COMMA
@@ -401,17 +412,19 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 		finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 
@@ -452,17 +465,19 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -491,17 +506,19 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 		finally {
 			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -534,17 +551,19 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 		}
 		finally {
 			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}

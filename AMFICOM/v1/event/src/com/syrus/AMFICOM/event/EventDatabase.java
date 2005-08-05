@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.39 2005/08/03 19:53:01 bass Exp $
+ * $Id: EventDatabase.java,v 1.40 2005/08/05 09:21:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/08/03 19:53:01 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/08/05 09:21:35 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -176,20 +176,26 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		}
 		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 
@@ -202,8 +208,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	}
 
 	private void retrieveEventSourceIdsByOneQuery(final Set<Event> events) throws RetrieveObjectException {
-		if ((events == null) || (events.isEmpty()))
+		if ((events == null) || (events.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = this.retrieveLinkedEntityIds(events,
 				ObjectEntities.EVENTSOURCELINK,
@@ -278,17 +285,19 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		}
 		finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
@@ -300,8 +309,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	}
 
 	private void updateEventSources(final Set<Event> events) throws UpdateObjectException {
-		if (events == null || events.isEmpty())
+		if (events == null || events.isEmpty()) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> eventSourceIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final Event event : events) {
@@ -350,17 +360,19 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		}
 		finally {
 			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}
