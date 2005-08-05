@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.9 2005/07/24 17:40:34 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/24 17:40:34 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeCablePortWrapper extends StorableObjectWrapper {
+public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCablePort> {
 	
 //	schemecableport.sql
 //	
@@ -91,13 +91,12 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final SchemeCablePort schemeCablePort, final String key) {
+		final Object value = super.getValue(schemeCablePort, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof SchemeCablePort) {
-			final SchemeCablePort schemeCablePort = (SchemeCablePort) object;
+		if (schemeCablePort != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return schemeCablePort.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -121,9 +120,9 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SchemeCablePort) {
-			final SchemeCablePort schemeCablePort = (SchemeCablePort) object;
+	@Override
+	public void setValue(final SchemeCablePort schemeCablePort, final String key, final Object value) {
+		if (schemeCablePort != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemeCablePort.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

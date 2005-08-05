@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.5 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.6 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeCableThreadWrapper extends StorableObjectWrapper {
-	
-	//TODO: insert creation sql
-		
+public final class SchemeCableThreadWrapper extends StorableObjectWrapper<SchemeCableThread> {
 	public static final String COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
 	public static final String COLUMN_LINK_ID = "link_id";
 	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_cable_link_id";
@@ -50,7 +47,7 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(SchemeCableThread object, String key) {
 		throw new UnsupportedOperationException("SchemeCableThreadWrapper | not implemented yet");
 	}
 
@@ -58,7 +55,8 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeCableThreadWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	@Override
+	public void setValue(SchemeCableThread object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeCableThreadWrapper | not implemented yet");
 	}
 

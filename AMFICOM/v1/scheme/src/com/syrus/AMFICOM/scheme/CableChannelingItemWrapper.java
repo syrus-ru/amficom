@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.9 2005/07/28 17:42:35 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class CableChannelingItemWrapper extends StorableObjectWrapper {
+public final class CableChannelingItemWrapper extends StorableObjectWrapper<CableChannelingItem> {
 	public static final String COLUMN_START_SPARE = "start_spare";
 	public static final String COLUMN_END_SPARE = "end_spare";
 	public static final String COLUMN_ROW_X = "row_x";
@@ -51,7 +51,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
+	public Object getValue(final CableChannelingItem object, final String key) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
@@ -59,7 +59,8 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
+	@Override
+	public void setValue(final CableChannelingItem object, final String key, final Object value) {
 		throw new UnsupportedOperationException("CableChannelingItemWrapper | not implemented yet");
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.8 2005/08/02 20:33:39 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.9 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/02 20:33:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeWrapper extends StorableObjectWrapper {
+public final class SchemeWrapper extends StorableObjectWrapper<Scheme> {
 	public static final String COLUMN_LABEL = "label";
 	public static final int	SIZE_LABEL_COLUMN = 64;
 	public static final String COLUMN_WIDTH = "width";
@@ -96,13 +96,12 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final Scheme scheme, final String key) {
+		final Object value = super.getValue(scheme, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof Scheme) {
-			final Scheme scheme = (Scheme) object;
+		if (scheme != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return scheme.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -136,9 +135,9 @@ public final class SchemeWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof Scheme) {
-			final Scheme scheme = (Scheme) object;
+	@Override
+	public void setValue(final Scheme scheme, final String key, final Object value) {
+		if (scheme != null) {
 			if (key.equals(COLUMN_NAME)) {
 				scheme.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.10 2005/08/02 08:40:42 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.11 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,20 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
-import com.syrus.util.Wrapper;
-
 import java.util.Date;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
+
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/08/02 08:40:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
  * @module scheme
  */
 final class TypicalConditionImpl extends TypicalCondition {
@@ -124,7 +124,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 	 */
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		Wrapper wrapper;
+		StorableObjectWrapper wrapper;
 		if (storableObject instanceof SchemeMonitoringSolution) {
 			wrapper = SchemeMonitoringSolutionWrapper.getInstance();
 		} else if (storableObject instanceof Scheme) {

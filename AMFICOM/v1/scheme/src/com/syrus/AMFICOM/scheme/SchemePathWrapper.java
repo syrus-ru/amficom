@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.9 2005/07/25 12:12:33 bass Exp $
+ * $Id: SchemePathWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 12:12:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemePathWrapper extends StorableObjectWrapper {
+public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
 	public static final String COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
 
 	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "prnt_schm_mntrng_sltn_id";
@@ -45,7 +45,7 @@ public final class SchemePathWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(SchemePath object, String key) {
 		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
 	}
 
@@ -53,7 +53,8 @@ public final class SchemePathWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	@Override
+	public void setValue(SchemePath object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
 	}
 

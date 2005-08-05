@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionWrapper.java,v 1.8 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeMonitoringSolutionWrapper.java,v 1.9 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper {
+public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper<SchemeMonitoringSolution> {
 	public static final String COLUMN_PRICE_USD = "price_usd";
 
 	public static final String COLUMN_ACTIVE = "active";
@@ -78,13 +78,12 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final SchemeMonitoringSolution schemeMonitoringSolution, final String key) {
+		final Object value = super.getValue(schemeMonitoringSolution, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof SchemeMonitoringSolution) {
-			final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) object;
+		if (schemeMonitoringSolution != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return schemeMonitoringSolution.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -106,9 +105,9 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SchemeMonitoringSolution) {
-			final SchemeMonitoringSolution schemeMonitoringSolution = (SchemeMonitoringSolution) object;
+	@Override
+	public void setValue(final SchemeMonitoringSolution schemeMonitoringSolution, final String key, final Object value) {
+		if (schemeMonitoringSolution != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemeMonitoringSolution.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

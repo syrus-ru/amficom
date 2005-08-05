@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.7 2005/07/28 17:42:35 bass Exp $
+ * $Id: PathElementWrapper.java,v 1.8 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class PathElementWrapper extends StorableObjectWrapper {
+public final class PathElementWrapper extends StorableObjectWrapper<PathElement> {
 	
 //	pathelement.sql
 //	
@@ -60,7 +60,7 @@ public final class PathElementWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
+	public Object getValue(final PathElement object, final String key) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
@@ -68,7 +68,8 @@ public final class PathElementWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
+	@Override
+	public void setValue(final PathElement object, final String key, final Object value) {
 		throw new UnsupportedOperationException("PathElementWrapper | not implemented yet");
 	}
 

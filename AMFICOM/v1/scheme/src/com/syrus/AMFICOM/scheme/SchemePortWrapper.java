@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.9 2005/07/24 17:40:34 bass Exp $
+ * $Id: SchemePortWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/24 17:40:34 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemePortWrapper extends StorableObjectWrapper {
+public final class SchemePortWrapper extends StorableObjectWrapper<SchemePort> {
 
 //	schemeport.sql
 //
@@ -92,13 +92,12 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final SchemePort schemePort, final String key) {
+		final Object value = super.getValue(schemePort, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof SchemePort) {
-			final SchemePort schemePort = (SchemePort) object;
+		if (schemePort != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return schemePort.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -122,9 +121,9 @@ public final class SchemePortWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SchemePort) {
-			final SchemePort schemePort = (SchemePort) object;
+	@Override
+	public void setValue(final SchemePort schemePort, final String key, final Object value) {
+		if (schemePort != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemePort.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

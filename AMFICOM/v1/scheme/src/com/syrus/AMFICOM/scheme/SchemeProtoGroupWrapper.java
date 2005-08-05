@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupWrapper.java,v 1.10 2005/08/02 20:04:08 bass Exp $
+ * $Id: SchemeProtoGroupWrapper.java,v 1.11 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/02 20:04:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
+public final class SchemeProtoGroupWrapper extends StorableObjectWrapper<SchemeProtoGroup> {
 	public static final String COLUMN_SYMBOL_ID = "symbol_id";
 	public static final String COLUMN_PARENT_SCHEME_PROTO_GROUP_ID  = "parent_scheme_proto_group_id";
 
@@ -69,13 +69,12 @@ public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final SchemeProtoGroup schemeProtoGroup, final String key) {
+		final Object value = super.getValue(schemeProtoGroup, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof SchemeProtoGroup) {
-			final SchemeProtoGroup schemeProtoGroup = (SchemeProtoGroup) object;
+		if (schemeProtoGroup != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return schemeProtoGroup.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -93,9 +92,9 @@ public final class SchemeProtoGroupWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SchemeProtoGroup) {
-			final SchemeProtoGroup schemeProtoGroup = (SchemeProtoGroup) object;
+	@Override
+	public void setValue(final SchemeProtoGroup schemeProtoGroup, final String key, final Object value) {
+		if (schemeProtoGroup != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemeProtoGroup.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

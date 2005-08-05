@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.6 2005/07/24 17:10:19 bass Exp $
+ * $Id: SchemeElementWrapper.java,v 1.7 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/24 17:10:19 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeElementWrapper extends StorableObjectWrapper {
+public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElement> {
 
 //	schemeelement.sql
 //	
@@ -70,7 +70,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(SchemeElement object, String key) {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
 	}
 
@@ -78,7 +78,8 @@ public final class SchemeElementWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	@Override
+	public void setValue(SchemeElement object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
 	}
 

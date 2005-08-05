@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementWrapper.java,v 1.10 2005/08/04 12:17:50 bass Exp $
+ * $Id: SchemeProtoElementWrapper.java,v 1.11 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/04 12:17:50 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
+public final class SchemeProtoElementWrapper extends StorableObjectWrapper<SchemeProtoElement> {
 
 //  SchemeProtoElement.sql
 //
@@ -99,13 +99,12 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(final Object object, final String key) {
-		final Object value = super.getValue(object, key);
+	public Object getValue(final SchemeProtoElement schemeProtoElement, final String key) {
+		final Object value = super.getValue(schemeProtoElement, key);
 		if (value != null) {
 			return value;
 		}
-		if (object instanceof SchemeProtoElement) {
-			final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) object;
+		if (schemeProtoElement != null) {
 			if (key.equals(COLUMN_NAME)) {
 				return schemeProtoElement.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
@@ -133,9 +132,9 @@ public final class SchemeProtoElementWrapper extends StorableObjectWrapper {
 		return false;
 	}
 
-	public void setValue(final Object object, final String key, final Object value) {
-		if (object instanceof SchemeProtoElement) {
-			final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) object;
+	@Override
+	public void setValue(final SchemeProtoElement schemeProtoElement, final String key, final Object value) {
+		if (schemeProtoElement != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemeProtoElement.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {

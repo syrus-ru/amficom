@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.5 2005/07/25 12:10:56 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.6 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/07/25 12:10:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 11:20:03 $
  * @module scheme
  */
-public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper {
+public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper<SchemeOptimizeInfoSwitch> {
 	public static final String COLUMN_PRICE = "price_usd";
 
 	public static final String COLUMN_NO_OF_PORTS = "no_of_ports";
@@ -84,7 +84,17 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @param value
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
-	public void setValue(Object object, String key, Object value) {
+	@Override
+	public void setValue(SchemeOptimizeInfoSwitch object, String key, Object value) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param object
+	 * @param key
+	 */
+	@Override
+	public Object getValue(SchemeOptimizeInfoSwitch object, String key) {
 		throw new UnsupportedOperationException();
 	}
 

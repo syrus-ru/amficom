@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.6 2005/07/25 12:13:09 bass Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.7 2005/08/05 11:20:03 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/25 12:13:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 11:20:03 $
  * @author $Author: bass $
  * @module scheme
  */
-public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper {
+public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<SchemeOptimizeInfo> {
 	
 //	schemeoptimizeinfo.sql
 //	
@@ -79,7 +79,7 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper {
 	}
 
 	@Override
-	public Object getValue(Object object, String key) {
+	public Object getValue(SchemeOptimizeInfo object, String key) {
 		throw new UnsupportedOperationException("SchemeOptimizeInfoWrapper | not implemented yet");
 	}
 
@@ -87,7 +87,8 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper {
 		throw new UnsupportedOperationException("SchemeOptimizeInfoWrapper | not implemented yet");
 	}
 
-	public void setValue(Object object, String key, Object value) {
+	@Override
+	public void setValue(SchemeOptimizeInfo object, String key, Object value) {
 		throw new UnsupportedOperationException("SchemeOptimizeInfoWrapper | not implemented yet");
 	}
 
