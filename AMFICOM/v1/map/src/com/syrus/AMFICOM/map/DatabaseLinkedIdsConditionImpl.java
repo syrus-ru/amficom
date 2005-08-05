@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.4 2005/07/16 18:57:18 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.5 2005/08/05 10:48:05 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
@@ -23,8 +26,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/07/16 18:57:18 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 10:48:05 $
  * @module map_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -56,6 +59,20 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 						return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
 					default:
 						throw newExceptionLinkedEntityIllegal();
+				}
+			case SITENODE_TYPE_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case MAPLIBRARY_CODE:
+					return super.getQuery(SiteNodeTypeWrapper.COLUMN_MAP_LIBRARY_ID);
+				default:
+					throw newExceptionLinkedEntityIllegal();
+				}
+			case PHYSICALLINK_TYPE_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case MAPLIBRARY_CODE:
+					return super.getQuery(PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID);
+				default:
+					throw newExceptionLinkedEntityIllegal();
 				}
 			default:
 				throw newExceptionEntityIllegal();
