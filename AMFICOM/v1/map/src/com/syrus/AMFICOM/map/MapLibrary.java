@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.7 2005/08/05 12:34:15 max Exp $
+ * $Id: MapLibrary.java,v 1.8 2005/08/05 13:42:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:34:15 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 13:42:46 $
+ * @author $Author: krupenn $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -112,7 +112,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			final String codename,
 			final String description,
 			final MapLibrary parentMapLibrary) throws CreateObjectException {
-		assert creatorId == null || name == null || codename == null || description == null : ErrorMessages.NON_NULL_EXPECTED;
+		assert creatorId != null && name != null && codename != null && description != null : ErrorMessages.NON_NULL_EXPECTED;
 			
 		try {
 			final MapLibrary mapLibrary = new MapLibrary(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPLIBRARY_CODE),
