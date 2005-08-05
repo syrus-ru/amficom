@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.100 2005/08/03 19:52:59 bass Exp $
+ * $Id: ResultDatabase.java,v 1.101 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -290,22 +290,30 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				resultParameters.add(parameter);
 			}
 		} catch (SQLException sqle) {
-			final String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			final String mesg = "ResultDatabase.retrieveResultParametersByOneQuery | Cannot retrieve parameters for result -- "
+					+ sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 
@@ -313,10 +321,12 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			final Identifier resultId = result.getId();
 			final Set<Parameter> resultParameters = resultParametersMap.get(resultId);
 
-			if (resultParameters != null)
+			if (resultParameters != null) {
 				result.setParameters0(resultParameters.toArray(new Parameter[resultParameters.size()]));
-			else
+			}
+			else {
 				result.setParameters0(new Parameter[0]);
+			}
 		}
 
 	}
@@ -375,15 +385,19 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -408,15 +422,18 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}

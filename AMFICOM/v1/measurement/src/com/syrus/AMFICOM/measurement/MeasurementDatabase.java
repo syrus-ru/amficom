@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.89 2005/08/03 19:52:59 bass Exp $
+ * $Id: MeasurementDatabase.java,v 1.90 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -192,18 +192,26 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}

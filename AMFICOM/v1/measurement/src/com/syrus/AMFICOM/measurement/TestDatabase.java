@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.110 2005/08/03 19:52:59 bass Exp $
+ * $Id: TestDatabase.java,v 1.111 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.110 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.111 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -245,7 +245,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				measurements.add(measurement);
 			}
 		} catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr + "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
+			final String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test '" + testIdStr
+					+ "' and status " + Integer.toString(measurementStatus.value()) + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -299,22 +300,31 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				}
 			throw new ObjectNotFoundException("No last measurement for test: " + testIdStr);
 		} catch (SQLException sqle) {
-			final String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '" + testIdStr + "' -- " + sqle.getMessage();
+			final String mesg = "TestDatabase.retrieveLastMeasurement | Cannot retrieve last measurement for test '"
+					+ testIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -346,22 +356,31 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				return resultSet.getInt("count");
 			throw new ObjectNotFoundException("No number of results for test '" + testIdStr + "' of result sort " + resultSort.value());
 		} catch (SQLException sqle) {
-			final String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr + "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
+			final String mesg = "TestDatabase.retrieveNumberOfMeasurements | Cannot retrieve number of results for test '" + testIdStr
+					+ "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}

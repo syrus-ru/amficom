@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.11 2005/08/03 19:52:59 bass Exp $
+ * $Id: ActionTypeDatabase.java,v 1.12 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public abstract class ActionTypeDatabase<T extends ActionType> extends StorableObjectDatabase<T> {
@@ -107,25 +107,34 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
 
 	final void updateParameterTypeIds(final Set<T> actionTypes) throws UpdateObjectException {
-		if (actionTypes == null || actionTypes.isEmpty())
+		if (actionTypes == null || actionTypes.isEmpty()) {
 			return;
+		}
 
 		Map<Identifier, Map<String, Set<Identifier>>> dbParameterTypeIdsMap = null;
 		try {
@@ -269,15 +278,19 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			throw new CreateObjectException("Cannot insert parameter type ids -- " + sqle.getMessage(), sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 

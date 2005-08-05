@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.11 2005/08/03 19:52:59 bass Exp $
+ * $Id: ParameterSetDatabase.java,v 1.12 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -168,18 +168,26 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 
@@ -187,17 +195,20 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			final Identifier setId = set.getId();
 			final Set<Parameter> setParameters = setParametersMap.get(setId);
 
-			if (setParameters != null)
+			if (setParameters != null) {
 				set.setParameters0(setParameters.toArray(new Parameter[setParameters.size()]));
-			else
+			}
+			else {
 				set.setParameters0(new Parameter[0]);
+			}
 		}
 
 	}
 
 	private void retrieveSetMELinksByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
-		if ((sets == null) || (sets.isEmpty()))
+		if ((sets == null) || (sets.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = this.retrieveLinkedEntityIds(sets,
 				ObjectEntities.SETMELINK,
@@ -274,15 +285,19 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -334,15 +349,19 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			} catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}

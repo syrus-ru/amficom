@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.100 2005/08/03 19:52:59 bass Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.101 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -161,8 +161,9 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 	}
 
 	private void updateMeasurementTypeIds(final Set<AnalysisType> analysisTypes) throws UpdateObjectException {
-		if (analysisTypes == null || analysisTypes.isEmpty())
+		if (analysisTypes == null || analysisTypes.isEmpty()) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> mtIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final AnalysisType analysisType : analysisTypes) {
@@ -197,15 +198,19 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}

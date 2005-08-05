@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.107 2005/08/03 19:52:59 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.108 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.108 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -125,8 +125,9 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 	}
 
 	private void retrieveMeasurementPortTypeIdsByOneQuery(final Set<MeasurementType> measurementTypes) throws RetrieveObjectException {
-		if ((measurementTypes == null) || (measurementTypes.isEmpty()))
+		if ((measurementTypes == null) || (measurementTypes.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> measurementPortTypeIdsMap = super.retrieveLinkedEntityIds(measurementTypes,
 				ObjectEntities.MNTTYPEMEASPORTTYPELINK,
@@ -202,15 +203,19 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			} catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
 			}
 		}
 	}

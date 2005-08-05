@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.16 2005/08/03 19:52:59 bass Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.17 2005/08/05 08:29:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 08:29:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase<IntervalsTemporalPattern> {
@@ -148,15 +148,20 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		} finally {
 			try {
 				try {
-					if (resultSet != null)
+					if (resultSet != null) {
 						resultSet.close();
+						resultSet = null;
+					}
 				} finally {
 					try {
-						if (statement != null)
+						if (statement != null) {
 							statement.close();
+							statement = null;
+						}
 					} finally {
 						if (connection != null) {
 							DatabaseConnection.releaseConnection(connection);
+							connection = null;
 						}
 					}
 				}
@@ -199,15 +204,19 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			Log.errorMessage(mesg);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -308,13 +317,16 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 				final Identifier temporalPatternId = (Identifier) row.get(TEMPORAL_PATTERN_ID_ROW);
 				final Long duration = (Long) row.get(DURATION_ROW);
 				int i = 1;
-				if(updateMode.equals(ExecuteMode.MODE_INSERT))
+				if(updateMode.equals(ExecuteMode.MODE_INSERT)) {
 					DatabaseIdentifier.setIdentifier(preparedStatement, i++, intervalsTemporalPatternId);
+				}
 				DatabaseIdentifier.setIdentifier(preparedStatement, i++, temporalPatternId);
-				if(duration == null)
+				if(duration == null) {
 					preparedStatement.setLong(i++, 0L);
-				else
+				}
+				else {
 					preparedStatement.setLong(i++, duration.longValue());
+				}
 				preparedStatement.setLong(i++, offset.longValue());
 				preparedStatement.executeUpdate();
 			}
@@ -326,15 +338,19 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -364,15 +380,19 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
