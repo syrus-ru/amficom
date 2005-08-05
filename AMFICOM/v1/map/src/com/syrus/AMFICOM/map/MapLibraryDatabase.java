@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryDatabase.java,v 1.4 2005/08/05 13:54:23 max Exp $
+ * $Id: MapLibraryDatabase.java,v 1.5 2005/08/05 14:02:29 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author max
  * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/08/05 13:54:23 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/05 14:02:29 $
  * @module map
  */
 
@@ -70,7 +70,7 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_CODENAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.possiblyVoid(storableObject.getParent()));
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentMapLibraryId());
 		return startParameterNumber;
 	}
 	
@@ -79,7 +79,7 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 		final String values = APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getCodename(), SIZE_CODENAME_COLUMN) + APOSTROPHE + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(Identifier.possiblyVoid(storableObject.getParent()));
+			+ DatabaseIdentifier.toSQLString(storableObject.getParentMapLibraryId());
 		return values;
 	}
 	
