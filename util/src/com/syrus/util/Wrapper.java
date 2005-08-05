@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.5 2005/07/26 08:53:47 arseniy Exp $
+* $Id: Wrapper.java,v 1.6 2005/08/05 09:45:43 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import java.util.List;
  * wrapper's constructor must be private and its instance must be obtained
  * using a static method <code>getInstance()</code>.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/07/26 08:53:47 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 09:45:43 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module util
  */
-public interface Wrapper {	
+public interface Wrapper<T> {	
 	
 	/**
 	 * @return array of available keys
@@ -79,7 +79,7 @@ public interface Wrapper {
 	 * @param object
 	 * @param key entity key
 	 */
-	Object getValue(final Object object, final String key);
+	Object getValue(final T object, final String key);
 
 	/**
 	 * Returns <code>true</code> if the entity represented by
@@ -98,6 +98,6 @@ public interface Wrapper {
 	 * @param key entity key
 	 * @param value value, which will be assigned to Model
 	 */
-	void setValue(Object object, final String key, final Object value);
+	void setValue(T object, final String key, final Object value);
 
 }
