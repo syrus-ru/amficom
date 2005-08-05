@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.66 2005/08/04 18:55:05 bass Exp $
+ * $Id: SchemePath.java,v 1.67 2005/08/05 10:38:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -40,6 +41,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -53,9 +55,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
@@ -65,7 +71,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/08/04 18:55:05 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/05 10:38:06 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -451,6 +457,41 @@ public final class SchemePath extends StorableObject
 		this.description = schemePath.description;
 		this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
 		this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
+	}
+
+	/**
+	 * @param sequentialNumber
+	 * @throws ApplicationException
+	 * @see PathOwner#getPathMember(int)
+	 */
+	public PathElement getPathMember(final int sequentialNumber) throws ApplicationException {
+		if (sequentialNumber < 0) {
+			throw new IndexOutOfBoundsException("sequential numbers usually start with 0");
+		}
+		final StorableObjectCondition typicalCondition = new TypicalCondition(
+				sequentialNumber,
+				sequentialNumber,
+				OperationSort.OPERATION_EQUALS,
+				PATHELEMENT_CODE,
+				PathElementWrapper.COLUMN_SEQUENTIAL_NUMBER) {
+			@Override
+			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+				return false;
+			}
+		};
+		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(
+				super.id,
+				PATHELEMENT_CODE);
+		final StorableObjectCondition compoundCondition = new CompoundCondition(
+				typicalCondition,
+				CompoundConditionSort.AND,
+				linkedIdsCondition);
+		final Set<PathElement> pathMembers = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		if (pathMembers.isEmpty()) {
+			throw new NoSuchElementException("no path member found with sequential number: " + sequentialNumber);
+		}
+		assert pathMembers.size() == 1;
+		return pathMembers.iterator().next();
 	}
 
 	/*-********************************************************************

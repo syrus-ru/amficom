@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.64 2005/08/04 18:55:05 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.65 2005/08/05 10:38:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -41,6 +42,7 @@ import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -52,9 +54,14 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
 import com.syrus.util.Log;
@@ -63,7 +70,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/08/04 18:55:05 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/05 10:38:06 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -653,5 +660,40 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 		final SortedSet<CableChannelingItem> cableChanelingItems = this.getPathMembers();
 		return cableChannelingItem.getParentSchemeCableLinkId().equals(super.id)
 				&& cableChanelingItems.headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber;
+	}
+
+	/**
+	 * @param sequentialNumber
+	 * @throws ApplicationException
+	 * @see PathOwner#getPathMember(int)
+	 */
+	public CableChannelingItem getPathMember(final int sequentialNumber) throws ApplicationException {
+		if (sequentialNumber < 0) {
+			throw new IndexOutOfBoundsException("sequential numbers usually start with 0");
+		}
+		final StorableObjectCondition typicalCondition = new TypicalCondition(
+				sequentialNumber,
+				sequentialNumber,
+				OperationSort.OPERATION_EQUALS,
+				CABLECHANNELINGITEM_CODE,
+				CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER) {
+			@Override
+			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+				return false;
+			}
+		};
+		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(
+				super.id,
+				CABLECHANNELINGITEM_CODE);
+		final StorableObjectCondition compoundCondition = new CompoundCondition(
+				typicalCondition,
+				CompoundConditionSort.AND,
+				linkedIdsCondition);
+		final Set<CableChannelingItem> pathMembers = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		if (pathMembers.isEmpty()) {
+			throw new NoSuchElementException("no path member found with sequential number: " + sequentialNumber);
+		}
+		assert pathMembers.size() == 1;
+		return pathMembers.iterator().next();
 	}
 }
