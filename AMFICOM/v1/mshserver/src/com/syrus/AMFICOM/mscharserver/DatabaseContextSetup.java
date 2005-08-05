@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.2 2005/06/16 10:47:47 bass Exp $
+ * $Id: DatabaseContextSetup.java,v 1.3 2005/08/05 08:52:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.map.CollectorDatabase;
 import com.syrus.AMFICOM.map.MapDatabase;
+import com.syrus.AMFICOM.map.MapLibraryDatabase;
 import com.syrus.AMFICOM.map.MarkDatabase;
 import com.syrus.AMFICOM.map.NodeLinkDatabase;
 import com.syrus.AMFICOM.map.PhysicalLinkDatabase;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/16 10:47:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 08:52:08 $
  * @module mscharserver_v1
  */
 final class DatabaseContextSetup {
@@ -74,6 +75,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new PhysicalLinkDatabase());
 		DatabaseContext.registerDatabase(new SiteNodeDatabase());
 		DatabaseContext.registerDatabase(new TopologicalNodeDatabase());
+		DatabaseContext.registerDatabase(new MapLibraryDatabase());
 
 		DatabaseContext.registerDatabase(new SchemeProtoGroupDatabase());
 		DatabaseContext.registerDatabase(new SchemeProtoElementDatabase());
