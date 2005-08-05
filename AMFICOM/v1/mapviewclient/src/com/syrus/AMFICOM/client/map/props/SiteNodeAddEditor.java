@@ -37,7 +37,9 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -55,6 +57,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private JPanel buttonsPanel = new JPanel();
 	private JButton bindButton = new JButton();
 	private JButton unbindButton = new JButton();
+	JButton selectButton = new JButton();
+
 	private JScrollPane treeScrollPane = new JScrollPane();
 	JTree elementsTree;
 	
@@ -120,6 +124,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 						showElement(null);
 					else
 						showElement(node.getUserObject());
+					SiteNodeAddEditor.this.selectButton.setEnabled(node != null);
 				}
 			});
 
@@ -143,9 +148,26 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				{
 					DefaultMutableTreeNode node = (DefaultMutableTreeNode)
 							SiteNodeAddEditor.this.elementsTree.getLastSelectedPathComponent();
-					unbindElement(node.getUserObject());
+					try {
+						unbindElement(node.getUserObject());
+					} catch(ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
+		this.selectButton.setToolTipText("Выбрать элемент");
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setPreferredSize(buttonSize);
+		this.selectButton.setMaximumSize(buttonSize);
+		this.selectButton.setMinimumSize(buttonSize);
+		this.selectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+				SiteNodeAddEditor.this.elementsTree.getLastSelectedPathComponent();
+				selectElement(node.getUserObject());
+			}
+		});
 		this.buttonsPanel.setLayout(new GridBagLayout());
 
 		this.treeScrollPane.getViewport().add(this.elementsTree);
@@ -192,6 +214,19 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.buttonsPanel.add(this.unbindButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.selectButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -293,7 +328,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.elementsTree.updateUI();
 	}
 
-	private void unbindSchemeCableLink(SchemeCableLink scl) {
+	private void unbindSchemeCableLink(SchemeCableLink scl) throws ApplicationException {
 		MapView mapView = this.logicalNetLayer.getMapView();
 
 		for(int i = 0; i < this.cablesBranch.getChildCount(); i++) {
@@ -373,7 +408,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.elementsTree.updateUI();
 	}
 
-	void unbindElement(Object or) {
+	void unbindElement(Object or) throws ApplicationException {
 		if(or instanceof SchemeElement) {
 			SchemeElement se = (SchemeElement )or;
 			unbindSchemeElement(se);
@@ -390,7 +425,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		if(element != null) {
 			if(element instanceof SchemeElement) {
 				SchemeElement schemeElement = (SchemeElement )element;
-				this.schemePane.openSchemeCellContainer(schemeElement, false);
+				this.schemePane.openSchemeImageResource(schemeElement.getSchemeCell(), false);
 				this.crossingScrollPane.setVisible(false);
 				this.schemePane.getGraph().setVisible(true);
 				sen = true;
@@ -432,6 +467,16 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			this.crossingScrollPane.setVisible(true);
 		}
 		this.unbindButton.setEnabled(sen);
+		this.selectButton.setEnabled(sen);
+	}
+
+	void selectElement(Object or) {
+		MapElement mapElement = (MapElement )or;
+		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().clearSelection();
+		this.netMapViewer.getLogicalNetLayer().deselectAll();
+		this.netMapViewer.getLogicalNetLayer().setCurrentMapElement(mapElement);
+		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().setSelected(mapElement, true);
+		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	public void setObject(Object objectResource) {

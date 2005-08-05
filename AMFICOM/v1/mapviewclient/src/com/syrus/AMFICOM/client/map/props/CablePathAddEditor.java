@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -80,6 +80,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	JButton bindChainButton = new JButton();
 	JButton unbindButton = new JButton();
 	JButton clearBindingButton = new JButton();
+	JButton selectButton = new JButton();
 
 	JPanel startPanel = new JPanel();
 
@@ -220,7 +221,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		{
 			public void valueChanged(ListSelectionEvent e)
 			{
-				CablePathAddEditor.this.unbindButton.setEnabled(CablePathAddEditor.this.table.getSelectedRowCount() != 0);
+				boolean itemSelected = CablePathAddEditor.this.table.getSelectedRowCount() != 0;
+				CablePathAddEditor.this.unbindButton.setEnabled(itemSelected);
+				CablePathAddEditor.this.selectButton.setEnabled(itemSelected);
 			}
 		});
 
@@ -233,7 +236,12 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					addBinding();
+					try {
+						addBinding();
+					} catch(ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 		this.bindChainButton.setToolTipText("Привязать цепочку");
@@ -245,7 +253,12 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					addChainBinding();
+					try {
+						addChainBinding();
+					} catch(ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 		this.unbindButton.setToolTipText("Убрать связь");
@@ -257,7 +270,12 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					removeBinding();
+					try {
+						removeBinding();
+					} catch(ApplicationException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			});
 		this.clearBindingButton.setToolTipText("Отвязать кабель");
@@ -270,6 +288,19 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				public void actionPerformed(ActionEvent e)
 				{
 					clearBinding();
+				}
+			});
+
+		this.selectButton.setToolTipText("Выбрать связь");
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setPreferredSize(buttonSize);
+		this.selectButton.setMaximumSize(buttonSize);
+		this.selectButton.setMinimumSize(buttonSize);
+		this.selectButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					selectLink();
 				}
 			});
 
@@ -690,10 +721,20 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endNodeToComboBox.setEnabled(false);
 	}
 
+	void selectLink() {
+		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
+		this.logicalNetLayer.getMapView().getMap().clearSelection();
+		this.logicalNetLayer.deselectAll();
+		this.logicalNetLayer.setCurrentMapElement(link);
+		this.logicalNetLayer.getMapView().getMap().setSelected(link, true);
+		this.logicalNetLayer.sendSelectionChangeEvent();
+	}
+
 	/**
+	 * @throws ApplicationException 
 	 * @todo working woth nodelinks and creation/deletion of elements
 	 */
-	void removeBinding()
+	void removeBinding() throws ApplicationException
 	{
 		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
 		CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(link);
@@ -798,7 +839,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	private void addLinkBinding(
 			PhysicalLink link,
 			CableChannelingItem unboundCableChannelingItem,
-			AbstractNode fromSite) {
+			AbstractNode fromSite) throws ApplicationException {
 
 		CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, link);
 		newCableChannelingItem.insertSelfBefore(unboundCableChannelingItem);
@@ -834,7 +875,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		}
 	}
 
-	void addBinding() {
+	void addBinding() throws ApplicationException {
 		PhysicalLink selectedStartLink;
 		PhysicalLink selectedEndLink;
 		
@@ -871,7 +912,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		setBindingPanels();
 	}
 
-	void addChainBinding()
+	void addChainBinding() throws ApplicationException
 	{
 		while(true)
 		{

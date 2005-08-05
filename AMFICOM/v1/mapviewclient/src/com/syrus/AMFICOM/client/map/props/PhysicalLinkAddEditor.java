@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -64,6 +65,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	private JPanel buttonsPanel = new JPanel();
 	JToggleButton bindButton = new JToggleButton();
 	JButton unbindButton = new JButton();
+	JButton selectButton = new JButton();
 
 	JLabel horvertLabel = new JLabel();
 	JLabel topDownLabel = new JLabel();
@@ -129,10 +131,9 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 					Object or = PhysicalLinkAddEditor.this.cableList
 							.getSelectedValue();
 					cableSelected(or);
-					PhysicalLinkAddEditor.this.bindButton
-							.setEnabled(or != null);
-					PhysicalLinkAddEditor.this.unbindButton
-							.setEnabled(or != null);
+					PhysicalLinkAddEditor.this.bindButton.setEnabled(or != null);
+					PhysicalLinkAddEditor.this.unbindButton.setEnabled(or != null);
+					PhysicalLinkAddEditor.this.selectButton.setEnabled(or != null);
 					PhysicalLinkAddEditor.this.processSelection = true;
 				}
 			}
@@ -158,9 +159,28 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			public void actionPerformed(ActionEvent e) {
 				Object or = PhysicalLinkAddEditor.this.cableList
 						.getSelectedValue();
-				unbind(or);
+				try {
+					unbind(or);
+				} catch(ApplicationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
+
+		this.selectButton.setToolTipText("Выбрать связь");
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setPreferredSize(buttonSize);
+		this.selectButton.setMaximumSize(buttonSize);
+		this.selectButton.setMinimumSize(buttonSize);
+		this.selectButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Object or = PhysicalLinkAddEditor.this.cableList
+						.getSelectedValue();
+				selectCable(or);
+			}
+		});
+
 		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
@@ -266,6 +286,19 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.buttonsPanel.add(this.unbindButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.buttonsPanel.add(this.selectButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -399,6 +432,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 		this.bindButton.setEnabled(false);
 		this.unbindButton.setEnabled(false);
+		this.selectButton.setEnabled(false);
 
 		super.addToUndoableListener(this.mTextField);
 		super.addToUndoableListener(this.nTextField);
@@ -472,6 +506,15 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		}
 	}
 
+	void selectCable(Object or) {
+		CablePath cablePath = (CablePath )or;
+		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().clearSelection();
+		this.netMapViewer.getLogicalNetLayer().deselectAll();
+		this.netMapViewer.getLogicalNetLayer().setCurrentMapElement(cablePath);
+		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().setSelected(cablePath, true);
+		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+	}
+
 	public void bind(Object or) {
 		PhysicalLinkBinding binding = this.physicalLink.getBinding();
 		IntPoint pt = this.tunnelLayout.getActiveCoordinates();
@@ -489,14 +532,16 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		if(bindModeEnabled) {
 			this.cableList.setEnabled(false);
 			this.unbindButton.setEnabled(false);
+			this.selectButton.setEnabled(false);
 		}
 		else {
 			this.cableList.setEnabled(true);
 			this.unbindButton.setEnabled(true);
+			this.selectButton.setEnabled(true);
 		}
 	}
 
-	public void unbind(Object or) {
+	public void unbind(Object or) throws ApplicationException {
 		CablePath cablePath = (CablePath )or;
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
