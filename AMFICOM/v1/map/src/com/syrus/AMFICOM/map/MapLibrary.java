@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.8 2005/08/05 13:42:46 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.9 2005/08/05 14:02:09 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/05 13:42:46 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 14:02:09 $
+ * @author $Author: max $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -366,8 +366,8 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		}
 	}
 
-	public Identifier getParentMapLibraryId() {
-		return parentMapLibraryId;
+	Identifier getParentMapLibraryId() {
+		return this.parentMapLibraryId;
 	}
 	
 }
