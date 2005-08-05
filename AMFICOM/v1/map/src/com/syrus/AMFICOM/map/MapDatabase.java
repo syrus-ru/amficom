@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.40 2005/08/03 19:52:59 bass Exp $
+ * $Id: MapDatabase.java,v 1.41 2005/08/05 09:05:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/08/03 19:52:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/08/05 09:05:58 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -377,8 +377,9 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 
 	private void updateLinkedObjectIds(final Set<Map> maps, final int linkedTable)
 			throws UpdateObjectException {
-		if (maps == null || maps.isEmpty())
+		if (maps == null || maps.isEmpty()) {
 			return;
+		}
 
 		String tableName;
 		try {
@@ -515,7 +516,8 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_MAP);
 	}	
 
-	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<? extends StorableObject>> linkedObjectIds, final int linkedTable) {
+	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<? extends StorableObject>> linkedObjectIds,
+			final int linkedTable) {
 		String tableName;
 		try {
 			tableName = this.getLinkedTableName(linkedTable);
@@ -540,15 +542,19 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			Log.errorException(sqle1);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -556,12 +562,12 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 	@Override
 	protected Set<Map> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<Map> maps = super.retrieveByCondition(conditionQuery);
-		
+
 		final java.util.Map<Identifier, Map> mapIds = new HashMap<Identifier, Map>();
 		for (final Map map : maps) {
 			mapIds.put(map.getId(), map);
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> collectors = this.retrieveLinkedObjects(maps, _MAP_COLLECTOR);
 			for (final Identifier id : collectors.keySet()) {
@@ -577,7 +583,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> marks = this.retrieveLinkedObjects(maps, _MAP_MARK);
 			for (final Identifier id : marks.keySet()) {
@@ -593,7 +599,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> nodeLinks = this.retrieveLinkedObjects(maps, _MAP_NODE_LINK);
 			for (final Identifier id : nodeLinks.keySet()) {
@@ -609,7 +615,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> physicalLinks = this.retrieveLinkedObjects(maps, _MAP_PHYSICAL_LINK);
 			for (final Identifier id :physicalLinks.keySet()) {
@@ -625,7 +631,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> siteNodes = this.retrieveLinkedObjects(maps, _MAP_SITE_NODE);
 			for (final Identifier id : siteNodes.keySet()) {
@@ -641,7 +647,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> topologicalNodes = this.retrieveLinkedObjects(maps, _MAP_TOPOLOGICAL_NODE);
 			for (final Identifier id : topologicalNodes.keySet()) {
@@ -657,7 +663,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> childMaps = this.retrieveLinkedObjects(maps, _MAP_MAP);
 			for (final Identifier id : childMaps.keySet()) {
@@ -673,7 +679,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> externalNodes = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
 			for (final Identifier id : externalNodes.keySet()) {
@@ -689,7 +695,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				}
 			}
 		}
-		
+
 		{
 			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_MAP_LIBRARY);
 			for (final Identifier id : mapLibraries.keySet()) {
