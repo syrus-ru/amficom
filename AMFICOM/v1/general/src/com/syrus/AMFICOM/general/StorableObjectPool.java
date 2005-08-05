@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.148 2005/08/05 14:21:28 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.149 2005/08/05 15:35:21 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.148 $, $Date: 2005/08/05 14:21:28 $
+ * @version $Revision: 1.149 $, $Date: 2005/08/05 15:35:21 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -582,6 +582,9 @@ public final class StorableObjectPool {
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable : dependencies) {
 			assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
+			if (identifiable.getId().isVoid()) {
+				continue;
+			}
 
 			StorableObject dependencyObject = null;
 			if (identifiable instanceof Identifier) {
