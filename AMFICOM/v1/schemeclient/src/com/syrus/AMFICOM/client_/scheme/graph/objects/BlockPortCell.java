@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.6 2005/08/05 12:39:59 stas Exp $
+ * $Id: BlockPortCell.java,v 1.7 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -39,7 +39,7 @@ public class BlockPortCell  extends DefaultGraphCell {
 	private boolean isCablePort = false;
 	
 	public static BlockPortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, AbstractSchemePort port) {
+			Rectangle bounds, Map<Object, Map> viewMap, AbstractSchemePort port) {
 		
 		BlockPortCell cell = new BlockPortCell(userObject);
 		cell.setAbstractSchemePortId(port.getId());

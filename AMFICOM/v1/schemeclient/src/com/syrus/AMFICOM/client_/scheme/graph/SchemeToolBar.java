@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.8 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeToolBar.java,v 1.9 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SetTopLevelModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -52,10 +52,12 @@ public class SchemeToolBar extends ElementsToolBar {
 		super(sourcePane, aContext);
 	}
 
+	@Override
 	protected String[] getButtons() {
 		return buttons;
 	}
 	
+	@Override
 	protected Map<String, AbstractButton> createGraphButtons() {
 		Map<String, AbstractButton> bttns = super.createGraphButtons();
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.11 2005/08/05 12:39:59 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.12 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -76,6 +76,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		this.keyListener = new SchemeKeyListener();
 	}
 	
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(SchemeEvent.TYPE, this);
@@ -88,6 +89,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		}
 	}
 	
+	@Override
 	protected JComponent createPanel() {
 		this.panel = new ElementsPanel(this.aContext);
 		SchemeGraph graph = this.panel.getGraph();
@@ -97,6 +99,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		return graphView;
 	}
 	
+	@Override
 	protected JComponent createToolBar() {
 		this.toolBar = new ElementsToolBar(this, this.aContext);
 		return this.toolBar;
@@ -159,10 +162,12 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	/**
 	 * @return selected ElementsPanel
 	 */
+	@Override
 	public ElementsPanel getCurrentPanel() {
 		return (ElementsPanel)this.panel;
 	}
 	
+	@Override
 	public boolean removePanel(UgoPanel p) {
 		if (p instanceof ElementsPanel) {
 			if (p.getGraph().isGraphChanged()) {
@@ -174,6 +179,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		return super.removePanel(p);
 	}
 
+	@Override
 	public boolean removeAllPanels() {
 		return removePanel(this.panel);
 	}
@@ -219,6 +225,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}*/
 	
 	class SchemeKeyListener extends KeyAdapter {
+		@Override
 		public void keyPressed(KeyEvent e) {
 			ElementsTabbedPane pane = ElementsTabbedPane.this;
 			UgoPanel p = pane.getCurrentPanel();

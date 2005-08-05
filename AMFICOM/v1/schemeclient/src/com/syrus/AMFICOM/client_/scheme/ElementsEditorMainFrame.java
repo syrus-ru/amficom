@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.12 2005/08/05 12:39:58 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.13 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -142,6 +142,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		
 		super.setWindowArranger(new WindowArranger(ElementsEditorMainFrame.this) {
 
+			@Override
 			public void arrange() {
 				Rectangle r = ElementsEditorMainFrame.this.scrollPane.getViewportBorderBounds();
 				int w = r.width + ElementsEditorMainFrame.this.scrollPane.getVerticalScrollBar().getWidth();
@@ -198,6 +199,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		});
 	}
 	
+	@Override
 	protected void initModule() {
 		super.initModule();
 		
@@ -234,12 +236,14 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				return this.command;
 			}
 
+			@Override
 			public void execute() {
 				this.getLazyCommand().execute();
 			}
 		};
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 
@@ -251,6 +255,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		aModel.setVisible("menuSchemeImport", false);
 	}
 
+	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();
 		
@@ -267,6 +272,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -281,6 +287,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		setFramesVisible(false);
 	}
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			if (!this.elementsTab.removeAllPanels())

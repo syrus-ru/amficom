@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.5 2005/08/05 12:39:58 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.6 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -194,7 +194,7 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
+			Collection<Object> toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
 			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);

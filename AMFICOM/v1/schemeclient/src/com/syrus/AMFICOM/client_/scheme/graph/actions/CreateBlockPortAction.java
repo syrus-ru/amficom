@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.7 2005/08/05 08:21:34 stas Exp $
+ * $Id: CreateBlockPortAction.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -105,7 +105,7 @@ public class CreateBlockPortAction extends AbstractAction {
 						_bounds.y - 2), new Dimension(grid * 3, _bounds.height + 4));
 		}
 
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		BlockPortCell blockport = BlockPortCell.createInstance(abstractSchemePort.getName(), bounds, viewMap, abstractSchemePort);
 		graph.getGraphLayoutCache().insert(new Object[] { blockport }, viewMap, null, null, null);
 		
@@ -126,7 +126,7 @@ public class CreateBlockPortAction extends AbstractAction {
 		GraphConstants.setEndFill(edgemap, false);
 		GraphConstants.setDisconnectable(edgemap, false);
 
-		viewMap = new HashMap();
+		viewMap = new HashMap<Object, Map>();
 		BlockPortEdge edge = new BlockPortEdge("");
 
 		viewMap.put(edge, edgemap);

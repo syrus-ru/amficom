@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.11 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.12 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -66,6 +66,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		super(aContext);
 	}
 
+	@Override
 	protected JComponent createPanel() {
 		this.tabs = new JTabbedPane(SwingConstants.BOTTOM);
 		this.tabs.addChangeListener(new ChangeListener() {
@@ -81,6 +82,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		});
 		
 		this.tabs.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseReleased(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e) && SchemeTabbedPane.this.tabs.getTabCount() > 1) {
 					JPopupMenu popup = new JPopupMenu();
@@ -103,12 +105,14 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return this.tabs;
 	}
 	
+	@Override
 	protected JComponent createToolBar() {
 		this.toolBar = new SchemeToolBar(this, this.aContext);
 		return this.toolBar;
 	}
 
 	
+	@Override
 	public Set<UgoPanel> getAllPanels() {
 		Object[] comp = this.tabs.getComponents();
 		Set<UgoPanel> panels = new HashSet<UgoPanel>(comp.length);
@@ -117,6 +121,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return panels;
 	}
 	
+	@Override
 	public ElementsPanel getCurrentPanel() {
 		if (this.tabs.getSelectedIndex() != -1)
 			return this.graphPanelsMap.get(this.tabs.getComponentAt(this.tabs.getSelectedIndex()));
@@ -158,6 +163,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs.setTitleAt(this.tabs.getSelectedIndex(), title);
 	}
 
+	@Override
 	public boolean removePanel(UgoPanel p) {
 		if (super.removePanel(p)) {
 			Object[] comp = this.tabs.getComponents();
@@ -172,6 +178,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return false;
 	}
 
+	@Override
 	public boolean removeAllPanels() {
 		Object[] comp = this.tabs.getComponents();
 		// check for unsaved changes
@@ -186,6 +193,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		return true;
 	}
 	
+	@Override
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent) ae;
@@ -415,6 +423,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		}
 	}
 	
+	@Override
 	public void setGraphChanged(boolean b) {
 		if (getGraph().isGraphChanged() == b)
 			return;

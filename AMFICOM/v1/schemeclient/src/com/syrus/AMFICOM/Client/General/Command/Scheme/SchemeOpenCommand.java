@@ -12,11 +12,13 @@ public class SchemeOpenCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public Object clone()
 	{
 		return new SchemeOpenCommand(this.aContext);
 	}
 
+	@Override
 	public void execute()
 	{
 		/*

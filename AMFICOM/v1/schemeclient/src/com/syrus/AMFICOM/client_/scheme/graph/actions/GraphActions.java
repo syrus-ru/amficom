@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: GraphActions.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -57,7 +57,7 @@ public class GraphActions {
 			DefaultGraphCell cell, Point p) {
 		CellView[] cv = graph.getGraphLayoutCache().getMapping(
 				cell.getChildren().toArray(), true);
-		Map map = new HashMap();
+		Map<Object, Map> map = new HashMap<Object, Map>();
 		for (int i = 0; i < cv.length; i++)
 			map.put(cv[i].getCell(), cv[i].getAllAttributes());
 
@@ -68,7 +68,7 @@ public class GraphActions {
 	}
 
 	private static DefaultPort addPort(Object userObject,
-			DefaultGraphCell cell, Point p, Map viewMap) {
+			DefaultGraphCell cell, Point p, Map<Object, Map> viewMap) {
 		DefaultPort port = new DefaultPort(userObject);
 		cell.add(port);
 		Map map = GraphConstants.createMap();
@@ -88,7 +88,7 @@ public class GraphActions {
 	public static DefaultGraphCell addVertex(SchemeGraph graph,
 			Object userObject, Rectangle bounds, boolean autosize, boolean opaque,
 			boolean sizable, Color border) {
-		Map viewMap = new HashMap();
+		Map<DefaultGraphCell, Map> viewMap = new HashMap<DefaultGraphCell, Map>();
 
 		// Create Vertex
 		Object obj = (userObject instanceof String) ? userObject : "";
@@ -165,7 +165,7 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBackground(map, color);
 		GraphConstants.setOpaque(map, true);
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 
 		for (int i = 0; i < objs.length; i++)
 			viewMap.put(objs[i], GraphConstants.cloneMap(map));
@@ -178,7 +178,7 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBackground(map, color);
 		GraphConstants.setOpaque(map, true);
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		viewMap.put(obj, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
@@ -187,7 +187,7 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setLineColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 
 		for (int i = 0; i < edges.length; i++)
 			viewMap.put(edges[i], GraphConstants.cloneMap(map));
@@ -199,7 +199,7 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setLineColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		viewMap.put(edge, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
@@ -209,7 +209,7 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBorderColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 
 		for (int i = 0; i < objs.length; i++)
 			viewMap.put(objs[i], GraphConstants.cloneMap(map));
@@ -222,13 +222,13 @@ public class GraphActions {
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBorderColor(map, color);
 		GraphConstants.setForeground(map, graph.getForeground());
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		viewMap.put(obj, GraphConstants.cloneMap(map));
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
 
 	public static void setText(SchemeGraph graph, Object obj, String text) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		if (obj instanceof CablePortCell || obj instanceof PortCell) {
 			DefaultGraphCell cell = (DefaultGraphCell) obj;
 			for (Enumeration enumeration = cell.children(); enumeration
@@ -259,7 +259,7 @@ public class GraphActions {
 		if (icon == null) {
 			Map map = cell.getAttributes();
 			map.remove(GraphConstants.ICON);
-			Map viewMap = new HashMap();
+			Map<Object, Map> viewMap = new HashMap<Object, Map>();
 			viewMap.put(cell, GraphConstants.cloneMap(map));
 			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 		} else {
@@ -268,7 +268,7 @@ public class GraphActions {
 						Image.SCALE_SMOOTH));
 			Map map = GraphConstants.createMap();
 			GraphConstants.setIcon(map, icon);
-			Map viewMap = new HashMap();
+			Map<Object, Map> viewMap = new HashMap<Object, Map>();
 			viewMap.put(cell, GraphConstants.cloneMap(map));
 			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 		}
@@ -280,7 +280,7 @@ public class GraphActions {
 	}
 
 	public static void setResizable(SchemeGraph graph, Object[] cells, boolean b) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DefaultGraphCell) {
 				Map m = GraphConstants.createMap();
@@ -304,7 +304,7 @@ public class GraphActions {
 	}
 
 	public static void alignToGrid(SchemeGraph graph, Object[] cells) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		int grid = graph.getGridSize();
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DefaultGraphCell) {
@@ -457,7 +457,7 @@ public class GraphActions {
 	}
 */
 	static void disconnectEdge(SchemeGraph graph, DefaultEdge edge, DefaultPort port, boolean is_source) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		Map map = edge.getAttributes();
 		viewMap.put(edge, GraphConstants.cloneMap(map));
 		ConnectionSet cs = new ConnectionSet();

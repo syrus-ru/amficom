@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeGraph.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -112,10 +112,12 @@ public class SchemeGraph extends GPGraph {
 	}
 
 	// objects view substitution
+	@Override
 	public DefaultGraphCell addVertex(Object userObject, Rectangle bounds, boolean autosize, Color border) {
 		return GraphActions.addVertex(this, userObject, bounds, autosize, false, true, border);
 	}
 
+	@Override
 	protected VertexView createVertexView(Object v, CellMapper cm) {
 		if (v instanceof DeviceCell)
 			return new DeviceView(v, this, cm);
@@ -126,11 +128,13 @@ public class SchemeGraph extends GPGraph {
 		return super.createVertexView(v, cm);
 	}
 	
+	@Override
 	protected EdgeView createEdgeView(Edge e, CellMapper cm) {
 		return new LinkView(e, this, cm);
 	}
 	
 	// correcting mapping between screen and logical points
+	@Override
 	public Point snap(Point p) {
 		Point p2 = new Point(fromScreen(p));
 		if (this.gridEnabled && p != null) {
@@ -142,10 +146,12 @@ public class SchemeGraph extends GPGraph {
 		return toScreen(p2);
 	}
 
+	@Override
 	public Dimension snap(Dimension d) {
 		return super.snap(d);
 	}
 
+	@Override
 	public Point toScreen(Point p) {
 		if (p == null)
 			return null;
@@ -154,6 +160,7 @@ public class SchemeGraph extends GPGraph {
 		return p;
 	}
 
+	@Override
 	public Point fromScreen(Point p) {
 		if (p == null)
 			return null;
@@ -162,6 +169,7 @@ public class SchemeGraph extends GPGraph {
 		return p;
 	}
 
+	@Override
 	public Rectangle toScreen(Rectangle rect) {
 		if (rect == null)
 			return null;
@@ -172,6 +180,7 @@ public class SchemeGraph extends GPGraph {
 		return rect;
 	}
 
+	@Override
 	public Rectangle fromScreen(Rectangle rect) {
 		if (rect == null)
 			return null;
@@ -205,26 +214,31 @@ public class SchemeGraph extends GPGraph {
 		this.notify = false;
 	}
 	
+	@Override
 	public void addSelectionCell(Object cell) {
 		if (!this.notify)
 			super.addSelectionCell(cell);
 	}
 
+	@Override
 	public void addSelectionCells(Object[] cells) {
 		if (!this.notify)
 			super.addSelectionCells(cells);
 	}
 
+	@Override
 	public void setSelectionCell(Object cell) {
 		if (!this.notify)
 			super.setSelectionCell(cell);
 	}
 	
+	@Override
 	public void setSelectionCells(Object[] cells) {
 		if (!this.notify)
 			super.setSelectionCells(cells);
 	}
 	
+	@Override
 	public void removeSelectionCell(Object cell) {
 		if (!this.notify)
 			super.removeSelectionCell(cell);
@@ -261,11 +275,13 @@ public class SchemeGraph extends GPGraph {
 		selectionNotify();
 	}*/
 
+	@Override
 	public void removeAll() {
 		getModel().remove(getDescendants(getAll()));
 	}
 	
 	// cells serialization
+	@Override
 	public Serializable getArchiveableState() {
 		return getArchiveableState(getRoots());
 	}
@@ -312,7 +328,7 @@ public class SchemeGraph extends GPGraph {
 			}
 
 			// клонируем селлы
-			Map<DefaultGraphCell, DefaultGraphCell> clones = cloneCells(cells);
+			Map<DefaultGraphCell, DefaultGraphCell> clones = super.cloneCells(cells);
 			// клонируем аттрубуты
 			Map cell_attr = GraphConstants.createAttributes(cells,
 					getGraphLayoutCache());
@@ -363,10 +379,12 @@ public class SchemeGraph extends GPGraph {
 	}
 
 	// SchemeUI substitution
+	@Override
 	public void updateUI() {
 		setUI(new SchemeGraphUI());
 		invalidate();
 	}
+	@Override
 	public GraphUI getUI() {
 		return (SchemeGraphUI)this.ui;
 	}

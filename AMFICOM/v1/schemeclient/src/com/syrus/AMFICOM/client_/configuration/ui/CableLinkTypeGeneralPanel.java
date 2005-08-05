@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.7 2005/08/05 12:39:58 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,8 +74,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -456,6 +456,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		});
 		
 		tfTMarkText.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 				if (currentCash != null)
 					currentCash.mark = tfTMarkText.getText(); 
@@ -477,6 +478,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		});
 		
 		taTDescrArea.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 				if (currentCash != null)
 					currentCash.description = taTDescrArea.getText(); 
@@ -510,7 +512,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	private List<CableThreadType> getSortedThreadTypes() {
 		Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
 		List<CableThreadType> threads = new LinkedList<CableThreadType>(cableThreadTypes);
-		Collections.sort(threads, new WrapperComparator(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_CODENAME));
+		Collections.sort(threads, new WrapperComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
 	}
 

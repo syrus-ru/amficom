@@ -6,6 +6,7 @@ public class SchematicsApplicationModelFactory
 {
 	public SchematicsApplicationModelFactory()
 	{
+		//Maybe nothing
 	}
 
 	public ApplicationModel create()

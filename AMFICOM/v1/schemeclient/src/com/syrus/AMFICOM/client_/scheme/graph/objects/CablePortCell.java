@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.8 2005/08/05 12:39:59 stas Exp $
+ * $Id: CablePortCell.java,v 1.9 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -36,7 +36,7 @@ public class CablePortCell extends DefaultGraphCell {
 	private Identifier schemeCableportId;
 
 	public static CablePortCell createInstance(Object userObject,
-			Rectangle bounds, Map viewMap, IdlDirectionType direction, Color color) {
+			Rectangle bounds, Map<Object, Map> viewMap, IdlDirectionType direction, Color color) {
 
 		CablePortCell cell = new CablePortCell(userObject);
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditor.java,v 1.5 2005/06/22 10:16:05 stas Exp $
+ * $Id: SchemeEditor.java,v 1.6 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/06/22 10:16:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -34,6 +34,7 @@ public class SchemeEditor extends AbstractApplication {
 //		screen.setVisible(true);
 //screen.dispose();
 	
+	@Override
 	protected void init() {
 		super.init();
 		super.aContext.setApplicationModel(new DefaultSchematicsApplicationModelFactory().create());

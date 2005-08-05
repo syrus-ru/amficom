@@ -54,7 +54,7 @@ import java.util.Set;
  */
 public final class Pool {
 	// хранилище для объектов
-	static private Map objHash	= new HashMap();
+	static private Map<String, Map<String, Object>> objHash	= new HashMap<String, Map<String, Object>>();
 
 	// конструктор не доступен
 	private Pool() {
@@ -74,7 +74,7 @@ public final class Pool {
 		Object result = null;
 		if ((objTypeId != null) && (objId != null)) {
 			// получаем список всех объектов типа obj_type_id
-			Map hash2 = (Map) objHash.get(objTypeId);
+			Map hash2 = objHash.get(objTypeId);
 			// если такого списка нет, то есть нет ни одного объекта данного
 			// типа, то возвращаем null
 			result = (hash2 == null) ? null : hash2.get(objId); // вынимаем из
@@ -99,10 +99,10 @@ public final class Pool {
 			return;
 
 		// получаем список всех объектов типа obj_type_id
-		Map hash2 = (Map)objHash.get(objTypeId);
+		Map<String, Object> hash2 = objHash.get(objTypeId);
 		if (hash2 == null) 								// если такого списка нет, то есть
 		{ 																// нет ни одного объекта данного
-			hash2 = new HashMap(); 				  // типа, то создаем список объектов
+			hash2 = new HashMap<String, Object>(); 				  // типа, то создаем список объектов
 			objHash.put(objTypeId, hash2);	// и заносим в хранилище
 																			// для объектов
 		}
@@ -117,9 +117,10 @@ public final class Pool {
 	 *            тип объектов
 	 */
 	public static Map getMap(String objTypeId) {
-		Map result = null;
-		if (objTypeId != null)
-			result = (Map) objHash.get(objTypeId);
+		Map<String, Object> result = null;
+		if (objTypeId != null) {
+			result = objHash.get(objTypeId);
+		}
 		return result;
 	}
 
@@ -131,11 +132,11 @@ public final class Pool {
 	 *            тип объектов
 	 */
 	public static List getList(String objTypeId) {
-		ArrayList result = null;
+		ArrayList<Object> result = null;
 		if (objTypeId != null) {
-			Map ht = (Map) objHash.get(objTypeId);
+			Map<String, Object> ht = objHash.get(objTypeId);
 			if (ht != null) {
-				result = new ArrayList(ht.size());
+				result = new ArrayList<Object>(ht.size());
 				result.addAll(ht.values());
 				result.trimToSize();
 			}
@@ -151,7 +152,7 @@ public final class Pool {
 	 * @param map список объектов
 	 *
 	 */
-	public static void putMap(String objTypeId, Map map)
+	public static void putMap(String objTypeId, Map<String, Object> map)
 	{
 		objHash.put(objTypeId, map);
 	}
@@ -168,13 +169,15 @@ public final class Pool {
 	public static void remove(String objTypeId, String objId)
 	{
 		// получаем список всех объектов типа obj_type_id
-		Map hash2 = (Map)objHash.get(objTypeId);
-		if (hash2 == null)	// если такого списка нет, то есть нет ни одного
+		Map<String, Object> hash2 = objHash.get(objTypeId);
+		if (hash2 == null) {	// если такого списка нет, то есть нет ни одного
 			return;						// объекта данного типа, то ничего не делаем
+		}
 
 		hash2.remove(objId);// удаляем объект
-		if (hash2.isEmpty())
+		if (hash2.isEmpty()) {
 			objHash.remove(objTypeId);
+		}
 	}
 
 

@@ -7,8 +7,10 @@ public class DefaultSchematicsApplicationModelFactory
 {
 	public DefaultSchematicsApplicationModelFactory()
 	{
+		//Maybe nothing
 	}
 
+	@Override
 	public ApplicationModel create()
 	{
 		ApplicationModel aModel = super.create();

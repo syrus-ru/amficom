@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.11 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.12 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -60,6 +60,7 @@ public class SchemeGraphUI extends GPGraphUI {
 	private static final long serialVersionUID = 2929624792764978924L;
 	private Object selected;
 	
+	@Override
 	public boolean isConstrainedMoveEvent(MouseEvent event) {
 		/*	if (event != null)
 		 return event.isShiftDown();
@@ -67,12 +68,14 @@ public class SchemeGraphUI extends GPGraphUI {
 		return false;
 	}
 
+	@Override
 	public CellHandle createHandle(GraphContext context) {
 		if (context != null && !context.isEmpty() && this.graph.isEnabled())
 			return new SchemeRootHandle(context);
 		return null;
 	}
 
+	@Override
 	protected MouseListener createMouseListener() {
 		return new SchemeMouseHandler();
 	}
@@ -85,6 +88,7 @@ public class SchemeGraphUI extends GPGraphUI {
 			dt.setActive(true);
 		}
 
+		@Override
 		public void drop(DropTargetDropEvent e) {
 			//			Point p = e.getLocation();
 			DataFlavor[] df = e.getCurrentDataFlavors();
@@ -150,6 +154,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
+	@Override
 	protected void installListeners() {
 		super.installListeners();
 		DropTarget dropTarget = this.graph.getDropTarget();
@@ -166,6 +171,7 @@ public class SchemeGraphUI extends GPGraphUI {
 	public class SchemeMouseHandler extends BasicGraphUI.MouseHandler {
 		private static final long serialVersionUID = 4087747949953155093L;
 
+		@Override
 		public void mousePressed(MouseEvent e) {
 			this.handler = null;
 			if (!e.isConsumed())// && graph.isEnabled())
@@ -219,11 +225,13 @@ public class SchemeGraphUI extends GPGraphUI {
 			}
 		}
 
+		@Override
 		public void mouseDragged(MouseEvent e) {
 			if (SchemeGraphUI.this.graph.isEditable())
 				super.mouseDragged(e);
 		}
 		
+		@Override
 		public void mouseReleased(MouseEvent e) {
 			super.mouseReleased(e);
 			((SchemeGraph)SchemeGraphUI.this.graph).selectionNotify();
@@ -237,6 +245,7 @@ public class SchemeGraphUI extends GPGraphUI {
 			super(ctx);
 		}
 
+		@Override
 		public void mouseReleased(MouseEvent event) {
 			try {
 				if (event != null && !event.isConsumed()) {
@@ -282,6 +291,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
+	@Override
 	protected void paintBackground(Graphics g) {
 		super.paintBackground(g);
 
@@ -309,6 +319,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
+	@Override
 	protected boolean startEditing(Object cell, MouseEvent event) {
 		this.selected = cell;
 		boolean b;
@@ -320,6 +331,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		return b;
 	}
 
+	@Override
 	protected void completeEditing() {
 		super.completeEditing();
 		if (this.selected instanceof PortEdge) {
@@ -347,6 +359,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
+	@Override
 	protected void paintGrid(int gs, Graphics g, Rectangle r) {
 		
 		if (gs > 0) {

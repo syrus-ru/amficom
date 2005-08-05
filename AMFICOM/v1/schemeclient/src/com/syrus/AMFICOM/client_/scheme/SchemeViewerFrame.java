@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeViewerFrame.java,v 1.6 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeViewerFrame.java,v 1.7 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -71,6 +71,7 @@ public class SchemeViewerFrame extends JInternalFrame {
 		return this.pane.getGraph();
 	}
 
+	@Override
 	public void doDefaultCloseAction() {
 		if (isMaximum()) {
 			try {

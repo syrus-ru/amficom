@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: ElementsPanel.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -42,6 +42,7 @@ public class ElementsPanel extends UgoPanel {
 		this.schemeResource = new SchemeResource(this.graph);
 	}
 
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
@@ -72,6 +73,7 @@ public class ElementsPanel extends UgoPanel {
 		return this.schemeResource;
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ev = (ObjectSelectedEvent) ae;

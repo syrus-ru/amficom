@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.17 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeActions.java,v 1.18 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -72,7 +72,7 @@ public class SchemeActions {
 	
 	public static DeviceGroup createTopLevelElement(SchemeGraph graph,
 			Object userObject, Rectangle bounds, SchemeElement element) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		DeviceGroup cell = DeviceGroup.createInstance(userObject, viewMap, element.getId(), DeviceGroup.SCHEME_ELEMENT);
 
 		Object[] insert = new Object[] { cell };
@@ -83,7 +83,7 @@ public class SchemeActions {
 
 	public static TopLevelCableLink createTopLevelCableLink(SchemeGraph graph, Port firstPort,
 			Port port, Point p, Point p2) {
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		ConnectionSet cs = new ConnectionSet();
 		TopLevelCableLink cell = TopLevelCableLink.createInstance(EMPTY, firstPort, 
 				port, p, p2, viewMap, cs);
@@ -96,8 +96,8 @@ public class SchemeActions {
 	
 	public static void generateTopLevelScheme(SchemeGraph graph)
 	{
-		Map oldToNewMap = new HashMap();
-		Map map2 = new HashMap();
+		Map<DeviceGroup, DeviceGroup> oldToNewMap = new HashMap<DeviceGroup, DeviceGroup>();
+		Map<DeviceGroup, DeviceGroup> map2 = new HashMap<DeviceGroup, DeviceGroup>();
 		Object[] cells = graph.getRoots();
 
 		for (int i = 0; i < cells.length; i++)
@@ -134,16 +134,16 @@ public class SchemeActions {
 				boolean b1 = !isCableGroup(start);
 				boolean b2 = !isCableGroup(end);
 				if (b1 && b2) {
-					DeviceGroup newStart = (DeviceGroup)oldToNewMap.get(start);
-					DeviceGroup newEnd = (DeviceGroup)oldToNewMap.get(end);
+					DeviceGroup newStart = oldToNewMap.get(start);
+					DeviceGroup newEnd = oldToNewMap.get(end);
 					createTopLevelCableLink(graph,
 							(Port)newStart.getFirstChild(),
 							(Port)newEnd.getFirstChild(),
 							graph.getCellBounds(newStart).getLocation(),
 							graph.getCellBounds(newEnd).getLocation());
 				} else if (b1) {
-					DeviceGroup newStart = (DeviceGroup)oldToNewMap.get(start);
-					DeviceGroup newEnd = (DeviceGroup)map2.get(end);
+					DeviceGroup newStart = oldToNewMap.get(start);
+					DeviceGroup newEnd = map2.get(end);
 					if (newEnd == null)
 						map2.put(start, newStart);
 					else
@@ -153,8 +153,8 @@ public class SchemeActions {
 							graph.getCellBounds(newStart).getLocation(),
 							graph.getCellBounds(newEnd).getLocation());
 				} else if (b2) {
-					DeviceGroup newEnd = (DeviceGroup)oldToNewMap.get(end);
-					DeviceGroup newStart = (DeviceGroup)map2.get(start);
+					DeviceGroup newEnd = oldToNewMap.get(end);
+					DeviceGroup newStart = map2.get(start);
 					if (newStart == null)
 						map2.put(end, newEnd);
 					else
@@ -240,7 +240,7 @@ public class SchemeActions {
 	public static DefaultCableLink createCableLink(SchemeGraph graph, PortView firstPort,
 			PortView port, Point p, Point p2, Identifier linkId) {
 		ConnectionSet cs = new ConnectionSet();
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		
 		Object[] cells = graph.getAll();
 		int counter = 0;
@@ -320,7 +320,7 @@ public class SchemeActions {
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		
-		Map viewMap = new HashMap();
+		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 	
 		if (!isCable) {
 			visualPort = PortCell.createInstance(EMPTY, portCellBounds, viewMap, direction, color);

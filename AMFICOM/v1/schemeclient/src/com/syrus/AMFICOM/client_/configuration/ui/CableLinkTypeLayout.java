@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.6 2005/08/05 12:39:58 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.7 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -107,7 +107,8 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	
 	private List<CableThreadType> getSortedThreadTypes() {
 		List<CableThreadType> threads = new LinkedList<CableThreadType>(this.type.getCableThreadTypes(false));
-		Collections.sort(threads, new WrapperComparator(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_CODENAME));
+		Collections.sort(threads, new WrapperComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
 	}
 
@@ -213,7 +214,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 	private void addCell(SchemeGraph graph, Object userObject, Rectangle bounds,
 			Color color) {
-		Map viewMap = new HashMap();
+		Map<EllipseCell, Map> viewMap = new HashMap<EllipseCell, Map>();
 		EllipseCell cell = new EllipseCell(userObject);
 		Map map = GraphConstants.createMap();
 		GraphConstants.setBounds(map, bounds);

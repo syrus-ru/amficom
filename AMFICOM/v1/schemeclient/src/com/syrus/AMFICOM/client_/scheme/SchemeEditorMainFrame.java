@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.16 2005/08/05 12:39:58 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.17 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -142,6 +142,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		});
 		
 		this.setWindowArranger(new WindowArranger(SchemeEditorMainFrame.this) {
+			@Override
 			public void arrange() {
 				Rectangle r = SchemeEditorMainFrame.this.scrollPane.getViewportBorderBounds();
 				int w = r.width + SchemeEditorMainFrame.this.scrollPane.getVerticalScrollBar().getVisibleRect().width;
@@ -203,6 +204,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	}
 
 		
+	@Override
 	public void initModule() {
 		super.initModule();
 		
@@ -259,6 +261,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 		aModel.setEnabled("menuScheme", true);
@@ -267,6 +270,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuWindow", true);
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(CreatePathEvent.TYPE)) {
 			CreatePathEvent cpe = (CreatePathEvent) ae;
@@ -349,12 +353,14 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				return this.command;
 			}
 
+			@Override
 			public void execute() {
 				this.getLazyCommand().execute();
 			}
 		};
 	}
 	
+	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();
 
@@ -370,6 +376,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -383,6 +390,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -407,6 +415,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		setFramesVisible(false);
 	}
 
+	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			if (!this.schemeTab.removeAllPanels())

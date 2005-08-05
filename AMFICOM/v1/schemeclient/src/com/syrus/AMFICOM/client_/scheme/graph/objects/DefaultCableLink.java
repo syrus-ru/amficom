@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -46,7 +46,7 @@ public class DefaultCableLink extends DefaultEdge {
 	private LinkRouting routing = new LinkRouting();
 
 	public static DefaultCableLink createInstance(Object userObject,
-			PortView firstPort, PortView port, Point p, Point p2, Map viewMap,
+			PortView firstPort, PortView port, Point p, Point p2, Map<Object, Map> viewMap,
 			ConnectionSet cs) {
 
 		// we can connect cable to CablePortCell or not connect at all
@@ -92,11 +92,13 @@ public class DefaultCableLink extends DefaultEdge {
 		super(userObject);
 	}
 
+	@Override
 	public void setSource(Object port) {
 		super.setSource(port);
 		this.source = (DefaultPort)port;
 	}
 
+	@Override
 	public void setTarget(Object port) {
 		super.setTarget(port);
 		this.target = (DefaultPort)port;

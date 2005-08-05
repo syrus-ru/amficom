@@ -22,10 +22,12 @@ public class ComponentNewCommand extends AbstractCommand {
 		this.cellPane = cellPane;
 	}
 
+	@Override
 	public Object clone() {
 		return new ComponentNewCommand(this.aContext, this.cellPane);
 	}
 
+	@Override
 	public void execute() {
 		ApplicationModel aModel = this.aContext.getApplicationModel(); 
 		aModel.getCommand("menuWindowScheme").execute();

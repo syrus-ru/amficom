@@ -16,6 +16,7 @@ public class SchemeNewCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		try {
 			Scheme scheme = SchemeObjectsFactory.createScheme();

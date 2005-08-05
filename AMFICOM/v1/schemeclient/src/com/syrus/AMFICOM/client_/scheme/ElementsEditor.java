@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditor.java,v 1.3 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsEditor.java,v 1.4 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -30,6 +30,7 @@ public class ElementsEditor extends AbstractApplication {
 		super(APPLICATION_NAME);
 	}		
 
+	@Override
 	protected void init() {
 		super.init();		
 		super.aContext.setApplicationModel(new DefaultSchematicsApplicationModelFactory().create());

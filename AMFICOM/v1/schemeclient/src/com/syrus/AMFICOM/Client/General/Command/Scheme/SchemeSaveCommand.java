@@ -44,10 +44,12 @@ public class SchemeSaveCommand extends AbstractCommand {
 		this.schemeTab = schemeTab;
 	}
 
+	@Override
 	public Object clone() {
 		return new SchemeSaveCommand(this.schemeTab);
 	}
 
+	@Override
 	public void execute() {
 		SchemeGraph graph = this.schemeTab.getGraph();
 

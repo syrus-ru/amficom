@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.19 2005/08/05 12:39:58 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.20 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/08/05 12:39:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -96,7 +96,6 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		setObject(apt);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		this.root = createRoot();
 		CheckableTreeUI treeUI = new CheckableTreeUI(this.root); 
@@ -106,9 +105,9 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		this.pnPanel0.setLayout( gbPanel0 );
 
-		lbDescriptionLabel.setFocusable( false );
+		this.lbDescriptionLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 1;
 		gbcPanel0.gridwidth = 2;
@@ -118,10 +117,10 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 0,5,0,2 );
-		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
-		pnPanel0.add( lbDescriptionLabel );
+		gbPanel0.setConstraints( this.lbDescriptionLabel, gbcPanel0 );
+		this.pnPanel0.add( this.lbDescriptionLabel );
 
-		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
+		JScrollPane scpDescriptionArea = new JScrollPane( this.taDescriptionArea );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 2;
 		gbcPanel0.gridwidth = 4;
@@ -132,9 +131,9 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 0,2,0,2 );
 		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
-		pnPanel0.add( scpDescriptionArea );
+		this.pnPanel0.add( scpDescriptionArea );
 
-		lbTestTypeLabel.setFocusable( false );
+		this.lbTestTypeLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 4;
 		gbcPanel0.gridwidth = 2;
@@ -144,10 +143,10 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 0,5,0,2 );
-		gbPanel0.setConstraints( lbTestTypeLabel, gbcPanel0 );
-		pnPanel0.add( lbTestTypeLabel );
+		gbPanel0.setConstraints( this.lbTestTypeLabel, gbcPanel0 );
+		this.pnPanel0.add( this.lbTestTypeLabel );
 
-		JScrollPane scpTestTypeTree = new JScrollPane( trTestTypeTree );
+		JScrollPane scpTestTypeTree = new JScrollPane( this.trTestTypeTree );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 5;
 		gbcPanel0.gridwidth = 4;
@@ -158,13 +157,13 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 0,2,0,2 );
 		gbPanel0.setConstraints( scpTestTypeTree, gbcPanel0 );
-		pnPanel0.add( scpTestTypeTree );
+		this.pnPanel0.add( scpTestTypeTree );
 
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout( gbGeneralPanel );
+		this.pnGeneralPanel.setLayout( gbGeneralPanel );
 
-		lbNameLabel.setFocusable( false );
+		this.lbNameLabel.setFocusable( false );
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -174,8 +173,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
-		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbNameLabel );
+		gbGeneralPanel.setConstraints( this.lbNameLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.lbNameLabel );
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -186,8 +185,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
-		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfNameText );
+		gbGeneralPanel.setConstraints( this.tfNameText, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.tfNameText );
 		
 		gbcGeneralPanel.gridx = 3;
 		gbcGeneralPanel.gridy = 0;
@@ -198,8 +197,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
-		gbGeneralPanel.setConstraints( commitButton, gbcGeneralPanel );
-		pnGeneralPanel.add( commitButton );
+		gbGeneralPanel.setConstraints( this.commitButton, gbcGeneralPanel );
+		this.pnGeneralPanel.add( this.commitButton );
 		
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
@@ -210,18 +209,18 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets( 0,0,0,0 );
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
+		gbPanel0.setConstraints( this.pnGeneralPanel, gbcPanel0 );
+		this.pnPanel0.add( this.pnGeneralPanel );
 		
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		this.pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 //		pnPanel0.setBackground(Color.WHITE);
 //		pnGeneralPanel.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		scpTestTypeTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(taDescriptionArea);
-		addToUndoableListener(trTestTypeTree);
+		addToUndoableListener(this.tfNameText);
+		addToUndoableListener(this.taDescriptionArea);
+		addToUndoableListener(this.trTestTypeTree);
 		
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));

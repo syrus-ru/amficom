@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: DeviceGroup.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -37,14 +37,14 @@ public class DeviceGroup extends DefaultGraphCell {
 	private int type;
 
 	public static DeviceGroup createInstance(Object userObject,
-			Map viewMap, Identifier elementId, int type) {
+			Map<Object, Map> viewMap, Identifier elementId, int type) {
 		DeviceGroup cell = new DeviceGroup(userObject, viewMap);
 		cell.elementId = elementId;
 		cell.type = type;
 		return cell;
 	}
 
-	private DeviceGroup(Object userObject, Map viewMap) {
+	private DeviceGroup(Object userObject, Map<Object, Map> viewMap) {
 		super(userObject);
 		
 		// make group created unresizable

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.19 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.20 2005/08/05 18:44:38 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/08/05 12:39:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/05 18:44:38 $
  * @module schemeclient_v1
  */
 
@@ -138,6 +138,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	}
 	
 	/* Return true if this handler should be preferred over other handlers. */
+	@Override
 	public boolean isForceMarqueeEvent(MouseEvent event) {
 		return !this.s.isSelected()
 			|| isPopupTrigger(event)
@@ -206,6 +207,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 
+	@Override
 	public void mousePressed(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (graph.isEditable()) {
@@ -240,6 +242,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (!graph.isEditable())
@@ -397,6 +400,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (!graph.isEditable()) {
@@ -529,7 +533,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					GraphConstants.setPoints(map, list);
 					GraphConstants.setLineEnd(map, GraphConstants.ARROW_NONE);
 					GraphConstants.setEndFill(map, true);
-					Map viewMap = new HashMap();
+					Map<DefaultEdge, Map> viewMap = new HashMap<DefaultEdge, Map>();
 					DefaultEdge cell = new DefaultEdge(""); //$NON-NLS-1$
 					viewMap.put(cell, map);
 					Object[] insert = new Object[] { cell };
@@ -578,6 +582,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 //		graph.selectionNotify();
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
 		if (!graph.isEditable())
@@ -646,6 +651,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		}
 	}
 	
+	@Override
 	public void overlay(Graphics g) {
 		if (this.marqueeBounds != null) {
 			g.drawRect(this.marqueeBounds.x, this.marqueeBounds.y, this.marqueeBounds.width, this.marqueeBounds.height);
