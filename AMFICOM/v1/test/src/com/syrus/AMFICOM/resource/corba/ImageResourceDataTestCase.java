@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDataTestCase.java,v 1.1 2004/12/15 14:35:45 cvsadmin Exp $
+ * $Id: ImageResourceDataTestCase.java,v 1.1.1.1 2004/12/15 14:35:45 cvsadmin Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import org.omg.CORBA.BAD_OPERATION;
 
 /**
  * @author $Author: cvsadmin $
- * @version $Revision: 1.1 $, $Date: 2004/12/15 14:35:45 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2004/12/15 14:35:45 $
  * @module idl_v1
  */
 public final class ImageResourceDataTestCase extends TestCase {

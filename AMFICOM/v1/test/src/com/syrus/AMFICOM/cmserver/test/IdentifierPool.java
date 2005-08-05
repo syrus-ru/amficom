@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.1 2005/03/04 12:52:46 cvsadmin Exp $
+ * $Id: IdentifierPool.java,v 1.1.1.1 2005/03/04 12:52:46 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/04 12:52:46 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/03/04 12:52:46 $
  * @author $Author: cvsadmin $
  * @module cmserver_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierTestCase.java,v 1.1 2005/03/04 19:13:37 cvsadmin Exp $
+ * $Id: IdentifierTestCase.java,v 1.1.1.1 2005/03/04 19:13:37 cvsadmin Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * @author $Author: cvsadmin $
- * @version $Revision: 1.1 $, $Date: 2005/03/04 19:13:37 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/03/04 19:13:37 $
  * @module general_v1
  */
 public class IdentifierTestCase extends TestCase {

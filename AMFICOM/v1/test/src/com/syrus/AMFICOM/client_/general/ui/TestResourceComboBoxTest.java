@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceComboBoxTest.java,v 1.1 2005/01/14 11:04:09 cvsadmin Exp $
+ * $Id: TestResourceComboBoxTest.java,v 1.1.1.1 2005/01/14 11:04:09 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 
 /**
  * @author $Author: cvsadmin $
- * @version $Revision: 1.1 $, $Date: 2005/01/14 11:04:09 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/01/14 11:04:09 $
  * @module general_v1
  */
 public class TestResourceComboBoxTest {

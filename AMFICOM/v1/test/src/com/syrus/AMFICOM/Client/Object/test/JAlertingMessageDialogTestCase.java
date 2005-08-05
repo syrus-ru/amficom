@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageDialogTestCase.java,v 1.1 2004/08/06 06:29:14 cvsadmin Exp $
+ * $Id: JAlertingMessageDialogTestCase.java,v 1.1.1.1 2004/08/06 06:29:14 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import junit.framework.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/06 06:29:14 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2004/08/06 06:29:14 $
  * @author $Author: cvsadmin $
  */
 public class JAlertingMessageDialogTestCase extends TestCase {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationXMLTestCase.java,v 1.1 2005/04/13 17:48:43 cvsadmin Exp $
+ * $Id: ConfigurationXMLTestCase.java,v 1.1.1.1 2005/04/13 17:48:43 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.XMLIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/13 17:48:43 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/04/13 17:48:43 $
  * @author $Author: cvsadmin $
  * @module tools
  */

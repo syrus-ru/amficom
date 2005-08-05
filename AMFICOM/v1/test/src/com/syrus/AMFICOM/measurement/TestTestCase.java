@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.1 2005/04/22 16:12:48 cvsadmin Exp $
+ * $Id: TestTestCase.java,v 1.1.1.1 2005/04/22 16:12:48 cvsadmin Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:12:48 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2005/04/22 16:12:48 $
  * @author $Author: cvsadmin $
  * @module tools
  */
