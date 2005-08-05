@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.6 2005/08/03 19:53:00 bass Exp $
+ * $Id: ShadowDatabase.java,v 1.7 2005/08/05 10:01:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/03 19:53:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 10:01:32 $
+ * @author $Author: arseniy $
  * @module leserver_v1
  */
 public final class ShadowDatabase {
@@ -76,22 +76,22 @@ public final class ShadowDatabase {
 				try {
 					if (resultSet != null) {
 						resultSet.close();
+						resultSet = null;
 					}
-				}
-				finally {
+				} finally {
 					try {
-						if (statement != null){
+						if (statement != null) {
 							statement.close();
+							statement = null;
 						}
-					}
-					finally {
+					} finally {
 						if (connection != null) {
 							DatabaseConnection.releaseConnection(connection);
+							connection = null;
 						}
 					}
 				}
-			}
-			catch (SQLException sqle) {
+			} catch (SQLException sqle) {
 				Log.errorException(sqle);
 			}
 		}
@@ -130,18 +130,19 @@ public final class ShadowDatabase {
 		}
 		finally {
 			try {
-				if (statement != null) {
-					statement.close();
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
-				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
