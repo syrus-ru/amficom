@@ -9,14 +9,14 @@ CREATE TABLE MapLibrary (
  name VARCHAR2(64 CHAR),
  codename VARCHAR2(32 CHAR),
  description VARCHAR2(256 CHAR),
- parentmaplibrary_id,
+ parent_map_library_id,
 --
  CONSTRAINT map_lib_pk PRIMARY KEY (id),
  CONSTRAINT map_lib_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
  CONSTRAINT map_lib_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT par_map_lib_fk FOREIGN KEY (parentmaplibrary_id)
+ CONSTRAINT par_map_lib_fk FOREIGN KEY (parent_map_library_id)
   REFERENCES MapLibrary (id) ON DELETE CASCADE
 );
 CREATE SEQUENCE MapLibrary_Seq;
