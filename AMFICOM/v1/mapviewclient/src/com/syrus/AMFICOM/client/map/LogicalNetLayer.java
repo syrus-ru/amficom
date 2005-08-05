@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.105 2005/08/03 15:30:25 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.106 2005/08/05 07:37:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.105 $, $Date: 2005/08/03 15:30:25 $
+ * @version $Revision: 1.106 $, $Date: 2005/08/05 07:37:10 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -417,7 +417,6 @@ public final class LogicalNetLayer
 //		System.out.println("--------------------------------------");
 		f = System.currentTimeMillis();
 		if(MapPropertiesManager.isOptimizeLinks()) {
-//			drawVisualLinks(p, visibleBounds);
 			drawVisualElements(p, visibleBounds);
 		}
 		else {
@@ -1128,7 +1127,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.105 $, $Date: 2005/08/03 15:30:25 $
+	 * @version $Revision: 1.106 $, $Date: 2005/08/05 07:37:10 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
