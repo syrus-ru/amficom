@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.146 2005/08/03 16:45:20 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.147 2005/08/05 11:41:48 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.146 $, $Date: 2005/08/03 16:45:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.147 $, $Date: 2005/08/05 11:41:48 $
+ * @author $Author: bob $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -778,7 +778,8 @@ public final class StorableObjectPool {
 
 			storableObjects.clear();
 			for (final StorableObject storableObject : objectPool) {
-				if (!storableObject.isChanged() && entityDeletedIds != null && !entityDeletedIds.contains(storableObject.getId())) {
+				if (!storableObject.isChanged() && 
+						(entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
 					storableObjects.add(storableObject);
 				}
 			}
@@ -798,6 +799,8 @@ public final class StorableObjectPool {
 			final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
 			for (final StorableObject storableObject : loadedObjects) {
 				objectPool.put(storableObject.getId(), storableObject);
+				Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
+					Log.DEBUGLEVEL08);
 			}
 		}
 	}
