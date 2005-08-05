@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.176 2005/08/05 07:38:01 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.177 2005/08/05 12:49:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.176 $, $Date: 2005/08/05 07:38:01 $
+ * @version $Revision: 1.177 $, $Date: 2005/08/05 12:49:10 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -562,7 +562,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage(tableName + "Database.retrieveVersions | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(tableName + "Database.retrievePresentInDatabaseIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
@@ -570,7 +570,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 		catch (SQLException sqle) {
-			final String mesg = tableName + "Database.retrieveVersions | Cannot check presence -- " + sqle.getMessage();
+			final String mesg = tableName + "Database.retrievePresentInDatabaseIds | Cannot check presence -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -630,19 +630,16 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.debugMessage(this.getEntityName() + "Database.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
 			for (final T storableObject : storableObjects) {
 				id = storableObject.getId();
-				try {
-					if (isPresentInDatabase(id)) {
-						continue;
-					}
-				}
-				catch (RetrieveObjectException roe) {
-					Log.errorException(roe);
-				}
-
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
 				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
 						+ " '" + id + "'", Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
+				try {
+					preparedStatement.executeUpdate();
+				}
+				catch (SQLException sqle) {
+					Log.errorException(sqle);
+					continue;
+				}
 			}
 
 			connection.commit();
@@ -654,8 +651,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			final String mesg = "StorableObejctDatabase.insertEntities | Cannot insert " + this.getEntityName()
-					+ " '" + id + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot insert " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -852,8 +848,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			final String mesg = this.getEntityName() + "Database.updateEntities | Cannot update " + this.getEntityName()
-					+ " '" + id + "' -- " + sqle.getMessage();
+			final String mesg = "Cannot update " + this.getEntityName() + " '" + id + "' -- " + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
