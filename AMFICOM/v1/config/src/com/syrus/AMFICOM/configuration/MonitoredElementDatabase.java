@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.81 2005/08/03 19:53:02 bass Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.82 2005/08/05 08:06:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/08/03 19:53:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/08/05 08:06:01 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -104,7 +105,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 	public void retrieve(final MonitoredElement storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException {
 		super.retrieveEntity(storableObject);
-		this.retrieveMonitoredDomainMemberIds(storableObject);
+		this.retrieveMonitoredDomainMemberIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	@Override
@@ -132,81 +133,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
 				DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
-	}
-
-	private void retrieveMonitoredDomainMemberIds(final MonitoredElement monitoredElement) throws RetrieveObjectException {
-		final Set<Identifier> mdmIds = new HashSet<Identifier>();
-		final String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
-		final int meSort = monitoredElement.getSort().value();
-		String column;
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			switch (meSort) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID);
-					column = MonitoredElementWrapper.LINK_COLUMN_EQUIPMENT_ID;
-					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
-					column = MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID;
-					break;
-				default:
-					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
-					throw new RetrieveObjectException(mesg);
-			}
-			buffer.append(SQL_FROM);
-			switch (meSort) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					buffer.append(ObjectEntities.EQUIPMENTMELINK);
-					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					buffer.append(ObjectEntities.TRANSPATHMELINK);
-					break;
-				default:
-					String mesg = "ERROR: Unknown sort of monitoredelement: " + meSort;
-					throw new RetrieveObjectException(mesg);
-			}
-			buffer.append(SQL_WHERE);
-			buffer.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-			buffer.append(EQUALS);
-			buffer.append(meIdStr);
-			sql = buffer.toString();
-		}
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql,
-				Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, column));
-			}
-		} catch (SQLException sqle) {
-			final String mesg = "MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Cannot retrieve monitored domain members for monitored element "
-					+ meIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
-			}
-		}
-		monitoredElement.setMonitoredDomainMemberIds0(mdmIds);
 	}
 
 	private void retrieveMonitoredDomainMemberIdsByOneQuery(final Set<MonitoredElement> monitoredElements)
@@ -285,7 +211,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				buffer.append(ObjectEntities.TRANSPATHMELINK);
 				break;
 			default:
-				String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
+				final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
 						+ meSort;
 				throw new CreateObjectException(mesg);
 		}
@@ -298,7 +224,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				buffer.append(MonitoredElementWrapper.LINK_COLUMN_TRANSMISSION_PATH_ID);
 				break;
 			default:
-				String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
+				final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | ERROR: Unknown sort of monitoredelement: "
 						+ meSort;
 				throw new CreateObjectException(mesg);
 		}
@@ -324,30 +250,30 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
 				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '"
 						+ meId.getIdentifierString()
-						+ "' and monitored domain member '"
-						+ mdmId.getIdentifierString()
-						+ "'", Log.DEBUGLEVEL09);
+						+ "' and monitored domain member '" + mdmId.getIdentifierString() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
 			final String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '"
 					+ meId.getIdentifierString()
-					+ "' and monitored domain member '"
-					+ mdmId.getIdentifierString()
-					+ "'";
+					+ "' and monitored domain member '" + mdmId.getIdentifierString() + "'";
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 	}
@@ -428,7 +354,7 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 					sql1.append(ObjectEntities.TRANSPATHMELINK);
 					break;
 				default:
-					String mesg = "MonitoredElementDatabase.delete | ERROR: Unknown sort of monitored element: "
+					final String mesg = "MonitoredElementDatabase.delete | ERROR: Unknown sort of monitored element: "
 							+ meSort;
 					Log.errorMessage(mesg);
 			}
@@ -454,15 +380,19 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 				Log.errorException(sqle1);
 			} finally {
 				try {
-					if (statement != null)
-						statement.close();
-					statement = null;
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
 				} catch (SQLException sqle1) {
 					Log.errorException(sqle1);
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-					}
 				}
 			}
 		} catch (RetrieveObjectException e) {
