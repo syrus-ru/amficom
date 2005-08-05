@@ -4,7 +4,6 @@
 
 package com.syrus.AMFICOM.client.map.ui;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,6 @@ public final class MapViewTableController implements Wrapper {
 	private String[] keysArray;
 
 	private MapViewTableController() {
-		// empty private constructor
 		this.keysArray = new String[] {
 			KEY_NAME,
 			KEY_DOMAIN,
@@ -45,8 +43,7 @@ public final class MapViewTableController implements Wrapper {
 			KEY_MODIFIED
 		};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(
-				Arrays.asList(this.keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(this.keysArray));
 	}
 
 	public static MapViewTableController getInstance() {
