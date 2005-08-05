@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryDatabase.java,v 1.2 2005/08/02 18:03:24 arseniy Exp $
+ * $Id: MapLibraryDatabase.java,v 1.3 2005/08/05 12:52:31 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/02 18:03:24 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/08/05 12:52:31 $
  * @module map
  */
 
@@ -97,18 +97,6 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 						null)
 					: storableObject;
 
-		MapLibrary parent;
-		try {
-			parent = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					MapLibraryWrapper.COLUMN_PARENT_MAP_LIBRARY_ID), true);
-		} catch (ApplicationException ae) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
-			throw new RetrieveObjectException(msg, ae);
-		} catch (SQLException sqle) {
-			String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + sqle.getMessage();
-			throw new RetrieveObjectException(msg, sqle);
-		}
-
 		mapLibrary.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -117,7 +105,7 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-				parent);
+				DatabaseIdentifier.getIdentifier(resultSet, MapLibraryWrapper.COLUMN_PARENT_MAP_LIBRARY_ID));
 		return mapLibrary;
 	}
 }
