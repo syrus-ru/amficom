@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.30 2005/07/26 11:41:05 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.31 2005/08/05 07:34:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/07/26 11:41:05 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/08/05 07:34:31 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -40,18 +40,6 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 	protected String	name;
 
 	protected String	description;
-
-	/**
-	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
-	 */
-	@Deprecated
-	protected double	longitude;
-
-	/**
-	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
-	 */
-	@Deprecated
-	protected double	latitude;
 
 	/**
 	 * Идентификатор изображения, которое отображается на топологической схеме
@@ -136,10 +124,12 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 	
 	protected void setLongitude(final double longitude) {
 		this.location.setLocation(longitude, this.location.getY());
+		super.markAsChanged();
 	}
 
 	protected void setLatitude(final double latitude) {
 		this.location.setLocation(this.location.getX(), latitude);
+		super.markAsChanged();
 	}
 
 
